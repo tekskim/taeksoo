@@ -11,6 +11,7 @@ import {
   Select,
   SectionCard,
   Disclosure,
+  PageShell,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -278,16 +279,12 @@ export function EditNodeConfigPage() {
   );
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -295,8 +292,8 @@ export function EditNodeConfigPage() {
           onTabClose={closeTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -332,292 +329,282 @@ export function EditNodeConfigPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20 overflow-auto overscroll-contain sidebar-scroll"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <div className="flex items-center justify-between min-h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Node: {nodeName}</h1>
+        </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between min-h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Node: {nodeName}
-                </h1>
-              </div>
+        {/* Main Content with Sidebar */}
+        <HStack gap={6} align="start" className="w-full items-start">
+          {/* Form Content */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <VStack gap={4}>
+                  {/* Node Name (Read-only) */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Node Name<span className="text-[var(--color-state-danger)]"> *</span>
+                    </label>
+                    <Input
+                      value={nodeName}
+                      disabled
+                      fullWidth
+                      className="bg-[var(--color-surface-muted)]"
+                    />
+                  </VStack>
 
-              {/* Main Content with Sidebar */}
-              <HStack gap={6} align="start" className="w-full items-start">
-                {/* Form Content */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Basic information" />
-                    <SectionCard.Content>
-                      <VStack gap={4}>
-                        {/* Node Name (Read-only) */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Node Name<span className="text-[var(--color-state-danger)]"> *</span>
-                          </label>
+                  {/* Description with Disclosure */}
+                  <Disclosure defaultOpen={false}>
+                    <Disclosure.Trigger>Description</Disclosure.Trigger>
+                    <Disclosure.Panel>
+                      <div className="pt-2">
+                        <Input
+                          placeholder="Enter description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                    </Disclosure.Panel>
+                  </Disclosure>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Taints Section */}
+            <SectionCard>
+              <SectionCard.Header title="Taints" />
+              <SectionCard.Content>
+                <VStack gap={3}>
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <VStack gap={2}>
+                      {taints.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Effect
+                          </span>
+                          <div />
+                        </div>
+                      )}
+                      {taints.map((taint, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                        >
                           <Input
-                            value={nodeName}
-                            disabled
+                            placeholder="input key"
+                            value={taint.key}
+                            onChange={(e) => updateTaint(index, 'key', e.target.value)}
                             fullWidth
-                            className="bg-[var(--color-surface-muted)]"
                           />
-                        </VStack>
+                          <Input
+                            placeholder="input value"
+                            value={taint.value}
+                            onChange={(e) => updateTaint(index, 'value', e.target.value)}
+                            fullWidth
+                          />
+                          <Select
+                            options={TAINT_EFFECT_OPTIONS}
+                            value={taint.effect}
+                            onChange={(value) => updateTaint(index, 'effect', value)}
+                            placeholder="Select effect"
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeTaint(index)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addTaint}
+                        >
+                          Add Taint
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
 
-                        {/* Description with Disclosure */}
-                        <Disclosure defaultOpen={false}>
-                          <Disclosure.Trigger>Description</Disclosure.Trigger>
-                          <Disclosure.Panel>
-                            <div className="pt-2">
-                              <Input
-                                placeholder="Enter description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                              />
-                            </div>
-                          </Disclosure.Panel>
-                        </Disclosure>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+            {/* Labels & Annotations Section */}
+            <SectionCard>
+              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Labels */}
+                  <VStack gap={3}>
+                    <VStack gap={1.5}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+                      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the labels used to identify and categorize the node.
+                      </p>
+                    </VStack>
 
-                  {/* Taints Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Taints" />
-                    <SectionCard.Content>
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                       <VStack gap={3}>
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {taints.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Effect
-                                </span>
-                                <div />
-                              </div>
-                            )}
-                            {taints.map((taint, index) => (
-                              <div
-                                key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                              >
-                                <Input
-                                  placeholder="input key"
-                                  value={taint.key}
-                                  onChange={(e) => updateTaint(index, 'key', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="input value"
-                                  value={taint.value}
-                                  onChange={(e) => updateTaint(index, 'value', e.target.value)}
-                                  fullWidth
-                                />
-                                <Select
-                                  options={TAINT_EFFECT_OPTIONS}
-                                  value={taint.effect}
-                                  onChange={(value) => updateTaint(index, 'effect', value)}
-                                  placeholder="Select effect"
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeTaint(index)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addTaint}
-                              >
-                                Add Taint
-                              </Button>
-                            </div>
-                          </VStack>
+                        {labels.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {labels.map((label, index) => (
+                          <div
+                            key={index}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="label key"
+                              value={label.key}
+                              onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="label value"
+                              value={label.value}
+                              onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeLabel(index)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addLabel}
+                          >
+                            Add Label
+                          </Button>
                         </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
 
-                  {/* Labels & Annotations Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Labels & Annotations" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Labels */}
-                        <VStack gap={3}>
-                          <VStack gap={1.5}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Labels
+                  {/* Annotations */}
+                  <VStack gap={3}>
+                    <VStack gap={1.5}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Annotations
+                      </span>
+                      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Add annotations to store non-identifying metadata.
+                      </p>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={3}>
+                        {annotations.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
                             </span>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the labels used to identify and categorize the node.
-                            </p>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={3}>
-                              {labels.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {labels.map((label, index) => (
-                                <div
-                                  key={index}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="label key"
-                                    value={label.key}
-                                    onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="label value"
-                                    value={label.value}
-                                    onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeLabel(index)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addLabel}
-                                >
-                                  Add Label
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={3}>
-                          <VStack gap={1.5}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Annotations
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
                             </span>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Add annotations to store non-identifying metadata.
-                            </p>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={3}>
-                              {annotations.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {annotations.map((annotation, index) => (
-                                <div
-                                  key={index}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="annotation key"
-                                    value={annotation.key}
-                                    onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="annotation value"
-                                    value={annotation.value}
-                                    onChange={(e) =>
-                                      updateAnnotation(index, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAnnotation(index)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addAnnotation}
-                                >
-                                  Add Annotation
-                                </Button>
-                              </div>
-                            </VStack>
+                            <div />
                           </div>
-                        </VStack>
+                        )}
+                        {annotations.map((annotation, index) => (
+                          <div
+                            key={index}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="annotation key"
+                              value={annotation.key}
+                              onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="annotation value"
+                              value={annotation.value}
+                              onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeAnnotation(index)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addAnnotation}
+                          >
+                            Add Annotation
+                          </Button>
+                        </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
                 </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  nodeName={nodeName}
-                  description={description}
-                  taints={taints}
-                  labels={labels}
-                  annotations={annotations}
-                  onCancel={handleCancel}
-                  onSave={handleSave}
-                />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            nodeName={nodeName}
+            description={description}
+            taints={taints}
+            labels={labels}
+            annotations={annotations}
+            onCancel={handleCancel}
+            onSave={handleSave}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

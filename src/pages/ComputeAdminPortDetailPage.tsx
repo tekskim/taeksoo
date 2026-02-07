@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -254,6 +255,7 @@ export default function PortDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedMac, setCopiedMac] = useState(false);
 
@@ -510,17 +512,13 @@ export default function PortDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
+    <>
+      <PageShell
+        sidebar={
+          <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
           <TabBar
             tabs={tabBarTabs}
             activeTab={activeTabId}
@@ -531,8 +529,8 @@ export default function PortDetailPage() {
             showAddButton={true}
             showWindowControls={true}
           />
-
-          {/* Top Bar with Breadcrumb */}
+        }
+        topBar={
           <TopBar
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
@@ -548,289 +546,277 @@ export default function PortDetailPage() {
               />
             }
           />
-        </div>
+        }
+        contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      >
+        <VStack gap={8} className="min-w-[1176px]">
+          {/* Header Card */}
+          <DetailHeader>
+            {/* Title */}
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
+              {port.name}
+            </h1>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                {/* Title */}
-                <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
-                  {port.name}
-                </h1>
+            {/* Actions */}
+            <div className="flex items-center gap-1 mb-3">
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+            </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1 mb-3">
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </div>
+            {/* Info Cards */}
+            <DetailHeader.InfoGrid>
+              <DetailHeader.InfoCard
+                label="Status"
+                value={port.status.charAt(0).toUpperCase() + port.status.slice(1)}
+                status={portStatusMap[port.status]}
+              />
+              <DetailHeader.InfoCard label="ID" value={port.id} copyable onCopy={handleCopyId} />
+              <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+              <DetailHeader.InfoCard label="Admin state" value="Up" />
+              <DetailHeader.InfoCard
+                label="Port security"
+                value={port.portSecurity ? 'On' : 'Off'}
+              />
+              <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
-                {/* Info Cards */}
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={port.status.charAt(0).toUpperCase() + port.status.slice(1)}
-                    status={portStatusMap[port.status]}
-                  />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={port.id}
-                    copyable
-                    onCopy={handleCopyId}
-                  />
-                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="Admin state" value="Up" />
-                  <DetailHeader.InfoCard
-                    label="Port security"
-                    value={port.portSecurity ? 'On' : 'Off'}
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+          {/* Tabs */}
+          <div className="w-full">
+            <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+              <TabList>
+                <Tab value="details">Details</Tab>
+                <Tab value="fixed-ips">Fixed IPs</Tab>
+                {port.status === 'active' && (
+                  <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
+                )}
+                {port.status === 'active' && <Tab value="security">Security groups</Tab>}
+              </TabList>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="fixed-ips">Fixed IPs</Tab>
-                    {port.status === 'active' && (
-                      <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
-                    )}
-                    {port.status === 'active' && <Tab value="security">Security groups</Tab>}
-                  </TabList>
+              {/* Details Tab */}
+              <TabPanel value="details" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Basic information */}
+                  <SectionCard>
+                    <SectionCard.Header
+                      title="Basic information"
+                      actions={
+                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                          Edit
+                        </Button>
+                      }
+                    />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Port name" value={port.name} />
+                      <SectionCard.DataRow label="Description" value={port.description} />
+                      <SectionCard.DataRow label="Admin state" value="Up" />
+                    </SectionCard.Content>
+                  </SectionCard>
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
+                  {/* Owned Network */}
+                  <SectionCard>
+                    <SectionCard.Header title="Owned network" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow
+                        label="Network"
+                        value={
+                          <Link
+                            to={`/compute-admin/networks/${port.ownedNetwork.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {port.ownedNetwork.name}
+                          </Link>
+                        }
+                      />
+                      <SectionCard.DataRow label="MAC Address" value={port.macAddress} />
+                    </SectionCard.Content>
+                  </SectionCard>
+
+                  {/* Attachments */}
+                  <SectionCard>
+                    <SectionCard.Header title="Attachments" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow
+                        label="Bind Device Type"
+                        value={
+                          port.attachedTo
+                            ? port.attachedTo.type === 'instance'
+                              ? 'Instance'
+                              : 'Router'
+                            : '-'
+                        }
+                      />
+                      <SectionCard.DataRow
+                        label="Bind device"
+                        value={
+                          port.attachedTo ? (
+                            <Link
+                              to={
+                                port.attachedTo.type === 'instance'
+                                  ? `/instances/${port.attachedTo.id}`
+                                  : `/routers/${port.attachedTo.id}`
+                              }
+                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            >
+                              {port.attachedTo.name}
+                            </Link>
+                          ) : (
+                            '-'
+                          )
+                        }
+                      />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+              </TabPanel>
+
+              {/* Fixed IPs Tab */}
+              <TabPanel value="fixed-ips" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Fixed IPs</h3>
+                  </div>
+
+                  {/* Search */}
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={fixedIpSearchTerm}
+                        onChange={(e) => {
+                          setFixedIpSearchTerm(e.target.value);
+                          setFixedIpCurrentPage(1);
+                        }}
+                        placeholder="Search fixed IP by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center gap-2">
+                    <Pagination
+                      currentPage={fixedIpCurrentPage}
+                      totalPages={totalFixedIpPages}
+                      onPageChange={setFixedIpCurrentPage}
+                      totalItems={filteredFixedIPs.length}
+                      selectedCount={selectedFixedIPs.length}
+                    />
+                  </div>
+
+                  {/* Table */}
+                  <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
+                </VStack>
+              </TabPanel>
+
+              {/* Allowed Address Pairs Tab */}
+              {port.status === 'active' && (
+                <TabPanel value="allowed-address-pairs" className="pt-0">
+                  <VStack gap={4} className="pt-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                        Allowed Address Pairs
+                      </h3>
+                    </div>
+
+                    {/* Search */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          value={aapSearchTerm}
+                          onChange={(e) => {
+                            setAapSearchTerm(e.target.value);
+                            setAapCurrentPage(1);
+                          }}
+                          placeholder="Search address pair by attributes"
                         />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Port name" value={port.name} />
-                          <SectionCard.DataRow label="Description" value={port.description} />
-                          <SectionCard.DataRow label="Admin state" value="Up" />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Owned Network */}
-                      <SectionCard>
-                        <SectionCard.Header title="Owned network" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Network"
-                            value={
-                              <Link
-                                to={`/compute-admin/networks/${port.ownedNetwork.id}`}
-                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                {port.ownedNetwork.name}
-                              </Link>
-                            }
-                          />
-                          <SectionCard.DataRow label="MAC Address" value={port.macAddress} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Attachments */}
-                      <SectionCard>
-                        <SectionCard.Header title="Attachments" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Bind Device Type"
-                            value={
-                              port.attachedTo
-                                ? port.attachedTo.type === 'instance'
-                                  ? 'Instance'
-                                  : 'Router'
-                                : '-'
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="Bind device"
-                            value={
-                              port.attachedTo ? (
-                                <Link
-                                  to={
-                                    port.attachedTo.type === 'instance'
-                                      ? `/instances/${port.attachedTo.id}`
-                                      : `/routers/${port.attachedTo.id}`
-                                  }
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {port.attachedTo.name}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Fixed IPs Tab */}
-                  <TabPanel value="fixed-ips" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Fixed IPs
-                        </h3>
                       </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        iconOnly
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </div>
 
-                      {/* Search */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={fixedIpSearchTerm}
-                            onChange={(e) => {
-                              setFixedIpSearchTerm(e.target.value);
-                              setFixedIpCurrentPage(1);
-                            }}
-                            placeholder="Search fixed IP by attributes"
-                          />
-                        </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          iconOnly
-                          icon={<IconDownload size={12} />}
-                          aria-label="Download"
+                    {/* Pagination */}
+                    <div className="flex items-center gap-2">
+                      <Pagination
+                        currentPage={aapCurrentPage}
+                        totalPages={totalAapPages}
+                        onPageChange={setAapCurrentPage}
+                        totalItems={filteredAaps.length}
+                        selectedCount={selectedAaps.length}
+                      />
+                    </div>
+
+                    {/* Table */}
+                    <Table columns={aapColumns} data={paginatedAaps} rowKey="id" />
+                  </VStack>
+                </TabPanel>
+              )}
+
+              {/* Security Tab */}
+              {port.status === 'active' && (
+                <TabPanel value="security" className="pt-0">
+                  <VStack gap={4} className="pt-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                        Security groups
+                      </h3>
+                    </div>
+
+                    {/* Search */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          value={sgSearchTerm}
+                          onChange={(e) => {
+                            setSgSearchTerm(e.target.value);
+                            setSgCurrentPage(1);
+                          }}
+                          placeholder="Search security group by attributes"
                         />
                       </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        iconOnly
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </div>
 
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={fixedIpCurrentPage}
-                          totalPages={totalFixedIpPages}
-                          onPageChange={setFixedIpCurrentPage}
-                          totalItems={filteredFixedIPs.length}
-                          selectedCount={selectedFixedIPs.length}
-                        />
-                      </div>
+                    {/* Pagination */}
+                    <div className="flex items-center gap-2">
+                      <Pagination
+                        currentPage={sgCurrentPage}
+                        totalPages={totalSgPages}
+                        onPageChange={setSgCurrentPage}
+                        totalItems={filteredSgs.length}
+                        selectedCount={selectedSgs.length}
+                      />
+                    </div>
 
-                      {/* Table */}
-                      <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Allowed Address Pairs Tab */}
-                  {port.status === 'active' && (
-                    <TabPanel value="allowed-address-pairs" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Allowed Address Pairs
-                          </h3>
-                        </div>
-
-                        {/* Search */}
-                        <div className="flex items-center gap-1">
-                          <div className="w-[var(--search-input-width)]">
-                            <SearchInput
-                              value={aapSearchTerm}
-                              onChange={(e) => {
-                                setAapSearchTerm(e.target.value);
-                                setAapCurrentPage(1);
-                              }}
-                              placeholder="Search address pair by attributes"
-                            />
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            iconOnly
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={aapCurrentPage}
-                            totalPages={totalAapPages}
-                            onPageChange={setAapCurrentPage}
-                            totalItems={filteredAaps.length}
-                            selectedCount={selectedAaps.length}
-                          />
-                        </div>
-
-                        {/* Table */}
-                        <Table columns={aapColumns} data={paginatedAaps} rowKey="id" />
-                      </VStack>
-                    </TabPanel>
-                  )}
-
-                  {/* Security Tab */}
-                  {port.status === 'active' && (
-                    <TabPanel value="security" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Security groups
-                          </h3>
-                        </div>
-
-                        {/* Search */}
-                        <div className="flex items-center gap-1">
-                          <div className="w-[var(--search-input-width)]">
-                            <SearchInput
-                              value={sgSearchTerm}
-                              onChange={(e) => {
-                                setSgSearchTerm(e.target.value);
-                                setSgCurrentPage(1);
-                              }}
-                              placeholder="Search security group by attributes"
-                            />
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            iconOnly
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={sgCurrentPage}
-                            totalPages={totalSgPages}
-                            onPageChange={setSgCurrentPage}
-                            totalItems={filteredSgs.length}
-                            selectedCount={selectedSgs.length}
-                          />
-                        </div>
-
-                        {/* Table */}
-                        <Table columns={sgColumns} data={paginatedSgs} rowKey="id" />
-                      </VStack>
-                    </TabPanel>
-                  )}
-                </Tabs>
-              </div>
-            </VStack>
+                    {/* Table */}
+                    <Table columns={sgColumns} data={paginatedSgs} rowKey="id" />
+                  </VStack>
+                </TabPanel>
+              )}
+            </Tabs>
           </div>
-        </div>
-      </main>
+        </VStack>
+      </PageShell>
 
       {/* Detach Security group Modal */}
       <Modal
@@ -897,6 +883,6 @@ export default function PortDetailPage() {
           </Button>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }

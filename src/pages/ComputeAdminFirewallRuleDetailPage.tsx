@@ -13,6 +13,7 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -123,6 +124,7 @@ const defaultRuleDetail: FirewallRuleDetail = {
 export default function ComputeAdminFirewallRuleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('details');
 
   // Global tab management
@@ -147,142 +149,126 @@ export default function ComputeAdminFirewallRuleDetailPage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Firewalls', href: '/compute-admin/firewall' },
+                { label: rule.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{rule.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="ID" value={rule.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={rule.tenant} />
+            <DetailHeader.InfoCard label="Enabled" value={rule.enabled ? 'On' : 'Off'} />
+            <DetailHeader.InfoCard label="Shared" value={rule.shared ? 'Yes' : 'No'} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="details">Details</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Firewalls', href: '/compute-admin/firewall' },
-                  { label: rule.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-6">
+              <VStack gap={6}>
+                {/* Basic Information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Rule name" value={rule.name} />
+                    <SectionCard.DataRow label="Description" value={rule.description || '-'} />
+                    <SectionCard.DataRow label="Protocol" value={rule.protocol} />
+                    <SectionCard.DataRow label="Action" value={rule.action} />
+                    <SectionCard.DataRow label="Source IP" value={rule.sourceIp || '-'} />
+                    <SectionCard.DataRow label="Source port" value={rule.sourcePort || '-'} />
+                    <SectionCard.DataRow label="Destination IP" value={rule.destinationIp || '-'} />
+                    <SectionCard.DataRow
+                      label="Destination port"
+                      value={rule.destinationPort || '-'}
+                    />
+                    <SectionCard.DataRow label="Enabled" value={rule.enabled ? 'On' : 'Off'} />
+                    <SectionCard.DataRow label="Shared" value={rule.shared ? 'Yes' : 'No'} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Firewall Policy */}
+                <SectionCard>
+                  <SectionCard.Header title="Firewall policy" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Firewall policy"
+                      value={
+                        rule.firewallPolicyId ? (
+                          <Link
+                            to={`/compute-admin/firewall-policies/${rule.firewallPolicyId}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {rule.firewallPolicy}
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{rule.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="ID" value={rule.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value={rule.tenant} />
-                  <DetailHeader.InfoCard label="Enabled" value={rule.enabled ? 'On' : 'Off'} />
-                  <DetailHeader.InfoCard label="Shared" value={rule.shared ? 'Yes' : 'No'} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Basic Information */}
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Rule name" value={rule.name} />
-                          <SectionCard.DataRow
-                            label="Description"
-                            value={rule.description || '-'}
-                          />
-                          <SectionCard.DataRow label="Protocol" value={rule.protocol} />
-                          <SectionCard.DataRow label="Action" value={rule.action} />
-                          <SectionCard.DataRow label="Source IP" value={rule.sourceIp || '-'} />
-                          <SectionCard.DataRow label="Source port" value={rule.sourcePort || '-'} />
-                          <SectionCard.DataRow
-                            label="Destination IP"
-                            value={rule.destinationIp || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Destination port"
-                            value={rule.destinationPort || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Enabled"
-                            value={rule.enabled ? 'On' : 'Off'}
-                          />
-                          <SectionCard.DataRow label="Shared" value={rule.shared ? 'Yes' : 'No'} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Firewall Policy */}
-                      <SectionCard>
-                        <SectionCard.Header title="Firewall policy" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Firewall policy"
-                            value={
-                              rule.firewallPolicyId ? (
-                                <Link
-                                  to={`/compute-admin/firewall-policies/${rule.firewallPolicyId}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {rule.firewallPolicy}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

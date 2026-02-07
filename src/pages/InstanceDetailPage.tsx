@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
@@ -833,6 +834,7 @@ const mockActionLogs: ActionLog[] = [
 export function InstanceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [selectedNetworkInterface, setSelectedNetworkInterface] = useState(
     mockNetworkInterfaces[0]?.id || ''
@@ -936,1110 +938,1047 @@ export function InstanceDetailPage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instances list', href: '/compute/instances' },
+                { label: instance.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Instance Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+              Console
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Start
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+              Stop
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+              Reboot
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                {
+                  id: 'instance-status',
+                  label: 'Instance status',
+                  submenu: [
+                    {
+                      id: 'soft-reboot',
+                      label: 'Soft reboot',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'pause',
+                      label: 'Pause',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'suspend',
+                      label: 'Suspend',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'shelve',
+                      label: 'Shelve',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'unpause',
+                      label: 'Unpause',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'resume',
+                      label: 'Resume',
+                      onClick: () => {},
+                    },
+                    {
+                      id: 'unshelve',
+                      label: 'Unshelve',
+                      onClick: () => {},
+                    },
+                  ],
+                },
+                {
+                  id: 'storage-snapshot',
+                  label: 'Storage & Snapshot',
+                  onClick: () => {},
+                },
+                { id: 'network', label: 'Network', onClick: () => {} },
+                {
+                  id: 'configuration',
+                  label: 'Configuration',
+                  onClick: () => {},
+                },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
 
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Instances list', href: '/compute/instances' },
-                  { label: instance.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
+            <DetailHeader.InfoCard label="Host" value={instance.host} />
+            <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Instance Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{instance.name}</DetailHeader.Title>
+        {/* Instance Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="volumes">Volumes</Tab>
+              <Tab value="interfaces">Interfaces</Tab>
+              <Tab value="floating-ips">Floating IPs</Tab>
+              <Tab value="security">Security</Tab>
+              <Tab value="snapshots">Instance snapshots</Tab>
+              <Tab value="monitoring">Monitoring</Tab>
+              <Tab value="resource-map">Resource map</Tab>
+              <Tab value="logs">Logs</Tab>
+              <Tab value="action-logs">Action logs</Tab>
+            </TabList>
 
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
-                    Console
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Instance name" value={instance.name} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={instance.availabilityZone}
+                    />
+                    <SectionCard.DataRow label="Description" value={instance.description} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Flavor */}
+                <SectionCard>
+                  <SectionCard.Header title="Flavor" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Flavor name"
+                      value={instance.flavor.name}
+                      isLink
+                      linkHref="/flavors"
+                    />
+                    <SectionCard.DataRow
+                      label="Spec"
+                      value={`vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Start Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Start source" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={instance.image}
+                      isLink
+                      linkHref="/images"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Authentication */}
+                <SectionCard>
+                  <SectionCard.Header title="Authentication" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Key pair"
+                      value={instance.keyPair}
+                      isLink
+                      linkHref="/key-pairs"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Advanced"
+                    actions={
+                      <Button variant="secondary" size="sm">
+                        Manage tags
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Tags" value="Team: Backend" />
+                    <SectionCard.DataRow
+                      label="Server group"
+                      value={instance.serverGroup}
+                      isLink
+                      linkHref="/server-groups"
+                    />
+                    <SectionCard.DataRow label="User data" value={instance.userData} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Volumes Tab Panel */}
+            <TabPanel value="volumes" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Attach volume
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
-                    Start
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
-                    Stop
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
-                    Reboot
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <ContextMenu
-                    items={[
-                      {
-                        id: 'instance-status',
-                        label: 'Instance status',
-                        submenu: [
+                </div>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search volume by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={1}
+                  totalItems={10}
+                  onPageChange={() => {}}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_, row: AttachedVolume) => (
+                        <StatusIndicator status={row.status as any} layout="icon-only" />
+                      ),
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
+                      render: (value: string, row: AttachedVolume) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/volumes/${row.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                          >
+                            {value}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'size',
+                      label: 'Size',
+                      flex: 1,
+                      minWidth: columnMinWidths.size,
+                      sortable: true,
+                    },
+                    {
+                      key: 'type',
+                      label: 'Type',
+                      flex: 1,
+                      minWidth: columnMinWidths.type,
+                      sortable: true,
+                    },
+                    {
+                      key: 'diskTag',
+                      label: 'Disk tag',
+                      flex: 1,
+                      minWidth: columnMinWidths.diskTag,
+                    },
+                    {
+                      key: 'bootable',
+                      label: 'Bootable',
+                      flex: 1,
+                      minWidth: columnMinWidths.bootable,
+                      render: (value: boolean) => (value ? 'Yes' : 'No'),
+                    },
+                    {
+                      key: 'access',
+                      label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center',
+                      render: (_: unknown, row: AttachedVolume) => {
+                        const volumeMenuItems: ContextMenuItem[] = [
                           {
-                            id: 'soft-reboot',
-                            label: 'Soft reboot',
+                            id: 'data-protection',
+                            label: 'Data protection',
+                            submenu: [
+                              {
+                                id: 'create-snapshot',
+                                label: 'Create volume snapshot',
+                                onClick: () => {},
+                              },
+                              {
+                                id: 'create-backup',
+                                label: 'Create volume backup',
+                                onClick: () => {},
+                              },
+                              {
+                                id: 'clone-volume',
+                                label: 'Clone volume',
+                                onClick: () => {},
+                              },
+                            ],
+                          },
+                          {
+                            id: 'extend-volume',
+                            label: 'Extend volume',
                             onClick: () => {},
                           },
                           {
-                            id: 'pause',
-                            label: 'Pause',
+                            id: 'bootable',
+                            label: 'Bootable',
                             onClick: () => {},
                           },
                           {
-                            id: 'suspend',
-                            label: 'Suspend',
+                            id: 'detach',
+                            label: 'Detach',
+                            status: 'danger',
                             onClick: () => {},
                           },
-                          {
-                            id: 'shelve',
-                            label: 'Shelve',
-                            onClick: () => {},
-                          },
-                          {
-                            id: 'unpause',
-                            label: 'Unpause',
-                            onClick: () => {},
-                          },
-                          {
-                            id: 'resume',
-                            label: 'Resume',
-                            onClick: () => {},
-                          },
-                          {
-                            id: 'unshelve',
-                            label: 'Unshelve',
-                            onClick: () => {},
-                          },
-                        ],
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={volumeMenuItems} trigger="click" align="right">
+                              <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
                       },
-                      {
-                        id: 'storage-snapshot',
-                        label: 'Storage & Snapshot',
-                        onClick: () => {},
-                      },
-                      { id: 'network', label: 'Network', onClick: () => {} },
-                      {
-                        id: 'configuration',
-                        label: 'Configuration',
-                        onClick: () => {},
-                      },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
+                    },
+                  ]}
+                  data={mockAttachedVolumes}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
-                  <DetailHeader.InfoCard label="Host" value={instance.host} />
-                  <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+            {/* Interfaces Tab Panel */}
+            <TabPanel value="interfaces" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Attach interface
+                  </Button>
+                </div>
 
-              {/* Instance Tabs */}
-              <div className="w-full">
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search interface by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={interfaceCurrentPage}
+                  totalPages={interfaceTotalPages}
+                  onPageChange={setInterfaceCurrentPage}
+                  totalItems={mockAttachedInterfaces.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, iface: AttachedInterface) => {
+                        const statusMap: Record<
+                          string,
+                          'active' | 'down' | 'building' | 'shutoff'
+                        > = {
+                          Active: 'active',
+                          Inactive: 'shutoff',
+                          Down: 'down',
+                          Build: 'building',
+                        };
+                        return (
+                          <StatusIndicator
+                            status={statusMap[iface.portStatus] || 'down'}
+                            layout="icon-only"
+                          />
+                        );
+                      },
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/ports/${iface.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                          >
+                            {iface.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'network',
+                      label: 'Network',
+                      flex: 1,
+                      minWidth: columnMinWidths.network,
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/networks/${iface.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                          >
+                            {iface.network}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'fixedIp',
+                      label: 'Fixed IP',
+                      flex: 1,
+                      minWidth: columnMinWidths.fixedIp,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.fixedIp}</span>
+                      ),
+                    },
+                    {
+                      key: 'macAddress',
+                      label: 'Mac address',
+                      flex: 1,
+                      minWidth: columnMinWidths.macAddress,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
+                      ),
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
+                      ),
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center' as const,
+                      render: (_: unknown, iface: AttachedInterface) => {
+                        const interfaceMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'detach',
+                            label: 'Detach',
+                            status: 'danger',
+                            onClick: () => {},
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
+                    },
+                  ]}
+                  data={mockAttachedInterfaces.slice(
+                    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+                    interfaceCurrentPage * interfaceRowsPerPage
+                  )}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Floating IPs Tab Panel */}
+            <TabPanel value="floating-ips" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Associate floating IP
+                  </Button>
+                </div>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search floating IP by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={floatingIpCurrentPage}
+                  totalPages={floatingIpTotalPages}
+                  onPageChange={setFloatingIpCurrentPage}
+                  totalItems={mockFloatingIPs.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, row: FloatingIP) => (
+                        <StatusIndicator status={row.status} layout="icon-only" size="md" />
+                      ),
+                    },
+                    {
+                      key: 'floatingIp',
+                      label: 'Floating IP',
+                      flex: 1,
+                      minWidth: columnMinWidths.floatingIp,
+                      render: (_value: string, row: FloatingIP) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/floating-ips/${row.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                          >
+                            {row.floatingIp}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'fixedIp',
+                      label: 'Fixed IP',
+                      flex: 1,
+                      minWidth: columnMinWidths.fixedIp,
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
+                      sortable: true,
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center',
+                      render: (_: unknown, row: FloatingIP) => {
+                        const floatingIpMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'disassociate',
+                            label: 'Disassociate',
+                            status: 'danger',
+                            onClick: () => {},
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={floatingIpMenuItems} trigger="click" align="right">
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
+                    },
+                  ]}
+                  data={mockFloatingIPs.slice(
+                    (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
+                    floatingIpCurrentPage * floatingIpRowsPerPage
+                  )}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Security Tab Panel */}
+            <TabPanel value="security" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Security groups
+                  </h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Attach Security group
+                  </Button>
+                </div>
+
+                {/* Network Interface Toggle */}
                 <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
+                  value={selectedNetworkInterface}
+                  onChange={setSelectedNetworkInterface}
+                  variant="boxed"
                   size="sm"
                 >
                   <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="volumes">Volumes</Tab>
-                    <Tab value="interfaces">Interfaces</Tab>
-                    <Tab value="floating-ips">Floating IPs</Tab>
-                    <Tab value="security">Security</Tab>
-                    <Tab value="snapshots">Instance snapshots</Tab>
-                    <Tab value="monitoring">Monitoring</Tab>
-                    <Tab value="resource-map">Resource map</Tab>
-                    <Tab value="logs">Logs</Tab>
-                    <Tab value="action-logs">Action logs</Tab>
+                    {mockNetworkInterfaces.map((net) => (
+                      <Tab key={net.id} value={net.id}>
+                        {net.name}({net.ip})
+                      </Tab>
+                    ))}
                   </TabList>
+                </Tabs>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Instance name" value={instance.name} />
-                          <SectionCard.DataRow
-                            label="Availability zone"
-                            value={instance.availabilityZone}
-                          />
-                          <SectionCard.DataRow label="Description" value={instance.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search security group by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
 
-                      {/* Flavor */}
-                      <SectionCard>
-                        <SectionCard.Header title="Flavor" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Flavor name"
-                            value={instance.flavor.name}
-                            isLink
-                            linkHref="/flavors"
-                          />
-                          <SectionCard.DataRow
-                            label="Spec"
-                            value={`vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={securityCurrentPage}
+                  totalPages={securityTotalPages}
+                  onPageChange={setSecurityCurrentPage}
+                  totalItems={mockSecurityGroups.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
 
-                      {/* Start Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Start source" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Image"
-                            value={instance.image}
-                            isLink
-                            linkHref="/images"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Authentication */}
-                      <SectionCard>
-                        <SectionCard.Header title="Authentication" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Key pair"
-                            value={instance.keyPair}
-                            isLink
-                            linkHref="/key-pairs"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Advanced"
-                          actions={
-                            <Button variant="secondary" size="sm">
-                              Manage tags
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Tags" value="Team: Backend" />
-                          <SectionCard.DataRow
-                            label="Server group"
-                            value={instance.serverGroup}
-                            isLink
-                            linkHref="/server-groups"
-                          />
-                          <SectionCard.DataRow label="User data" value={instance.userData} />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Volumes Tab Panel */}
-                  <TabPanel value="volumes" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Volumes
-                        </h2>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Attach volume
-                        </Button>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search volume by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={1}
-                        totalItems={10}
-                        onPageChange={() => {}}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_, row: AttachedVolume) => (
-                              <StatusIndicator status={row.status as any} layout="icon-only" />
-                            ),
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            flex: 1,
-                            minWidth: columnMinWidths.name,
-                            render: (value: string, row: AttachedVolume) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/volumes/${row.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {value}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'size',
-                            label: 'Size',
-                            flex: 1,
-                            minWidth: columnMinWidths.size,
-                            sortable: true,
-                          },
-                          {
-                            key: 'type',
-                            label: 'Type',
-                            flex: 1,
-                            minWidth: columnMinWidths.type,
-                            sortable: true,
-                          },
-                          {
-                            key: 'diskTag',
-                            label: 'Disk tag',
-                            flex: 1,
-                            minWidth: columnMinWidths.diskTag,
-                          },
-                          {
-                            key: 'bootable',
-                            label: 'Bootable',
-                            flex: 1,
-                            minWidth: columnMinWidths.bootable,
-                            render: (value: boolean) => (value ? 'Yes' : 'No'),
-                          },
-                          {
-                            key: 'access',
-                            label: 'Created at',
-                            flex: 1,
-                            minWidth: columnMinWidths.createdAt,
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center',
-                            render: (_: unknown, row: AttachedVolume) => {
-                              const volumeMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'data-protection',
-                                  label: 'Data protection',
-                                  submenu: [
-                                    {
-                                      id: 'create-snapshot',
-                                      label: 'Create volume snapshot',
-                                      onClick: () => {},
-                                    },
-                                    {
-                                      id: 'create-backup',
-                                      label: 'Create volume backup',
-                                      onClick: () => {},
-                                    },
-                                    {
-                                      id: 'clone-volume',
-                                      label: 'Clone volume',
-                                      onClick: () => {},
-                                    },
-                                  ],
-                                },
-                                {
-                                  id: 'extend-volume',
-                                  label: 'Extend volume',
-                                  onClick: () => {},
-                                },
-                                {
-                                  id: 'bootable',
-                                  label: 'Bootable',
-                                  onClick: () => {},
-                                },
-                                {
-                                  id: 'detach',
-                                  label: 'Detach',
-                                  status: 'danger',
-                                  onClick: () => {},
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={volumeMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={mockAttachedVolumes}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Interfaces Tab Panel */}
-                  <TabPanel value="interfaces" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Interfaces
-                        </h2>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Attach interface
-                        </Button>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search interface by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={interfaceCurrentPage}
-                        totalPages={interfaceTotalPages}
-                        onPageChange={setInterfaceCurrentPage}
-                        totalItems={mockAttachedInterfaces.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, iface: AttachedInterface) => {
-                              const statusMap: Record<
-                                string,
-                                'active' | 'down' | 'building' | 'shutoff'
-                              > = {
-                                Active: 'active',
-                                Inactive: 'shutoff',
-                                Down: 'down',
-                                Build: 'building',
-                              };
-                              return (
-                                <StatusIndicator
-                                  status={statusMap[iface.portStatus] || 'down'}
-                                  layout="icon-only"
-                                />
-                              );
-                            },
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            flex: 1,
-                            minWidth: columnMinWidths.name,
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/ports/${iface.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {iface.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'network',
-                            label: 'Network',
-                            flex: 1,
-                            minWidth: columnMinWidths.network,
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/networks/${iface.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {iface.network}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'fixedIp',
-                            label: 'Fixed IP',
-                            flex: 1,
-                            minWidth: columnMinWidths.fixedIp,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.fixedIp}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'macAddress',
-                            label: 'Mac address',
-                            flex: 1,
-                            minWidth: columnMinWidths.macAddress,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.macAddress}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            flex: 1,
-                            minWidth: columnMinWidths.createdAt,
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.createdAt}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center' as const,
-                            render: (_: unknown, iface: AttachedInterface) => {
-                              const interfaceMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'detach',
-                                  label: 'Detach',
-                                  status: 'danger',
-                                  onClick: () => {},
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={interfaceMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={mockAttachedInterfaces.slice(
-                          (interfaceCurrentPage - 1) * interfaceRowsPerPage,
-                          interfaceCurrentPage * interfaceRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Floating IPs Tab Panel */}
-                  <TabPanel value="floating-ips" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Floating IPs
-                        </h2>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Associate floating IP
-                        </Button>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search floating IP by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={floatingIpCurrentPage}
-                        totalPages={floatingIpTotalPages}
-                        onPageChange={setFloatingIpCurrentPage}
-                        totalItems={mockFloatingIPs.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, row: FloatingIP) => (
-                              <StatusIndicator status={row.status} layout="icon-only" size="md" />
-                            ),
-                          },
-                          {
-                            key: 'floatingIp',
-                            label: 'Floating IP',
-                            flex: 1,
-                            minWidth: columnMinWidths.floatingIp,
-                            render: (_value: string, row: FloatingIP) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/floating-ips/${row.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {row.floatingIp}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'fixedIp',
-                            label: 'Fixed IP',
-                            flex: 1,
-                            minWidth: columnMinWidths.fixedIp,
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            flex: 1,
-                            minWidth: columnMinWidths.createdAt,
-                            sortable: true,
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center',
-                            render: (_: unknown, row: FloatingIP) => {
-                              const floatingIpMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'disassociate',
-                                  label: 'Disassociate',
-                                  status: 'danger',
-                                  onClick: () => {},
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={floatingIpMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={mockFloatingIPs.slice(
-                          (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
-                          floatingIpCurrentPage * floatingIpRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Security Tab Panel */}
-                  <TabPanel value="security" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Security groups
-                        </h2>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Attach Security group
-                        </Button>
-                      </div>
-
-                      {/* Network Interface Toggle */}
-                      <Tabs
-                        value={selectedNetworkInterface}
-                        onChange={setSelectedNetworkInterface}
-                        variant="boxed"
-                        size="sm"
-                      >
-                        <TabList>
-                          {mockNetworkInterfaces.map((net) => (
-                            <Tab key={net.id} value={net.id}>
-                              {net.name}({net.ip})
-                            </Tab>
-                          ))}
-                        </TabList>
-                      </Tabs>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search security group by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={securityCurrentPage}
-                        totalPages={securityTotalPages}
-                        onPageChange={setSecurityCurrentPage}
-                        totalItems={mockSecurityGroups.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            flex: 1,
-                            minWidth: columnMinWidths.name,
-                            sortable: true,
-                            render: (_value: string, row: SecurityGroup) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/security-groups/${row.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {row.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'description',
-                            label: 'Description',
-                            flex: 1,
-                            minWidth: columnMinWidths.description,
-                            sortable: true,
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            flex: 1,
-                            minWidth: columnMinWidths.createdAt,
-                            sortable: true,
-                            render: (_value: string, row: SecurityGroup) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {row.createdAt}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center' as const,
-                            render: (_: unknown, row: SecurityGroup) => {
-                              const securityGroupMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'detach',
-                                  label: 'Detach',
-                                  status: 'danger',
-                                  onClick: () => {},
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={securityGroupMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={mockSecurityGroups.slice(
-                          (securityCurrentPage - 1) * securityRowsPerPage,
-                          securityCurrentPage * securityRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Instance snapshots Tab Panel */}
-                  <TabPanel value="snapshots" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Instance snapshots
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          <IconCirclePlus size={12} />
-                          Create Snapshot
-                        </Button>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search instance snapshot by attributes"
-                        value={snapshotSearchQuery}
-                        onChange={(e) => {
-                          setSnapshotSearchQuery(e.target.value);
-                          setSnapshotCurrentPage(1);
-                        }}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={snapshotCurrentPage}
-                        totalPages={snapshotTotalPages}
-                        onPageChange={setSnapshotCurrentPage}
-                        totalItems={filteredSnapshots.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
-
-                      {/* Table */}
-                      <Table<InstanceSnapshot>
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, row: InstanceSnapshot) => (
-                              <StatusIndicator
-                                status={
-                                  row.status === 'active'
-                                    ? 'active'
-                                    : row.status === 'queued'
-                                      ? 'building'
-                                      : row.status === 'saving'
-                                        ? 'building'
-                                        : 'error'
-                                }
-                                layout="icon-only"
-                              />
-                            ),
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            flex: 1,
-                            minWidth: columnMinWidths.name,
-                            sortable: true,
-                            render: (_value: string, row: InstanceSnapshot) => (
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/instance-snapshots/${row.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                                >
-                                  {row.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'size',
-                            label: 'Size',
-                            flex: 1,
-                            minWidth: columnMinWidths.size,
-                            sortable: true,
-                          },
-                          {
-                            key: 'diskFormat',
-                            label: 'Disk format',
-                            flex: 1,
-                            minWidth: columnMinWidths.diskFormat,
-                            sortable: true,
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            flex: 1,
-                            minWidth: columnMinWidths.createdAt,
-                            sortable: true,
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center',
-                            render: (_: unknown, row: InstanceSnapshot) => {
-                              const snapshotMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'edit',
-                                  label: 'Edit',
-                                  onClick: () => {},
-                                },
-                                {
-                                  id: 'create-instance',
-                                  label: 'Create instance',
-                                  onClick: () => {},
-                                },
-                                {
-                                  id: 'create-volume',
-                                  label: 'Create volume',
-                                  onClick: () => {},
-                                },
-                                {
-                                  id: 'delete',
-                                  label: 'Delete',
-                                  status: 'danger',
-                                  onClick: () => {},
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={snapshotMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={filteredSnapshots.slice(
-                          (snapshotCurrentPage - 1) * snapshotRowsPerPage,
-                          snapshotCurrentPage * snapshotRowsPerPage
-                        )}
-                        rowKey="id"
-                        emptyMessage="No instance snapshots found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Monitoring Tab Panel */}
-                  <TabPanel value="monitoring" className="pt-0">
-                    <div className="pt-6">
-                      <p className="text-[var(--color-text-subtle)]">
-                        Monitoring content will be displayed here.
-                      </p>
-                    </div>
-                  </TabPanel>
-
-                  {/* Resource Map Tab Panel */}
-                  <TabPanel value="resource-map" className="pt-0">
-                    <div className="pt-6">
-                      <p className="text-[var(--color-text-subtle)]">
-                        Resource Map content will be displayed here.
-                      </p>
-                    </div>
-                  </TabPanel>
-
-                  {/* Logs Tab Panel */}
-                  <TabPanel value="logs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Console Logs
-                        </h2>
-                      </div>
-
-                      {/* Log Length Container */}
-                      <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
-                        {/* Left side - Log Length */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Log Length
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
+                      sortable: true,
+                      render: (_value: string, row: SecurityGroup) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/security-groups/${row.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                          >
+                            {row.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {row.id}
                           </span>
-                          <div className="flex items-center gap-1">
-                            {/* Number Input with Spinner */}
-                            <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {logLength}
-                              </span>
-                              <div className="flex flex-col">
-                                <button
-                                  onClick={() => setLogLength((prev) => prev + 1)}
-                                  className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
-                                >
-                                  <IconChevronUp size={12} stroke={1.5} />
-                                </button>
-                                <button
-                                  onClick={() => setLogLength((prev) => Math.max(1, prev - 1))}
-                                  className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
-                                >
-                                  <IconChevronDown size={12} stroke={1.5} />
-                                </button>
-                              </div>
-                            </div>
-                            {/* Search Button */}
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
-                            >
-                              <IconSearch size={16} stroke={2} />
-                            </Button>
-                          </div>
                         </div>
+                      ),
+                    },
+                    {
+                      key: 'description',
+                      label: 'Description',
+                      flex: 1,
+                      minWidth: columnMinWidths.description,
+                      sortable: true,
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
+                      sortable: true,
+                      render: (_value: string, row: SecurityGroup) => (
+                        <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
+                      ),
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center' as const,
+                      render: (_: unknown, row: SecurityGroup) => {
+                        const securityGroupMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'detach',
+                            label: 'Detach',
+                            status: 'danger',
+                            onClick: () => {},
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu
+                              items={securityGroupMenuItems}
+                              trigger="click"
+                              align="right"
+                            >
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
+                    },
+                  ]}
+                  data={mockSecurityGroups.slice(
+                    (securityCurrentPage - 1) * securityRowsPerPage,
+                    securityCurrentPage * securityRowsPerPage
+                  )}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
 
-                        {/* Right side - View Full Log */}
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="text-[var(--color-text-default)]"
+            {/* Instance snapshots Tab Panel */}
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Instance snapshots
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    <IconCirclePlus size={12} />
+                    Create Snapshot
+                  </Button>
+                </div>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search instance snapshot by attributes"
+                  value={snapshotSearchQuery}
+                  onChange={(e) => {
+                    setSnapshotSearchQuery(e.target.value);
+                    setSnapshotCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={snapshotCurrentPage}
+                  totalPages={snapshotTotalPages}
+                  onPageChange={setSnapshotCurrentPage}
+                  totalItems={filteredSnapshots.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
+
+                {/* Table */}
+                <Table<InstanceSnapshot>
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, row: InstanceSnapshot) => (
+                        <StatusIndicator
+                          status={
+                            row.status === 'active'
+                              ? 'active'
+                              : row.status === 'queued'
+                                ? 'building'
+                                : row.status === 'saving'
+                                  ? 'building'
+                                  : 'error'
+                          }
+                          layout="icon-only"
+                        />
+                      ),
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
+                      sortable: true,
+                      render: (_value: string, row: InstanceSnapshot) => (
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <Link
+                            to={`/compute/instance-snapshots/${row.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
-                            <IconTerminal2 size={14} stroke={1.5} />
-                            View Full Log
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                            {row.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'size',
+                      label: 'Size',
+                      flex: 1,
+                      minWidth: columnMinWidths.size,
+                      sortable: true,
+                    },
+                    {
+                      key: 'diskFormat',
+                      label: 'Disk format',
+                      flex: 1,
+                      minWidth: columnMinWidths.diskFormat,
+                      sortable: true,
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
+                      sortable: true,
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center',
+                      render: (_: unknown, row: InstanceSnapshot) => {
+                        const snapshotMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'edit',
+                            label: 'Edit',
+                            onClick: () => {},
+                          },
+                          {
+                            id: 'create-instance',
+                            label: 'Create instance',
+                            onClick: () => {},
+                          },
+                          {
+                            id: 'create-volume',
+                            label: 'Create volume',
+                            onClick: () => {},
+                          },
+                          {
+                            id: 'delete',
+                            label: 'Delete',
+                            status: 'danger',
+                            onClick: () => {},
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
+                    },
+                  ]}
+                  data={filteredSnapshots.slice(
+                    (snapshotCurrentPage - 1) * snapshotRowsPerPage,
+                    snapshotCurrentPage * snapshotRowsPerPage
+                  )}
+                  rowKey="id"
+                  emptyMessage="No instance snapshots found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Monitoring Tab Panel */}
+            <TabPanel value="monitoring" className="pt-0">
+              <div className="pt-6">
+                <p className="text-[var(--color-text-subtle)]">
+                  Monitoring content will be displayed here.
+                </p>
+              </div>
+            </TabPanel>
+
+            {/* Resource Map Tab Panel */}
+            <TabPanel value="resource-map" className="pt-0">
+              <div className="pt-6">
+                <p className="text-[var(--color-text-subtle)]">
+                  Resource Map content will be displayed here.
+                </p>
+              </div>
+            </TabPanel>
+
+            {/* Logs Tab Panel */}
+            <TabPanel value="logs" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Console Logs</h2>
+                </div>
+
+                {/* Log Length Container */}
+                <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
+                  {/* Left side - Log Length */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Log Length
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {/* Number Input with Spinner */}
+                      <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {logLength}
+                        </span>
+                        <div className="flex flex-col">
+                          <button
+                            onClick={() => setLogLength((prev) => prev + 1)}
+                            className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
                           >
-                            <IconDownload size={18} stroke={2} className="w-[14px]" />
-                          </Button>
+                            <IconChevronUp size={12} stroke={1.5} />
+                          </button>
+                          <button
+                            onClick={() => setLogLength((prev) => Math.max(1, prev - 1))}
+                            className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
+                          >
+                            <IconChevronDown size={12} stroke={1.5} />
+                          </button>
                         </div>
                       </div>
+                      {/* Search Button */}
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                      >
+                        <IconSearch size={16} stroke={2} />
+                      </Button>
+                    </div>
+                  </div>
 
-                      {/* Console Area */}
-                      <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
-                        <pre className="font-mono text-body-md leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
-                          {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
+                  {/* Right side - View Full Log */}
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="text-[var(--color-text-default)]"
+                    >
+                      <IconTerminal2 size={14} stroke={1.5} />
+                      View Full Log
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                    >
+                      <IconDownload size={18} stroke={2} className="w-[14px]" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Console Area */}
+                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
+                  <pre className="font-mono text-body-md leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
+                    {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
 [    1.456789] systemd[1]: Reached target Cloud-init Pre-Networking.
@@ -2051,238 +1990,233 @@ export function InstanceDetailPage() {
 [    8.000000] systemd[1]: Reached target Cloud-init Final.
 [    9.123456] cloud-init[500]: VM boot completed in 9.12 seconds.
 [   10.000000] *** NOTICE: Unauthorized access to this system is prohibited. ***`}
-                        </pre>
-                      </div>
-                    </VStack>
-                  </TabPanel>
+                  </pre>
+                </div>
+              </VStack>
+            </TabPanel>
 
-                  {/* Action Logs Tab Panel */}
-                  <TabPanel value="action-logs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Action logs
-                        </h2>
-                      </div>
+            {/* Action Logs Tab Panel */}
+            <TabPanel value="action-logs" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Action logs</h2>
+                </div>
 
-                      {/* Search and Download */}
-                      <div className="flex items-center gap-1">
-                        <SearchInput
-                          placeholder="Search action logs by attributes"
-                          value={actionLogSearchQuery}
-                          onChange={(e) => {
-                            setActionLogSearchQuery(e.target.value);
-                            setActionLogCurrentPage(1);
-                          }}
-                          className="w-[var(--search-input-width)]"
-                        />
-                        <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                          <IconDownload size={12} stroke={2} className="w-3 h-3" />
-                        </Button>
-                      </div>
+                {/* Search and Download */}
+                <div className="flex items-center gap-1">
+                  <SearchInput
+                    placeholder="Search action logs by attributes"
+                    value={actionLogSearchQuery}
+                    onChange={(e) => {
+                      setActionLogSearchQuery(e.target.value);
+                      setActionLogCurrentPage(1);
+                    }}
+                    className="w-[var(--search-input-width)]"
+                  />
+                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
+                    <IconDownload size={12} stroke={2} className="w-3 h-3" />
+                  </Button>
+                </div>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={actionLogCurrentPage}
-                        totalPages={actionLogTotalPages}
-                        onPageChange={setActionLogCurrentPage}
-                        totalItems={filteredActionLogs.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                      />
+                {/* Pagination */}
+                <Pagination
+                  currentPage={actionLogCurrentPage}
+                  totalPages={actionLogTotalPages}
+                  onPageChange={setActionLogCurrentPage}
+                  totalItems={filteredActionLogs.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                />
 
-                      {/* Action Logs Table */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('operationName')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Action
-                              </span>
-                              {actionLogSortKey === 'operationName' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestId')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Request ID
-                              </span>
-                              {actionLogSortKey === 'requestId' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestedTime')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Requested Time
-                              </span>
-                              {actionLogSortKey === 'requestedTime' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Table Rows */}
-                        {filteredActionLogs
-                          .slice(
-                            (actionLogCurrentPage - 1) * actionLogRowsPerPage,
-                            actionLogCurrentPage * actionLogRowsPerPage
+                {/* Action Logs Table */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('operationName')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Action
+                        </span>
+                        {actionLogSortKey === 'operationName' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
                           )
-                          .map((log) => {
-                            const isExpanded = expandedLogIds.has(log.id);
-                            return (
-                              <div
-                                key={log.id}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                              >
-                                {/* Main Row */}
-                                <div className="flex items-center w-full">
-                                  <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
-                                    <button
-                                      onClick={() => toggleLogExpansion(log.id)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      {isExpanded ? (
-                                        <IconChevronDown
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      ) : (
-                                        <IconChevronRight
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      )}
-                                    </button>
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.operationName}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestId}
-                                    </span>
-                                    <button
-                                      onClick={() => copyToClipboard(log.requestId)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconCopy
-                                        size={12}
-                                        stroke={1.5}
-                                        className="text-[var(--color-action-primary)]"
-                                      />
-                                    </button>
-                                  </div>
-                                  <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestedTime}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* Expanded Details */}
-                                {isExpanded && (
-                                  <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Result :</span>
-                                      <span>{log.result}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Start Time :</span>
-                                      <span>{log.startTime}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">End Time :</span>
-                                      <span>{log.endTime}</span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestId')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Request ID
+                        </span>
+                        {actionLogSortKey === 'requestId' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestedTime')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Requested Time
+                        </span>
+                        {actionLogSortKey === 'requestedTime' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Table Rows */}
+                  {filteredActionLogs
+                    .slice(
+                      (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+                      actionLogCurrentPage * actionLogRowsPerPage
+                    )
+                    .map((log) => {
+                      const isExpanded = expandedLogIds.has(log.id);
+                      return (
+                        <div
+                          key={log.id}
+                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                        >
+                          {/* Main Row */}
+                          <div className="flex items-center w-full">
+                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
+                              <button
+                                onClick={() => toggleLogExpansion(log.id)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                {isExpanded ? (
+                                  <IconChevronDown
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                ) : (
+                                  <IconChevronRight
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                )}
+                              </button>
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.operationName}
+                              </span>
+                            </div>
+                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestId}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(log.requestId)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconCopy
+                                  size={12}
+                                  stroke={1.5}
+                                  className="text-[var(--color-action-primary)]"
+                                />
+                              </button>
+                            </div>
+                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestedTime}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Expanded Details */}
+                          {isExpanded && (
+                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Result :</span>
+                                <span>{log.result}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Start Time :</span>
+                                <span>{log.startTime}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">End Time :</span>
+                                <span>{log.endTime}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

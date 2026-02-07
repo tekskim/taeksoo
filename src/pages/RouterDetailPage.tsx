@@ -18,6 +18,7 @@ import {
   SearchInput,
   Pagination,
   ContextMenu,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -316,6 +317,7 @@ export default function RouterDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Port state
@@ -549,323 +551,286 @@ export default function RouterDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Router Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{router.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
+              Connect subnet
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
+                { label: 'External gateway Setting', onClick: () => {} },
+                { label: 'Enable SNAT', onClick: () => {} },
+                { label: 'Disable SNAT', onClick: () => {} },
+                { label: 'Create static Route', onClick: () => {} },
+                { label: 'Edit', onClick: () => {} },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value="Available"
+              status={routerStatusMap[router.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={router.id} copyable />
+            <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
+            <DetailHeader.InfoCard label="Access" value={router.access} />
+            <DetailHeader.InfoCard
+              label="External gateway"
+              value={router.externalGateway ? 'Yes' : 'No'}
+            />
+            <DetailHeader.InfoCard label="Created at" value={router.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Router Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="ports">Ports</Tab>
+              <Tab value="static-routes">Static routes</Tab>
+            </TabList>
 
-          {/* Top Bar with Breadcrumb */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Router name" value={router.routerName} />
+                    <SectionCard.DataRow
+                      label="AZ(Availability zone)"
+                      value={router.availabilityZone}
+                    />
+                    <SectionCard.DataRow
+                      label="AZ(Availability zone) Hint"
+                      value={router.availabilityZoneHint}
+                    />
+                    <SectionCard.DataRow label="Description" value={router.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Router Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{router.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
+                {/* External network */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="External network"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                        Setting
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Network"
+                      value={
+                        router.network ? (
+                          <Link
+                            to={`/compute/networks/${router.network.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {router.network.name}
+                            <IconExternalLink
+                              size={12}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                    <SectionCard.DataRow label="SNAT" value={router.snat ? 'Yes' : 'No'} />
+                    <SectionCard.DataRow
+                      label="Subnet"
+                      value={
+                        router.subnet ? (
+                          <Link
+                            to={`/compute/subnets/${router.subnet.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {router.subnet.name}
+                            <IconExternalLink
+                              size={12}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                    <SectionCard.DataRow label="Gateway IP" value={router.gatewayIp} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Ports Tab Panel */}
+            <TabPanel value="ports" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                     Connect subnet
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={portSearchTerm}
+                      onChange={(e) => {
+                        setPortSearchTerm(e.target.value);
+                        setPortCurrentPage(1);
+                      }}
+                      placeholder="Search interface by attributes"
+                    />
+                  </div>
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconLink size={12} />}
+                    disabled={selectedPorts.length === 0}
+                  >
+                    Disconnect
+                  </Button>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={portCurrentPage}
+                  totalPages={totalPortPages}
+                  onPageChange={setPortCurrentPage}
+                  totalItems={filteredPorts.length}
+                  selectedCount={selectedPorts.length}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={portColumns}
+                  data={paginatedPorts}
+                  rowKey="id"
+                  sortBy={portSortBy}
+                  sortDirection={portSortDirection}
+                  onSort={handlePortSort}
+                  selectable
+                  selectedKeys={selectedPorts}
+                  onSelectionChange={setSelectedPorts}
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Static Routes Tab Panel */}
+            <TabPanel value="static-routes" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Static Route</h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create static Route
+                  </Button>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={routeSearchTerm}
+                      onChange={(e) => {
+                        setRouteSearchTerm(e.target.value);
+                        setRouteCurrentPage(1);
+                      }}
+                      placeholder="Search static route by attributes"
+                    />
+                  </div>
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />} disabled>
                     Delete
                   </Button>
-                  <ContextMenu
-                    items={[
-                      { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
-                      { label: 'External gateway Setting', onClick: () => {} },
-                      { label: 'Enable SNAT', onClick: () => {} },
-                      { label: 'Disable SNAT', onClick: () => {} },
-                      { label: 'Create static Route', onClick: () => {} },
-                      { label: 'Edit', onClick: () => {} },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value="Available"
-                    status={routerStatusMap[router.status]}
-                  />
-                  <DetailHeader.InfoCard label="ID" value={router.id} copyable />
-                  <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
-                  <DetailHeader.InfoCard label="Access" value={router.access} />
-                  <DetailHeader.InfoCard
-                    label="External gateway"
-                    value={router.externalGateway ? 'Yes' : 'No'}
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={router.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* Router Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="ports">Ports</Tab>
-                    <Tab value="static-routes">Static routes</Tab>
-                  </TabList>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={routeCurrentPage}
+                  totalPages={totalRoutePages}
+                  onPageChange={setRouteCurrentPage}
+                  totalItems={filteredRoutes.length}
+                  selectedCount={selectedRoutes.length}
+                />
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Router name" value={router.routerName} />
-                          <SectionCard.DataRow
-                            label="AZ(Availability zone)"
-                            value={router.availabilityZone}
-                          />
-                          <SectionCard.DataRow
-                            label="AZ(Availability zone) Hint"
-                            value={router.availabilityZoneHint}
-                          />
-                          <SectionCard.DataRow label="Description" value={router.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* External network */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="External network"
-                          actions={
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconSettings size={12} />}
-                            >
-                              Setting
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Network"
-                            value={
-                              router.network ? (
-                                <Link
-                                  to={`/compute/networks/${router.network.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {router.network.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                          <SectionCard.DataRow label="SNAT" value={router.snat ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow
-                            label="Subnet"
-                            value={
-                              router.subnet ? (
-                                <Link
-                                  to={`/compute/subnets/${router.subnet.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {router.subnet.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                          <SectionCard.DataRow label="Gateway IP" value={router.gatewayIp} />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Ports Tab Panel */}
-                  <TabPanel value="ports" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Connect subnet
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={portSearchTerm}
-                            onChange={(e) => {
-                              setPortSearchTerm(e.target.value);
-                              setPortCurrentPage(1);
-                            }}
-                            placeholder="Search interface by attributes"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconLink size={12} />}
-                          disabled={selectedPorts.length === 0}
-                        >
-                          Disconnect
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={portCurrentPage}
-                        totalPages={totalPortPages}
-                        onPageChange={setPortCurrentPage}
-                        totalItems={filteredPorts.length}
-                        selectedCount={selectedPorts.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={portColumns}
-                        data={paginatedPorts}
-                        rowKey="id"
-                        sortBy={portSortBy}
-                        sortDirection={portSortDirection}
-                        onSort={handlePortSort}
-                        selectable
-                        selectedKeys={selectedPorts}
-                        onSelectionChange={setSelectedPorts}
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Static Routes Tab Panel */}
-                  <TabPanel value="static-routes" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Static Route
-                        </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create static Route
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={routeSearchTerm}
-                            onChange={(e) => {
-                              setRouteSearchTerm(e.target.value);
-                              setRouteCurrentPage(1);
-                            }}
-                            placeholder="Search static route by attributes"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={routeCurrentPage}
-                        totalPages={totalRoutePages}
-                        onPageChange={setRouteCurrentPage}
-                        totalItems={filteredRoutes.length}
-                        selectedCount={selectedRoutes.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={staticRouteColumns}
-                        data={paginatedRoutes}
-                        rowKey="id"
-                        selectable
-                        selectedKeys={selectedRoutes}
-                        onSelectionChange={setSelectedRoutes}
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table
+                  columns={staticRouteColumns}
+                  data={paginatedRoutes}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedRoutes}
+                  onSelectionChange={setSelectedRoutes}
+                />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

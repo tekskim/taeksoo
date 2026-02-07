@@ -13,6 +13,7 @@ import {
   Button,
   ContextMenu,
   DetailHeader,
+  PageShell,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -246,16 +247,12 @@ export function SecretDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -264,8 +261,8 @@ export function SecretDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -315,175 +312,8 @@ export function SecretDetailPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Secret: {secretData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={secretData.status}
-                    status={
-                      secretData.status === 'Active'
-                        ? 'active'
-                        : secretData.status === 'Pending'
-                          ? 'pending'
-                          : 'error'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={
-                      <span
-                        className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/namespaces/${secretData.namespace}`)}
-                      >
-                        {secretData.namespace}
-                      </span>
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Secret type" value={secretData.secretType} />
-                  <DetailHeader.InfoCard label="Created at" value={secretData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      labelsCount > 0
-                        ? Object.entries(secretData.labels)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : '-'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      annotationsCount > 0
-                        ? Object.entries(secretData.annotations)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : '-'
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="data">Data</Tab>
-                </TabList>
-
-                {/* Data Tab */}
-                <TabPanel value="data">
-                  {/* Data Section */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
-                    <VStack gap={3}>
-                      {/* Section Header */}
-                      <HStack gap={1} align="center">
-                        <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                          Data
-                        </span>
-                        <span className="text-label-lg leading-[20px] text-[var(--color-text-subtle)]">
-                          ({dataEntries.length})
-                        </span>
-                      </HStack>
-
-                      {/* Data Entries */}
-                      {dataEntries.length > 0 ? (
-                        <VStack gap={3}>
-                          {dataEntries.map(([key, value], index) => (
-                            <HStack key={key} gap={2} align="end" className="w-full">
-                              {/* Key Column */}
-                              <div className="w-[240px]">
-                                {index === 0 && (
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Key
-                                  </label>
-                                )}
-                                <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center">
-                                  {key}
-                                </div>
-                              </div>
-                              {/* Value Column */}
-                              <div className="flex-1">
-                                {index === 0 && (
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Value
-                                  </label>
-                                )}
-                                <div className="w-full h-[36px] px-2.5 py-1.5 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
-                                  <span className="truncate font-mono">
-                                    {visibleValues[key] ? value : maskValue(value)}
-                                  </span>
-                                  <HStack gap={2} className="flex-shrink-0">
-                                    <button
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      onClick={() => toggleValueVisibility(key)}
-                                      aria-label={visibleValues[key] ? 'Hide value' : 'Show value'}
-                                    >
-                                      {visibleValues[key] ? (
-                                        <IconEyeOff
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      ) : (
-                                        <IconEye
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      )}
-                                    </button>
-                                    <button
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      onClick={() => copyToClipboard(value)}
-                                      aria-label="Copy value"
-                                    >
-                                      <IconCopy
-                                        size={16}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </HStack>
-                                </div>
-                              </div>
-                            </HStack>
-                          ))}
-                        </VStack>
-                      ) : (
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          No data entries.
-                        </p>
-                      )}
-                    </VStack>
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-
-        {/* Shell Panel */}
+      }
+      bottomPanel={
         <ShellPanel
           tabs={shellPanel.tabs}
           activeTabId={shellPanel.activeTabId}
@@ -492,8 +322,169 @@ export function SecretDetailPage() {
           onTabClose={shellPanel.closeTab}
           onToggleExpand={() => shellPanel.setIsExpanded(!shellPanel.isExpanded)}
           onOpenInNewTab={handleOpenInNewTab}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
         />
-      </main>
-    </div>
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Secret: {secretData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={secretData.status}
+              status={
+                secretData.status === 'Active'
+                  ? 'active'
+                  : secretData.status === 'Pending'
+                    ? 'pending'
+                    : 'error'
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Namespace"
+              value={
+                <span
+                  className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/namespaces/${secretData.namespace}`)}
+                >
+                  {secretData.namespace}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Secret type" value={secretData.secretType} />
+            <DetailHeader.InfoCard label="Created at" value={secretData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                labelsCount > 0
+                  ? Object.entries(secretData.labels)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : '-'
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                annotationsCount > 0
+                  ? Object.entries(secretData.annotations)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : '-'
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <TabList>
+            <Tab value="data">Data</Tab>
+          </TabList>
+
+          {/* Data Tab */}
+          <TabPanel value="data">
+            {/* Data Section */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
+              <VStack gap={3}>
+                {/* Section Header */}
+                <HStack gap={1} align="center">
+                  <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Data
+                  </span>
+                  <span className="text-label-lg leading-[20px] text-[var(--color-text-subtle)]">
+                    ({dataEntries.length})
+                  </span>
+                </HStack>
+
+                {/* Data Entries */}
+                {dataEntries.length > 0 ? (
+                  <VStack gap={3}>
+                    {dataEntries.map(([key, value], index) => (
+                      <HStack key={key} gap={2} align="end" className="w-full">
+                        {/* Key Column */}
+                        <div className="w-[240px]">
+                          {index === 0 && (
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Key
+                            </label>
+                          )}
+                          <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center">
+                            {key}
+                          </div>
+                        </div>
+                        {/* Value Column */}
+                        <div className="flex-1">
+                          {index === 0 && (
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Value
+                            </label>
+                          )}
+                          <div className="w-full h-[36px] px-2.5 py-1.5 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
+                            <span className="truncate font-mono">
+                              {visibleValues[key] ? value : maskValue(value)}
+                            </span>
+                            <HStack gap={2} className="flex-shrink-0">
+                              <button
+                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                onClick={() => toggleValueVisibility(key)}
+                                aria-label={visibleValues[key] ? 'Hide value' : 'Show value'}
+                              >
+                                {visibleValues[key] ? (
+                                  <IconEyeOff
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                ) : (
+                                  <IconEye
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                )}
+                              </button>
+                              <button
+                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                onClick={() => copyToClipboard(value)}
+                                aria-label="Copy value"
+                              >
+                                <IconCopy
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </HStack>
+                          </div>
+                        </div>
+                      </HStack>
+                    ))}
+                  </VStack>
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">No data entries.</p>
+                )}
+              </VStack>
+            </div>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }

@@ -13,6 +13,7 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -227,6 +228,7 @@ export function VolumeBackupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Get backup data based on the ID
@@ -258,141 +260,121 @@ export function VolumeBackupDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/volume-backups')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Backup Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{backup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create volume
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
+              Restore backup
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={statusDisplayMap[backup.status]}
+              status={statusIndicatorMap[backup.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={backup.id} copyable />
+            <DetailHeader.InfoCard label="Size" value={backup.size} />
+            <DetailHeader.InfoCard label="Created at" value={backup.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Backup Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/volume-backups')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Backup Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{backup.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create volume
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
-                    Restore backup
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={statusDisplayMap[backup.status]}
-                    status={statusIndicatorMap[backup.status]}
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
                   />
-                  <DetailHeader.InfoCard label="ID" value={backup.id} copyable />
-                  <DetailHeader.InfoCard label="Size" value={backup.size} />
-                  <DetailHeader.InfoCard label="Created at" value={backup.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Volume backup Name" value={backup.name} />
+                    <SectionCard.DataRow label="Description" value={backup.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Backup Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                  </TabList>
+                {/* Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Source" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Volume">
+                      <Link
+                        to={`/compute/volumes/${backup.sourceVolumeId}`}
+                        className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                      >
+                        {backup.sourceVolume}
+                        <IconExternalLink size={12} stroke={1.5} />
+                      </Link>
+                    </SectionCard.DataRow>
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Volume backup Name" value={backup.name} />
-                          <SectionCard.DataRow label="Description" value={backup.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Source" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Volume">
-                            <Link
-                              to={`/compute/volumes/${backup.sourceVolumeId}`}
-                              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
-                            >
-                              {backup.sourceVolume}
-                              <IconExternalLink size={12} stroke={1.5} />
-                            </Link>
-                          </SectionCard.DataRow>
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specifications" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Size" value={backup.size} />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Size" value={backup.size} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

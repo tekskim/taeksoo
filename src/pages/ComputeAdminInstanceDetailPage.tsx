@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
   type ContextMenuItem,
   fixedColumns,
 } from '@/design-system';
@@ -846,6 +847,7 @@ const mockActionLogs: ActionLog[] = [
 export function ComputeAdminInstanceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [selectedNetworkInterface, setSelectedNetworkInterface] = useState(
     mockNetworkInterfaces[0]?.id || ''
@@ -949,898 +951,868 @@ export function ComputeAdminInstanceDetailPage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Instances list', href: '/compute-admin/instances' },
-                  { label: instance.name },
-                ]}
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Instances list', href: '/compute-admin/instances' },
+                { label: instance.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Instance Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>
+            {instance.locked && (
+              <IconLock
+                size={16}
+                stroke={1.5}
+                className="inline-block mr-1.5 text-[var(--color-text-default)]"
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            )}
+            {instance.name}
+          </DetailHeader.Title>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Instance Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>
-                  {instance.locked && (
-                    <IconLock
-                      size={16}
-                      stroke={1.5}
-                      className="inline-block mr-1.5 text-[var(--color-text-default)]"
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+              Console
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Start
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+              Stop
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+              Reboot
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                {
+                  id: 'instance-status',
+                  label: 'Instance status',
+                  submenu: [
+                    {
+                      id: 'soft-reboot',
+                      label: 'Soft reboot',
+                      onClick: () => console.log('Soft reboot instance'),
+                    },
+                    {
+                      id: 'pause',
+                      label: 'Pause',
+                      onClick: () => console.log('Pause instance'),
+                    },
+                    {
+                      id: 'suspend',
+                      label: 'Suspend',
+                      onClick: () => console.log('Suspend instance'),
+                    },
+                    {
+                      id: 'shelve',
+                      label: 'Shelve',
+                      onClick: () => console.log('Shelve instance'),
+                    },
+                    {
+                      id: 'unpause',
+                      label: 'Unpause',
+                      onClick: () => console.log('Unpause instance'),
+                    },
+                    {
+                      id: 'resume',
+                      label: 'Resume',
+                      onClick: () => console.log('Resume instance'),
+                    },
+                    {
+                      id: 'unshelve',
+                      label: 'Unshelve',
+                      onClick: () => console.log('Unshelve instance'),
+                    },
+                    {
+                      id: 'rescue',
+                      label: 'Rescue',
+                      onClick: () => console.log('Rescue instance'),
+                    },
+                    {
+                      id: 'unrescue',
+                      label: 'Unrescue',
+                      onClick: () => console.log('Unrescue instance'),
+                    },
+                  ],
+                },
+                {
+                  id: 'configuration',
+                  label: 'Configuration',
+                  submenu: [
+                    {
+                      id: 'lock-setting',
+                      label: 'Lock setting',
+                      onClick: () => console.log('Lock setting'),
+                    },
+                    {
+                      id: 'edit',
+                      label: 'Edit',
+                      onClick: () => console.log('Edit instance'),
+                    },
+                  ],
+                },
+                {
+                  id: 'migrate',
+                  label: 'Migrate',
+                  onClick: () => console.log('Migrate instance'),
+                },
+                {
+                  id: 'live-migrate',
+                  label: 'Live migrate',
+                  onClick: () => console.log('Live migrate instance'),
+                },
+                {
+                  id: 'confirm-resize',
+                  label: 'Confirm resize',
+                  onClick: () => console.log('Confirm resize'),
+                },
+                {
+                  id: 'revert-resize',
+                  label: 'Revert resize',
+                  onClick: () => console.log('Revert resize'),
+                },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
+            <DetailHeader.InfoCard label="Host" value={instance.host} />
+            <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Instance Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="volumes">Volumes</Tab>
+              <Tab value="interfaces">Interfaces</Tab>
+              <Tab value="floating-ips">Floating IPs</Tab>
+              <Tab value="security">Security</Tab>
+              <Tab value="snapshots">Instance snapshots</Tab>
+              <Tab value="monitoring">Monitoring</Tab>
+              <Tab value="resource-map">Resource map</Tab>
+              <Tab value="logs">Logs</Tab>
+              <Tab value="action-logs">Action logs</Tab>
+            </TabList>
+
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Instance name" value={instance.name} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={instance.availabilityZone}
                     />
+                    <SectionCard.DataRow label="Description" value={instance.description} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Flavor */}
+                <SectionCard>
+                  <SectionCard.Header title="Flavor" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Flavor name"
+                      value={instance.flavor.name}
+                      isLink
+                      linkHref="/flavors"
+                    />
+                    <SectionCard.DataRow
+                      label="Spec"
+                      value={`vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Source" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={instance.imageName || 'image-01'}
+                      isLink
+                      linkHref="/compute-admin/images"
+                    />
+                    <SectionCard.DataRow label="OS" value={instance.image} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Authentication */}
+                <SectionCard>
+                  <SectionCard.Header title="Authentication" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Key pair" value={instance.keyPair} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header title="Advanced" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Tags"
+                      value={
+                        <div className="flex gap-1.5">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                            <span className="text-[var(--color-text-default)]">Team</span>
+                            <span className="text-[var(--color-border-default)]">|</span>
+                            <span className="text-[var(--color-text-default)]">dev</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                            <span className="text-[var(--color-text-default)]">Env</span>
+                            <span className="text-[var(--color-border-default)]">|</span>
+                            <span className="text-[var(--color-text-default)]">prod</span>
+                          </span>
+                        </div>
+                      }
+                    />
+                    <SectionCard.DataRow
+                      label="Server group"
+                      value={instance.serverGroup}
+                      isLink
+                      linkHref="/compute-admin/server-groups"
+                    />
+                    <SectionCard.DataRow label="User Data" value="Provided at creation" />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Volumes Tab Panel */}
+            <TabPanel value="volumes" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h2>
+                </div>
+
+                {/* Search */}
+                <SearchInput placeholder="Search volume by attributes" size="sm" />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={1}
+                  totalItems={10}
+                  onPageChange={() => {}}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_, row: AttachedVolume) => (
+                        <StatusIndicator status={row.status as any} layout="icon-only" />
+                      ),
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      render: (value: string, row: AttachedVolume) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/volumes/${row.id}`}
+                            className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {value}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'size',
+                      label: 'Size',
+                      sortable: true,
+                    },
+                    {
+                      key: 'type',
+                      label: 'Type',
+                      sortable: true,
+                    },
+                    {
+                      key: 'diskTag',
+                      label: 'Disk tag',
+                      sortable: true,
+                    },
+                    {
+                      key: 'bootable',
+                      label: 'Bootable',
+                      render: (value: boolean) => (value ? 'Yes' : 'No'),
+                    },
+                    {
+                      key: 'access',
+                      label: 'Created at',
+                      sortable: true,
+                    },
+                  ]}
+                  data={mockAttachedVolumes}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Interfaces Tab Panel */}
+            <TabPanel value="interfaces" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
+                </div>
+
+                {/* Search */}
+                <SearchInput placeholder="Search interface by attributes" size="sm" />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={interfaceCurrentPage}
+                  totalPages={interfaceTotalPages}
+                  onPageChange={setInterfaceCurrentPage}
+                  totalItems={mockAttachedInterfaces.length}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, iface: AttachedInterface) => {
+                        const statusMap: Record<
+                          string,
+                          'active' | 'down' | 'building' | 'shutoff'
+                        > = {
+                          Active: 'active',
+                          Inactive: 'shutoff',
+                          Down: 'down',
+                          Build: 'building',
+                        };
+                        return (
+                          <StatusIndicator
+                            status={statusMap[iface.portStatus] || 'down'}
+                            layout="icon-only"
+                          />
+                        );
+                      },
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/ports/${iface.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {iface.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'network',
+                      label: 'Network',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/networks/${iface.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {iface.network}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'fixedIp',
+                      label: 'Fixed IP',
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.fixedIp}</span>
+                      ),
+                    },
+                    {
+                      key: 'macAddress',
+                      label: 'Mac address',
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
+                      ),
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
+                      ),
+                    },
+                  ]}
+                  data={mockAttachedInterfaces.slice(
+                    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+                    interfaceCurrentPage * interfaceRowsPerPage
                   )}
-                  {instance.name}
-                </DetailHeader.Title>
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
 
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
-                    Console
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
-                    Start
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
-                    Stop
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
-                    Reboot
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <ContextMenu
-                    items={[
-                      {
-                        id: 'instance-status',
-                        label: 'Instance status',
-                        submenu: [
-                          {
-                            id: 'soft-reboot',
-                            label: 'Soft reboot',
-                            onClick: () => console.log('Soft reboot instance'),
-                          },
-                          {
-                            id: 'pause',
-                            label: 'Pause',
-                            onClick: () => console.log('Pause instance'),
-                          },
-                          {
-                            id: 'suspend',
-                            label: 'Suspend',
-                            onClick: () => console.log('Suspend instance'),
-                          },
-                          {
-                            id: 'shelve',
-                            label: 'Shelve',
-                            onClick: () => console.log('Shelve instance'),
-                          },
-                          {
-                            id: 'unpause',
-                            label: 'Unpause',
-                            onClick: () => console.log('Unpause instance'),
-                          },
-                          {
-                            id: 'resume',
-                            label: 'Resume',
-                            onClick: () => console.log('Resume instance'),
-                          },
-                          {
-                            id: 'unshelve',
-                            label: 'Unshelve',
-                            onClick: () => console.log('Unshelve instance'),
-                          },
-                          {
-                            id: 'rescue',
-                            label: 'Rescue',
-                            onClick: () => console.log('Rescue instance'),
-                          },
-                          {
-                            id: 'unrescue',
-                            label: 'Unrescue',
-                            onClick: () => console.log('Unrescue instance'),
-                          },
-                        ],
-                      },
-                      {
-                        id: 'configuration',
-                        label: 'Configuration',
-                        submenu: [
-                          {
-                            id: 'lock-setting',
-                            label: 'Lock setting',
-                            onClick: () => console.log('Lock setting'),
-                          },
-                          {
-                            id: 'edit',
-                            label: 'Edit',
-                            onClick: () => console.log('Edit instance'),
-                          },
-                        ],
-                      },
-                      {
-                        id: 'migrate',
-                        label: 'Migrate',
-                        onClick: () => console.log('Migrate instance'),
-                      },
-                      {
-                        id: 'live-migrate',
-                        label: 'Live migrate',
-                        onClick: () => console.log('Live migrate instance'),
-                      },
-                      {
-                        id: 'confirm-resize',
-                        label: 'Confirm resize',
-                        onClick: () => console.log('Confirm resize'),
-                      },
-                      {
-                        id: 'revert-resize',
-                        label: 'Revert resize',
-                        onClick: () => console.log('Revert resize'),
-                      },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
+            {/* Floating IPs Tab Panel */}
+            <TabPanel value="floating-ips" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h2>
+                </div>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
-                  <DetailHeader.InfoCard label="Host" value={instance.host} />
-                  <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                {/* Search */}
+                <SearchInput placeholder="Search floating IP by attributes" size="sm" />
 
-              {/* Instance Tabs */}
-              <div className="w-full">
+                {/* Pagination */}
+                <Pagination
+                  currentPage={floatingIpCurrentPage}
+                  totalPages={floatingIpTotalPages}
+                  onPageChange={setFloatingIpCurrentPage}
+                  totalItems={mockFloatingIPs.length}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, row: FloatingIP) => (
+                        <StatusIndicator status={row.status} layout="icon-only" size="md" />
+                      ),
+                    },
+                    {
+                      key: 'floatingIp',
+                      label: 'Floating IP',
+                      render: (_value: string, row: FloatingIP) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/floating-ips/${row.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {row.floatingIp}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'fixedIp',
+                      label: 'Fixed IP',
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      sortable: true,
+                    },
+                  ]}
+                  data={mockFloatingIPs.slice(
+                    (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
+                    floatingIpCurrentPage * floatingIpRowsPerPage
+                  )}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Security Tab Panel */}
+            <TabPanel value="security" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Security groups
+                  </h2>
+                </div>
+
+                {/* Network Interface Toggle */}
                 <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
+                  value={selectedNetworkInterface}
+                  onChange={setSelectedNetworkInterface}
+                  variant="boxed"
                   size="sm"
                 >
                   <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="volumes">Volumes</Tab>
-                    <Tab value="interfaces">Interfaces</Tab>
-                    <Tab value="floating-ips">Floating IPs</Tab>
-                    <Tab value="security">Security</Tab>
-                    <Tab value="snapshots">Instance snapshots</Tab>
-                    <Tab value="monitoring">Monitoring</Tab>
-                    <Tab value="resource-map">Resource map</Tab>
-                    <Tab value="logs">Logs</Tab>
-                    <Tab value="action-logs">Action logs</Tab>
+                    {mockNetworkInterfaces.map((net) => (
+                      <Tab key={net.id} value={net.id}>
+                        {net.name}({net.ip})
+                      </Tab>
+                    ))}
                   </TabList>
+                </Tabs>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Instance name" value={instance.name} />
-                          <SectionCard.DataRow
-                            label="Availability zone"
-                            value={instance.availabilityZone}
-                          />
-                          <SectionCard.DataRow label="Description" value={instance.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Search */}
+                <SearchInput placeholder="Search security group by attributes" size="sm" />
 
-                      {/* Flavor */}
-                      <SectionCard>
-                        <SectionCard.Header title="Flavor" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Flavor name"
-                            value={instance.flavor.name}
-                            isLink
-                            linkHref="/flavors"
-                          />
-                          <SectionCard.DataRow
-                            label="Spec"
-                            value={`vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={securityCurrentPage}
+                  totalPages={securityTotalPages}
+                  onPageChange={setSecurityCurrentPage}
+                  totalItems={mockSecurityGroups.length}
+                />
 
-                      {/* Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Source" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Image"
-                            value={instance.imageName || 'image-01'}
-                            isLink
-                            linkHref="/compute-admin/images"
-                          />
-                          <SectionCard.DataRow label="OS" value={instance.image} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Authentication */}
-                      <SectionCard>
-                        <SectionCard.Header title="Authentication" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Key pair" value={instance.keyPair} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header title="Advanced" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Tags"
-                            value={
-                              <div className="flex gap-1.5">
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                                  <span className="text-[var(--color-text-default)]">Team</span>
-                                  <span className="text-[var(--color-border-default)]">|</span>
-                                  <span className="text-[var(--color-text-default)]">dev</span>
-                                </span>
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                                  <span className="text-[var(--color-text-default)]">Env</span>
-                                  <span className="text-[var(--color-border-default)]">|</span>
-                                  <span className="text-[var(--color-text-default)]">prod</span>
-                                </span>
-                              </div>
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="Server group"
-                            value={instance.serverGroup}
-                            isLink
-                            linkHref="/compute-admin/server-groups"
-                          />
-                          <SectionCard.DataRow label="User Data" value="Provided at creation" />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Volumes Tab Panel */}
-                  <TabPanel value="volumes" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Volumes
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput placeholder="Search volume by attributes" size="sm" />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={1}
-                        totalItems={10}
-                        onPageChange={() => {}}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_, row: AttachedVolume) => (
-                              <StatusIndicator status={row.status as any} layout="icon-only" />
-                            ),
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            render: (value: string, row: AttachedVolume) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/volumes/${row.id}`}
-                                  className="flex items-center gap-1.5 text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {value}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'size',
-                            label: 'Size',
-                            sortable: true,
-                          },
-                          {
-                            key: 'type',
-                            label: 'Type',
-                            sortable: true,
-                          },
-                          {
-                            key: 'diskTag',
-                            label: 'Disk tag',
-                            sortable: true,
-                          },
-                          {
-                            key: 'bootable',
-                            label: 'Bootable',
-                            render: (value: boolean) => (value ? 'Yes' : 'No'),
-                          },
-                          {
-                            key: 'access',
-                            label: 'Created at',
-                            sortable: true,
-                          },
-                        ]}
-                        data={mockAttachedVolumes}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Interfaces Tab Panel */}
-                  <TabPanel value="interfaces" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Interfaces
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput placeholder="Search interface by attributes" size="sm" />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={interfaceCurrentPage}
-                        totalPages={interfaceTotalPages}
-                        onPageChange={setInterfaceCurrentPage}
-                        totalItems={mockAttachedInterfaces.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, iface: AttachedInterface) => {
-                              const statusMap: Record<
-                                string,
-                                'active' | 'down' | 'building' | 'shutoff'
-                              > = {
-                                Active: 'active',
-                                Inactive: 'shutoff',
-                                Down: 'down',
-                                Build: 'building',
-                              };
-                              return (
-                                <StatusIndicator
-                                  status={statusMap[iface.portStatus] || 'down'}
-                                  layout="icon-only"
-                                />
-                              );
-                            },
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/ports/${iface.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {iface.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'network',
-                            label: 'Network',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/networks/${iface.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {iface.network}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'fixedIp',
-                            label: 'Fixed IP',
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.fixedIp}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'macAddress',
-                            label: 'Mac address',
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.macAddress}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.createdAt}
-                              </span>
-                            ),
-                          },
-                        ]}
-                        data={mockAttachedInterfaces.slice(
-                          (interfaceCurrentPage - 1) * interfaceRowsPerPage,
-                          interfaceCurrentPage * interfaceRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Floating IPs Tab Panel */}
-                  <TabPanel value="floating-ips" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Floating IPs
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput placeholder="Search floating IP by attributes" size="sm" />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={floatingIpCurrentPage}
-                        totalPages={floatingIpTotalPages}
-                        onPageChange={setFloatingIpCurrentPage}
-                        totalItems={mockFloatingIPs.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, row: FloatingIP) => (
-                              <StatusIndicator status={row.status} layout="icon-only" size="md" />
-                            ),
-                          },
-                          {
-                            key: 'floatingIp',
-                            label: 'Floating IP',
-                            render: (_value: string, row: FloatingIP) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/floating-ips/${row.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {row.floatingIp}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'fixedIp',
-                            label: 'Fixed IP',
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            sortable: true,
-                          },
-                        ]}
-                        data={mockFloatingIPs.slice(
-                          (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
-                          floatingIpCurrentPage * floatingIpRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Security Tab Panel */}
-                  <TabPanel value="security" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Security groups
-                        </h2>
-                      </div>
-
-                      {/* Network Interface Toggle */}
-                      <Tabs
-                        value={selectedNetworkInterface}
-                        onChange={setSelectedNetworkInterface}
-                        variant="boxed"
-                        size="sm"
-                      >
-                        <TabList>
-                          {mockNetworkInterfaces.map((net) => (
-                            <Tab key={net.id} value={net.id}>
-                              {net.name}({net.ip})
-                            </Tab>
-                          ))}
-                        </TabList>
-                      </Tabs>
-
-                      {/* Search */}
-                      <SearchInput placeholder="Search security group by attributes" size="sm" />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={securityCurrentPage}
-                        totalPages={securityTotalPages}
-                        onPageChange={setSecurityCurrentPage}
-                        totalItems={mockSecurityGroups.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            render: (_value: string, row: SecurityGroup) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/security-groups/${row.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {row.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'description',
-                            label: 'Description',
-                            sortable: true,
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            sortable: true,
-                            render: (_value: string, row: SecurityGroup) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {row.createdAt}
-                              </span>
-                            ),
-                          },
-                        ]}
-                        data={mockSecurityGroups.slice(
-                          (securityCurrentPage - 1) * securityRowsPerPage,
-                          securityCurrentPage * securityRowsPerPage
-                        )}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Instance snapshots Tab Panel */}
-                  <TabPanel value="snapshots" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Instance snapshots
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search instance snapshot by attributes"
-                        value={snapshotSearchQuery}
-                        onChange={(e) => {
-                          setSnapshotSearchQuery(e.target.value);
-                          setSnapshotCurrentPage(1);
-                        }}
-                        size="sm"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={snapshotCurrentPage}
-                        totalPages={snapshotTotalPages}
-                        onPageChange={setSnapshotCurrentPage}
-                        totalItems={filteredSnapshots.length}
-                      />
-
-                      {/* Table */}
-                      <Table<InstanceSnapshot>
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, row: InstanceSnapshot) => (
-                              <StatusIndicator
-                                status={
-                                  row.status === 'active'
-                                    ? 'active'
-                                    : row.status === 'queued'
-                                      ? 'building'
-                                      : row.status === 'saving'
-                                        ? 'building'
-                                        : 'error'
-                                }
-                                layout="icon-only"
-                              />
-                            ),
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            render: (_value: string, row: InstanceSnapshot) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/instance-snapshots/${row.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {row.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'size',
-                            label: 'Size',
-                            sortable: true,
-                          },
-                          {
-                            key: 'diskFormat',
-                            label: 'Disk format',
-                            sortable: true,
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            sortable: true,
-                          },
-                          {
-                            key: 'action',
-                            label: 'Action',
-                            width: fixedColumns.actions,
-                            align: 'center',
-                            render: (_: unknown, row: InstanceSnapshot) => {
-                              const snapshotMenuItems: ContextMenuItem[] = [
-                                {
-                                  id: 'edit',
-                                  label: 'Edit',
-                                  onClick: () => console.log('Edit snapshot', row.id),
-                                },
-                                {
-                                  id: 'create-instance',
-                                  label: 'Create instance',
-                                  onClick: () => console.log('Create instance from', row.id),
-                                },
-                                {
-                                  id: 'create-volume',
-                                  label: 'Create volume',
-                                  onClick: () => console.log('Create volume from', row.id),
-                                },
-                                {
-                                  id: 'delete',
-                                  label: 'Delete',
-                                  status: 'danger',
-                                  onClick: () => console.log('Delete snapshot', row.id),
-                                },
-                              ];
-                              return (
-                                <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu
-                                    items={snapshotMenuItems}
-                                    trigger="click"
-                                    align="right"
-                                  >
-                                    <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                      <IconDotsCircleHorizontal
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--action-icon-color)]"
-                                      />
-                                    </button>
-                                  </ContextMenu>
-                                </div>
-                              );
-                            },
-                          },
-                        ]}
-                        data={filteredSnapshots.slice(
-                          (snapshotCurrentPage - 1) * snapshotRowsPerPage,
-                          snapshotCurrentPage * snapshotRowsPerPage
-                        )}
-                        rowKey="id"
-                        emptyMessage="No instance snapshots found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Monitoring Tab Panel */}
-                  <TabPanel value="monitoring" className="pt-0">
-                    <div className="pt-6">
-                      <p className="text-[var(--color-text-subtle)]">
-                        Monitoring content will be displayed here.
-                      </p>
-                    </div>
-                  </TabPanel>
-
-                  {/* Resource Map Tab Panel */}
-                  <TabPanel value="resource-map" className="pt-0">
-                    <div className="pt-6">
-                      <p className="text-[var(--color-text-subtle)]">
-                        Resource Map content will be displayed here.
-                      </p>
-                    </div>
-                  </TabPanel>
-
-                  {/* Logs Tab Panel */}
-                  <TabPanel value="logs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Console Logs
-                        </h2>
-                      </div>
-
-                      {/* Log Length Container */}
-                      <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
-                        {/* Left side - Log Length */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Log Length
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      render: (_value: string, row: SecurityGroup) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/security-groups/${row.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {row.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {row.id}
                           </span>
-                          <div className="flex items-center gap-1">
-                            {/* Number Input with Spinner */}
-                            <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {logLength}
-                              </span>
-                              <div className="flex flex-col">
-                                <button
-                                  onClick={() => setLogLength((prev) => prev + 1)}
-                                  className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
-                                >
-                                  <IconChevronUp size={12} stroke={1.5} />
-                                </button>
-                                <button
-                                  onClick={() => setLogLength((prev) => Math.max(1, prev - 1))}
-                                  className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
-                                >
-                                  <IconChevronDown size={12} stroke={1.5} />
-                                </button>
-                              </div>
-                            </div>
-                            {/* Search Button */}
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
-                            >
-                              <IconSearch size={16} stroke={2} />
-                            </Button>
-                          </div>
                         </div>
+                      ),
+                    },
+                    {
+                      key: 'description',
+                      label: 'Description',
+                      sortable: true,
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      sortable: true,
+                      render: (_value: string, row: SecurityGroup) => (
+                        <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
+                      ),
+                    },
+                  ]}
+                  data={mockSecurityGroups.slice(
+                    (securityCurrentPage - 1) * securityRowsPerPage,
+                    securityCurrentPage * securityRowsPerPage
+                  )}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
 
-                        {/* Right side - View Full Log */}
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="text-[var(--color-text-default)]"
+            {/* Instance snapshots Tab Panel */}
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Instance snapshots
+                  </h2>
+                </div>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search instance snapshot by attributes"
+                  value={snapshotSearchQuery}
+                  onChange={(e) => {
+                    setSnapshotSearchQuery(e.target.value);
+                    setSnapshotCurrentPage(1);
+                  }}
+                  size="sm"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={snapshotCurrentPage}
+                  totalPages={snapshotTotalPages}
+                  onPageChange={setSnapshotCurrentPage}
+                  totalItems={filteredSnapshots.length}
+                />
+
+                {/* Table */}
+                <Table<InstanceSnapshot>
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, row: InstanceSnapshot) => (
+                        <StatusIndicator
+                          status={
+                            row.status === 'active'
+                              ? 'active'
+                              : row.status === 'queued'
+                                ? 'building'
+                                : row.status === 'saving'
+                                  ? 'building'
+                                  : 'error'
+                          }
+                          layout="icon-only"
+                        />
+                      ),
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      render: (_value: string, row: InstanceSnapshot) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/instance-snapshots/${row.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
                           >
-                            <IconTerminal2 size={14} stroke={1.5} />
-                            View Full Log
-                          </Button>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                            {row.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {row.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'size',
+                      label: 'Size',
+                      sortable: true,
+                    },
+                    {
+                      key: 'diskFormat',
+                      label: 'Disk format',
+                      sortable: true,
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      sortable: true,
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center',
+                      render: (_: unknown, row: InstanceSnapshot) => {
+                        const snapshotMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'edit',
+                            label: 'Edit',
+                            onClick: () => console.log('Edit snapshot', row.id),
+                          },
+                          {
+                            id: 'create-instance',
+                            label: 'Create instance',
+                            onClick: () => console.log('Create instance from', row.id),
+                          },
+                          {
+                            id: 'create-volume',
+                            label: 'Create volume',
+                            onClick: () => console.log('Create volume from', row.id),
+                          },
+                          {
+                            id: 'delete',
+                            label: 'Delete',
+                            status: 'danger',
+                            onClick: () => console.log('Delete snapshot', row.id),
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
+                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
+                    },
+                  ]}
+                  data={filteredSnapshots.slice(
+                    (snapshotCurrentPage - 1) * snapshotRowsPerPage,
+                    snapshotCurrentPage * snapshotRowsPerPage
+                  )}
+                  rowKey="id"
+                  emptyMessage="No instance snapshots found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Monitoring Tab Panel */}
+            <TabPanel value="monitoring" className="pt-0">
+              <div className="pt-6">
+                <p className="text-[var(--color-text-subtle)]">
+                  Monitoring content will be displayed here.
+                </p>
+              </div>
+            </TabPanel>
+
+            {/* Resource Map Tab Panel */}
+            <TabPanel value="resource-map" className="pt-0">
+              <div className="pt-6">
+                <p className="text-[var(--color-text-subtle)]">
+                  Resource Map content will be displayed here.
+                </p>
+              </div>
+            </TabPanel>
+
+            {/* Logs Tab Panel */}
+            <TabPanel value="logs" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Console Logs</h2>
+                </div>
+
+                {/* Log Length Container */}
+                <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
+                  {/* Left side - Log Length */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Log Length
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {/* Number Input with Spinner */}
+                      <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {logLength}
+                        </span>
+                        <div className="flex flex-col">
+                          <button
+                            onClick={() => setLogLength((prev) => prev + 1)}
+                            className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
                           >
-                            <IconDownload size={18} stroke={2} />
-                          </Button>
+                            <IconChevronUp size={12} stroke={1.5} />
+                          </button>
+                          <button
+                            onClick={() => setLogLength((prev) => Math.max(1, prev - 1))}
+                            className="text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
+                          >
+                            <IconChevronDown size={12} stroke={1.5} />
+                          </button>
                         </div>
                       </div>
+                      {/* Search Button */}
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                      >
+                        <IconSearch size={16} stroke={2} />
+                      </Button>
+                    </div>
+                  </div>
 
-                      {/* Console Area */}
-                      <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
-                        <pre className="font-mono text-[13px] leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
-                          {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
+                  {/* Right side - View Full Log */}
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="text-[var(--color-text-default)]"
+                    >
+                      <IconTerminal2 size={14} stroke={1.5} />
+                      View Full Log
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
+                    >
+                      <IconDownload size={18} stroke={2} />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Console Area */}
+                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
+                  <pre className="font-mono text-[13px] leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
+                    {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
 [    1.456789] systemd[1]: Reached target Cloud-init Pre-Networking.
@@ -1852,235 +1824,230 @@ export function ComputeAdminInstanceDetailPage() {
 [    8.000000] systemd[1]: Reached target Cloud-init Final.
 [    9.123456] cloud-init[500]: VM boot completed in 9.12 seconds.
 [   10.000000] *** NOTICE: Unauthorized access to this system is prohibited. ***`}
-                        </pre>
-                      </div>
-                    </VStack>
-                  </TabPanel>
+                  </pre>
+                </div>
+              </VStack>
+            </TabPanel>
 
-                  {/* Action Logs Tab Panel */}
-                  <TabPanel value="action-logs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Action logs
-                        </h2>
-                      </div>
+            {/* Action Logs Tab Panel */}
+            <TabPanel value="action-logs" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Action logs</h2>
+                </div>
 
-                      {/* Search and Download */}
-                      <div className="flex items-center gap-1">
-                        <SearchInput
-                          placeholder="Search action logs by attributes"
-                          value={actionLogSearchQuery}
-                          onChange={(e) => {
-                            setActionLogSearchQuery(e.target.value);
-                            setActionLogCurrentPage(1);
-                          }}
-                        />
-                        <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                          <IconDownload size={12} stroke={2} className="w-3 h-3" />
-                        </Button>
-                      </div>
+                {/* Search and Download */}
+                <div className="flex items-center gap-1">
+                  <SearchInput
+                    placeholder="Search action logs by attributes"
+                    value={actionLogSearchQuery}
+                    onChange={(e) => {
+                      setActionLogSearchQuery(e.target.value);
+                      setActionLogCurrentPage(1);
+                    }}
+                  />
+                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
+                    <IconDownload size={12} stroke={2} className="w-3 h-3" />
+                  </Button>
+                </div>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={actionLogCurrentPage}
-                        totalPages={actionLogTotalPages}
-                        onPageChange={setActionLogCurrentPage}
-                        totalItems={filteredActionLogs.length}
-                      />
+                {/* Pagination */}
+                <Pagination
+                  currentPage={actionLogCurrentPage}
+                  totalPages={actionLogTotalPages}
+                  onPageChange={setActionLogCurrentPage}
+                  totalItems={filteredActionLogs.length}
+                />
 
-                      {/* Action Logs Table */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('operationName')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Action
-                              </span>
-                              {actionLogSortKey === 'operationName' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestId')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Request ID
-                              </span>
-                              {actionLogSortKey === 'requestId' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestedTime')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Requested Time
-                              </span>
-                              {actionLogSortKey === 'requestedTime' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Table Rows */}
-                        {filteredActionLogs
-                          .slice(
-                            (actionLogCurrentPage - 1) * actionLogRowsPerPage,
-                            actionLogCurrentPage * actionLogRowsPerPage
+                {/* Action Logs Table */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('operationName')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Action
+                        </span>
+                        {actionLogSortKey === 'operationName' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
                           )
-                          .map((log) => {
-                            const isExpanded = expandedLogIds.has(log.id);
-                            return (
-                              <div
-                                key={log.id}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                              >
-                                {/* Main Row */}
-                                <div className="flex items-center w-full">
-                                  <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
-                                    <button
-                                      onClick={() => toggleLogExpansion(log.id)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      {isExpanded ? (
-                                        <IconChevronDown
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      ) : (
-                                        <IconChevronRight
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      )}
-                                    </button>
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.operationName}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestId}
-                                    </span>
-                                    <button
-                                      onClick={() => copyToClipboard(log.requestId)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconCopy
-                                        size={12}
-                                        stroke={1.5}
-                                        className="text-[var(--color-action-primary)]"
-                                      />
-                                    </button>
-                                  </div>
-                                  <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestedTime}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* Expanded Details */}
-                                {isExpanded && (
-                                  <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Result :</span>
-                                      <span>{log.result}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Start Time :</span>
-                                      <span>{log.startTime}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">End Time :</span>
-                                      <span>{log.endTime}</span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestId')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Request ID
+                        </span>
+                        {actionLogSortKey === 'requestId' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestedTime')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Requested Time
+                        </span>
+                        {actionLogSortKey === 'requestedTime' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Table Rows */}
+                  {filteredActionLogs
+                    .slice(
+                      (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+                      actionLogCurrentPage * actionLogRowsPerPage
+                    )
+                    .map((log) => {
+                      const isExpanded = expandedLogIds.has(log.id);
+                      return (
+                        <div
+                          key={log.id}
+                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                        >
+                          {/* Main Row */}
+                          <div className="flex items-center w-full">
+                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
+                              <button
+                                onClick={() => toggleLogExpansion(log.id)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                {isExpanded ? (
+                                  <IconChevronDown
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                ) : (
+                                  <IconChevronRight
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                )}
+                              </button>
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.operationName}
+                              </span>
+                            </div>
+                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestId}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(log.requestId)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconCopy
+                                  size={12}
+                                  stroke={1.5}
+                                  className="text-[var(--color-action-primary)]"
+                                />
+                              </button>
+                            </div>
+                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestedTime}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Expanded Details */}
+                          {isExpanded && (
+                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Result :</span>
+                                <span>{log.result}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Start Time :</span>
+                                <span>{log.startTime}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">End Time :</span>
+                                <span>{log.endTime}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

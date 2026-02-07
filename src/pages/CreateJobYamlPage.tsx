@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar } from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, PageShell } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
@@ -161,16 +161,12 @@ export function CreateJobYamlPage() {
   }, [navigate, yamlContent]);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -179,8 +175,8 @@ export function CreateJobYamlPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -216,54 +212,50 @@ export function CreateJobYamlPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={6} className="flex-1 min-h-0">
+        {/* Header */}
+        <VStack gap={2} className="flex-shrink-0">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Job</h1>
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
+            Create a Job to run pods until a specified task completes successfully, ensuring
+            reliable execution for short-lived or one-time workloads.
+          </p>
+        </VStack>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
-          <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
-            <VStack gap={6} className="flex-1 min-h-0">
-              {/* Header */}
-              <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Job</h1>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  Create a Job to run pods until a specified task completes successfully, ensuring
-                  reliable execution for short-lived or one-time workloads.
-                </p>
-              </VStack>
+        {/* YAML Editor */}
+        <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
-              {/* YAML Editor */}
-              <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
-
-              {/* Footer */}
-              <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
-                {/* Left side - Read from File */}
-                <div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".yaml,.yml,.txt"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <Button variant="secondary" size="md" onClick={handleReadFromFile}>
-                    Read from File
-                  </Button>
-                </div>
-
-                {/* Right side - Cancel & Create */}
-                <HStack gap={3}>
-                  <Button variant="secondary" size="md" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" size="md" onClick={handleCreate}>
-                    Create
-                  </Button>
-                </HStack>
-              </div>
-            </VStack>
+        {/* Footer */}
+        <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
+          {/* Left side - Read from File */}
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".yaml,.yml,.txt"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <Button variant="secondary" size="md" onClick={handleReadFromFile}>
+              Read from File
+            </Button>
           </div>
+
+          {/* Right side - Cancel & Create */}
+          <HStack gap={3}>
+            <Button variant="secondary" size="md" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" size="md" onClick={handleCreate}>
+              Create
+            </Button>
+          </HStack>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

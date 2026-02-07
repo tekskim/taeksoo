@@ -17,6 +17,7 @@ import {
   Select,
   Input,
   Chip,
+  PageShell,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -180,6 +181,10 @@ export function PersistentVolumeDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
+  if (!pvData) {
+    return <div>Loading...</div>;
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
@@ -190,7 +195,7 @@ export function PersistentVolumeDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/persistent-volumes/${pv.name}/edit-yaml`),
+      onClick: () => navigate(`/container/persistent-volumes/${pvData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -204,10 +209,6 @@ export function PersistentVolumeDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!pvData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(pvData.labels).length;
@@ -234,16 +235,12 @@ export function PersistentVolumeDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -252,8 +249,8 @@ export function PersistentVolumeDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -303,254 +300,241 @@ export function PersistentVolumeDetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Persistent Volume: {pvData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={pvData.status === 'Bound' ? 'Active' : pvData.status}
+              status={
+                pvData.status === 'Bound' || pvData.status === 'Available'
+                  ? 'active'
+                  : pvData.status === 'Pending'
+                    ? 'pending'
+                    : pvData.status === 'Failed'
+                      ? 'error'
+                      : 'muted'
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={pvData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  {Object.entries(pvData.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {labelsCount > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{labelsCount - 1})
+                    </span>
+                  )}
+                </div>
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  {Object.entries(pvData.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {annotationsCount > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{annotationsCount - 1})
+                    </span>
+                  )}
+                </div>
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Persistent Volume: {pvData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={pvData.status === 'Bound' ? 'Active' : pvData.status}
-                    status={
-                      pvData.status === 'Bound' || pvData.status === 'Available'
-                        ? 'active'
-                        : pvData.status === 'Pending'
-                          ? 'pending'
-                          : pvData.status === 'Failed'
-                            ? 'error'
-                            : 'muted'
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={pvData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      <div className="flex flex-wrap items-center gap-1 min-w-0">
-                        {Object.entries(pvData.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {labelsCount > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{labelsCount - 1})
-                          </span>
-                        )}
-                      </div>
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      <div className="flex flex-wrap items-center gap-1 min-w-0">
-                        {Object.entries(pvData.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {annotationsCount > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{annotationsCount - 1})
-                          </span>
-                        )}
-                      </div>
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} className="w-full">
+          <TabList>
+            <Tab value={0}>Customize</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} className="w-full">
-                <TabList>
-                  <Tab value={0}>Customize</Tab>
-                </TabList>
-
-                {/* Customize Tab */}
-                <TabPanel value={0}>
-                  <VStack gap={3}>
-                    {/* Customize Content */}
-                    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-                      <VStack gap={4}>
-                        {/* Access Modes */}
-                        <VStack gap={2} align="start">
-                          <h3 className="text-label-lg text-[var(--color-text-default)]">
-                            Access Modes
-                          </h3>
-                          <VStack gap={1.5} align="start">
-                            <Checkbox
-                              label="Single node read-write"
-                              checked={pvData.accessModes.singleNodeReadWrite}
-                              onChange={() => {}}
-                              disabled
-                            />
-                            <Checkbox
-                              label="Many nodes read-only"
-                              checked={pvData.accessModes.manyNodesReadOnly}
-                              onChange={() => {}}
-                              disabled
-                            />
-                            <Checkbox
-                              label="Many nodes read-write"
-                              checked={pvData.accessModes.manyNodesReadWrite}
-                              onChange={() => {}}
-                              disabled
-                            />
-                          </VStack>
-                        </VStack>
-
-                        {/* Assign to Storage Class */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <label className="text-label-sm text-[var(--color-text-default)]">
-                            Assign to Storage Class
-                          </label>
-                          <Select
-                            options={[
-                              { value: 'None', label: 'None' },
-                              { value: 'standard', label: 'standard' },
-                              { value: 'fast', label: 'fast' },
-                            ]}
-                            value={pvData.storageClass}
-                            onChange={() => {}}
-                            placeholder="None"
-                            fullWidth
-                            disabled
-                          />
-                        </VStack>
-
-                        {/* Mount Options */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <h3 className="text-label-lg text-[var(--color-text-default)]">
-                            Mount Options
-                          </h3>
-                          <VStack gap={2} align="start" className="w-full">
-                            <label className="text-label-sm text-[var(--color-text-default)]">
-                              Value
-                            </label>
-                            <Input
-                              placeholder="e.g. bar"
-                              value={pvData.mountOptions}
-                              onChange={() => {}}
-                              fullWidth
-                              disabled
-                            />
-                          </VStack>
-                        </VStack>
-
-                        {/* Node Selectors */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <h3 className="text-label-lg text-[var(--color-text-default)]">
-                            Node Selectors
-                          </h3>
-                          <VStack gap={2} className="w-full">
-                            {pvData.nodeSelectors.map((group) => (
-                              <div
-                                key={group.id}
-                                className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
-                              >
-                                <VStack gap={2}>
-                                  {/* Header Row */}
-                                  <HStack gap={2} className="w-full">
-                                    <div className="flex-1">
-                                      <label className="text-label-sm text-[var(--color-text-default)]">
-                                        Key
-                                      </label>
-                                    </div>
-                                    <div className="flex-1">
-                                      <label className="text-label-sm text-[var(--color-text-default)]">
-                                        Operator
-                                      </label>
-                                    </div>
-                                    <div className="flex-1">
-                                      <label className="text-label-sm text-[var(--color-text-default)]">
-                                        Value
-                                      </label>
-                                    </div>
-                                  </HStack>
-                                  {/* Data Rows */}
-                                  {group.items.map((item) => (
-                                    <HStack key={item.id} gap={2} className="w-full">
-                                      <div className="flex-1">
-                                        <Input
-                                          value={item.key}
-                                          onChange={() => {}}
-                                          fullWidth
-                                          disabled
-                                        />
-                                      </div>
-                                      <div className="flex-1">
-                                        <Select
-                                          options={operatorOptions}
-                                          value={item.operator}
-                                          onChange={() => {}}
-                                          fullWidth
-                                          disabled
-                                        />
-                                      </div>
-                                      <div className="flex-1">
-                                        <Input
-                                          value={item.value}
-                                          onChange={() => {}}
-                                          fullWidth
-                                          disabled
-                                        />
-                                      </div>
-                                    </HStack>
-                                  ))}
-                                </VStack>
-                              </div>
-                            ))}
-                            {pvData.nodeSelectors.length === 0 && (
-                              <div className="w-full text-center py-4 text-[var(--color-text-subtle)] text-body-md">
-                                No node selectors configured
-                              </div>
-                            )}
-                          </VStack>
-                        </VStack>
-                      </VStack>
-                    </div>
+          {/* Customize Tab */}
+          <TabPanel value={0}>
+            <VStack gap={3}>
+              {/* Customize Content */}
+              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
+                <VStack gap={4}>
+                  {/* Access Modes */}
+                  <VStack gap={2} align="start">
+                    <h3 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h3>
+                    <VStack gap={1.5} align="start">
+                      <Checkbox
+                        label="Single node read-write"
+                        checked={pvData.accessModes.singleNodeReadWrite}
+                        onChange={() => {}}
+                        disabled
+                      />
+                      <Checkbox
+                        label="Many nodes read-only"
+                        checked={pvData.accessModes.manyNodesReadOnly}
+                        onChange={() => {}}
+                        disabled
+                      />
+                      <Checkbox
+                        label="Many nodes read-write"
+                        checked={pvData.accessModes.manyNodesReadWrite}
+                        onChange={() => {}}
+                        disabled
+                      />
+                    </VStack>
                   </VStack>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+                  {/* Assign to Storage Class */}
+                  <VStack gap={2} align="start" className="w-full">
+                    <label className="text-label-sm text-[var(--color-text-default)]">
+                      Assign to Storage Class
+                    </label>
+                    <Select
+                      options={[
+                        { value: 'None', label: 'None' },
+                        { value: 'standard', label: 'standard' },
+                        { value: 'fast', label: 'fast' },
+                      ]}
+                      value={pvData.storageClass}
+                      onChange={() => {}}
+                      placeholder="None"
+                      fullWidth
+                      disabled
+                    />
+                  </VStack>
+
+                  {/* Mount Options */}
+                  <VStack gap={2} align="start" className="w-full">
+                    <h3 className="text-label-lg text-[var(--color-text-default)]">
+                      Mount Options
+                    </h3>
+                    <VStack gap={2} align="start" className="w-full">
+                      <label className="text-label-sm text-[var(--color-text-default)]">
+                        Value
+                      </label>
+                      <Input
+                        placeholder="e.g. bar"
+                        value={pvData.mountOptions}
+                        onChange={() => {}}
+                        fullWidth
+                        disabled
+                      />
+                    </VStack>
+                  </VStack>
+
+                  {/* Node Selectors */}
+                  <VStack gap={2} align="start" className="w-full">
+                    <h3 className="text-label-lg text-[var(--color-text-default)]">
+                      Node Selectors
+                    </h3>
+                    <VStack gap={2} className="w-full">
+                      {pvData.nodeSelectors.map((group) => (
+                        <div
+                          key={group.id}
+                          className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                        >
+                          <VStack gap={2}>
+                            {/* Header Row */}
+                            <HStack gap={2} className="w-full">
+                              <div className="flex-1">
+                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                  Key
+                                </label>
+                              </div>
+                              <div className="flex-1">
+                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                  Operator
+                                </label>
+                              </div>
+                              <div className="flex-1">
+                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                  Value
+                                </label>
+                              </div>
+                            </HStack>
+                            {/* Data Rows */}
+                            {group.items.map((item) => (
+                              <HStack key={item.id} gap={2} className="w-full">
+                                <div className="flex-1">
+                                  <Input value={item.key} onChange={() => {}} fullWidth disabled />
+                                </div>
+                                <div className="flex-1">
+                                  <Select
+                                    options={operatorOptions}
+                                    value={item.operator}
+                                    onChange={() => {}}
+                                    fullWidth
+                                    disabled
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <Input
+                                    value={item.value}
+                                    onChange={() => {}}
+                                    fullWidth
+                                    disabled
+                                  />
+                                </div>
+                              </HStack>
+                            ))}
+                          </VStack>
+                        </div>
+                      ))}
+                      {pvData.nodeSelectors.length === 0 && (
+                        <div className="w-full text-center py-4 text-[var(--color-text-subtle)] text-body-md">
+                          No node selectors configured
+                        </div>
+                      )}
+                    </VStack>
+                  </VStack>
+                </VStack>
+              </div>
+            </VStack>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

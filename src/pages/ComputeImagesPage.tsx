@@ -17,6 +17,8 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  PageShell,
+  PageHeader,
   fixedColumns,
   type TableColumn,
   type ContextMenuItem,
@@ -469,134 +471,124 @@ export function ComputeImagesPage() {
       .filter((col): col is TableColumn<Image> => col !== undefined);
   }, [columns, columnConfig]);
 
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={handleWindowClose}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Images"
+          actions={
+            <Button size="md" onClick={() => navigate('/compute/images/create')}>
+              Create image
+            </Button>
+          }
+        />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-            onWindowClose={handleWindowClose}
+        {/* Category Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="current">Current tenant</Tab>
+            <Tab value="shared">Shared</Tab>
+            <Tab value="public">Public</Tab>
+            <Tab value="all">All</Tab>
+          </TabList>
+        </Tabs>
+
+        {/* List Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search image by attributes"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedImages.length === 0}
+                onClick={handleBulkDelete}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+
+        {/* Pagination */}
+        {filteredImages.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => setIsPreferencesOpen(true)}
+            totalItems={filteredImages.length}
+            selectedCount={selectedImages.length}
           />
+        )}
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Images</h1>
-                <Button size="md" onClick={() => navigate('/compute/images/create')}>
-                  Create image
-                </Button>
-              </div>
-
-              {/* Category Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="current">Current tenant</Tab>
-                  <Tab value="shared">Shared</Tab>
-                  <Tab value="public">Public</Tab>
-                  <Tab value="all">All</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* List Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search image by attributes"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedImages.length === 0}
-                      onClick={handleBulkDelete}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
-
-              {/* Pagination */}
-              {filteredImages.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => setIsPreferencesOpen(true)}
-                  totalItems={filteredImages.length}
-                  selectedCount={selectedImages.length}
-                />
-              )}
-
-              {/* Image Table */}
-              <Table<Image>
-                columns={visibleColumns}
-                data={paginatedImages}
-                rowKey="id"
-                emptyMessage="No images found"
-                selectable
-                selectedKeys={selectedImages}
-                onSelectionChange={setSelectedImages}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Image Table */}
+        <Table<Image>
+          columns={visibleColumns}
+          data={paginatedImages}
+          rowKey="id"
+          emptyMessage="No images found"
+          selectable
+          selectedKeys={selectedImages}
+          onSelectionChange={setSelectedImages}
+        />
+      </VStack>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -650,7 +642,7 @@ export function ComputeImagesPage() {
             : null
         }
       />
-    </div>
+    </PageShell>
   );
 }
 

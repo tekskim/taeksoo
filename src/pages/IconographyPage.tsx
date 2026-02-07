@@ -12,6 +12,8 @@ import {
   SectionCard,
   VStack,
   HStack,
+  PageShell,
+  TopBar,
 } from '@/design-system';
 import {
   // Actions - Media Controls
@@ -780,353 +782,354 @@ export function IconographyPage() {
     return filteredCategories.reduce((acc, cat) => acc + cat.items.length, 0);
   }, [filteredCategories]);
 
+  const sidebarWidth = 0;
+
   return (
-    <div className="fixed inset-0 overflow-y-scroll bg-[var(--color-surface-subtle)]">
-      {/* Header */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
-        <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
-          <HStack gap={4} align="center">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<IconArrowLeft size={14} stroke={1.5} />}
-              onClick={() => navigate('/')}
-            >
-              Back
-            </Button>
-            <div className="w-px h-5 bg-[var(--color-border-default)]" />
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
-          </HStack>
+    <PageShell
+      sidebarWidth={sidebarWidth}
+      topBar={
+        <TopBar
+          breadcrumb={
+            <HStack gap={4} align="center">
+              <Button
+                variant="ghost"
+                size="sm"
+                leftIcon={<IconArrowLeft size={14} stroke={1.5} />}
+                onClick={() => navigate('/')}
+              >
+                Back
+              </Button>
+              <div className="w-px h-5 bg-[var(--color-border-default)]" />
+              <img
+                src={isDark ? ThakiLogoDark : ThakiLogoLight}
+                alt="THAKI Cloud"
+                className="h-5"
+              />
+            </HStack>
+          }
+          actions={
+            <div className="w-[280px]">
+              <SearchInput
+                placeholder="Search icons..."
+                value={searchQuery}
+                onChange={setSearchQuery}
+                size="sm"
+              />
+            </div>
+          }
+        />
+      }
+      contentClassName="max-w-7xl mx-auto px-8 py-8"
+    >
+      {/* Page Header */}
+      <VStack gap={2} className="mb-8">
+        <h1 className="text-heading-h3 text-[var(--color-text-default)]">Iconography</h1>
+        <p className="text-body-md text-[var(--color-text-subtle)]">
+          Tabler Icons & Custom Icons - Stroke width 1.5, Size 16-20px
+        </p>
+      </VStack>
 
-          <div className="w-[280px]">
-            <SearchInput
-              placeholder="Search icons..."
-              value={searchQuery}
-              onChange={setSearchQuery}
-              size="sm"
-            />
-          </div>
-        </div>
-      </header>
+      {/* Tabs */}
+      <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+        <TabList>
+          <Tab value="icons">Icon Set</Tab>
+          <Tab value="sizes">Size Guidelines</Tab>
+          <Tab value="usage">Usage</Tab>
+        </TabList>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-8 py-8">
-        {/* Page Header */}
-        <VStack gap={2} className="mb-8">
-          <h1 className="text-heading-h3 text-[var(--color-text-default)]">Iconography</h1>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Tabler Icons & Custom Icons - Stroke width 1.5, Size 16-20px
-          </p>
-        </VStack>
+        {/* Icon Set Tab */}
+        <TabPanel value="icons" className="pt-6">
+          <VStack gap={4}>
+            {/* Header with count and category filter */}
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                Available icons ({totalIcons})
+              </h2>
+              {/* Category Filter - Dropdown style */}
+              <Select
+                value={activeCategory}
+                onChange={(value) => setActiveCategory(value)}
+                options={[
+                  { value: 'all', label: 'All Categories' },
+                  ...iconCategories.map((cat) => ({
+                    value: cat.title,
+                    label: cat.title,
+                  })),
+                ]}
+                size="sm"
+                className="w-[200px]"
+              />
+            </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="icons">Icon Set</Tab>
-            <Tab value="sizes">Size Guidelines</Tab>
-            <Tab value="usage">Usage</Tab>
-          </TabList>
-
-          {/* Icon Set Tab */}
-          <TabPanel value="icons" className="pt-6">
-            <VStack gap={4}>
-              {/* Header with count and category filter */}
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Available icons ({totalIcons})
-                </h2>
-                {/* Category Filter - Dropdown style */}
-                <Select
-                  value={activeCategory}
-                  onChange={(value) => setActiveCategory(value)}
-                  options={[
-                    { value: 'all', label: 'All Categories' },
-                    ...iconCategories.map((cat) => ({
-                      value: cat.title,
-                      label: cat.title,
-                    })),
-                  ]}
-                  size="sm"
-                  className="w-[200px]"
-                />
-              </div>
-
-              {/* Icons Table */}
-              {filteredCategories.map((category) => (
-                <div
-                  key={category.title}
-                  className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] overflow-hidden"
-                >
-                  {/* Category Header */}
-                  <div className="px-4 py-3 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                    <h3 className="text-label-md text-[var(--color-text-default)] font-semibold">
-                      {category.title}
-                      <span className="ml-2 text-body-sm text-[var(--color-text-subtle)] font-normal">
-                        ({category.items.length})
-                      </span>
-                    </h3>
-                  </div>
-
-                  <table className="w-full table-fixed">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th
-                          className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                          style={{ width: '64px' }}
-                        >
-                          Icon
-                        </th>
-                        <th
-                          className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                          style={{ width: '220px' }}
-                        >
-                          Name
-                        </th>
-                        <th
-                          className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                          style={{ width: '100px' }}
-                        >
-                          Type
-                        </th>
-                        <th
-                          className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                          style={{ width: '80px' }}
-                        >
-                          Library
-                        </th>
-                        <th className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium">
-                          Description
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {category.items.map((item) => (
-                        <IconRow key={item.name} item={item} categoryType={category.title} />
-                      ))}
-                    </tbody>
-                  </table>
+            {/* Icons Table */}
+            {filteredCategories.map((category) => (
+              <div
+                key={category.title}
+                className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] overflow-hidden"
+              >
+                {/* Category Header */}
+                <div className="px-4 py-3 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
+                  <h3 className="text-label-md text-[var(--color-text-default)] font-semibold">
+                    {category.title}
+                    <span className="ml-2 text-body-sm text-[var(--color-text-subtle)] font-normal">
+                      ({category.items.length})
+                    </span>
+                  </h3>
                 </div>
-              ))}
 
-              {/* No Results */}
-              {filteredCategories.length === 0 && (
-                <div className="text-center py-16">
-                  <IconSearch
-                    size={48}
-                    stroke={1}
-                    className="mx-auto text-[var(--color-text-subtle)] mb-4"
-                  />
-                  <p className="text-body-md text-[var(--color-text-muted)]">
-                    "{searchQuery}"에 대한 결과가 없습니다.
-                  </p>
-                </div>
-              )}
-            </VStack>
-          </TabPanel>
-
-          {/* Size Guidelines Tab */}
-          <TabPanel value="sizes" className="pt-6">
-            <VStack gap={6}>
-              <SectionCard>
-                <SectionCard.Header title="Icon Sizes" />
-                <SectionCard.Content>
-                  <p className="text-body-md text-[var(--color-text-subtle)] mb-6">
-                    아이콘은 사용 컨텍스트에 따라 4가지 주요 사이즈로 표시됩니다. 텍스트와 함께
-                    사용할 때는 폰트 크기와 조화를 이루는 사이즈를 선택하세요.
-                  </p>
-                  <SizeDemo />
-                </SectionCard.Content>
-              </SectionCard>
-
-              <SectionCard>
-                <SectionCard.Header title="Stroke Width" />
-                <SectionCard.Content>
-                  <p className="text-body-md text-[var(--color-text-subtle)] mb-4">
-                    아이콘의 stroke-width는 인터페이스의 일관성에 중요한 요소입니다. TDS에서는{' '}
-                    <code className="px-1.5 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm">
-                      stroke={'{1.5}'}
-                    </code>
-                    를 기본값으로 사용합니다.
-                  </p>
-                  <div className="flex items-center gap-8">
-                    {[1, 1.5, 2].map((stroke) => (
-                      <div key={stroke} className="flex flex-col items-center gap-2">
-                        <IconSettings
-                          size={24}
-                          stroke={stroke}
-                          className="text-[var(--color-text-default)]"
-                        />
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          stroke={stroke}
-                        </span>
-                      </div>
+                <table className="w-full table-fixed">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th
+                        className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                        style={{ width: '64px' }}
+                      >
+                        Icon
+                      </th>
+                      <th
+                        className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                        style={{ width: '220px' }}
+                      >
+                        Name
+                      </th>
+                      <th
+                        className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                        style={{ width: '100px' }}
+                      >
+                        Type
+                      </th>
+                      <th
+                        className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                        style={{ width: '80px' }}
+                      >
+                        Library
+                      </th>
+                      <th className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium">
+                        Description
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {category.items.map((item) => (
+                      <IconRow key={item.name} item={item} categoryType={category.title} />
                     ))}
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
-            </VStack>
-          </TabPanel>
+                  </tbody>
+                </table>
+              </div>
+            ))}
 
-          {/* Usage Tab */}
-          <TabPanel value="usage" className="pt-6">
-            <VStack gap={6}>
-              <SectionCard>
-                <SectionCard.Header title="Button Icons" />
-                <SectionCard.Content>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <UsageExample
-                      title="sm/md 버튼"
-                      description="12px 아이콘 사용"
-                      code={`<Button size="sm" leftIcon={<IconPlus size={12} />}>Create</Button>`}
-                    >
-                      <Button size="sm" leftIcon={<IconPlus size={12} />}>
-                        Create
-                      </Button>
-                      <Button size="md" leftIcon={<IconPencil size={12} />}>
-                        Edit
-                      </Button>
-                    </UsageExample>
+            {/* No Results */}
+            {filteredCategories.length === 0 && (
+              <div className="text-center py-16">
+                <IconSearch
+                  size={48}
+                  stroke={1}
+                  className="mx-auto text-[var(--color-text-subtle)] mb-4"
+                />
+                <p className="text-body-md text-[var(--color-text-muted)]">
+                  "{searchQuery}"에 대한 결과가 없습니다.
+                </p>
+              </div>
+            )}
+          </VStack>
+        </TabPanel>
 
-                    <UsageExample
-                      title="lg 버튼"
-                      description="14px 아이콘 사용"
-                      code={`<Button size="lg" leftIcon={<IconPlus size={14} />}>Create</Button>`}
-                    >
-                      <Button size="lg" leftIcon={<IconPlus size={14} />}>
-                        Create
-                      </Button>
-                    </UsageExample>
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
+        {/* Size Guidelines Tab */}
+        <TabPanel value="sizes" className="pt-6">
+          <VStack gap={6}>
+            <SectionCard>
+              <SectionCard.Header title="Icon Sizes" />
+              <SectionCard.Content>
+                <p className="text-body-md text-[var(--color-text-subtle)] mb-6">
+                  아이콘은 사용 컨텍스트에 따라 4가지 주요 사이즈로 표시됩니다. 텍스트와 함께 사용할
+                  때는 폰트 크기와 조화를 이루는 사이즈를 선택하세요.
+                </p>
+                <SizeDemo />
+              </SectionCard.Content>
+            </SectionCard>
 
-              <SectionCard>
-                <SectionCard.Header title="Status Icons" />
-                <SectionCard.Content>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <UsageExample
-                      title="상태 표시"
-                      description="상태별 색상과 함께 사용"
-                      code={`<IconCircleCheck className="text-[var(--color-state-success)]" />`}
-                    >
-                      <HStack gap={4}>
-                        <IconCircleCheck size={20} className="text-[var(--color-state-success)]" />
-                        <IconAlertTriangle
-                          size={20}
-                          className="text-[var(--color-state-warning)]"
-                        />
-                        <IconAlertCircle size={20} className="text-[var(--color-state-danger)]" />
-                        <IconInfoCircle size={20} className="text-[var(--color-state-info)]" />
-                      </HStack>
-                    </UsageExample>
-
-                    <UsageExample
-                      title="로딩 상태"
-                      description="animate-spin 클래스와 함께 사용"
-                      code={`<IconLoader2 className="animate-spin" />`}
-                    >
-                      <IconLoader2
-                        size={20}
-                        className="animate-spin text-[var(--color-action-primary)]"
+            <SectionCard>
+              <SectionCard.Header title="Stroke Width" />
+              <SectionCard.Content>
+                <p className="text-body-md text-[var(--color-text-subtle)] mb-4">
+                  아이콘의 stroke-width는 인터페이스의 일관성에 중요한 요소입니다. TDS에서는{' '}
+                  <code className="px-1.5 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm">
+                    stroke={'{1.5}'}
+                  </code>
+                  를 기본값으로 사용합니다.
+                </p>
+                <div className="flex items-center gap-8">
+                  {[1, 1.5, 2].map((stroke) => (
+                    <div key={stroke} className="flex flex-col items-center gap-2">
+                      <IconSettings
+                        size={24}
+                        stroke={stroke}
+                        className="text-[var(--color-text-default)]"
                       />
-                    </UsageExample>
-                  </div>
-                </SectionCard.Content>
-              </SectionCard>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        stroke={stroke}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
+        </TabPanel>
 
-              <SectionCard>
-                <SectionCard.Header title="Favorite (Star) Icon" />
-                <SectionCard.Content>
+        {/* Usage Tab */}
+        <TabPanel value="usage" className="pt-6">
+          <VStack gap={6}>
+            <SectionCard>
+              <SectionCard.Header title="Button Icons" />
+              <SectionCard.Content>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <UsageExample
-                    title="즐겨찾기"
-                    description="yellow400 색상 사용"
-                    code={`// Active
+                    title="sm/md 버튼"
+                    description="12px 아이콘 사용"
+                    code={`<Button size="sm" leftIcon={<IconPlus size={12} />}>Create</Button>`}
+                  >
+                    <Button size="sm" leftIcon={<IconPlus size={12} />}>
+                      Create
+                    </Button>
+                    <Button size="md" leftIcon={<IconPencil size={12} />}>
+                      Edit
+                    </Button>
+                  </UsageExample>
+
+                  <UsageExample
+                    title="lg 버튼"
+                    description="14px 아이콘 사용"
+                    code={`<Button size="lg" leftIcon={<IconPlus size={14} />}>Create</Button>`}
+                  >
+                    <Button size="lg" leftIcon={<IconPlus size={14} />}>
+                      Create
+                    </Button>
+                  </UsageExample>
+                </div>
+              </SectionCard.Content>
+            </SectionCard>
+
+            <SectionCard>
+              <SectionCard.Header title="Status Icons" />
+              <SectionCard.Content>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <UsageExample
+                    title="상태 표시"
+                    description="상태별 색상과 함께 사용"
+                    code={`<IconCircleCheck className="text-[var(--color-state-success)]" />`}
+                  >
+                    <HStack gap={4}>
+                      <IconCircleCheck size={20} className="text-[var(--color-state-success)]" />
+                      <IconAlertTriangle size={20} className="text-[var(--color-state-warning)]" />
+                      <IconAlertCircle size={20} className="text-[var(--color-state-danger)]" />
+                      <IconInfoCircle size={20} className="text-[var(--color-state-info)]" />
+                    </HStack>
+                  </UsageExample>
+
+                  <UsageExample
+                    title="로딩 상태"
+                    description="animate-spin 클래스와 함께 사용"
+                    code={`<IconLoader2 className="animate-spin" />`}
+                  >
+                    <IconLoader2
+                      size={20}
+                      className="animate-spin text-[var(--color-action-primary)]"
+                    />
+                  </UsageExample>
+                </div>
+              </SectionCard.Content>
+            </SectionCard>
+
+            <SectionCard>
+              <SectionCard.Header title="Favorite (Star) Icon" />
+              <SectionCard.Content>
+                <UsageExample
+                  title="즐겨찾기"
+                  description="yellow400 색상 사용"
+                  code={`// Active
 <IconStarFilled className="text-[var(--primitive-color-yellow400)]" />
 // Inactive
 <IconStar className="text-[var(--color-text-muted)]" />`}
-                  >
-                    <HStack gap={4}>
-                      <IconStarFilled
-                        size={20}
-                        className="text-[var(--primitive-color-yellow400)]"
-                      />
-                      <IconStar size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                    </HStack>
-                  </UsageExample>
-                </SectionCard.Content>
-              </SectionCard>
+                >
+                  <HStack gap={4}>
+                    <IconStarFilled size={20} className="text-[var(--primitive-color-yellow400)]" />
+                    <IconStar size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                  </HStack>
+                </UsageExample>
+              </SectionCard.Content>
+            </SectionCard>
 
-              <SectionCard>
-                <SectionCard.Header title="Import Statements" />
-                <SectionCard.Content>
-                  <VStack gap={4}>
-                    <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-                      <h4 className="text-label-sm text-[var(--color-text-muted)] mb-2">
-                        Tabler Icons
-                      </h4>
-                      <code className="text-body-sm font-mono text-[var(--color-text-default)]">
-                        {`import { IconName } from '@tabler/icons-react';`}
-                      </code>
-                    </div>
-                    <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-                      <h4 className="text-label-sm text-[var(--color-text-muted)] mb-2">
-                        Custom Icons (TDS)
-                      </h4>
-                      <code className="text-body-sm font-mono text-[var(--color-text-default)]">
-                        {`import { IconName } from '@/design-system/components/Icons/CustomIcons';`}
-                      </code>
-                    </div>
-                  </VStack>
-                </SectionCard.Content>
-              </SectionCard>
+            <SectionCard>
+              <SectionCard.Header title="Import Statements" />
+              <SectionCard.Content>
+                <VStack gap={4}>
+                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <h4 className="text-label-sm text-[var(--color-text-muted)] mb-2">
+                      Tabler Icons
+                    </h4>
+                    <code className="text-body-sm font-mono text-[var(--color-text-default)]">
+                      {`import { IconName } from '@tabler/icons-react';`}
+                    </code>
+                  </div>
+                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <h4 className="text-label-sm text-[var(--color-text-muted)] mb-2">
+                      Custom Icons (TDS)
+                    </h4>
+                    <code className="text-body-sm font-mono text-[var(--color-text-default)]">
+                      {`import { IconName } from '@/design-system/components/Icons/CustomIcons';`}
+                    </code>
+                  </div>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
 
-              <SectionCard>
-                <SectionCard.Header title="General Guidelines" />
-                <SectionCard.Content>
-                  <VStack gap={3}>
-                    <div className="flex items-start gap-3">
-                      <IconCircleCheck
-                        size={16}
-                        className="text-[var(--color-state-success)] mt-0.5"
-                      />
-                      <p className="text-body-md text-[var(--color-text-default)]">
-                        상태 아이콘과 심볼 아이콘에는 레이블을 함께 사용하세요.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <IconCircleCheck
-                        size={16}
-                        className="text-[var(--color-state-success)] mt-0.5"
-                      />
-                      <p className="text-body-md text-[var(--color-text-default)]">
-                        stroke width는 항상 1.5를 사용하세요.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <IconAlertCircle
-                        size={16}
-                        className="text-[var(--color-state-danger)] mt-0.5"
-                      />
-                      <p className="text-body-md text-[var(--color-text-default)]">
-                        페이지, 섹션 제목에 아이콘을 사용하지 마세요.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <IconAlertCircle
-                        size={16}
-                        className="text-[var(--color-state-danger)] mt-0.5"
-                      />
-                      <p className="text-body-md text-[var(--color-text-default)]">
-                        여러 아이콘을 하나의 객체로 결합하지 마세요.
-                      </p>
-                    </div>
-                  </VStack>
-                </SectionCard.Content>
-              </SectionCard>
-            </VStack>
-          </TabPanel>
-        </Tabs>
-      </main>
+            <SectionCard>
+              <SectionCard.Header title="General Guidelines" />
+              <SectionCard.Content>
+                <VStack gap={3}>
+                  <div className="flex items-start gap-3">
+                    <IconCircleCheck
+                      size={16}
+                      className="text-[var(--color-state-success)] mt-0.5"
+                    />
+                    <p className="text-body-md text-[var(--color-text-default)]">
+                      상태 아이콘과 심볼 아이콘에는 레이블을 함께 사용하세요.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <IconCircleCheck
+                      size={16}
+                      className="text-[var(--color-state-success)] mt-0.5"
+                    />
+                    <p className="text-body-md text-[var(--color-text-default)]">
+                      stroke width는 항상 1.5를 사용하세요.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <IconAlertCircle
+                      size={16}
+                      className="text-[var(--color-state-danger)] mt-0.5"
+                    />
+                    <p className="text-body-md text-[var(--color-text-default)]">
+                      페이지, 섹션 제목에 아이콘을 사용하지 마세요.
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <IconAlertCircle
+                      size={16}
+                      className="text-[var(--color-state-danger)] mt-0.5"
+                    />
+                    <p className="text-body-md text-[var(--color-text-default)]">
+                      여러 아이콘을 하나의 객체로 결합하지 마세요.
+                    </p>
+                  </div>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
+        </TabPanel>
+      </Tabs>
 
       {/* Footer */}
       <footer className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
@@ -1136,7 +1139,7 @@ export function IconographyPage() {
           </p>
         </div>
       </footer>
-    </div>
+    </PageShell>
   );
 }
 

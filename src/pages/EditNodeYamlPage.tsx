@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Breadcrumb, VStack, TabBar, TopBar } from '@/design-system';
+import { Button, Breadcrumb, VStack, TabBar, TopBar, PageShell } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -285,16 +285,12 @@ export function EditNodeYamlPage() {
   }, [navigate, yamlContent]);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -303,8 +299,8 @@ export function EditNodeYamlPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -340,40 +336,34 @@ export function EditNodeYamlPage() {
             </>
           }
         />
-
-        {/* Page Content */}
-        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
-          <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
-            <VStack gap={6} className="flex-1 min-h-0">
-              {/* Header */}
-              <div className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Node: {nodeName}
-                </h1>
-              </div>
-
-              {/* YAML Editor */}
-              <YamlEditor
-                value={yamlContent}
-                onChange={setYamlContent}
-                onCopy={handleCopy}
-                onDownload={handleDownload}
-              />
-
-              {/* Footer */}
-              <div className="flex-shrink-0 flex items-center justify-end gap-3 pt-4">
-                <Button variant="secondary" size="md" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button variant="primary" size="md" onClick={handleSave}>
-                  Save
-                </Button>
-              </div>
-            </VStack>
-          </div>
+      }
+      contentClassName="pt-3 px-8 pb-6 flex flex-col min-h-0"
+    >
+      <VStack gap={6} className="flex-1 min-h-0">
+        {/* Header */}
+        <div className="flex-shrink-0">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Node: {nodeName}</h1>
         </div>
-      </main>
-    </div>
+
+        {/* YAML Editor */}
+        <YamlEditor
+          value={yamlContent}
+          onChange={setYamlContent}
+          onCopy={handleCopy}
+          onDownload={handleDownload}
+        />
+
+        {/* Footer */}
+        <div className="flex-shrink-0 flex items-center justify-end gap-3 pt-4">
+          <Button variant="secondary" size="md" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={handleSave}>
+            Save
+          </Button>
+        </div>
+      </VStack>
+    </PageShell>
   );
 }
 

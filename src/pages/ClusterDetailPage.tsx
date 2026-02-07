@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   ContextMenu,
+  PageShell,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
@@ -215,19 +216,15 @@ export function ClusterDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ClusterManagementSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ClusterManagementSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -236,8 +233,8 @@ export function ClusterDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -273,169 +270,159 @@ export function ClusterDetailPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={8}>
+        {/* Header Card */}
+        <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            {/* Cluster Name */}
+            <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+              {clusterData.name}
+            </h1>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* Header Card */}
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg p-4">
-                <VStack gap={3}>
-                  {/* Cluster Name */}
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    {clusterData.name}
-                  </h1>
+            {/* More Actions Button */}
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+              >
+                More actions
+              </Button>
+            </ContextMenu>
 
-                  {/* More Actions Button */}
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
-                    >
-                      More actions
-                    </Button>
-                  </ContextMenu>
+            {/* Summary Cards */}
+            <div className="grid grid-cols-4 gap-3 w-full">
+              {/* Status */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative">
+                <VStack gap={1}>
+                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                    Status
+                  </span>
+                  <span className="text-[12px] text-[var(--color-text-default)]">
+                    {clusterData.status.charAt(0).toUpperCase() + clusterData.status.slice(1)}
+                  </span>
+                </VStack>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <StatusIndicator
+                    status={statusMap[clusterData.status]}
+                    layout="icon-only"
+                    size="lg"
+                  />
+                </div>
+              </div>
 
-                  {/* Summary Cards */}
-                  <div className="grid grid-cols-4 gap-3 w-full">
-                    {/* Status */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative">
-                      <VStack gap={1}>
-                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                          Status
-                        </span>
-                        <span className="text-[12px] text-[var(--color-text-default)]">
-                          {clusterData.status.charAt(0).toUpperCase() + clusterData.status.slice(1)}
-                        </span>
-                      </VStack>
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <StatusIndicator
-                          status={statusMap[clusterData.status]}
-                          layout="icon-only"
-                          size="lg"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Kubernetes Version */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                      <VStack gap={1}>
-                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                          Kubernetes Version
-                        </span>
-                        <span className="text-[12px] text-[var(--color-text-default)]">
-                          {clusterData.kubernetesVersion}
-                        </span>
-                      </VStack>
-                    </div>
-
-                    {/* Container Network */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                      <VStack gap={1}>
-                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                          Container Network
-                        </span>
-                        <span className="text-[12px] text-[var(--color-text-default)]">
-                          {clusterData.containerNetwork}
-                        </span>
-                      </VStack>
-                    </div>
-
-                    {/* Created At */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                      <VStack gap={1}>
-                        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                          Created at
-                        </span>
-                        <span className="text-[12px] text-[var(--color-text-default)]">
-                          {clusterData.createdAt}
-                        </span>
-                      </VStack>
-                    </div>
-                  </div>
+              {/* Kubernetes Version */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <VStack gap={1}>
+                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                    Kubernetes Version
+                  </span>
+                  <span className="text-[12px] text-[var(--color-text-default)]">
+                    {clusterData.kubernetesVersion}
+                  </span>
                 </VStack>
               </div>
 
-              {/* Tabs Section */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="networking">Networking</Tab>
-                  <Tab value="node-config">Node Configuration</Tab>
-                </TabList>
+              {/* Container Network */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <VStack gap={1}>
+                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                    Container Network
+                  </span>
+                  <span className="text-[12px] text-[var(--color-text-default)]">
+                    {clusterData.containerNetwork}
+                  </span>
+                </VStack>
+              </div>
 
-                <TabPanel value="networking">
-                  <div>
-                    <SectionCard>
-                      <SectionCard.Header title="Networking" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="External network"
-                          value={clusterData.networking.externalNetwork}
-                        />
-                        <SectionCard.DataRow
-                          label="Tenant Network"
-                          value={clusterData.networking.tenantNetwork}
-                        />
-                        <SectionCard.DataRow label="Subnet" value={clusterData.networking.subnet} />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </div>
-                </TabPanel>
-
-                <TabPanel value="node-config">
-                  <VStack gap={6}>
-                    {/* Node Configuration Card */}
-                    <SectionCard>
-                      <SectionCard.Header title="Node configuration" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Node type"
-                          value={clusterData.nodeConfiguration.nodeType}
-                        />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Control Planes Card */}
-                    <SectionCard>
-                      <SectionCard.Header title="Control planes" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Image"
-                          value={clusterData.controlPlanes.image}
-                        />
-                        <SectionCard.DataRow
-                          label="Flavor"
-                          value={clusterData.controlPlanes.flavor}
-                        />
-                        <SectionCard.DataRow
-                          label="Node count"
-                          value={clusterData.controlPlanes.nodeCount.toString()}
-                        />
-                        <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Nodes Card */}
-                    <SectionCard>
-                      <SectionCard.Header title="Nodes" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
-                        <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
-                        <SectionCard.DataRow
-                          label="Node count"
-                          value={clusterData.nodes.nodeCount.toString()}
-                        />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
+              {/* Created At */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <VStack gap={1}>
+                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                    Created at
+                  </span>
+                  <span className="text-[12px] text-[var(--color-text-default)]">
+                    {clusterData.createdAt}
+                  </span>
+                </VStack>
+              </div>
+            </div>
+          </VStack>
         </div>
-      </main>
-    </div>
+
+        {/* Tabs Section */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="networking">Networking</Tab>
+            <Tab value="node-config">Node Configuration</Tab>
+          </TabList>
+
+          <TabPanel value="networking">
+            <div>
+              <SectionCard>
+                <SectionCard.Header title="Networking" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="External network"
+                    value={clusterData.networking.externalNetwork}
+                  />
+                  <SectionCard.DataRow
+                    label="Tenant Network"
+                    value={clusterData.networking.tenantNetwork}
+                  />
+                  <SectionCard.DataRow label="Subnet" value={clusterData.networking.subnet} />
+                </SectionCard.Content>
+              </SectionCard>
+            </div>
+          </TabPanel>
+
+          <TabPanel value="node-config">
+            <VStack gap={6}>
+              {/* Node Configuration Card */}
+              <SectionCard>
+                <SectionCard.Header title="Node configuration" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Node type"
+                    value={clusterData.nodeConfiguration.nodeType}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+
+              {/* Control Planes Card */}
+              <SectionCard>
+                <SectionCard.Header title="Control planes" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Image" value={clusterData.controlPlanes.image} />
+                  <SectionCard.DataRow label="Flavor" value={clusterData.controlPlanes.flavor} />
+                  <SectionCard.DataRow
+                    label="Node count"
+                    value={clusterData.controlPlanes.nodeCount.toString()}
+                  />
+                  <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
+                </SectionCard.Content>
+              </SectionCard>
+
+              {/* Nodes Card */}
+              <SectionCard>
+                <SectionCard.Header title="Nodes" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
+                  <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
+                  <SectionCard.DataRow
+                    label="Node count"
+                    value={clusterData.nodes.nodeCount.toString()}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            </VStack>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

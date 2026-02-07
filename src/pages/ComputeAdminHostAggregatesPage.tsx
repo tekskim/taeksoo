@@ -13,6 +13,8 @@ import {
   Tab,
   ContextMenu,
   ConfirmModal,
+  PageShell,
+  PageHeader,
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
@@ -139,6 +141,7 @@ const azFilterFields: FilterField[] = [{ key: 'name', label: 'Name', type: 'text
 
 export function ComputeAdminHostAggregatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hostAggregates, setHostAggregates] = useState(mockHostAggregates);
@@ -237,353 +240,344 @@ export function ComputeAdminHostAggregatesPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Host Aggregates' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        <PageHeader
+          title={activeTab === 'host-aggregates' ? 'Host Aggregates' : 'Availability Zones'}
+          actions={
+            activeTab === 'host-aggregates' ? (
+              <Button variant="primary" size="md">
+                Create Host Aggregate
+              </Button>
+            ) : undefined
+          }
+        />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="host-aggregates">Host aggregates</Tab>
+            <Tab value="availability-zones">Availability zones</Tab>
+          </TabList>
+        </Tabs>
 
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Host Aggregates' },
-                ]}
+        {/* Content based on active tab */}
+        {activeTab === 'host-aggregates' && (
+          <>
+            {/* Action Bar */}
+            <div className="flex items-center gap-1">
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search host aggregates by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
               />
-            }
-          />
-        </div>
+            </div>
 
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  {activeTab === 'host-aggregates' ? 'Host Aggregates' : 'Availability Zones'}
-                </h1>
-                {activeTab === 'host-aggregates' && (
-                  <Button variant="primary" size="md">
-                    Create Host Aggregate
-                  </Button>
-                )}
+            {/* Pagination */}
+            {filteredItems.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredItems.length}
+              />
+            )}
+
+            {/* Expandable Table */}
+            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+              {/* Table Header */}
+              <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
+                  <span>Name</span>
+                </div>
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                  <span>Availability Zone</span>
+                </div>
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                  <span>Hosts</span>
+                </div>
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                  <span>Created at</span>
+                </div>
+                <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[72px] border-l border-[var(--color-border-default)]">
+                  <span>Action</span>
+                </div>
               </div>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="host-aggregates">Host aggregates</Tab>
-                  <Tab value="availability-zones">Availability zones</Tab>
-                </TabList>
-              </Tabs>
+              {/* Table Rows */}
+              {paginatedItems.map((row) => {
+                const isExpanded = expandedRows.includes(row.id);
+                const firstHost = row.hosts[0];
+                const additionalHosts = row.hosts.length - 1;
 
-              {/* Content based on active tab */}
-              {activeTab === 'host-aggregates' && (
-                <>
-                  {/* Action Bar */}
-                  <div className="flex items-center gap-1">
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search host aggregates by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </div>
+                return (
+                  <div
+                    key={row.id}
+                    className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                  >
+                    {/* Row Content */}
+                    <div className="flex items-center min-h-[var(--table-row-height)] w-full">
+                      {/* Name Cell with Expand Icon */}
+                      <div className="flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                        <button
+                          onClick={() => toggleRowExpansion(row.id)}
+                          className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
+                        >
+                          {isExpanded ? (
+                            <IconChevronDown
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
+                          ) : (
+                            <IconChevronRight
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
+                          )}
+                        </button>
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {row.name}
+                        </span>
+                      </div>
 
-                  {/* Pagination */}
-                  {filteredItems.length > 0 && (
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      onPageChange={setCurrentPage}
-                      totalItems={filteredItems.length}
-                    />
-                  )}
+                      {/* Availability Zone Cell */}
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {row.availabilityZone}
+                        </span>
+                      </div>
 
-                  {/* Expandable Table */}
-                  <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                    {/* Table Header */}
-                    <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
-                        <span>Name</span>
+                      {/* Hosts Cell */}
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {firstHost}
+                          {additionalHosts > 0 && ` (+${additionalHosts})`}
+                        </span>
                       </div>
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                        <span>Availability Zone</span>
+
+                      {/* Created at Cell */}
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {row.createdAt}
+                        </span>
                       </div>
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                        <span>Hosts</span>
-                      </div>
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                        <span>Created at</span>
-                      </div>
-                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[72px] border-l border-[var(--color-border-default)]">
-                        <span>Action</span>
+
+                      {/* Action Cell */}
+                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[72px]">
+                        <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
+                          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                            <IconDotsCircleHorizontal
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--action-icon-color)]"
+                            />
+                          </button>
+                        </ContextMenu>
                       </div>
                     </div>
 
-                    {/* Table Rows */}
-                    {paginatedItems.map((row) => {
-                      const isExpanded = expandedRows.includes(row.id);
-                      const firstHost = row.hosts[0];
-                      const additionalHosts = row.hosts.length - 1;
-
-                      return (
-                        <div
-                          key={row.id}
-                          className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                        >
-                          {/* Row Content */}
-                          <div className="flex items-center min-h-[var(--table-row-height)] w-full">
-                            {/* Name Cell with Expand Icon */}
-                            <div className="flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                              <button
-                                onClick={() => toggleRowExpansion(row.id)}
-                                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                              >
-                                {isExpanded ? (
-                                  <IconChevronDown
-                                    size={16}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                ) : (
-                                  <IconChevronRight
-                                    size={16}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                )}
-                              </button>
-                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {row.name}
+                    {/* Expanded Metadata Table */}
+                    {isExpanded && row.metadata.length > 0 && (
+                      <div className="border-t border-[var(--color-border-default)] p-3">
+                        <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                          {/* Metadata Table Header */}
+                          <div className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                              <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
+                                Metadata
                               </span>
                             </div>
-
-                            {/* Availability Zone Cell */}
-                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {row.availabilityZone}
+                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1 border-l border-[var(--color-border-default)]">
+                              <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
+                                Value
                               </span>
-                            </div>
-
-                            {/* Hosts Cell */}
-                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {firstHost}
-                                {additionalHosts > 0 && ` (+${additionalHosts})`}
-                              </span>
-                            </div>
-
-                            {/* Created at Cell */}
-                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {row.createdAt}
-                              </span>
-                            </div>
-
-                            {/* Action Cell */}
-                            <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[72px]">
-                              <ContextMenu
-                                items={getContextMenuItems(row)}
-                                trigger="click"
-                                align="right"
-                              >
-                                <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                                  <IconDotsCircleHorizontal
-                                    size={16}
-                                    stroke={1.5}
-                                    className="text-[var(--action-icon-color)]"
-                                  />
-                                </button>
-                              </ContextMenu>
                             </div>
                           </div>
-
-                          {/* Expanded Metadata Table */}
-                          {isExpanded && row.metadata.length > 0 && (
-                            <div className="border-t border-[var(--color-border-default)] p-3">
-                              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                                {/* Metadata Table Header */}
-                                <div className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                                  <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                                    <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
-                                      Metadata
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1 border-l border-[var(--color-border-default)]">
-                                    <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                  </div>
-                                </div>
-                                {/* Metadata Table Rows */}
-                                {row.metadata.map((meta, index) => (
-                                  <div
-                                    key={index}
-                                    className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                                  >
-                                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                        {meta.key}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                        {meta.value}
-                                      </span>
-                                    </div>
-                                  </div>
-                                ))}
+                          {/* Metadata Table Rows */}
+                          {row.metadata.map((meta, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                            >
+                              <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                                <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                                  {meta.key}
+                                </span>
+                              </div>
+                              <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                                <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                                  {meta.value}
+                                </span>
                               </div>
                             </div>
-                          )}
+                          ))}
                         </div>
-                      );
-                    })}
-
-                    {/* Empty State */}
-                    {paginatedItems.length === 0 && (
-                      <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
-                        No host aggregates found
                       </div>
                     )}
                   </div>
-                </>
+                );
+              })}
+
+              {/* Empty State */}
+              {paginatedItems.length === 0 && (
+                <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
+                  No host aggregates found
+                </div>
               )}
+            </div>
+          </>
+        )}
 
-              {activeTab === 'availability-zones' && (
-                <>
-                  {/* Action Bar */}
-                  <div className="flex items-center gap-1">
-                    <FilterSearchInput
-                      filters={azFilterFields}
-                      appliedFilters={azAppliedFilters}
-                      onFiltersChange={setAzAppliedFilters}
-                      placeholder="Search availability zones by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </div>
+        {activeTab === 'availability-zones' && (
+          <>
+            {/* Action Bar */}
+            <div className="flex items-center gap-1">
+              <FilterSearchInput
+                filters={azFilterFields}
+                appliedFilters={azAppliedFilters}
+                onFiltersChange={setAzAppliedFilters}
+                placeholder="Search availability zones by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </div>
 
-                  {/* Pagination */}
-                  {filteredAZs.length > 0 && (
-                    <Pagination
-                      currentPage={azCurrentPage}
-                      totalPages={azTotalPages}
-                      onPageChange={setAzCurrentPage}
-                      totalItems={filteredAZs.length}
-                    />
-                  )}
+            {/* Pagination */}
+            {filteredAZs.length > 0 && (
+              <Pagination
+                currentPage={azCurrentPage}
+                totalPages={azTotalPages}
+                onPageChange={setAzCurrentPage}
+                totalItems={filteredAZs.length}
+              />
+            )}
 
-                  {/* Availability Zones Table */}
-                  <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                    {/* Table Header */}
-                    <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                      <div className="flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
-                        <span>Name</span>
-                        <IconChevronDown
-                          size={16}
-                          stroke={1.5}
-                          className="text-[var(--color-text-default)]"
-                        />
-                      </div>
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                        <span>Hosts</span>
-                      </div>
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                        <span>Available</span>
-                      </div>
+            {/* Availability Zones Table */}
+            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+              {/* Table Header */}
+              <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                <div className="flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
+                  <span>Name</span>
+                  <IconChevronDown
+                    size={16}
+                    stroke={1.5}
+                    className="text-[var(--color-text-default)]"
+                  />
+                </div>
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                  <span>Hosts</span>
+                </div>
+                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                  <span>Available</span>
+                </div>
+              </div>
+
+              {/* Table Rows */}
+              {paginatedAZs.map((az) => {
+                const firstHost = az.hosts[0];
+                const additionalHosts = az.hosts.length - 1;
+
+                return (
+                  <div
+                    key={az.id}
+                    className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                  >
+                    {/* Name Cell */}
+                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {az.name}
+                      </span>
                     </div>
 
-                    {/* Table Rows */}
-                    {paginatedAZs.map((az) => {
-                      const firstHost = az.hosts[0];
-                      const additionalHosts = az.hosts.length - 1;
+                    {/* Hosts Cell */}
+                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {firstHost}
+                        {additionalHosts > 0 && ` (+${additionalHosts})`}
+                      </span>
+                    </div>
 
-                      return (
-                        <div
-                          key={az.id}
-                          className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                        >
-                          {/* Name Cell */}
-                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                              {az.name}
-                            </span>
-                          </div>
-
-                          {/* Hosts Cell */}
-                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                              {firstHost}
-                              {additionalHosts > 0 && ` (+${additionalHosts})`}
-                            </span>
-                          </div>
-
-                          {/* Available Cell */}
-                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                              {az.available ? 'Yes' : 'No'}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {/* Empty State */}
-                    {paginatedAZs.length === 0 && (
-                      <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
-                        No availability zones found
-                      </div>
-                    )}
+                    {/* Available Cell */}
+                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {az.available ? 'Yes' : 'No'}
+                      </span>
+                    </div>
                   </div>
-                </>
+                );
+              })}
+
+              {/* Empty State */}
+              {paginatedAZs.length === 0 && (
+                <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
+                  No availability zones found
+                </div>
               )}
-            </VStack>
-          </div>
-        </div>
-      </main>
+            </div>
+          </>
+        )}
+      </VStack>
 
       <ConfirmModal
         isOpen={deleteModalOpen}
@@ -607,7 +601,7 @@ export function ComputeAdminHostAggregatesPage() {
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
       />
-    </div>
+    </PageShell>
   );
 }
 

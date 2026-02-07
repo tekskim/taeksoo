@@ -7,6 +7,7 @@ import {
   VStack,
   TabBar,
   TopBar,
+  PageShell,
   Input,
   Select,
   SectionCard,
@@ -845,16 +846,12 @@ export function CreatePodDisruptionBudgetPage() {
   const isCreateDisabled = !podDisruptionBudgetName.trim();
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -863,8 +860,8 @@ export function CreatePodDisruptionBudgetPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -900,84 +897,80 @@ export function CreatePodDisruptionBudgetPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <div className="flex flex-col gap-[9px]">
-                <div className="flex items-center justify-between h-8">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Create Pod Disruption Budget
-                  </h1>
-                </div>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  Pod Disruption Budget defines the minimum number of pods that must remain
-                  available during voluntary disruptions to ensure application stability.
-                </p>
-              </div>
-
-              {/* Main Content with Sidebar */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Form Content */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <BasicInfoSection
-                    podDisruptionBudgetName={podDisruptionBudgetName}
-                    onPodDisruptionBudgetNameChange={setPodDisruptionBudgetName}
-                    podDisruptionBudgetNameError={podDisruptionBudgetNameError}
-                    onPodDisruptionBudgetNameErrorChange={setPodDisruptionBudgetNameError}
-                    namespace={namespace}
-                    onNamespaceChange={setNamespace}
-                    description={description}
-                    onDescriptionChange={setDescription}
-                  />
-
-                  {/* Budget Section */}
-                  <BudgetSection
-                    minAvailablePods={minAvailablePods}
-                    onMinAvailablePodsChange={setMinAvailablePods}
-                    minAvailableUnit={minAvailableUnit}
-                    onMinAvailableUnitChange={setMinAvailableUnit}
-                    maxUnavailablePods={maxUnavailablePods}
-                    onMaxUnavailablePodsChange={setMaxUnavailablePods}
-                    maxUnavailableUnit={maxUnavailableUnit}
-                    onMaxUnavailableUnitChange={setMaxUnavailableUnit}
-                  />
-
-                  {/* Selector Section */}
-                  <SelectorSection
-                    selectorRules={selectorRules}
-                    onSelectorRulesChange={setSelectorRules}
-                  />
-
-                  {/* Labels & Annotations Section */}
-                  <LabelsAnnotationsSection
-                    labels={labels}
-                    onAddLabel={addLabel}
-                    onRemoveLabel={removeLabel}
-                    onUpdateLabel={updateLabel}
-                    annotations={annotations}
-                    onAddAnnotation={addAnnotation}
-                    onRemoveAnnotation={removeAnnotation}
-                    onUpdateAnnotation={updateAnnotation}
-                  />
-                </VStack>
-
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  podDisruptionBudgetName={podDisruptionBudgetName}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
-              </HStack>
-            </VStack>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <div className="flex flex-col gap-[9px]">
+          <div className="flex items-center justify-between h-8">
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              Create Pod Disruption Budget
+            </h1>
           </div>
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            Pod Disruption Budget defines the minimum number of pods that must remain available
+            during voluntary disruptions to ensure application stability.
+          </p>
         </div>
-      </main>
-    </div>
+
+        {/* Main Content with Sidebar */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Form Content */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <BasicInfoSection
+              podDisruptionBudgetName={podDisruptionBudgetName}
+              onPodDisruptionBudgetNameChange={setPodDisruptionBudgetName}
+              podDisruptionBudgetNameError={podDisruptionBudgetNameError}
+              onPodDisruptionBudgetNameErrorChange={setPodDisruptionBudgetNameError}
+              namespace={namespace}
+              onNamespaceChange={setNamespace}
+              description={description}
+              onDescriptionChange={setDescription}
+            />
+
+            {/* Budget Section */}
+            <BudgetSection
+              minAvailablePods={minAvailablePods}
+              onMinAvailablePodsChange={setMinAvailablePods}
+              minAvailableUnit={minAvailableUnit}
+              onMinAvailableUnitChange={setMinAvailableUnit}
+              maxUnavailablePods={maxUnavailablePods}
+              onMaxUnavailablePodsChange={setMaxUnavailablePods}
+              maxUnavailableUnit={maxUnavailableUnit}
+              onMaxUnavailableUnitChange={setMaxUnavailableUnit}
+            />
+
+            {/* Selector Section */}
+            <SelectorSection
+              selectorRules={selectorRules}
+              onSelectorRulesChange={setSelectorRules}
+            />
+
+            {/* Labels & Annotations Section */}
+            <LabelsAnnotationsSection
+              labels={labels}
+              onAddLabel={addLabel}
+              onRemoveLabel={removeLabel}
+              onUpdateLabel={updateLabel}
+              annotations={annotations}
+              onAddAnnotation={addAnnotation}
+              onRemoveAnnotation={removeAnnotation}
+              onUpdateAnnotation={updateAnnotation}
+            />
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            podDisruptionBudgetName={podDisruptionBudgetName}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

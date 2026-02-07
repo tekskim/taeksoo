@@ -13,6 +13,8 @@ import {
   TabPanel,
   SectionCard,
   NumberInput,
+  PageShell,
+  PageHeader,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -73,16 +75,10 @@ export default function IAMTokenPoliciesPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -91,8 +87,8 @@ export default function IAMTokenPoliciesPage() {
           onTabAdd={() => addNewTab('/iam/home', 'Home')}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -101,125 +97,116 @@ export default function IAMTokenPoliciesPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
+      }
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <PageHeader title="Token policies" />
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Token policies
-                </h1>
-              </HStack>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="general">General policy</Tab>
+            </TabList>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="general">General policy</Tab>
-                  </TabList>
-
-                  {/* General Policy Tab */}
-                  <TabPanel value="general" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <SectionCard>
-                        <SectionCard.Header title="General policy" />
-                        <SectionCard.Content gap={6}>
-                          {/* Access Token Lifespan */}
-                          <VStack gap={4}>
-                            <VStack gap={2}>
-                              <HStack className="gap-[3px]">
-                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                  Access token lifespan
-                                </span>
-                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                              </HStack>
-                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                                Defines how long an access token remains valid before it needs to be
-                                renewed.
-                              </p>
-                            </VStack>
-                            <VStack gap={2}>
-                              <HStack gap={2} align="center">
-                                <NumberInput
-                                  value={accessTokenLifespan}
-                                  onChange={setAccessTokenLifespan}
-                                  min={5}
-                                  max={15}
-                                  step={1}
-                                  width="sm"
-                                />
-                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                  Minutes
-                                </span>
-                              </HStack>
-                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                                5 - 15 Minutes
-                              </p>
-                            </VStack>
-                          </VStack>
-
-                          {/* Refresh Token Lifespan */}
-                          <VStack gap={4}>
-                            <VStack gap={2}>
-                              <HStack className="gap-[3px]">
-                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                  Refresh token lifespan
-                                </span>
-                                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                              </HStack>
-                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                                Defines how long a user can stay signed in using a refresh token.
-                              </p>
-                            </VStack>
-                            <VStack gap={2}>
-                              <HStack gap={2} align="center">
-                                <NumberInput
-                                  value={refreshTokenLifespan}
-                                  onChange={setRefreshTokenLifespan}
-                                  min={1}
-                                  max={30}
-                                  step={1}
-                                  width="sm"
-                                />
-                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                  Days
-                                </span>
-                              </HStack>
-                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                                1-30 Days
-                              </p>
-                            </VStack>
-                          </VStack>
-
-                          {/* Action Buttons */}
-                          <HStack gap={2} justify="end" className="w-full">
-                            <button
-                              type="button"
-                              onClick={handleResetToDefault}
-                              className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
-                            >
-                              <IconRefresh size={12} stroke={1.5} />
-                              Reset to default
-                            </button>
-                            <Button variant="secondary" size="sm" onClick={handleReload}>
-                              Reload
-                            </Button>
-                            <Button variant="primary" size="sm" onClick={handleSave}>
-                              Save
-                            </Button>
-                          </HStack>
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* General Policy Tab */}
+            <TabPanel value="general" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="General policy" />
+                  <SectionCard.Content gap={6}>
+                    {/* Access Token Lifespan */}
+                    <VStack gap={4}>
+                      <VStack gap={2}>
+                        <HStack className="gap-[3px]">
+                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                            Access token lifespan
+                          </span>
+                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                        </HStack>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
+                          Defines how long an access token remains valid before it needs to be
+                          renewed.
+                        </p>
+                      </VStack>
+                      <VStack gap={2}>
+                        <HStack gap={2} align="center">
+                          <NumberInput
+                            value={accessTokenLifespan}
+                            onChange={setAccessTokenLifespan}
+                            min={5}
+                            max={15}
+                            step={1}
+                            width="sm"
+                          />
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            Minutes
+                          </span>
+                        </HStack>
+                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+                          5 - 15 Minutes
+                        </p>
+                      </VStack>
                     </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+
+                    {/* Refresh Token Lifespan */}
+                    <VStack gap={4}>
+                      <VStack gap={2}>
+                        <HStack className="gap-[3px]">
+                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                            Refresh token lifespan
+                          </span>
+                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                        </HStack>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
+                          Defines how long a user can stay signed in using a refresh token.
+                        </p>
+                      </VStack>
+                      <VStack gap={2}>
+                        <HStack gap={2} align="center">
+                          <NumberInput
+                            value={refreshTokenLifespan}
+                            onChange={setRefreshTokenLifespan}
+                            min={1}
+                            max={30}
+                            step={1}
+                            width="sm"
+                          />
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            Days
+                          </span>
+                        </HStack>
+                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+                          1-30 Days
+                        </p>
+                      </VStack>
+                    </VStack>
+
+                    {/* Action Buttons */}
+                    <HStack gap={2} justify="end" className="w-full">
+                      <button
+                        type="button"
+                        onClick={handleResetToDefault}
+                        className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
+                      >
+                        <IconRefresh size={12} stroke={1.5} />
+                        Reset to default
+                      </button>
+                      <Button variant="secondary" size="sm" onClick={handleReload}>
+                        Reload
+                      </Button>
+                      <Button variant="primary" size="sm" onClick={handleSave}>
+                        Save
+                      </Button>
+                    </HStack>
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

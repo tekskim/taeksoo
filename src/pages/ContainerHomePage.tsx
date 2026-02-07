@@ -12,6 +12,7 @@ import {
   SectionCard,
   SearchInput,
   Pagination,
+  PageShell,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
@@ -190,16 +191,12 @@ export function ContainerHomePage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -208,8 +205,8 @@ export function ContainerHomePage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -234,79 +231,75 @@ export function ContainerHomePage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-6 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Welcome Header */}
-              <SectionCard className="bg-[var(--color-surface-subtle)]">
-                <SectionCard.Content>
-                  <VStack gap={2}>
-                    <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                      Welcome to Thaki Cloud Container
-                    </h1>
-                    <p className="text-body-lg text-[var(--color-text-muted)]">
-                      Manage effortlessly, scale and optimize your Kubernetes clusters, workloads,
-                      and resources from a single platform.
-                    </p>
-                  </VStack>
-                </SectionCard.Content>
-              </SectionCard>
-
-              {/* Clusters Section */}
-              <HStack gap={6} align="start">
-                {/* Clusters Table */}
-                <SectionCard className="flex-1">
-                  <SectionCard.Header title="Clusters" />
-                  <SectionCard.Content>
-                    <VStack gap={4}>
-                      <SearchInput
-                        placeholder="Search clusters by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={Math.ceil(clustersData.length / 10)}
-                        onPageChange={setCurrentPage}
-                        totalItems={clustersData.length}
-                      />
-                      <Table<ClusterRow>
-                        columns={columns}
-                        data={clustersData}
-                        rowKey="id"
-                        rowHeight="40px"
-                      />
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
-
-                {/* Create Cluster Card */}
-                <SectionCard className="w-[var(--search-input-width)] shrink-0">
-                  <SectionCard.Content>
-                    <VStack gap={4}>
-                      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                        Create a Cluster
-                      </h3>
-                      <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
-                        Create a Kubernetes cluster to start running and managing your containerized
-                        workloads.
-                      </p>
-                      <div className="w-full flex justify-end">
-                        <Button variant="primary" size="md">
-                          Create Cluster
-                        </Button>
-                      </div>
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
-              </HStack>
+      }
+      contentClassName="pt-6 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Welcome Header */}
+        <SectionCard className="bg-[var(--color-surface-subtle)]">
+          <SectionCard.Content>
+            <VStack gap={2}>
+              <h1 className="text-heading-h4 text-[var(--color-text-default)]">
+                Welcome to Thaki Cloud Container
+              </h1>
+              <p className="text-body-lg text-[var(--color-text-muted)]">
+                Manage effortlessly, scale and optimize your Kubernetes clusters, workloads, and
+                resources from a single platform.
+              </p>
             </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          </SectionCard.Content>
+        </SectionCard>
+
+        {/* Clusters Section */}
+        <HStack gap={6} align="start">
+          {/* Clusters Table */}
+          <SectionCard className="flex-1">
+            <SectionCard.Header title="Clusters" />
+            <SectionCard.Content>
+              <VStack gap={4}>
+                <SearchInput
+                  placeholder="Search clusters by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(clustersData.length / 10)}
+                  onPageChange={setCurrentPage}
+                  totalItems={clustersData.length}
+                />
+                <Table<ClusterRow>
+                  columns={columns}
+                  data={clustersData}
+                  rowKey="id"
+                  rowHeight="40px"
+                />
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Create Cluster Card */}
+          <SectionCard className="w-[var(--search-input-width)] shrink-0">
+            <SectionCard.Content>
+              <VStack gap={4}>
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                  Create a Cluster
+                </h3>
+                <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+                  Create a Kubernetes cluster to start running and managing your containerized
+                  workloads.
+                </p>
+                <div className="w-full flex justify-end">
+                  <Button variant="primary" size="md">
+                    Create Cluster
+                  </Button>
+                </div>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

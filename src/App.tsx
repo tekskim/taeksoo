@@ -15,6 +15,11 @@ import { MailTemplatePage } from '@/pages/MailTemplatePage';
 import { LinkExpiredPage } from '@/pages/LinkExpiredPage';
 import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
 
+// Pages - Compute (Pilot - Phase 2-A)
+import { DNSZonesPage } from '@/pages/DNSZonesPage';
+import { BackupPoliciesPage } from '@/pages/BackupPoliciesPage';
+import { ScheduledTasksPage } from '@/pages/ScheduledTasksPage';
+
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
@@ -421,6 +426,9 @@ function AppRoutes() {
       <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
       <Route path="/compute/certificates" element={<CertificatesPage />} />
       <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
+      <Route path="/compute/dns-zones" element={<DNSZonesPage />} />
+      <Route path="/compute/backup-policies" element={<BackupPoliciesPage />} />
+      <Route path="/compute/scheduled-tasks" element={<ScheduledTasksPage />} />
       <Route path="/compute/topology" element={<TopologyD3Page />} />
       <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 

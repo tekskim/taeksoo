@@ -10,6 +10,7 @@ import {
   TopBar,
   Input,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -755,16 +756,12 @@ export function CreateConfigMapPage() {
     annotations.some((a) => a.key.trim() || a.value.trim());
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -773,8 +770,8 @@ export function CreateConfigMapPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -810,78 +807,72 @@ export function CreateConfigMapPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <div className="flex items-center justify-between h-8">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Create ConfigMap
-                  </h1>
-                </div>
-                <p className="text-body-md text-[var(--color-text-subtle)]">
-                  ConfigMap provide configuration data as key–value pairs so applications can load
-                  settings without changing container images.
-                </p>
-              </VStack>
-
-              {/* Main Content with Sidebar */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Form Content */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <BasicInfoSection
-                    configMapName={configMapName}
-                    onConfigMapNameChange={setConfigMapName}
-                    configMapNameError={configMapNameError}
-                    onConfigMapNameErrorChange={setConfigMapNameError}
-                    namespace={namespace}
-                    onNamespaceChange={setNamespace}
-                    description={description}
-                    onDescriptionChange={setDescription}
-                  />
-
-                  {/* Data Section */}
-                  <DataSection dataEntries={dataEntries} onDataEntriesChange={setDataEntries} />
-
-                  {/* Binary Data Section */}
-                  <BinaryDataSection
-                    binaryDataEntries={binaryDataEntries}
-                    onBinaryDataEntriesChange={setBinaryDataEntries}
-                  />
-
-                  {/* Labels & Annotations Section */}
-                  <LabelsAnnotationsSection
-                    labels={labels}
-                    onAddLabel={addLabel}
-                    onRemoveLabel={removeLabel}
-                    onUpdateLabel={updateLabel}
-                    annotations={annotations}
-                    onAddAnnotation={addAnnotation}
-                    onRemoveAnnotation={removeAnnotation}
-                    onUpdateAnnotation={updateAnnotation}
-                  />
-                </VStack>
-
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  configMapName={configMapName}
-                  dataEntries={dataEntries}
-                  binaryDataEntries={binaryDataEntries}
-                  hasLabelsOrAnnotations={hasLabelsOrAnnotations}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
-              </HStack>
-            </VStack>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <div className="flex items-center justify-between h-8">
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create ConfigMap</h1>
           </div>
-        </div>
-      </main>
-    </div>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            ConfigMap provide configuration data as key–value pairs so applications can load
+            settings without changing container images.
+          </p>
+        </VStack>
+
+        {/* Main Content with Sidebar */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Form Content */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <BasicInfoSection
+              configMapName={configMapName}
+              onConfigMapNameChange={setConfigMapName}
+              configMapNameError={configMapNameError}
+              onConfigMapNameErrorChange={setConfigMapNameError}
+              namespace={namespace}
+              onNamespaceChange={setNamespace}
+              description={description}
+              onDescriptionChange={setDescription}
+            />
+
+            {/* Data Section */}
+            <DataSection dataEntries={dataEntries} onDataEntriesChange={setDataEntries} />
+
+            {/* Binary Data Section */}
+            <BinaryDataSection
+              binaryDataEntries={binaryDataEntries}
+              onBinaryDataEntriesChange={setBinaryDataEntries}
+            />
+
+            {/* Labels & Annotations Section */}
+            <LabelsAnnotationsSection
+              labels={labels}
+              onAddLabel={addLabel}
+              onRemoveLabel={removeLabel}
+              onUpdateLabel={updateLabel}
+              annotations={annotations}
+              onAddAnnotation={addAnnotation}
+              onRemoveAnnotation={removeAnnotation}
+              onUpdateAnnotation={updateAnnotation}
+            />
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            configMapName={configMapName}
+            dataEntries={dataEntries}
+            binaryDataEntries={binaryDataEntries}
+            hasLabelsOrAnnotations={hasLabelsOrAnnotations}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

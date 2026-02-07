@@ -11,6 +11,9 @@ import {
   Breadcrumb,
   StatusIndicator,
   Badge,
+  PageShell,
+  PageHeader,
+  ListToolbar,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -234,6 +237,8 @@ export function HostsPage() {
     closable: tab.closable,
   }));
 
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   // Filter hosts based on search
   const filteredHosts = useMemo(
     () =>
@@ -351,120 +356,106 @@ export function HostsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Hosts' }]} />
+          }
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader title="Hosts" />
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Hosts' }]} />
-            }
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Hosts</h1>
-              </div>
-
-              {/* Search and Actions */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <SearchInput
-                      placeholder="Search users by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
-                      aria-label="Download"
-                      onClick={() => console.log('Download clicked')}
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconRefresh size={12} stroke={1.5} />}
-                      aria-label="Refresh"
-                      onClick={() => console.log('Refresh clicked')}
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                      onClick={() => console.log('Delete clicked')}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
+        {/* Search and Actions */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <SearchInput
+                placeholder="Search users by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-
-              {/* Pagination */}
-              {filteredHosts.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => console.log('Settings clicked')}
-                  totalItems={filteredHosts.length}
-                />
-              )}
-
-              {/* Hosts Table */}
-              <Table<Host>
-                columns={columns}
-                data={paginatedHosts}
-                rowKey="id"
-                emptyMessage="No hosts found"
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} stroke={1.5} />}
+                aria-label="Download"
+                onClick={() => console.log('Download clicked')}
               />
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                onClick={() => console.log('Delete clicked')}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+
+        {/* Pagination */}
+        {filteredHosts.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => console.log('Settings clicked')}
+            totalItems={filteredHosts.length}
+          />
+        )}
+
+        {/* Hosts Table */}
+        <Table<Host>
+          columns={columns}
+          data={paginatedHosts}
+          rowKey="id"
+          emptyMessage="No hosts found"
+        />
+      </VStack>
+    </PageShell>
   );
 }
 

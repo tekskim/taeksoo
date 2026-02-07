@@ -9,6 +9,8 @@ import {
   Breadcrumb,
   MonitoringToolbar,
   Select,
+  PageShell,
+  PageHeader,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -626,6 +628,7 @@ function SystemLoadCard() {
 
 export default function ComputeAdminPhysicalNodesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('1h');
   const [selectedNode, setSelectedNode] = useState('node1');
   const [diskDevice, setDiskDevice] = useState('node1');
@@ -670,186 +673,173 @@ export default function ComputeAdminPhysicalNodesPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={6}>
+        <PageHeader title="Physical Nodes" />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
+        {/* Monitoring Toolbar with Node Selector */}
+        <div className="flex items-center gap-2">
+          <Select
+            options={nodeOptions}
+            value={selectedNode}
+            onChange={(val) => setSelectedNode(val as string)}
+            size="sm"
+            width={273}
           />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
+          <MonitoringToolbar
+            timeRangeOptions={timeRangeOptions}
+            timeRange={timeRange}
+            onTimeRangeChange={setTimeRange}
+            onRefresh={() => console.log('Refresh')}
           />
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Physical Nodes
-                </h1>
-              </div>
-
-              {/* Monitoring Toolbar with Node Selector */}
-              <div className="flex items-center gap-2">
-                <Select
-                  options={nodeOptions}
-                  value={selectedNode}
-                  onChange={(val) => setSelectedNode(val as string)}
-                  size="sm"
-                  width={273}
-                />
-                <MonitoringToolbar
-                  timeRangeOptions={timeRangeOptions}
-                  timeRange={timeRange}
-                  onTimeRangeChange={setTimeRange}
-                  onRefresh={() => console.log('Refresh')}
-                />
-              </div>
-
-              {/* Row 1: Stat Cards */}
-              <div className="flex gap-4">
-                <StatCard title="CPU Cores" value={0} />
-                <StatCard title="Total RAM" value="2.56" unit="GiB" />
-                <StatCard title="System running time" value="2.56" unit="weeks" />
-                <FileSystemCard />
-              </div>
-
-              {/* Row 2: CPU Usage & RAM Usage */}
-              <div className="flex gap-4">
-                <AreaChartCard
-                  title="CPU Usage"
-                  labels={timeLabels}
-                  series={[
-                    cpuUsageData.idle,
-                    cpuUsageData.iowait,
-                    cpuUsageData.system,
-                    cpuUsageData.user,
-                  ]}
-                  colors={[
-                    chartColors.cyan400,
-                    chartColors.emerald400,
-                    chartColors.amber400,
-                    chartColors.violet400,
-                  ]}
-                  legendLabels={['idle', 'iowait', 'system', 'user']}
-                  yAxisUnit="%"
-                  stacked={true}
-                />
-                <AreaChartCard
-                  title="RAM Usage"
-                  labels={timeLabels}
-                  series={[ramUsageData.used, ramUsageData.free]}
-                  colors={[chartColors.cyan400, chartColors.emerald400]}
-                  legendLabels={['Used', 'Free']}
-                  stacked={true}
-                />
-              </div>
-
-              {/* Row 3: Disk IOPS & Disk Usage */}
-              <div className="flex gap-4">
-                <AreaChartCard
-                  title="Disk IOPS"
-                  labels={timeLabels}
-                  series={[diskIOPSData.read, diskIOPSData.write]}
-                  colors={[chartColors.cyan400, chartColors.emerald400]}
-                  legendLabels={['Read', 'Write']}
-                  dropdown={diskDevice}
-                  onDropdownChange={setDiskDevice}
-                  dropdownOptions={nodeOptions}
-                />
-                <AreaChartCard
-                  title="Disk usage"
-                  labels={timeLabels}
-                  series={[diskUsageData.usage]}
-                  colors={[chartColors.emerald400]}
-                  legendLabels={['Usage']}
-                  yAxisUnit="%"
-                  dropdown={diskUsageDevice}
-                  onDropdownChange={setDiskUsageDevice}
-                  dropdownOptions={diskDeviceOptions}
-                />
-              </div>
-
-              {/* Row 4: System Load */}
-              <SystemLoadCard />
-
-              {/* Row 5: Network Traffic & TCP Connections */}
-              <div className="flex gap-4">
-                <AreaChartCard
-                  title="Network traffic"
-                  labels={timeLabels}
-                  series={[networkTrafficData.receive, networkTrafficData.transmit]}
-                  colors={[chartColors.cyan400, chartColors.emerald400]}
-                  legendLabels={['Receive', 'Transmit']}
-                />
-                <AreaChartCard
-                  title="TCP Connections"
-                  labels={['0', '4', '8', '12', '16', '20', '24', '28', '32']}
-                  series={[tcpConnectionsData.connections]}
-                  colors={[chartColors.cyan400]}
-                  legendLabels={['Connections']}
-                />
-              </div>
-
-              {/* Row 6: Network Errors & Dropped Packets */}
-              <div className="flex gap-4">
-                <AreaChartCard
-                  title="Network errors"
-                  labels={timeLabels}
-                  series={[networkErrorsData.errors]}
-                  colors={[chartColors.cyan400]}
-                  legendLabels={['Errors']}
-                  dropdown={networkInterface}
-                  onDropdownChange={setNetworkInterface}
-                  dropdownOptions={networkInterfaceOptions}
-                />
-                <AreaChartCard
-                  title="Network dropped packets"
-                  labels={timeLabels}
-                  series={[networkDroppedData.receive, networkDroppedData.transmit]}
-                  colors={[chartColors.cyan400, chartColors.emerald400]}
-                  legendLabels={['Receive', 'Transmit']}
-                  dropdown={networkInterface}
-                  onDropdownChange={setNetworkInterface}
-                  dropdownOptions={networkInterfaceOptions}
-                />
-              </div>
-            </VStack>
-          </div>
+        {/* Row 1: Stat Cards */}
+        <div className="flex gap-4">
+          <StatCard title="CPU Cores" value={0} />
+          <StatCard title="Total RAM" value="2.56" unit="GiB" />
+          <StatCard title="System running time" value="2.56" unit="weeks" />
+          <FileSystemCard />
         </div>
-      </main>
-    </div>
+
+        {/* Row 2: CPU Usage & RAM Usage */}
+        <div className="flex gap-4">
+          <AreaChartCard
+            title="CPU Usage"
+            labels={timeLabels}
+            series={[
+              cpuUsageData.idle,
+              cpuUsageData.iowait,
+              cpuUsageData.system,
+              cpuUsageData.user,
+            ]}
+            colors={[
+              chartColors.cyan400,
+              chartColors.emerald400,
+              chartColors.amber400,
+              chartColors.violet400,
+            ]}
+            legendLabels={['idle', 'iowait', 'system', 'user']}
+            yAxisUnit="%"
+            stacked={true}
+          />
+          <AreaChartCard
+            title="RAM Usage"
+            labels={timeLabels}
+            series={[ramUsageData.used, ramUsageData.free]}
+            colors={[chartColors.cyan400, chartColors.emerald400]}
+            legendLabels={['Used', 'Free']}
+            stacked={true}
+          />
+        </div>
+
+        {/* Row 3: Disk IOPS & Disk Usage */}
+        <div className="flex gap-4">
+          <AreaChartCard
+            title="Disk IOPS"
+            labels={timeLabels}
+            series={[diskIOPSData.read, diskIOPSData.write]}
+            colors={[chartColors.cyan400, chartColors.emerald400]}
+            legendLabels={['Read', 'Write']}
+            dropdown={diskDevice}
+            onDropdownChange={setDiskDevice}
+            dropdownOptions={nodeOptions}
+          />
+          <AreaChartCard
+            title="Disk usage"
+            labels={timeLabels}
+            series={[diskUsageData.usage]}
+            colors={[chartColors.emerald400]}
+            legendLabels={['Usage']}
+            yAxisUnit="%"
+            dropdown={diskUsageDevice}
+            onDropdownChange={setDiskUsageDevice}
+            dropdownOptions={diskDeviceOptions}
+          />
+        </div>
+
+        {/* Row 4: System Load */}
+        <SystemLoadCard />
+
+        {/* Row 5: Network Traffic & TCP Connections */}
+        <div className="flex gap-4">
+          <AreaChartCard
+            title="Network traffic"
+            labels={timeLabels}
+            series={[networkTrafficData.receive, networkTrafficData.transmit]}
+            colors={[chartColors.cyan400, chartColors.emerald400]}
+            legendLabels={['Receive', 'Transmit']}
+          />
+          <AreaChartCard
+            title="TCP Connections"
+            labels={['0', '4', '8', '12', '16', '20', '24', '28', '32']}
+            series={[tcpConnectionsData.connections]}
+            colors={[chartColors.cyan400]}
+            legendLabels={['Connections']}
+          />
+        </div>
+
+        {/* Row 6: Network Errors & Dropped Packets */}
+        <div className="flex gap-4">
+          <AreaChartCard
+            title="Network errors"
+            labels={timeLabels}
+            series={[networkErrorsData.errors]}
+            colors={[chartColors.cyan400]}
+            legendLabels={['Errors']}
+            dropdown={networkInterface}
+            onDropdownChange={setNetworkInterface}
+            dropdownOptions={networkInterfaceOptions}
+          />
+          <AreaChartCard
+            title="Network dropped packets"
+            labels={timeLabels}
+            series={[networkDroppedData.receive, networkDroppedData.transmit]}
+            colors={[chartColors.cyan400, chartColors.emerald400]}
+            legendLabels={['Receive', 'Transmit']}
+            dropdown={networkInterface}
+            onDropdownChange={setNetworkInterface}
+            dropdownOptions={networkInterfaceOptions}
+          />
+        </div>
+      </VStack>
+    </PageShell>
   );
 }

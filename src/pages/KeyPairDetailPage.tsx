@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -174,7 +175,8 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
 export function KeyPairDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Get key pair data based on URL ID
@@ -206,118 +208,94 @@ export function KeyPairDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Created at" value={keyPair.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs Content */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => navigate(1)}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
+                    <CopyableDataRow label="User ID" value={keyPair.userId} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Key Identity */}
+                <SectionCard>
+                  <SectionCard.Header title="Key identity" />
+                  <SectionCard.Content>
+                    <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
+                    <CopyableDataRow label="Public key" value={keyPair.publicKey} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{keyPair.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} stroke={1.5} />}
-                  >
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Created at" value={keyPair.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs Content */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
-                          <CopyableDataRow label="User ID" value={keyPair.userId} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Key Identity */}
-                      <SectionCard>
-                        <SectionCard.Header title="Key identity" />
-                        <SectionCard.Content>
-                          <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
-                          <CopyableDataRow label="Public key" value={keyPair.publicKey} />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

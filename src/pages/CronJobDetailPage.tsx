@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   Pagination,
+  PageShell,
   Button,
   ContextMenu,
   StatusIndicator,
@@ -539,16 +540,12 @@ export function CronJobDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -557,8 +554,8 @@ export function CronJobDetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -594,113 +591,110 @@ export function CronJobDetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>CronJob: {cronjob.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={cronjob.status}
+              status={cronjob.status === 'Active' ? 'active' : 'suspended'}
+            />
+            <DetailHeader.InfoCard label="Namespace" value={cronjob.namespace} copyable />
+            <DetailHeader.InfoCard label="Image" value={cronjob.image} copyable />
+            <DetailHeader.InfoCard label="Created at" value={cronjob.createdAt} />
+          </DetailHeader.InfoGrid>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>CronJob: {cronjob.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={cronjob.status}
-                    status={cronjob.status === 'Active' ? 'active' : 'suspended'}
-                  />
-                  <DetailHeader.InfoCard label="Namespace" value={cronjob.namespace} copyable />
-                  <DetailHeader.InfoCard label="Image" value={cronjob.image} copyable />
-                  <DetailHeader.InfoCard label="Created at" value={cronjob.createdAt} />
-                </DetailHeader.InfoGrid>
+          {/* Labels & Annotations Cards */}
+          <HStack gap={3} className="w-full mt-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Labels ({Object.keys(cronjob.labels).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(cronjob.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(cronjob.labels).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(cronjob.labels).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Annotations ({Object.keys(cronjob.annotations).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(cronjob.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(cronjob.annotations).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(cronjob.annotations).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+          </HStack>
+        </DetailHeader>
 
-                {/* Labels & Annotations Cards */}
-                <HStack gap={3} className="w-full mt-3">
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Labels ({Object.keys(cronjob.labels).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(cronjob.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(cronjob.labels).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(cronjob.labels).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Annotations ({Object.keys(cronjob.annotations).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(cronjob.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(cronjob.annotations).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(cronjob.annotations).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                </HStack>
-              </DetailHeader>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="jobs">Jobs</Tab>
+            <Tab value="events">Recent Events</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="jobs">Jobs</Tab>
-                  <Tab value="events">Recent Events</Tab>
-                </TabList>
-
-                <TabPanel value="jobs">
-                  <JobsTab jobs={mockJobsData} />
-                </TabPanel>
-                <TabPanel value="events">
-                  <RecentEventsTab events={mockEventsData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
-
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+          <TabPanel value="jobs">
+            <JobsTab jobs={mockJobsData} />
+          </TabPanel>
+          <TabPanel value="events">
+            <RecentEventsTab events={mockEventsData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

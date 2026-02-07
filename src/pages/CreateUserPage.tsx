@@ -17,6 +17,7 @@ import {
   SelectionIndicator,
   InlineMessage,
   FormField,
+  PageShell,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -1226,20 +1227,16 @@ export default function CreateUserPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        currentPath="/iam/users"
-      />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <IAMSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          currentPath="/iam/users"
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -1248,8 +1245,8 @@ export default function CreateUserPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -1266,119 +1263,115 @@ export default function CreateUserPage() {
             />
           }
         />
-
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            {/* Main content area */}
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create user</h1>
-              </div>
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInformationSection
-                      username={username}
-                      onUsernameChange={setUsername}
-                      usernameError={usernameError}
-                      onUsernameErrorChange={setUsernameError}
-                      passwordOption={passwordOption}
-                      onPasswordOptionChange={setPasswordOption}
-                      password={password}
-                      onPasswordChange={setPassword}
-                      passwordError={passwordError}
-                      onPasswordErrorChange={setPasswordError}
-                      confirmPassword={confirmPassword}
-                      onConfirmPasswordChange={setConfirmPassword}
-                      confirmPasswordError={confirmPasswordError}
-                      onConfirmPasswordErrorChange={setConfirmPasswordError}
-                      email={email}
-                      onEmailChange={setEmail}
-                      emailError={emailError}
-                      onEmailErrorChange={setEmailError}
-                      displayName={displayName}
-                      onDisplayNameChange={setDisplayName}
-                      status={status}
-                      onStatusChange={setStatus}
-                      onNext={() => handleNext('basic-info')}
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow label="Username" value={username} showDivider={false} />
-                      <SectionCard.DataRow label="Password" value={getPasswordOptionDisplay()} />
-                      <SectionCard.DataRow label="Email" value={email} />
-                      <SectionCard.DataRow label="Display name" value={displayName || '-'} />
-                      <SectionCard.DataRow label="Status" value={status ? 'Enabled' : 'Disabled'} />
-                    </DoneSection>
-                  )}
-
-                  {/* User Group Section */}
-                  {sectionStatus['user-group'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['user-group']} />
-                  )}
-                  {sectionStatus['user-group'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['user-group']} />
-                  )}
-                  {sectionStatus['user-group'] === 'active' && (
-                    <UserGroupSection
-                      selectedGroups={selectedGroups}
-                      onSelectionChange={(ids) => {
-                        setSelectedGroups(ids);
-                        if (ids.length > 0) {
-                          setUserGroupError(null);
-                        }
-                      }}
-                      onNext={() => handleNext('user-group')}
-                      isEditing={editingSection === 'user-group'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                      userGroupError={userGroupError}
-                      onUserGroupErrorChange={setUserGroupError}
-                    />
-                  )}
-                  {sectionStatus['user-group'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['user-group']}
-                      onEdit={() => handleEdit('user-group')}
-                    >
-                      <SectionCard.DataRow
-                        label="Selected groups"
-                        value={getSelectedGroupsDisplay()}
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
-                </VStack>
-
-                {/* Right Column - Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateEnabled={allSectionsDone && !editingSection}
-                />
-              </HStack>
-            </VStack>
-          </div>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      {/* Main content area */}
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create user</h1>
         </div>
-      </main>
-    </div>
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            {sectionStatus['basic-info'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'active' && (
+              <BasicInformationSection
+                username={username}
+                onUsernameChange={setUsername}
+                usernameError={usernameError}
+                onUsernameErrorChange={setUsernameError}
+                passwordOption={passwordOption}
+                onPasswordOptionChange={setPasswordOption}
+                password={password}
+                onPasswordChange={setPassword}
+                passwordError={passwordError}
+                onPasswordErrorChange={setPasswordError}
+                confirmPassword={confirmPassword}
+                onConfirmPasswordChange={setConfirmPassword}
+                confirmPasswordError={confirmPasswordError}
+                onConfirmPasswordErrorChange={setConfirmPasswordError}
+                email={email}
+                onEmailChange={setEmail}
+                emailError={emailError}
+                onEmailErrorChange={setEmailError}
+                displayName={displayName}
+                onDisplayNameChange={setDisplayName}
+                status={status}
+                onStatusChange={setStatus}
+                onNext={() => handleNext('basic-info')}
+                isEditing={editingSection === 'basic-info'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['basic-info'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['basic-info']}
+                onEdit={() => handleEdit('basic-info')}
+              >
+                <SectionCard.DataRow label="Username" value={username} showDivider={false} />
+                <SectionCard.DataRow label="Password" value={getPasswordOptionDisplay()} />
+                <SectionCard.DataRow label="Email" value={email} />
+                <SectionCard.DataRow label="Display name" value={displayName || '-'} />
+                <SectionCard.DataRow label="Status" value={status ? 'Enabled' : 'Disabled'} />
+              </DoneSection>
+            )}
+
+            {/* User Group Section */}
+            {sectionStatus['user-group'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['user-group']} />
+            )}
+            {sectionStatus['user-group'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['user-group']} />
+            )}
+            {sectionStatus['user-group'] === 'active' && (
+              <UserGroupSection
+                selectedGroups={selectedGroups}
+                onSelectionChange={(ids) => {
+                  setSelectedGroups(ids);
+                  if (ids.length > 0) {
+                    setUserGroupError(null);
+                  }
+                }}
+                onNext={() => handleNext('user-group')}
+                isEditing={editingSection === 'user-group'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+                userGroupError={userGroupError}
+                onUserGroupErrorChange={setUserGroupError}
+              />
+            )}
+            {sectionStatus['user-group'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['user-group']}
+                onEdit={() => handleEdit('user-group')}
+              >
+                <SectionCard.DataRow
+                  label="Selected groups"
+                  value={getSelectedGroupsDisplay()}
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
+          </VStack>
+
+          {/* Right Column - Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateEnabled={allSectionsDone && !editingSection}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
+import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconChevronRight, IconBell, IconCpu, IconServer } from '@tabler/icons-react';
@@ -229,6 +229,7 @@ function Card({
    ---------------------------------------- */
 export function ComputeAdminHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
 
@@ -239,146 +240,140 @@ export function ComputeAdminHomePage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-            onWindowClose={() => navigate('/')}
-          />
-
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Home' }]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Dashboard Content */}
-          <div className="px-8 py-6">
-            {/* Top Row - 3 Cards */}
-            <div className="grid grid-cols-3 gap-6 mb-6">
-              {/* CAPACITY SUMMARY */}
-              <Card title="CAPACITY SUMMARY">
-                <div className="space-y-[22px]">
-                  <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
-                  <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
-                  <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />
-                  <ComputeQuotaBar label="Total NPU" used={6} total={8} unit="NPU" />
-                </div>
-              </Card>
-
-              {/* INSTANCE SUMMARY */}
-              <Card title="INSTANCE SUMMARY" className="flex flex-col">
-                <div className="mb-4">
-                  <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
-                    13
-                  </div>
-                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-                </div>
-                <div className="space-y-2 mt-auto">
-                  <div className="flex gap-2">
-                    <SummaryStatBox value={10} label="Active" />
-                    <SummaryStatBox value={0} label="Error" />
-                  </div>
-                  <div className="flex gap-2">
-                    <SummaryStatBox value={0} label="Stopped" />
-                    <SummaryStatBox value={3} label="Others" />
-                  </div>
-                </div>
-              </Card>
-
-              {/* BARE METAL SUMMARY */}
-              <Card title="BARE METAL SUMMARY" className="flex flex-col">
-                <div className="mb-4">
-                  <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
-                    8
-                  </div>
-                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-                </div>
-                <div className="space-y-2 mt-auto">
-                  <div className="flex gap-2">
-                    <SummaryStatBox value={6} label="Active" />
-                    <SummaryStatBox value={1} label="Error" />
-                  </div>
-                  <div className="flex gap-2">
-                    <SummaryStatBox value={0} label="Stopped" />
-                    <SummaryStatBox value={1} label="Others" />
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Bottom Row - Tenant Usages */}
-            <Card title="TENANT USAGES">
-              <div className="space-y-6">
-                <TenantRow
-                  name="Tenant A"
-                  enabled={true}
-                  resources={{
-                    vCPU: { used: 4, total: 8 },
-                    RAM: { used: 22, total: 32 },
-                    Disk: { used: 4, total: 6 },
-                    GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 },
-                  }}
-                />
-                <TenantRow
-                  name="Tenant B"
-                  enabled={false}
-                  resources={{
-                    vCPU: { used: 4, total: 8 },
-                    RAM: { used: 22, total: 32 },
-                    Disk: { used: 4, total: 6 },
-                    GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 },
-                  }}
-                />
-                <TenantRow
-                  name="Tenant C"
-                  enabled={true}
-                  resources={{
-                    vCPU: { used: 4, total: 8 },
-                    RAM: { used: 22, total: 32 },
-                    Disk: { used: 4, total: 6 },
-                    GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 },
-                  }}
-                />
-              </div>
-            </Card>
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Home' }]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="px-8 py-6"
+    >
+      {/* Top Row - 3 Cards */}
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        {/* CAPACITY SUMMARY */}
+        <Card title="CAPACITY SUMMARY">
+          <div className="space-y-[22px]">
+            <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
+            <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
+            <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />
+            <ComputeQuotaBar label="Total NPU" used={6} total={8} unit="NPU" />
           </div>
+        </Card>
+
+        {/* INSTANCE SUMMARY */}
+        <Card title="INSTANCE SUMMARY" className="flex flex-col">
+          <div className="mb-4">
+            <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
+              13
+            </div>
+            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
+          </div>
+          <div className="space-y-2 mt-auto">
+            <div className="flex gap-2">
+              <SummaryStatBox value={10} label="Active" />
+              <SummaryStatBox value={0} label="Error" />
+            </div>
+            <div className="flex gap-2">
+              <SummaryStatBox value={0} label="Stopped" />
+              <SummaryStatBox value={3} label="Others" />
+            </div>
+          </div>
+        </Card>
+
+        {/* BARE METAL SUMMARY */}
+        <Card title="BARE METAL SUMMARY" className="flex flex-col">
+          <div className="mb-4">
+            <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">8</div>
+            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
+          </div>
+          <div className="space-y-2 mt-auto">
+            <div className="flex gap-2">
+              <SummaryStatBox value={6} label="Active" />
+              <SummaryStatBox value={1} label="Error" />
+            </div>
+            <div className="flex gap-2">
+              <SummaryStatBox value={0} label="Stopped" />
+              <SummaryStatBox value={1} label="Others" />
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Bottom Row - Tenant Usages */}
+      <Card title="TENANT USAGES">
+        <div className="space-y-6">
+          <TenantRow
+            name="Tenant A"
+            enabled={true}
+            resources={{
+              vCPU: { used: 4, total: 8 },
+              RAM: { used: 22, total: 32 },
+              Disk: { used: 4, total: 6 },
+              GPU: { used: 6, total: 8 },
+              NPU: { used: 6, total: 8 },
+            }}
+          />
+          <TenantRow
+            name="Tenant B"
+            enabled={false}
+            resources={{
+              vCPU: { used: 4, total: 8 },
+              RAM: { used: 22, total: 32 },
+              Disk: { used: 4, total: 6 },
+              GPU: { used: 6, total: 8 },
+              NPU: { used: 6, total: 8 },
+            }}
+          />
+          <TenantRow
+            name="Tenant C"
+            enabled={true}
+            resources={{
+              vCPU: { used: 4, total: 8 },
+              RAM: { used: 22, total: 32 },
+              Disk: { used: 4, total: 6 },
+              GPU: { used: 6, total: 8 },
+              NPU: { used: 6, total: 8 },
+            }}
+          />
         </div>
-      </main>
-    </div>
+      </Card>
+    </PageShell>
   );
 }
 

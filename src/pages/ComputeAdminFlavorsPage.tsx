@@ -14,6 +14,8 @@ import {
   ListToolbar,
   Button,
   ContextMenu,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -23,6 +25,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -263,7 +266,8 @@ const filterFields: FilterField[] = [
 
 export function ComputeAdminFlavorsPage() {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('cpu');
@@ -490,128 +494,114 @@ export function ComputeAdminFlavorsPage() {
   }, [columns, columnConfig, activeTab]);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Flavors' }]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Flavors"
+          actions={
+            <Link to="/compute-admin/flavors/create">
+              <Button size="md" onClick={() => navigate('/compute-admin/flavors/create')}>
+                Create Flavor
+              </Button>
+            </Link>
+          }
+        />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
+        {/* Category Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="cpu">CPU</Tab>
+            <Tab value="gpu">GPU</Tab>
+            <Tab value="mpu">MPU</Tab>
+            <Tab value="custom">Custom</Tab>
+          </TabList>
+        </Tabs>
+
+        {/* List Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search flavor by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </ListToolbar.Actions>
+          }
+        />
+
+        {/* Pagination */}
+        {filteredFlavors.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => setIsPreferencesOpen(true)}
+            totalItems={filteredFlavors.length}
+            selectedCount={selectedFlavors.length}
           />
+        )}
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Flavors' }]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Flavors</h1>
-                <Link to="/compute-admin/flavors/create">
-                  <Button size="md" onClick={() => navigate('/compute-admin/flavors/create')}>
-                    Create Flavor
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Category Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="cpu">CPU</Tab>
-                  <Tab value="gpu">GPU</Tab>
-                  <Tab value="mpu">MPU</Tab>
-                  <Tab value="custom">Custom</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* List Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search flavor by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                      hideAppliedFilters
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-              />
-
-              {/* Pagination */}
-              {filteredFlavors.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => setIsPreferencesOpen(true)}
-                  totalItems={filteredFlavors.length}
-                  selectedCount={selectedFlavors.length}
-                />
-              )}
-
-              {/* Flavor Table */}
-              <Table<Flavor>
-                columns={visibleColumns}
-                data={filteredFlavors.slice(
-                  (currentPage - 1) * rowsPerPage,
-                  currentPage * rowsPerPage
-                )}
-                rowKey="id"
-                emptyMessage="No flavors found"
-                selectable
-                selectedKeys={selectedFlavors}
-                onSelectionChange={setSelectedFlavors}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Flavor Table */}
+        <Table<Flavor>
+          columns={visibleColumns}
+          data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+          rowKey="id"
+          emptyMessage="No flavors found"
+          selectable
+          selectedKeys={selectedFlavors}
+          onSelectionChange={setSelectedFlavors}
+        />
+      </VStack>
 
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer
@@ -623,7 +613,7 @@ export function ComputeAdminFlavorsPage() {
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
       />
-    </div>
+    </PageShell>
   );
 }
 

@@ -24,6 +24,7 @@ import {
   Pagination,
   Table,
   MonitoringToolbar,
+  PageShell,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -951,163 +952,155 @@ export function OSDDetailPage() {
     },
   ];
 
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'OSDs', href: '/storage/osds' },
-                  { label: `OSD.${osd.id}` },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <div className="flex flex-col items-stretch justify-start gap-2 min-w-[1176px]">
-              {/* OSD Header Card */}
-              <DetailHeader>
-                <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>
-                <div className="flex gap-2 w-full">
-                  <DetailHeaderInfoCard
-                    label="Status"
-                    value={
-                      <div className="flex gap-0.5">
-                        {osd.status.map((s, index) => (
-                          <Chip key={index} value={s} />
-                        ))}
-                      </div>
-                    }
-                    status={osd.status.includes('up') ? 'active' : 'error'}
-                  />
-                  <DetailHeaderInfoCard label="ID" value={String(osd.id)} />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Home', href: '/storage' },
+                { label: 'OSDs', href: '/storage/osds' },
+                { label: `OSD.${osd.id}` },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <div className="flex flex-col items-stretch justify-start gap-2 min-w-[1176px]">
+        {/* OSD Header Card */}
+        <DetailHeader>
+          <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>
+          <div className="flex gap-2 w-full">
+            <DetailHeaderInfoCard
+              label="Status"
+              value={
+                <div className="flex gap-0.5">
+                  {osd.status.map((s, index) => (
+                    <Chip key={index} value={s} />
+                  ))}
                 </div>
-              </DetailHeader>
+              }
+              status={osd.status.includes('up') ? 'active' : 'error'}
+            />
+            <DetailHeaderInfoCard label="ID" value={String(osd.id)} />
+          </div>
+        </DetailHeader>
 
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="devices">Devices</Tab>
-                    <Tab value="device-health">Device health</Tab>
-                    <Tab value="performance">Performance</Tab>
-                  </TabList>
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="devices">Devices</Tab>
+              <Tab value="device-health">Device health</Tab>
+              <Tab value="performance">Performance</Tab>
+            </TabList>
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCardHeader title="Basic information" />
-                        <SectionCardContent>
-                          <SectionCardDataRow label="Device class" showDivider={false}>
-                            <Chip value={osd.deviceClass} />
-                          </SectionCardDataRow>
-                          <SectionCardDataRow label="PGs" value={String(osd.pgs)} />
-                          <SectionCardDataRow label="Size" value={osd.size} />
-                          <SectionCardDataRow label="Flags" value={osd.flags} />
-                          <SectionCardDataRow label="Usage" value={`${osd.usage}%`} />
-                        </SectionCardContent>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCardHeader title="Basic information" />
+                  <SectionCardContent>
+                    <SectionCardDataRow label="Device class" showDivider={false}>
+                      <Chip value={osd.deviceClass} />
+                    </SectionCardDataRow>
+                    <SectionCardDataRow label="PGs" value={String(osd.pgs)} />
+                    <SectionCardDataRow label="Size" value={osd.size} />
+                    <SectionCardDataRow label="Flags" value={osd.flags} />
+                    <SectionCardDataRow label="Usage" value={`${osd.usage}%`} />
+                  </SectionCardContent>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                  {/* Devices Tab */}
-                  <TabPanel value="devices" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Devices
-                        </h2>
-                      </div>
+            {/* Devices Tab */}
+            <TabPanel value="devices" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Devices</h2>
+                </div>
 
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search instance by attributes"
-                          value={deviceSearchQuery}
-                          onChange={(e) => setDeviceSearchQuery(e.target.value)}
-                          onClear={() => setDeviceSearchQuery('')}
-                          size="sm"
-                          fullWidth
-                        />
-                      </div>
+                {/* Search */}
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search instance by attributes"
+                    value={deviceSearchQuery}
+                    onChange={(e) => setDeviceSearchQuery(e.target.value)}
+                    onClear={() => setDeviceSearchQuery('')}
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
 
-                      {/* Pagination */}
-                      {filteredDevices.length > 0 && (
-                        <Pagination
-                          currentPage={deviceCurrentPage}
-                          totalPages={deviceTotalPages}
-                          onPageChange={setDeviceCurrentPage}
-                          totalItems={filteredDevices.length}
-                          itemsPerPage={deviceRowsPerPage}
-                          showItemCount
-                        />
-                      )}
+                {/* Pagination */}
+                {filteredDevices.length > 0 && (
+                  <Pagination
+                    currentPage={deviceCurrentPage}
+                    totalPages={deviceTotalPages}
+                    onPageChange={setDeviceCurrentPage}
+                    totalItems={filteredDevices.length}
+                    itemsPerPage={deviceRowsPerPage}
+                    showItemCount
+                  />
+                )}
 
-                      {/* Devices Table */}
-                      <Table<Device>
-                        columns={deviceColumns}
-                        data={paginatedDevices}
-                        rowKey="id"
-                        emptyMessage="No devices found"
-                      />
-                    </VStack>
-                  </TabPanel>
+                {/* Devices Table */}
+                <Table<Device>
+                  columns={deviceColumns}
+                  data={paginatedDevices}
+                  rowKey="id"
+                  emptyMessage="No devices found"
+                />
+              </VStack>
+            </TabPanel>
 
-                  {/* Device Health Tab */}
-                  <TabPanel value="device-health" className="pt-0">
-                    <div className="flex gap-4 pt-4">
-                      {/* Device List Sidebar */}
-                      <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3">
-                        <h6 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Device health
-                        </h6>
-                        <div className="w-full h-px bg-[var(--color-border-subtle)] my-3" />
-                        <div className="flex flex-col">
-                          {mockDeviceHealthList.map((device) => (
-                            <button
-                              key={device.id}
-                              onClick={() => setSelectedHealthDevice(device)}
-                              className={`
+            {/* Device Health Tab */}
+            <TabPanel value="device-health" className="pt-0">
+              <div className="flex gap-4 pt-4">
+                {/* Device List Sidebar */}
+                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3">
+                  <h6 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Device health
+                  </h6>
+                  <div className="w-full h-px bg-[var(--color-border-subtle)] my-3" />
+                  <div className="flex flex-col">
+                    {mockDeviceHealthList.map((device) => (
+                      <button
+                        key={device.id}
+                        onClick={() => setSelectedHealthDevice(device)}
+                        className={`
                                 text-left px-2.5 py-[7px] rounded text-label-md truncate
                                 transition-colors duration-[var(--duration-fast)]
                                 ${
@@ -1116,25 +1109,25 @@ export function OSDDetailPage() {
                                     : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
                                 }
                               `}
-                            >
-                              {device.name} ({device.serialNumber})
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                      >
+                        {device.name} ({device.serialNumber})
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                      {/* Device Details */}
-                      <div className="flex-1 flex flex-col gap-3 min-w-0">
-                        {/* Selected Device Header */}
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          {selectedHealthDevice.name} ({selectedHealthDevice.serialNumber})
-                        </h2>
+                {/* Device Details */}
+                <div className="flex-1 flex flex-col gap-3 min-w-0">
+                  {/* Selected Device Header */}
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    {selectedHealthDevice.name} ({selectedHealthDevice.serialNumber})
+                  </h2>
 
-                        {/* Sub-tab Switcher */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1 flex gap-2">
-                          <button
-                            onClick={() => setHealthSubTab('device-info')}
-                            className={`
+                  {/* Sub-tab Switcher */}
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1 flex gap-2">
+                    <button
+                      onClick={() => setHealthSubTab('device-info')}
+                      className={`
                               flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${
@@ -1143,12 +1136,12 @@ export function OSDDetailPage() {
                                   : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
-                          >
-                            Device information
-                          </button>
-                          <button
-                            onClick={() => setHealthSubTab('smart')}
-                            className={`
+                    >
+                      Device information
+                    </button>
+                    <button
+                      onClick={() => setHealthSubTab('smart')}
+                      className={`
                               flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${
@@ -1157,213 +1150,210 @@ export function OSDDetailPage() {
                                   : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
-                          >
-                            SMART
-                          </button>
+                    >
+                      SMART
+                    </button>
+                  </div>
+
+                  {/* Content based on sub-tab */}
+                  <SectionCard>
+                    <SectionCardHeader title="Device information" />
+                    <SectionCardContent>
+                      <SectionCardDataRow
+                        label="Model number"
+                        value={selectedHealthDevice.modelNumber}
+                        showDivider={false}
+                      />
+                      <SectionCardDataRow
+                        label="Serial number"
+                        value={selectedHealthDevice.serialNumber}
+                      />
+                      <SectionCardDataRow
+                        label="Firmware version"
+                        value={selectedHealthDevice.firmwareVersion}
+                      />
+                      <SectionCardDataRow
+                        label="Total capacity"
+                        value={selectedHealthDevice.totalCapacity}
+                      />
+
+                      {/* Smartctl Output */}
+                      <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">
+                        <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
+                          Smartctl Output
+                        </p>
+                        <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                          <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
+                            {selectedHealthDevice.smartctlOutput}
+                          </pre>
                         </div>
-
-                        {/* Content based on sub-tab */}
-                        <SectionCard>
-                          <SectionCardHeader title="Device information" />
-                          <SectionCardContent>
-                            <SectionCardDataRow
-                              label="Model number"
-                              value={selectedHealthDevice.modelNumber}
-                              showDivider={false}
-                            />
-                            <SectionCardDataRow
-                              label="Serial number"
-                              value={selectedHealthDevice.serialNumber}
-                            />
-                            <SectionCardDataRow
-                              label="Firmware version"
-                              value={selectedHealthDevice.firmwareVersion}
-                            />
-                            <SectionCardDataRow
-                              label="Total capacity"
-                              value={selectedHealthDevice.totalCapacity}
-                            />
-
-                            {/* Smartctl Output */}
-                            <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">
-                              <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-                                Smartctl Output
-                              </p>
-                              <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                                <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
-                                  {selectedHealthDevice.smartctlOutput}
-                                </pre>
-                              </div>
-                            </div>
-                          </SectionCardContent>
-                        </SectionCard>
                       </div>
-                    </div>
-                  </TabPanel>
+                    </SectionCardContent>
+                  </SectionCard>
+                </div>
+              </div>
+            </TabPanel>
 
-                  {/* Performance Tab */}
-                  <TabPanel value="performance" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Monitoring Time Controls */}
-                      <div className="flex justify-start w-full">
-                        <MonitoringToolbar
-                          onTimeRangeChange={(value) => console.log('Time range changed:', value)}
-                          onRefresh={() => console.log('Refresh clicked')}
+            {/* Performance Tab */}
+            <TabPanel value="performance" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Monitoring Time Controls */}
+                <div className="flex justify-start w-full">
+                  <MonitoringToolbar
+                    onTimeRangeChange={(value) => console.log('Time range changed:', value)}
+                    onRefresh={() => console.log('Refresh clicked')}
+                  />
+                </div>
+
+                {/* OSD Performance Section */}
+                <SectionCard>
+                  <SectionCardHeader title="OSD PERFORMANCE" />
+                  <SectionCardContent>
+                    <div className="flex flex-col gap-4">
+                      {/* Top row - 2 charts */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <OSDChartWithFullScreen
+                          title={`osd.${osdId} Latency`}
+                          series={[
+                            {
+                              name: 'Reads',
+                              data: [65, 68, 70, 72, 75, 85],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'Writes',
+                              data: [20, 22, 25, 28, 30, 35],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=" µs"
+                        />
+                        <OSDChartWithFullScreen
+                          title={`osd.${osdId} R/W IOPS`}
+                          series={[
+                            {
+                              name: 'Reads',
+                              data: [0.6, 0.7, 0.8, 1.0, 1.2, 1.5],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'Writes',
+                              data: [0.4, 0.45, 0.5, 0.55, 0.6, 0.7],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=""
                         />
                       </div>
+                      {/* Bottom row - 1 chart (half width) */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <OSDChartWithFullScreen
+                          title={`osd.${osdId} R/W Bytes`}
+                          series={[
+                            {
+                              name: 'Reads',
+                              data: [15, 18, 22, 28, 32, 40],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'Writes',
+                              data: [8, 10, 12, 15, 18, 22],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=" B"
+                        />
+                      </div>
+                    </div>
+                  </SectionCardContent>
+                </SectionCard>
 
-                      {/* OSD Performance Section */}
-                      <SectionCard>
-                        <SectionCardHeader title="OSD PERFORMANCE" />
-                        <SectionCardContent>
-                          <div className="flex flex-col gap-4">
-                            {/* Top row - 2 charts */}
-                            <div className="grid grid-cols-2 gap-4">
-                              <OSDChartWithFullScreen
-                                title={`osd.${osdId} Latency`}
-                                series={[
-                                  {
-                                    name: 'Reads',
-                                    data: [65, 68, 70, 72, 75, 85],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'Writes',
-                                    data: [20, 22, 25, 28, 30, 35],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=" µs"
-                              />
-                              <OSDChartWithFullScreen
-                                title={`osd.${osdId} R/W IOPS`}
-                                series={[
-                                  {
-                                    name: 'Reads',
-                                    data: [0.6, 0.7, 0.8, 1.0, 1.2, 1.5],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'Writes',
-                                    data: [0.4, 0.45, 0.5, 0.55, 0.6, 0.7],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=""
-                              />
-                            </div>
-                            {/* Bottom row - 1 chart (half width) */}
-                            <div className="grid grid-cols-2 gap-4">
-                              <OSDChartWithFullScreen
-                                title={`osd.${osdId} R/W Bytes`}
-                                series={[
-                                  {
-                                    name: 'Reads',
-                                    data: [15, 18, 22, 28, 32, 40],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'Writes',
-                                    data: [8, 10, 12, 15, 18, 22],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=" B"
-                              />
-                            </div>
-                          </div>
-                        </SectionCardContent>
-                      </SectionCard>
-
-                      {/* Physical Device Data Section */}
-                      <SectionCard>
-                        <SectionCardHeader title={`PHYSICAL DEVICE DATA FOR OSD.${osdId}`} />
-                        <SectionCardContent>
-                          <div className="flex flex-col gap-4">
-                            {/* Top row - 2 charts */}
-                            <div className="grid grid-cols-2 gap-4">
-                              <OSDChartWithFullScreen
-                                title={`Physical Device Latency for osd.${osdId}`}
-                                series={[
-                                  {
-                                    name: 'dm-0 Reads',
-                                    data: [180, 350, 420, 550, 680, 750],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'dm-0 Writes',
-                                    data: [50, 80, 100, 120, 150, 180],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=" µs"
-                              />
-                              <OSDChartWithFullScreen
-                                title={`Physical Device R/W IOPS for osd.${osdId}`}
-                                series={[
-                                  {
-                                    name: 'dm-0 Reads',
-                                    data: [50, 80, 100, 140, 170, 200],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'dm-0 Writes',
-                                    data: [30, 50, 70, 90, 110, 130],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=""
-                              />
-                            </div>
-                            {/* Bottom row - 2 charts */}
-                            <div className="grid grid-cols-2 gap-4">
-                              <OSDChartWithFullScreen
-                                title={`Physical Device R/W Bytes for osd.${osdId}`}
-                                series={[
-                                  {
-                                    name: 'dm-0 Reads',
-                                    data: [350, 450, 550, 700, 900, 1100],
-                                    color: chartColors.cyan400,
-                                  },
-                                  {
-                                    name: 'dm-0 Writes',
-                                    data: [200, 280, 350, 450, 550, 650],
-                                    color: chartColors.emerald400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit=" kiB/s"
-                              />
-                              <OSDChartWithFullScreen
-                                title={`Physical Device Util% for osd.${osdId}`}
-                                series={[
-                                  {
-                                    name: 'dm-0 Util%',
-                                    data: [2.5, 4.0, 5.5, 6.5, 8.0, 9.5],
-                                    color: chartColors.cyan400,
-                                  },
-                                ]}
-                                timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
-                                yAxisUnit="%"
-                              />
-                            </div>
-                          </div>
-                        </SectionCardContent>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </div>
-          </div>
+                {/* Physical Device Data Section */}
+                <SectionCard>
+                  <SectionCardHeader title={`PHYSICAL DEVICE DATA FOR OSD.${osdId}`} />
+                  <SectionCardContent>
+                    <div className="flex flex-col gap-4">
+                      {/* Top row - 2 charts */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <OSDChartWithFullScreen
+                          title={`Physical Device Latency for osd.${osdId}`}
+                          series={[
+                            {
+                              name: 'dm-0 Reads',
+                              data: [180, 350, 420, 550, 680, 750],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'dm-0 Writes',
+                              data: [50, 80, 100, 120, 150, 180],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=" µs"
+                        />
+                        <OSDChartWithFullScreen
+                          title={`Physical Device R/W IOPS for osd.${osdId}`}
+                          series={[
+                            {
+                              name: 'dm-0 Reads',
+                              data: [50, 80, 100, 140, 170, 200],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'dm-0 Writes',
+                              data: [30, 50, 70, 90, 110, 130],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=""
+                        />
+                      </div>
+                      {/* Bottom row - 2 charts */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <OSDChartWithFullScreen
+                          title={`Physical Device R/W Bytes for osd.${osdId}`}
+                          series={[
+                            {
+                              name: 'dm-0 Reads',
+                              data: [350, 450, 550, 700, 900, 1100],
+                              color: chartColors.cyan400,
+                            },
+                            {
+                              name: 'dm-0 Writes',
+                              data: [200, 280, 350, 450, 550, 650],
+                              color: chartColors.emerald400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit=" kiB/s"
+                        />
+                        <OSDChartWithFullScreen
+                          title={`Physical Device Util% for osd.${osdId}`}
+                          series={[
+                            {
+                              name: 'dm-0 Util%',
+                              data: [2.5, 4.0, 5.5, 6.5, 8.0, 9.5],
+                              color: chartColors.cyan400,
+                            },
+                          ]}
+                          timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
+                          yAxisUnit="%"
+                        />
+                      </div>
+                    </div>
+                  </SectionCardContent>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </div>
+    </PageShell>
   );
 }
 

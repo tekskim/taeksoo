@@ -12,6 +12,7 @@ import {
   TabPanel,
   Button,
   ContextMenu,
+  PageShell,
   DetailHeader,
   Select,
   Input,
@@ -405,16 +406,12 @@ export function PodDisruptionBudgetDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -423,8 +420,8 @@ export function PodDisruptionBudgetDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -474,484 +471,464 @@ export function PodDisruptionBudgetDetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Pod Disruption Budget: {pdbData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={pdbData.status}
+              status={
+                pdbData.status === 'Active'
+                  ? 'active'
+                  : pdbData.status === 'Pending'
+                    ? 'pending'
+                    : 'error'
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Namespace"
+              value={
+                <span
+                  className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/namespaces/${pdbData.namespace}`)}
+                >
+                  {pdbData.namespace}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={pdbData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                labelsCount > 0
+                  ? Object.entries(pdbData.labels)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : 'labels'
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                annotationsCount > 0
+                  ? Object.entries(pdbData.annotations)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : 'annotations'
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Pod Disruption Budget: {pdbData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={pdbData.status}
-                    status={
-                      pdbData.status === 'Active'
-                        ? 'active'
-                        : pdbData.status === 'Pending'
-                          ? 'pending'
-                          : 'error'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={
-                      <span
-                        className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/namespaces/${pdbData.namespace}`)}
-                      >
-                        {pdbData.namespace}
+        {/* Tabs */}
+        <VStack className="flex flex-col h-fit w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="budget">Budget</Tab>
+              <Tab value="selector">Selector</Tab>
+              <Tab value="conditions">Conditions</Tab>
+              <Tab value="labels-annotations">Labels & Annotations</Tab>
+              <Tab value="recent-events">Recent Events</Tab>
+            </TabList>
+
+            {/* Budget Tab */}
+            <TabPanel value="budget">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                <VStack gap={4}>
+                  <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Budget
+                  </h3>
+
+                  <HStack gap={3} className="w-full pl-3">
+                    {/* Min. available Pods */}
+                    <VStack gap={2} className="flex-1">
+                      <span className="text-label-sm text-[var(--color-text-default)]">
+                        Min. available Pods
                       </span>
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={pdbData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      labelsCount > 0
-                        ? Object.entries(pdbData.labels)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : 'labels'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      annotationsCount > 0
-                        ? Object.entries(pdbData.annotations)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : 'annotations'
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <VStack className="flex flex-col h-fit w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="budget">Budget</Tab>
-                    <Tab value="selector">Selector</Tab>
-                    <Tab value="conditions">Conditions</Tab>
-                    <Tab value="labels-annotations">Labels & Annotations</Tab>
-                    <Tab value="recent-events">Recent Events</Tab>
-                  </TabList>
-
-                  {/* Budget Tab */}
-                  <TabPanel value="budget">
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
-                      <VStack gap={4}>
-                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                          Budget
-                        </h3>
-
-                        <HStack gap={3} className="w-full pl-3">
-                          {/* Min. available Pods */}
-                          <VStack gap={2} className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
-                              Min. available Pods
-                            </span>
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <Input
-                                  value={pdbData.minAvailable || ''}
-                                  onChange={() => {}}
-                                  size="sm"
-                                  fullWidth
-                                  disabled
-                                />
-                              </div>
-                              <div className="w-[103px]">
-                                <Input
-                                  value="Pods"
-                                  onChange={() => {}}
-                                  size="sm"
-                                  fullWidth
-                                  disabled
-                                />
-                              </div>
-                            </HStack>
-                          </VStack>
-
-                          {/* Max. unavailable Pods */}
-                          <VStack gap={2} className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
-                              Max. unavailable Pods
-                            </span>
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <Input
-                                  value={pdbData.maxUnavailable || ''}
-                                  onChange={() => {}}
-                                  size="sm"
-                                  fullWidth
-                                  disabled
-                                />
-                              </div>
-                              <div className="w-[103px]">
-                                <Input
-                                  value="Pods"
-                                  onChange={() => {}}
-                                  size="sm"
-                                  fullWidth
-                                  disabled
-                                />
-                              </div>
-                            </HStack>
-                          </VStack>
-                        </HStack>
-                      </VStack>
-                    </div>
-                  </TabPanel>
-
-                  {/* Selector Tab */}
-                  <TabPanel value="selector">
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
-                      <VStack gap={6}>
-                        {/* Selectors Section */}
-                        <VStack gap={2} className="w-full">
-                          <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                            Selectors
-                          </h3>
-
-                          {/* Bordered Container for Selectors */}
-                          <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                            <VStack gap={2}>
-                              {/* Column Headers */}
-                              <HStack gap={2} className="w-full">
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Operator
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                </div>
-                              </HStack>
-
-                              {/* Selector Rows */}
-                              {Object.entries(pdbData.selector).length > 0 ? (
-                                Object.entries(pdbData.selector).map(([key, value]) => (
-                                  <HStack key={key} gap={2} className="w-full">
-                                    <div className="flex-1">
-                                      <Input
-                                        value={key}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                        className="bg-[var(--color-surface-muted)]"
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <Select
-                                        options={operatorOptions}
-                                        value="In List"
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <Input
-                                        value={value}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                        className="bg-[var(--color-surface-muted)]"
-                                      />
-                                    </div>
-                                  </HStack>
-                                ))
-                              ) : (
-                                <p className="text-body-md text-[var(--color-text-subtle)]">
-                                  No selectors configured.
-                                </p>
-                              )}
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Matching Pods Section */}
-                        <VStack gap={2}>
-                          <span className="text-label-sm text-[var(--color-text-default)]">
-                            Matching Pods ({pdbData.matchingPods.length}/10)
-                          </span>
-
-                          <Pagination
-                            currentPage={matchingPodsPage}
-                            totalPages={Math.max(totalMatchingPodsPages, 5)}
-                            onPageChange={setMatchingPodsPage}
-                            totalItems={pdbData.matchingPods.length}
-                          />
-
-                          <Table<MatchingPod>
-                            columns={matchingPodsColumns}
-                            data={paginatedMatchingPods}
-                            rowKey="name"
-                          />
-                        </VStack>
-                      </VStack>
-                    </div>
-                  </TabPanel>
-
-                  {/* Conditions Tab */}
-                  <TabPanel value="conditions">
-                    <VStack gap={3}>
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Conditions
-                      </h3>
-
-                      {/* Simple Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={1}
-                        onPageChange={() => {}}
-                        totalItems={pdbData.conditions.length}
-                      />
-
-                      {pdbData.conditions.length > 0 ? (
-                        <Table<Condition>
-                          columns={conditionsColumns}
-                          data={pdbData.conditions}
-                          rowKey="condition"
-                        />
-                      ) : (
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          No conditions available.
-                        </p>
-                      )}
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Labels & Annotations Tab */}
-                  <TabPanel value="labels-annotations">
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
-                      <VStack gap={6}>
-                        {/* Section Title */}
-                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                          Labels & Annotations
-                        </h3>
-
-                        {/* Labels */}
-                        <VStack gap={2} className="w-full">
-                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                            Labels
-                          </h4>
-                          <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                            <VStack gap={2}>
-                              {/* Column Headers */}
-                              <HStack gap={2} className="w-full">
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                </div>
-                              </HStack>
-                              {/* Label Rows */}
-                              {labelsCount > 0 ? (
-                                Object.entries(pdbData.labels).map(([key, value]) => (
-                                  <HStack key={key} gap={2} className="w-full">
-                                    <div className="flex-1">
-                                      <Input
-                                        value={key}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <Input
-                                        value={value}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                      />
-                                    </div>
-                                  </HStack>
-                                ))
-                              ) : (
-                                <p className="text-body-md text-[var(--color-text-subtle)]">
-                                  No labels configured.
-                                </p>
-                              )}
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={2} className="w-full">
-                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                            Annotations
-                          </h4>
-                          <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                            <VStack gap={2}>
-                              {/* Column Headers */}
-                              <HStack gap={2} className="w-full">
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                </div>
-                                <div className="flex-1">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                </div>
-                              </HStack>
-                              {/* Annotation Rows */}
-                              {annotationsCount > 0 ? (
-                                Object.entries(pdbData.annotations).map(([key, value]) => (
-                                  <HStack key={key} gap={2} className="w-full">
-                                    <div className="flex-1">
-                                      <Input
-                                        value={key}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <Input
-                                        value={value}
-                                        onChange={() => {}}
-                                        size="sm"
-                                        fullWidth
-                                        disabled
-                                      />
-                                    </div>
-                                  </HStack>
-                                ))
-                              ) : (
-                                <p className="text-body-md text-[var(--color-text-subtle)]">
-                                  No annotations configured.
-                                </p>
-                              )}
-                            </VStack>
-                          </div>
-                        </VStack>
-                      </VStack>
-                    </div>
-                  </TabPanel>
-
-                  {/* Recent Events Tab */}
-                  <TabPanel value="recent-events">
-                    <VStack gap={3}>
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Recent Events
-                      </h3>
-
-                      {/* Search and Actions */}
-                      <HStack gap={2} align="center" className="w-full">
-                        <HStack gap={1} align="center">
-                          <SearchInput
-                            placeholder="Search events by attributes"
+                      <HStack gap={2} className="w-full">
+                        <div className="flex-1">
+                          <Input
+                            value={pdbData.minAvailable || ''}
+                            onChange={() => {}}
                             size="sm"
-                            className="w-[200px]"
+                            fullWidth
+                            disabled
                           />
+                        </div>
+                        <div className="w-[103px]">
+                          <Input value="Pods" onChange={() => {}} size="sm" fullWidth disabled />
+                        </div>
+                      </HStack>
+                    </VStack>
+
+                    {/* Max. unavailable Pods */}
+                    <VStack gap={2} className="flex-1">
+                      <span className="text-label-sm text-[var(--color-text-default)]">
+                        Max. unavailable Pods
+                      </span>
+                      <HStack gap={2} className="w-full">
+                        <div className="flex-1">
+                          <Input
+                            value={pdbData.maxUnavailable || ''}
+                            onChange={() => {}}
+                            size="sm"
+                            fullWidth
+                            disabled
+                          />
+                        </div>
+                        <div className="w-[103px]">
+                          <Input value="Pods" onChange={() => {}} size="sm" fullWidth disabled />
+                        </div>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </div>
+            </TabPanel>
+
+            {/* Selector Tab */}
+            <TabPanel value="selector">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+                <VStack gap={6}>
+                  {/* Selectors Section */}
+                  <VStack gap={2} className="w-full">
+                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                      Selectors
+                    </h3>
+
+                    {/* Bordered Container for Selectors */}
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <VStack gap={2}>
+                        {/* Column Headers */}
+                        <HStack gap={2} className="w-full">
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Operator
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                          </div>
                         </HStack>
 
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconDownload size={12} stroke={1.5} />}
-                          disabled={selectedEvents.length === 0}
-                        >
-                          Download YAML
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} stroke={1.5} />}
-                          disabled={selectedEvents.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </HStack>
+                        {/* Selector Rows */}
+                        {Object.entries(pdbData.selector).length > 0 ? (
+                          Object.entries(pdbData.selector).map(([key, value]) => (
+                            <HStack key={key} gap={2} className="w-full">
+                              <div className="flex-1">
+                                <Input
+                                  value={key}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                  className="bg-[var(--color-surface-muted)]"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <Select
+                                  options={operatorOptions}
+                                  value="In List"
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <Input
+                                  value={value}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                  className="bg-[var(--color-surface-muted)]"
+                                />
+                              </div>
+                            </HStack>
+                          ))
+                        ) : (
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            No selectors configured.
+                          </p>
+                        )}
+                      </VStack>
+                    </div>
+                  </VStack>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={eventsPage}
-                        totalPages={Math.max(Math.ceil(pdbData.recentEvents.length / 10), 1)}
-                        onPageChange={setEventsPage}
-                        totalItems={pdbData.recentEvents.length}
-                      />
+                  {/* Matching Pods Section */}
+                  <VStack gap={2}>
+                    <span className="text-label-sm text-[var(--color-text-default)]">
+                      Matching Pods ({pdbData.matchingPods.length}/10)
+                    </span>
 
-                      {/* Events Table */}
-                      {pdbData.recentEvents.length > 0 ? (
-                        <Table<RecentEvent>
-                          columns={recentEventsColumns}
-                          data={pdbData.recentEvents}
-                          rowKey="id"
-                          selectable
-                          selectedKeys={selectedEvents}
-                          onSelectionChange={setSelectedEvents}
-                        />
-                      ) : (
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          No recent events.
-                        </p>
-                      )}
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
+                    <Pagination
+                      currentPage={matchingPodsPage}
+                      totalPages={Math.max(totalMatchingPodsPages, 5)}
+                      onPageChange={setMatchingPodsPage}
+                      totalItems={pdbData.matchingPods.length}
+                    />
+
+                    <Table<MatchingPod>
+                      columns={matchingPodsColumns}
+                      data={paginatedMatchingPods}
+                      rowKey="name"
+                    />
+                  </VStack>
+                </VStack>
+              </div>
+            </TabPanel>
+
+            {/* Conditions Tab */}
+            <TabPanel value="conditions">
+              <VStack gap={3}>
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Conditions
+                </h3>
+
+                {/* Simple Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={1}
+                  onPageChange={() => {}}
+                  totalItems={pdbData.conditions.length}
+                />
+
+                {pdbData.conditions.length > 0 ? (
+                  <Table<Condition>
+                    columns={conditionsColumns}
+                    data={pdbData.conditions}
+                    rowKey="condition"
+                  />
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                    No conditions available.
+                  </p>
+                )}
               </VStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
+            </TabPanel>
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+            {/* Labels & Annotations Tab */}
+            <TabPanel value="labels-annotations">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                <VStack gap={6}>
+                  {/* Section Title */}
+                  <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Labels & Annotations
+                  </h3>
+
+                  {/* Labels */}
+                  <VStack gap={2} className="w-full">
+                    <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                      Labels
+                    </h4>
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <VStack gap={2}>
+                        {/* Column Headers */}
+                        <HStack gap={2} className="w-full">
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                          </div>
+                        </HStack>
+                        {/* Label Rows */}
+                        {labelsCount > 0 ? (
+                          Object.entries(pdbData.labels).map(([key, value]) => (
+                            <HStack key={key} gap={2} className="w-full">
+                              <div className="flex-1">
+                                <Input
+                                  value={key}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <Input
+                                  value={value}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                />
+                              </div>
+                            </HStack>
+                          ))
+                        ) : (
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            No labels configured.
+                          </p>
+                        )}
+                      </VStack>
+                    </div>
+                  </VStack>
+
+                  {/* Annotations */}
+                  <VStack gap={2} className="w-full">
+                    <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                      Annotations
+                    </h4>
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <VStack gap={2}>
+                        {/* Column Headers */}
+                        <HStack gap={2} className="w-full">
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                          </div>
+                        </HStack>
+                        {/* Annotation Rows */}
+                        {annotationsCount > 0 ? (
+                          Object.entries(pdbData.annotations).map(([key, value]) => (
+                            <HStack key={key} gap={2} className="w-full">
+                              <div className="flex-1">
+                                <Input
+                                  value={key}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <Input
+                                  value={value}
+                                  onChange={() => {}}
+                                  size="sm"
+                                  fullWidth
+                                  disabled
+                                />
+                              </div>
+                            </HStack>
+                          ))
+                        ) : (
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            No annotations configured.
+                          </p>
+                        )}
+                      </VStack>
+                    </div>
+                  </VStack>
+                </VStack>
+              </div>
+            </TabPanel>
+
+            {/* Recent Events Tab */}
+            <TabPanel value="recent-events">
+              <VStack gap={3}>
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Recent Events
+                </h3>
+
+                {/* Search and Actions */}
+                <HStack gap={2} align="center" className="w-full">
+                  <HStack gap={1} align="center">
+                    <SearchInput
+                      placeholder="Search events by attributes"
+                      size="sm"
+                      className="w-[200px]"
+                    />
+                  </HStack>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconDownload size={12} stroke={1.5} />}
+                    disabled={selectedEvents.length === 0}
+                  >
+                    Download YAML
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
+                    disabled={selectedEvents.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </HStack>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={eventsPage}
+                  totalPages={Math.max(Math.ceil(pdbData.recentEvents.length / 10), 1)}
+                  onPageChange={setEventsPage}
+                  totalItems={pdbData.recentEvents.length}
+                />
+
+                {/* Events Table */}
+                {pdbData.recentEvents.length > 0 ? (
+                  <Table<RecentEvent>
+                    columns={recentEventsColumns}
+                    data={pdbData.recentEvents}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedEvents}
+                    onSelectionChange={setSelectedEvents}
+                  />
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">No recent events.</p>
+                )}
+              </VStack>
+            </TabPanel>
+          </Tabs>
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }
 

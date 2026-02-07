@@ -17,6 +17,7 @@ import {
   Input,
   Pagination,
   Table,
+  PageShell,
   type ContextMenuItem,
   type TableColumn,
   columnMinWidths,
@@ -291,16 +292,12 @@ export function NetworkPolicyDetailPage() {
   );
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -309,8 +306,8 @@ export function NetworkPolicyDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -360,784 +357,758 @@ export function NetworkPolicyDetailPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Network Policy: {networkPolicyData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={networkPolicyData.status}
-                    status={
-                      networkPolicyData.status === 'Active'
-                        ? 'active'
-                        : networkPolicyData.status === 'Pending'
-                          ? 'pending'
-                          : 'error'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={
-                      <span
-                        className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() =>
-                          navigate(`/container/namespaces/${networkPolicyData.namespace}`)
-                        }
-                      >
-                        {networkPolicyData.namespace}
-                      </span>
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={networkPolicyData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      labelsCount > 0
-                        ? Object.entries(networkPolicyData.labels)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : 'labels'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      annotationsCount > 0
-                        ? Object.entries(networkPolicyData.annotations)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ')
-                        : 'annotations'
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="ingress-rules">Ingress Rules</Tab>
-                  <Tab value="egress-rules">Egress Rules</Tab>
-                  <Tab value="selectors">Selectors</Tab>
-                  <Tab value="labels-annotations">Labels & Annotations</Tab>
-                </TabList>
-
-                {/* Ingress Rules Tab */}
-                <TabPanel value="ingress-rules">
-                  <VStack gap={4}>
-                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Ingress Rules
-                    </h3>
-
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
-                      <HStack gap={0} className="h-full">
-                        {/* Rules List (Left Panel) */}
-                        <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                          <VStack gap={0}>
-                            {networkPolicyData.ingressRules.map((rule) => (
-                              <button
-                                key={rule.id}
-                                className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
-                                  selectedRule === rule.id
-                                    ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
-                                    : 'text-[var(--color-text-default)]'
-                                }`}
-                                onClick={() => setSelectedRule(rule.id)}
-                              >
-                                <span>{rule.name}</span>
-                                {rule.id !== 'rule1' && (
-                                  <IconX
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-muted)]"
-                                  />
-                                )}
-                              </button>
-                            ))}
-                            <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
-                              <IconPlus size={12} stroke={1.5} />
-                              Add Rule
-                            </button>
-                          </VStack>
-                        </div>
-
-                        {/* Rule Details (Right Panel) */}
-                        <div className="flex-1 p-4">
-                          {selectedRuleData ? (
-                            <VStack gap={4}>
-                              <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                Targets
-                              </h4>
-
-                              {/* Rule Type */}
-                              <VStack gap={2}>
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Rule type
-                                </label>
-                                <Select
-                                  options={ruleTypeOptions}
-                                  value={selectedRuleData.ruleType}
-                                  onChange={() => {}}
-                                  className="w-[var(--search-input-width)]"
-                                />
-                              </VStack>
-
-                              {/* Selectors Table */}
-                              <div className="w-full">
-                                <HStack gap={2} className="mb-2">
-                                  <div className="w-[100px]" />
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Key
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Operator
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                  </div>
-                                  <div className="w-[28px]" />
-                                </HStack>
-
-                                {/* Namespace Row */}
-                                <HStack gap={2} className="mb-2" align="center">
-                                  <div className="w-[100px]">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Namespace
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedRuleData.namespaceSelectors[0]?.key || 'foo'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Select
-                                      options={operatorOptions}
-                                      value={
-                                        selectedRuleData.namespaceSelectors[0]?.operator ||
-                                        'In List'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedRuleData.namespaceSelectors[0]?.value || 'bar'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="w-[28px]" />
-                                </HStack>
-
-                                {/* Pod Row */}
-                                <HStack gap={2} className="mb-2" align="center">
-                                  <div className="w-[100px]">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Pod
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedRuleData.podSelectors[0]?.key || 'foo'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Select
-                                      options={operatorOptions}
-                                      value={
-                                        selectedRuleData.podSelectors[0]?.operator || 'In List'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedRuleData.podSelectors[0]?.value || 'bar'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                                    <IconX
-                                      size={14}
-                                      stroke={1.5}
-                                      className="text-[var(--color-text-muted)]"
-                                    />
-                                  </button>
-                                </HStack>
-                              </div>
-
-                              {/* Matching Pods */}
-                              <VStack gap={2} className="mt-4">
-                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                  Matching Pods ({networkPolicyData.matchingPods.length}/10)
-                                </h4>
-
-                                {/* Pagination for Matching Pods */}
-                                <Pagination
-                                  currentPage={matchingPodsPage}
-                                  totalPages={Math.max(totalMatchingPodsPages, 5)}
-                                  onPageChange={setMatchingPodsPage}
-                                  totalItems={networkPolicyData.matchingPods.length}
-                                />
-
-                                <Table<MatchingPod>
-                                  columns={matchingPodsColumns}
-                                  data={paginatedMatchingPods}
-                                  rowKey="name"
-                                />
-                              </VStack>
-
-                              {/* Allowed Ports */}
-                              <VStack gap={2} className="mt-4">
-                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                  Allowed Ports
-                                </h4>
-
-                                <HStack gap={4}>
-                                  <VStack gap={2} className="flex-1">
-                                    <label className="text-label-sm text-[var(--color-text-default)]">
-                                      Port
-                                    </label>
-                                    <Input
-                                      value={selectedRuleData.allowedPorts[0]?.port || '8080'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="flex-1">
-                                    <label className="text-label-sm text-[var(--color-text-default)]">
-                                      Protocol
-                                    </label>
-                                    <Select
-                                      options={protocolOptions}
-                                      value={selectedRuleData.allowedPorts[0]?.protocol || 'TCP'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                </HStack>
-                              </VStack>
-                            </VStack>
-                          ) : (
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              No rule selected. Click on a rule or add a new one.
-                            </p>
-                          )}
-                        </div>
-                      </HStack>
-                    </div>
-                  </VStack>
-                </TabPanel>
-
-                {/* Egress Rules Tab */}
-                <TabPanel value="egress-rules">
-                  <VStack gap={4}>
-                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Egress Rules
-                    </h3>
-
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
-                      <HStack gap={0} className="h-full">
-                        {/* Rules List (Left Panel) */}
-                        <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-                          <VStack gap={0}>
-                            {networkPolicyData.egressRules.map((rule) => (
-                              <button
-                                key={rule.id}
-                                className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
-                                  selectedEgressRule === rule.id
-                                    ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
-                                    : 'text-[var(--color-text-default)]'
-                                }`}
-                                onClick={() => setSelectedEgressRule(rule.id)}
-                              >
-                                <span>{rule.name}</span>
-                                {rule.id !== 'egress1' && (
-                                  <IconX
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-muted)]"
-                                  />
-                                )}
-                              </button>
-                            ))}
-                            <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
-                              <IconPlus size={12} stroke={1.5} />
-                              Add Rule
-                            </button>
-                          </VStack>
-                        </div>
-
-                        {/* Rule Details (Right Panel) */}
-                        <div className="flex-1 p-4">
-                          {selectedEgressRuleData ? (
-                            <VStack gap={4}>
-                              <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                Targets
-                              </h4>
-
-                              {/* Rule Type */}
-                              <VStack gap={2}>
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Rule type
-                                </label>
-                                <Select
-                                  options={ruleTypeOptions}
-                                  value={selectedEgressRuleData.ruleType}
-                                  onChange={() => {}}
-                                  className="w-[var(--search-input-width)]"
-                                />
-                              </VStack>
-
-                              {/* Selectors Table */}
-                              <div className="w-full">
-                                <HStack gap={2} className="mb-2">
-                                  <div className="w-[100px]" />
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Key
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Operator
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                  </div>
-                                  <div className="w-[28px]" />
-                                </HStack>
-
-                                {/* Namespace Row */}
-                                <HStack gap={2} className="mb-2" align="center">
-                                  <div className="w-[100px]">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Namespace
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={
-                                        selectedEgressRuleData.namespaceSelectors[0]?.key || 'foo'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Select
-                                      options={operatorOptions}
-                                      value={
-                                        selectedEgressRuleData.namespaceSelectors[0]?.operator ||
-                                        'In List'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={
-                                        selectedEgressRuleData.namespaceSelectors[0]?.value || 'bar'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="w-[28px]" />
-                                </HStack>
-
-                                {/* Pod Row */}
-                                <HStack gap={2} className="mb-2" align="center">
-                                  <div className="w-[100px]">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
-                                      Pod
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedEgressRuleData.podSelectors[0]?.key || 'foo'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Select
-                                      options={operatorOptions}
-                                      value={
-                                        selectedEgressRuleData.podSelectors[0]?.operator ||
-                                        'In List'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={selectedEgressRuleData.podSelectors[0]?.value || 'bar'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </div>
-                                  <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                                    <IconX
-                                      size={14}
-                                      stroke={1.5}
-                                      className="text-[var(--color-text-muted)]"
-                                    />
-                                  </button>
-                                </HStack>
-                              </div>
-
-                              {/* Matching Pods */}
-                              <VStack gap={2} className="mt-4">
-                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                  Matching Pods ({networkPolicyData.matchingPods.length}/10)
-                                </h4>
-
-                                {/* Pagination for Matching Pods */}
-                                <Pagination
-                                  currentPage={egressMatchingPodsPage}
-                                  totalPages={Math.max(totalMatchingPodsPages, 5)}
-                                  onPageChange={setEgressMatchingPodsPage}
-                                  totalItems={networkPolicyData.matchingPods.length}
-                                />
-
-                                <Table<MatchingPod>
-                                  columns={matchingPodsColumns}
-                                  data={paginatedMatchingPods}
-                                  rowKey="name"
-                                />
-                              </VStack>
-
-                              {/* Allowed Ports */}
-                              <VStack gap={2} className="mt-4">
-                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                                  Allowed Ports
-                                </h4>
-
-                                <HStack gap={4}>
-                                  <VStack gap={2} className="flex-1">
-                                    <label className="text-label-sm text-[var(--color-text-default)]">
-                                      Port
-                                    </label>
-                                    <Input
-                                      value={selectedEgressRuleData.allowedPorts[0]?.port || '53'}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="flex-1">
-                                    <label className="text-label-sm text-[var(--color-text-default)]">
-                                      Protocol
-                                    </label>
-                                    <Select
-                                      options={protocolOptions}
-                                      value={
-                                        selectedEgressRuleData.allowedPorts[0]?.protocol || 'UDP'
-                                      }
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                </HStack>
-                              </VStack>
-                            </VStack>
-                          ) : (
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              No rule selected. Click on a rule or add a new one.
-                            </p>
-                          )}
-                        </div>
-                      </HStack>
-                    </div>
-                  </VStack>
-                </TabPanel>
-
-                {/* Selectors Tab */}
-                <TabPanel value="selectors">
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
-                    <VStack gap={6}>
-                      {/* Selectors Section */}
-                      <VStack gap={2} className="w-full">
-                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                          Selectors
-                        </h3>
-
-                        {/* Bordered Container for Selectors */}
-                        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                          <VStack gap={2}>
-                            {/* Column Headers */}
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Operator
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                              </div>
-                            </HStack>
-
-                            {/* Selector Rows */}
-                            {Object.entries(networkPolicyData.podSelector).length > 0 ? (
-                              Object.entries(networkPolicyData.podSelector).map(([key, value]) => (
-                                <HStack key={key} gap={2} className="w-full">
-                                  <div className="flex-1">
-                                    <Input
-                                      value={key}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                      className="bg-[var(--color-surface-muted)]"
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Select
-                                      options={operatorOptions}
-                                      value="In List"
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={value}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                      className="bg-[var(--color-surface-muted)]"
-                                    />
-                                  </div>
-                                </HStack>
-                              ))
-                            ) : (
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                No selectors configured.
-                              </p>
-                            )}
-                          </VStack>
-                        </div>
-                      </VStack>
-
-                      {/* Matching Pods Section */}
-                      <VStack gap={2}>
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Matching Pods ({networkPolicyData.matchingPods.length}/10)
-                        </span>
-
-                        <Pagination
-                          currentPage={matchingPodsPage}
-                          totalPages={Math.max(totalMatchingPodsPages, 5)}
-                          onPageChange={setMatchingPodsPage}
-                          totalItems={networkPolicyData.matchingPods.length}
-                        />
-
-                        <Table<MatchingPod>
-                          columns={matchingPodsColumns}
-                          data={paginatedMatchingPods}
-                          rowKey="name"
-                        />
-                      </VStack>
-                    </VStack>
-                  </div>
-                </TabPanel>
-
-                {/* Labels & Annotations Tab */}
-                <TabPanel value="labels-annotations">
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
-                    <VStack gap={6}>
-                      {/* Section Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Labels & Annotations
-                      </h3>
-
-                      {/* Labels */}
-                      <VStack gap={2} className="w-full">
-                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                          Labels
-                        </h4>
-                        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                          <VStack gap={2}>
-                            {/* Column Headers */}
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                              </div>
-                            </HStack>
-                            {/* Label Rows */}
-                            {labelsCount > 0 ? (
-                              Object.entries(networkPolicyData.labels).map(([key, value]) => (
-                                <HStack key={key} gap={2} className="w-full">
-                                  <div className="flex-1">
-                                    <Input
-                                      value={key}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={value}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                    />
-                                  </div>
-                                </HStack>
-                              ))
-                            ) : (
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                No labels configured.
-                              </p>
-                            )}
-                          </VStack>
-                        </div>
-                      </VStack>
-
-                      {/* Annotations */}
-                      <VStack gap={2} className="w-full">
-                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                          Annotations
-                        </h4>
-                        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                          <VStack gap={2}>
-                            {/* Column Headers */}
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                              </div>
-                            </HStack>
-                            {/* Annotation Rows */}
-                            {annotationsCount > 0 ? (
-                              Object.entries(networkPolicyData.annotations).map(([key, value]) => (
-                                <HStack key={key} gap={2} className="w-full">
-                                  <div className="flex-1">
-                                    <Input
-                                      value={key}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <Input
-                                      value={value}
-                                      onChange={() => {}}
-                                      size="sm"
-                                      fullWidth
-                                      disabled
-                                    />
-                                  </div>
-                                </HStack>
-                              ))
-                            ) : (
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                No annotations configured.
-                              </p>
-                            )}
-                          </VStack>
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-
-        {/* Shell Panel */}
+      }
+      bottomPanel={
         <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
           tabs={shellPanel.tabs}
           activeTabId={shellPanel.activeTabId}
-          isExpanded={shellPanel.isExpanded}
-          onTabChange={shellPanel.setActiveTabId}
-          onTabClose={shellPanel.closeTab}
-          onToggleExpand={() => shellPanel.setIsExpanded(!shellPanel.isExpanded)}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
           onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
         />
-      </main>
-    </div>
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Network Policy: {networkPolicyData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={networkPolicyData.status}
+              status={
+                networkPolicyData.status === 'Active'
+                  ? 'active'
+                  : networkPolicyData.status === 'Pending'
+                    ? 'pending'
+                    : 'error'
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Namespace"
+              value={
+                <span
+                  className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/namespaces/${networkPolicyData.namespace}`)}
+                >
+                  {networkPolicyData.namespace}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={networkPolicyData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                labelsCount > 0
+                  ? Object.entries(networkPolicyData.labels)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : 'labels'
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                annotationsCount > 0
+                  ? Object.entries(networkPolicyData.annotations)
+                      .map(([k, v]) => `${k}: ${v}`)
+                      .join(', ')
+                  : 'annotations'
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <TabList>
+            <Tab value="ingress-rules">Ingress Rules</Tab>
+            <Tab value="egress-rules">Egress Rules</Tab>
+            <Tab value="selectors">Selectors</Tab>
+            <Tab value="labels-annotations">Labels & Annotations</Tab>
+          </TabList>
+
+          {/* Ingress Rules Tab */}
+          <TabPanel value="ingress-rules">
+            <VStack gap={4}>
+              <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                Ingress Rules
+              </h3>
+
+              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+                <HStack gap={0} className="h-full">
+                  {/* Rules List (Left Panel) */}
+                  <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                    <VStack gap={0}>
+                      {networkPolicyData.ingressRules.map((rule) => (
+                        <button
+                          key={rule.id}
+                          className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
+                            selectedRule === rule.id
+                              ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
+                              : 'text-[var(--color-text-default)]'
+                          }`}
+                          onClick={() => setSelectedRule(rule.id)}
+                        >
+                          <span>{rule.name}</span>
+                          {rule.id !== 'rule1' && (
+                            <IconX
+                              size={12}
+                              stroke={1.5}
+                              className="text-[var(--color-text-muted)]"
+                            />
+                          )}
+                        </button>
+                      ))}
+                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                        <IconPlus size={12} stroke={1.5} />
+                        Add Rule
+                      </button>
+                    </VStack>
+                  </div>
+
+                  {/* Rule Details (Right Panel) */}
+                  <div className="flex-1 p-4">
+                    {selectedRuleData ? (
+                      <VStack gap={4}>
+                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                          Targets
+                        </h4>
+
+                        {/* Rule Type */}
+                        <VStack gap={2}>
+                          <label className="text-label-sm text-[var(--color-text-default)]">
+                            Rule type
+                          </label>
+                          <Select
+                            options={ruleTypeOptions}
+                            value={selectedRuleData.ruleType}
+                            onChange={() => {}}
+                            className="w-[var(--search-input-width)]"
+                          />
+                        </VStack>
+
+                        {/* Selectors Table */}
+                        <div className="w-full">
+                          <HStack gap={2} className="mb-2">
+                            <div className="w-[100px]" />
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Key
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Operator
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Value
+                              </span>
+                            </div>
+                            <div className="w-[28px]" />
+                          </HStack>
+
+                          {/* Namespace Row */}
+                          <HStack gap={2} className="mb-2" align="center">
+                            <div className="w-[100px]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Namespace
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedRuleData.namespaceSelectors[0]?.key || 'foo'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Select
+                                options={operatorOptions}
+                                value={
+                                  selectedRuleData.namespaceSelectors[0]?.operator || 'In List'
+                                }
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedRuleData.namespaceSelectors[0]?.value || 'bar'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="w-[28px]" />
+                          </HStack>
+
+                          {/* Pod Row */}
+                          <HStack gap={2} className="mb-2" align="center">
+                            <div className="w-[100px]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Pod
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedRuleData.podSelectors[0]?.key || 'foo'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Select
+                                options={operatorOptions}
+                                value={selectedRuleData.podSelectors[0]?.operator || 'In List'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedRuleData.podSelectors[0]?.value || 'bar'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                              <IconX
+                                size={14}
+                                stroke={1.5}
+                                className="text-[var(--color-text-muted)]"
+                              />
+                            </button>
+                          </HStack>
+                        </div>
+
+                        {/* Matching Pods */}
+                        <VStack gap={2} className="mt-4">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                            Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                          </h4>
+
+                          {/* Pagination for Matching Pods */}
+                          <Pagination
+                            currentPage={matchingPodsPage}
+                            totalPages={Math.max(totalMatchingPodsPages, 5)}
+                            onPageChange={setMatchingPodsPage}
+                            totalItems={networkPolicyData.matchingPods.length}
+                          />
+
+                          <Table<MatchingPod>
+                            columns={matchingPodsColumns}
+                            data={paginatedMatchingPods}
+                            rowKey="name"
+                          />
+                        </VStack>
+
+                        {/* Allowed Ports */}
+                        <VStack gap={2} className="mt-4">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                            Allowed Ports
+                          </h4>
+
+                          <HStack gap={4}>
+                            <VStack gap={2} className="flex-1">
+                              <label className="text-label-sm text-[var(--color-text-default)]">
+                                Port
+                              </label>
+                              <Input
+                                value={selectedRuleData.allowedPorts[0]?.port || '8080'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </VStack>
+                            <VStack gap={2} className="flex-1">
+                              <label className="text-label-sm text-[var(--color-text-default)]">
+                                Protocol
+                              </label>
+                              <Select
+                                options={protocolOptions}
+                                value={selectedRuleData.allowedPorts[0]?.protocol || 'TCP'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </VStack>
+                          </HStack>
+                        </VStack>
+                      </VStack>
+                    ) : (
+                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                        No rule selected. Click on a rule or add a new one.
+                      </p>
+                    )}
+                  </div>
+                </HStack>
+              </div>
+            </VStack>
+          </TabPanel>
+
+          {/* Egress Rules Tab */}
+          <TabPanel value="egress-rules">
+            <VStack gap={4}>
+              <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                Egress Rules
+              </h3>
+
+              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+                <HStack gap={0} className="h-full">
+                  {/* Rules List (Left Panel) */}
+                  <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+                    <VStack gap={0}>
+                      {networkPolicyData.egressRules.map((rule) => (
+                        <button
+                          key={rule.id}
+                          className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
+                            selectedEgressRule === rule.id
+                              ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
+                              : 'text-[var(--color-text-default)]'
+                          }`}
+                          onClick={() => setSelectedEgressRule(rule.id)}
+                        >
+                          <span>{rule.name}</span>
+                          {rule.id !== 'egress1' && (
+                            <IconX
+                              size={12}
+                              stroke={1.5}
+                              className="text-[var(--color-text-muted)]"
+                            />
+                          )}
+                        </button>
+                      ))}
+                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                        <IconPlus size={12} stroke={1.5} />
+                        Add Rule
+                      </button>
+                    </VStack>
+                  </div>
+
+                  {/* Rule Details (Right Panel) */}
+                  <div className="flex-1 p-4">
+                    {selectedEgressRuleData ? (
+                      <VStack gap={4}>
+                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                          Targets
+                        </h4>
+
+                        {/* Rule Type */}
+                        <VStack gap={2}>
+                          <label className="text-label-sm text-[var(--color-text-default)]">
+                            Rule type
+                          </label>
+                          <Select
+                            options={ruleTypeOptions}
+                            value={selectedEgressRuleData.ruleType}
+                            onChange={() => {}}
+                            className="w-[var(--search-input-width)]"
+                          />
+                        </VStack>
+
+                        {/* Selectors Table */}
+                        <div className="w-full">
+                          <HStack gap={2} className="mb-2">
+                            <div className="w-[100px]" />
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Key
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Operator
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Value
+                              </span>
+                            </div>
+                            <div className="w-[28px]" />
+                          </HStack>
+
+                          {/* Namespace Row */}
+                          <HStack gap={2} className="mb-2" align="center">
+                            <div className="w-[100px]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Namespace
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedEgressRuleData.namespaceSelectors[0]?.key || 'foo'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Select
+                                options={operatorOptions}
+                                value={
+                                  selectedEgressRuleData.namespaceSelectors[0]?.operator ||
+                                  'In List'
+                                }
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedEgressRuleData.namespaceSelectors[0]?.value || 'bar'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="w-[28px]" />
+                          </HStack>
+
+                          {/* Pod Row */}
+                          <HStack gap={2} className="mb-2" align="center">
+                            <div className="w-[100px]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Pod
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedEgressRuleData.podSelectors[0]?.key || 'foo'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Select
+                                options={operatorOptions}
+                                value={
+                                  selectedEgressRuleData.podSelectors[0]?.operator || 'In List'
+                                }
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={selectedEgressRuleData.podSelectors[0]?.value || 'bar'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </div>
+                            <button className="w-[28px] h-[28px] flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                              <IconX
+                                size={14}
+                                stroke={1.5}
+                                className="text-[var(--color-text-muted)]"
+                              />
+                            </button>
+                          </HStack>
+                        </div>
+
+                        {/* Matching Pods */}
+                        <VStack gap={2} className="mt-4">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                            Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                          </h4>
+
+                          {/* Pagination for Matching Pods */}
+                          <Pagination
+                            currentPage={egressMatchingPodsPage}
+                            totalPages={Math.max(totalMatchingPodsPages, 5)}
+                            onPageChange={setEgressMatchingPodsPage}
+                            totalItems={networkPolicyData.matchingPods.length}
+                          />
+
+                          <Table<MatchingPod>
+                            columns={matchingPodsColumns}
+                            data={paginatedMatchingPods}
+                            rowKey="name"
+                          />
+                        </VStack>
+
+                        {/* Allowed Ports */}
+                        <VStack gap={2} className="mt-4">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                            Allowed Ports
+                          </h4>
+
+                          <HStack gap={4}>
+                            <VStack gap={2} className="flex-1">
+                              <label className="text-label-sm text-[var(--color-text-default)]">
+                                Port
+                              </label>
+                              <Input
+                                value={selectedEgressRuleData.allowedPorts[0]?.port || '53'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </VStack>
+                            <VStack gap={2} className="flex-1">
+                              <label className="text-label-sm text-[var(--color-text-default)]">
+                                Protocol
+                              </label>
+                              <Select
+                                options={protocolOptions}
+                                value={selectedEgressRuleData.allowedPorts[0]?.protocol || 'UDP'}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                              />
+                            </VStack>
+                          </HStack>
+                        </VStack>
+                      </VStack>
+                    ) : (
+                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                        No rule selected. Click on a rule or add a new one.
+                      </p>
+                    )}
+                  </div>
+                </HStack>
+              </div>
+            </VStack>
+          </TabPanel>
+
+          {/* Selectors Tab */}
+          <TabPanel value="selectors">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+              <VStack gap={6}>
+                {/* Selectors Section */}
+                <VStack gap={2} className="w-full">
+                  <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Selectors
+                  </h3>
+
+                  {/* Bordered Container for Selectors */}
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                    <VStack gap={2}>
+                      {/* Column Headers */}
+                      <HStack gap={2} className="w-full">
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Operator
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                        </div>
+                      </HStack>
+
+                      {/* Selector Rows */}
+                      {Object.entries(networkPolicyData.podSelector).length > 0 ? (
+                        Object.entries(networkPolicyData.podSelector).map(([key, value]) => (
+                          <HStack key={key} gap={2} className="w-full">
+                            <div className="flex-1">
+                              <Input
+                                value={key}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                                disabled
+                                className="bg-[var(--color-surface-muted)]"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Select
+                                options={operatorOptions}
+                                value="In List"
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                                disabled
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={value}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                                disabled
+                                className="bg-[var(--color-surface-muted)]"
+                              />
+                            </div>
+                          </HStack>
+                        ))
+                      ) : (
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          No selectors configured.
+                        </p>
+                      )}
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Matching Pods Section */}
+                <VStack gap={2}>
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                  </span>
+
+                  <Pagination
+                    currentPage={matchingPodsPage}
+                    totalPages={Math.max(totalMatchingPodsPages, 5)}
+                    onPageChange={setMatchingPodsPage}
+                    totalItems={networkPolicyData.matchingPods.length}
+                  />
+
+                  <Table<MatchingPod>
+                    columns={matchingPodsColumns}
+                    data={paginatedMatchingPods}
+                    rowKey="name"
+                  />
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+
+          {/* Labels & Annotations Tab */}
+          <TabPanel value="labels-annotations">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+              <VStack gap={6}>
+                {/* Section Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Labels & Annotations
+                </h3>
+
+                {/* Labels */}
+                <VStack gap={2} className="w-full">
+                  <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                    Labels
+                  </h4>
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                    <VStack gap={2}>
+                      {/* Column Headers */}
+                      <HStack gap={2} className="w-full">
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                        </div>
+                      </HStack>
+                      {/* Label Rows */}
+                      {labelsCount > 0 ? (
+                        Object.entries(networkPolicyData.labels).map(([key, value]) => (
+                          <HStack key={key} gap={2} className="w-full">
+                            <div className="flex-1">
+                              <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={value}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                                disabled
+                              />
+                            </div>
+                          </HStack>
+                        ))
+                      ) : (
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          No labels configured.
+                        </p>
+                      )}
+                    </VStack>
+                  </div>
+                </VStack>
+
+                {/* Annotations */}
+                <VStack gap={2} className="w-full">
+                  <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
+                    Annotations
+                  </h4>
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                    <VStack gap={2}>
+                      {/* Column Headers */}
+                      <HStack gap={2} className="w-full">
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                        </div>
+                      </HStack>
+                      {/* Annotation Rows */}
+                      {annotationsCount > 0 ? (
+                        Object.entries(networkPolicyData.annotations).map(([key, value]) => (
+                          <HStack key={key} gap={2} className="w-full">
+                            <div className="flex-1">
+                              <Input value={key} onChange={() => {}} size="sm" fullWidth disabled />
+                            </div>
+                            <div className="flex-1">
+                              <Input
+                                value={value}
+                                onChange={() => {}}
+                                size="sm"
+                                fullWidth
+                                disabled
+                              />
+                            </div>
+                          </HStack>
+                        ))
+                      ) : (
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          No annotations configured.
+                        </p>
+                      )}
+                    </VStack>
+                  </div>
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }

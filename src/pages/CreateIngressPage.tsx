@@ -12,6 +12,7 @@ import {
   Disclosure,
   SectionCard,
   InlineMessage,
+  PageShell,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -392,16 +393,12 @@ export default function CreateIngressPage() {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -410,8 +407,8 @@ export default function CreateIngressPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -447,101 +444,175 @@ export default function CreateIngressPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <h1 className="text-heading-h4">Create ingress</h1>
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
+            Ingresses route incoming traffic from the internet to Services within the cluster based
+            on the hostname and path specified in the request. You can expose multiple Services on
+            the same external IP address and port.
+          </p>
+        </VStack>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h4">Create ingress</h1>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  Ingresses route incoming traffic from the internet to Services within the cluster
-                  based on the hostname and path specified in the request. You can expose multiple
-                  Services on the same external IP address and port.
-                </p>
-              </VStack>
+        {/* Main Content with Summary Sidebar */}
+        <HStack gap={6} className="w-full items-start">
+          {/* Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Namespace */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Select
+                      options={NAMESPACE_OPTIONS}
+                      value={namespace}
+                      onChange={setNamespace}
+                      fullWidth
+                    />
+                  </VStack>
 
-              {/* Main Content with Summary Sidebar */}
-              <HStack gap={6} className="w-full items-start">
-                {/* Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Basic information" />
-                    <SectionCard.Content>
+                  {/* Name */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Name <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Input
+                      placeholder="Enter a unique name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
+
+                  {/* Description (collapsible) */}
+                  <Disclosure>
+                    <Disclosure.Trigger>Description</Disclosure.Trigger>
+                    <Disclosure.Panel>
+                      <div className="pt-2">
+                        <Input
+                          placeholder="Description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                    </Disclosure.Panel>
+                  </Disclosure>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Rules Section */}
+            <SectionCard>
+              <SectionCard.Header title="Rules" />
+              <SectionCard.Content>
+                <VStack gap={2}>
+                  {/* Rule rows */}
+                  {rules.map((rule) => (
+                    <div
+                      key={rule.id}
+                      className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    >
                       <VStack gap={6}>
-                        {/* Namespace */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Namespace <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Select
-                            options={NAMESPACE_OPTIONS}
-                            value={namespace}
-                            onChange={setNamespace}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Name */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Name <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Input
-                            placeholder="Enter a unique name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Description (collapsible) */}
-                        <Disclosure>
-                          <Disclosure.Trigger>Description</Disclosure.Trigger>
-                          <Disclosure.Panel>
-                            <div className="pt-2">
-                              <Input
-                                placeholder="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                              />
-                            </div>
-                          </Disclosure.Panel>
-                        </Disclosure>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Rules Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Rules" />
-                    <SectionCard.Content>
-                      <VStack gap={2}>
-                        {/* Rule rows */}
-                        {rules.map((rule) => (
-                          <div
-                            key={rule.id}
-                            className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                        {/* Request Host with close button */}
+                        <HStack gap={6} className="w-full" align="start">
+                          <VStack gap={2} className="flex-1">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
+                              Request Host
+                            </label>
+                            <Input
+                              placeholder="e.g. example.com"
+                              value={rule.host}
+                              onChange={(e) => updateRule(rule.id, 'host', e.target.value)}
+                              fullWidth
+                            />
+                          </VStack>
+                          <button
+                            onClick={() => removeRule(rule.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                           >
-                            <VStack gap={6}>
-                              {/* Request Host with close button */}
-                              <HStack gap={6} className="w-full" align="start">
-                                <VStack gap={2} className="flex-1">
-                                  <label className="text-label-lg text-[var(--color-text-default)]">
-                                    Request Host
-                                  </label>
-                                  <Input
-                                    placeholder="e.g. example.com"
-                                    value={rule.host}
-                                    onChange={(e) => updateRule(rule.id, 'host', e.target.value)}
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </HStack>
+
+                        {/* Paths container */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
+                            {rule.paths.length > 0 && (
+                              <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Path
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Target Service
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Port
+                                </span>
+                                <div />
+                              </div>
+                            )}
+                            {rule.paths.map((path) => (
+                              <div
+                                key={path.id}
+                                className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-center"
+                              >
+                                {/* Path */}
+                                <HStack gap={2}>
+                                  <Select
+                                    options={PATH_TYPE_OPTIONS}
+                                    value={path.pathType}
+                                    onChange={(value) =>
+                                      updatePath(rule.id, path.id, 'pathType', value)
+                                    }
                                     fullWidth
                                   />
-                                </VStack>
+                                  <Input
+                                    placeholder="e.g. /foo"
+                                    value={path.path}
+                                    onChange={(e) =>
+                                      updatePath(rule.id, path.id, 'path', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                </HStack>
+
+                                {/* Target Service */}
+                                <Select
+                                  options={TARGET_SERVICE_OPTIONS}
+                                  value={path.targetService}
+                                  onChange={(value) =>
+                                    updatePath(rule.id, path.id, 'targetService', value)
+                                  }
+                                  fullWidth
+                                />
+
+                                {/* Port */}
+                                <Input
+                                  placeholder="e.g. 80 or http"
+                                  value={path.port}
+                                  onChange={(e) =>
+                                    updatePath(rule.id, path.id, 'port', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+
+                                {/* Remove path button */}
                                 <button
-                                  onClick={() => removeRule(rule.id)}
+                                  onClick={() => removePath(rule.id, path.id)}
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
@@ -550,405 +621,320 @@ export default function CreateIngressPage() {
                                     stroke={1.5}
                                   />
                                 </button>
-                              </HStack>
-
-                              {/* Paths container */}
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={2}>
-                                  {rule.paths.length > 0 && (
-                                    <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
-                                      <span className="block text-label-lg text-[var(--color-text-default)]">
-                                        Path
-                                      </span>
-                                      <span className="block text-label-lg text-[var(--color-text-default)]">
-                                        Target Service
-                                      </span>
-                                      <span className="block text-label-lg text-[var(--color-text-default)]">
-                                        Port
-                                      </span>
-                                      <div />
-                                    </div>
-                                  )}
-                                  {rule.paths.map((path) => (
-                                    <div
-                                      key={path.id}
-                                      className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-center"
-                                    >
-                                      {/* Path */}
-                                      <HStack gap={2}>
-                                        <Select
-                                          options={PATH_TYPE_OPTIONS}
-                                          value={path.pathType}
-                                          onChange={(value) =>
-                                            updatePath(rule.id, path.id, 'pathType', value)
-                                          }
-                                          fullWidth
-                                        />
-                                        <Input
-                                          placeholder="e.g. /foo"
-                                          value={path.path}
-                                          onChange={(e) =>
-                                            updatePath(rule.id, path.id, 'path', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </HStack>
-
-                                      {/* Target Service */}
-                                      <Select
-                                        options={TARGET_SERVICE_OPTIONS}
-                                        value={path.targetService}
-                                        onChange={(value) =>
-                                          updatePath(rule.id, path.id, 'targetService', value)
-                                        }
-                                        fullWidth
-                                      />
-
-                                      {/* Port */}
-                                      <Input
-                                        placeholder="e.g. 80 or http"
-                                        value={path.port}
-                                        onChange={(e) =>
-                                          updatePath(rule.id, path.id, 'port', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-
-                                      {/* Remove path button */}
-                                      <button
-                                        onClick={() => removePath(rule.id, path.id)}
-                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
-                                  ))}
-
-                                  {/* Add Path button */}
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={() => addPath(rule.id)}
-                                    >
-                                      Add Path
-                                    </Button>
-                                  </div>
-                                </VStack>
                               </div>
-                            </VStack>
+                            ))}
+
+                            {/* Add Path button */}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() => addPath(rule.id)}
+                              >
+                                Add Path
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
+                      </VStack>
+                    </div>
+                  ))}
+
+                  {/* Add Rule button */}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addRule}
+                    >
+                      Add Rule
+                    </Button>
+                  </div>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Default Backend Section */}
+            <SectionCard>
+              <SectionCard.Header title="Default backend" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Warning message */}
+                  <InlineMessage variant="error">
+                    Warning: Default backend is used globally for the entire cluster.
+                  </InlineMessage>
+
+                  {/* Target Service and Port */}
+                  <HStack gap={3} className="w-full">
+                    <VStack gap={2} className="flex-1">
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Target Service
+                      </label>
+                      <Select
+                        options={[{ value: '', label: 'None' }, ...TARGET_SERVICE_OPTIONS.slice(1)]}
+                        value={defaultBackendService}
+                        onChange={setDefaultBackendService}
+                        fullWidth
+                      />
+                    </VStack>
+                    <VStack gap={2} className="flex-1">
+                      <label className="text-label-lg text-[var(--color-text-default)]">Port</label>
+                      <Input
+                        placeholder="e.g. 80 or http"
+                        value={defaultBackendPort}
+                        onChange={(e) => setDefaultBackendPort(e.target.value)}
+                        fullWidth
+                      />
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Certificates Section */}
+            <SectionCard>
+              <SectionCard.Header title="Certificates" />
+              <SectionCard.Content>
+                <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                  <VStack gap={2}>
+                    {/* Header row */}
+                    {certificates.length > 0 && (
+                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                          Secret Name
+                        </span>
+                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                          Hosts (comma separated)
+                        </span>
+                        <div />
+                      </div>
+                    )}
+
+                    {/* Certificate rows */}
+                    {certificates.map((cert) => (
+                      <div
+                        key={cert.id}
+                        className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      >
+                        <Select
+                          options={CERTIFICATE_OPTIONS}
+                          value={cert.secretName}
+                          onChange={(value) => updateCertificate(cert.id, 'secretName', value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="e.g. example.com, api.example.com"
+                          value={cert.hosts.join(', ')}
+                          onChange={(e) =>
+                            updateCertificate(
+                              cert.id,
+                              'hosts',
+                              e.target.value.split(',').map((h) => h.trim())
+                            )
+                          }
+                          fullWidth
+                        />
+                        <button
+                          onClick={() => removeCertificate(cert.id)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        >
+                          <IconX
+                            size={16}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </div>
+                    ))}
+
+                    {/* Add Certificate button */}
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                        onClick={addCertificate}
+                      >
+                        Add Certificate
+                      </Button>
+                    </div>
+                  </VStack>
+                </div>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Ingress Class Section */}
+            <SectionCard>
+              <SectionCard.Header title="Ingress class" />
+              <SectionCard.Content>
+                <VStack gap={2}>
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Ingress Class
+                  </label>
+                  <Select
+                    options={INGRESS_CLASS_OPTIONS}
+                    value={ingressClass}
+                    onChange={setIngressClass}
+                    width="half"
+                  />
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Labels & Annotations Section */}
+            <SectionCard>
+              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Labels */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Labels
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the labels used to identify and categorize the resource.
+                      </span>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
+                        {labels.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {labels.map((label) => (
+                          <div
+                            key={label.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="Input key"
+                              value={label.key}
+                              onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="Input value"
+                              value={label.value}
+                              onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeLabel(label.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
                           </div>
                         ))}
-
-                        {/* Add Rule button */}
                         <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addRule}
+                            onClick={addLabel}
                           >
-                            Add Rule
+                            Add Label
                           </Button>
                         </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
 
-                  {/* Default Backend Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Default backend" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Warning message */}
-                        <InlineMessage variant="error">
-                          Warning: Default backend is used globally for the entire cluster.
-                        </InlineMessage>
+                  {/* Annotations */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Annotations
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the annotations used to provide additional metadata for the
+                        resource.
+                      </span>
+                    </VStack>
 
-                        {/* Target Service and Port */}
-                        <HStack gap={3} className="w-full">
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Target Service
-                            </label>
-                            <Select
-                              options={[
-                                { value: '', label: 'None' },
-                                ...TARGET_SERVICE_OPTIONS.slice(1),
-                              ]}
-                              value={defaultBackendService}
-                              onChange={setDefaultBackendService}
-                              fullWidth
-                            />
-                          </VStack>
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Port
-                            </label>
-                            <Input
-                              placeholder="e.g. 80 or http"
-                              value={defaultBackendPort}
-                              onChange={(e) => setDefaultBackendPort(e.target.value)}
-                              fullWidth
-                            />
-                          </VStack>
-                        </HStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Certificates Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Certificates" />
-                    <SectionCard.Content>
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                        <VStack gap={2}>
-                          {/* Header row */}
-                          {certificates.length > 0 && (
-                            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                              <span className="block text-label-lg text-[var(--color-text-default)]">
-                                Secret Name
-                              </span>
-                              <span className="block text-label-lg text-[var(--color-text-default)]">
-                                Hosts (comma separated)
-                              </span>
-                              <div />
-                            </div>
-                          )}
-
-                          {/* Certificate rows */}
-                          {certificates.map((cert) => (
-                            <div
-                              key={cert.id}
-                              className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                            >
-                              <Select
-                                options={CERTIFICATE_OPTIONS}
-                                value={cert.secretName}
-                                onChange={(value) =>
-                                  updateCertificate(cert.id, 'secretName', value)
-                                }
-                                fullWidth
-                              />
-                              <Input
-                                placeholder="e.g. example.com, api.example.com"
-                                value={cert.hosts.join(', ')}
-                                onChange={(e) =>
-                                  updateCertificate(
-                                    cert.id,
-                                    'hosts',
-                                    e.target.value.split(',').map((h) => h.trim())
-                                  )
-                                }
-                                fullWidth
-                              />
-                              <button
-                                onClick={() => removeCertificate(cert.id)}
-                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconX
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          ))}
-
-                          {/* Add Certificate button */}
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addCertificate}
-                            >
-                              Add Certificate
-                            </Button>
-                          </div>
-                        </VStack>
-                      </div>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Ingress Class Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Ingress class" />
-                    <SectionCard.Content>
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                       <VStack gap={2}>
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Ingress Class
-                        </label>
-                        <Select
-                          options={INGRESS_CLASS_OPTIONS}
-                          value={ingressClass}
-                          onChange={setIngressClass}
-                          width="half"
-                        />
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Labels & Annotations Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Labels & Annotations" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Labels */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Labels
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the labels used to identify and categorize the resource.
+                        {annotations.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
                             </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {labels.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {labels.map((label) => (
-                                <div
-                                  key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="Input key"
-                                    value={label.key}
-                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="Input value"
-                                    value={label.value}
-                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeLabel(label.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addLabel}
-                                >
-                                  Add Label
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Annotations
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the annotations used to provide additional metadata for the
-                              resource.
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
                             </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {annotations.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {annotations.map((annotation) => (
-                                <div
-                                  key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="Input key"
-                                    value={annotation.key}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'key', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="Input value"
-                                    value={annotation.value}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAnnotation(annotation.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addAnnotation}
-                                >
-                                  Add Annotation
-                                </Button>
-                              </div>
-                            </VStack>
+                            <div />
                           </div>
-                        </VStack>
+                        )}
+                        {annotations.map((annotation) => (
+                          <div
+                            key={annotation.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="Input key"
+                              value={annotation.key}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'key', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="Input value"
+                              value={annotation.value}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'value', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeAnnotation(annotation.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addAnnotation}
+                          >
+                            Add Annotation
+                          </Button>
+                        </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
                 </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar sectionStates={getSectionStates()} />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Summary Sidebar */}
+          <SummarySidebar sectionStates={getSectionStates()} />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

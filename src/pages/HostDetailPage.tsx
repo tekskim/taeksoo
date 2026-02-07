@@ -24,12 +24,14 @@ import {
   Select,
   FormField,
   MonitoringToolbar,
+  PageShell,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
@@ -1070,7 +1072,8 @@ const mockHostData: Record<string, HostDetail> = {
 
 export default function HostDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Identify drawer state
@@ -1343,17 +1346,13 @@ export default function HostDetailPage() {
 
   if (!host) {
     return (
-      <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-        <main
-          className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0' }}
-        >
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--color-text-muted)]">Host not found</p>
-          </div>
-        </main>
-      </div>
+      <PageShell
+        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebarWidth={sidebarWidth}
+        contentClassName="flex items-center justify-center"
+      >
+        <p className="text-[var(--color-text-muted)]">Host not found</p>
+      </PageShell>
     );
   }
 
@@ -1371,16 +1370,10 @@ export default function HostDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0' }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -1391,11 +1384,11 @@ export default function HostDetailPage() {
           showAddButton={true}
           showWindowControls={true}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -1416,778 +1409,736 @@ export default function HostDetailPage() {
             />
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{host.hostname}</DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={getStatusLabel(host.status)}
+              status={host.status}
+            />
+            <DetailHeader.InfoCard
+              label="Labels"
+              value={host.labels.length > 0 ? host.labels.join(', ') : '-'}
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{host.hostname}</DetailHeader.Title>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={getStatusLabel(host.status)}
-                    status={host.status}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Labels"
-                    value={host.labels.length > 0 ? host.labels.join(', ') : '-'}
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="devices">Devices</Tab>
+              <Tab value="physical-disks">Physical disks</Tab>
+              <Tab value="daemon">Daemon</Tab>
+              <Tab value="device-health">Device health</Tab>
+              <Tab value="performance">Performance</Tab>
+            </TabList>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="devices">Devices</Tab>
-                    <Tab value="physical-disks">Physical disks</Tab>
-                    <Tab value="daemon">Daemon</Tab>
-                    <Tab value="device-health">Device health</Tab>
-                    <Tab value="performance">Performance</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Model">
-                            {host.model} ({host.modelDetail})
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Service instances">
-                            <div className="flex flex-wrap gap-1">
-                              {host.serviceInstances.map((instance, index) => (
-                                <Chip key={index} value={instance} />
-                              ))}
-                            </div>
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="CPUs">{host.cpus}</SectionCard.DataRow>
-                          <SectionCard.DataRow label="Cores">{host.cores}</SectionCard.DataRow>
-                          <SectionCard.DataRow label="Total memory">
-                            {host.totalMemory}
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Raw capacity">
-                            {host.rawCapacity}
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="HDDs">{host.hdds}</SectionCard.DataRow>
-                          <SectionCard.DataRow label="Flash">{host.flash}</SectionCard.DataRow>
-                          <SectionCard.DataRow label="NICs">{host.nics}</SectionCard.DataRow>
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Devices Tab */}
-                  <TabPanel value="devices" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Devices
-                        </h3>
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Model">
+                      {host.model} ({host.modelDetail})
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Service instances">
+                      <div className="flex flex-wrap gap-1">
+                        {host.serviceInstances.map((instance, index) => (
+                          <Chip key={index} value={instance} />
+                        ))}
                       </div>
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="CPUs">{host.cpus}</SectionCard.DataRow>
+                    <SectionCard.DataRow label="Cores">{host.cores}</SectionCard.DataRow>
+                    <SectionCard.DataRow label="Total memory">
+                      {host.totalMemory}
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Raw capacity">
+                      {host.rawCapacity}
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="HDDs">{host.hdds}</SectionCard.DataRow>
+                    <SectionCard.DataRow label="Flash">{host.flash}</SectionCard.DataRow>
+                    <SectionCard.DataRow label="NICs">{host.nics}</SectionCard.DataRow>
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Search */}
-                      <div className="flex items-center gap-4">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search instance by attributes"
-                            size="sm"
-                            fullWidth
-                          />
+            {/* Devices Tab */}
+            <TabPanel value="devices" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Devices</h3>
+                </div>
+
+                {/* Search */}
+                <div className="flex items-center gap-4">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                  </div>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(host.devices.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={host.devices.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                {/* Table */}
+                <Table
+                  columns={deviceColumns}
+                  data={host.devices}
+                  rowKey="id"
+                  emptyMessage="No devices found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Physical disks Tab */}
+            <TabPanel value="physical-disks" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Physical disks
+                  </h3>
+                </div>
+
+                {/* Search */}
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(host.physicalDisks.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={host.physicalDisks.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                {/* Table */}
+                <Table
+                  columns={physicalDiskColumns}
+                  data={host.physicalDisks}
+                  rowKey="id"
+                  emptyMessage="No physical disks found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Daemon Tab */}
+            <TabPanel value="daemon" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Daemon</h3>
+                </div>
+
+                {/* Search */}
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(host.daemons.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={host.daemons.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                {/* Table */}
+                <Table
+                  columns={daemonColumns}
+                  data={host.daemons}
+                  rowKey="id"
+                  emptyMessage="No daemons found"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Device Health Tab */}
+            <TabPanel value="device-health" className="pt-0">
+              <div className="flex gap-4 pt-4">
+                {/* Left Panel - Device List */}
+                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
+                  <h6 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Device health
+                  </h6>
+                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                  <div className="flex flex-col">
+                    {host.deviceHealth.map((device) => {
+                      const isSelected =
+                        (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
+                      return (
+                        <button
+                          key={device.id}
+                          onClick={() => setSelectedDeviceHealth(device.id)}
+                          className={`px-2.5 py-[7px] rounded text-left text-label-md leading-4 transition-colors ${
+                            isSelected
+                              ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
+                              : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
+                          }`}
+                        >
+                          {device.device} ({device.serialId})
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right Panel - Device Details */}
+                <div className="flex-1 flex flex-col gap-3">
+                  {selectedDeviceData && (
+                    <>
+                      {/* Title */}
+                      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                        {selectedDeviceData.device} ({selectedDeviceData.serialId})
+                      </h3>
+
+                      {/* Tab Switcher */}
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setDeviceHealthTab('device-info')}
+                            className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
+                              deviceHealthTab === 'device-info'
+                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                : 'border-transparent text-[var(--color-text-default)]'
+                            }`}
+                          >
+                            Device information
+                          </button>
+                          <button
+                            onClick={() => setDeviceHealthTab('smart')}
+                            className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
+                              deviceHealthTab === 'smart'
+                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                : 'border-transparent text-[var(--color-text-default)]'
+                            }`}
+                          >
+                            SMART
+                          </button>
                         </div>
                       </div>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={Math.ceil(host.devices.length / 10) || 1}
-                        onPageChange={() => {}}
-                        totalItems={host.devices.length}
-                        itemsPerPage={10}
-                        showItemCount
-                      />
+                      {/* Content */}
+                      {deviceHealthTab === 'device-info' && (
+                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                          <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                            Device Information
+                          </h4>
 
-                      {/* Table */}
-                      <Table
-                        columns={deviceColumns}
-                        data={host.devices}
-                        rowKey="id"
-                        emptyMessage="No devices found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Physical disks Tab */}
-                  <TabPanel value="physical-disks" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Physical disks
-                        </h3>
-                      </div>
-
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search instance by attributes"
-                          size="sm"
-                          fullWidth
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={Math.ceil(host.physicalDisks.length / 10) || 1}
-                        onPageChange={() => {}}
-                        totalItems={host.physicalDisks.length}
-                        itemsPerPage={10}
-                        showItemCount
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={physicalDiskColumns}
-                        data={host.physicalDisks}
-                        rowKey="id"
-                        emptyMessage="No physical disks found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Daemon Tab */}
-                  <TabPanel value="daemon" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Daemon</h3>
-                      </div>
-
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search instance by attributes"
-                          size="sm"
-                          fullWidth
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={Math.ceil(host.daemons.length / 10) || 1}
-                        onPageChange={() => {}}
-                        totalItems={host.daemons.length}
-                        itemsPerPage={10}
-                        showItemCount
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={daemonColumns}
-                        data={host.daemons}
-                        rowKey="id"
-                        emptyMessage="No daemons found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Device Health Tab */}
-                  <TabPanel value="device-health" className="pt-0">
-                    <div className="flex gap-4 pt-4">
-                      {/* Left Panel - Device List */}
-                      <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h6 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Device health
-                        </h6>
-                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                        <div className="flex flex-col">
-                          {host.deviceHealth.map((device) => {
-                            const isSelected =
-                              (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
-                            return (
-                              <button
-                                key={device.id}
-                                onClick={() => setSelectedDeviceHealth(device.id)}
-                                className={`px-2.5 py-[7px] rounded text-left text-label-md leading-4 transition-colors ${
-                                  isSelected
-                                    ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
-                                    : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
-                                }`}
-                              >
-                                {device.device} ({device.serialId})
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Right Panel - Device Details */}
-                      <div className="flex-1 flex flex-col gap-3">
-                        {selectedDeviceData && (
-                          <>
-                            {/* Title */}
-                            <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                              {selectedDeviceData.device} ({selectedDeviceData.serialId})
-                            </h3>
-
-                            {/* Tab Switcher */}
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() => setDeviceHealthTab('device-info')}
-                                  className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
-                                    deviceHealthTab === 'device-info'
-                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'border-transparent text-[var(--color-text-default)]'
-                                  }`}
-                                >
-                                  Device information
-                                </button>
-                                <button
-                                  onClick={() => setDeviceHealthTab('smart')}
-                                  className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
-                                    deviceHealthTab === 'smart'
-                                      ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                      : 'border-transparent text-[var(--color-text-default)]'
-                                  }`}
-                                >
-                                  SMART
-                                </button>
-                              </div>
+                          <div className="flex flex-col gap-1.5">
+                            <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                              Smartctl Output
+                            </span>
+                            <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
+                              <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
+                                {selectedDeviceData.smartctlOutput}
+                              </pre>
                             </div>
-
-                            {/* Content */}
-                            {deviceHealthTab === 'device-info' && (
-                              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
-                                <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                  Device Information
-                                </h4>
-
-                                <div className="flex flex-col gap-1.5">
-                                  <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                    Smartctl Output
-                                  </span>
-                                  <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                                    <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
-                                      {selectedDeviceData.smartctlOutput}
-                                    </pre>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {deviceHealthTab === 'smart' && (
-                              <>
-                                {/* Info/Status Message based on SMART status */}
-                                {selectedDeviceData?.smartStatus === 'passed' && (
-                                  <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="shrink-0 mt-0.5"
-                                    >
-                                      <path
-                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                        stroke="var(--color-state-success)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M5.5 8L7.16667 9.66667L10.5 6.33333"
-                                        stroke="var(--color-state-success)"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                      SMART overall-health self-assessment test result:{' '}
-                                      <strong>passed</strong>
-                                    </span>
-                                  </div>
-                                )}
-                                {selectedDeviceData?.smartStatus === 'unavailable' && (
-                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="shrink-0 mt-0.5"
-                                    >
-                                      <path
-                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M8 10.6667V8"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M8 5.33333H8.00667"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                      No SMART data available for this device.
-                                    </span>
-                                  </div>
-                                )}
-                                {selectedDeviceData?.smartStatus === 'loading' && (
-                                  <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="shrink-0 mt-0.5"
-                                    >
-                                      <path
-                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M8 10.6667V8"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M8 5.33333H8.00667"
-                                        stroke="var(--color-state-info)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                      SMART data is loading.
-                                    </span>
-                                  </div>
-                                )}
-                                {selectedDeviceData?.smartStatus === 'failed' && (
-                                  <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="shrink-0 mt-0.5"
-                                    >
-                                      <path
-                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                        stroke="var(--color-state-danger)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M10 6L6 10"
-                                        stroke="var(--color-state-danger)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M6 6L10 10"
-                                        stroke="var(--color-state-danger)"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                      SMART overall-health self-assessment test result:{' '}
-                                      <strong>failed</strong>
-                                    </span>
-                                  </div>
-                                )}
-
-                                {/* SMART Card */}
-                                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
-                                  <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                    SMART
-                                  </h4>
-
-                                  <div className="flex flex-col gap-1.5">
-                                    <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                      Health Status
-                                    </span>
-                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                      {selectedDeviceData?.smartStatus === 'passed'
-                                        ? 'Passed'
-                                        : selectedDeviceData?.smartStatus === 'failed'
-                                          ? 'Failed'
-                                          : selectedDeviceData?.smartStatus === 'unavailable'
-                                            ? 'Unavailable'
-                                            : '-'}
-                                    </span>
-                                  </div>
-                                </div>
-                              </>
-                            )}
-                          </>
-                        )}
-
-                        {!selectedDeviceData && host.deviceHealth.length === 0 && (
-                          <div className="flex items-center justify-center h-[200px] text-[var(--color-text-subtle)]">
-                            No device health data available
                           </div>
-                        )}
+                        </div>
+                      )}
+
+                      {deviceHealthTab === 'smart' && (
+                        <>
+                          {/* Info/Status Message based on SMART status */}
+                          {selectedDeviceData?.smartStatus === 'passed' && (
+                            <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="shrink-0 mt-0.5"
+                              >
+                                <path
+                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                  stroke="var(--color-state-success)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M5.5 8L7.16667 9.66667L10.5 6.33333"
+                                  stroke="var(--color-state-success)"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                                SMART overall-health self-assessment test result:{' '}
+                                <strong>passed</strong>
+                              </span>
+                            </div>
+                          )}
+                          {selectedDeviceData?.smartStatus === 'unavailable' && (
+                            <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="shrink-0 mt-0.5"
+                              >
+                                <path
+                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M8 10.6667V8"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M8 5.33333H8.00667"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                                No SMART data available for this device.
+                              </span>
+                            </div>
+                          )}
+                          {selectedDeviceData?.smartStatus === 'loading' && (
+                            <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="shrink-0 mt-0.5"
+                              >
+                                <path
+                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M8 10.6667V8"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M8 5.33333H8.00667"
+                                  stroke="var(--color-state-info)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                                SMART data is loading.
+                              </span>
+                            </div>
+                          )}
+                          {selectedDeviceData?.smartStatus === 'failed' && (
+                            <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="shrink-0 mt-0.5"
+                              >
+                                <path
+                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                  stroke="var(--color-state-danger)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M10 6L6 10"
+                                  stroke="var(--color-state-danger)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                                <path
+                                  d="M6 6L10 10"
+                                  stroke="var(--color-state-danger)"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                                SMART overall-health self-assessment test result:{' '}
+                                <strong>failed</strong>
+                              </span>
+                            </div>
+                          )}
+
+                          {/* SMART Card */}
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
+                            <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                              SMART
+                            </h4>
+
+                            <div className="flex flex-col gap-1.5">
+                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                                Health Status
+                              </span>
+                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                                {selectedDeviceData?.smartStatus === 'passed'
+                                  ? 'Passed'
+                                  : selectedDeviceData?.smartStatus === 'failed'
+                                    ? 'Failed'
+                                    : selectedDeviceData?.smartStatus === 'unavailable'
+                                      ? 'Unavailable'
+                                      : '-'}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {!selectedDeviceData && host.deviceHealth.length === 0 && (
+                    <div className="flex items-center justify-center h-[200px] text-[var(--color-text-subtle)]">
+                      No device health data available
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabPanel>
+
+            {/* Performance Tab */}
+            <TabPanel value="performance" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Monitoring Time Controls */}
+                <div className="flex justify-start w-full">
+                  <MonitoringToolbar
+                    onTimeRangeChange={(value) => console.log('Time range changed:', value)}
+                    onRefresh={() => console.log('Refresh clicked')}
+                  />
+                </div>
+
+                {/* System Overview Section */}
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
+                    SYSTEM OVERVIEW
+                  </h3>
+
+                  {/* Stat Cards Row */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    {/* OSDs Card */}
+                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
+                      <span className="text-body-md text-[var(--color-text-muted)]">OSDs</span>
+                      <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
+                        {host.osds || 24}
                       </div>
                     </div>
-                  </TabPanel>
 
-                  {/* Performance Tab */}
-                  <TabPanel value="performance" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Monitoring Time Controls */}
-                      <div className="flex justify-start w-full">
-                        <MonitoringToolbar
-                          onTimeRangeChange={(value) => console.log('Time range changed:', value)}
-                          onRefresh={() => console.log('Refresh clicked')}
-                        />
+                    {/* Raw capacity Card */}
+                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
+                      <span className="text-body-md text-[var(--color-text-muted)]">
+                        Raw capacity
+                      </span>
+                      <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
+                        {host.rawCapacity || '11.6 TiB'}
                       </div>
+                    </div>
+                  </div>
 
-                      {/* System Overview Section */}
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
-                          SYSTEM OVERVIEW
-                        </h3>
+                  {/* Charts Container with 24px vertical gap */}
+                  <div className="flex flex-col gap-6">
+                    {/* Charts Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Network drop rate */}
+                      <HostChartWithFullScreen
+                        title="Network drop rate"
+                        series={[
+                          {
+                            name: 'Send',
+                            data: [2, 4, 8, 10, 9, 12, 14],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'Receive',
+                            data: [1, 3, 6, 8, 7, 10, 12],
+                            color: chartColors.emerald400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00']}
+                        yAxisUnit=" p/s"
+                      />
 
-                        {/* Stat Cards Row */}
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                          {/* OSDs Card */}
-                          <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-body-md text-[var(--color-text-muted)]">
-                              OSDs
-                            </span>
-                            <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
-                              {host.osds || 24}
-                            </div>
-                          </div>
+                      {/* Network error rate */}
+                      <HostChartWithFullScreen
+                        title="Network error rate"
+                        series={[
+                          {
+                            name: 'Send',
+                            data: [1, 2, 4, 5, 4, 6, 8],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'Receive',
+                            data: [0.5, 1.5, 3, 4, 3, 5, 7],
+                            color: chartColors.emerald400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00']}
+                        yAxisUnit=" p/s"
+                      />
+                    </div>
 
-                          {/* Raw capacity Card */}
-                          <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-body-md text-[var(--color-text-muted)]">
-                              Raw capacity
-                            </span>
-                            <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
-                              {host.rawCapacity || '11.6 TiB'}
-                            </div>
-                          </div>
-                        </div>
+                    {/* Additional Charts Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* RAM Usage */}
+                      <HostChartWithFullScreen
+                        title="RAM Usage"
+                        series={[
+                          {
+                            name: 'Used',
+                            data: [28, 32, 35, 38, 36, 40],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'Cached',
+                            data: [18, 22, 25, 28, 26, 30],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'Buffers',
+                            data: [8, 10, 12, 14, 12, 15],
+                            color: chartColors.amber400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit=" GB"
+                      />
 
-                        {/* Charts Container with 24px vertical gap */}
-                        <div className="flex flex-col gap-6">
-                          {/* Charts Row */}
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* Network drop rate */}
-                            <HostChartWithFullScreen
-                              title="Network drop rate"
-                              series={[
-                                {
-                                  name: 'Send',
-                                  data: [2, 4, 8, 10, 9, 12, 14],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'Receive',
-                                  data: [1, 3, 6, 8, 7, 10, 12],
-                                  color: chartColors.emerald400,
-                                },
-                              ]}
-                              timeLabels={[
-                                '14:30',
-                                '14:45',
-                                '15:00',
-                                '15:15',
-                                '15:30',
-                                '15:45',
-                                '16:00',
-                              ]}
-                              yAxisUnit=" p/s"
-                            />
+                      {/* CPU Utilization */}
+                      <HostChartWithFullScreen
+                        title="CPU Utilization"
+                        series={[
+                          {
+                            name: 'osd.0',
+                            data: [1.2, 1.4, 1.6, 1.5, 1.8],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'osd.1',
+                            data: [0.8, 1.0, 1.2, 1.1, 1.4],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'osd.2',
+                            data: [0.5, 0.7, 0.9, 0.85, 1.0],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'osd.3',
+                            data: [0.6, 0.8, 1.0, 0.95, 1.2],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit="%"
+                      />
+                    </div>
 
-                            {/* Network error rate */}
-                            <HostChartWithFullScreen
-                              title="Network error rate"
-                              series={[
-                                {
-                                  name: 'Send',
-                                  data: [1, 2, 4, 5, 4, 6, 8],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'Receive',
-                                  data: [0.5, 1.5, 3, 4, 3, 5, 7],
-                                  color: chartColors.emerald400,
-                                },
-                              ]}
-                              timeLabels={[
-                                '14:30',
-                                '14:45',
-                                '15:00',
-                                '15:15',
-                                '15:30',
-                                '15:45',
-                                '16:00',
-                              ]}
-                              yAxisUnit=" p/s"
-                            />
-                          </div>
+                    {/* Network load Chart */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <HostChartWithFullScreen
+                        title="Network load"
+                        series={[
+                          {
+                            name: 'eth0 Rx',
+                            data: [2.2, 2.5, 2.8, 3.0, 3.2, 3.5],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'eth0 Tx',
+                            data: [1.5, 1.8, 2.0, 2.2, 2.5, 2.8],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'eth1 Rx',
+                            data: [1.0, 1.2, 1.5, 1.8, 2.0, 2.2],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'eth1 Tx',
+                            data: [0.8, 1.0, 1.2, 1.4, 1.6, 1.8],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit=" Gb/s"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                          {/* Additional Charts Row */}
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* RAM Usage */}
-                            <HostChartWithFullScreen
-                              title="RAM Usage"
-                              series={[
-                                {
-                                  name: 'Used',
-                                  data: [28, 32, 35, 38, 36, 40],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'Cached',
-                                  data: [18, 22, 25, 28, 26, 30],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'Buffers',
-                                  data: [8, 10, 12, 14, 12, 15],
-                                  color: chartColors.amber400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit=" GB"
-                            />
+                {/* DISK PERFORMANCE Section */}
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
+                    DISK PERFORMANCE
+                  </h3>
 
-                            {/* CPU Utilization */}
-                            <HostChartWithFullScreen
-                              title="CPU Utilization"
-                              series={[
-                                {
-                                  name: 'osd.0',
-                                  data: [1.2, 1.4, 1.6, 1.5, 1.8],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'osd.1',
-                                  data: [0.8, 1.0, 1.2, 1.1, 1.4],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'osd.2',
-                                  data: [0.5, 0.7, 0.9, 0.85, 1.0],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'osd.3',
-                                  data: [0.6, 0.8, 1.0, 0.95, 1.2],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit="%"
-                            />
-                          </div>
+                  {/* Disk Charts Container with 24px vertical gap */}
+                  <div className="flex flex-col gap-6">
+                    {/* Row 1: Disk IOPS + Throughput by Disk */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Disk IOPS */}
+                      <HostChartWithFullScreen
+                        title="Disk IOPS"
+                        series={[
+                          {
+                            name: 'sda Read',
+                            data: [100, 120, 140, 160, 180, 150],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'sda Write',
+                            data: [80, 95, 110, 130, 145, 120],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'sdb Read',
+                            data: [60, 70, 85, 100, 110, 90],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'sdb Write',
+                            data: [40, 55, 70, 85, 95, 75],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit=""
+                      />
 
-                          {/* Network load Chart */}
-                          <div className="grid grid-cols-2 gap-4">
-                            <HostChartWithFullScreen
-                              title="Network load"
-                              series={[
-                                {
-                                  name: 'eth0 Rx',
-                                  data: [2.2, 2.5, 2.8, 3.0, 3.2, 3.5],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'eth0 Tx',
-                                  data: [1.5, 1.8, 2.0, 2.2, 2.5, 2.8],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'eth1 Rx',
-                                  data: [1.0, 1.2, 1.5, 1.8, 2.0, 2.2],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'eth1 Tx',
-                                  data: [0.8, 1.0, 1.2, 1.4, 1.6, 1.8],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit=" Gb/s"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                      {/* Throughput by Disk */}
+                      <HostChartWithFullScreen
+                        title="Throughput by Disk"
+                        series={[
+                          {
+                            name: 'sda Read',
+                            data: [4, 5, 6, 7, 8, 9],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'sda Write',
+                            data: [3, 4, 5, 5.5, 6, 7],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'sdb Read',
+                            data: [2, 2.5, 3, 4, 5, 6],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'sdb Write',
+                            data: [1, 1.5, 2, 2.5, 3, 4],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit=" MB/s"
+                      />
+                    </div>
 
-                      {/* DISK PERFORMANCE Section */}
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
-                          DISK PERFORMANCE
-                        </h3>
+                    {/* Row 2: Disk Latency + Disk Utilization */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Disk Latency */}
+                      <HostChartWithFullScreen
+                        title="Disk latency"
+                        series={[
+                          {
+                            name: 'sda Read',
+                            data: [5, 8, 12, 15, 18, 20],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'sda Write',
+                            data: [4, 6, 9, 12, 14, 16],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'sdb Read',
+                            data: [3, 5, 7, 10, 12, 14],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'sdb Write',
+                            data: [2, 4, 6, 8, 10, 12],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit=" ms"
+                      />
 
-                        {/* Disk Charts Container with 24px vertical gap */}
-                        <div className="flex flex-col gap-6">
-                          {/* Row 1: Disk IOPS + Throughput by Disk */}
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* Disk IOPS */}
-                            <HostChartWithFullScreen
-                              title="Disk IOPS"
-                              series={[
-                                {
-                                  name: 'sda Read',
-                                  data: [100, 120, 140, 160, 180, 150],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'sda Write',
-                                  data: [80, 95, 110, 130, 145, 120],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'sdb Read',
-                                  data: [60, 70, 85, 100, 110, 90],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'sdb Write',
-                                  data: [40, 55, 70, 85, 95, 75],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit=""
-                            />
-
-                            {/* Throughput by Disk */}
-                            <HostChartWithFullScreen
-                              title="Throughput by Disk"
-                              series={[
-                                {
-                                  name: 'sda Read',
-                                  data: [4, 5, 6, 7, 8, 9],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'sda Write',
-                                  data: [3, 4, 5, 5.5, 6, 7],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'sdb Read',
-                                  data: [2, 2.5, 3, 4, 5, 6],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'sdb Write',
-                                  data: [1, 1.5, 2, 2.5, 3, 4],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit=" MB/s"
-                            />
-                          </div>
-
-                          {/* Row 2: Disk Latency + Disk Utilization */}
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* Disk Latency */}
-                            <HostChartWithFullScreen
-                              title="Disk latency"
-                              series={[
-                                {
-                                  name: 'sda Read',
-                                  data: [5, 8, 12, 15, 18, 20],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'sda Write',
-                                  data: [4, 6, 9, 12, 14, 16],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'sdb Read',
-                                  data: [3, 5, 7, 10, 12, 14],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'sdb Write',
-                                  data: [2, 4, 6, 8, 10, 12],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit=" ms"
-                            />
-
-                            {/* Disk Utilization */}
-                            <HostChartWithFullScreen
-                              title="Disk utilization"
-                              series={[
-                                {
-                                  name: 'sda',
-                                  data: [20, 25, 30, 35, 45, 50],
-                                  color: chartColors.cyan400,
-                                },
-                                {
-                                  name: 'sdb',
-                                  data: [15, 20, 25, 30, 40, 45],
-                                  color: chartColors.emerald400,
-                                },
-                                {
-                                  name: 'sdc',
-                                  data: [10, 15, 20, 28, 35, 42],
-                                  color: chartColors.amber400,
-                                },
-                                {
-                                  name: 'sdd',
-                                  data: [8, 12, 18, 22, 30, 38],
-                                  color: chartColors.violet400,
-                                },
-                              ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
-                              yAxisUnit="%"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                      {/* Disk Utilization */}
+                      <HostChartWithFullScreen
+                        title="Disk utilization"
+                        series={[
+                          {
+                            name: 'sda',
+                            data: [20, 25, 30, 35, 45, 50],
+                            color: chartColors.cyan400,
+                          },
+                          {
+                            name: 'sdb',
+                            data: [15, 20, 25, 30, 40, 45],
+                            color: chartColors.emerald400,
+                          },
+                          {
+                            name: 'sdc',
+                            data: [10, 15, 20, 28, 35, 42],
+                            color: chartColors.amber400,
+                          },
+                          {
+                            name: 'sdd',
+                            data: [8, 12, 18, 22, 30, 38],
+                            color: chartColors.violet400,
+                          },
+                        ]}
+                        timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
+                        yAxisUnit="%"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
+      </VStack>
 
       {/* Identify Drawer */}
       <Drawer
@@ -2223,6 +2174,6 @@ export default function HostDetailPage() {
           </FormField>
         </div>
       </Drawer>
-    </div>
+    </PageShell>
   );
 }

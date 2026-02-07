@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { IconTerminal2, IconCircleFilled } from '@tabler/icons-react';
-import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
+import { Select, Button, TabBar, TopBar, Breadcrumb, PageShell } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
@@ -148,106 +148,101 @@ export function ContainerConsolePage() {
   }, []);
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 260 : 60;
+  const sidebarWidth = sidebarOpen ? 240 : 40;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Container Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId || ''}
-            onTabChange={handleTabChange}
-            onTabClose={handleTabClose}
-            onTabAdd={handleAddTab}
-            onTabMove={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => navigate(1)}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'clusterName', href: '/container' },
-                  { label: `Kubectl: ${instanceName}` },
-                ]}
-              />
-            }
-          />
-        </div>
-
-        {/* Console Content - Full height */}
-        <div className="flex flex-col flex-1">
-          {/* Console Area - Dark background with monospace font */}
-          <div
-            ref={contentRef}
-            onClick={handleConsoleClick}
-            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text shell-scroll"
-          >
-            {/* Command History */}
-            {commandHistory.map((line, index) => (
-              <div key={index} className="whitespace-pre-wrap break-all">
-                {line}
-              </div>
-            ))}
-
-            {/* Current Input Line */}
-            <div className="flex items-center">
-              <span className="text-white">&gt; </span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={currentInput}
-                onChange={(e) => setCurrentInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent border-none outline-none text-white font-mono text-body-md leading-[18px]"
-                autoFocus
-                spellCheck={false}
-              />
-            </div>
-          </div>
-
-          {/* Bottom Status Bar */}
-          <div className="flex items-center gap-2.5 px-2 py-1 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
-            {/* Container Select */}
-            <Select
-              value={selectedContainer}
-              onChange={setSelectedContainer}
-              options={containerOptions}
-              placeholder="Container"
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId || ''}
+          onTabChange={handleTabChange}
+          onTabClose={handleTabClose}
+          onTabAdd={handleAddTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'clusterName', href: '/container' },
+                { label: `Kubectl: ${instanceName}` },
+              ]}
             />
+          }
+        />
+      }
+      contentClassName="flex flex-col flex-1 p-0"
+    >
+      {/* Console Content - Full height */}
+      <div className="flex flex-col flex-1">
+        {/* Console Area - Dark background with monospace font */}
+        <div
+          ref={contentRef}
+          onClick={handleConsoleClick}
+          className="flex-1 overflow-auto p-4 font-mono text-body-md leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text shell-scroll"
+        >
+          {/* Command History */}
+          {commandHistory.map((line, index) => (
+            <div key={index} className="whitespace-pre-wrap break-all">
+              {line}
+            </div>
+          ))}
 
-            {/* Clear Button */}
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={handleClear}
-              className="!text-[var(--color-action-primary)]"
-            >
-              Clear
-            </Button>
-
-            {/* Connection Status indicator */}
-            <ConnectionStatusIndicator status={connectionStatus} />
+          {/* Current Input Line */}
+          <div className="flex items-center">
+            <span className="text-white">&gt; </span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={currentInput}
+              onChange={(e) => setCurrentInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-transparent border-none outline-none text-white font-mono text-body-md leading-[18px]"
+              autoFocus
+              spellCheck={false}
+            />
           </div>
         </div>
-      </main>
-    </div>
+
+        {/* Bottom Status Bar */}
+        <div className="flex items-center gap-2.5 px-2 py-1 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+          {/* Container Select */}
+          <Select
+            value={selectedContainer}
+            onChange={setSelectedContainer}
+            options={containerOptions}
+            placeholder="Container"
+          />
+
+          {/* Clear Button */}
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={handleClear}
+            className="!text-[var(--color-action-primary)]"
+          >
+            Clear
+          </Button>
+
+          {/* Connection Status indicator */}
+          <ConnectionStatusIndicator status={connectionStatus} />
+        </div>
+      </div>
+    </PageShell>
   );
 }
 

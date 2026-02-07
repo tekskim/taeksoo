@@ -17,6 +17,7 @@ import {
   DetailHeader,
   Chip,
   SectionCard,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
@@ -385,16 +386,12 @@ export function ContainerHPADetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -403,8 +400,8 @@ export function ContainerHPADetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -440,117 +437,114 @@ export function ContainerHPADetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Horizontal Pod Autoscaler: {hpa.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={hpa.status}
+              status={getStatusType(hpa.status)}
+            />
+            <DetailHeader.InfoCard label="Namespace" value={hpa.namespace} copyable />
+            <DetailHeader.InfoCard label="Target reference" value={hpa.targetReference} />
+            <DetailHeader.InfoCard label="Created at" value={hpa.createdAt} />
+          </DetailHeader.InfoGrid>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Horizontal Pod Autoscaler: {hpa.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={hpa.status}
-                    status={getStatusType(hpa.status)}
-                  />
-                  <DetailHeader.InfoCard label="Namespace" value={hpa.namespace} copyable />
-                  <DetailHeader.InfoCard label="Target reference" value={hpa.targetReference} />
-                  <DetailHeader.InfoCard label="Created at" value={hpa.createdAt} />
-                </DetailHeader.InfoGrid>
+          {/* Second row: Labels, Annotations */}
+          <HStack gap={3} className="w-full mt-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Labels ({Object.keys(hpa.labels).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(hpa.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(hpa.labels).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(hpa.labels).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Annotations ({Object.keys(hpa.annotations).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(hpa.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(hpa.annotations).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(hpa.annotations).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+          </HStack>
+        </DetailHeader>
 
-                {/* Second row: Labels, Annotations */}
-                <HStack gap={3} className="w-full mt-3">
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Labels ({Object.keys(hpa.labels).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(hpa.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(hpa.labels).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(hpa.labels).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Annotations ({Object.keys(hpa.annotations).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(hpa.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(hpa.annotations).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(hpa.annotations).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                </HStack>
-              </DetailHeader>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="metrics">Metrics</Tab>
+            <Tab value="behavior">Behavior</Tab>
+            <Tab value="conditions">Conditions</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="metrics">Metrics</Tab>
-                  <Tab value="behavior">Behavior</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                </TabList>
-
-                <TabPanel value="metrics">
-                  <MetricsTab />
-                </TabPanel>
-                <TabPanel value="behavior">
-                  <BehaviorTab />
-                </TabPanel>
-                <TabPanel value="conditions">
-                  <ConditionsTab />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
-
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+          <TabPanel value="metrics">
+            <MetricsTab />
+          </TabPanel>
+          <TabPanel value="behavior">
+            <BehaviorTab />
+          </TabPanel>
+          <TabPanel value="conditions">
+            <ConditionsTab />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

@@ -13,6 +13,7 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -201,6 +202,7 @@ export default function FloatingIPDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedFqdn, setCopiedFqdn] = useState(false);
 
@@ -238,167 +240,149 @@ export default function FloatingIPDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Floating IP Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconLinkOff size={12} />}>
+              Disassociate
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Release
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value="Available"
+              status={floatingIPStatusMap[floatingIP.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
+            <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Floating IP Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+            </TabList>
 
-          {/* Top Bar with Breadcrumb */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Floating IP Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLinkOff size={12} />}>
-                    Disassociate
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Release
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value="Available"
-                    status={floatingIPStatusMap[floatingIP.status]}
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
                   />
-                  <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
-                  <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Floating IP" value={floatingIP.floatingIp} />
+                    <SectionCard.DataRow label="Description" value={floatingIP.description} />
+                    <SectionCard.DataRow
+                      label="External network"
+                      value={
+                        floatingIP.network ? (
+                          <Link
+                            to={`/compute/networks/${floatingIP.network.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {floatingIP.network.name}
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Floating IP Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                  </TabList>
-
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Floating IP" value={floatingIP.floatingIp} />
-                          <SectionCard.DataRow label="Description" value={floatingIP.description} />
-                          <SectionCard.DataRow
-                            label="External network"
-                            value={
-                              floatingIP.network ? (
-                                <Link
-                                  to={`/compute/networks/${floatingIP.network.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {floatingIP.network.name}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Association */}
-                      <SectionCard>
-                        <SectionCard.Header title="Association" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Resource"
-                            value={
-                              floatingIP.resource ? (
-                                <Link
-                                  to={`/compute/instances/${floatingIP.resource.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {floatingIP.resource.name}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                          <SectionCard.DataRow label="Fixed IP" value={floatingIP.fixedIp || '-'} />
-                          <SectionCard.DataRow
-                            label="Router"
-                            value={
-                              floatingIP.router ? (
-                                <Link
-                                  to={`/compute/routers/${floatingIP.router.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {floatingIP.router.name}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Association */}
+                <SectionCard>
+                  <SectionCard.Header title="Association" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Resource"
+                      value={
+                        floatingIP.resource ? (
+                          <Link
+                            to={`/compute/instances/${floatingIP.resource.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {floatingIP.resource.name}
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                    <SectionCard.DataRow label="Fixed IP" value={floatingIP.fixedIp || '-'} />
+                    <SectionCard.DataRow
+                      label="Router"
+                      value={
+                        floatingIP.router ? (
+                          <Link
+                            to={`/compute/routers/${floatingIP.router.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {floatingIP.router.name}
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

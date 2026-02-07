@@ -8,6 +8,7 @@ import {
   VStack,
   TabBar,
   TopBar,
+  PageShell,
   Input,
   Radio,
   RadioGroup,
@@ -562,16 +563,12 @@ export function CreateStorageClassPage() {
     mountOptions.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -580,8 +577,8 @@ export function CreateStorageClassPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -617,70 +614,66 @@ export function CreateStorageClassPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <div className="flex items-center justify-between h-8">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Create Storage Class
-                  </h1>
-                </div>
-                <p className="text-body-md text-[var(--color-text-subtle)]">
-                  Storage Class provides a way to describe different classes of storage, allowing
-                  administrators to define storage profiles with specific provisioner, parameters,
-                  and reclaim policies for dynamic volume provisioning.
-                </p>
-              </VStack>
-
-              {/* Main Content with Sidebar */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Form Content */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <BasicInfoSection
-                    storageClassName={storageClassName}
-                    onStorageClassNameChange={setStorageClassName}
-                    storageClassNameError={storageClassNameError}
-                    onStorageClassNameErrorChange={setStorageClassNameError}
-                    description={description}
-                    onDescriptionChange={setDescription}
-                  />
-
-                  {/* Parameters Section */}
-                  <ParametersSection parameters={parameters} onParametersChange={setParameters} />
-
-                  {/* Customize Section */}
-                  <CustomizeSection
-                    reclaimPolicy={reclaimPolicy}
-                    onReclaimPolicyChange={setReclaimPolicy}
-                    volumeExpansion={volumeExpansion}
-                    onVolumeExpansionChange={setVolumeExpansion}
-                    volumeBindingMode={volumeBindingMode}
-                    onVolumeBindingModeChange={setVolumeBindingMode}
-                    mountOptions={mountOptions}
-                    onMountOptionsChange={setMountOptions}
-                  />
-                </VStack>
-
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  storageClassName={storageClassName}
-                  parameters={parameters}
-                  hasCustomizeData={hasCustomizeData}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
-              </HStack>
-            </VStack>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <div className="flex items-center justify-between h-8">
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              Create Storage Class
+            </h1>
           </div>
-        </div>
-      </main>
-    </div>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Storage Class provides a way to describe different classes of storage, allowing
+            administrators to define storage profiles with specific provisioner, parameters, and
+            reclaim policies for dynamic volume provisioning.
+          </p>
+        </VStack>
+
+        {/* Main Content with Sidebar */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Form Content */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <BasicInfoSection
+              storageClassName={storageClassName}
+              onStorageClassNameChange={setStorageClassName}
+              storageClassNameError={storageClassNameError}
+              onStorageClassNameErrorChange={setStorageClassNameError}
+              description={description}
+              onDescriptionChange={setDescription}
+            />
+
+            {/* Parameters Section */}
+            <ParametersSection parameters={parameters} onParametersChange={setParameters} />
+
+            {/* Customize Section */}
+            <CustomizeSection
+              reclaimPolicy={reclaimPolicy}
+              onReclaimPolicyChange={setReclaimPolicy}
+              volumeExpansion={volumeExpansion}
+              onVolumeExpansionChange={setVolumeExpansion}
+              volumeBindingMode={volumeBindingMode}
+              onVolumeBindingModeChange={setVolumeBindingMode}
+              mountOptions={mountOptions}
+              onMountOptionsChange={setMountOptions}
+            />
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            storageClassName={storageClassName}
+            parameters={parameters}
+            hasCustomizeData={hasCustomizeData}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

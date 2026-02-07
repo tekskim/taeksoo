@@ -23,6 +23,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  PageShell,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
@@ -294,19 +295,15 @@ export function CreateClusterPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ClusterManagementSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ClusterManagementSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -315,8 +312,8 @@ export function CreateClusterPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -333,646 +330,636 @@ export function CreateClusterPage() {
             />
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      {/* Header */}
+      <VStack gap={2} className="mb-6">
+        <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
+          Create Cluster
+        </h1>
+        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+          Cluster is a group of machines that work together to run containerized applications with
+          automated scaling, scheduling, and management.
+        </p>
+      </VStack>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            {/* Header */}
-            <VStack gap={2} className="mb-6">
-              <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
-                Create Cluster
-              </h1>
-              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                Cluster is a group of machines that work together to run containerized applications
-                with automated scaling, scheduling, and management.
-              </p>
-            </VStack>
+      {/* Main Content Grid */}
+      <div className="flex gap-6">
+        {/* Left Column - Form */}
+        <div className="flex-1 flex flex-col gap-4">
+          {/* Basic Information */}
+          <SectionCard>
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content>
+              <VStack gap={6}>
+                {/* Name */}
+                <FormField required>
+                  <FormField.Label>Name</FormField.Label>
+                  <FormField.Control>
+                    <Input
+                      placeholder="Enter a unique name"
+                      value={clusterName}
+                      onChange={(e) => setClusterName(e.target.value)}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
 
-            {/* Main Content Grid */}
-            <div className="flex gap-6">
-              {/* Left Column - Form */}
-              <div className="flex-1 flex flex-col gap-4">
-                {/* Basic Information */}
-                <SectionCard>
-                  <SectionCard.Header title="Basic information" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
-                      {/* Name */}
-                      <FormField required>
-                        <FormField.Label>Name</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter a unique name"
-                            value={clusterName}
-                            onChange={(e) => setClusterName(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                      </FormField>
+                {/* Kubernetes Version */}
+                <FormField required>
+                  <FormField.Label>Kubernetes Version</FormField.Label>
+                  <FormField.Description>
+                    Select the Kubernetes version to apply to the cluster. Choosing the latest
+                    supported version is recommended for improved stability and security unless your
+                    application requires a specific older version.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select
+                      options={kubernetesVersionOptions}
+                      value={kubernetesVersion}
+                      onChange={setKubernetesVersion}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
 
-                      {/* Kubernetes Version */}
-                      <FormField required>
-                        <FormField.Label>Kubernetes Version</FormField.Label>
-                        <FormField.Description>
-                          Select the Kubernetes version to apply to the cluster. Choosing the latest
-                          supported version is recommended for improved stability and security
-                          unless your application requires a specific older version.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <Select
-                            options={kubernetesVersionOptions}
-                            value={kubernetesVersion}
-                            onChange={setKubernetesVersion}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                      </FormField>
+                {/* Container Network */}
+                <FormField required>
+                  <FormField.Label>Container Network</FormField.Label>
+                  <FormField.Description>
+                    Select the container network (CNI) plugin that manages internal cluster traffic.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select
+                      options={containerNetworkOptions}
+                      value={containerNetwork}
+                      onChange={setContainerNetwork}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
 
-                      {/* Container Network */}
-                      <FormField required>
-                        <FormField.Label>Container Network</FormField.Label>
-                        <FormField.Description>
-                          Select the container network (CNI) plugin that manages internal cluster
-                          traffic.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <Select
-                            options={containerNetworkOptions}
-                            value={containerNetwork}
-                            onChange={setContainerNetwork}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                      </FormField>
+                {/* Description */}
+                <Disclosure defaultOpen={false}>
+                  <Disclosure.Trigger>Description</Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <Input
+                      placeholder="Description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      fullWidth
+                      className="mt-2"
+                    />
+                  </Disclosure.Panel>
+                </Disclosure>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
 
-                      {/* Description */}
-                      <Disclosure defaultOpen={false}>
-                        <Disclosure.Trigger>Description</Disclosure.Trigger>
-                        <Disclosure.Panel>
-                          <Input
-                            placeholder="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            fullWidth
-                            className="mt-2"
-                          />
-                        </Disclosure.Panel>
-                      </Disclosure>
+          {/* Networking */}
+          <SectionCard>
+            <SectionCard.Header title="Networking" />
+            <SectionCard.Content>
+              <VStack gap={6}>
+                {/* External Network */}
+                <FormField required>
+                  <FormField.Label>External Network</FormField.Label>
+                  <FormField.Description>
+                    Select the external network for outbound access.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <VStack gap={3}>
+                      <SearchInput
+                        placeholder="Search network by attributes"
+                        value={externalNetworkSearch}
+                        onChange={(e) => setExternalNetworkSearch(e.target.value)}
+                      />
+                      <Pagination
+                        currentPage={1}
+                        totalPages={Math.ceil(filteredExternalNetworks.length / 6) || 1}
+                        onPageChange={() => {}}
+                        totalItems={filteredExternalNetworks.length}
+                      />
+                      <Table
+                        columns={externalNetworkColumns}
+                        data={filteredExternalNetworks}
+                        rowKey="id"
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedExternalNetwork
+                            ? [
+                                {
+                                  id: selectedExternalNetwork,
+                                  label: selectedExternalNetwork,
+                                },
+                              ]
+                            : []
+                        }
+                        emptyText="No network selected"
+                        onRemove={() => setSelectedExternalNetwork('')}
+                      />
                     </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
+                  </FormField.Control>
+                </FormField>
 
-                {/* Networking */}
-                <SectionCard>
-                  <SectionCard.Header title="Networking" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
-                      {/* External Network */}
-                      <FormField required>
-                        <FormField.Label>External Network</FormField.Label>
-                        <FormField.Description>
-                          Select the external network for outbound access.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <VStack gap={3}>
-                            <SearchInput
-                              placeholder="Search network by attributes"
-                              value={externalNetworkSearch}
-                              onChange={(e) => setExternalNetworkSearch(e.target.value)}
-                            />
-                            <Pagination
-                              currentPage={1}
-                              totalPages={Math.ceil(filteredExternalNetworks.length / 6) || 1}
-                              onPageChange={() => {}}
-                              totalItems={filteredExternalNetworks.length}
-                            />
-                            <Table
-                              columns={externalNetworkColumns}
-                              data={filteredExternalNetworks}
-                              rowKey="id"
-                            />
-                            <SelectionIndicator
-                              selectedItems={
-                                selectedExternalNetwork
-                                  ? [
-                                      {
-                                        id: selectedExternalNetwork,
-                                        label: selectedExternalNetwork,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              emptyText="No network selected"
-                              onRemove={() => setSelectedExternalNetwork('')}
-                            />
-                          </VStack>
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Tenant Network */}
-                      <FormField required>
-                        <FormField.Label>Tenant Network</FormField.Label>
-                        <FormField.Description>
-                          Select a tenant network for your cluster resources.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <VStack gap={3}>
-                            <SearchInput
-                              placeholder="Search network by attributes"
-                              value={tenantNetworkSearch}
-                              onChange={(e) => setTenantNetworkSearch(e.target.value)}
-                            />
-                            <Pagination
-                              currentPage={1}
-                              totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
-                              onPageChange={() => {}}
-                              totalItems={filteredTenantNetworks.length}
-                            />
-                            <Table
-                              columns={tenantNetworkColumns}
-                              data={filteredTenantNetworks}
-                              rowKey="id"
-                            />
-                            <SelectionIndicator
-                              selectedItems={
-                                selectedTenantNetwork
-                                  ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
-                                  : []
-                              }
-                              emptyText="No network selected"
-                              onRemove={() => setSelectedTenantNetwork('')}
-                            />
-                          </VStack>
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Subnet */}
-                      <FormField required>
-                        <FormField.Label>Subnet</FormField.Label>
-                        <FormField.Description>
-                          You can also enter the private IP address for the kubernetes api server.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <Select
-                            options={subnetOptions}
-                            value={selectedSubnet}
-                            onChange={setSelectedSubnet}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                      </FormField>
+                {/* Tenant Network */}
+                <FormField required>
+                  <FormField.Label>Tenant Network</FormField.Label>
+                  <FormField.Description>
+                    Select a tenant network for your cluster resources.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <VStack gap={3}>
+                      <SearchInput
+                        placeholder="Search network by attributes"
+                        value={tenantNetworkSearch}
+                        onChange={(e) => setTenantNetworkSearch(e.target.value)}
+                      />
+                      <Pagination
+                        currentPage={1}
+                        totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
+                        onPageChange={() => {}}
+                        totalItems={filteredTenantNetworks.length}
+                      />
+                      <Table
+                        columns={tenantNetworkColumns}
+                        data={filteredTenantNetworks}
+                        rowKey="id"
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedTenantNetwork
+                            ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
+                            : []
+                        }
+                        emptyText="No network selected"
+                        onRemove={() => setSelectedTenantNetwork('')}
+                      />
                     </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
+                  </FormField.Control>
+                </FormField>
 
-                {/* Node Configuration */}
-                <SectionCard>
-                  <SectionCard.Header title="Node configuration" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
-                      {/* Node Type */}
-                      <FormField required>
-                        <FormField.Label>Node Type</FormField.Label>
-                        <FormField.Description>
-                          Select the type of nodes to use for your cluster. Instance is used for
-                          VM-based clusters and BareMetal is used for physical server clusters.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <RadioGroup
-                            value={nodeType}
-                            onChange={(value) => setNodeType(value as 'instance' | 'baremetal')}
+                {/* Subnet */}
+                <FormField required>
+                  <FormField.Label>Subnet</FormField.Label>
+                  <FormField.Description>
+                    You can also enter the private IP address for the kubernetes api server.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select
+                      options={subnetOptions}
+                      value={selectedSubnet}
+                      onChange={setSelectedSubnet}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Node Configuration */}
+          <SectionCard>
+            <SectionCard.Header title="Node configuration" />
+            <SectionCard.Content>
+              <VStack gap={6}>
+                {/* Node Type */}
+                <FormField required>
+                  <FormField.Label>Node Type</FormField.Label>
+                  <FormField.Description>
+                    Select the type of nodes to use for your cluster. Instance is used for VM-based
+                    clusters and BareMetal is used for physical server clusters.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <RadioGroup
+                      value={nodeType}
+                      onChange={(value) => setNodeType(value as 'instance' | 'baremetal')}
+                    >
+                      <Radio value="instance" label="Instance" />
+                      <Radio value="baremetal" label="BareMetal" />
+                    </RadioGroup>
+                  </FormField.Control>
+                </FormField>
+
+                {/* Control Planes */}
+                <div className="border-t border-[var(--color-border-subtle)] pt-6">
+                  <h6 className="text-body-lg leading-5 font-medium text-[var(--color-text-default)] mb-4">
+                    Control Planes
+                  </h6>
+                  <VStack gap={6}>
+                    {/* Image */}
+                    <FormField required>
+                      <FormField.Label>Image</FormField.Label>
+                      <FormField.Description>
+                        Select the operating system image to use for the control plane nodes.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={imageOptions}
+                          value={cpImage}
+                          onChange={setCpImage}
+                          fullWidth
+                        />
+                      </FormField.Control>
+                    </FormField>
+
+                    {/* Flavor */}
+                    <FormField required>
+                      <FormField.Label>Flavor</FormField.Label>
+                      <FormField.Description>
+                        Select the Flavor that defines the vCPU, memory, and disk capacity for the
+                        control plane nodes.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3}>
+                          <Tabs
+                            value={cpFlavorFilter}
+                            onChange={setCpFlavorFilter}
+                            variant="underline"
+                            size="sm"
                           >
-                            <Radio value="instance" label="Instance" />
-                            <Radio value="baremetal" label="BareMetal" />
-                          </RadioGroup>
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Control Planes */}
-                      <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                        <h6 className="text-body-lg leading-5 font-medium text-[var(--color-text-default)] mb-4">
-                          Control Planes
-                        </h6>
-                        <VStack gap={6}>
-                          {/* Image */}
-                          <FormField required>
-                            <FormField.Label>Image</FormField.Label>
-                            <FormField.Description>
-                              Select the operating system image to use for the control plane nodes.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <Select
-                                options={imageOptions}
-                                value={cpImage}
-                                onChange={setCpImage}
-                                fullWidth
-                              />
-                            </FormField.Control>
-                          </FormField>
-
-                          {/* Flavor */}
-                          <FormField required>
-                            <FormField.Label>Flavor</FormField.Label>
-                            <FormField.Description>
-                              Select the Flavor that defines the vCPU, memory, and disk capacity for
-                              the control plane nodes.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <VStack gap={3}>
-                                <Tabs
-                                  value={cpFlavorFilter}
-                                  onChange={setCpFlavorFilter}
-                                  variant="underline"
-                                  size="sm"
-                                >
-                                  <TabList>
-                                    <Tab value="vcpu">vCPU</Tab>
-                                    <Tab value="gpu">GPU</Tab>
-                                    <Tab value="npu">NPU</Tab>
-                                    <Tab value="custom">Custom</Tab>
-                                  </TabList>
-                                </Tabs>
-                                <SearchInput placeholder="Find Flavor with filters" />
-                                <Pagination
-                                  currentPage={1}
-                                  totalPages={5}
-                                  onPageChange={() => {}}
-                                  totalItems={115}
-                                />
-                                <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
-                                <SelectionIndicator
-                                  selectedItems={
-                                    cpFlavor
-                                      ? [
-                                          {
-                                            id: cpFlavor,
-                                            label:
-                                              mockFlavors.find((f) => f.id === cpFlavor)?.name ||
-                                              cpFlavor,
-                                          },
-                                        ]
-                                      : []
-                                  }
-                                  emptyText="No flavor selected"
-                                  onRemove={() => setCpFlavor('')}
-                                />
-                              </VStack>
-                            </FormField.Control>
-                          </FormField>
-
-                          {/* Node Count */}
-                          <FormField required>
-                            <FormField.Label>Node Count</FormField.Label>
-                            <FormField.Description>
-                              Select the number of nodes to create.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <Select
-                                options={[
-                                  { value: '1', label: '1' },
-                                  { value: '3', label: '3' },
-                                  { value: '5', label: '5' },
-                                  { value: '7', label: '7' },
-                                ]}
-                                value={cpNodeCount}
-                                onChange={setCpNodeCount}
-                              />
-                            </FormField.Control>
-                          </FormField>
-
-                          {/* etcd Disk */}
-                          <FormField required>
-                            <FormField.Label>etcd Disk</FormField.Label>
-                            <FormField.Description>
-                              Select the disk type for storing etcd data.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <RadioGroup
-                                value={etcdDiskType}
-                                onChange={(value) => setEtcdDiskType(value as 'external' | 'local')}
-                              >
-                                <Radio value="external" label="External (recommended)" />
-                                <Radio value="local" label="Local" />
-                              </RadioGroup>
-                            </FormField.Control>
-                          </FormField>
-
-                          {/* etcd Volume Size */}
-                          <FormField required>
-                            <FormField.Label>etcd Volume Size</FormField.Label>
-                            <FormField.Description>
-                              Specify the volume size for the etcd data disk.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <HStack gap={2}>
-                                <NumberInput
-                                  value={etcdVolumeSize}
-                                  onChange={setEtcdVolumeSize}
-                                  min={10}
-                                  max={100}
-                                  width="sm"
-                                />
-                                <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
-                                  GiB
-                                </div>
-                              </HStack>
-                            </FormField.Control>
-                          </FormField>
+                            <TabList>
+                              <Tab value="vcpu">vCPU</Tab>
+                              <Tab value="gpu">GPU</Tab>
+                              <Tab value="npu">NPU</Tab>
+                              <Tab value="custom">Custom</Tab>
+                            </TabList>
+                          </Tabs>
+                          <SearchInput placeholder="Find Flavor with filters" />
+                          <Pagination
+                            currentPage={1}
+                            totalPages={5}
+                            onPageChange={() => {}}
+                            totalItems={115}
+                          />
+                          <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
+                          <SelectionIndicator
+                            selectedItems={
+                              cpFlavor
+                                ? [
+                                    {
+                                      id: cpFlavor,
+                                      label:
+                                        mockFlavors.find((f) => f.id === cpFlavor)?.name ||
+                                        cpFlavor,
+                                    },
+                                  ]
+                                : []
+                            }
+                            emptyText="No flavor selected"
+                            onRemove={() => setCpFlavor('')}
+                          />
                         </VStack>
-                      </div>
+                      </FormField.Control>
+                    </FormField>
 
-                      {/* Worker Nodes */}
-                      <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                        <h6 className="text-[14px] leading-5 font-medium text-[var(--color-text-default)] mb-4">
-                          Worker Nodes
-                        </h6>
-                        <VStack gap={6}>
-                          {/* Image */}
-                          <FormField required>
-                            <FormField.Label>Image</FormField.Label>
-                            <FormField.Description>
-                              Select the operating system image to use for the worker nodes.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <Select
-                                options={imageOptions}
-                                value={nodeImage}
-                                onChange={setNodeImage}
-                                fullWidth
-                              />
-                            </FormField.Control>
-                          </FormField>
+                    {/* Node Count */}
+                    <FormField required>
+                      <FormField.Label>Node Count</FormField.Label>
+                      <FormField.Description>
+                        Select the number of nodes to create.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={[
+                            { value: '1', label: '1' },
+                            { value: '3', label: '3' },
+                            { value: '5', label: '5' },
+                            { value: '7', label: '7' },
+                          ]}
+                          value={cpNodeCount}
+                          onChange={setCpNodeCount}
+                        />
+                      </FormField.Control>
+                    </FormField>
 
-                          {/* Flavor */}
-                          <FormField required>
-                            <FormField.Label>Flavor</FormField.Label>
-                            <FormField.Description>
-                              Select the Flavor that defines the vCPU, memory, and disk capacity for
-                              the worker nodes.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <VStack gap={3}>
-                                <Tabs
-                                  value={nodeFlavorFilter}
-                                  onChange={setNodeFlavorFilter}
-                                  variant="underline"
-                                  size="sm"
-                                >
-                                  <TabList>
-                                    <Tab value="vcpu">vCPU</Tab>
-                                    <Tab value="gpu">GPU</Tab>
-                                    <Tab value="npu">NPU</Tab>
-                                    <Tab value="custom">Custom</Tab>
-                                  </TabList>
-                                </Tabs>
-                                <SearchInput placeholder="Find Flavor with filters" />
-                                <Pagination
-                                  currentPage={1}
-                                  totalPages={5}
-                                  onPageChange={() => {}}
-                                  totalItems={115}
-                                />
-                                <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
-                                <SelectionIndicator
-                                  selectedItems={
-                                    nodeFlavor
-                                      ? [
-                                          {
-                                            id: nodeFlavor,
-                                            label:
-                                              mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
-                                              nodeFlavor,
-                                          },
-                                        ]
-                                      : []
-                                  }
-                                  emptyText="No flavor selected"
-                                  onRemove={() => setNodeFlavor('')}
-                                />
-                              </VStack>
-                            </FormField.Control>
-                          </FormField>
+                    {/* etcd Disk */}
+                    <FormField required>
+                      <FormField.Label>etcd Disk</FormField.Label>
+                      <FormField.Description>
+                        Select the disk type for storing etcd data.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <RadioGroup
+                          value={etcdDiskType}
+                          onChange={(value) => setEtcdDiskType(value as 'external' | 'local')}
+                        >
+                          <Radio value="external" label="External (recommended)" />
+                          <Radio value="local" label="Local" />
+                        </RadioGroup>
+                      </FormField.Control>
+                    </FormField>
 
-                          {/* Node Count */}
-                          <FormField required>
-                            <FormField.Label>Node Count</FormField.Label>
-                            <FormField.Description>
-                              Select the number of worker nodes to create.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <Select
-                                options={[
-                                  { value: '1', label: '1' },
-                                  { value: '2', label: '2' },
-                                  { value: '3', label: '3' },
-                                  { value: '5', label: '5' },
-                                  { value: '10', label: '10' },
-                                ]}
-                                value={nodeCount}
-                                onChange={setNodeCount}
-                              />
-                            </FormField.Control>
-                          </FormField>
+                    {/* etcd Volume Size */}
+                    <FormField required>
+                      <FormField.Label>etcd Volume Size</FormField.Label>
+                      <FormField.Description>
+                        Specify the volume size for the etcd data disk.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <HStack gap={2}>
+                          <NumberInput
+                            value={etcdVolumeSize}
+                            onChange={setEtcdVolumeSize}
+                            min={10}
+                            max={100}
+                            width="sm"
+                          />
+                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                            GiB
+                          </div>
+                        </HStack>
+                      </FormField.Control>
+                    </FormField>
+                  </VStack>
+                </div>
+
+                {/* Worker Nodes */}
+                <div className="border-t border-[var(--color-border-subtle)] pt-6">
+                  <h6 className="text-[14px] leading-5 font-medium text-[var(--color-text-default)] mb-4">
+                    Worker Nodes
+                  </h6>
+                  <VStack gap={6}>
+                    {/* Image */}
+                    <FormField required>
+                      <FormField.Label>Image</FormField.Label>
+                      <FormField.Description>
+                        Select the operating system image to use for the worker nodes.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={imageOptions}
+                          value={nodeImage}
+                          onChange={setNodeImage}
+                          fullWidth
+                        />
+                      </FormField.Control>
+                    </FormField>
+
+                    {/* Flavor */}
+                    <FormField required>
+                      <FormField.Label>Flavor</FormField.Label>
+                      <FormField.Description>
+                        Select the Flavor that defines the vCPU, memory, and disk capacity for the
+                        worker nodes.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3}>
+                          <Tabs
+                            value={nodeFlavorFilter}
+                            onChange={setNodeFlavorFilter}
+                            variant="underline"
+                            size="sm"
+                          >
+                            <TabList>
+                              <Tab value="vcpu">vCPU</Tab>
+                              <Tab value="gpu">GPU</Tab>
+                              <Tab value="npu">NPU</Tab>
+                              <Tab value="custom">Custom</Tab>
+                            </TabList>
+                          </Tabs>
+                          <SearchInput placeholder="Find Flavor with filters" />
+                          <Pagination
+                            currentPage={1}
+                            totalPages={5}
+                            onPageChange={() => {}}
+                            totalItems={115}
+                          />
+                          <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                          <SelectionIndicator
+                            selectedItems={
+                              nodeFlavor
+                                ? [
+                                    {
+                                      id: nodeFlavor,
+                                      label:
+                                        mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
+                                        nodeFlavor,
+                                    },
+                                  ]
+                                : []
+                            }
+                            emptyText="No flavor selected"
+                            onRemove={() => setNodeFlavor('')}
+                          />
                         </VStack>
-                      </div>
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
+                      </FormField.Control>
+                    </FormField>
 
-                {/* Labels & Annotations */}
-                <SectionCard>
-                  <SectionCard.Header title="Labels & Annotations" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
-                      {/* Labels */}
-                      <VStack gap={3}>
-                        <VStack gap={1.5}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Labels
+                    {/* Node Count */}
+                    <FormField required>
+                      <FormField.Label>Node Count</FormField.Label>
+                      <FormField.Description>
+                        Select the number of worker nodes to create.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={[
+                            { value: '1', label: '1' },
+                            { value: '2', label: '2' },
+                            { value: '3', label: '3' },
+                            { value: '5', label: '5' },
+                            { value: '10', label: '10' },
+                          ]}
+                          value={nodeCount}
+                          onChange={setNodeCount}
+                        />
+                      </FormField.Control>
+                    </FormField>
+                  </VStack>
+                </div>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Labels & Annotations */}
+          <SectionCard>
+            <SectionCard.Header title="Labels & Annotations" />
+            <SectionCard.Content>
+              <VStack gap={6}>
+                {/* Labels */}
+                <VStack gap={3}>
+                  <VStack gap={1.5}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      Specify the labels used to identify and categorize the resource.
+                    </p>
+                  </VStack>
+
+                  {/* Bordered container for labels */}
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <VStack gap={2}>
+                      {labels.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Key
                           </span>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                            Specify the labels used to identify and categorize the resource.
-                          </p>
-                        </VStack>
-
-                        {/* Bordered container for labels */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {labels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div />
-                              </div>
-                            )}
-                            {labels.map((label) => (
-                              <div
-                                key={label.id}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                              >
-                                <Input
-                                  placeholder="label key"
-                                  value={label.key}
-                                  onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="label value"
-                                  value={label.value}
-                                  onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeLabel(label.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addLabel}
-                              >
-                                Add Label
-                              </Button>
-                            </div>
-                          </VStack>
-                        </div>
-                      </VStack>
-
-                      {/* Annotations */}
-                      <VStack gap={3}>
-                        <VStack gap={1.5}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Annotations
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Value
                           </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                            Specify the annotations used to provide additional metadata for the
-                            resource.
-                          </p>
-                        </VStack>
-
-                        {/* Bordered container for annotations */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {annotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div />
-                              </div>
-                            )}
-                            {annotations.map((annotation) => (
-                              <div
-                                key={annotation.id}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                              >
-                                <Input
-                                  placeholder="annotation key"
-                                  value={annotation.key}
-                                  onChange={(e) =>
-                                    updateAnnotation(annotation.id, 'key', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="annotation value"
-                                  value={annotation.value}
-                                  onChange={(e) =>
-                                    updateAnnotation(annotation.id, 'value', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeAnnotation(annotation.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addAnnotation}
-                              >
-                                Add Annotation
-                              </Button>
-                            </div>
-                          </VStack>
+                          <div />
                         </div>
-                      </VStack>
-                    </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
-              </div>
+                      )}
+                      {labels.map((label) => (
+                        <div
+                          key={label.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                        >
+                          <Input
+                            placeholder="label key"
+                            value={label.key}
+                            onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="label value"
+                            value={label.value}
+                            onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeLabel(label.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
 
-              {/* Right Column - Summary (Floating Card Style) */}
-              <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-                  {/* Summary Content Area */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-                    <VStack gap={4}>
-                      {/* Summary Title */}
-                      <h5 className="text-heading-h5 leading-6 font-semibold text-[var(--color-text-default)]">
-                        Summary
-                      </h5>
-
-                      {/* Summary Items */}
-                      <VStack gap={0}>
-                        <SummaryItem label="Basic information" status="in-progress" />
-                        <SummaryItem label="Networking" status="in-progress" />
-                        <SummaryItem label="Node Configuration" status="complete" />
-                        <SummaryItem label="Labels & Annotations" status="complete" />
-                      </VStack>
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addLabel}
+                        >
+                          Add Label
+                        </Button>
+                      </div>
                     </VStack>
                   </div>
+                </VStack>
 
-                  {/* Button Container */}
-                  <HStack gap={2} className="w-full justify-end">
-                    <Button variant="secondary" onClick={handleCancel}>
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={handleCreate}
-                      className="flex-1 min-w-[80px]"
-                      disabled
-                    >
-                      Create
-                    </Button>
-                  </HStack>
-                </div>
-              </div>
+                {/* Annotations */}
+                <VStack gap={3}>
+                  <VStack gap={1.5}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Annotations
+                    </span>
+                    <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                      Specify the annotations used to provide additional metadata for the resource.
+                    </p>
+                  </VStack>
+
+                  {/* Bordered container for annotations */}
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <VStack gap={2}>
+                      {annotations.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div />
+                        </div>
+                      )}
+                      {annotations.map((annotation) => (
+                        <div
+                          key={annotation.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                        >
+                          <Input
+                            placeholder="annotation key"
+                            value={annotation.key}
+                            onChange={(e) => updateAnnotation(annotation.id, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="annotation value"
+                            value={annotation.value}
+                            onChange={(e) =>
+                              updateAnnotation(annotation.id, 'value', e.target.value)
+                            }
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeAnnotation(annotation.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addAnnotation}
+                        >
+                          Add Annotation
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+                </VStack>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+        </div>
+
+        {/* Right Column - Summary (Floating Card Style) */}
+        <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+            {/* Summary Content Area */}
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+              <VStack gap={4}>
+                {/* Summary Title */}
+                <h5 className="text-heading-h5 leading-6 font-semibold text-[var(--color-text-default)]">
+                  Summary
+                </h5>
+
+                {/* Summary Items */}
+                <VStack gap={0}>
+                  <SummaryItem label="Basic information" status="in-progress" />
+                  <SummaryItem label="Networking" status="in-progress" />
+                  <SummaryItem label="Node Configuration" status="complete" />
+                  <SummaryItem label="Labels & Annotations" status="complete" />
+                </VStack>
+              </VStack>
             </div>
+
+            {/* Button Container */}
+            <HStack gap={2} className="w-full justify-end">
+              <Button variant="secondary" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleCreate}
+                className="flex-1 min-w-[80px]"
+                disabled
+              >
+                Create
+              </Button>
+            </HStack>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </PageShell>
   );
 }
 

@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -318,6 +319,7 @@ export function ComputeAdminVolumeDetailPage() {
   const volume = id ? mockVolumesMap[id] || defaultVolumeDetail : defaultVolumeDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Snapshots tab state
@@ -524,292 +526,267 @@ export function ComputeAdminVolumeDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-          />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Volume Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{volume.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Update status
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={
+                [
+                  {
+                    id: 'migrate-volume',
+                    label: 'Migrate volume',
+                    onClick: () => console.log('Migrate volume'),
+                  },
+                  {
+                    id: 'manage-metadata',
+                    label: 'Manage metadata',
+                    onClick: () => console.log('Manage metadata'),
+                  },
+                ] as ContextMenuItem[]
+              }
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={volumeStatusDisplayMap[volume.status]}
+              status="active"
+            />
+            <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+            <DetailHeader.InfoCard label="Host" value="host" />
+            <DetailHeader.InfoCard label="Size" value={volume.size} />
+            <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+        {/* Volume Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="snapshots">Volume snapshots</Tab>
+              <Tab value="backups">Volume backups</Tab>
+            </TabList>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Volume Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{volume.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Update status
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <ContextMenu
-                    items={
-                      [
-                        {
-                          id: 'migrate-volume',
-                          label: 'Migrate volume',
-                          onClick: () => console.log('Migrate volume'),
-                        },
-                        {
-                          id: 'manage-metadata',
-                          label: 'Manage metadata',
-                          onClick: () => console.log('Manage metadata'),
-                        },
-                      ] as ContextMenuItem[]
-                    }
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={volumeStatusDisplayMap[volume.status]}
-                    status="active"
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" showEditButton onEdit={() => {}} />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
+                    <SectionCard.DataRow
+                      label="AZ(Availability zone)"
+                      value={volume.availabilityZone}
+                    />
+                    <SectionCard.DataRow label="Bootable" value="No" />
+                    <SectionCard.DataRow label="Description" value={volume.description} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Attachments */}
+                <SectionCard>
+                  <SectionCard.Header title="Attachments" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Instance"
+                      value={
+                        <Link
+                          to="/compute-admin/instances"
+                          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          instance
+                        </Link>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Volume snapshot" value={volume.dataSourceType} />
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={
+                        <Link
+                          to="/compute-admin/images"
+                          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          image
+                        </Link>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" showEditButton onEdit={() => {}} />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Size" value={volume.size} />
+                    <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
+                    <SectionCard.DataRow
+                      label="Encrypted"
+                      value={volume.encryption ? 'Yes' : 'No'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Volume snapshots Tab Panel */}
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Volume snapshots
+                  </h2>
+                </div>
+
+                {/* Search */}
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      placeholder="Search snapshot by attributes"
+                      value={snapshotSearchQuery}
+                      onChange={(e) => setSnapshotSearchQuery(e.target.value)}
+                      onClear={() => setSnapshotSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} stroke={1.5} />}
+                    aria-label="Download"
                   />
-                  <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="Host" value="host" />
-                  <DetailHeader.InfoCard label="Size" value={volume.size} />
-                  <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* Volume Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="snapshots">Volume snapshots</Tab>
-                    <Tab value="backups">Volume backups</Tab>
-                  </TabList>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={snapshotCurrentPage}
+                  totalPages={snapshotTotalPages}
+                  onPageChange={setSnapshotCurrentPage}
+                  totalItems={filteredSnapshots.length}
+                />
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          showEditButton
-                          onEdit={() => {}}
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
-                          <SectionCard.DataRow
-                            label="AZ(Availability zone)"
-                            value={volume.availabilityZone}
-                          />
-                          <SectionCard.DataRow label="Bootable" value="No" />
-                          <SectionCard.DataRow label="Description" value={volume.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Snapshots Table */}
+                <Table<VolumeSnapshot>
+                  columns={snapshotColumns}
+                  data={paginatedSnapshots}
+                  rowKey="id"
+                  emptyMessage="No volume snapshots found"
+                />
+              </VStack>
+            </TabPanel>
 
-                      {/* Attachments */}
-                      <SectionCard>
-                        <SectionCard.Header title="Attachments" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Instance"
-                            value={
-                              <Link
-                                to="/compute-admin/instances"
-                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                instance
-                              </Link>
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* Volume backups Tab Panel */}
+            <TabPanel value="backups" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Volume backups
+                  </h2>
+                </div>
 
-                      {/* Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Volume snapshot"
-                            value={volume.dataSourceType}
-                          />
-                          <SectionCard.DataRow
-                            label="Image"
-                            value={
-                              <Link
-                                to="/compute-admin/images"
-                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                image
-                              </Link>
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Search */}
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      placeholder="Search backup by attributes"
+                      value={backupSearchQuery}
+                      onChange={(e) => setBackupSearchQuery(e.target.value)}
+                      onClear={() => setBackupSearchQuery('')}
+                      size="sm"
+                      fullWidth
+                    />
+                  </div>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} stroke={1.5} />}
+                    aria-label="Download"
+                  />
+                </div>
 
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Specifications"
-                          showEditButton
-                          onEdit={() => {}}
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Size" value={volume.size} />
-                          <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
-                          <SectionCard.DataRow
-                            label="Encrypted"
-                            value={volume.encryption ? 'Yes' : 'No'}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={backupCurrentPage}
+                  totalPages={backupTotalPages}
+                  onPageChange={setBackupCurrentPage}
+                  totalItems={filteredBackups.length}
+                />
 
-                  {/* Volume snapshots Tab Panel */}
-                  <TabPanel value="snapshots" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Volume snapshots
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search snapshot by attributes"
-                            value={snapshotSearchQuery}
-                            onChange={(e) => setSnapshotSearchQuery(e.target.value)}
-                            onClear={() => setSnapshotSearchQuery('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          iconOnly
-                          icon={<IconDownload size={12} stroke={1.5} />}
-                          aria-label="Download"
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={snapshotCurrentPage}
-                        totalPages={snapshotTotalPages}
-                        onPageChange={setSnapshotCurrentPage}
-                        totalItems={filteredSnapshots.length}
-                      />
-
-                      {/* Snapshots Table */}
-                      <Table<VolumeSnapshot>
-                        columns={snapshotColumns}
-                        data={paginatedSnapshots}
-                        rowKey="id"
-                        emptyMessage="No volume snapshots found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Volume backups Tab Panel */}
-                  <TabPanel value="backups" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <div className="flex items-center justify-between w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Volume backups
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search backup by attributes"
-                            value={backupSearchQuery}
-                            onChange={(e) => setBackupSearchQuery(e.target.value)}
-                            onClear={() => setBackupSearchQuery('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          iconOnly
-                          icon={<IconDownload size={12} stroke={1.5} />}
-                          aria-label="Download"
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={backupCurrentPage}
-                        totalPages={backupTotalPages}
-                        onPageChange={setBackupCurrentPage}
-                        totalItems={filteredBackups.length}
-                      />
-
-                      {/* Backups Table */}
-                      <Table<VolumeBackup>
-                        columns={backupColumns}
-                        data={paginatedBackups}
-                        rowKey="id"
-                        emptyMessage="No volume backups found"
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Backups Table */}
+                <Table<VolumeBackup>
+                  columns={backupColumns}
+                  data={paginatedBackups}
+                  rowKey="id"
+                  emptyMessage="No volume backups found"
+                />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

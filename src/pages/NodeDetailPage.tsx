@@ -21,6 +21,7 @@ import {
   DetailHeader,
   Chip,
   SectionCard,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -842,16 +843,12 @@ export function NodeDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -860,8 +857,8 @@ export function NodeDetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -897,153 +894,138 @@ export function NodeDetailPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Node: {node.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={node.status === 'Ready' ? 'Active' : 'Not Ready'}
+              status={node.status === 'Ready' ? 'active' : 'error'}
+            />
+            <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
+            <DetailHeader.InfoCard label="Kubernetes version" value={node.kubernetesVersion} />
+            <DetailHeader.InfoCard label="OS" value={node.os} />
+            <DetailHeader.InfoCard label="Container runtime" value={node.containerRuntime} />
+            <DetailHeader.InfoCard
+              label={`Labels (${Object.keys(node.labels).length})`}
+              value={
+                Object.keys(node.labels).length > 0 ? (
+                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                    {Object.entries(node.labels)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
+                      ))}
+                  </div>
+                ) : (
+                  '-'
+                )
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${Object.keys(node.annotations).length})`}
+              value={
+                Object.keys(node.annotations).length > 0 ? (
+                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                    {Object.entries(node.annotations)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
+                      ))}
+                  </div>
+                ) : (
+                  '-'
+                )
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={node.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Node: {node.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={node.status === 'Ready' ? 'Active' : 'Not Ready'}
-                    status={node.status === 'Ready' ? 'active' : 'error'}
-                  />
-                  <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
-                  <DetailHeader.InfoCard
-                    label="Kubernetes version"
-                    value={node.kubernetesVersion}
-                  />
-                  <DetailHeader.InfoCard label="OS" value={node.os} />
-                  <DetailHeader.InfoCard label="Container runtime" value={node.containerRuntime} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${Object.keys(node.labels).length})`}
-                    value={
-                      Object.keys(node.labels).length > 0 ? (
-                        <div className="flex flex-wrap gap-1 min-w-0 w-full">
-                          {Object.entries(node.labels)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip
-                                key={key}
-                                value={val ? `${key}: ${val}` : key}
-                                maxWidth="100%"
-                              />
-                            ))}
-                        </div>
-                      ) : (
-                        '-'
-                      )
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${Object.keys(node.annotations).length})`}
-                    value={
-                      Object.keys(node.annotations).length > 0 ? (
-                        <div className="flex flex-wrap gap-1 min-w-0 w-full">
-                          {Object.entries(node.annotations)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip
-                                key={key}
-                                value={val ? `${key}: ${val}` : key}
-                                maxWidth="100%"
-                              />
-                            ))}
-                        </div>
-                      ) : (
-                        '-'
-                      )
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={node.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+        {/* Condition Cards */}
+        <HStack gap={3} className="w-full">
+          <ConditionCard
+            title="PID Pressure"
+            status={node.conditions.pidPressure ? 'NotReady' : 'Ready'}
+            tooltip="PID pressure indicates whether the node is running low on available process IDs."
+          />
+          <ConditionCard
+            title="Disk pressure"
+            status={node.conditions.diskPressure ? 'NotReady' : 'Ready'}
+            tooltip="Disk pressure reports whether the node is experiencing insufficient disk space."
+          />
+          <ConditionCard
+            title="Memory pressure"
+            status={node.conditions.memoryPressure ? 'NotReady' : 'Ready'}
+            tooltip="Memory pressure indicates that the node is running low on available memory resources."
+          />
+          <ConditionCard
+            title="kubelet"
+            status={node.conditions.kubeletReady ? 'Ready' : 'NotReady'}
+            tooltip="Kubelet readiness reflects whether the node is healthy and ready to run workloads."
+          />
+        </HStack>
 
-              {/* Condition Cards */}
-              <HStack gap={3} className="w-full">
-                <ConditionCard
-                  title="PID Pressure"
-                  status={node.conditions.pidPressure ? 'NotReady' : 'Ready'}
-                  tooltip="PID pressure indicates whether the node is running low on available process IDs."
-                />
-                <ConditionCard
-                  title="Disk pressure"
-                  status={node.conditions.diskPressure ? 'NotReady' : 'Ready'}
-                  tooltip="Disk pressure reports whether the node is experiencing insufficient disk space."
-                />
-                <ConditionCard
-                  title="Memory pressure"
-                  status={node.conditions.memoryPressure ? 'NotReady' : 'Ready'}
-                  tooltip="Memory pressure indicates that the node is running low on available memory resources."
-                />
-                <ConditionCard
-                  title="kubelet"
-                  status={node.conditions.kubeletReady ? 'Ready' : 'NotReady'}
-                  tooltip="Kubelet readiness reflects whether the node is healthy and ready to run workloads."
-                />
-              </HStack>
+        {/* Resource Usage */}
+        <HStack gap={3} className="w-full">
+          <ResourceUsage label="CPU" used={node.cpu.used} total={node.cpu.total} />
+          <ResourceUsage
+            label="Memory"
+            used={node.memory.used}
+            total={node.memory.total}
+            unit={node.memory.unit}
+          />
+          <ResourceUsage label="Pods" used={node.pods.used} total={node.pods.total} />
+        </HStack>
 
-              {/* Resource Usage */}
-              <HStack gap={3} className="w-full">
-                <ResourceUsage label="CPU" used={node.cpu.used} total={node.cpu.total} />
-                <ResourceUsage
-                  label="Memory"
-                  used={node.memory.used}
-                  total={node.memory.total}
-                  unit={node.memory.unit}
-                />
-                <ResourceUsage label="Pods" used={node.pods.used} total={node.pods.total} />
-              </HStack>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="pods">Pods</Tab>
+            <Tab value="details">Details</Tab>
+            <Tab value="images">Images</Tab>
+            <Tab value="taints">Taints</Tab>
+            <Tab value="conditions">Conditions</Tab>
+            <Tab value="events">Recent Events</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="pods">Pods</Tab>
-                  <Tab value="details">Details</Tab>
-                  <Tab value="images">Images</Tab>
-                  <Tab value="taints">Taints</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                  <Tab value="events">Recent Events</Tab>
-                </TabList>
-
-                <TabPanel value="pods">
-                  <PodsTab pods={mockPodsData} />
-                </TabPanel>
-                <TabPanel value="details">
-                  <DetailsTab node={node} />
-                </TabPanel>
-                <TabPanel value="images">
-                  <ImagesTab images={mockImagesData} />
-                </TabPanel>
-                <TabPanel value="taints">
-                  <TaintsTab taints={mockTaintsData} />
-                </TabPanel>
-                <TabPanel value="conditions">
-                  <ConditionsTab conditions={mockConditionsData} />
-                </TabPanel>
-                <TabPanel value="events">
-                  <RecentEventsTab events={mockEventsData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          <TabPanel value="pods">
+            <PodsTab pods={mockPodsData} />
+          </TabPanel>
+          <TabPanel value="details">
+            <DetailsTab node={node} />
+          </TabPanel>
+          <TabPanel value="images">
+            <ImagesTab images={mockImagesData} />
+          </TabPanel>
+          <TabPanel value="taints">
+            <TaintsTab taints={mockTaintsData} />
+          </TabPanel>
+          <TabPanel value="conditions">
+            <ConditionsTab conditions={mockConditionsData} />
+          </TabPanel>
+          <TabPanel value="events">
+            <RecentEventsTab events={mockEventsData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

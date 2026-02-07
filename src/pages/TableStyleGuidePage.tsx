@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, SectionCard } from '@/design-system';
+import { Button, SectionCard, PageShell, TopBar, HStack } from '@/design-system';
 import { IconDownload, IconArrowLeft, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -131,45 +131,53 @@ export function TableStyleGuidePage() {
     }
   };
 
-  return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
-        <div className="max-w-6xl mx-auto px-8 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<IconArrowLeft size={14} />}
-              onClick={() => navigate('/')}
-            >
-              Back{' '}
-            </Button>
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Table Style Guide </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconDownload size={14} />}
-              onClick={() => handleDownloadFile('TABLE_STYLE_GUIDE.md', 'text/markdown')}
-            >
-              Guide (.md)
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconDownload size={14} />}
-              onClick={() => handleDownloadFile('columnWidths.ts', 'text/typescript')}
-            >
-              Presets (.ts)
-            </Button>
-          </div>
-        </div>
-      </header>
+  const sidebarWidth = 0;
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-8 py-8 flex gap-8">
+  return (
+    <PageShell
+      sidebarWidth={sidebarWidth}
+      topBar={
+        <TopBar
+          breadcrumb={
+            <HStack gap={4} align="center">
+              <Button
+                variant="ghost"
+                size="sm"
+                leftIcon={<IconArrowLeft size={14} />}
+                onClick={() => navigate('/')}
+              >
+                Back
+              </Button>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                Table Style Guide
+              </h1>
+            </HStack>
+          }
+          actions={
+            <HStack gap={2}>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconDownload size={14} />}
+                onClick={() => handleDownloadFile('TABLE_STYLE_GUIDE.md', 'text/markdown')}
+              >
+                Guide (.md)
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconDownload size={14} />}
+                onClick={() => handleDownloadFile('columnWidths.ts', 'text/typescript')}
+              >
+                Presets (.ts)
+              </Button>
+            </HStack>
+          }
+        />
+      }
+      contentClassName="max-w-6xl mx-auto px-8 py-8"
+    >
+      <div className="flex gap-8">
         {/* Sidebar TOC */}
         <aside className="hidden lg:block w-56 flex-shrink-0">
           <div className="sticky top-24">
@@ -892,7 +900,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
           </SectionCard>
         </main>
       </div>
-    </div>
+    </PageShell>
   );
 }
 

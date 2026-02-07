@@ -16,6 +16,7 @@ import {
   SectionCard,
   DetailHeader,
   MonitoringToolbar,
+  PageShell,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -1045,283 +1046,258 @@ export function StoragePoolDetailPage() {
     closable: tab.closable,
   }));
 
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Pool Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{pool.name}</DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Data protection"
+              value={pool.dataProtection}
+              status="active"
+            />
+            <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
+            <DetailHeader.InfoCard label="PG Status" value={pool.pgStatus} />
+            <DetailHeader.InfoCard label="Crush ruleset" value={pool.crushRuleset} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="performance">Performance</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Pool Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{pool.name}</DetailHeader.Title>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Data protection"
-                    value={pool.dataProtection}
-                    status="active"
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
                   />
-                  <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
-                  <DetailHeader.InfoCard label="PG Status" value={pool.pgStatus} />
-                  <DetailHeader.InfoCard label="Crush ruleset" value={pool.crushRuleset} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Description" value={pool.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="performance">Performance</Tab>
-                  </TabList>
+                {/* Cache & Tiering */}
+                <SectionCard>
+                  <SectionCard.Header title="Cache & tiering" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Cache mode" value={pool.cacheMode} />
+                    <SectionCard.DataRow label="Tier pool" value={pool.tierPool} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Description" value={pool.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Pool flags & limits */}
+                <SectionCard>
+                  <SectionCard.Header title="Pool flags & limits" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="No scrub"
+                      value={pool.noScrub ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow
+                      label="No deep scrub"
+                      value={pool.noDeepScrub ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow
+                      label="Max objects"
+                      value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)}
+                    />
+                    <SectionCard.DataRow label="Max bytes" value={pool.maxBytes} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Cache & Tiering */}
-                      <SectionCard>
-                        <SectionCard.Header title="Cache & tiering" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Cache mode" value={pool.cacheMode} />
-                          <SectionCard.DataRow label="Tier pool" value={pool.tierPool} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Load balancing */}
+                <SectionCard>
+                  <SectionCard.Header title="Load balancing" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="PG Autoscale Mode" value={pool.pgAutoscaleMode} />
+                    <SectionCard.DataRow
+                      label="Target size Ratio"
+                      value={String(pool.targetSizeRatio)}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Pool flags & limits */}
-                      <SectionCard>
-                        <SectionCard.Header title="Pool flags & limits" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="No scrub"
-                            value={pool.noScrub ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow
-                            label="No deep scrub"
-                            value={pool.noDeepScrub ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow
-                            label="Max objects"
-                            value={pool.maxObjects === 0 ? 'unlimited' : String(pool.maxObjects)}
-                          />
-                          <SectionCard.DataRow label="Max bytes" value={pool.maxBytes} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Snapshots & history */}
+                <SectionCard>
+                  <SectionCard.Header title="Snapshots & history" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Snapshots" value={String(pool.snapshots)} />
+                    <SectionCard.DataRow label="Last snapshot Date" value={pool.lastSnapshotDate} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Load balancing */}
-                      <SectionCard>
-                        <SectionCard.Header title="Load balancing" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="PG Autoscale Mode"
-                            value={pool.pgAutoscaleMode}
-                          />
-                          <SectionCard.DataRow
-                            label="Target size Ratio"
-                            value={String(pool.targetSizeRatio)}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* PG & data placement */}
+                <SectionCard>
+                  <SectionCard.Header title="PG & data placement" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="PG Num" value={String(pool.pgNum)} />
+                    <SectionCard.DataRow label="PGP Num" value={String(pool.pgpNum)} />
+                    <SectionCard.DataRow label="Min size" value={String(pool.minSize)} />
+                    <SectionCard.DataRow label="Size" value={String(pool.size)} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Snapshots & history */}
-                      <SectionCard>
-                        <SectionCard.Header title="Snapshots & history" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Snapshots" value={String(pool.snapshots)} />
-                          <SectionCard.DataRow
-                            label="Last snapshot Date"
-                            value={pool.lastSnapshotDate}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header title="Advanced" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Compression mode" value={pool.compressionMode} />
+                    <SectionCard.DataRow
+                      label="Compression algorithm"
+                      value={pool.compressionAlgorithm}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* PG & data placement */}
-                      <SectionCard>
-                        <SectionCard.Header title="PG & data placement" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="PG Num" value={String(pool.pgNum)} />
-                          <SectionCard.DataRow label="PGP Num" value={String(pool.pgpNum)} />
-                          <SectionCard.DataRow label="Min size" value={String(pool.minSize)} />
-                          <SectionCard.DataRow label="Size" value={String(pool.size)} />
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* Performance Tab */}
+            <TabPanel value="performance" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Monitoring Time Controls */}
+                <div className="flex justify-start w-full">
+                  <MonitoringToolbar
+                    onTimeRangeChange={(value) => console.log('Time range changed:', value)}
+                    onRefresh={() => console.log('Refresh clicked')}
+                  />
+                </div>
 
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header title="Advanced" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Compression mode"
-                            value={pool.compressionMode}
-                          />
-                          <SectionCard.DataRow
-                            label="Compression algorithm"
-                            value={pool.compressionAlgorithm}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                {/* Top Row - Capacity & Time Till Full */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Capacity Used */}
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                    <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
+                      Capacity used
+                    </h4>
+                    <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
+                  </div>
+                  {/* Time Till Full */}
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                    <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
+                      Time till full
+                    </h4>
+                    <TimeTillFull value={12.3} unit="weeks" />
+                  </div>
+                </div>
 
-                  {/* Performance Tab */}
-                  <TabPanel value="performance" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Monitoring Time Controls */}
-                      <div className="flex justify-start w-full">
-                        <MonitoringToolbar
-                          onTimeRangeChange={(value) => console.log('Time range changed:', value)}
-                          onRefresh={() => console.log('Refresh clicked')}
-                        />
-                      </div>
-
-                      {/* Top Row - Capacity & Time Till Full */}
-                      <div className="grid grid-cols-2 gap-4">
-                        {/* Capacity Used */}
-                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
-                            Capacity used
-                          </h4>
-                          <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
-                        </div>
-                        {/* Time Till Full */}
-                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
-                            Time till full
-                          </h4>
-                          <TimeTillFull value={12.3} unit="weeks" />
-                        </div>
-                      </div>
-
-                      {/* Performance Charts Grid */}
-                      <div className="grid grid-cols-2 gap-4">
-                        {/* Object Ingress/Egress */}
-                        <ChartWithFullScreen
-                          title="Object ingress/egress"
-                          series={[
-                            {
-                              name: 'Objects per second',
-                              data: [0.15, 0.25, 0.35, 0.3, 0.2, 0.4],
-                              color: chartColors.emerald500,
-                            },
-                          ]}
-                          timeLabels={timeLabels}
-                          yAxisUnit=""
-                        />
-                        {/* Client IOPS */}
-                        <ChartWithFullScreen
-                          title="Client IOPS"
-                          series={[
-                            {
-                              name: 'reads',
-                              data: [200, 350, 500, 450, 300, 600],
-                              color: chartColors.blue500,
-                            },
-                            {
-                              name: 'writes',
-                              data: [100, 200, 300, 250, 150, 350],
-                              color: chartColors.emerald500,
-                            },
-                          ]}
-                          timeLabels={timeLabels}
-                          yAxisUnit=""
-                        />
-                        {/* Client Throughput */}
-                        <ChartWithFullScreen
-                          title="Client throughput"
-                          series={[
-                            {
-                              name: 'reads',
-                              data: [80, 100, 120, 110, 90, 130],
-                              color: chartColors.blue500,
-                            },
-                            {
-                              name: 'writes',
-                              data: [60, 80, 100, 90, 70, 110],
-                              color: chartColors.emerald500,
-                            },
-                          ]}
-                          timeLabels={timeLabels}
-                          yAxisUnit=""
-                        />
-                        {/* Objects */}
-                        <ChartWithFullScreen
-                          title="Objects"
-                          series={[
-                            {
-                              name: 'Number of Objects',
-                              data: [2.9, 2.905, 2.91, 2.915, 2.92, 2.96],
-                              color: chartColors.emerald500,
-                            },
-                          ]}
-                          timeLabels={timeLabels}
-                          yAxisUnit=""
-                        />
-                      </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Performance Charts Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Object Ingress/Egress */}
+                  <ChartWithFullScreen
+                    title="Object ingress/egress"
+                    series={[
+                      {
+                        name: 'Objects per second',
+                        data: [0.15, 0.25, 0.35, 0.3, 0.2, 0.4],
+                        color: chartColors.emerald500,
+                      },
+                    ]}
+                    timeLabels={timeLabels}
+                    yAxisUnit=""
+                  />
+                  {/* Client IOPS */}
+                  <ChartWithFullScreen
+                    title="Client IOPS"
+                    series={[
+                      {
+                        name: 'reads',
+                        data: [200, 350, 500, 450, 300, 600],
+                        color: chartColors.blue500,
+                      },
+                      {
+                        name: 'writes',
+                        data: [100, 200, 300, 250, 150, 350],
+                        color: chartColors.emerald500,
+                      },
+                    ]}
+                    timeLabels={timeLabels}
+                    yAxisUnit=""
+                  />
+                  {/* Client Throughput */}
+                  <ChartWithFullScreen
+                    title="Client throughput"
+                    series={[
+                      {
+                        name: 'reads',
+                        data: [80, 100, 120, 110, 90, 130],
+                        color: chartColors.blue500,
+                      },
+                      {
+                        name: 'writes',
+                        data: [60, 80, 100, 90, 70, 110],
+                        color: chartColors.emerald500,
+                      },
+                    ]}
+                    timeLabels={timeLabels}
+                    yAxisUnit=""
+                  />
+                  {/* Objects */}
+                  <ChartWithFullScreen
+                    title="Objects"
+                    series={[
+                      {
+                        name: 'Number of Objects',
+                        data: [2.9, 2.905, 2.91, 2.915, 2.92, 2.96],
+                        color: chartColors.emerald500,
+                      },
+                    ]}
+                    timeLabels={timeLabels}
+                    yAxisUnit=""
+                  />
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

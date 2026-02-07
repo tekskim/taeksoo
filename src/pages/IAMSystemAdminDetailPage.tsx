@@ -17,6 +17,7 @@ import {
   SectionCard,
   SearchInput,
   Pagination,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -386,16 +387,10 @@ export default function IAMSystemAdminDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -404,8 +399,8 @@ export default function IAMSystemAdminDetailPage() {
           onTabAdd={() => addNewTab('/iam/home', 'Home')}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -414,155 +409,142 @@ export default function IAMSystemAdminDetailPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={8}>
+        {/* Header Card */}
+        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+          <VStack gap={3}>
+            {/* Title */}
+            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+              {admin.username}
+            </h1>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-                <VStack gap={3}>
-                  {/* Title */}
-                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    {admin.username}
-                  </h1>
+            {/* Action Buttons */}
+            <HStack gap={1}>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                Edit
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+              <Button variant="secondary" size="sm">
+                Lock setting
+              </Button>
+              <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
+              </ContextMenu>
+            </HStack>
 
-                  {/* Action Buttons */}
-                  <HStack gap={1}>
-                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                      Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                      Delete
-                    </Button>
-                    <Button variant="secondary" size="sm">
-                      Lock setting
-                    </Button>
-                    <ContextMenu
-                      items={moreActionsItems}
-                      onSelect={(itemId) => console.log(itemId)}
-                    >
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
-                      >
-                        More Actions
-                      </Button>
-                    </ContextMenu>
-                  </HStack>
-
-                  {/* Info Cards */}
-                  <HStack gap={2} className="w-full">
-                    <InfoCard
-                      label="Status"
-                      value={admin.status === 'online' ? 'Online' : 'Offline'}
-                      statusIndicator={
-                        <StatusIndicator
-                          status={admin.status === 'online' ? 'active' : 'shutoff'}
-                        />
-                      }
-                    />
-                    <InfoCard label="Display name" value={admin.displayName} />
-                    <InfoCard label="Email address" value={admin.email} />
-                    <InfoCard label="Default domain" value={admin.defaultDomain} />
-                    <InfoCard label="Created at" value={admin.createdAt} />
-                  </HStack>
-                </VStack>
-              </div>
-
-              {/* Tabs */}
-              <Tabs
-                value={activeDetailTab}
-                onChange={setActiveDetailTab}
-                variant="underline"
-                size="sm"
-                className="w-full"
-              >
-                <TabList>
-                  <Tab value="security-credentials">Security credentials</Tab>
-                  <Tab value="sessions">Sessions</Tab>
-                </TabList>
-
-                {/* Security Credentials Tab */}
-                <TabPanel value="security-credentials" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Password Section */}
-                    <SectionCard>
-                      <SectionCard.Header
-                        title="Password"
-                        actions={
-                          <Button variant="secondary" size="sm">
-                            Reset password
-                          </Button>
-                        }
-                      />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Last updated at"
-                          value="2025.11.11 14:22:43 (Updated by user)"
-                        />
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* MFA Section */}
-                    <SectionCard>
-                      <SectionCard.Header title={`MFA (${mockMFAMethods.length})`} />
-                      <SectionCard.Content>
-                        <Table columns={mfaColumns} data={mockMFAMethods} rowKey="id" />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </VStack>
-                </TabPanel>
-
-                {/* Sessions Tab */}
-                <TabPanel value="sessions" className="pt-0">
-                  <VStack gap={4} className="pt-4">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                        Sessions
-                      </h3>
-                    </div>
-                    {/* Action Bar */}
-                    <HStack gap={2} align="center">
-                      <HStack gap={1} align="center">
-                        <SearchInput
-                          placeholder="Search session by attributes"
-                          value={sessionsSearchQuery}
-                          onChange={(e) => setSessionsSearchQuery(e.target.value)}
-                          className="w-[var(--search-input-width)]"
-                        />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          icon={<IconRefresh size={12} stroke={1.5} />}
-                          aria-label="Refresh"
-                        />
-                      </HStack>
-                      <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                      <Button variant="secondary" size="sm">
-                        Terminate all sessions
-                      </Button>
-                    </HStack>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={sessionsCurrentPage}
-                      totalPages={sessionsTotalPages || 1}
-                      onPageChange={setSessionsCurrentPage}
-                      totalItems={filteredSessions.length}
-                    />
-
-                    {/* Sessions Table */}
-                    <Table columns={sessionColumns} data={paginatedSessions} rowKey="id" />
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
+            {/* Info Cards */}
+            <HStack gap={2} className="w-full">
+              <InfoCard
+                label="Status"
+                value={admin.status === 'online' ? 'Online' : 'Offline'}
+                statusIndicator={
+                  <StatusIndicator status={admin.status === 'online' ? 'active' : 'shutoff'} />
+                }
+              />
+              <InfoCard label="Display name" value={admin.displayName} />
+              <InfoCard label="Email address" value={admin.email} />
+              <InfoCard label="Default domain" value={admin.defaultDomain} />
+              <InfoCard label="Created at" value={admin.createdAt} />
+            </HStack>
+          </VStack>
         </div>
-      </main>
-    </div>
+
+        {/* Tabs */}
+        <Tabs
+          value={activeDetailTab}
+          onChange={setActiveDetailTab}
+          variant="underline"
+          size="sm"
+          className="w-full"
+        >
+          <TabList>
+            <Tab value="security-credentials">Security credentials</Tab>
+            <Tab value="sessions">Sessions</Tab>
+          </TabList>
+
+          {/* Security Credentials Tab */}
+          <TabPanel value="security-credentials" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              {/* Password Section */}
+              <SectionCard>
+                <SectionCard.Header
+                  title="Password"
+                  actions={
+                    <Button variant="secondary" size="sm">
+                      Reset password
+                    </Button>
+                  }
+                />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Last updated at"
+                    value="2025.11.11 14:22:43 (Updated by user)"
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+
+              {/* MFA Section */}
+              <SectionCard>
+                <SectionCard.Header title={`MFA (${mockMFAMethods.length})`} />
+                <SectionCard.Content>
+                  <Table columns={mfaColumns} data={mockMFAMethods} rowKey="id" />
+                </SectionCard.Content>
+              </SectionCard>
+            </VStack>
+          </TabPanel>
+
+          {/* Sessions Tab */}
+          <TabPanel value="sessions" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                  Sessions
+                </h3>
+              </div>
+              {/* Action Bar */}
+              <HStack gap={2} align="center">
+                <HStack gap={1} align="center">
+                  <SearchInput
+                    placeholder="Search session by attributes"
+                    value={sessionsSearchQuery}
+                    onChange={(e) => setSessionsSearchQuery(e.target.value)}
+                    className="w-[var(--search-input-width)]"
+                  />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconRefresh size={12} stroke={1.5} />}
+                    aria-label="Refresh"
+                  />
+                </HStack>
+                <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                <Button variant="secondary" size="sm">
+                  Terminate all sessions
+                </Button>
+              </HStack>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={sessionsCurrentPage}
+                totalPages={sessionsTotalPages || 1}
+                onPageChange={setSessionsCurrentPage}
+                totalItems={filteredSessions.length}
+              />
+
+              {/* Sessions Table */}
+              <Table columns={sessionColumns} data={paginatedSessions} rowKey="id" />
+            </VStack>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }

@@ -11,6 +11,8 @@ import {
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -18,6 +20,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -179,7 +182,8 @@ const filterFields: FilterField[] = [
 
 export function ComputeAdminServerGroupsPage() {
   const [selectedServerGroups, setSelectedServerGroups] = useState<string[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
@@ -369,124 +373,109 @@ export function ComputeAdminServerGroupsPage() {
   }, [columns, columnConfig]);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Server Groups' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader title="Server groups" />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
+        {/* List Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search server group by attributes"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedServerGroups.length === 0}
+                onClick={handleBulkDelete}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+
+        {/* Pagination */}
+        {filteredServerGroups.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => setIsPreferencesOpen(true)}
+            totalItems={filteredServerGroups.length}
+            selectedCount={selectedServerGroups.length}
           />
+        )}
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Server Groups' },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Server groups</h1>
-              </div>
-
-              {/* List Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search server group by attributes"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedServerGroups.length === 0}
-                      onClick={handleBulkDelete}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
-
-              {/* Pagination */}
-              {filteredServerGroups.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => setIsPreferencesOpen(true)}
-                  totalItems={filteredServerGroups.length}
-                  selectedCount={selectedServerGroups.length}
-                />
-              )}
-
-              {/* Server groups Table */}
-              <Table<ServerGroup>
-                columns={visibleColumns}
-                data={paginatedServerGroups}
-                rowKey="id"
-                emptyMessage="No server groups found"
-                selectable
-                selectedKeys={selectedServerGroups}
-                onSelectionChange={setSelectedServerGroups}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Server groups Table */}
+        <Table<ServerGroup>
+          columns={visibleColumns}
+          data={paginatedServerGroups}
+          rowKey="id"
+          emptyMessage="No server groups found"
+          selectable
+          selectedKeys={selectedServerGroups}
+          onSelectionChange={setSelectedServerGroups}
+        />
+      </VStack>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -512,7 +501,7 @@ export function ComputeAdminServerGroupsPage() {
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
       />
-    </div>
+    </PageShell>
   );
 }
 

@@ -18,11 +18,13 @@ import {
   SearchInput,
   Pagination,
   Badge,
+  PageShell,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { IconEdit, IconTrash, IconBell, IconDownload, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -189,7 +191,8 @@ export default function CertificateDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
@@ -325,230 +328,207 @@ export default function CertificateDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              onClick={() => {}}
+              aria-label="Notifications"
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{certificate.name}</DetailHeader.Title>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          <DetailHeader.Actions>
+            {isServerCertificate(certificate) ? (
+              // Server Certificate actions
+              <>
+                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
+                  Download
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                  Delete
+                </Button>
+              </>
+            ) : (
+              // CA Certificate actions
+              <>
+                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                  Edit
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
+                  Download
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                  Delete
+                </Button>
+              </>
+            )}
+          </DetailHeader.Actions>
 
-          {/* Top Bar */}
-          <TopBar
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            }
-          />
-        </div>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={certificate.status.charAt(0).toUpperCase() + certificate.status.slice(1)}
+              status={certificateStatusMap[certificate.status]}
+              className="flex-1"
+            />
+            <DetailHeader.InfoCard
+              label="ID"
+              value={certificate.id}
+              copyable
+              onCopy={handleCopyId}
+              className="flex-1"
+            />
+            {isServerCertificate(certificate) && (
+              <DetailHeader.InfoCard label="Type" value={certificate.type} className="flex-1" />
+            )}
+            <DetailHeader.InfoCard
+              label="Expires at"
+              value={certificate.expiresAt}
+              className="flex-1"
+            />
+            <DetailHeader.InfoCard
+              label="Created at"
+              value={certificate.createdAt}
+              className="flex-1"
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{certificate.name}</DetailHeader.Title>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="listeners">Listeners</Tab>
+            </TabList>
 
-                <DetailHeader.Actions>
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Certificate name" value={certificate.name} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Certificate Metadata */}
+                <SectionCard>
                   {isServerCertificate(certificate) ? (
-                    // Server Certificate actions
+                    // Server Certificate Metadata
                     <>
-                      <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
-                        Download
-                      </Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                        Delete
-                      </Button>
+                      <SectionCard.Header title="Certificate metadata" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow
+                          label="Classification"
+                          value={certificate.classification}
+                        />
+                        <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
+                        <SectionCard.DataRow label="Type" value={certificate.type} />
+                        <SectionCard.DataRow label="CN" value={certificate.domain} />
+                        <SectionCard.DataRow label="SAN" value={certificate.san} />
+                        <SectionCard.DataRow
+                          label="Signature type"
+                          value={certificate.signatureType}
+                        />
+                        <SectionCard.DataRow
+                          label="Valid from / To"
+                          value={`${certificate.validFrom} ~ ${certificate.validTo}`}
+                        />
+                      </SectionCard.Content>
                     </>
                   ) : (
-                    // CA Certificate actions
+                    // CA Certificate Metadata without Edit button
                     <>
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
-                        Download
-                      </Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                        Delete
-                      </Button>
+                      <SectionCard.Header title="Certificate metadata" />
+                      <SectionCard.Content>
+                        <SectionCard.DataRow
+                          label="Classification"
+                          value={certificate.classification}
+                        />
+                        <SectionCard.DataRow label="Authority" value={certificate.authority} />
+                        <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
+                        <SectionCard.DataRow
+                          label="Signature type"
+                          value={certificate.signatureType}
+                        />
+                        <SectionCard.DataRow
+                          label="Valid from / To"
+                          value={`${certificate.validFrom} ~ ${certificate.validTo}`}
+                        />
+                      </SectionCard.Content>
                     </>
                   )}
-                </DetailHeader.Actions>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={certificate.status.charAt(0).toUpperCase() + certificate.status.slice(1)}
-                    status={certificateStatusMap[certificate.status]}
-                    className="flex-1"
+            {/* Listeners Tab */}
+            <TabPanel value="listeners" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Listener</h3>
+                </div>
+
+                {/* Search */}
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    value={listenerSearchTerm}
+                    onChange={(e) => {
+                      setListenerSearchTerm(e.target.value);
+                      setListenerCurrentPage(1);
+                    }}
+                    placeholder="Search listener by attributes"
                   />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={certificate.id}
-                    copyable
-                    onCopy={handleCopyId}
-                    className="flex-1"
-                  />
-                  {isServerCertificate(certificate) && (
-                    <DetailHeader.InfoCard
-                      label="Type"
-                      value={certificate.type}
-                      className="flex-1"
-                    />
-                  )}
-                  <DetailHeader.InfoCard
-                    label="Expires at"
-                    value={certificate.expiresAt}
-                    className="flex-1"
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created at"
-                    value={certificate.createdAt}
-                    className="flex-1"
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="listeners">Listeners</Tab>
-                  </TabList>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={listenerCurrentPage}
+                  totalPages={totalListenerPages}
+                  onPageChange={setListenerCurrentPage}
+                  totalItems={filteredListeners.length}
+                />
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Certificate name" value={certificate.name} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Certificate Metadata */}
-                      <SectionCard>
-                        {isServerCertificate(certificate) ? (
-                          // Server Certificate Metadata
-                          <>
-                            <SectionCard.Header title="Certificate metadata" />
-                            <SectionCard.Content>
-                              <SectionCard.DataRow
-                                label="Classification"
-                                value={certificate.classification}
-                              />
-                              <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
-                              <SectionCard.DataRow label="Type" value={certificate.type} />
-                              <SectionCard.DataRow label="CN" value={certificate.domain} />
-                              <SectionCard.DataRow label="SAN" value={certificate.san} />
-                              <SectionCard.DataRow
-                                label="Signature type"
-                                value={certificate.signatureType}
-                              />
-                              <SectionCard.DataRow
-                                label="Valid from / To"
-                                value={`${certificate.validFrom} ~ ${certificate.validTo}`}
-                              />
-                            </SectionCard.Content>
-                          </>
-                        ) : (
-                          // CA Certificate Metadata without Edit button
-                          <>
-                            <SectionCard.Header title="Certificate metadata" />
-                            <SectionCard.Content>
-                              <SectionCard.DataRow
-                                label="Classification"
-                                value={certificate.classification}
-                              />
-                              <SectionCard.DataRow
-                                label="Authority"
-                                value={certificate.authority}
-                              />
-                              <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
-                              <SectionCard.DataRow
-                                label="Signature type"
-                                value={certificate.signatureType}
-                              />
-                              <SectionCard.DataRow
-                                label="Valid from / To"
-                                value={`${certificate.validFrom} ~ ${certificate.validTo}`}
-                              />
-                            </SectionCard.Content>
-                          </>
-                        )}
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Listeners Tab */}
-                  <TabPanel value="listeners" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Listener
-                        </h3>
-                      </div>
-
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          value={listenerSearchTerm}
-                          onChange={(e) => {
-                            setListenerSearchTerm(e.target.value);
-                            setListenerCurrentPage(1);
-                          }}
-                          placeholder="Search listener by attributes"
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={listenerCurrentPage}
-                        totalPages={totalListenerPages}
-                        onPageChange={setListenerCurrentPage}
-                        totalItems={filteredListeners.length}
-                      />
-
-                      {/* Table */}
-                      <Table columns={listenerColumns} data={paginatedListeners} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table columns={listenerColumns} data={paginatedListeners} rowKey="id" />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

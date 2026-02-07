@@ -15,6 +15,8 @@ import {
   Tabs,
   TabList,
   Tab,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -24,6 +26,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -151,7 +154,8 @@ const qosSpecFilterFields: FilterField[] = [
 export function ComputeAdminVolumeTypesPage() {
   const [selectedVolumeTypes, setSelectedVolumeTypes] = useState<string[]>([]);
   const [selectedQoSSpecs, setSelectedQoSSpecs] = useState<string[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [volumeTypes, setVolumeTypes] = useState(mockVolumeTypes);
@@ -480,201 +484,191 @@ export function ComputeAdminVolumeTypesPage() {
     activeTab === 'volume-types' ? selectedVolumeTypes.length > 0 : selectedQoSSpecs.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Volume types' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Volume types"
+          actions={
+            <Button size="md">
+              {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
+            </Button>
+          }
+        />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
+          <TabList>
+            <Tab value="volume-types">Volume types</Tab>
+            <Tab value="qos-specs">QoS specs</Tab>
+          </TabList>
+        </Tabs>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Volume types' },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume types</h1>
-                <Button size="md">
-                  {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
-                </Button>
-              </div>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="volume-types">Volume types</Tab>
-                  <Tab value="qos-specs">QoS specs</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* Content based on active tab */}
-              {activeTab === 'volume-types' && (
-                <VStack gap={3} align="stretch">
-                  {/* Toolbar */}
-                  <ListToolbar
-                    primaryActions={
-                      <ListToolbar.Actions>
-                        <FilterSearchInput
-                          filters={volumeTypeFilterFields}
-                          appliedFilters={appliedFilters}
-                          onFiltersChange={setAppliedFilters}
-                          placeholder="Search volume types by attributes"
-                          size="sm"
-                          className="w-[var(--search-input-width)]"
-                          hideAppliedFilters
-                        />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          iconOnly
-                          icon={<IconDownload size={12} />}
-                          aria-label="Download"
-                        />
-                      </ListToolbar.Actions>
-                    }
-                    bulkActions={
-                      <ListToolbar.Actions>
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedVolumeTypes.length === 0}
-                          onClick={handleBulkDelete}
-                        >
-                          Delete
-                        </Button>
-                      </ListToolbar.Actions>
-                    }
+        {/* Content based on active tab */}
+        {activeTab === 'volume-types' && (
+          <VStack gap={3} align="stretch">
+            {/* Toolbar */}
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <FilterSearchInput
+                    filters={volumeTypeFilterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search volume types by attributes"
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                    hideAppliedFilters
                   />
-
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalVolumeTypePages}
-                    totalItems={filteredVolumeTypes.length}
-                    selectedCount={selectedVolumeTypes.length}
-                    onPageChange={setCurrentPage}
-                    showSettings
-                    onSettingsClick={() => setIsPreferencesOpen(true)}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
                   />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedVolumeTypes.length === 0}
+                    onClick={handleBulkDelete}
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+            />
 
-                  {/* Table */}
-                  <Table
-                    columns={volumeTypeColumns}
-                    data={paginatedVolumeTypes}
-                    rowKey="id"
-                    selectable
-                    selectedKeys={selectedVolumeTypes}
-                    onSelectionChange={setSelectedVolumeTypes}
-                  />
-                </VStack>
-              )}
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalVolumeTypePages}
+              totalItems={filteredVolumeTypes.length}
+              selectedCount={selectedVolumeTypes.length}
+              onPageChange={setCurrentPage}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
+            />
 
-              {activeTab === 'qos-specs' && (
-                <VStack gap={3} align="stretch">
-                  {/* Toolbar */}
-                  <ListToolbar
-                    primaryActions={
-                      <ListToolbar.Actions>
-                        <FilterSearchInput
-                          filters={qosSpecFilterFields}
-                          appliedFilters={appliedFilters}
-                          onFiltersChange={setAppliedFilters}
-                          placeholder="Search QoS specs by attributes"
-                          size="sm"
-                          className="w-[var(--search-input-width)]"
-                          hideAppliedFilters
-                        />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          iconOnly
-                          icon={<IconDownload size={12} />}
-                          aria-label="Download"
-                        />
-                      </ListToolbar.Actions>
-                    }
-                    bulkActions={
-                      <ListToolbar.Actions>
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedQoSSpecs.length === 0}
-                          onClick={handleBulkDelete}
-                        >
-                          Delete
-                        </Button>
-                      </ListToolbar.Actions>
-                    }
-                  />
+            {/* Table */}
+            <Table
+              columns={volumeTypeColumns}
+              data={paginatedVolumeTypes}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedVolumeTypes}
+              onSelectionChange={setSelectedVolumeTypes}
+            />
+          </VStack>
+        )}
 
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalQoSSpecPages}
-                    totalItems={filteredQoSSpecs.length}
-                    selectedCount={selectedQoSSpecs.length}
-                    onPageChange={setCurrentPage}
-                    showSettings
-                    onSettingsClick={() => setIsPreferencesOpen(true)}
+        {activeTab === 'qos-specs' && (
+          <VStack gap={3} align="stretch">
+            {/* Toolbar */}
+            <ListToolbar
+              primaryActions={
+                <ListToolbar.Actions>
+                  <FilterSearchInput
+                    filters={qosSpecFilterFields}
+                    appliedFilters={appliedFilters}
+                    onFiltersChange={setAppliedFilters}
+                    placeholder="Search QoS specs by attributes"
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                    hideAppliedFilters
                   />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    iconOnly
+                    icon={<IconDownload size={12} />}
+                    aria-label="Download"
+                  />
+                </ListToolbar.Actions>
+              }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedQoSSpecs.length === 0}
+                    onClick={handleBulkDelete}
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
+            />
 
-                  {/* Table */}
-                  <Table
-                    columns={qosSpecColumns}
-                    data={paginatedQoSSpecs}
-                    rowKey="id"
-                    selectable
-                    selectedKeys={selectedQoSSpecs}
-                    onSelectionChange={setSelectedQoSSpecs}
-                  />
-                </VStack>
-              )}
-            </VStack>
-          </div>
-        </div>
-      </main>
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalQoSSpecPages}
+              totalItems={filteredQoSSpecs.length}
+              selectedCount={selectedQoSSpecs.length}
+              onPageChange={setCurrentPage}
+              showSettings
+              onSettingsClick={() => setIsPreferencesOpen(true)}
+            />
+
+            {/* Table */}
+            <Table
+              columns={qosSpecColumns}
+              data={paginatedQoSSpecs}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedQoSSpecs}
+              onSelectionChange={setSelectedQoSSpecs}
+            />
+          </VStack>
+        )}
+      </VStack>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -700,7 +694,7 @@ export function ComputeAdminVolumeTypesPage() {
           setCurrentPage(1);
         }}
       />
-    </div>
+    </PageShell>
   );
 }
 

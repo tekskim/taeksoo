@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -143,6 +144,7 @@ export default function L7PolicyDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
@@ -279,189 +281,169 @@ export default function L7PolicyDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton
+          showWindowControls
+        />
+      }
+      topBar={
+        <TopBar
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              onClick={() => {}}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={8} align="stretch" className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
+              {l7Policy.name}
+            </h1>
+            <DetailHeader.Actions>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+          </DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value="Available"
+              status={l7PolicyStatusMap[l7Policy.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={l7Policy.id} copyable onCopy={handleCopyId} />
+            <DetailHeader.InfoCard label="Admin state" value={l7Policy.adminState} />
+            <DetailHeader.InfoCard label="Created at" value={l7Policy.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-[48px]'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* TabBar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton
-            showWindowControls
-          />
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab}>
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="l7-rules">L7 Rules</Tab>
+            </TabList>
 
-          {/* TopBar */}
-          <TopBar
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} align="stretch" className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
-                    {l7Policy.name}
-                  </h1>
-                  <DetailHeader.Actions>
-                    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                      Delete
-                    </Button>
-                  </DetailHeader.Actions>
-                </DetailHeader.Title>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value="Available"
-                    status={l7PolicyStatusMap[l7Policy.status]}
-                  />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={l7Policy.id}
-                    copyable
-                    onCopy={handleCopyId}
-                  />
-                  <DetailHeader.InfoCard label="Admin state" value={l7Policy.adminState} />
-                  <DetailHeader.InfoCard label="Created at" value={l7Policy.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab}>
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="l7-rules">L7 Rules</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={l7Policy.name} />
-                          <SectionCard.DataRow label="Description" value={l7Policy.description} />
-                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
-                          <SectionCard.DataRow label="Behavior" value={l7Policy.behavior} />
-                          <SectionCard.DataRow
-                            label="Behavior detail"
-                            value={
-                              l7Policy.behaviorDetail ? (
-                                <Link
-                                  to={`/compute-admin/pools/${l7Policy.behaviorDetail.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {l7Policy.behaviorDetail.name}
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                          <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* L7 Rules Tab */}
-                  <TabPanel value="l7-rules" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          L7 Rules
-                        </h3>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1">
-                          <div className="w-[var(--search-input-width)]">
-                            <SearchInput
-                              value={l7RuleSearchTerm}
-                              onChange={(e) => {
-                                setL7RuleSearchTerm(e.target.value);
-                                setL7RuleCurrentPage(1);
-                              }}
-                              placeholder="Search L7 rules by attributes"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                            aria-label="Download"
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Name" value={l7Policy.name} />
+                    <SectionCard.DataRow label="Description" value={l7Policy.description} />
+                    <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
+                    <SectionCard.DataRow label="Behavior" value={l7Policy.behavior} />
+                    <SectionCard.DataRow
+                      label="Behavior detail"
+                      value={
+                        l7Policy.behaviorDetail ? (
+                          <Link
+                            to={`/compute-admin/pools/${l7Policy.behaviorDetail.id}`}
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
-                            <IconDownload size={14} stroke={1.5} />
-                          </button>
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedL7Rules.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
+                            {l7Policy.behaviorDetail.name}
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                    <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={l7RuleCurrentPage}
-                        totalPages={totalL7RulePages}
-                        onPageChange={setL7RuleCurrentPage}
-                        totalItems={filteredL7Rules.length}
-                        selectedCount={selectedL7Rules.length}
-                      />
+            {/* L7 Rules Tab */}
+            <TabPanel value="l7-rules" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">L7 Rules</h3>
+                </div>
 
-                      {/* Table */}
-                      <Table
-                        columns={l7RuleColumns}
-                        data={paginatedL7Rules}
-                        rowKey="id"
-                        selectable
-                        selectedKeys={selectedL7Rules}
-                        onSelectionChange={setSelectedL7Rules}
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={l7RuleSearchTerm}
+                        onChange={(e) => {
+                          setL7RuleSearchTerm(e.target.value);
+                          setL7RuleCurrentPage(1);
+                        }}
+                        placeholder="Search L7 rules by attributes"
                       />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                      aria-label="Download"
+                    >
+                      <IconDownload size={14} stroke={1.5} />
+                    </button>
+                  </div>
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedL7Rules.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={l7RuleCurrentPage}
+                  totalPages={totalL7RulePages}
+                  onPageChange={setL7RuleCurrentPage}
+                  totalItems={filteredL7Rules.length}
+                  selectedCount={selectedL7Rules.length}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={l7RuleColumns}
+                  data={paginatedL7Rules}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedL7Rules}
+                  onSelectionChange={setSelectedL7Rules}
+                />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

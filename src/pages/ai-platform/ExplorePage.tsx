@@ -9,6 +9,8 @@ import {
   Input,
   Select,
   Checkbox,
+  PageShell,
+  PageHeader,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -245,13 +247,12 @@ export function ExplorePage() {
   });
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -260,7 +261,8 @@ export function ExplorePage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -276,75 +278,64 @@ export function ExplorePage() {
             </>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6}>
+        <PageHeader
+          title="Explore"
+          actions={
+            <Button variant="secondary" size="md">
+              Submit Template
+            </Button>
+          }
+        />
 
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
-            <VStack gap={6}>
-              {/* Header */}
-              <HStack justify="between" align="start">
-                <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Explore</h1>
-                  <p className="text-body-lg text-[var(--color-text-subtle)]">
-                    Discover and deploy community templates
-                  </p>
-                </VStack>
-                <Button variant="secondary" size="md">
-                  Submit Template
-                </Button>
-              </HStack>
-
-              {/* Search & Filters */}
-              <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4">
-                <HStack gap={4} align="center">
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Search templates, models, or tags..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <Select
-                    options={categoryOptions}
-                    value={category}
-                    onChange={setCategory}
-                    placeholder="All categories"
-                  />
-                  <Select
-                    options={sortOptions}
-                    value={sortBy}
-                    onChange={setSortBy}
-                    placeholder="Newest"
-                  />
-                  <Checkbox
-                    checked={featuredOnly}
-                    onChange={setFeaturedOnly}
-                    label="Featured only"
-                  />
-                </HStack>
-              </div>
-
-              {/* Templates Grid */}
-              <VStack gap={4}>
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                  All Templates ({filteredTemplates.length})
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredTemplates.map((template) => (
-                    <TemplateCard
-                      key={template.name}
-                      {...template}
-                      onView={() => console.log('View', template.name)}
-                      onDeploy={() => console.log('Deploy', template.name)}
-                    />
-                  ))}
-                </div>
-              </VStack>
-            </VStack>
-          </div>
+        {/* Search & Filters */}
+        <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-4">
+          <HStack gap={4} align="center">
+            <div className="flex-1">
+              <Input
+                placeholder="Search templates, models, or tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                fullWidth
+              />
+            </div>
+            <Select
+              options={categoryOptions}
+              value={category}
+              onChange={setCategory}
+              placeholder="All categories"
+            />
+            <Select
+              options={sortOptions}
+              value={sortBy}
+              onChange={setSortBy}
+              placeholder="Newest"
+            />
+            <Checkbox checked={featuredOnly} onChange={setFeaturedOnly} label="Featured only" />
+          </HStack>
         </div>
-      </main>
-    </div>
+
+        {/* Templates Grid */}
+        <VStack gap={4}>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+            All Templates ({filteredTemplates.length})
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredTemplates.map((template) => (
+              <TemplateCard
+                key={template.name}
+                {...template}
+                onView={() => console.log('View', template.name)}
+                onDeploy={() => console.log('Deploy', template.name)}
+              />
+            ))}
+          </div>
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }
 

@@ -18,6 +18,8 @@ import {
   Tabs,
   TabList,
   Tab,
+  PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -262,6 +264,8 @@ export function NetworksPage() {
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -422,132 +426,120 @@ export function NetworksPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Networks' }]} />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Networks"
+          actions={
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => navigate('/compute/networks/create')}
+            >
+              Create network
+            </Button>
+          }
+        />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <TabList>
+            <Tab value="current">Current tenant</Tab>
+            <Tab value="shared">Shared</Tab>
+            <Tab value="external">External</Tab>
+          </TabList>
+        </Tabs>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Networks' }]} />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
+        {/* Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search network by attributes"
+                className="w-[var(--search-input-width)]"
               />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Networks</h1>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/compute/networks/create')}
-                >
-                  Create network
-                </Button>
-              </div>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="current">Current tenant</Tab>
-                  <Tab value="shared">Shared</Tab>
-                  <Tab value="external">External</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search network by attributes"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      iconOnly
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedNetworks.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
+              <Button
+                variant="secondary"
+                size="sm"
+                iconOnly
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
               />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedNetworks.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredNetworks.length}
-                selectedCount={selectedNetworks.length}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-              />
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredNetworks.length}
+          selectedCount={selectedNetworks.length}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+        />
 
-              {/* Table */}
-              <Table
-                columns={visibleColumns}
-                data={paginatedNetworks}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedNetworks}
-                onSelectionChange={setSelectedNetworks}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Table */}
+        <Table
+          columns={visibleColumns}
+          data={paginatedNetworks}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedNetworks}
+          onSelectionChange={setSelectedNetworks}
+        />
+      </VStack>
 
       {/* Delete Modal */}
       <ConfirmModal
@@ -596,6 +588,6 @@ export function NetworksPage() {
             : { id: '', name: '' }
         }
       />
-    </div>
+    </PageShell>
   );
 }

@@ -15,6 +15,7 @@ import {
   SearchInput,
   Pagination,
   DetailHeader,
+  PageShell,
   type TableColumn,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -114,6 +115,7 @@ const mockRules: FirewallRule[] = Array.from({ length: 115 }, (_, i) => ({
 export default function ComputeAdminFirewallPolicyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('rules');
 
   // Rules state
@@ -240,128 +242,121 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Firewalls', href: '/compute-admin/firewall' },
+                { label: policy.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{policy.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="ID" value={policy.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={policy.tenant} />
+            <DetailHeader.InfoCard label="Description" value={policy.description || '-'} />
+            <DetailHeader.InfoCard label="Shared" value={policy.shared ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Audited" value={policy.audited ? 'Yes' : 'No'} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="rules">Rules</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Firewalls', href: '/compute-admin/firewall' },
-                  { label: policy.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+            {/* Rules Tab */}
+            <TabPanel value="rules" className="pt-6">
+              <VStack gap={3}>
+                {/* Sub Header */}
+                <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                  Rules
+                </h3>
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={ruleSearchTerm}
+                      onChange={(e) => {
+                        setRuleSearchTerm(e.target.value);
+                        setRuleCurrentPage(1);
+                      }}
+                      placeholder="Search rules by attributes"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                    aria-label="Download"
+                  >
+                    <IconDownload size={14} stroke={1.5} />
+                  </button>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={ruleCurrentPage}
+                  totalPages={Math.ceil(filteredRules.length / rulesPerPage)}
+                  onPageChange={setRuleCurrentPage}
+                  totalItems={filteredRules.length}
+                />
+
+                {/* Table */}
+                <Table columns={ruleColumns} data={paginatedRules} rowKey="id" />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{policy.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="ID" value={policy.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value={policy.tenant} />
-                  <DetailHeader.InfoCard label="Description" value={policy.description || '-'} />
-                  <DetailHeader.InfoCard label="Shared" value={policy.shared ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Audited" value={policy.audited ? 'Yes' : 'No'} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="rules">Rules</Tab>
-                  </TabList>
-
-                  {/* Rules Tab */}
-                  <TabPanel value="rules" className="pt-6">
-                    <VStack gap={3}>
-                      {/* Sub Header */}
-                      <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                        Rules
-                      </h3>
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={ruleSearchTerm}
-                            onChange={(e) => {
-                              setRuleSearchTerm(e.target.value);
-                              setRuleCurrentPage(1);
-                            }}
-                            placeholder="Search rules by attributes"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                          aria-label="Download"
-                        >
-                          <IconDownload size={14} stroke={1.5} />
-                        </button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={ruleCurrentPage}
-                        totalPages={Math.ceil(filteredRules.length / rulesPerPage)}
-                        onPageChange={setRuleCurrentPage}
-                        totalItems={filteredRules.length}
-                      />
-
-                      {/* Table */}
-                      <Table columns={ruleColumns} data={paginatedRules} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
