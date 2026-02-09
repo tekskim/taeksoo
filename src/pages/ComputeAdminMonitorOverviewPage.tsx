@@ -11,6 +11,7 @@ import {
   MonitoringToolbar,
   PageShell,
   PageHeader,
+  ProgressBar,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -118,7 +119,7 @@ function AlertCard({ title, value }: { title: string; value: number }) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-5 flex-1 flex flex-col">
       <span className="chartTitle">{title}</span>
-      <div className="flex-1 flex items-center justify-center text-[48px] font-normal text-[var(--color-text-default)] leading-[48px]">
+      <div className="flex-1 flex items-center justify-center text-heading-h1 text-[var(--color-text-default)]">
         {value}
       </div>
     </div>
@@ -403,9 +404,9 @@ function HostUsageCard({
       <div className="chartTitle mb-4">{title}</div>
       <div className="space-y-[22px]">
         {data.map((node) => {
-          const percent = type === 'cpu' ? node.cpuPercent : node.ramPercent;
           const used = type === 'cpu' ? node.cpuUsed : node.ramUsed;
           const total = type === 'cpu' ? node.cpuTotal : node.ramTotal;
+          const percent = type === 'cpu' ? node.cpuPercent : node.ramPercent;
           return (
             <div key={node.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
@@ -419,20 +420,7 @@ function HostUsageCard({
                   </Badge>
                 </div>
               </div>
-              <div className="h-1 rounded-sm bg-[var(--color-border-default)] overflow-hidden">
-                <div
-                  className="h-full rounded-sm transition-all"
-                  style={{
-                    width: `${Math.min(percent, 100)}%`,
-                    backgroundColor:
-                      percent >= 100
-                        ? 'var(--color-state-danger)'
-                        : percent >= 70
-                          ? 'var(--color-state-warning)'
-                          : 'var(--color-state-success)',
-                  }}
-                />
-              </div>
+              <ProgressBar value={used} max={total} showValue={false} />
             </div>
           );
         })}
@@ -767,14 +755,16 @@ export default function ComputeAdminMonitorOverviewPage() {
         />
 
         {/* Row 1: Alert Cards + Alarm Trend */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <AlertCard title="Today CPU usage > 80% alert" value={0} />
           <AlertCard title="Today RAM usage > 80% alert" value={0} />
-          <AlarmTrendCard />
+          <div className="col-span-2">
+            <AlarmTrendCard />
+          </div>
         </div>
 
         {/* Row 2: Gauge Charts + Pie Chart */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <GaugeCard title="Physical CPU usage" value={70} used={7} total={10} unit="vCPU" />
           <GaugeCard title="Total RAM usage" value={70} used={8} total={10} unit="GiB" />
           <GaugeCard title="Physical storage usage" value={70} used={8} total={10} unit="TiB" />

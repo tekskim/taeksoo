@@ -10605,25 +10605,20 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
-                    {/* Default Variant - Simple Progress */}
+                    {/* Default Variant - Status Examples */}
                     <VStack gap={3}>
-                      <Label>Default Variant - Simple Progress</Label>
+                      <Label>Default Variant - Status Based Colors</Label>
                       <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                        {/* Normal (under 70%) - Green */}
+                        <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
+                        {/* Warning (70-99%) - Orange */}
                         <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
-                      </div>
-                    </VStack>
-
-                    {/* Error State */}
-                    <VStack gap={3}>
-                      <Label>Error state</Label>
-                      <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                        {/* Danger (>=100%) - Red */}
                         <ProgressBar
-                          label="60 MB (75%)"
-                          value={75}
+                          label="100 MB (100%)"
+                          value={100}
                           max={100}
                           showValue={false}
-                          error
-                          errorMessage="Upload failed: Network error"
                         />
                       </div>
                     </VStack>
@@ -10633,27 +10628,21 @@ outline: 2px solid var(--color-border-focus);`}
                       <Label>Status colors</Label>
                       <div className="flex flex-wrap gap-4">
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success-default)]" />
+                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
                           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
                             0% ~ 70%: Normal
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning-default)]" />
+                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
                           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
                             70% ~ 100%: Warning
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-error-default)]" />
+                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
                           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
                             &gt;100%: Danger
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-border-default)]" />
-                          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                            Unlimited: Neutral
                           </span>
                         </div>
                       </div>

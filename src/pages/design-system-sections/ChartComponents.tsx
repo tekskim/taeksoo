@@ -645,15 +645,21 @@ export function QuotaBarDemo({
       return {
         bg: 'bg-[var(--color-status-error-subtle)]',
         text: 'text-[var(--color-status-error)]',
+        bar: 'bg-[var(--color-state-danger)]',
+        dot: 'bg-[var(--color-state-danger)]',
       };
     if (percentage >= 70)
       return {
         bg: 'bg-[var(--color-status-warning-subtle)]',
         text: 'text-[var(--color-status-warning)]',
+        bar: 'bg-[var(--color-state-warning)]',
+        dot: 'bg-[var(--color-state-warning)]',
       };
     return {
       bg: 'bg-[var(--color-status-success-subtle)]',
       text: 'text-[var(--color-status-success)]',
+      bar: 'bg-[var(--color-state-success)]',
+      dot: 'bg-[var(--color-state-success)]',
     };
   };
 
@@ -680,7 +686,7 @@ export function QuotaBarDemo({
         content={
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[var(--color-text-muted)]" />
+              <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
               <span>Used: {used}</span>
             </div>
           </div>
@@ -690,7 +696,7 @@ export function QuotaBarDemo({
         <div className="w-full">
           <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
             <div
-              className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
+              className={`h-full rounded-sm ${colors.bar} transition-all`}
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>

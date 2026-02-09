@@ -518,7 +518,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h7 mb-4">{title}</h6>
+      <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -632,7 +632,7 @@ export function StorageHomePage() {
         {/* Top Row - 2 Cards: Inventory and Capacity */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* INVENTORY */}
-          <Card title="INVENTORY" className="flex flex-col">
+          <Card title="Inventory" className="flex flex-col">
             {/* Total */}
             <div className="mb-4">
               <div className="text-heading-h2 text-[var(--color-text-default)]">54</div>
@@ -653,7 +653,7 @@ export function StorageHomePage() {
           </Card>
 
           {/* CAPACITY */}
-          <Card title="CAPACITY" className="flex flex-col">
+          <Card title="Capacity" className="flex flex-col">
             <CapacityGauge percentage={26.19} used={49.7} total={189.9} unit="TiB" />
           </Card>
         </div>
@@ -662,7 +662,7 @@ export function StorageHomePage() {
         <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h6 className="text-heading-h7">CLUSTER UTILIZATION</h6>
+            <h6 className="text-heading-h6">Cluster Utilization</h6>
             <MonitoringToolbar
               timeRange={timeRange}
               onTimeRangeChange={setTimeRange}

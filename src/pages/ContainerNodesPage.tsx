@@ -153,7 +153,7 @@ function ProgressCell({ value }: { value: number }) {
   return (
     <div className="flex flex-col gap-0.5 w-24">
       <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">{value}%</span>
-      <ProgressBar value={value} size="sm" />
+      <ProgressBar value={value} max={100} showValue={false} size="sm" />
     </div>
   );
 }

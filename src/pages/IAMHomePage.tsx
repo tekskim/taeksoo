@@ -287,7 +287,7 @@ export function IAMHomePage() {
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* Domain Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
-            <h6 className="text-heading-h7">DOMAIN INFO</h6>
+            <h6 className="text-heading-h6">Domain Info</h6>
             <h2 className="text-heading-h2 text-[var(--color-text-default)]">DomainA</h2>
             <VStack gap={4} className="mt-auto">
               <div>
@@ -303,7 +303,7 @@ export function IAMHomePage() {
 
           {/* Authentication Summary Card */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-            <h6 className="text-heading-h7">AUTHENTICATION SUMMARY</h6>
+            <h6 className="text-heading-h6">Authentication Summary</h6>
 
             <div className="grid grid-cols-2 gap-4">
               {/* Today's Sign-ins */}
@@ -367,7 +367,7 @@ export function IAMHomePage() {
 
         {/* Row 2: User Status */}
         <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-          <h6 className="text-heading-h7">USER STATUS</h6>
+          <h6 className="text-heading-h6">User Status</h6>
           <div className="grid grid-cols-4 gap-4">
             <StatCard label="Total" value="150" variant="default" />
             <StatCard label="Online" value="50" variant="success" />
@@ -380,7 +380,7 @@ export function IAMHomePage() {
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* IAM Resources */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-            <h6 className="text-heading-h7">IAM RESOURCES</h6>
+            <h6 className="text-heading-h6">IAM Resources</h6>
             <VStack gap={2}>
               <ResourceCard label="User group" value="13" />
               <ResourceCard label="Roles" value="13" />
@@ -390,7 +390,7 @@ export function IAMHomePage() {
 
           {/* Recent Events */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
-            <h6 className="text-heading-h7">RECENT EVENTS</h6>
+            <h6 className="text-heading-h6">Recent Events</h6>
             <div className="overflow-x-auto">
               <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
             </div>

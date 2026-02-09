@@ -12,6 +12,7 @@ import {
   Select,
   PageShell,
   PageHeader,
+  ProgressBar,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -111,9 +112,7 @@ function StatCard({
         <span className="chartTitle">{title}</span>
       </div>
       <div className="flex items-baseline justify-center gap-1 font-medium">
-        <span className="text-heading-h1 font-normal leading-[48px] text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="text-heading-h1 text-[var(--color-text-default)]">{value}</span>
         {unit && <span className="text-body-lg text-[var(--color-text-muted)]">{unit}</span>}
       </div>
     </div>
@@ -149,20 +148,7 @@ function FileSystemCard() {
                 </Badge>
               </div>
             </div>
-            <div className="h-1 rounded-sm bg-[var(--color-border-default)] overflow-hidden">
-              <div
-                className="h-full rounded-sm transition-all"
-                style={{
-                  width: `${Math.min(fs.percent, 100)}%`,
-                  backgroundColor:
-                    fs.percent >= 100
-                      ? 'var(--color-state-danger)'
-                      : fs.percent >= 70
-                        ? 'var(--color-state-warning)'
-                        : 'var(--color-state-success)',
-                }}
-              />
-            </div>
+            <ProgressBar value={fs.used} max={fs.total} showValue={false} />
           </div>
         ))}
       </div>
@@ -766,11 +752,15 @@ export default function ComputeAdminPhysicalNodesPage() {
         </div>
 
         {/* Row 1: Stat Cards */}
-        <div className="flex gap-4">
-          <StatCard title="CPU Cores" value={0} />
-          <StatCard title="Total RAM" value="2.56" unit="GiB" />
-          <StatCard title="System running time" value="2.56" unit="weeks" />
-          <FileSystemCard />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex gap-4">
+            <StatCard title="CPU Cores" value={0} />
+            <StatCard title="Total RAM" value="2.56" unit="GiB" />
+          </div>
+          <div className="flex gap-4">
+            <StatCard title="System running time" value="2.56" unit="weeks" />
+            <FileSystemCard />
+          </div>
         </div>
 
         {/* Row 2: CPU Usage & RAM Usage */}

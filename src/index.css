@@ -1530,7 +1530,7 @@ input[type='search']::-webkit-search-decoration {
   background: var(--color-surface-default);
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
-  padding: 12px 12px 8px 12px;
+  padding: 12px 20px 8px 20px;
   height: var(--chart-card-height);
   width: 100%;
   min-width: 0;
@@ -1556,9 +1556,9 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .chartTitle {
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-20);
   color: var(--color-text-default);
 }
 
