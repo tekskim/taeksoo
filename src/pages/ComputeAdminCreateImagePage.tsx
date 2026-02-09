@@ -457,7 +457,7 @@ export function ComputeAdminCreateImagePage() {
                   </FormField>
 
                   {/* Owned tenant section */}
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-[8px]">
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-1.5">
                         <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
@@ -538,7 +538,7 @@ export function ComputeAdminCreateImagePage() {
 
                     {/* Shared tenants table - shown when visibility is 'shared' */}
                     {visibility === 'shared' && (
-                      <div className="flex flex-col gap-4 mt-2">
+                      <div className="flex flex-col gap-[8px] mt-2">
                         <div className="flex flex-col gap-2">
                           <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                             Tenants

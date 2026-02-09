@@ -889,7 +889,7 @@ export function ConnectDataSourceDrawer({
         </VStack>
 
         {/* Search and Table */}
-        <VStack gap={3}>
+        <VStack gap={2}>
           {/* Search Input */}
           <SearchInput
             placeholder="Find data sources with filters"
@@ -1112,7 +1112,7 @@ export function ConnectMCPServerDrawer({
         </VStack>
 
         {/* Search and Table */}
-        <VStack gap={3}>
+        <VStack gap={2}>
           {/* Search Input */}
           <SearchInput
             placeholder="Find MCP tools with filters"

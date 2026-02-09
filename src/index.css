@@ -703,7 +703,7 @@ html.theme-transition *::after {
   --select-bg: var(--color-surface-default);
   --select-border: var(--color-border-strong);
   --select-border-focus: var(--color-action-primary);
-  --select-bg-disabled: var(--color-slate-200);
+  --select-bg-disabled: var(--color-slate-100);
 
   /* Select - Dropdown Menu */
   --select-menu-bg: var(--color-surface-default);
