@@ -19,6 +19,7 @@ import {
   ContextMenu,
   type ContextMenuItem,
   StatusIndicator,
+  PageShell,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -346,13 +347,10 @@ export function AIPlatformPageLayout({
   );
 
   return (
-    <div className="h-screen bg-[var(--color-surface-subtle)] flex w-full overflow-hidden">
-      {/* Sidebar */}
-      <AIPlatformSidebar />
-
-      {/* Main Content Area */}
-      <main className="flex flex-1 flex-col h-screen bg-[var(--color-surface-default)] ml-[220px]">
-        {/* TabBar - Fixed */}
+    <PageShell
+      sidebar={<AIPlatformSidebar />}
+      sidebarWidth={220}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -363,8 +361,8 @@ export function AIPlatformPageLayout({
           showWindowControls={true}
           onWindowClose={handleWindowClose}
         />
-
-        {/* TopBar - Fixed */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={false}
           showNavigation={showNavigation}
@@ -375,27 +373,24 @@ export function AIPlatformPageLayout({
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           actions={topBarActions || defaultTopBarActions}
         />
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
-          <div className="bg-[var(--color-surface-default)] flex flex-col gap-6 pb-[120px] pt-6 px-8 w-full">
-            {/* Page Header */}
-            <div className="flex items-center justify-between w-full">
-              <div className="flex flex-col items-start justify-center">
-                <h4 className="text-heading-h4 text-[var(--color-text-default)]">{title}</h4>
-                {subtitle && (
-                  <p className="text-body-md text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
-                )}
-              </div>
-              {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
-            </div>
-
-            {/* Page Content */}
-            <div className="flex flex-col gap-6 w-full">{children}</div>
+      }
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col items-start justify-center">
+            <h4 className="text-heading-h4 text-[var(--color-text-default)]">{title}</h4>
+            {subtitle && (
+              <p className="text-body-md text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
+            )}
           </div>
+          {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
         </div>
-      </main>
-    </div>
+
+        {/* Page Content */}
+        <div className="flex flex-col gap-6 w-full">{children}</div>
+      </VStack>
+    </PageShell>
   );
 }
 

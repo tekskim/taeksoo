@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   Badge,
@@ -13,12 +13,18 @@ import {
   SearchInput,
   Pagination,
   DetailHeader,
+  PageShell,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  VStack,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { AgentPageLayout } from '@/layouts';
-import { AgentSidebar } from '@/pages/AgentPage';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconStar,
   IconStarFilled,
@@ -29,6 +35,8 @@ import {
   IconRefresh,
   IconCode,
   IconDownload,
+  IconBell,
+  IconPalette,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -480,6 +488,8 @@ function SettingsTabContent() {
    ---------------------------------------- */
 export function MCPToolDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -498,12 +508,51 @@ export function MCPToolDetailPage() {
   };
 
   return (
-    <AgentPageLayout
-      title={toolData.name}
-      breadcrumbItems={[{ label: 'MCP tools', href: '/mcp-tools' }, { label: toolData.name }]}
+    <PageShell
       sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: toolData.name }]}
+            />
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1} />}
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
     >
-      <div className="flex flex-col gap-6 w-full">
+      <VStack gap={6}>
         {/* Header */}
         <MCPToolHeader
           name={toolData.name}
@@ -546,8 +595,8 @@ export function MCPToolDetailPage() {
             </div>
           </TabPanel>
         </Tabs>
-      </div>
-    </AgentPageLayout>
+      </VStack>
+    </PageShell>
   );
 }
 

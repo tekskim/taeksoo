@@ -173,7 +173,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={8} className="min-w-[1176px]">
         {/* Header Card */}

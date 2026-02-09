@@ -329,7 +329,7 @@ export default function L7PolicyDetailPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={8} align="stretch" className="min-w-[1176px]">
         {/* Detail header */}

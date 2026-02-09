@@ -7,12 +7,20 @@ import {
   ListToolbar,
   StatusIndicator,
   ContextMenu,
+  PageShell,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  VStack,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { AgentPageLayout } from '@/layouts';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconTrash,
   IconStar,
@@ -101,6 +109,7 @@ interface DataSourceRow {
    ---------------------------------------- */
 export function StoragePage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [selectedDataSources, setSelectedDataSources] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -331,79 +340,137 @@ export function StoragePage() {
   ];
 
   return (
-    <AgentPageLayout
-      title="Data sources"
-      breadcrumbItems={[{ label: 'Data sources' }]}
-      headerActions={
-        <Button variant="primary" size="md" onClick={() => {}}>
-          Create data source
-        </Button>
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Data Sources' }]} />
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="m12 1 0 2m0 18 0 2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12l2 0m18 0 2 0M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                  </svg>
+                }
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconAlertTriangle size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
       }
     >
-      {/* Status Cards */}
-      <div className="flex gap-2 items-center relative shrink-0 w-full">
-        <StatusCard label="Completed" count={5} status="completed" />
-        <StatusCard label="Error" count={0} status="error" />
-        <StatusCard label="Processing" count={5} status="processing" />
-        <StatusCard label="Pending" count={5} status="pending" />
-        <StatusCard label="Draft" count={5} status="draft" />
-      </div>
+      <VStack gap={6}>
+        <PageHeader
+          title="Data sources"
+          actions={
+            <Button variant="primary" size="md" onClick={() => {}}>
+              Create data source
+            </Button>
+          }
+        />
 
-      {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
-      <div className="flex flex-col gap-3 w-full">
-        {/* List Toolbar */}
-        <ListToolbar
-          primaryActions={
-            <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder="Search data sources by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
+        {/* Status Cards */}
+        <div className="flex gap-2 items-center relative shrink-0 w-full">
+          <StatusCard label="Completed" count={5} status="completed" />
+          <StatusCard label="Error" count={0} status="error" />
+          <StatusCard label="Processing" count={5} status="processing" />
+          <StatusCard label="Pending" count={5} status="pending" />
+          <StatusCard label="Draft" count={5} status="draft" />
+        </div>
+
+        {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
+        <div className="flex flex-col gap-3 w-full">
+          {/* List Toolbar */}
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search data sources by attributes"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onClear={() => setSearchQuery('')}
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
+              </ListToolbar.Actions>
+            }
+            bulkActions={
+              <ListToolbar.Actions>
+                <Button
+                  variant="muted"
                   size="sm"
-                  fullWidth
-                />
-              </div>
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            <ListToolbar.Actions>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconTrash size={12} />}
-                disabled={selectedDataSources.length === 0}
-              >
-                Delete
-              </Button>
-            </ListToolbar.Actions>
-          }
-        />
-
-        {/* Pagination */}
-        {filteredDataSources.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            totalItems={filteredDataSources.length}
-            selectedCount={selectedDataSources.length}
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedDataSources.length === 0}
+                >
+                  Delete
+                </Button>
+              </ListToolbar.Actions>
+            }
           />
-        )}
 
-        {/* Table */}
-        <Table<DataSourceRow>
-          columns={columns}
-          data={paginatedDataSources}
-          rowKey="id"
-          emptyMessage="No data sources found"
-          selectable
-          selectedKeys={selectedDataSources}
-          onSelectionChange={setSelectedDataSources}
-        />
-      </div>
-    </AgentPageLayout>
+          {/* Pagination */}
+          {filteredDataSources.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredDataSources.length}
+              selectedCount={selectedDataSources.length}
+            />
+          )}
+
+          {/* Table */}
+          <Table<DataSourceRow>
+            columns={columns}
+            data={paginatedDataSources}
+            rowKey="id"
+            emptyMessage="No data sources found"
+            selectable
+            selectedKeys={selectedDataSources}
+            onSelectionChange={setSelectedDataSources}
+          />
+        </div>
+      </VStack>
+    </PageShell>
   );
 }
 

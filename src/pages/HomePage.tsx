@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { TopBar, TopBarAction, Breadcrumb, VStack } from '@/design-system';
+import { TopBar, TopBarAction, Breadcrumb, VStack, PageShell, TabBar } from '@/design-system';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconMessagePlus,
   IconRobotFace,
@@ -157,152 +159,168 @@ function SubLabel({ children }: SubLabelProps) {
    ---------------------------------------- */
 export function HomePage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   return (
-    <>
-      <TopBar
-        showSidebarToggle={false}
-        showNavigation={true}
-        onBack={() => window.history.back()}
-        onForward={() => window.history.forward()}
-        breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
-        actions={
-          <>
-            <TopBarAction
-              icon={<IconPalette size={16} stroke={1.5} />}
-              aria-label="Design system"
-              onClick={() => navigate('/design-system')}
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1.5} />}
+                aria-label="Design system"
+                onClick={() => navigate('/design-system')}
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
+      contentClassName="px-8 py-6 pb-[120px]"
+    >
+      <div className="flex flex-col gap-[var(--spacing-6)]">
+        {/* Header & Stats Cards */}
+        <VStack gap={6}>
+          <SectionTitle>Home</SectionTitle>
+
+          {/* Stats Cards */}
+          <div className="flex gap-[var(--spacing-2)] w-full">
+            <StatCard value={10} label="Chat sessions" />
+            <StatCard value={6} label="Agents" />
+            <StatCard value={12} label="Data sources" />
+            <StatCard value={4} label="Tools (My Servers)" />
+          </div>
+        </VStack>
+
+        {/* Quick Action Section */}
+        <VStack gap={4}>
+          <SectionTitle>Quick action</SectionTitle>
+
+          <div className="flex gap-[var(--spacing-2)] w-full">
+            <QuickActionCard
+              icon={<IconMessagePlus size={20} stroke={1.5} />}
+              label="New chat"
+              onClick={() => navigate('/chat')}
             />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
+            <QuickActionCard
+              icon={<IconRobotFace size={20} stroke={1.5} />}
+              label="New agent"
+              highlighted
             />
-          </>
-        }
-      />
+            <QuickActionCard
+              icon={<IconSquarePlus size={20} stroke={1.5} />}
+              label="New data source"
+            />
+            <QuickActionCard icon={<IconPuzzle size={20} stroke={1.5} />} label="Manage tools" />
+          </div>
+        </VStack>
 
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-        <div className="px-8 py-6 pb-[120px] flex flex-col gap-[var(--spacing-6)]">
-          {/* Header & Stats Cards */}
-          <VStack gap={6}>
-            <SectionTitle>Home</SectionTitle>
+        {/* Recent Chats Section */}
+        <VStack gap={6}>
+          <SectionTitle>Recent chats</SectionTitle>
 
-            {/* Stats Cards */}
-            <div className="flex gap-[var(--spacing-2)] w-full">
-              <StatCard value={10} label="Chat sessions" />
-              <StatCard value={6} label="Agents" />
-              <StatCard value={12} label="Data sources" />
-              <StatCard value={4} label="Tools (My Servers)" />
-            </div>
-          </VStack>
-
-          {/* Quick Action Section */}
-          <VStack gap={4}>
-            <SectionTitle>Quick action</SectionTitle>
-
-            <div className="flex gap-[var(--spacing-2)] w-full">
-              <QuickActionCard
-                icon={<IconMessagePlus size={20} stroke={1.5} />}
-                label="New chat"
+          {/* Today Section */}
+          <VStack gap={2}>
+            <SubLabel>Today</SubLabel>
+            <VStack gap={2} className="w-full">
+              <ChatItem
+                title="New chat"
+                description="Analyze SQL queries and recommend optimal indexes"
+                createdAt="Sep 26, 2025"
                 onClick={() => navigate('/chat')}
               />
-              <QuickActionCard
-                icon={<IconRobotFace size={20} stroke={1.5} />}
-                label="New agent"
-                highlighted
+              <ChatItem
+                title="New chat"
+                description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                createdAt="Sep 26, 2025"
               />
-              <QuickActionCard
-                icon={<IconSquarePlus size={20} stroke={1.5} />}
-                label="New data source"
-              />
-              <QuickActionCard icon={<IconPuzzle size={20} stroke={1.5} />} label="Manage tools" />
-            </div>
-          </VStack>
-
-          {/* Recent Chats Section */}
-          <VStack gap={6}>
-            <SectionTitle>Recent chats</SectionTitle>
-
-            {/* Today Section */}
-            <VStack gap={2}>
-              <SubLabel>Today</SubLabel>
-              <VStack gap={2} className="w-full">
-                <ChatItem
-                  title="New chat"
-                  description="Analyze SQL queries and recommend optimal indexes"
-                  createdAt="Sep 26, 2025"
-                  onClick={() => navigate('/chat')}
-                />
-                <ChatItem
-                  title="New chat"
-                  description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                  createdAt="Sep 26, 2025"
-                />
-              </VStack>
-            </VStack>
-
-            {/* Last 7 days Section */}
-            <VStack gap={2}>
-              <SubLabel>Last 7 days</SubLabel>
-              <VStack gap={2} className="w-full">
-                <ChatItem
-                  title="New chat"
-                  description="Analyze SQL queries and recommend optimal indexes"
-                  createdAt="Sep 26, 2025"
-                />
-                <ChatItem
-                  title="New Chat 222"
-                  description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                  createdAt="Sep 26, 2025"
-                />
-                <ChatItem
-                  title="API 최적화 분석"
-                  description="REST API 응답 시간을 개선하기 위한 캐싱 전략과 데이터베이스 쿼리 최적화 방법을 검토했습니다."
-                  createdAt="Sep 25, 2025"
-                />
-                <ChatItem
-                  title="코드 리뷰 요청"
-                  description="새로운 인증 모듈에 대한 코드 리뷰를 진행하고 보안 취약점을 분석했습니다."
-                  createdAt="Sep 25, 2025"
-                />
-                <ChatItem
-                  title="데이터 마이그레이션"
-                  description="레거시 시스템에서 새 데이터베이스로 마이그레이션하는 스크립트를 작성하고 검증했습니다."
-                  createdAt="Sep 24, 2025"
-                />
-                <ChatItem
-                  title="성능 테스트 결과"
-                  description="로드 테스트 결과를 분석하고 병목 현상이 발생하는 구간을 식별했습니다."
-                  createdAt="Sep 24, 2025"
-                />
-                <ChatItem
-                  title="UI 컴포넌트 설계"
-                  description="새로운 대시보드를 위한 재사용 가능한 UI 컴포넌트 라이브러리 설계를 논의했습니다."
-                  createdAt="Sep 23, 2025"
-                />
-                <ChatItem
-                  title="배포 자동화"
-                  description="CI/CD 파이프라인을 구성하고 자동 배포 프로세스를 설정했습니다."
-                  createdAt="Sep 23, 2025"
-                />
-                <ChatItem
-                  title="에러 로깅 시스템"
-                  description="중앙 집중식 에러 로깅 시스템을 구축하고 알림 설정을 완료했습니다."
-                  createdAt="Sep 22, 2025"
-                />
-                <ChatItem
-                  title="문서화 작업"
-                  description="API 문서와 사용자 가이드를 업데이트하고 예제 코드를 추가했습니다."
-                  createdAt="Sep 22, 2025"
-                />
-              </VStack>
             </VStack>
           </VStack>
-        </div>
+
+          {/* Last 7 days Section */}
+          <VStack gap={2}>
+            <SubLabel>Last 7 days</SubLabel>
+            <VStack gap={2} className="w-full">
+              <ChatItem
+                title="New chat"
+                description="Analyze SQL queries and recommend optimal indexes"
+                createdAt="Sep 26, 2025"
+              />
+              <ChatItem
+                title="New Chat 222"
+                description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
+                createdAt="Sep 26, 2025"
+              />
+              <ChatItem
+                title="API 최적화 분석"
+                description="REST API 응답 시간을 개선하기 위한 캐싱 전략과 데이터베이스 쿼리 최적화 방법을 검토했습니다."
+                createdAt="Sep 25, 2025"
+              />
+              <ChatItem
+                title="코드 리뷰 요청"
+                description="새로운 인증 모듈에 대한 코드 리뷰를 진행하고 보안 취약점을 분석했습니다."
+                createdAt="Sep 25, 2025"
+              />
+              <ChatItem
+                title="데이터 마이그레이션"
+                description="레거시 시스템에서 새 데이터베이스로 마이그레이션하는 스크립트를 작성하고 검증했습니다."
+                createdAt="Sep 24, 2025"
+              />
+              <ChatItem
+                title="성능 테스트 결과"
+                description="로드 테스트 결과를 분석하고 병목 현상이 발생하는 구간을 식별했습니다."
+                createdAt="Sep 24, 2025"
+              />
+              <ChatItem
+                title="UI 컴포넌트 설계"
+                description="새로운 대시보드를 위한 재사용 가능한 UI 컴포넌트 라이브러리 설계를 논의했습니다."
+                createdAt="Sep 23, 2025"
+              />
+              <ChatItem
+                title="배포 자동화"
+                description="CI/CD 파이프라인을 구성하고 자동 배포 프로세스를 설정했습니다."
+                createdAt="Sep 23, 2025"
+              />
+              <ChatItem
+                title="에러 로깅 시스템"
+                description="중앙 집중식 에러 로깅 시스템을 구축하고 알림 설정을 완료했습니다."
+                createdAt="Sep 22, 2025"
+              />
+              <ChatItem
+                title="문서화 작업"
+                description="API 문서와 사용자 가이드를 업데이트하고 예제 코드를 추가했습니다."
+                createdAt="Sep 22, 2025"
+              />
+            </VStack>
+          </VStack>
+        </VStack>
       </div>
-    </>
+    </PageShell>
   );
 }
 

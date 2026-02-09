@@ -11,7 +11,11 @@ import {
   Pagination,
   SearchInput,
   SectionCard,
+  PageShell,
+  TabBar,
 } from '@/design-system';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconPlus,
@@ -385,6 +389,7 @@ function NewChatDrawer({
    ---------------------------------------- */
 export function ChatPage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
   const [agents, setAgents] = useState(mockAgents);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -432,30 +437,47 @@ export function ChatPage() {
   };
 
   return (
-    <>
-      {/* TopBar - Full width */}
-      <TopBar
-        showSidebarToggle={false}
-        showNavigation={true}
-        canGoBack={false}
-        canGoForward={false}
-        onBack={() => {}}
-        onForward={() => {}}
-        breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
-        actions={
-          <>
-            <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          </>
-        }
-      />
-
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          canGoBack={false}
+          canGoForward={false}
+          onBack={() => {}}
+          onForward={() => {}}
+          breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
+          actions={
+            <>
+              <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
+      contentClassName="p-0"
+    >
       {/* Sidebar and Content */}
-      <div className="flex flex-1 min-h-0 min-w-[var(--layout-content-min-width)]">
+      <div className="flex flex-1 min-h-0 h-full">
         {/* Chat Sidebar */}
         <ChatSidebar />
 
@@ -512,7 +534,7 @@ export function ChatPage() {
         onFavoriteToggle={() => selectedAgentId && handleFavoriteToggle(selectedAgentId)}
         onStartChat={handleStartChat}
       />
-    </>
+    </PageShell>
   );
 }
 

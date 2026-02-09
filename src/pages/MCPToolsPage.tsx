@@ -11,13 +11,20 @@ import {
   StatusIndicator,
   ContextMenu,
   Badge,
+  PageShell,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  VStack,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { AgentPageLayout } from '@/layouts';
-import { AgentSidebar } from '@/pages/AgentPage';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconTrash,
   IconDotsCircleHorizontal,
@@ -27,6 +34,8 @@ import {
   IconAlertTriangle,
   IconCircleX,
   IconLock,
+  IconBell,
+  IconPalette,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -124,6 +133,7 @@ interface TemplateRow {
    ---------------------------------------- */
 export function MCPToolsPage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -722,98 +732,79 @@ export function MCPToolsPage() {
   ];
 
   return (
-    <AgentPageLayout
-      title="MCP tools"
-      breadcrumbItems={[{ label: 'MCP tools' }]}
+    <PageShell
       sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={[{ label: 'MCP Tools' }]} />}
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1} />}
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
     >
-      {/* Tabs */}
-      <div className="w-full">
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="my-servers">My servers</Tab>
-            <Tab value="catalog">Catalog</Tab>
-            <Tab value="templates">Templates</Tab>
-          </TabList>
-        </Tabs>
-      </div>
+      <VStack gap={3}>
+        <PageHeader title="MCP tools" />
 
-      {/* Status Cards - Only for My servers tab */}
-      {activeTab === 'my-servers' && (
-        <div className="flex gap-2 items-center relative shrink-0 w-full">
-          <StatusCard label="Active" count={7} status="active" />
-          <StatusCard label="Deactive" count={1} status="deactive" />
-          <StatusCard label="Error" count={1} status="error" />
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="my-servers">My servers</Tab>
+              <Tab value="catalog">Catalog</Tab>
+              <Tab value="templates">Templates</Tab>
+            </TabList>
+          </Tabs>
         </div>
-      )}
 
-      {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
-      {activeTab === 'my-servers' && (
-        <div className="flex flex-col gap-3 w-full">
-          {/* List Toolbar */}
-          <ListToolbar
-            primaryActions={
-              <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder="Search MCP tools by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
-              </ListToolbar.Actions>
-            }
-            bulkActions={
-              <ListToolbar.Actions>
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedTools.length === 0}
-                >
-                  Delete
-                </Button>
-              </ListToolbar.Actions>
-            }
-          />
+        {/* Status Cards - Only for My servers tab */}
+        {activeTab === 'my-servers' && (
+          <div className="flex gap-2 items-center relative shrink-0 w-full">
+            <StatusCard label="Active" count={7} status="active" />
+            <StatusCard label="Deactive" count={1} status="deactive" />
+            <StatusCard label="Error" count={1} status="error" />
+          </div>
+        )}
 
-          {/* Pagination */}
-          {filteredTools.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={filteredTools.length}
-              selectedCount={selectedTools.length}
-            />
-          )}
-
-          {/* Table */}
-          <Table<MCPToolRow>
-            columns={toolColumns}
-            data={paginatedTools}
-            rowKey="id"
-            emptyMessage="No MCP tools found"
-            selectable
-            selectedKeys={selectedTools}
-            onSelectionChange={setSelectedTools}
-          />
-        </div>
-      )}
-
-      {activeTab === 'templates' && (
-        <div className="flex flex-col gap-3 w-full">
-          {/* List Toolbar with Create Button */}
-          <div className="flex items-center justify-between w-full">
+        {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
+        {activeTab === 'my-servers' && (
+          <div className="flex flex-col gap-3 w-full">
+            {/* List Toolbar */}
             <ListToolbar
               primaryActions={
                 <ListToolbar.Actions>
                   <div className="w-[var(--search-input-width)]">
                     <SearchInput
-                      placeholder="Search templates by attributes"
+                      placeholder="Search MCP tools by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
@@ -823,56 +814,113 @@ export function MCPToolsPage() {
                   </div>
                 </ListToolbar.Actions>
               }
+              bulkActions={
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedTools.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              }
             />
-            <Button size="md" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
-              Create template
-            </Button>
+
+            {/* Pagination */}
+            {filteredTools.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredTools.length}
+                selectedCount={selectedTools.length}
+              />
+            )}
+
+            {/* Table */}
+            <Table<MCPToolRow>
+              columns={toolColumns}
+              data={paginatedTools}
+              rowKey="id"
+              emptyMessage="No MCP tools found"
+              selectable
+              selectedKeys={selectedTools}
+              onSelectionChange={setSelectedTools}
+            />
           </div>
+        )}
 
-          {/* Pagination */}
-          {filteredTemplates.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={templateTotalPages}
-              onPageChange={setCurrentPage}
-              totalItems={filteredTemplates.length}
-              selectedCount={selectedTemplates.length}
+        {activeTab === 'templates' && (
+          <div className="flex flex-col gap-3 w-full">
+            {/* List Toolbar with Create Button */}
+            <div className="flex items-center justify-between w-full">
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        placeholder="Search templates by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        size="sm"
+                        fullWidth
+                      />
+                    </div>
+                  </ListToolbar.Actions>
+                }
+              />
+              <Button size="md" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
+                Create template
+              </Button>
+            </div>
+
+            {/* Pagination */}
+            {filteredTemplates.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={templateTotalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredTemplates.length}
+                selectedCount={selectedTemplates.length}
+              />
+            )}
+
+            {/* Table */}
+            <Table<TemplateRow>
+              columns={templateColumns}
+              data={paginatedTemplates}
+              rowKey="id"
+              emptyMessage="No templates found"
+              selectable
+              selectedKeys={selectedTemplates}
+              onSelectionChange={setSelectedTemplates}
             />
-          )}
+          </div>
+        )}
 
-          {/* Table */}
-          <Table<TemplateRow>
-            columns={templateColumns}
-            data={paginatedTemplates}
-            rowKey="id"
-            emptyMessage="No templates found"
-            selectable
-            selectedKeys={selectedTemplates}
-            onSelectionChange={setSelectedTemplates}
-          />
-        </div>
-      )}
-
-      {activeTab === 'catalog' && (
-        /* Catalog Grid */
-        <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
-          {catalogTools.map((tool) => (
-            <div
-              key={tool.id}
-              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
-            >
-              {/* Thumbnail */}
-              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
-                <img
-                  src={tool.thumbnail}
-                  alt={tool.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      parent.innerHTML = `
+        {activeTab === 'catalog' && (
+          /* Catalog Grid */
+          <div className="grid grid-cols-3 gap-4 relative shrink-0 w-full">
+            {catalogTools.map((tool) => (
+              <div
+                key={tool.id}
+                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
+              >
+                {/* Thumbnail */}
+                <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
+                  <img
+                    src={tool.thumbnail}
+                    alt={tool.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `
                                 <div class="flex flex-wrap w-full h-full">
                                   <div class="w-1/2 h-1/2 bg-[var(--primitive-color-yellow400)]"></div>
                                   <div class="w-1/2 h-1/2 bg-[var(--primitive-color-green400)]"></div>
@@ -880,53 +928,54 @@ export function MCPToolsPage() {
                                   <div class="w-1/2 h-1/2 bg-[var(--primitive-color-red400)]"></div>
                                 </div>
                               `;
-                    }
-                  }}
-                />
-              </div>
+                      }
+                    }}
+                  />
+                </div>
 
-              {/* Title */}
-              <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                <p className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                  {tool.title}
-                </p>
-              </div>
+                {/* Title */}
+                <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
+                  <p className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                    {tool.title}
+                  </p>
+                </div>
 
-              {/* Category */}
-              <div className="flex flex-col items-start justify-center relative shrink-0">
-                <p className="text-body-md leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
-                  {tool.category}
-                </p>
-              </div>
+                {/* Category */}
+                <div className="flex flex-col items-start justify-center relative shrink-0">
+                  <p className="text-body-md leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
+                    {tool.category}
+                  </p>
+                </div>
 
-              {/* Description */}
-              <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                <p className="text-body-md leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
-                  {tool.description}
-                </p>
-              </div>
+                {/* Description */}
+                <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
+                  <p className="text-body-md leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
+                    {tool.description}
+                  </p>
+                </div>
 
-              {/* Tags */}
-              <div className="flex gap-1 items-center flex-wrap relative shrink-0 w-full">
-                {tool.tags.slice(0, 10).map((tag, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
-                  >
-                    {tag}
-                  </div>
-                ))}
-                {tool.tags.length > 10 && (
-                  <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
-                    +{tool.tags.length - 10}
-                  </span>
-                )}
+                {/* Tags */}
+                <div className="flex gap-1 items-center flex-wrap relative shrink-0 w-full">
+                  {tool.tags.slice(0, 10).map((tag, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                    >
+                      {tag}
+                    </div>
+                  ))}
+                  {tool.tags.length > 10 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
+                      +{tool.tags.length - 10}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </AgentPageLayout>
+            ))}
+          </div>
+        )}
+      </VStack>
+    </PageShell>
   );
 }
 
