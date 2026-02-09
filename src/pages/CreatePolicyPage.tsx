@@ -287,7 +287,7 @@ function BasicInformationSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Basic information"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -303,8 +303,11 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Policy Name */}
-          <div className="pt-2 pb-6">
+          <div className="py-6">
             <FormField required error={!!policyNameError}>
               <FormField.Label>Policy name</FormField.Label>
               <FormField.Control>
@@ -333,7 +336,7 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <div className="pt-2 pb-6">
+          <div className="py-6">
             <FormField>
               <FormField.Label>Description</FormField.Label>
               <FormField.Control>
@@ -742,7 +745,7 @@ function PolicyEditorSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Policy editor"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -757,7 +760,9 @@ function PolicyEditorSection({
         }
       />
       <SectionCard.Content showDividers={false}>
-        <VStack gap={6} className="pt-2 pb-6">
+        <VStack gap={6}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Permissions Label */}
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">

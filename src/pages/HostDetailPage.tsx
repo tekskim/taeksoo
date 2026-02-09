@@ -29,9 +29,8 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { useSidebar } from '@/contexts/SidebarContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
@@ -1072,7 +1071,7 @@ const mockHostData: Record<string, HostDetail> = {
 
 export default function HostDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
@@ -1347,7 +1346,9 @@ export default function HostDetailPage() {
   if (!host) {
     return (
       <PageShell
-        sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+        sidebar={
+          <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+        }
         sidebarWidth={sidebarWidth}
         contentClassName="flex items-center justify-center"
       >
@@ -1371,7 +1372,9 @@ export default function HostDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -1388,7 +1391,7 @@ export default function HostDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={openSidebar}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}

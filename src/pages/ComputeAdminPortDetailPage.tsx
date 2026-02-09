@@ -18,6 +18,7 @@ import {
   SearchInput,
   Pagination,
   Modal,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';

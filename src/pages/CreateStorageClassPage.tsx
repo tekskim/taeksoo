@@ -425,9 +425,7 @@ function CustomizeSection({
 
           {/* Mount Options */}
           <VStack gap={3}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Mount Options
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
                 {/* Header row */}

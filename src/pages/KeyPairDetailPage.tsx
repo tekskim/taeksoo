@@ -17,6 +17,7 @@ import {
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { IconTrash, IconEdit, IconBell, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------

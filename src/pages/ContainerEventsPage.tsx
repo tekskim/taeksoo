@@ -249,14 +249,6 @@ export function ContainerEventsPage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
-      render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          title={value}
-        >
-          {value}
-        </span>
-      ),
     },
     {
       key: 'namespace',
@@ -290,14 +282,6 @@ export function ContainerEventsPage() {
       flex: 1,
       minWidth: columnMinWidths.object,
       sortable: true,
-      render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
-          title={value}
-        >
-          {value}
-        </span>
-      ),
     },
     {
       key: 'subobject',

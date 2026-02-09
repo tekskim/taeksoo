@@ -298,7 +298,7 @@ function BasicInformationSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Basic information"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -312,10 +312,11 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Bucket Name */}
-          <div className="flex flex-col pt-2 pb-6">
+          <div className="flex flex-col py-6">
             <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Bucket Name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
@@ -450,7 +451,7 @@ function SettingsSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Settings"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -464,10 +465,11 @@ function SettingsSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Object Locking */}
-          <div className="flex flex-col pt-2 pb-6">
+          <div className="flex flex-col py-6">
             <span className="text-label-lg text-[var(--color-text-default)] mb-2">
               Object Locking
             </span>
@@ -677,7 +679,7 @@ function PolicySection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Policy"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -691,10 +693,11 @@ function PolicySection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Bucket policy */}
-          <div className="flex flex-col pt-2 pb-6">
+          <div className="flex flex-col py-6">
             <HStack justify="between" align="center" className="mb-2">
               <label className="text-label-lg text-[var(--color-text-default)]">
                 Bucket policy

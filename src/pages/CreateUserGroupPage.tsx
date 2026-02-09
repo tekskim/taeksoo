@@ -507,7 +507,7 @@ function BasicInformationSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Basic information"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -523,8 +523,11 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Group Name */}
-          <div className="pt-2 pb-6">
+          <div className="py-6">
             <FormField required error={!!groupNameError}>
               <FormField.Label>Group name</FormField.Label>
               <FormField.Description>
@@ -557,7 +560,7 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <div className="pt-2 pb-6">
+          <div className="py-6">
             <FormField>
               <FormField.Label>Description</FormField.Label>
               <FormField.Control>
@@ -691,7 +694,7 @@ function AddUsersSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Add users to the group"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -715,8 +718,10 @@ function AddUsersSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={0} className="pt-2 pb-6">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)]">Users</span>

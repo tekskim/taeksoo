@@ -1219,256 +1219,277 @@ export default function CreateLoadBalancerPage() {
                 }
               />
               {activeSection === 'basic-info' && (
-                <SectionCard.Content gap={6} className="pt-2">
-                  {/* Load Balancer Name */}
-                  <FormField required error={!!lbNameError}>
-                    <FormField.Label>Load balancer name</FormField.Label>
-                    <FormField.Control>
-                      <VStack gap={1}>
-                        <Input
-                          placeholder="Enter Load balancer name"
-                          value={loadBalancerName}
-                          onChange={(e) => {
-                            setLoadBalancerName(e.target.value);
-                            setLbNameError(null);
-                          }}
-                          fullWidth
-                          error={!!lbNameError}
-                        />
-                        {lbNameError && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            {lbNameError}
-                          </span>
-                        )}
-                      </VStack>
-                    </FormField.Control>
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_), and the length
-                      must be between 2-128 characters.
-                    </FormField.HelperText>
-                  </FormField>
-
-                  {/* Description */}
-                  <FormField>
-                    <FormField.Label>Load balancer description</FormField.Label>
-                    <FormField.Control>
-                      <Input
-                        placeholder="Enter description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                      maximum 255 characters.
-                    </FormField.HelperText>
-                  </FormField>
-
-                  {/* Provider */}
-                  <FormField required error={!!providerError}>
-                    <FormField.Label>Provider</FormField.Label>
-                    <FormField.Description>
-                      Choose the provider to use for the load balancer.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <VStack gap={1}>
-                        <VStack gap={3}>
-                          <HStack gap={1.5} align="center">
-                            <Radio
-                              value="ovn"
-                              checked={provider === 'ovn'}
-                              onChange={() => handleProviderChange('ovn')}
-                              label="OVN"
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Load Balancer Name */}
+                    <div className="py-6">
+                      <FormField required error={!!lbNameError}>
+                        <FormField.Label>Load balancer name</FormField.Label>
+                        <FormField.Control>
+                          <VStack gap={1}>
+                            <Input
+                              placeholder="Enter Load balancer name"
+                              value={loadBalancerName}
+                              onChange={(e) => {
+                                setLoadBalancerName(e.target.value);
+                                setLbNameError(null);
+                              }}
+                              fullWidth
+                              error={!!lbNameError}
                             />
-                            <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
-                          </HStack>
-                          <HStack gap={1.5} align="center">
-                            <Radio
-                              value="amphora"
-                              checked={provider === 'amphora'}
-                              onChange={() => handleProviderChange('amphora')}
-                              label="Amphora"
-                            />
-                            <IconInfoCircle size={16} className="text-[var(--color-text-subtle)]" />
-                          </HStack>
-                        </VStack>
-                        {providerError && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            {providerError}
-                          </span>
-                        )}
-                      </VStack>
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Owned Network */}
-                  <VStack gap={4}>
-                    <FormField required>
-                      <FormField.Label>Owned network</FormField.Label>
-                      <FormField.Description>
-                        Select the network to attach the load balancer to.
-                      </FormField.Description>
-                    </FormField>
-
-                    {/* Network Tabs */}
-                    <Tabs
-                      value={networkTab}
-                      onChange={(value) =>
-                        setNetworkTab(value as 'current' | 'shared' | 'external')
-                      }
-                      variant="underline"
-                    >
-                      <TabList>
-                        <Tab value="current">Current tenant</Tab>
-                        <Tab value="shared">Shared</Tab>
-                        <Tab value="external">External</Tab>
-                      </TabList>
-                    </Tabs>
-
-                    {/* Search */}
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        placeholder="Search networks by attributes"
-                        value={networkSearch}
-                        onChange={(e) => setNetworkSearch(e.target.value)}
-                      />
+                            {lbNameError && (
+                              <span className="text-body-sm text-[var(--color-state-danger)]">
+                                {lbNameError}
+                              </span>
+                            )}
+                          </VStack>
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-128 characters.
+                        </FormField.HelperText>
+                      </FormField>
                     </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Description */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Load balancer description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Provider */}
+                    <div className="py-6">
+                      <FormField required error={!!providerError}>
+                        <FormField.Label>Provider</FormField.Label>
+                        <FormField.Description>
+                          Choose the provider to use for the load balancer.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <VStack gap={1}>
+                            <VStack gap={3}>
+                              <HStack gap={1.5} align="center">
+                                <Radio
+                                  value="ovn"
+                                  checked={provider === 'ovn'}
+                                  onChange={() => handleProviderChange('ovn')}
+                                  label="OVN"
+                                />
+                                <IconInfoCircle
+                                  size={16}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
+                              </HStack>
+                              <HStack gap={1.5} align="center">
+                                <Radio
+                                  value="amphora"
+                                  checked={provider === 'amphora'}
+                                  onChange={() => handleProviderChange('amphora')}
+                                  label="Amphora"
+                                />
+                                <IconInfoCircle
+                                  size={16}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
+                              </HStack>
+                            </VStack>
+                            {providerError && (
+                              <span className="text-body-sm text-[var(--color-state-danger)]">
+                                {providerError}
+                              </span>
+                            )}
+                          </VStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Owned Network */}
+                    <div className="py-6">
+                      <VStack gap={4}>
+                        <FormField required>
+                          <FormField.Label>Owned network</FormField.Label>
+                          <FormField.Description>
+                            Select the network to attach the load balancer to.
+                          </FormField.Description>
+                        </FormField>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={networkPage}
-                      totalPages={5}
-                      totalItems={115}
-                      onPageChange={setNetworkPage}
-                    />
+                        {/* Network Tabs */}
+                        <Tabs
+                          value={networkTab}
+                          onChange={(value) =>
+                            setNetworkTab(value as 'current' | 'shared' | 'external')
+                          }
+                          variant="underline"
+                        >
+                          <TabList>
+                            <Tab value="current">Current tenant</Tab>
+                            <Tab value="shared">Shared</Tab>
+                            <Tab value="external">External</Tab>
+                          </TabList>
+                        </Tabs>
 
-                    {/* Network Table */}
-                    {provider ? (
-                      <Table
-                        columns={networkColumns}
-                        data={mockNetworks}
-                        getRowId={(row) => row.id}
-                        onRowClick={(row) => {
-                          setSelectedNetwork(row.id);
-                          setNetworkError(null);
-                        }}
-                      />
-                    ) : (
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
-                        Select a provider to view the network list.
-                      </div>
-                    )}
+                        {/* Search */}
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            placeholder="Search networks by attributes"
+                            value={networkSearch}
+                            onChange={(e) => setNetworkSearch(e.target.value)}
+                          />
+                        </div>
 
-                    {/* Error Message or Selection Indicator for Network */}
-                    {networkError && !selectedNetwork ? (
-                      <div className="mt-2">
-                        <InlineMessage variant="error">{networkError}</InlineMessage>
-                      </div>
-                    ) : (
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={
-                          selectedNetwork
-                            ? [
-                                {
-                                  id: selectedNetwork,
-                                  label:
-                                    mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
-                                    selectedNetwork,
-                                },
-                              ]
-                            : []
-                        }
-                        onRemove={() => setSelectedNetwork('')}
-                      />
-                    )}
-                  </VStack>
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={networkPage}
+                          totalPages={5}
+                          totalItems={115}
+                          onPageChange={setNetworkPage}
+                        />
 
-                  {/* VIP Address */}
-                  <FormField required>
-                    <FormField.Label>VIP Address</FormField.Label>
-                    <FormField.Description>
-                      Select the subnet for the VIP. You can assign an IP automatically or manually
-                      enter one within the subnet range.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
-                        <HStack gap={2} align="center">
-                          <span className="text-label-md text-[var(--color-text-default)]">
-                            Subnet
-                          </span>
-                          <Select
-                            options={[
-                              ...(selectedNetworkDetails
+                        {/* Network Table */}
+                        {provider ? (
+                          <Table
+                            columns={networkColumns}
+                            data={mockNetworks}
+                            getRowId={(row) => row.id}
+                            onRowClick={(row) => {
+                              setSelectedNetwork(row.id);
+                              setNetworkError(null);
+                            }}
+                          />
+                        ) : (
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                            Select a provider to view the network list.
+                          </div>
+                        )}
+
+                        {/* Error Message or Selection Indicator for Network */}
+                        {networkError && !selectedNetwork ? (
+                          <div className="mt-2">
+                            <InlineMessage variant="error">{networkError}</InlineMessage>
+                          </div>
+                        ) : (
+                          <SelectionIndicator
+                            className="mt-2"
+                            selectedItems={
+                              selectedNetwork
                                 ? [
                                     {
-                                      value: selectedNetworkDetails.subnetCidr,
-                                      label: selectedNetworkDetails.subnetCidr,
+                                      id: selectedNetwork,
+                                      label:
+                                        mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
+                                        selectedNetwork,
                                     },
                                   ]
-                                : []),
-                              { value: '10.0.0.0/24', label: '10.0.0.0/24' },
-                              { value: '10.0.1.0/24', label: '10.0.1.0/24' },
-                            ]}
-                            value={subnet}
-                            onChange={setSubnet}
-                            placeholder="Select"
-                            width="sm"
+                                : []
+                            }
+                            onRemove={() => setSelectedNetwork('')}
                           />
-                        </HStack>
-                        <HStack gap={2} align="center">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            VIP
-                          </span>
-                          <Select
-                            options={[
-                              { value: 'auto', label: 'Auto-assign' },
-                              { value: 'manual', label: 'Manual' },
-                            ]}
-                            value={vipMode}
-                            onChange={(value) => setVipMode(value as 'auto' | 'manual')}
-                            placeholder="Auto-assign"
-                            width="sm"
+                        )}
+                      </VStack>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* VIP Address */}
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>VIP Address</FormField.Label>
+                        <FormField.Description>
+                          Select the subnet for the VIP. You can assign an IP automatically or
+                          manually enter one within the subnet range.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
+                            <HStack gap={2} align="center">
+                              <span className="text-label-md text-[var(--color-text-default)]">
+                                Subnet
+                              </span>
+                              <Select
+                                options={[
+                                  ...(selectedNetworkDetails
+                                    ? [
+                                        {
+                                          value: selectedNetworkDetails.subnetCidr,
+                                          label: selectedNetworkDetails.subnetCidr,
+                                        },
+                                      ]
+                                    : []),
+                                  { value: '10.0.0.0/24', label: '10.0.0.0/24' },
+                                  { value: '10.0.1.0/24', label: '10.0.1.0/24' },
+                                ]}
+                                value={subnet}
+                                onChange={setSubnet}
+                                placeholder="Select"
+                                width="sm"
+                              />
+                            </HStack>
+                            <HStack gap={2} align="center">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                VIP
+                              </span>
+                              <Select
+                                options={[
+                                  { value: 'auto', label: 'Auto-assign' },
+                                  { value: 'manual', label: 'Manual' },
+                                ]}
+                                value={vipMode}
+                                onChange={(value) => setVipMode(value as 'auto' | 'manual')}
+                                placeholder="Auto-assign"
+                                width="sm"
+                              />
+                              {vipMode === 'manual' && (
+                                <Input
+                                  placeholder="Enter VIP address"
+                                  value={manualVip}
+                                  onChange={(e) => setManualVip(e.target.value)}
+                                  style={{ width: '160px' }}
+                                />
+                              )}
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                10.62.0.31 - 10.62.0.77
+                              </span>
+                            </HStack>
+                          </div>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Load Balancer Admin State */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Load balancer admin state</FormField.Label>
+                        <FormField.Description>
+                          Set the administrative state of the load balancer. 'UP' enables traffic
+                          handling, while 'DOWN' disables it.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Toggle
+                            checked={adminStateUp}
+                            onChange={(e) => setAdminStateUp(e.target.checked)}
+                            label={adminStateUp ? 'Up' : 'Down'}
                           />
-                          {vipMode === 'manual' && (
-                            <Input
-                              placeholder="Enter VIP address"
-                              value={manualVip}
-                              onChange={(e) => setManualVip(e.target.value)}
-                              style={{ width: '160px' }}
-                            />
-                          )}
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            10.62.0.31 - 10.62.0.77
-                          </span>
-                        </HStack>
-                      </div>
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Load Balancer Admin State */}
-                  <FormField>
-                    <FormField.Label>Load balancer admin state</FormField.Label>
-                    <FormField.Description>
-                      Set the administrative state of the load balancer. 'UP' enables traffic
-                      handling, while 'DOWN' disables it.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <Toggle
-                        checked={adminStateUp}
-                        onChange={(e) => setAdminStateUp(e.target.checked)}
-                        label={adminStateUp ? 'Up' : 'Down'}
-                      />
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Next Button */}
-                  <div className="flex items-center justify-end w-full">
-                    <Button variant="primary" onClick={handleBasicInfoNext}>
-                      Next
-                    </Button>
-                  </div>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Next Button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={handleBasicInfoNext}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['basic-info'] === 'done' && (
@@ -1520,495 +1541,537 @@ export default function CreateLoadBalancerPage() {
                 }
               />
               {activeSection === 'listener' && (
-                <SectionCard.Content gap={6} className="pt-2">
-                  {/* Listener name */}
-                  <FormField required>
-                    <FormField.Label>Listener name</FormField.Label>
-                    <FormField.Control>
-                      <Input
-                        value={listenerName}
-                        onChange={(e) => setListenerName(e.target.value)}
-                        placeholder="Enter listener name"
-                        fullWidth
-                      />
-                    </FormField.Control>
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_), and the length
-                      must be between 2-128 characters.
-                    </FormField.HelperText>
-                  </FormField>
-
-                  {/* Listener description */}
-                  <FormField>
-                    <FormField.Label>Listener description</FormField.Label>
-                    <FormField.Control>
-                      <Input
-                        value={listenerDescription}
-                        onChange={(e) => setListenerDescription(e.target.value)}
-                        placeholder="Enter description"
-                        fullWidth
-                      />
-                    </FormField.Control>
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                      maximum 255 characters.
-                    </FormField.HelperText>
-                  </FormField>
-
-                  {/* Listener protocol */}
-                  <FormField required>
-                    <FormField.Label>Listener protocol</FormField.Label>
-                    <FormField.Description>
-                      Select the protocol used to handle client requests.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <Select
-                        value={listenerProtocol}
-                        onChange={handleListenerProtocolChange}
-                        options={
-                          provider === 'ovn'
-                            ? [
-                                { value: 'TCP', label: 'TCP' },
-                                { value: 'UDP', label: 'UDP' },
-                              ]
-                            : [
-                                { value: 'HTTP', label: 'HTTP' },
-                                { value: 'HTTPS', label: 'HTTPS' },
-                                { value: 'TCP', label: 'TCP' },
-                                { value: 'UDP', label: 'UDP' },
-                                { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
-                              ]
-                        }
-                        placeholder="Select a protocol"
-                        width="sm"
-                      />
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* SSL Parsing Method - shown when HTTP is selected */}
-                  {listenerProtocol === 'HTTP' && (
-                    <FormField required>
-                      <FormField.Label>SSL Parsing Method</FormField.Label>
-                      <FormField.Description>
-                        Defines how SSL information is parsed from incoming HTTPS requests.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <VStack gap={3} align="start">
-                          <Radio
-                            label="One-way authentication"
-                            checked={sslParsingMethod === 'one-way'}
-                            onChange={() => setSslParsingMethod('one-way')}
-                          />
-                          <Radio
-                            label="Two-way authentication"
-                            checked={sslParsingMethod === 'two-way'}
-                            onChange={() => setSslParsingMethod('two-way')}
-                          />
-                        </VStack>
-                      </FormField.Control>
-                    </FormField>
-                  )}
-
-                  {/* Server Certificates - shown when HTTP is selected */}
-                  {listenerProtocol === 'HTTP' && (
-                    <VStack gap={4}>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Listener name */}
+                    <div className="py-6">
                       <FormField required>
-                        <FormField.Label>Server Certificates</FormField.Label>
-                        <FormField.Description>
-                          Select a server certificate for the listener to handle HTTPS traffic.
-                        </FormField.Description>
-                      </FormField>
-
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search certificates by attributes"
-                          value={certificateSearch}
-                          onChange={(e) => setCertificateSearch(e.target.value)}
-                        />
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={certificatePage}
-                        totalPages={5}
-                        totalItems={115}
-                        onPageChange={setCertificatePage}
-                      />
-
-                      {/* Certificate Table */}
-                      <Table
-                        columns={certificateColumns}
-                        data={mockCertificates}
-                        getRowId={(row) => row.id}
-                      />
-
-                      {/* Selection Indicator for Certificate */}
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={
-                          selectedCertificate
-                            ? [
-                                {
-                                  id: selectedCertificate,
-                                  label:
-                                    mockCertificates.find((c) => c.id === selectedCertificate)
-                                      ?.name || selectedCertificate,
-                                },
-                              ]
-                            : []
-                        }
-                        onRemove={() => setSelectedCertificate('')}
-                      />
-                    </VStack>
-                  )}
-
-                  {/* CA Certificates - shown when HTTP is selected AND two-way authentication */}
-                  {listenerProtocol === 'HTTP' && sslParsingMethod === 'two-way' && (
-                    <VStack gap={4} align="stretch">
-                      <FormField required>
-                        <FormField.Label>CA Certificates</FormField.Label>
-                        <FormField.Description>
-                          Select a CA certificate to validate client certificates.
-                        </FormField.Description>
-                      </FormField>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search certificates by attributes"
-                        value={caCertificateSearch}
-                        onChange={(e) => setCaCertificateSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={caCertificatePage}
-                        totalPages={5}
-                        totalItems={115}
-                        onPageChange={setCaCertificatePage}
-                      />
-
-                      {/* CA Certificate Table */}
-                      <Table
-                        columns={caCertificateColumns}
-                        data={mockCaCertificates}
-                        getRowId={(row) => row.id}
-                      />
-
-                      {/* Selection Indicator for CA Certificate */}
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={
-                          selectedCaCertificate
-                            ? [
-                                {
-                                  id: selectedCaCertificate,
-                                  label:
-                                    mockCaCertificates.find((c) => c.id === selectedCaCertificate)
-                                      ?.name || selectedCaCertificate,
-                                },
-                              ]
-                            : []
-                        }
-                        onRemove={() => setSelectedCaCertificate('')}
-                      />
-                    </VStack>
-                  )}
-
-                  {/* SNI - shown when HTTP is selected */}
-                  {listenerProtocol === 'HTTP' && (
-                    <FormField>
-                      <FormField.Label>SNI</FormField.Label>
-                      <FormField.Description>
-                        Add more certificates here to host multiple, different HTTPS websites on
-                        this single listener.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <HStack gap={2} align="center">
-                          <Toggle checked={sniEnabled} onChange={setSniEnabled} />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            {sniEnabled ? 'On' : 'Off'}
-                          </span>
-                        </HStack>
-                      </FormField.Control>
-                    </FormField>
-                  )}
-
-                  {/* SNI Certificates - shown when HTTP is selected AND SNI is enabled */}
-                  {listenerProtocol === 'HTTP' && sniEnabled && (
-                    <VStack gap={4} align="stretch">
-                      <span className="text-label-lg text-[var(--color-text-default)]">
-                        SNI Certificates
-                      </span>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search server certificate by attributes"
-                        value={sniCertificateSearch}
-                        onChange={(e) => setSniCertificateSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={sniCertificatePage}
-                        totalPages={5}
-                        totalItems={115}
-                        onPageChange={setSniCertificatePage}
-                      />
-
-                      {/* SNI Certificate Table */}
-                      <Table
-                        columns={sniCertificateColumns}
-                        data={mockSniCertificates}
-                        getRowId={(row) => row.id}
-                      />
-
-                      {/* Selection Indicator for SNI Certificates */}
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={Array.from(selectedSniCertificates).map((id) => ({
-                          id,
-                          label: mockSniCertificates.find((c) => c.id === id)?.name || id,
-                        }))}
-                        onRemove={(id) => {
-                          const newSet = new Set(selectedSniCertificates);
-                          newSet.delete(id);
-                          setSelectedSniCertificates(newSet);
-                        }}
-                      />
-                    </VStack>
-                  )}
-
-                  {/* Protocol port */}
-                  <FormField required>
-                    <FormField.Label>Protocol port</FormField.Label>
-                    <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                      The port on which the listener receives client requests.
-                    </p>
-                    <FormField.Control>
-                      <NumberInput
-                        value={protocolPort}
-                        onChange={setProtocolPort}
-                        min={1}
-                        max={65535}
-                        width="sm"
-                      />
-                    </FormField.Control>
-                    <FormField.HelperText>1-65535</FormField.HelperText>
-                  </FormField>
-
-                  {/* Connection limit */}
-                  <FormField required>
-                    <FormField.Label>Connection limit</FormField.Label>
-                    <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                      Defines the maximum number of concurrent connections the listener can handle.
-                    </p>
-                    <FormField.Control>
-                      <VStack gap={3} align="start">
-                        <Radio
-                          label="Unlimited"
-                          checked={connectionLimitType === 'unlimited'}
-                          onChange={() => setConnectionLimitType('unlimited')}
-                        />
-                        <HStack gap={3} align="center">
-                          <Radio
-                            label="Limited"
-                            checked={connectionLimitType === 'limited'}
-                            onChange={() => setConnectionLimitType('limited')}
+                        <FormField.Label>Listener name</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={listenerName}
+                            onChange={(e) => setListenerName(e.target.value)}
+                            placeholder="Enter listener name"
+                            fullWidth
                           />
-                          <NumberInput
-                            value={connectionLimitValue}
-                            onChange={setConnectionLimitValue}
-                            disabled={connectionLimitType === 'unlimited'}
-                            min={1}
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-128 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Listener description */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Listener description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={listenerDescription}
+                            onChange={(e) => setListenerDescription(e.target.value)}
+                            placeholder="Enter description"
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Listener protocol */}
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Listener protocol</FormField.Label>
+                        <FormField.Description>
+                          Select the protocol used to handle client requests.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Select
+                            value={listenerProtocol}
+                            onChange={handleListenerProtocolChange}
+                            options={
+                              provider === 'ovn'
+                                ? [
+                                    { value: 'TCP', label: 'TCP' },
+                                    { value: 'UDP', label: 'UDP' },
+                                  ]
+                                : [
+                                    { value: 'HTTP', label: 'HTTP' },
+                                    { value: 'HTTPS', label: 'HTTPS' },
+                                    { value: 'TCP', label: 'TCP' },
+                                    { value: 'UDP', label: 'UDP' },
+                                    { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
+                                  ]
+                            }
+                            placeholder="Select a protocol"
                             width="sm"
                           />
-                        </HStack>
-                      </VStack>
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Listener admin state */}
-                  <FormField>
-                    <FormField.Label>Listener admin state</FormField.Label>
-                    <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                      Set the administrative state of the listener. 'UP' enables traffic handling,
-                      while 'DOWN' disables it.
-                    </p>
-                    <FormField.Control>
-                      <HStack gap={2} align="center">
-                        <Toggle
-                          checked={listenerAdminState}
-                          onChange={(e) => setListenerAdminState(e.target.checked)}
-                        />
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {listenerAdminState ? 'Up' : 'Down'}
-                        </span>
-                      </HStack>
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Advanced Section */}
-                  <Disclosure defaultOpen={false}>
-                    <Disclosure.Trigger>Advanced</Disclosure.Trigger>
-                    <Disclosure.Panel>
-                      <VStack gap={6} className="mt-4">
-                        {/* Custom headers */}
-                        <FormField>
-                          <FormField.Label>Custom headers</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
-                            Defines custom header values to be forwarded to backend servers.
-                          </p>
-                          <VStack gap={3} align="start">
-                            <HStack gap={2} align="center">
-                              <Checkbox
-                                checked={xForwardedFor}
-                                onChange={(e) => setXForwardedFor(e.target.checked)}
-                                label="X-Forwarded-For"
-                              />
-                              <Tooltip content="Captures the original client IP address">
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    {/* SSL Parsing Method - shown when HTTP is selected */}
+                    {listenerProtocol === 'HTTP' && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>SSL Parsing Method</FormField.Label>
+                            <FormField.Description>
+                              Defines how SSL information is parsed from incoming HTTPS requests.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <VStack gap={3} align="start">
+                                <Radio
+                                  label="One-way authentication"
+                                  checked={sslParsingMethod === 'one-way'}
+                                  onChange={() => setSslParsingMethod('one-way')}
                                 />
-                              </Tooltip>
-                            </HStack>
-                            <HStack gap={2} align="center">
-                              <Checkbox
-                                checked={xForwardedPort}
-                                onChange={(e) => setXForwardedPort(e.target.checked)}
-                                label="X-Forwarded-Port"
-                              />
-                              <Tooltip content="Captures the original client port">
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
+                                <Radio
+                                  label="Two-way authentication"
+                                  checked={sslParsingMethod === 'two-way'}
+                                  onChange={() => setSslParsingMethod('two-way')}
                                 />
-                              </Tooltip>
-                            </HStack>
+                              </VStack>
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+                      </>
+                    )}
+                    {/* Server Certificates - shown when HTTP is selected */}
+                    {listenerProtocol === 'HTTP' && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        <div className="py-6">
+                          <VStack gap={4}>
+                            <FormField required>
+                              <FormField.Label>Server Certificates</FormField.Label>
+                              <FormField.Description>
+                                Select a server certificate for the listener to handle HTTPS
+                                traffic.
+                              </FormField.Description>
+                            </FormField>
+
+                            {/* Search */}
+                            <div className="w-[var(--search-input-width)]">
+                              <SearchInput
+                                placeholder="Search certificates by attributes"
+                                value={certificateSearch}
+                                onChange={(e) => setCertificateSearch(e.target.value)}
+                              />
+                            </div>
+
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={certificatePage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setCertificatePage}
+                            />
+
+                            {/* Certificate Table */}
+                            <Table
+                              columns={certificateColumns}
+                              data={mockCertificates}
+                              getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for Certificate */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={
+                                selectedCertificate
+                                  ? [
+                                      {
+                                        id: selectedCertificate,
+                                        label:
+                                          mockCertificates.find((c) => c.id === selectedCertificate)
+                                            ?.name || selectedCertificate,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              onRemove={() => setSelectedCertificate('')}
+                            />
                           </VStack>
-                        </FormField>
+                        </div>
+                      </>
+                    )}
+                    {/* CA Certificates - shown when HTTP is selected AND two-way authentication */}
+                    {listenerProtocol === 'HTTP' && sslParsingMethod === 'two-way' && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        <div className="py-6">
+                          <VStack gap={4} align="stretch">
+                            <FormField required>
+                              <FormField.Label>CA Certificates</FormField.Label>
+                              <FormField.Description>
+                                Select a CA certificate to validate client certificates.
+                              </FormField.Description>
+                            </FormField>
 
-                        {/* Client data timeout */}
-                        <FormField>
-                          <FormField.Label>Client data timeout (ms)</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                            Maximum time to wait for client request data.
-                          </p>
-                          <FormField.Control>
-                            <NumberInput
-                              value={clientDataTimeout}
-                              onChange={setClientDataTimeout}
-                              min={0}
-                              width="sm"
+                            {/* Search */}
+                            <SearchInput
+                              placeholder="Search certificates by attributes"
+                              value={caCertificateSearch}
+                              onChange={(e) => setCaCertificateSearch(e.target.value)}
+                              className="w-[var(--search-input-width)]"
                             />
-                          </FormField.Control>
-                        </FormField>
 
-                        {/* Member connect timeout */}
-                        <FormField>
-                          <FormField.Label>Member connect timeout (ms)</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                            Maximum time to wait when establishing a connection to a backend member.
-                          </p>
-                          <FormField.Control>
-                            <NumberInput
-                              value={memberConnectTimeout}
-                              onChange={setMemberConnectTimeout}
-                              min={0}
-                              width="sm"
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={caCertificatePage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setCaCertificatePage}
                             />
-                          </FormField.Control>
-                        </FormField>
 
-                        {/* Member data timeout */}
-                        <FormField>
-                          <FormField.Label>Member data timeout (ms)</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                            Maximum time to wait for response data from a backend member.
-                          </p>
-                          <FormField.Control>
-                            <NumberInput
-                              value={memberDataTimeout}
-                              onChange={setMemberDataTimeout}
-                              min={0}
-                              width="sm"
+                            {/* CA Certificate Table */}
+                            <Table
+                              columns={caCertificateColumns}
+                              data={mockCaCertificates}
+                              getRowId={(row) => row.id}
                             />
-                          </FormField.Control>
-                        </FormField>
 
-                        {/* TCP Inspect Timeout */}
-                        <FormField>
-                          <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                            Timeout for TCP packet inspection or handshake. 0 disables this feature.
-                          </p>
-                          <FormField.Control>
-                            <NumberInput
-                              value={tcpInspectTimeout}
-                              onChange={setTcpInspectTimeout}
-                              min={0}
-                              width="sm"
+                            {/* Selection Indicator for CA Certificate */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={
+                                selectedCaCertificate
+                                  ? [
+                                      {
+                                        id: selectedCaCertificate,
+                                        label:
+                                          mockCaCertificates.find(
+                                            (c) => c.id === selectedCaCertificate
+                                          )?.name || selectedCaCertificate,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              onRemove={() => setSelectedCaCertificate('')}
                             />
-                          </FormField.Control>
-                        </FormField>
-
-                        {/* Allowed CIDRs */}
-                        <FormField>
-                          <FormField.Label>Allowed CIDRs</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                            Defines the client IP ranges allowed to access the listener.
-                          </p>
-                          <VStack gap={2} align="start">
-                            {allowedCidrs.map((cidr, index) => (
-                              <HStack key={index} gap={2} align="center">
-                                <Input
-                                  value={cidr}
-                                  onChange={(e) => {
-                                    const newCidrs = [...allowedCidrs];
-                                    newCidrs[index] = e.target.value;
-                                    setAllowedCidrs(newCidrs);
-                                  }}
-                                  placeholder="e.g. 10.0.0.0/24"
-                                  className="w-[var(--layout-sidebar-width)]"
-                                />
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => {
-                                    setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
-                                  }}
-                                >
-                                  Remove
-                                </Button>
+                          </VStack>
+                        </div>
+                      </>
+                    )}
+                    {/* SNI - shown when HTTP is selected */}
+                    {listenerProtocol === 'HTTP' && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>SNI</FormField.Label>
+                            <FormField.Description>
+                              Add more certificates here to host multiple, different HTTPS websites
+                              on this single listener.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <HStack gap={2} align="center">
+                                <Toggle checked={sniEnabled} onChange={setSniEnabled} />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  {sniEnabled ? 'On' : 'Off'}
+                                </span>
                               </HStack>
-                            ))}
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} />}
-                              onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
-                            >
-                              Add CIDR
-                            </Button>
-                          </VStack>
-                        </FormField>
-                      </VStack>
-                    </Disclosure.Panel>
-                  </Disclosure>
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+                      </>
+                    )}
+                    {/* SNI Certificates - shown when HTTP is selected AND SNI is enabled */}
+                    {listenerProtocol === 'HTTP' && sniEnabled && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        <div className="py-6">
+                          <VStack gap={4} align="stretch">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
+                              SNI Certificates
+                            </span>
 
-                  {/* Next button */}
-                  <div className="flex items-center justify-end w-full">
-                    <Button
-                      variant="primary"
-                      onClick={() => goToNextSection('listener')}
-                      disabled={!listenerName.trim() || !listenerProtocol || !protocolPort}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                            {/* Search */}
+                            <SearchInput
+                              placeholder="Search server certificate by attributes"
+                              value={sniCertificateSearch}
+                              onChange={(e) => setSniCertificateSearch(e.target.value)}
+                              className="w-[var(--search-input-width)]"
+                            />
+
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={sniCertificatePage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setSniCertificatePage}
+                            />
+
+                            {/* SNI Certificate Table */}
+                            <Table
+                              columns={sniCertificateColumns}
+                              data={mockSniCertificates}
+                              getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for SNI Certificates */}
+                            <SelectionIndicator
+                              className="mt-2"
+                              selectedItems={Array.from(selectedSniCertificates).map((id) => ({
+                                id,
+                                label: mockSniCertificates.find((c) => c.id === id)?.name || id,
+                              }))}
+                              onRemove={(id) => {
+                                const newSet = new Set(selectedSniCertificates);
+                                newSet.delete(id);
+                                setSelectedSniCertificates(newSet);
+                              }}
+                            />
+                          </VStack>
+                        </div>
+                      </>
+                    )}
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Protocol port */}
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Protocol port</FormField.Label>
+                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                          The port on which the listener receives client requests.
+                        </p>
+                        <FormField.Control>
+                          <NumberInput
+                            value={protocolPort}
+                            onChange={setProtocolPort}
+                            min={1}
+                            max={65535}
+                            width="sm"
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>1-65535</FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Connection limit */}
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Connection limit</FormField.Label>
+                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                          Defines the maximum number of concurrent connections the listener can
+                          handle.
+                        </p>
+                        <FormField.Control>
+                          <VStack gap={3} align="start">
+                            <Radio
+                              label="Unlimited"
+                              checked={connectionLimitType === 'unlimited'}
+                              onChange={() => setConnectionLimitType('unlimited')}
+                            />
+                            <HStack gap={3} align="center">
+                              <Radio
+                                label="Limited"
+                                checked={connectionLimitType === 'limited'}
+                                onChange={() => setConnectionLimitType('limited')}
+                              />
+                              <NumberInput
+                                value={connectionLimitValue}
+                                onChange={setConnectionLimitValue}
+                                disabled={connectionLimitType === 'unlimited'}
+                                min={1}
+                                width="sm"
+                              />
+                            </HStack>
+                          </VStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Listener admin state */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Listener admin state</FormField.Label>
+                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                          Set the administrative state of the listener. 'UP' enables traffic
+                          handling, while 'DOWN' disables it.
+                        </p>
+                        <FormField.Control>
+                          <HStack gap={2} align="center">
+                            <Toggle
+                              checked={listenerAdminState}
+                              onChange={(e) => setListenerAdminState(e.target.checked)}
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {listenerAdminState ? 'Up' : 'Down'}
+                            </span>
+                          </HStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Advanced Section */}
+                    <div className="py-6">
+                      <Disclosure defaultOpen={false}>
+                        <Disclosure.Trigger>Advanced</Disclosure.Trigger>
+                        <Disclosure.Panel>
+                          <VStack gap={6} className="mt-4">
+                            {/* Custom headers */}
+                            <FormField>
+                              <FormField.Label>Custom headers</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
+                                Defines custom header values to be forwarded to backend servers.
+                              </p>
+                              <VStack gap={3} align="start">
+                                <HStack gap={2} align="center">
+                                  <Checkbox
+                                    checked={xForwardedFor}
+                                    onChange={(e) => setXForwardedFor(e.target.checked)}
+                                    label="X-Forwarded-For"
+                                  />
+                                  <Tooltip content="Captures the original client IP address">
+                                    <IconInfoCircle
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
+                                  </Tooltip>
+                                </HStack>
+                                <HStack gap={2} align="center">
+                                  <Checkbox
+                                    checked={xForwardedPort}
+                                    onChange={(e) => setXForwardedPort(e.target.checked)}
+                                    label="X-Forwarded-Port"
+                                  />
+                                  <Tooltip content="Captures the original client port">
+                                    <IconInfoCircle
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                    />
+                                  </Tooltip>
+                                </HStack>
+                              </VStack>
+                            </FormField>
+
+                            {/* Client data timeout */}
+                            <FormField>
+                              <FormField.Label>Client data timeout (ms)</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                                Maximum time to wait for client request data.
+                              </p>
+                              <FormField.Control>
+                                <NumberInput
+                                  value={clientDataTimeout}
+                                  onChange={setClientDataTimeout}
+                                  min={0}
+                                  width="sm"
+                                />
+                              </FormField.Control>
+                            </FormField>
+
+                            {/* Member connect timeout */}
+                            <FormField>
+                              <FormField.Label>Member connect timeout (ms)</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                                Maximum time to wait when establishing a connection to a backend
+                                member.
+                              </p>
+                              <FormField.Control>
+                                <NumberInput
+                                  value={memberConnectTimeout}
+                                  onChange={setMemberConnectTimeout}
+                                  min={0}
+                                  width="sm"
+                                />
+                              </FormField.Control>
+                            </FormField>
+
+                            {/* Member data timeout */}
+                            <FormField>
+                              <FormField.Label>Member data timeout (ms)</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                                Maximum time to wait for response data from a backend member.
+                              </p>
+                              <FormField.Control>
+                                <NumberInput
+                                  value={memberDataTimeout}
+                                  onChange={setMemberDataTimeout}
+                                  min={0}
+                                  width="sm"
+                                />
+                              </FormField.Control>
+                            </FormField>
+
+                            {/* TCP Inspect Timeout */}
+                            <FormField>
+                              <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                                Timeout for TCP packet inspection or handshake. 0 disables this
+                                feature.
+                              </p>
+                              <FormField.Control>
+                                <NumberInput
+                                  value={tcpInspectTimeout}
+                                  onChange={setTcpInspectTimeout}
+                                  min={0}
+                                  width="sm"
+                                />
+                              </FormField.Control>
+                            </FormField>
+
+                            {/* Allowed CIDRs */}
+                            <FormField>
+                              <FormField.Label>Allowed CIDRs</FormField.Label>
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                                Defines the client IP ranges allowed to access the listener.
+                              </p>
+                              <VStack gap={2} align="start">
+                                {allowedCidrs.map((cidr, index) => (
+                                  <HStack key={index} gap={2} align="center">
+                                    <Input
+                                      value={cidr}
+                                      onChange={(e) => {
+                                        const newCidrs = [...allowedCidrs];
+                                        newCidrs[index] = e.target.value;
+                                        setAllowedCidrs(newCidrs);
+                                      }}
+                                      placeholder="e.g. 10.0.0.0/24"
+                                      className="w-[var(--layout-sidebar-width)]"
+                                    />
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => {
+                                        setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </HStack>
+                                ))}
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} />}
+                                  onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
+                                >
+                                  Add CIDR
+                                </Button>
+                              </VStack>
+                            </FormField>
+                          </VStack>
+                        </Disclosure.Panel>
+                      </Disclosure>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Next button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button
+                        variant="primary"
+                        onClick={() => goToNextSection('listener')}
+                        disabled={!listenerName.trim() || !listenerProtocol || !protocolPort}
+                      >
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['listener'] === 'done' && (
@@ -2053,187 +2116,201 @@ export default function CreateLoadBalancerPage() {
                 }
               />
               {activeSection === 'pool' && (
-                <SectionCard.Content gap={6} className="pt-2">
-                  {/* Create Pool toggle */}
-                  <VStack gap={2} align="start">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Create Pool
-                    </span>
-                    <HStack gap={2} align="center">
-                      <Toggle checked={createPool} onChange={setCreatePool} />
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        {createPool ? 'Yes' : 'No'}
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Create Pool toggle */}
+                    <VStack gap={3} className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Create Pool
                       </span>
+                      <HStack gap={2} align="center">
+                        <Toggle checked={createPool} onChange={setCreatePool} />
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {createPool ? 'Yes' : 'No'}
+                        </span>
+                      </HStack>
+                    </VStack>
+                    {createPool && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Pool name */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Pool name</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                placeholder="Enter pool name"
+                                value={poolName}
+                                onChange={(e) => setPoolName(e.target.value)}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Pool description */}
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Pool description</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                placeholder="Enter description"
+                                value={poolDescription}
+                                onChange={(e) => setPoolDescription(e.target.value)}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              You can use letters, numbers, and special characters (+=,.@-_()[]),
+                              and maximum 255 characters.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Pool algorithm */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Pool algorithm</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Select how incoming requests are distributed across backend members.
+                              The chosen algorithm determines how traffic is routed to each server.
+                            </p>
+                            <FormField.Control>
+                              <Select
+                                options={[
+                                  { value: 'ROUND_ROBIN', label: 'Round robin' },
+                                  { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
+                                  { value: 'SOURCE_IP', label: 'Source IP' },
+                                  { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
+                                ]}
+                                value={poolAlgorithm}
+                                onChange={setPoolAlgorithm}
+                                placeholder="Select algorithm"
+                                className="w-[var(--layout-sidebar-width)]"
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              {poolAlgorithm === 'ROUND_ROBIN' &&
+                                'Round Robin: Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.'}
+                              {poolAlgorithm === 'LEAST_CONNECTIONS' &&
+                                'Least Connections: Sends traffic to the server with the fewest active connections. Suitable for long-lived sessions.'}
+                              {poolAlgorithm === 'SOURCE_IP' &&
+                                "Source IP: Uses client's source IP to maintain consistent routing to the same backend."}
+                              {poolAlgorithm === 'SOURCE_IP_PORT' &&
+                                'Source IP Port: Routes traffic based on both client IP and source port to maintain consistent session mapping.'}
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Pool protocol */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Pool protocol</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Select the protocol used to communicate with backend members. It must
+                              match or be compatible with the listener's protocol.
+                            </p>
+                            <FormField.Control>
+                              <Select
+                                options={poolProtocolOptions}
+                                value={poolProtocol}
+                                onChange={setPoolProtocol}
+                                placeholder="Select protocol"
+                                className="w-[var(--layout-sidebar-width)]"
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Pool admin state */}
+                        <VStack gap={3} className="py-6">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Pool admin state
+                          </span>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            Set the administrative state of the pool. 'UP' enables traffic handling,
+                            while 'DOWN' disables it.
+                          </p>
+                          <HStack gap={2} align="center">
+                            <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {poolAdminState ? 'Up' : 'Down'}
+                            </span>
+                          </HStack>
+                        </VStack>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Advanced Section */}
+                        <div className="py-6">
+                          <Disclosure
+                            open={poolAdvancedOpen}
+                            onChange={(open) => setPoolAdvancedOpen(open)}
+                          >
+                            <Disclosure.Trigger>Advanced</Disclosure.Trigger>
+                            <Disclosure.Panel>
+                              <VStack gap={4} align="stretch" className="pt-4">
+                                {/* Session persistence */}
+                                <VStack gap={3} align="start">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Session persistence
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Select the protocol used to communicate with backend members. It
+                                    must match or be compatible with the listener's protocol.
+                                  </p>
+                                  <RadioGroup
+                                    value={sessionPersistence}
+                                    onChange={(value) =>
+                                      setSessionPersistence(
+                                        value as 'none' | 'source_ip' | 'http_cookie' | 'app_cookie'
+                                      )
+                                    }
+                                  >
+                                    <VStack gap={3} align="start">
+                                      <Radio value="none" label="None" />
+                                      <Radio value="source_ip" label="Source IP" />
+                                      {/* HTTP Cookie - only shown when pool protocol is HTTP */}
+                                      {poolProtocol === 'HTTP' && (
+                                        <Radio value="http_cookie" label="HTTP Cookie" />
+                                      )}
+                                      {/* App Cookie - only shown when pool protocol is HTTP */}
+                                      {poolProtocol === 'HTTP' && (
+                                        <VStack gap={2} align="start">
+                                          <Radio value="app_cookie" label="App Cookie" />
+                                          <Input
+                                            placeholder="Enter cookie name"
+                                            value={cookieName}
+                                            onChange={(e) => setCookieName(e.target.value)}
+                                            disabled={sessionPersistence !== 'app_cookie'}
+                                            className="w-[var(--layout-sidebar-width)]"
+                                          />
+                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                            You can use letters, numbers, and special
+                                            characters(+.-_!#$%&'*^|~).
+                                          </span>
+                                        </VStack>
+                                      )}
+                                    </VStack>
+                                  </RadioGroup>
+                                </VStack>
+                              </VStack>
+                            </Disclosure.Panel>
+                          </Disclosure>
+                        </div>
+                      </>
+                    )}
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Next button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('pool')}>
+                        Next
+                      </Button>
                     </HStack>
                   </VStack>
-
-                  {createPool && (
-                    <>
-                      {/* Pool name */}
-                      <FormField required>
-                        <FormField.Label>Pool name</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter pool name"
-                            value={poolName}
-                            onChange={(e) => setPoolName(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_), and the
-                          length must be between 2-128 characters.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Pool description */}
-                      <FormField>
-                        <FormField.Label>Pool description</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter description"
-                            value={poolDescription}
-                            onChange={(e) => setPoolDescription(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                          maximum 255 characters.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Pool algorithm */}
-                      <FormField required>
-                        <FormField.Label>Pool algorithm</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Select how incoming requests are distributed across backend members. The
-                          chosen algorithm determines how traffic is routed to each server.
-                        </p>
-                        <FormField.Control>
-                          <Select
-                            options={[
-                              { value: 'ROUND_ROBIN', label: 'Round robin' },
-                              { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
-                              { value: 'SOURCE_IP', label: 'Source IP' },
-                              { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
-                            ]}
-                            value={poolAlgorithm}
-                            onChange={setPoolAlgorithm}
-                            placeholder="Select algorithm"
-                            className="w-[var(--layout-sidebar-width)]"
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          {poolAlgorithm === 'ROUND_ROBIN' &&
-                            'Round Robin: Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.'}
-                          {poolAlgorithm === 'LEAST_CONNECTIONS' &&
-                            'Least Connections: Sends traffic to the server with the fewest active connections. Suitable for long-lived sessions.'}
-                          {poolAlgorithm === 'SOURCE_IP' &&
-                            "Source IP: Uses client's source IP to maintain consistent routing to the same backend."}
-                          {poolAlgorithm === 'SOURCE_IP_PORT' &&
-                            'Source IP Port: Routes traffic based on both client IP and source port to maintain consistent session mapping.'}
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Pool protocol */}
-                      <FormField required>
-                        <FormField.Label>Pool protocol</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Select the protocol used to communicate with backend members. It must
-                          match or be compatible with the listener's protocol.
-                        </p>
-                        <FormField.Control>
-                          <Select
-                            options={poolProtocolOptions}
-                            value={poolProtocol}
-                            onChange={setPoolProtocol}
-                            placeholder="Select protocol"
-                            className="w-[var(--layout-sidebar-width)]"
-                          />
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Pool admin state */}
-                      <VStack gap={2} align="start">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Pool admin state
-                        </span>
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          Set the administrative state of the pool. 'UP' enables traffic handling,
-                          while 'DOWN' disables it.
-                        </p>
-                        <HStack gap={2} align="center">
-                          <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            {poolAdminState ? 'Up' : 'Down'}
-                          </span>
-                        </HStack>
-                      </VStack>
-
-                      {/* Advanced Section */}
-                      <Disclosure
-                        open={poolAdvancedOpen}
-                        onChange={(open) => setPoolAdvancedOpen(open)}
-                      >
-                        <Disclosure.Trigger>Advanced</Disclosure.Trigger>
-                        <Disclosure.Panel>
-                          <VStack gap={4} align="stretch" className="pt-4">
-                            {/* Session persistence */}
-                            <VStack gap={3} align="start">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Session persistence
-                              </span>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                Select the protocol used to communicate with backend members. It
-                                must match or be compatible with the listener's protocol.
-                              </p>
-                              <RadioGroup
-                                value={sessionPersistence}
-                                onChange={(value) =>
-                                  setSessionPersistence(
-                                    value as 'none' | 'source_ip' | 'http_cookie' | 'app_cookie'
-                                  )
-                                }
-                              >
-                                <VStack gap={3} align="start">
-                                  <Radio value="none" label="None" />
-                                  <Radio value="source_ip" label="Source IP" />
-                                  {/* HTTP Cookie - only shown when pool protocol is HTTP */}
-                                  {poolProtocol === 'HTTP' && (
-                                    <Radio value="http_cookie" label="HTTP Cookie" />
-                                  )}
-                                  {/* App Cookie - only shown when pool protocol is HTTP */}
-                                  {poolProtocol === 'HTTP' && (
-                                    <VStack gap={2} align="start">
-                                      <Radio value="app_cookie" label="App Cookie" />
-                                      <Input
-                                        placeholder="Enter cookie name"
-                                        value={cookieName}
-                                        onChange={(e) => setCookieName(e.target.value)}
-                                        disabled={sessionPersistence !== 'app_cookie'}
-                                        className="w-[var(--layout-sidebar-width)]"
-                                      />
-                                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                        You can use letters, numbers, and special
-                                        characters(+.-_!#$%&'*^|~).
-                                      </span>
-                                    </VStack>
-                                  )}
-                                </VStack>
-                              </RadioGroup>
-                            </VStack>
-                          </VStack>
-                        </Disclosure.Panel>
-                      </Disclosure>
-                    </>
-                  )}
-
-                  <div className="flex items-center justify-end w-full">
-                    <Button variant="primary" onClick={() => goToNextSection('pool')}>
-                      Next
-                    </Button>
-                  </div>
                 </SectionCard.Content>
               )}
               {sectionStatus['pool'] === 'done' && (
@@ -2284,332 +2361,352 @@ export default function CreateLoadBalancerPage() {
                 }
               />
               {activeSection === 'member' && (
-                <SectionCard.Content gap={6} className="pt-2">
-                  {/* Ports Section */}
-                  <VStack gap={3} align="stretch">
-                    <VStack gap={2} align="start">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Ports</span>
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        Select one of the IP addresses associated with the port to add as a member.
-                      </p>
-                    </VStack>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Ports Section */}
+                    <div className="py-6">
+                      <VStack gap={3} align="stretch">
+                        <VStack gap={2} align="start">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Ports
+                          </span>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            Select one of the IP addresses associated with the port to add as a
+                            member.
+                          </p>
+                        </VStack>
 
-                    {/* Search and Pagination */}
-                    <VStack gap={3} align="start">
-                      <SearchInput
-                        placeholder="Search ports by attributes"
-                        value={memberPortSearch}
-                        onChange={(e) => setMemberPortSearch(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Pagination
-                        currentPage={memberPortPage}
-                        totalPages={5}
-                        totalItems={115}
-                        onPageChange={setMemberPortPage}
-                      />
-                    </VStack>
+                        {/* Search and Pagination */}
+                        <VStack gap={3} align="start">
+                          <SearchInput
+                            placeholder="Search ports by attributes"
+                            value={memberPortSearch}
+                            onChange={(e) => setMemberPortSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={memberPortPage}
+                            totalPages={5}
+                            totalItems={115}
+                            onPageChange={setMemberPortPage}
+                          />
+                        </VStack>
 
-                    {/* Ports Table */}
-                    <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
-                      {/* Table Header */}
-                      <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                        <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                          Name
-                        </div>
-                        <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                          Attached instance
-                        </div>
-                        <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                          IP Address
-                        </div>
-                        <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
-                          Action
-                        </div>
-                      </div>
-                      {/* Table Rows */}
-                      {mockPorts.map((port) => (
-                        <div
-                          key={port.id}
-                          className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
-                        >
-                          {/* Name Cell */}
-                          <div className="flex-1 px-3 py-2">
-                            <VStack gap={0.5} align="start">
-                              <HStack gap={1.5} align="center">
-                                <span className="text-label-md text-[var(--color-action-primary)]">
-                                  {port.name}
-                                </span>
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </HStack>
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                ID: {port.id}
-                              </span>
-                            </VStack>
+                        {/* Ports Table */}
+                        <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
+                          {/* Table Header */}
+                          <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
+                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                              Name
+                            </div>
+                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                              Attached instance
+                            </div>
+                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                              IP Address
+                            </div>
+                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
+                              Action
+                            </div>
                           </div>
-                          {/* Attached Instance Cell */}
-                          <div className="flex-1 px-3 py-2">
-                            {port.attachedInstance ? (
-                              <VStack gap={0.5} align="start">
-                                <HStack gap={1.5} align="center">
-                                  <span className="text-label-md text-[var(--color-action-primary)]">
-                                    {port.attachedInstance}
-                                  </span>
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </HStack>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID: {port.attachedInstanceId}
-                                </span>
-                              </VStack>
-                            ) : (
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                -
-                              </span>
-                            )}
-                          </div>
-                          {/* IP Address Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center">
-                            {port.ipAddresses.length > 0 ? (
-                              <Select
-                                options={port.ipAddresses.map((ip) => ({
-                                  value: ip,
-                                  label: ip,
-                                }))}
-                                value={portIpSelections[port.id] || port.ipAddresses[0]}
-                                onChange={(value) =>
-                                  setPortIpSelections((prev) => ({
-                                    ...prev,
-                                    [port.id]: value,
-                                  }))
-                                }
-                                style={{ width: '152px' }}
-                              />
-                            ) : (
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                -
-                              </span>
-                            )}
-                          </div>
-                          {/* Action Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center justify-center">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} />}
-                              disabled={port.ipAddresses.length === 0}
-                              onClick={() => {
-                                const selectedIp = portIpSelections[port.id] || port.ipAddresses[0];
-                                if (
-                                  selectedIp &&
-                                  !allocatedMembers.find(
-                                    (m) => m.portId === port.id && m.ipAddress === selectedIp
-                                  )
-                                ) {
-                                  setAllocatedMembers((prev) => [
-                                    ...prev,
-                                    {
-                                      id: `member-${Date.now()}`,
-                                      portId: port.id,
-                                      portName: port.name,
-                                      ipAddress: selectedIp,
-                                      instanceName: port.attachedInstance,
-                                      weight: 1,
-                                      monitorPort: 80,
-                                      monitorAddress: selectedIp,
-                                      backup: false,
-                                      adminStateUp: true,
-                                    },
-                                  ]);
-                                }
-                              }}
+                          {/* Table Rows */}
+                          {mockPorts.map((port) => (
+                            <div
+                              key={port.id}
+                              className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
                             >
-                              Add Member
-                            </Button>
-                          </div>
+                              {/* Name Cell */}
+                              <div className="flex-1 px-3 py-2">
+                                <VStack gap={0.5} align="start">
+                                  <HStack gap={1.5} align="center">
+                                    <span className="text-label-md text-[var(--color-action-primary)]">
+                                      {port.name}
+                                    </span>
+                                    <IconExternalLink
+                                      size={12}
+                                      className="text-[var(--color-action-primary)]"
+                                    />
+                                  </HStack>
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    ID: {port.id}
+                                  </span>
+                                </VStack>
+                              </div>
+                              {/* Attached Instance Cell */}
+                              <div className="flex-1 px-3 py-2">
+                                {port.attachedInstance ? (
+                                  <VStack gap={0.5} align="start">
+                                    <HStack gap={1.5} align="center">
+                                      <span className="text-label-md text-[var(--color-action-primary)]">
+                                        {port.attachedInstance}
+                                      </span>
+                                      <IconExternalLink
+                                        size={12}
+                                        className="text-[var(--color-action-primary)]"
+                                      />
+                                    </HStack>
+                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                      ID: {port.attachedInstanceId}
+                                    </span>
+                                  </VStack>
+                                ) : (
+                                  <span className="text-body-md text-[var(--color-text-default)]">
+                                    -
+                                  </span>
+                                )}
+                              </div>
+                              {/* IP Address Cell */}
+                              <div className="flex-1 px-3 py-2 flex items-center">
+                                {port.ipAddresses.length > 0 ? (
+                                  <Select
+                                    options={port.ipAddresses.map((ip) => ({
+                                      value: ip,
+                                      label: ip,
+                                    }))}
+                                    value={portIpSelections[port.id] || port.ipAddresses[0]}
+                                    onChange={(value) =>
+                                      setPortIpSelections((prev) => ({
+                                        ...prev,
+                                        [port.id]: value,
+                                      }))
+                                    }
+                                    style={{ width: '152px' }}
+                                  />
+                                ) : (
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    -
+                                  </span>
+                                )}
+                              </div>
+                              {/* Action Cell */}
+                              <div className="flex-1 px-3 py-2 flex items-center justify-center">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} />}
+                                  disabled={port.ipAddresses.length === 0}
+                                  onClick={() => {
+                                    const selectedIp =
+                                      portIpSelections[port.id] || port.ipAddresses[0];
+                                    if (
+                                      selectedIp &&
+                                      !allocatedMembers.find(
+                                        (m) => m.portId === port.id && m.ipAddress === selectedIp
+                                      )
+                                    ) {
+                                      setAllocatedMembers((prev) => [
+                                        ...prev,
+                                        {
+                                          id: `member-${Date.now()}`,
+                                          portId: port.id,
+                                          portName: port.name,
+                                          ipAddress: selectedIp,
+                                          instanceName: port.attachedInstance,
+                                          weight: 1,
+                                          monitorPort: 80,
+                                          monitorAddress: selectedIp,
+                                          backup: false,
+                                          adminStateUp: true,
+                                        },
+                                      ]);
+                                    }
+                                  }}
+                                >
+                                  Add Member
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      </VStack>
                     </div>
-                  </VStack>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Allocated Members Section */}
+                    <div className="py-6">
+                      <VStack gap={3} align="start">
+                        <VStack gap={2} align="start">
+                          <HStack gap={1} align="center">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
+                              Allocated Members
+                            </span>
+                            <span className="text-[var(--color-state-danger)]">*</span>
+                          </HStack>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            Adding a member registers a new backend server to the pool, while
+                            removing a member excludes it from load balancing.
+                          </p>
+                        </VStack>
 
-                  {/* Allocated Members Section */}
-                  <VStack gap={3} align="start">
-                    <VStack gap={2} align="start">
-                      <HStack gap={1} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Allocated Members
-                        </span>
-                        <span className="text-[var(--color-state-danger)]">*</span>
-                      </HStack>
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        Adding a member registers a new backend server to the pool, while removing a
-                        member excludes it from load balancing.
-                      </p>
-                    </VStack>
-
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} />}
-                      onClick={() => {
-                        setExternalMembers((prev) => [
-                          ...prev,
-                          {
-                            id: `ext-${Date.now()}`,
-                            ipAddress: '',
-                            port: undefined,
-                            weight: 1,
-                          },
-                        ]);
-                      }}
-                    >
-                      Add External Member
-                    </Button>
-
-                    {/* External Member Rows */}
-                    {externalMembers.map((extMember) => (
-                      <div
-                        key={extMember.id}
-                        className="w-full border border-[var(--color-border-default)] rounded-md p-3 flex gap-3 items-end bg-[var(--color-surface-default)]"
-                      >
-                        {/* IP Address */}
-                        <div className="flex-1 flex flex-col gap-2">
-                          <span className="text-label-md text-[var(--color-text-default)]">
-                            IP Address
-                          </span>
-                          <Input
-                            placeholder="Enter IP address"
-                            value={extMember.ipAddress}
-                            onChange={(e) => {
-                              setExternalMembers((prev) =>
-                                prev.map((m) =>
-                                  m.id === extMember.id ? { ...m, ipAddress: e.target.value } : m
-                                )
-                              );
-                            }}
-                            fullWidth
-                          />
-                        </div>
-                        {/* Port */}
-                        <div className="flex-1 flex flex-col gap-2">
-                          <span className="text-label-md text-[var(--color-text-default)]">
-                            Port
-                          </span>
-                          <NumberInput
-                            value={extMember.port}
-                            onChange={(value) => {
-                              setExternalMembers((prev) =>
-                                prev.map((m) => (m.id === extMember.id ? { ...m, port: value } : m))
-                              );
-                            }}
-                            min={1}
-                            max={65535}
-                            width="sm"
-                          />
-                        </div>
-                        {/* Weights */}
-                        <div className="flex-1 flex flex-col gap-2">
-                          <span className="text-label-md text-[var(--color-text-default)]">
-                            Weights
-                          </span>
-                          <NumberInput
-                            value={extMember.weight}
-                            onChange={(value) => {
-                              setExternalMembers((prev) =>
-                                prev.map((m) =>
-                                  m.id === extMember.id ? { ...m, weight: value } : m
-                                )
-                              );
-                            }}
-                            min={1}
-                            max={256}
-                            fullWidth
-                          />
-                        </div>
-                        {/* Remove Button */}
                         <Button
                           variant="secondary"
                           size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
                           onClick={() => {
-                            setExternalMembers((prev) => prev.filter((m) => m.id !== extMember.id));
+                            setExternalMembers((prev) => [
+                              ...prev,
+                              {
+                                id: `ext-${Date.now()}`,
+                                ipAddress: '',
+                                port: undefined,
+                                weight: 1,
+                              },
+                            ]);
                           }}
                         >
-                          Remove
+                          Add External Member
                         </Button>
-                      </div>
-                    ))}
 
-                    {/* Allocated Members Table (shown when there are members) */}
-                    {allocatedMembers.length > 0 && (
-                      <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
-                        <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                          <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                            IP Address
-                          </div>
-                          <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                            Port
-                          </div>
-                          <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                            Instance
-                          </div>
-                          <div className="w-[80px] px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
-                            Action
-                          </div>
-                        </div>
-                        {allocatedMembers.map((member) => (
+                        {/* External Member Rows */}
+                        {externalMembers.map((extMember) => (
                           <div
-                            key={member.id}
-                            className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
+                            key={extMember.id}
+                            className="w-full border border-[var(--color-border-default)] rounded-md p-3 flex gap-3 items-end bg-[var(--color-surface-default)]"
                           >
-                            <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                              {member.ipAddress}
+                            {/* IP Address */}
+                            <div className="flex-1 flex flex-col gap-2">
+                              <span className="text-label-md text-[var(--color-text-default)]">
+                                IP Address
+                              </span>
+                              <Input
+                                placeholder="Enter IP address"
+                                value={extMember.ipAddress}
+                                onChange={(e) => {
+                                  setExternalMembers((prev) =>
+                                    prev.map((m) =>
+                                      m.id === extMember.id
+                                        ? { ...m, ipAddress: e.target.value }
+                                        : m
+                                    )
+                                  );
+                                }}
+                                fullWidth
+                              />
                             </div>
-                            <div className="flex-1 px-3 py-2">
-                              <VStack gap={0.5} align="start">
-                                <span className="text-body-md text-[var(--color-action-primary)]">
-                                  {member.portName}
-                                </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID: {member.portId}
-                                </span>
-                              </VStack>
+                            {/* Port */}
+                            <div className="flex-1 flex flex-col gap-2">
+                              <span className="text-label-md text-[var(--color-text-default)]">
+                                Port
+                              </span>
+                              <NumberInput
+                                value={extMember.port}
+                                onChange={(value) => {
+                                  setExternalMembers((prev) =>
+                                    prev.map((m) =>
+                                      m.id === extMember.id ? { ...m, port: value } : m
+                                    )
+                                  );
+                                }}
+                                min={1}
+                                max={65535}
+                                width="sm"
+                              />
                             </div>
-                            <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                              {member.instanceName || '-'}
+                            {/* Weights */}
+                            <div className="flex-1 flex flex-col gap-2">
+                              <span className="text-label-md text-[var(--color-text-default)]">
+                                Weights
+                              </span>
+                              <NumberInput
+                                value={extMember.weight}
+                                onChange={(value) => {
+                                  setExternalMembers((prev) =>
+                                    prev.map((m) =>
+                                      m.id === extMember.id ? { ...m, weight: value } : m
+                                    )
+                                  );
+                                }}
+                                min={1}
+                                max={256}
+                                fullWidth
+                              />
                             </div>
-                            <div className="w-[80px] px-3 py-2 flex items-center justify-center">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  setAllocatedMembers((prev) =>
-                                    prev.filter((m) => m.id !== member.id)
-                                  )
-                                }
-                              >
-                                <IconTrash size={14} className="text-[var(--color-state-danger)]" />
-                              </Button>
-                            </div>
+                            {/* Remove Button */}
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => {
+                                setExternalMembers((prev) =>
+                                  prev.filter((m) => m.id !== extMember.id)
+                                );
+                              }}
+                            >
+                              Remove
+                            </Button>
                           </div>
                         ))}
-                      </div>
-                    )}
-                  </VStack>
 
-                  {/* Buttons */}
-                  <HStack gap={2} align="center" justify="end" className="w-full">
-                    <Button variant="secondary" onClick={() => goToNextSection('member')}>
-                      Skip
-                    </Button>
-                    <Button variant="primary" onClick={() => goToNextSection('member')}>
-                      Next
-                    </Button>
-                  </HStack>
+                        {/* Allocated Members Table (shown when there are members) */}
+                        {allocatedMembers.length > 0 && (
+                          <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
+                            <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                                IP Address
+                              </div>
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                                Port
+                              </div>
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                                Instance
+                              </div>
+                              <div className="w-[80px] px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
+                                Action
+                              </div>
+                            </div>
+                            {allocatedMembers.map((member) => (
+                              <div
+                                key={member.id}
+                                className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
+                              >
+                                <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                  {member.ipAddress}
+                                </div>
+                                <div className="flex-1 px-3 py-2">
+                                  <VStack gap={0.5} align="start">
+                                    <span className="text-body-md text-[var(--color-action-primary)]">
+                                      {member.portName}
+                                    </span>
+                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                      ID: {member.portId}
+                                    </span>
+                                  </VStack>
+                                </div>
+                                <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                  {member.instanceName || '-'}
+                                </div>
+                                <div className="w-[80px] px-3 py-2 flex items-center justify-center">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      setAllocatedMembers((prev) =>
+                                        prev.filter((m) => m.id !== member.id)
+                                      )
+                                    }
+                                  >
+                                    <IconTrash
+                                      size={14}
+                                      className="text-[var(--color-state-danger)]"
+                                    />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </VStack>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Buttons */}
+                    <HStack gap={2} justify="end" className="pt-3">
+                      <Button variant="secondary" onClick={() => goToNextSection('member')}>
+                        Skip
+                      </Button>
+                      <Button variant="primary" onClick={() => goToNextSection('member')}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['member'] === 'done' && (
@@ -2645,146 +2742,163 @@ export default function CreateLoadBalancerPage() {
                 }
               />
               {activeSection === 'health-monitor' && (
-                <SectionCard.Content gap={6} className="pt-2">
-                  {/* Create Health Monitor toggle */}
-                  <VStack gap={2} align="start">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Create Health Monitor
-                    </span>
-                    <HStack gap={2} align="center">
-                      <Toggle checked={createHealthMonitor} onChange={setCreateHealthMonitor} />
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        {createHealthMonitor ? 'Yes' : 'No'}
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Create Health Monitor toggle */}
+                    <VStack gap={3} className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Create Health Monitor
                       </span>
+                      <HStack gap={2} align="center">
+                        <Toggle checked={createHealthMonitor} onChange={setCreateHealthMonitor} />
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {createHealthMonitor ? 'Yes' : 'No'}
+                        </span>
+                      </HStack>
+                    </VStack>
+                    {createHealthMonitor && (
+                      <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Health monitor name */}
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Health monitor name</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                placeholder="Enter health monitor name"
+                                value={healthMonitorName}
+                                onChange={(e) => setHealthMonitorName(e.target.value)}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Health monitor type */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Health monitor type</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Select the health check method used to monitor backend members.
+                            </p>
+                            <FormField.Control>
+                              <Select
+                                options={healthMonitorTypeOptions}
+                                value={healthMonitorType}
+                                onChange={setHealthMonitorType}
+                                placeholder="Select type"
+                                style={{ width: '240px' }}
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Interval (sec) */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Interval (sec)</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Specifies the interval in seconds between health checks.
+                            </p>
+                            <FormField.Control>
+                              <NumberInput
+                                value={healthMonitorInterval}
+                                onChange={setHealthMonitorInterval}
+                                min={1}
+                                max={3600}
+                                fullWidth
+                                width="sm"
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              Only numbers are allowed, and the value must be between 1–3,600
+                              seconds.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Timeout (sec) */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Timeout (sec)</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Specifies the timeout in seconds for health check responses.
+                            </p>
+                            <FormField.Control>
+                              <NumberInput
+                                value={healthMonitorTimeout}
+                                onChange={setHealthMonitorTimeout}
+                                min={1}
+                                max={3599}
+                                fullWidth
+                                width="sm"
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              Only numbers are allowed, and the value must be between 1–3,599
+                              seconds.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Max retries */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Max retries</FormField.Label>
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              Specifies the number of retries before marking the health check as
+                              failed.
+                            </p>
+                            <FormField.Control>
+                              <NumberInput
+                                value={healthMonitorMaxRetries}
+                                onChange={setHealthMonitorMaxRetries}
+                                min={3}
+                                max={10}
+                                fullWidth
+                                width="sm"
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              Only numbers are allowed, and the value must be between 3–10.
+                            </FormField.HelperText>
+                          </FormField>
+                        </div>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                        {/* Health monitor admin state */}
+                        <VStack gap={3} className="py-6">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Health monitor admin state
+                          </span>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            Set the administrative state of the health monitor. 'UP' enables traffic
+                            handling, while 'DOWN' disables it.
+                          </p>
+                          <HStack gap={2} align="center">
+                            <Toggle
+                              checked={healthMonitorAdminState}
+                              onChange={setHealthMonitorAdminState}
+                            />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {healthMonitorAdminState ? 'Up' : 'Down'}
+                            </span>
+                          </HStack>
+                        </VStack>
+                      </>
+                    )}
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Next button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('health-monitor')}>
+                        Next
+                      </Button>
                     </HStack>
                   </VStack>
-
-                  {createHealthMonitor && (
-                    <>
-                      {/* Health monitor name */}
-                      <FormField>
-                        <FormField.Label>Health monitor name</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter health monitor name"
-                            value={healthMonitorName}
-                            onChange={(e) => setHealthMonitorName(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_), and the
-                          length must be between 2-128 characters.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Health monitor type */}
-                      <FormField required>
-                        <FormField.Label>Health monitor type</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Select the health check method used to monitor backend members.
-                        </p>
-                        <FormField.Control>
-                          <Select
-                            options={healthMonitorTypeOptions}
-                            value={healthMonitorType}
-                            onChange={setHealthMonitorType}
-                            placeholder="Select type"
-                            style={{ width: '240px' }}
-                          />
-                        </FormField.Control>
-                      </FormField>
-
-                      {/* Interval (sec) */}
-                      <FormField required>
-                        <FormField.Label>Interval (sec)</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Specifies the interval in seconds between health checks.
-                        </p>
-                        <FormField.Control>
-                          <NumberInput
-                            value={healthMonitorInterval}
-                            onChange={setHealthMonitorInterval}
-                            min={1}
-                            max={3600}
-                            fullWidth
-                            width="sm"
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          Only numbers are allowed, and the value must be between 1–3,600 seconds.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Timeout (sec) */}
-                      <FormField required>
-                        <FormField.Label>Timeout (sec)</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Specifies the timeout in seconds for health check responses.
-                        </p>
-                        <FormField.Control>
-                          <NumberInput
-                            value={healthMonitorTimeout}
-                            onChange={setHealthMonitorTimeout}
-                            min={1}
-                            max={3599}
-                            fullWidth
-                            width="sm"
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          Only numbers are allowed, and the value must be between 1–3,599 seconds.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Max retries */}
-                      <FormField required>
-                        <FormField.Label>Max retries</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
-                          Specifies the number of retries before marking the health check as failed.
-                        </p>
-                        <FormField.Control>
-                          <NumberInput
-                            value={healthMonitorMaxRetries}
-                            onChange={setHealthMonitorMaxRetries}
-                            min={3}
-                            max={10}
-                            fullWidth
-                            width="sm"
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          Only numbers are allowed, and the value must be between 3–10.
-                        </FormField.HelperText>
-                      </FormField>
-
-                      {/* Health monitor admin state */}
-                      <VStack gap={2} align="start">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Health monitor admin state
-                        </span>
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          Set the administrative state of the health monitor. 'UP' enables traffic
-                          handling, while 'DOWN' disables it.
-                        </p>
-                        <HStack gap={2} align="center">
-                          <Toggle
-                            checked={healthMonitorAdminState}
-                            onChange={setHealthMonitorAdminState}
-                          />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            {healthMonitorAdminState ? 'Up' : 'Down'}
-                          </span>
-                        </HStack>
-                      </VStack>
-                    </>
-                  )}
-
-                  <div className="flex items-center justify-end w-full">
-                    <Button variant="primary" onClick={() => goToNextSection('health-monitor')}>
-                      Next
-                    </Button>
-                  </div>
                 </SectionCard.Content>
               )}
               {sectionStatus['health-monitor'] === 'done' && (

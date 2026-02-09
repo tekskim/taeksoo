@@ -678,7 +678,7 @@ export function CreateClusterPage() {
 
                 {/* Worker Nodes */}
                 <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                  <h6 className="text-[14px] leading-5 font-medium text-[var(--color-text-default)] mb-4">
+                  <h6 className="text-label-lg text-[var(--color-text-default)] mb-4">
                     Worker Nodes
                   </h6>
                   <VStack gap={6}>
