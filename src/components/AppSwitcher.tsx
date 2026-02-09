@@ -86,7 +86,7 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
           aria-label="Toggle sidebar"
         >
           <IconLayoutSidebar
-            size={16}
+            size={14}
             className="text-[var(--color-text-muted)] pointer-events-none"
             stroke={1.5}
           />

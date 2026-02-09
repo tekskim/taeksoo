@@ -266,7 +266,7 @@ const ContextMenuItemComponent: React.FC<{
         ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
         ${
           item.status === 'danger'
-            ? 'text-[var(--color-state-danger-text)] hover:bg-[var(--color-state-danger-bg)]'
+            ? 'text-[var(--color-state-danger)] hover:bg-[var(--color-state-danger-bg)]'
             : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
         }
         ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}

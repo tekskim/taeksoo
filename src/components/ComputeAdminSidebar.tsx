@@ -191,7 +191,15 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               active={isActive('/compute-admin/networks')}
             />
             <MenuItem
-              icon={<img src={RouterIcon} width={16} height={16} alt="" className="opacity-80" />}
+              icon={
+                <img
+                  src={RouterIcon}
+                  width={16}
+                  height={16}
+                  alt=""
+                  className="opacity-80 icon-theme-adaptive"
+                />
+              }
               label="Routers"
               href="/compute-admin/routers"
               active={isActive('/compute-admin/routers')}

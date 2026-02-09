@@ -637,7 +637,7 @@ function LabelsAnnotationsSection({
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
-                    className="bg-white"
+                    className="bg-[var(--color-surface-default)]"
                   >
                     Add Label
                   </Button>
