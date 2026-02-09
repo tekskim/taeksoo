@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell, Badge } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  PageShell,
+  Badge,
+  ProgressBar,
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -60,12 +68,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -124,12 +127,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -183,7 +181,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h7 mb-4">{title}</h6>
+      <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
     </div>
   );

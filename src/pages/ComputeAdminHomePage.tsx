@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell, Badge } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  PageShell,
+  Badge,
+  ProgressBar,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconChevronRight, IconBell, IconCpu, IconServer } from '@tabler/icons-react';
@@ -47,12 +55,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -106,12 +109,7 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -201,7 +199,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h7 mb-4">{title}</h6>
+      <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -270,7 +268,7 @@ export function ComputeAdminHomePage() {
       {/* Top Row - 3 Cards */}
       <div className="grid grid-cols-3 gap-6 mb-6">
         {/* CAPACITY SUMMARY */}
-        <Card title="CAPACITY SUMMARY">
+        <Card title="Capacity Summary">
           <div className="space-y-[22px]">
             <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
             <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
@@ -280,7 +278,7 @@ export function ComputeAdminHomePage() {
         </Card>
 
         {/* INSTANCE SUMMARY */}
-        <Card title="INSTANCE SUMMARY" className="flex flex-col">
+        <Card title="Instance Summary" className="flex flex-col">
           <div className="mb-4">
             <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
@@ -298,7 +296,7 @@ export function ComputeAdminHomePage() {
         </Card>
 
         {/* BARE METAL SUMMARY */}
-        <Card title="BARE METAL SUMMARY" className="flex flex-col">
+        <Card title="Bare Metal Summary" className="flex flex-col">
           <div className="mb-4">
             <div className="text-heading-h2 text-[var(--color-text-default)]">8</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
@@ -317,7 +315,7 @@ export function ComputeAdminHomePage() {
       </div>
 
       {/* Bottom Row - Tenant Usages */}
-      <Card title="TENANT USAGES">
+      <Card title="Tenant Usages">
         <div className="space-y-6">
           <TenantRow
             name="Tenant A"
