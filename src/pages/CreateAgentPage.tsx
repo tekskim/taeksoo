@@ -731,7 +731,6 @@ export function CreateAgentPage() {
 
                           {/* Selection Indicator for Data Sources */}
                           <SelectionIndicator
-                            className="mt-2"
                             selectedItems={selectedDataSources.map((id) => {
                               const data = filteredDataSources.find((d) => d.id === id);
                               return { id, label: data?.name || id };
@@ -785,18 +784,19 @@ export function CreateAgentPage() {
                           />
 
                           {/* Selection Indicator for MCP Tools */}
-                          <SelectionIndicator
-                            className="mt-2"
-                            selectedItems={selectedMCPTools.map((id) => {
-                              const tool = filteredMCPTools.find((t) => t.id === id);
-                              return { id, label: tool?.mcpServer.label || id };
-                            })}
-                            onRemove={(id) =>
-                              setSelectedMCPTools(
-                                selectedMCPTools.filter((selectedId) => selectedId !== id)
-                              )
-                            }
-                          />
+                          <div className="mt-2">
+                            <SelectionIndicator
+                              selectedItems={selectedMCPTools.map((id) => {
+                                const tool = filteredMCPTools.find((t) => t.id === id);
+                                return { id, label: tool?.mcpServer.label || id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedMCPTools(
+                                  selectedMCPTools.filter((selectedId) => selectedId !== id)
+                                )
+                              }
+                            />
+                          </div>
                         </SectionCard.Content>
                       </SectionCard>
 

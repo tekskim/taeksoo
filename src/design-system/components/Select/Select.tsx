@@ -290,8 +290,7 @@ export function Select({
       !disabled &&
       'focus:border-[var(--select-border-focus)] focus:shadow-[0_0_0_1px_var(--select-border-focus)]',
     // Disabled
-    disabled &&
-      'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
+    disabled && 'bg-[var(--select-bg-disabled)] border-transparent cursor-not-allowed',
     className
   );
 

@@ -142,7 +142,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -985,7 +984,7 @@ function DefaultDomainSection({
               </div>
 
               {/* Selection indicator */}
-              <div className="mt-3">
+              <div className="mt-2">
                 {selectedDomain ? (
                   <SelectionIndicator
                     selectedItems={[

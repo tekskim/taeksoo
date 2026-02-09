@@ -774,7 +774,6 @@ export function CreateNetworkPolicyPage() {
               <SectionCard.Header
                 title="Selector"
                 description="Selector keys and values are intended to match labels and values on existing pods."
-                showDivider
               />
               <SectionCard.Content>
                 <VStack gap={6}>

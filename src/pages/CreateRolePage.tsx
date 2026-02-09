@@ -11,7 +11,6 @@ import {
   SectionCard,
   Pagination,
   SelectionIndicator,
-  InlineMessage,
   Chip,
   Checkbox,
   FormField,
@@ -333,7 +332,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -536,14 +534,11 @@ function BasicInformationSection({
                   fullWidth
                 />
               </FormField.Control>
-              {roleNameError ? (
-                <FormField.ErrorMessage>{roleNameError}</FormField.ErrorMessage>
-              ) : (
-                <FormField.HelperText>
-                  You can use letters, numbers, and special characters (+=,.@-_), and the length
-                  must be between 2-128 characters.
-                </FormField.HelperText>
-              )}
+              <FormField.ErrorMessage>{roleNameError}</FormField.ErrorMessage>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
+              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -905,21 +900,17 @@ function AddPoliciesSection({
           </div>
 
           {/* Selection indicator */}
-          <div className="mt-3">
-            {policiesError && selectedPolicies.length === 0 ? (
-              <InlineMessage variant="error">{policiesError}</InlineMessage>
-            ) : (
-              <SelectionIndicator
-                selectedItems={selectedPolicies.map((policyId) => {
-                  const policy = mockPolicies.find((p) => p.id === policyId);
-                  return { id: policyId, label: policy?.name || policyId };
-                })}
-                onRemove={(id) => {
-                  onSelectionChange(selectedPolicies.filter((pId) => pId !== id));
-                }}
-              />
-            )}
-          </div>
+          <SelectionIndicator
+            selectedItems={selectedPolicies.map((policyId) => {
+              const policy = mockPolicies.find((p) => p.id === policyId);
+              return { id: policyId, label: policy?.name || policyId };
+            })}
+            onRemove={(id) => {
+              onSelectionChange(selectedPolicies.filter((pId) => pId !== id));
+            }}
+            error={!!policiesError}
+            errorMessage={policiesError || undefined}
+          />
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (

@@ -252,7 +252,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -280,7 +279,6 @@ function ActiveSection({ title, onSave, onCancel, children }: ActiveSectionProps
     <SectionCard isActive>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <HStack gap={2}>
             <Button variant="secondary" size="sm" onClick={onCancel}>
