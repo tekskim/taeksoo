@@ -427,7 +427,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                   </VStack>
 
                   {/* Owned tenant */}
-                  <VStack gap={4} align="stretch">
+                  <VStack gap={2} align="stretch">
                     <VStack gap={2} align="start">
                       <div className="flex gap-[3px]">
                         <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">

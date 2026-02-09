@@ -15,7 +15,6 @@ import {
   Pagination,
   Tooltip,
   SelectionIndicator,
-  InlineMessage,
   FormField,
   PageShell,
   type TableColumn,
@@ -178,7 +177,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -682,7 +680,6 @@ function BasicInformationSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Basic information"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -720,14 +717,11 @@ function BasicInformationSection({
                   fullWidth
                 />
               </FormField.Control>
-              {usernameError ? (
-                <FormField.ErrorMessage>{usernameError}</FormField.ErrorMessage>
-              ) : (
-                <FormField.HelperText>
-                  You can use letters, numbers, and special characters (-_.), and the length must be
-                  between 3-64 characters.
-                </FormField.HelperText>
-              )}
+              <FormField.ErrorMessage>{usernameError}</FormField.ErrorMessage>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (-_.), and the length must be
+                between 3-64 characters.
+              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -1009,20 +1003,18 @@ function UserGroupSection({
           </div>
 
           {/* Selection indicator */}
-          <div className="mt-3">
-            {userGroupError && selectedGroups.length === 0 ? (
-              <InlineMessage variant="error">{userGroupError}</InlineMessage>
-            ) : (
-              <SelectionIndicator
-                selectedItems={selectedGroups.map((groupId) => {
-                  const group = mockUserGroups.find((g) => g.id === groupId);
-                  return { id: groupId, label: group?.name || groupId };
-                })}
-                onRemove={(id) => {
-                  onSelectionChange(selectedGroups.filter((gId) => gId !== id));
-                }}
-              />
-            )}
+          <div className="mt-2">
+            <SelectionIndicator
+              selectedItems={selectedGroups.map((groupId) => {
+                const group = mockUserGroups.find((g) => g.id === groupId);
+                return { id: groupId, label: group?.name || groupId };
+              })}
+              onRemove={(id) => {
+                onSelectionChange(selectedGroups.filter((gId) => gId !== id));
+              }}
+              error={!!userGroupError}
+              errorMessage={userGroupError || undefined}
+            />
           </div>
         </VStack>
         {/* Next Button (only when not editing) */}

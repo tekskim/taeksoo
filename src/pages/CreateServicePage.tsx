@@ -818,7 +818,6 @@ export function CreateServicePage() {
               <SectionCard.Header
                 title="Selectors"
                 description="Selector keys and values are intended to match labels and values on existing pods."
-                showDivider
               />
               <SectionCard.Content>
                 <VStack gap={6}>

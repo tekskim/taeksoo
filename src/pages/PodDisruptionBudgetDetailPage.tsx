@@ -908,6 +908,7 @@ export function PodDisruptionBudgetDetailPage() {
                   totalPages={Math.max(Math.ceil(pdbData.recentEvents.length / 10), 1)}
                   onPageChange={setEventsPage}
                   totalItems={pdbData.recentEvents.length}
+                  selectedCount={selectedEvents.length}
                 />
 
                 {/* Events Table */}

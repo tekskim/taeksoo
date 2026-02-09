@@ -99,7 +99,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -321,14 +320,11 @@ function BasicInformationSection({
                   fullWidth
                 />
               </FormField.Control>
-              {policyNameError ? (
-                <FormField.ErrorMessage>{policyNameError}</FormField.ErrorMessage>
-              ) : (
-                <FormField.HelperText>
-                  You can use letters, numbers, and special characters (+=,.@-_), and the length
-                  must be between 2-128 characters.
-                </FormField.HelperText>
-              )}
+              <FormField.ErrorMessage>{policyNameError}</FormField.ErrorMessage>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
+              </FormField.HelperText>
             </FormField>
           </div>
 

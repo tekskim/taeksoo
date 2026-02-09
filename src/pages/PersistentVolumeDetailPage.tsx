@@ -18,6 +18,7 @@ import {
   Input,
   Chip,
   PageShell,
+  FormField,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -426,10 +427,7 @@ export function PersistentVolumeDetailPage() {
                   </VStack>
 
                   {/* Assign to Storage Class */}
-                  <VStack gap={2} align="start" className="w-full">
-                    <label className="text-label-sm text-[var(--color-text-default)]">
-                      Assign to Storage Class
-                    </label>
+                  <FormField label="Assign to Storage Class" disabled className="w-full">
                     <Select
                       options={[
                         { value: 'None', label: 'None' },
@@ -440,27 +438,22 @@ export function PersistentVolumeDetailPage() {
                       onChange={() => {}}
                       placeholder="None"
                       fullWidth
-                      disabled
                     />
-                  </VStack>
+                  </FormField>
 
                   {/* Mount Options */}
                   <VStack gap={2} align="start" className="w-full">
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount Options
                     </h3>
-                    <VStack gap={2} align="start" className="w-full">
-                      <label className="text-label-sm text-[var(--color-text-default)]">
-                        Value
-                      </label>
+                    <FormField label="Value" labelSize="sm" disabled className="w-full">
                       <Input
                         placeholder="e.g. bar"
                         value={pvData.mountOptions}
                         onChange={() => {}}
                         fullWidth
-                        disabled
                       />
-                    </VStack>
+                    </FormField>
                   </VStack>
 
                   {/* Node Selectors */}
@@ -478,19 +471,19 @@ export function PersistentVolumeDetailPage() {
                             {/* Header Row */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Key
-                                </label>
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Operator
-                                </label>
+                                </span>
                               </div>
                               <div className="flex-1">
-                                <label className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Value
-                                </label>
+                                </span>
                               </div>
                             </HStack>
                             {/* Data Rows */}

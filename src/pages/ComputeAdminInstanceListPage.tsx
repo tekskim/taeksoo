@@ -1606,6 +1606,7 @@ export function ComputeAdminInstanceListPage() {
             showSettings
             onSettingsClick={() => setIsPreferencesOpen(true)}
             totalItems={filteredInstances.length}
+            selectedCount={selectedInstances.length}
           />
         )}
         {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (

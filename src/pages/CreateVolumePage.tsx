@@ -23,7 +23,6 @@ import {
   IconUbuntu,
   IconGrid,
   IconRocky,
-  InlineMessage,
   SelectionIndicator,
   PageShell,
   fixedColumns,
@@ -789,7 +788,7 @@ export function CreateVolumePage() {
 
                     {/* Image Selection */}
                     {sourceType === 'image' && (
-                      <VStack gap={4} align="stretch">
+                      <VStack gap={2} align="stretch">
                         {/* OS Filter Tabs */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
                           {[
@@ -836,6 +835,7 @@ export function CreateVolumePage() {
                           totalPages={Math.ceil(filteredImages.length / 5)}
                           onPageChange={setImageCurrentPage}
                           totalItems={filteredImages.length}
+                          selectedCount={selectedImage.length}
                         />
 
                         <Table<ImageRow>
@@ -857,12 +857,13 @@ export function CreateVolumePage() {
 
                         {/* Selection Indicator for Images */}
                         <SelectionIndicator
-                          className="mt-2"
                           selectedItems={selectedImage.map((id) => {
                             const image = mockImages.find((img) => img.id === id);
                             return { id, label: image?.name || id };
                           })}
                           onRemove={(id) => setSelectedImage(selectedImage.filter((i) => i !== id))}
+                          error={!!sourceError}
+                          errorMessage={sourceError || undefined}
                         />
                       </VStack>
                     )}
@@ -886,6 +887,7 @@ export function CreateVolumePage() {
                           totalPages={Math.ceil(filteredSnapshots.length / 5)}
                           onPageChange={setSnapshotCurrentPage}
                           totalItems={filteredSnapshots.length}
+                          selectedCount={selectedSnapshot.length}
                         />
 
                         <Table<SnapshotRow>
@@ -907,7 +909,6 @@ export function CreateVolumePage() {
 
                         {/* Selection Indicator for Snapshots */}
                         <SelectionIndicator
-                          className="mt-2"
                           selectedItems={selectedSnapshot.map((id) => {
                             const snapshot = mockSnapshots.find((s) => s.id === id);
                             return { id, label: snapshot?.name || id };
@@ -915,15 +916,10 @@ export function CreateVolumePage() {
                           onRemove={(id) =>
                             setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
                           }
+                          error={!!sourceError}
+                          errorMessage={sourceError || undefined}
                         />
                       </VStack>
-                    )}
-
-                    {/* Source Error Message */}
-                    {sourceError && (
-                      <div className="mt-2">
-                        <InlineMessage variant="error">{sourceError}</InlineMessage>
-                      </div>
                     )}
                   </VStack>
                 </VStack>
@@ -1019,7 +1015,7 @@ export function CreateVolumePage() {
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                       <div className="py-6">
-                        <VStack gap={4} align="stretch">
+                        <VStack gap={2} align="stretch">
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               placeholder="Search volume types"
@@ -1036,6 +1032,7 @@ export function CreateVolumePage() {
                             totalPages={Math.ceil(filteredVolumeTypes.length / 5)}
                             onPageChange={setVolumeTypeCurrentPage}
                             totalItems={filteredVolumeTypes.length}
+                            selectedCount={selectedVolumeType.length}
                           />
 
                           <Table<VolumeTypeRow>
@@ -1053,7 +1050,6 @@ export function CreateVolumePage() {
 
                           {/* Selection Indicator for Volume Types */}
                           <SelectionIndicator
-                            className="mt-2"
                             selectedItems={selectedVolumeType.map((id) => {
                               const volumeType = mockVolumeTypes.find((v) => v.id === id);
                               return { id, label: volumeType?.name || id };

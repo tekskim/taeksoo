@@ -116,13 +116,13 @@ describe('FormField', () => {
       expect(screen.getByText('Enter a unique username')).toBeInTheDocument();
     });
 
-    it('does not render when there is an error', () => {
+    it('remains visible when there is an error', () => {
       render(
         <FormField error>
-          <FormField.HelperText>This should not appear</FormField.HelperText>
+          <FormField.HelperText>Helper text still visible</FormField.HelperText>
         </FormField>
       );
-      expect(screen.queryByText('This should not appear')).not.toBeInTheDocument();
+      expect(screen.getByText('Helper text still visible')).toBeInTheDocument();
     });
 
     it('has correct id when field has id', () => {
@@ -183,21 +183,21 @@ describe('FormField', () => {
       expect(screen.getByText('*')).toBeInTheDocument();
     });
 
-    it('renders form field with error', () => {
+    it('renders form field with error — both error and helper text visible', () => {
       render(
         <FormField id="password" error>
           <FormField.Label>Password</FormField.Label>
           <FormField.Control>
             <input id="password" type="password" />
           </FormField.Control>
-          <FormField.HelperText>This should be hidden</FormField.HelperText>
           <FormField.ErrorMessage>Password is too short</FormField.ErrorMessage>
+          <FormField.HelperText>Must be at least 8 characters</FormField.HelperText>
         </FormField>
       );
 
       expect(screen.getByLabelText('Password')).toBeInTheDocument();
-      expect(screen.queryByText('This should be hidden')).not.toBeInTheDocument();
       expect(screen.getByText('Password is too short')).toBeInTheDocument();
+      expect(screen.getByText('Must be at least 8 characters')).toBeInTheDocument();
     });
   });
 });
