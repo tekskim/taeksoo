@@ -213,6 +213,7 @@ export function JobsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -231,6 +232,7 @@ export function JobsPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {

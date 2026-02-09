@@ -15,6 +15,7 @@ import {
   DetailHeader,
   SectionCard,
   PageShell,
+  ProgressBar,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -145,21 +146,7 @@ function QuotaCard({
       </div>
 
       {/* Progress bar */}
-      <div className="h-1 bg-[var(--color-border-default)] rounded-sm overflow-hidden">
-        <div
-          className="h-full rounded-sm transition-all"
-          style={{
-            width: `${Math.min(percentage, 100)}%`,
-            backgroundColor: coloredGauge
-              ? percentage >= 100
-                ? 'var(--color-state-danger)'
-                : percentage >= 70
-                  ? 'var(--color-state-warning)'
-                  : 'var(--color-state-success)'
-              : 'var(--color-text-muted)',
-          }}
-        />
-      </div>
+      <ProgressBar value={used} max={limit} showValue={false} />
     </div>
   );
 }

@@ -411,9 +411,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     },
     {
       key: 'action',
-      label: 'Actions',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      label: 'Action',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
@@ -575,7 +574,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: ServiceRow) => (
@@ -677,7 +676,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: ConditionRow) => (
@@ -776,6 +775,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
@@ -789,8 +789,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
