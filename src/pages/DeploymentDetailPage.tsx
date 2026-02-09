@@ -332,7 +332,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (value: string) => (
         <StatusIndicator
           status={
@@ -515,7 +515,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (value: string) => (
         <StatusIndicator
           status={
