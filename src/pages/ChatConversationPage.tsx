@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { TopBar, TopBarAction, StatusIndicator } from '@/design-system';
+import { TopBar, TopBarAction, StatusIndicator, PageShell, TabBar } from '@/design-system';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconPlus,
@@ -70,6 +72,7 @@ export function ChatConversationPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [message, setMessage] = useState('');
 
   // Get agent info from location state or use defaults
@@ -91,29 +94,46 @@ export function ChatConversationPage() {
   };
 
   return (
-    <>
-      {/* TopBar */}
-      <TopBar
-        left={
-          <div className="flex items-center gap-2 bg-[var(--color-surface-subtle)] rounded-md px-2 h-6">
-            <StatusIndicator status="active" />
-            <span className="text-label-md text-[var(--color-text-default)]">{agentName}</span>
-          </div>
-        }
-        actions={
-          <>
-            <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          </>
-        }
-      />
-
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          left={
+            <div className="flex items-center gap-2 bg-[var(--color-surface-subtle)] rounded-md px-2 h-6">
+              <StatusIndicator status="active" />
+              <span className="text-label-md text-[var(--color-text-default)]">{agentName}</span>
+            </div>
+          }
+          actions={
+            <>
+              <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
+      contentClassName="p-0"
+    >
       {/* Sidebar and Content */}
-      <div className="flex flex-1 min-h-0 min-w-[var(--layout-content-min-width)]">
+      <div className="flex flex-1 min-h-0 h-full">
         {/* Chat Sidebar */}
         <ChatSidebar />
 
@@ -151,7 +171,7 @@ export function ChatConversationPage() {
           </div>
         </div>
       </div>
-    </>
+    </PageShell>
   );
 }
 

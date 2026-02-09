@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, EmptyState } from '@/design-system';
+import {
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  Button,
+  EmptyState,
+  PageShell,
+} from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconSettings } from '@tabler/icons-react';
@@ -16,12 +25,12 @@ export function SettingsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -30,6 +39,8 @@ export function SettingsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -45,30 +56,28 @@ export function SettingsPage() {
             </>
           }
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
-            <VStack gap={6}>
-              <HStack justify="between" align="center">
-                <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Settings</h1>
-                  <p className="text-body-lg text-[var(--color-text-subtle)]">
-                    Configure AI Platform settings and preferences.
-                  </p>
-                </VStack>
-                <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
-                  Refresh
-                </Button>
-              </HStack>
-              <EmptyState
-                icon={<IconSettings size={48} stroke={1} />}
-                title="Settings"
-                description="Platform settings and configurations will appear here."
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        <HStack justify="between" align="center">
+          <VStack gap={1}>
+            <h1 className="text-heading-h3 text-[var(--color-text-default)]">Settings</h1>
+            <p className="text-body-lg text-[var(--color-text-subtle)]">
+              Configure AI Platform settings and preferences.
+            </p>
+          </VStack>
+          <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
+            Refresh
+          </Button>
+        </HStack>
+        <EmptyState
+          icon={<IconSettings size={48} stroke={1} />}
+          title="Settings"
+          description="Platform settings and configurations will appear here."
+        />
+      </VStack>
+    </PageShell>
   );
 }
 

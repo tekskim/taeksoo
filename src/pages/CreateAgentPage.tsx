@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
+  PageShell,
+  TabBar,
   TopBar,
   TopBarAction,
   Breadcrumb,
@@ -28,6 +30,8 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconPalette } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,6 +41,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function CreateAgentPage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeStep, setActiveStep] = useState<'configuration' | 'data-mcp'>('configuration');
 
   // Validation error
@@ -349,35 +354,50 @@ export function CreateAgentPage() {
   };
 
   return (
-    <>
-      <TopBar
-        showSidebarToggle={false}
-        showNavigation={true}
-        canGoBack={false}
-        canGoForward={false}
-        onBack={() => {}}
-        onForward={() => {}}
-        breadcrumb={
-          <Breadcrumb
-            items={[{ label: 'Agent', href: '/agent/list' }, { label: 'Create agent' }]}
-          />
-        }
-        actions={
-          <>
-            <TopBarAction
-              icon={<IconPalette size={12} stroke={1} />}
-              onClick={() => navigate('/design-system')}
-              aria-label="Design system"
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'Agent', href: '/agent/list' }, { label: 'Create Agent' }]}
             />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          </>
-        }
-      />
-
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1} />}
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
+    >
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
@@ -902,7 +922,7 @@ export function CreateAgentPage() {
           </div>
         </div>
       </div>
-    </>
+    </PageShell>
   );
 }
 

@@ -337,9 +337,6 @@ import { MonitoringPage } from '@/pages/ai-platform/MonitoringPage';
 import { DependenciesPage } from '@/pages/ai-platform/DependenciesPage';
 import { SystemAdminPage } from '@/pages/ai-platform/SystemAdminPage';
 
-// Layouts
-import { AgentAppLayout } from '@/layouts';
-
 const defaultTabs = [{ id: 'home', label: 'Home', path: '/compute', closable: true }];
 
 function AppRoutes() {
@@ -354,19 +351,17 @@ function AppRoutes() {
       <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
       <Route path="/link-expired" element={<LinkExpiredPage />} />
 
-      {/* Agent Routes - Shared TabBar via AgentAppLayout */}
-      <Route element={<AgentAppLayout />}>
-        <Route path="/agent" element={<HomePage />} />
-        <Route path="/agent/list" element={<AgentPage />} />
-        <Route path="/agent/list/:id" element={<AgentDetailPage />} />
-        <Route path="/agent/create" element={<CreateAgentPage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/chat/:id" element={<ChatConversationPage />} />
-        <Route path="/agent/storage" element={<StoragePage />} />
-        <Route path="/mcp-tools" element={<MCPToolsPage />} />
-        <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />
-        <Route path="/mcp-tools/:id" element={<MCPToolDetailPage />} />
-      </Route>
+      {/* Agent Routes */}
+      <Route path="/agent" element={<HomePage />} />
+      <Route path="/agent/list" element={<AgentPage />} />
+      <Route path="/agent/list/:id" element={<AgentDetailPage />} />
+      <Route path="/agent/create" element={<CreateAgentPage />} />
+      <Route path="/chat" element={<ChatPage />} />
+      <Route path="/chat/:id" element={<ChatConversationPage />} />
+      <Route path="/agent/storage" element={<StoragePage />} />
+      <Route path="/mcp-tools" element={<MCPToolsPage />} />
+      <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />
+      <Route path="/mcp-tools/:id" element={<MCPToolDetailPage />} />
 
       {/* Cloud Builder Routes */}
       <Route path="/cloudbuilder" element={<CloudBuilderConsolePage />} />

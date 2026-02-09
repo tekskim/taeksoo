@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import AppLayout from '@/layouts/AppLayout';
 import {
   Badge,
   Button,
@@ -16,11 +15,23 @@ import {
   Tab,
   VStack,
   ProgressBar,
+  PageShell,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
   type ContextMenuItem,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
-import { IconDotsCircleHorizontal, IconDownload, IconPlus, IconTrash } from '@tabler/icons-react';
+import {
+  IconDotsCircleHorizontal,
+  IconDownload,
+  IconPlus,
+  IconTrash,
+  IconBell,
+} from '@tabler/icons-react';
+import { Sidebar } from '@/components/Sidebar';
 import {
   CLOUD_BUILDER_SLUGS,
   getCloudBuilderListConfig,
@@ -397,103 +408,135 @@ export function CloudBuilderConsolePage() {
   };
 
   return (
-    <AppLayout>
-      <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] w-full">
-        <VStack gap={3} className="w-full">
-          <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
-            {config.createLabel && (
-              <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
-                {config.createLabel}
-              </Button>
-            )}
-          </div>
-
-          {hasTabs && config.tabs && (
-            <Tabs
-              value={activeTabId}
-              onChange={(v) => setActiveTabId(v)}
-              variant="underline"
-              size="sm"
-            >
-              <TabList>
-                {config.tabs.map((t) => (
-                  <Tab key={t.id} value={t.id}>
-                    {t.label}
-                  </Tab>
-                ))}
-              </TabList>
-            </Tabs>
-          )}
-
-          <ListToolbar
-            primaryActions={
-              <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    onClear={() => {
-                      setSearchQuery('');
-                      setCurrentPage(1);
-                    }}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconDownload size={12} />}
-                  aria-label="Download"
-                  onClick={() => window.alert('Download: Coming Soon')}
-                />
-              </ListToolbar.Actions>
-            }
-            bulkActions={
-              selectable && showBulkDelete ? (
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selected.length === 0}
-                    onClick={handleDeleteSelected}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              ) : undefined
-            }
-          />
-
-          {filteredRows.length > 0 && (
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              showSettings={hasTabs}
-              onSettingsClick={() => window.alert('View settings: Coming Soon')}
-              totalItems={filteredRows.length}
-              selectedCount={selected.length}
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarOpen ? 200 : 0}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
             />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={3} className="w-full">
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
+          {config.createLabel && (
+            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
+              {config.createLabel}
+            </Button>
           )}
+        </div>
 
-          <Table<Record<string, string> & { id: string }>
-            columns={columns}
-            data={paged}
-            rowKey="id"
-            emptyMessage="No data found"
-            selectable={selectable}
-            selectedKeys={selected}
-            onSelectionChange={setSelected}
+        {hasTabs && config.tabs && (
+          <Tabs
+            value={activeTabId}
+            onChange={(v) => setActiveTabId(v)}
+            variant="underline"
+            size="sm"
+          >
+            <TabList>
+              {config.tabs.map((t) => (
+                <Tab key={t.id} value={t.id}>
+                  {t.label}
+                </Tab>
+              ))}
+            </TabList>
+          </Tabs>
+        )}
+
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput
+                  placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="sm"
+                  fullWidth
+                />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+                onClick={() => window.alert('Download: Coming Soon')}
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            selectable && showBulkDelete ? (
+              <ListToolbar.Actions>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selected.length === 0}
+                  onClick={handleDeleteSelected}
+                >
+                  Delete
+                </Button>
+              </ListToolbar.Actions>
+            ) : undefined
+          }
+        />
+
+        {filteredRows.length > 0 && (
+          <Pagination
+            currentPage={safePage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings={hasTabs}
+            onSettingsClick={() => window.alert('View settings: Coming Soon')}
+            totalItems={filteredRows.length}
+            selectedCount={selected.length}
           />
-        </VStack>
-      </div>
+        )}
+
+        <Table<Record<string, string> & { id: string }>
+          columns={columns}
+          data={paged}
+          rowKey="id"
+          emptyMessage="No data found"
+          selectable={selectable}
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+        />
+      </VStack>
 
       <ConfirmModal
         isOpen={confirmRemoveOpen}
@@ -567,7 +610,7 @@ export function CloudBuilderConsolePage() {
           </div>
         ) : null}
       </Modal>
-    </AppLayout>
+    </PageShell>
   );
 }
 

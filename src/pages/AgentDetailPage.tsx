@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   Badge,
@@ -13,11 +13,18 @@ import {
   SearchInput,
   Pagination,
   DetailHeader,
+  PageShell,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  VStack,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { AgentPageLayout } from '@/layouts';
+import { AgentSidebar } from '@/components/AgentSidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   IconStar,
   IconStarFilled,
@@ -27,6 +34,8 @@ import {
   IconEdit,
   IconRefresh,
   IconMessage,
+  IconBell,
+  IconPalette,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -876,6 +885,8 @@ function StatusHistoryTab() {
    ---------------------------------------- */
 export function AgentDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeTab, setActiveTab] = useState('information');
 
   // Mock agent data
@@ -913,76 +924,116 @@ export function AgentDetailPage() {
   const handleEditPromptSettings = () => console.log('Edit prompt settings');
 
   return (
-    <AgentPageLayout
-      title={agent.name}
-      breadcrumbItems={[{ label: 'Agent', href: '/agent/list' }, { label: agent.name }]}
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Agent', href: '/agent/list' }, { label: agent.name }]} />
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1} />}
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
     >
-      {/* Agent Header Card */}
-      <AgentHeader
-        name={agent.name}
-        description={agent.description}
-        tags={agent.tags}
-        isFavorite={isFavorite}
-        status={agent.status}
-        model={agent.model}
-        modelProvider={agent.modelProvider}
-        chats={agent.chats}
-        updatedAt={agent.updatedAt}
-        createdAt={agent.createdAt}
-        onFavoriteToggle={handleFavoriteToggle}
-        onDeactivate={handleDeactivate}
-        onConnectDataSource={handleConnectDataSource}
-        onConnectMCPServer={handleConnectMCPServer}
-        onDelete={handleDelete}
-      />
+      <VStack gap={6}>
+        {/* Agent Header Card */}
+        <AgentHeader
+          name={agent.name}
+          description={agent.description}
+          tags={agent.tags}
+          isFavorite={isFavorite}
+          status={agent.status}
+          model={agent.model}
+          modelProvider={agent.modelProvider}
+          chats={agent.chats}
+          updatedAt={agent.updatedAt}
+          createdAt={agent.createdAt}
+          onFavoriteToggle={handleFavoriteToggle}
+          onDeactivate={handleDeactivate}
+          onConnectDataSource={handleConnectDataSource}
+          onConnectMCPServer={handleConnectMCPServer}
+          onDelete={handleDelete}
+        />
 
-      {/* Tabs Section */}
-      <div className="flex flex-col gap-3 w-full">
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-          <TabList>
-            <Tab value="information">Information</Tab>
-            <Tab value="data-sources">Data sources</Tab>
-            <Tab value="mcp-servers">MCP servers</Tab>
-            <Tab value="execution-logs">Execution logs</Tab>
-            <Tab value="status-history">Status history</Tab>
-          </TabList>
+        {/* Tabs Section */}
+        <div className="flex flex-col gap-3 w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="information">Information</Tab>
+              <Tab value="data-sources">Data sources</Tab>
+              <Tab value="mcp-servers">MCP servers</Tab>
+              <Tab value="execution-logs">Execution logs</Tab>
+              <Tab value="status-history">Status history</Tab>
+            </TabList>
 
-          <TabPanel value="information">
-            <InformationTab
-              agentName={agent.name}
-              description={agent.description}
-              tags={agent.tags}
-              modelProvider={agent.modelProviderDisplay}
-              model={agent.modelDisplay}
-              temperature={agent.temperature}
-              systemPrompt={agent.systemPrompt}
-              tone={agent.tone}
-              maxTokens={agent.maxTokens}
-              maxIteration={agent.maxIteration}
-              onEditBasicInfo={handleEditBasicInfo}
-              onEditModelSettings={handleEditModelSettings}
-              onEditPromptSettings={handleEditPromptSettings}
-            />
-          </TabPanel>
+            <TabPanel value="information">
+              <InformationTab
+                agentName={agent.name}
+                description={agent.description}
+                tags={agent.tags}
+                modelProvider={agent.modelProviderDisplay}
+                model={agent.modelDisplay}
+                temperature={agent.temperature}
+                systemPrompt={agent.systemPrompt}
+                tone={agent.tone}
+                maxTokens={agent.maxTokens}
+                maxIteration={agent.maxIteration}
+                onEditBasicInfo={handleEditBasicInfo}
+                onEditModelSettings={handleEditModelSettings}
+                onEditPromptSettings={handleEditPromptSettings}
+              />
+            </TabPanel>
 
-          <TabPanel value="data-sources">
-            <DataSourcesTab />
-          </TabPanel>
+            <TabPanel value="data-sources">
+              <DataSourcesTab />
+            </TabPanel>
 
-          <TabPanel value="mcp-servers">
-            <MCPServersTab />
-          </TabPanel>
+            <TabPanel value="mcp-servers">
+              <MCPServersTab />
+            </TabPanel>
 
-          <TabPanel value="execution-logs">
-            <ExecutionLogsTab />
-          </TabPanel>
+            <TabPanel value="execution-logs">
+              <ExecutionLogsTab />
+            </TabPanel>
 
-          <TabPanel value="status-history">
-            <StatusHistoryTab />
-          </TabPanel>
-        </Tabs>
-      </div>
-    </AgentPageLayout>
+            <TabPanel value="status-history">
+              <StatusHistoryTab />
+            </TabPanel>
+          </Tabs>
+        </div>
+      </VStack>
+    </PageShell>
   );
 }
 

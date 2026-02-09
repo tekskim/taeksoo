@@ -56,6 +56,7 @@ interface ToolParameter {
 
 export function CreateMCPTemplatePage() {
   const navigate = useNavigate();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeStep, setActiveStep] = useState<'configuration' | 'publish'>('configuration');
 
   // Configuration Tab State
@@ -206,35 +207,50 @@ export function CreateMCPTemplatePage() {
   };
 
   return (
-    <>
-      <TopBar
-        showSidebarToggle={false}
-        showNavigation={true}
-        canGoBack={false}
-        canGoForward={false}
-        onBack={() => {}}
-        onForward={() => {}}
-        breadcrumb={
-          <Breadcrumb
-            items={[{ label: 'MCP tools', href: '/mcp-tools' }, { label: 'Create template' }]}
-          />
-        }
-        actions={
-          <>
-            <TopBarAction
-              icon={<IconPalette size={16} stroke={1} />}
-              onClick={() => navigate('/design-system')}
-              aria-label="Design system"
+    <PageShell
+      sidebar={<AgentSidebar />}
+      sidebarWidth={60}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+          onWindowClose={() => navigate('/')}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={false}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: 'Create MCP Template' }]}
             />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          </>
-        }
-      />
-
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconPalette size={16} stroke={1} />}
+                onClick={() => navigate('/design-system')}
+                aria-label="Design System"
+              />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            </>
+          }
+        />
+      }
+    >
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
@@ -1092,7 +1108,7 @@ export function CreateMCPTemplatePage() {
           </div>
         </div>
       </div>
-    </>
+    </PageShell>
   );
 }
 

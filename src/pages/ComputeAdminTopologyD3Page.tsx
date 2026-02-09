@@ -3071,7 +3071,7 @@ export function ComputeAdminTopologyD3Page() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-4 px-8 pb-6 flex flex-col"
     >
       <VStack gap={3} className="flex-1 min-h-0">
         {/* Page Header */}
