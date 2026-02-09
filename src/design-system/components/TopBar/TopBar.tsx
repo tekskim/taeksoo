@@ -86,7 +86,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             className={iconButtonClass}
             aria-label="Toggle sidebar"
           >
-            <IconLayoutSidebar size={12} stroke={1.5} />
+            <IconLayoutSidebar size={14} stroke={1.5} />
           </button>
         )}
 
