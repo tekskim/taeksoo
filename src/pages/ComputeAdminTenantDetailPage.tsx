@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
+  Badge,
   Button,
   VStack,
   TabBar,
@@ -115,31 +116,27 @@ function QuotaCard({
 }: QuotaItem & { showPercentage?: boolean; coloredGauge?: boolean }) {
   const percentage = Math.round((used / limit) * 100);
 
-  // Get badge colors based on percentage
-  const getBadgeClasses = () => {
-    if (percentage >= 100) {
-      return 'bg-[var(--semantic-color-state-danger-bg)] text-[var(--semantic-color-state-danger)]';
-    } else if (percentage >= 70) {
-      return 'bg-[var(--semantic-color-state-warning-bg)] text-[var(--semantic-color-state-warning)]';
-    } else {
-      return 'bg-[var(--semantic-color-state-success-bg)] text-[var(--semantic-color-state-success)]';
-    }
+  // Map percentage thresholds to Badge themes
+  const getBadgeTheme = (): 'red' | 'yellow' | 'green' => {
+    if (percentage >= 100) return 'red';
+    if (percentage >= 70) return 'yellow';
+    return 'green';
   };
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-5 flex-1 min-w-0">
+    <div className="bg-[var(--color-surface-subtle)] rounded-lg py-4 px-5 flex-1 min-w-0 h-[112px] flex flex-col justify-between">
       {/* Header with label and percentage badge */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between">
         <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
         {showPercentage && (
-          <span className={`px-1.5 py-0.5 rounded-md text-label-sm ${getBadgeClasses()}`}>
+          <Badge size="sm" type="subtle" theme={getBadgeTheme()}>
             {percentage}%
-          </span>
+          </Badge>
         )}
       </div>
 
       {/* Value display */}
-      <div className="flex items-baseline mb-4">
+      <div className="flex items-baseline">
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-subtle)]">
           /{limit}
@@ -342,14 +339,14 @@ export default function ComputeAdminTenantDetailPage() {
             {/* Quotas Tab */}
             <TabPanel value="quotas" className="pt-6">
               <VStack gap={6}>
-                <QuotaSection title="Compute quota" quotas={computeQuotas} />
+                <QuotaSection title="Compute quota" quotas={computeQuotas} coloredGauge={true} />
                 <QuotaSection
                   title="Storage quota"
                   quotas={storageQuotas}
-                  showPercentage={false}
+                  showPercentage={true}
                   coloredGauge={true}
                 />
-                <QuotaSection title="Network quota" quotas={networkQuotas} />
+                <QuotaSection title="Network quota" quotas={networkQuotas} coloredGauge={true} />
               </VStack>
             </TabPanel>
           </Tabs>

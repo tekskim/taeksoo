@@ -232,7 +232,7 @@ export function ContainerHomePage() {
           }
         />
       }
-      contentClassName="pt-6 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      contentClassName="pt-6 px-8 pb-20"
     >
       <VStack gap={6} className="min-w-[1176px]">
         {/* Welcome Header */}

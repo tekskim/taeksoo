@@ -164,12 +164,13 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
 interface StatCardProps {
   label: string;
   value: string | number;
-  variant?: 'default' | 'success' | 'warning' | 'danger';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'primary';
 }
 
 function StatCard({ label, value, variant = 'default' }: StatCardProps) {
   const colorStyles = {
     default: 'text-[var(--color-text-default)]',
+    primary: 'text-[var(--color-action-primary)]',
     success: 'text-[var(--color-state-success)]',
     warning: 'text-[var(--color-state-warning)]',
     danger: 'text-[var(--color-state-danger)]',
@@ -182,7 +183,7 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <div className="flex flex-col gap-1.5">
         <span className={`text-label-sm ${textColor}`}>{label}</span>
-        <span className={`text-heading-h3 ${textColor}`}>{value}</span>
+        <span className={`text-heading-h2 ${textColor}`}>{value}</span>
       </div>
     </div>
   );
@@ -201,7 +202,7 @@ function ResourceCard({ label, value }: ResourceCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
       <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
-      <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
+      <p className="text-heading-h3 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
 }
@@ -371,7 +372,7 @@ export function IAMHomePage() {
             <StatCard label="Total" value="150" variant="default" />
             <StatCard label="Online" value="50" variant="success" />
             <StatCard label="Disabled" value="27" variant="danger" />
-            <StatCard label="Locked" value="3" variant="warning" />
+            <StatCard label="Locked" value="3" variant="primary" />
           </div>
         </div>
 

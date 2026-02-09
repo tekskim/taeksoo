@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell } from '@/design-system';
+import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell, Badge } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -27,29 +27,12 @@ interface PercentageBadgeProps {
 }
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const getColors = () => {
-    if (percentage >= 100)
-      return {
-        bg: 'bg-[var(--color-state-danger-bg)]',
-        text: 'text-[var(--color-state-danger-text)]',
-      };
-    if (percentage >= 70)
-      return {
-        bg: 'bg-[var(--color-state-warning-bg)]',
-        text: 'text-[var(--color-state-warning-text)]',
-      };
-    return {
-      bg: 'bg-[var(--color-state-success-bg)]',
-      text: 'text-[var(--color-state-success-text)]',
-    };
-  };
-
-  const colors = getColors();
+  const theme = percentage >= 100 ? 'red' : percentage >= 70 ? 'yellow' : 'green';
 
   return (
-    <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <span className={`text-label-sm ${colors.text}`}>{percentage}%</span>
-    </div>
+    <Badge size="sm" type="subtle" theme={theme}>
+      {percentage}%
+    </Badge>
   );
 }
 

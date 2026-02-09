@@ -677,7 +677,6 @@ function ChartCard({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15],
       },
       boundaryGap: false,
     },
@@ -890,7 +889,6 @@ function EmptyStateChartCard({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15],
       },
       boundaryGap: false,
     },
