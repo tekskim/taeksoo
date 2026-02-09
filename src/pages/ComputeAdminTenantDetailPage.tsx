@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   DetailHeader,
+  SectionCard,
   PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -104,7 +105,14 @@ const networkQuotas: QuotaItem[] = [
    Quota Card Component
    ---------------------------------------- */
 
-function QuotaCard({ label, used, limit, unit }: QuotaItem) {
+function QuotaCard({
+  label,
+  used,
+  limit,
+  unit,
+  showPercentage = true,
+  coloredGauge = false,
+}: QuotaItem & { showPercentage?: boolean; coloredGauge?: boolean }) {
   const percentage = Math.round((used / limit) * 100);
 
   // Get badge colors based on percentage
@@ -123,9 +131,11 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
       {/* Header with label and percentage badge */}
       <div className="flex items-center justify-between mb-3">
         <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
-        <span className={`px-1.5 py-0.5 rounded-md text-label-sm ${getBadgeClasses()}`}>
-          {percentage}%
-        </span>
+        {showPercentage && (
+          <span className={`px-1.5 py-0.5 rounded-md text-label-sm ${getBadgeClasses()}`}>
+            {percentage}%
+          </span>
+        )}
       </div>
 
       {/* Value display */}
@@ -140,8 +150,17 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
       {/* Progress bar */}
       <div className="h-1 bg-[var(--color-border-default)] rounded-sm overflow-hidden">
         <div
-          className="h-full bg-[var(--color-text-muted)] rounded-sm transition-all"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
+          className="h-full rounded-sm transition-all"
+          style={{
+            width: `${Math.min(percentage, 100)}%`,
+            backgroundColor: coloredGauge
+              ? percentage >= 100
+                ? 'var(--color-state-danger)'
+                : percentage >= 70
+                  ? 'var(--color-state-warning)'
+                  : 'var(--color-state-success)'
+              : 'var(--color-text-muted)',
+          }}
         />
       </div>
     </div>
@@ -152,7 +171,17 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
    Quota Section Component
    ---------------------------------------- */
 
-function QuotaSection({ title, quotas }: { title: string; quotas: QuotaItem[] }) {
+function QuotaSection({
+  title,
+  quotas,
+  showPercentage = true,
+  coloredGauge = false,
+}: {
+  title: string;
+  quotas: QuotaItem[];
+  showPercentage?: boolean;
+  coloredGauge?: boolean;
+}) {
   // Split quotas into rows of 5
   const rows: QuotaItem[][] = [];
   for (let i = 0; i < quotas.length; i += 5) {
@@ -160,26 +189,30 @@ function QuotaSection({ title, quotas }: { title: string; quotas: QuotaItem[] })
   }
 
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl p-6">
-      {/* Section Title */}
-      <h4 className="text-heading-h5 text-[var(--color-text-muted)] mb-6">{title}</h4>
-
-      {/* Quota Cards Grid */}
-      <div className="flex flex-col gap-4">
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex gap-4">
-            {row.map((quota, index) => (
-              <QuotaCard key={`${quota.label}-${index}`} {...quota} />
-            ))}
-            {/* Fill remaining space if row has fewer than 5 items */}
-            {row.length < 5 &&
-              Array.from({ length: 5 - row.length }).map((_, i) => (
-                <div key={`empty-${i}`} className="flex-1 min-w-0" />
+    <SectionCard>
+      <SectionCard.Header title={title} />
+      <SectionCard.Content>
+        <div className="flex flex-col gap-4">
+          {rows.map((row, rowIndex) => (
+            <div key={rowIndex} className="flex gap-4">
+              {row.map((quota, index) => (
+                <QuotaCard
+                  key={`${quota.label}-${index}`}
+                  {...quota}
+                  showPercentage={showPercentage}
+                  coloredGauge={coloredGauge}
+                />
               ))}
-          </div>
-        ))}
-      </div>
-    </div>
+              {/* Fill remaining space if row has fewer than 5 items */}
+              {row.length < 5 &&
+                Array.from({ length: 5 - row.length }).map((_, i) => (
+                  <div key={`empty-${i}`} className="flex-1 min-w-0" />
+                ))}
+            </div>
+          ))}
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -310,7 +343,12 @@ export default function ComputeAdminTenantDetailPage() {
             <TabPanel value="quotas" className="pt-6">
               <VStack gap={6}>
                 <QuotaSection title="Compute quota" quotas={computeQuotas} />
-                <QuotaSection title="Storage quota" quotas={storageQuotas} />
+                <QuotaSection
+                  title="Storage quota"
+                  quotas={storageQuotas}
+                  showPercentage={false}
+                  coloredGauge={true}
+                />
                 <QuotaSection title="Network quota" quotas={networkQuotas} />
               </VStack>
             </TabPanel>

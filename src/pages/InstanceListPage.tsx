@@ -1426,7 +1426,7 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1583,7 +1583,7 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

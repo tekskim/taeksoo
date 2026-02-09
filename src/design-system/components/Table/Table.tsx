@@ -350,7 +350,9 @@ export function Table<T extends Record<string, any>>({
                           title={cellTitle}
                         >
                           {column.render ? (
-                            <span className="truncate w-full">
+                            <span
+                              className={`truncate w-full ${column.align === 'center' ? 'flex justify-center' : column.align === 'right' ? 'flex justify-end' : ''}`}
+                            >
                               {column.render(row[column.key], row, rowIndex)}
                             </span>
                           ) : (
