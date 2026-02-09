@@ -631,8 +631,6 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
           <VStack gap={2} className="py-6">
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -1339,48 +1337,49 @@ function ImageSection({
               onPageChange={setCurrentPage}
             />
 
-            {/* Table - Dynamic based on tab */}
-            {sourceTab === 'image' && (
-              <Table
-                columns={imageColumns}
-                data={paginatedImages}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
-            {sourceTab === 'snapshot' && (
-              <Table
-                columns={snapshotColumns}
-                data={filteredSnapshots.slice(
-                  (currentPage - 1) * itemsPerPage,
-                  currentPage * itemsPerPage
-                )}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
-            {sourceTab === 'volume' && (
-              <Table
-                columns={volumeColumns}
-                data={filteredVolumes.slice(
-                  (currentPage - 1) * itemsPerPage,
-                  currentPage * itemsPerPage
-                )}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
+            <div className="flex flex-col gap-[8px]">
+              {/* Table - Dynamic based on tab */}
+              {sourceTab === 'image' && (
+                <Table
+                  columns={imageColumns}
+                  data={paginatedImages}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
+              {sourceTab === 'snapshot' && (
+                <Table
+                  columns={snapshotColumns}
+                  data={filteredSnapshots.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
+              {sourceTab === 'volume' && (
+                <Table
+                  columns={volumeColumns}
+                  data={filteredVolumes.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
 
-            {/* Selected / Error Message */}
-            <SelectionIndicator
-              className="mt-2"
-              selectedItems={
-                selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-              }
-              onRemove={() => onSelectImage('')}
-              error={!!sourceError}
-              errorMessage={sourceError}
-            />
+              {/* Selected / Error Message */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                }
+                onRemove={() => onSelectImage('')}
+                error={!!sourceError}
+                errorMessage={sourceError}
+              />
+            </div>
           </VStack>
 
           {/* Divider */}
@@ -1661,10 +1660,7 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
-            >
+            <a href="#" className="text-[var(--color-action-primary)] hover:underline text-body-md">
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -2323,8 +2319,6 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
           {/* Network Sub-section */}
           <VStack gap={3} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2350,40 +2344,41 @@ function NetworkSection({
               onPageChange={setNetworkPage}
             />
 
-            {/* Network Table */}
-            <Table
-              columns={networkColumns}
-              data={filteredNetworks}
-              rowKey="id"
-              onRowClick={(row) => {
-                const newSet = new Set(selectedNetworkIds);
-                if (newSet.has(row.id)) {
-                  newSet.delete(row.id);
-                } else {
-                  newSet.add(row.id);
-                }
-                setSelectedNetworkIds(newSet);
-                // Clear error when network is selected
-                if (newSet.size > 0) {
-                  setNetworkError(null);
-                }
-              }}
-            />
+            <div className="flex flex-col gap-[8px]">
+              {/* Network Table */}
+              <Table
+                columns={networkColumns}
+                data={filteredNetworks}
+                rowKey="id"
+                onRowClick={(row) => {
+                  const newSet = new Set(selectedNetworkIds);
+                  if (newSet.has(row.id)) {
+                    newSet.delete(row.id);
+                  } else {
+                    newSet.add(row.id);
+                  }
+                  setSelectedNetworkIds(newSet);
+                  // Clear error when network is selected
+                  if (newSet.size > 0) {
+                    setNetworkError(null);
+                  }
+                }}
+              />
 
-            {/* Error Message or Selection Indicator for Networks */}
-            <SelectionIndicator
-              className="mt-2"
-              selectedItems={mockNetworks
-                .filter((n) => selectedNetworkIds.has(n.id))
-                .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
-              onRemove={(id) => {
-                const newSet = new Set(selectedNetworkIds);
-                newSet.delete(id);
-                setSelectedNetworkIds(newSet);
-              }}
-              error={!!networkError}
-              errorMessage={networkError}
-            />
+              {/* Error Message or Selection Indicator for Networks */}
+              <SelectionIndicator
+                selectedItems={mockNetworks
+                  .filter((n) => selectedNetworkIds.has(n.id))
+                  .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
+                onRemove={(id) => {
+                  const newSet = new Set(selectedNetworkIds);
+                  newSet.delete(id);
+                  setSelectedNetworkIds(newSet);
+                }}
+                error={!!networkError}
+                errorMessage={networkError}
+              />
+            </div>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2561,39 +2556,40 @@ function NetworkSection({
               onPageChange={setSgPage}
             />
 
-            <Table
-              columns={securityGroupColumns}
-              data={filteredSecurityGroups}
-              rowKey="id"
-              onRowClick={(row) => {
-                const newSet = new Set(selectedSecurityGroups);
-                if (newSet.has(row.id)) {
-                  newSet.delete(row.id);
-                } else {
-                  newSet.add(row.id);
-                }
-                setSelectedSecurityGroups(newSet);
-                // Clear error when security group is selected
-                if (newSet.size > 0) {
-                  setSecurityGroupError(null);
-                }
-              }}
-            />
+            <div className="flex flex-col gap-[8px]">
+              <Table
+                columns={securityGroupColumns}
+                data={filteredSecurityGroups}
+                rowKey="id"
+                onRowClick={(row) => {
+                  const newSet = new Set(selectedSecurityGroups);
+                  if (newSet.has(row.id)) {
+                    newSet.delete(row.id);
+                  } else {
+                    newSet.add(row.id);
+                  }
+                  setSelectedSecurityGroups(newSet);
+                  // Clear error when security group is selected
+                  if (newSet.size > 0) {
+                    setSecurityGroupError(null);
+                  }
+                }}
+              />
 
-            {/* Selection Indicator for Security Groups */}
-            <SelectionIndicator
-              className="mt-2"
-              selectedItems={mockSecurityGroups
-                .filter((sg) => selectedSecurityGroups.has(sg.id))
-                .map((sg) => ({ id: sg.id, label: sg.name }))}
-              onRemove={(id) => {
-                const newSet = new Set(selectedSecurityGroups);
-                newSet.delete(id);
-                setSelectedSecurityGroups(newSet);
-              }}
-              error={!!securityGroupError}
-              errorMessage={securityGroupError}
-            />
+              {/* Selection Indicator for Security Groups */}
+              <SelectionIndicator
+                selectedItems={mockSecurityGroups
+                  .filter((sg) => selectedSecurityGroups.has(sg.id))
+                  .map((sg) => ({ id: sg.id, label: sg.name }))}
+                onRemove={(id) => {
+                  const newSet = new Set(selectedSecurityGroups);
+                  newSet.delete(id);
+                  setSelectedSecurityGroups(newSet);
+                }}
+                error={!!securityGroupError}
+                errorMessage={securityGroupError}
+              />
+            </div>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2623,30 +2619,31 @@ function NetworkSection({
                     totalItems={filteredPorts.length}
                     onPageChange={setPortPage}
                   />
-                  <Table
-                    columns={portColumns}
-                    data={filteredPorts}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedPortId(row.id)}
-                  />
+                  <div className="flex flex-col gap-[8px]">
+                    <Table
+                      columns={portColumns}
+                      data={filteredPorts}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedPortId(row.id)}
+                    />
 
-                  {/* Selection Indicator for Port */}
-                  <SelectionIndicator
-                    className="mt-2"
-                    selectedItems={
-                      selectedPortId
-                        ? [
-                            {
-                              id: selectedPortId,
-                              label:
-                                mockPorts.find((p) => p.id === selectedPortId)?.name ||
-                                selectedPortId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedPortId(null)}
-                  />
+                    {/* Selection Indicator for Port */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedPortId
+                          ? [
+                              {
+                                id: selectedPortId,
+                                label:
+                                  mockPorts.find((p) => p.id === selectedPortId)?.name ||
+                                  selectedPortId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedPortId(null)}
+                    />
+                  </div>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -2825,8 +2822,6 @@ function AuthenticationSection({
       </SectionCard.Header>
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
           {/* Login type */}
           <VStack gap={4} className="py-6">
             <span className="text-label-lg">Login type</span>
@@ -3150,7 +3145,6 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Server group Disclosure */}
           <div className="py-6">
             <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
@@ -3428,8 +3422,6 @@ function TemplatesSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
           {/* Resource type */}
           <VStack gap={2} align="start" className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">

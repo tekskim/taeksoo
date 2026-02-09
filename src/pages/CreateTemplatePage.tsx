@@ -686,7 +686,6 @@ function TemplateInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Template name */}
           <div className="py-6">
             <VStack gap={2}>
@@ -812,7 +811,6 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* AZ (Availability zone) */}
           <div className="py-6">
             <VStack gap={2}>
@@ -1035,7 +1033,6 @@ function ImageSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
           <div className="py-6">
             <VStack gap={3}>
@@ -1378,7 +1375,6 @@ function FlavorSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Flavors Label & Description */}
           <div className="py-6">
             <VStack gap={2} align="start">
@@ -1829,7 +1825,6 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Networks Section */}
           <div className="py-6">
             <VStack gap={4} align="stretch">
@@ -2220,7 +2215,6 @@ function AuthenticationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type */}
           <div className="py-6">
             <VStack gap={2}>
@@ -2400,7 +2394,6 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Tags Section */}
           <div className="py-6">
             <VStack gap={3} align="stretch">
