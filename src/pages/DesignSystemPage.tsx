@@ -795,20 +795,15 @@ function OpenSectionTableDemo() {
                 />
               </div>
 
-              {/* Error Message or Selection Indicator */}
-              {sourceError && !selectedImage ? (
-                <div className="mt-2">
-                  <InlineMessage variant="error">{sourceError}</InlineMessage>
-                </div>
-              ) : (
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={
-                    selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                  }
-                  onRemove={() => setSelectedImageId(null)}
-                />
-              )}
+              {/* Selection Indicator (with built-in error state) */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                }
+                onRemove={() => setSelectedImageId(null)}
+                error={!!sourceError}
+                errorMessage={sourceError || undefined}
+              />
             </VStack>
 
             {/* Divider + Next Button */}

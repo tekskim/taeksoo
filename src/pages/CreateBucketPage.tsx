@@ -100,7 +100,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit

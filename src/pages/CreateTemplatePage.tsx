@@ -26,7 +26,6 @@ import {
   IconUbuntu,
   IconGrid,
   IconRocky,
-  InlineMessage,
   SelectionIndicator,
   PageShell,
   fixedColumns,
@@ -598,7 +597,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -670,7 +668,6 @@ function TemplateInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Template information"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -795,7 +792,6 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1017,7 +1013,6 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1035,7 +1030,7 @@ function ImageSection({
         <VStack gap={0}>
           {/* Start Source */}
           <div className="py-6">
-            <VStack gap={3}>
+            <VStack gap={2}>
               <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Select a template to launch the instance. You can start from an OS image, a
@@ -1131,18 +1126,13 @@ function ImageSection({
 
               {/* Selection Indicator for Image */}
               <SelectionIndicator
-                className="mt-2"
                 selectedItems={
                   selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
                 }
                 onRemove={() => onSelectImage('')}
+                error={!!imageError}
+                errorMessage={imageError || undefined}
               />
-              {/* Error Message */}
-              {imageError && (
-                <div className="mt-2">
-                  <InlineMessage variant="error">{imageError}</InlineMessage>
-                </div>
-              )}
             </VStack>
           </div>
 
@@ -1359,7 +1349,6 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1387,7 +1376,7 @@ function FlavorSection({
             </VStack>
 
             {/* Flavor Type Tabs */}
-            <VStack gap={4} align="stretch" className="mt-4">
+            <VStack gap={2} align="stretch" className="mt-4">
               <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="cpu">CPU</Tab>
@@ -1433,27 +1422,22 @@ function FlavorSection({
                 onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
               />
 
-              {/* Error Message or Selection Indicator for Flavor */}
-              {flavorError && !selectedFlavor ? (
-                <div className="mt-2">
-                  <InlineMessage variant="error">{flavorError}</InlineMessage>
-                </div>
-              ) : (
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={
-                    selectedFlavor
-                      ? [
-                          {
-                            id: selectedFlavor.id,
-                            label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => onSelectFlavor('')}
-                />
-              )}
+              {/* Selection Indicator for Flavor */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFlavor
+                    ? [
+                        {
+                          id: selectedFlavor.id,
+                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => onSelectFlavor('')}
+                error={!!flavorError}
+                errorMessage={flavorError || undefined}
+              />
             </VStack>
           </div>
 
@@ -1652,6 +1636,36 @@ function NetworkSection({
       key: 'select',
       label: '',
       width: fixedColumns.select,
+      headerRender: () => {
+        const visibleIds = paginatedNetworks.map((row) => row.id);
+        const allSelected =
+          visibleIds.length > 0 && visibleIds.every((id) => selectedNetworkIds.has(id));
+        const someSelected = visibleIds.some((id) => selectedNetworkIds.has(id));
+        return (
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onChange={() => {
+              if (allSelected) {
+                // Deselect all visible items
+                visibleIds.forEach((id) => {
+                  if (selectedNetworkIds.has(id)) {
+                    handleNetworkToggle(id);
+                  }
+                });
+              } else {
+                // Select all visible items
+                visibleIds.forEach((id) => {
+                  if (!selectedNetworkIds.has(id)) {
+                    handleNetworkToggle(id);
+                  }
+                });
+              }
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1702,6 +1716,36 @@ function NetworkSection({
       key: 'select',
       label: '',
       width: fixedColumns.select,
+      headerRender: () => {
+        const visibleIds = paginatedSGs.map((row) => row.id);
+        const allSelected =
+          visibleIds.length > 0 && visibleIds.every((id) => selectedSecurityGroups.has(id));
+        const someSelected = visibleIds.some((id) => selectedSecurityGroups.has(id));
+        return (
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onChange={() => {
+              if (allSelected) {
+                // Deselect all visible items
+                visibleIds.forEach((id) => {
+                  if (selectedSecurityGroups.has(id)) {
+                    handleSecurityGroupToggle(id);
+                  }
+                });
+              } else {
+                // Select all visible items
+                visibleIds.forEach((id) => {
+                  if (!selectedSecurityGroups.has(id)) {
+                    handleSecurityGroupToggle(id);
+                  }
+                });
+              }
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1741,6 +1785,28 @@ function NetworkSection({
       key: 'select',
       label: '',
       width: fixedColumns.select,
+      headerRender: () => {
+        const visibleIds = paginatedPorts.map((row) => row.id);
+        const allSelected =
+          visibleIds.length > 0 && visibleIds.every((id) => selectedPortIds.has(id));
+        const someSelected = visibleIds.some((id) => selectedPortIds.has(id));
+        return (
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onChange={() => {
+              const newSet = new Set(selectedPortIds);
+              if (allSelected) {
+                visibleIds.forEach((id) => newSet.delete(id));
+              } else {
+                visibleIds.forEach((id) => newSet.add(id));
+              }
+              setSelectedPortIds(newSet);
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1809,7 +1875,6 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1827,7 +1892,7 @@ function NetworkSection({
         <VStack gap={0}>
           {/* Networks Section */}
           <div className="py-6">
-            <VStack gap={4} align="stretch">
+            <VStack gap={2} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -1882,6 +1947,7 @@ function NetworkSection({
                 totalPages={networkTotalPages}
                 totalItems={filteredNetworks.length}
                 onPageChange={setNetworkPage}
+                selectedCount={selectedNetworkIds.size}
               />
 
               {/* Network Table */}
@@ -1892,18 +1958,13 @@ function NetworkSection({
                 onRowClick={(row) => handleNetworkToggle(row.id)}
               />
 
-              {/* Error Message or Selection Indicator for Networks */}
-              {networkError && selectedNetworks.length === 0 ? (
-                <div className="mt-2">
-                  <InlineMessage variant="error">{networkError}</InlineMessage>
-                </div>
-              ) : (
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
-                  onRemove={(id) => handleNetworkToggle(id)}
-                />
-              )}
+              {/* Selection Indicator for Networks */}
+              <SelectionIndicator
+                selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
+                onRemove={(id) => handleNetworkToggle(id)}
+                error={!!networkError}
+                errorMessage={networkError || undefined}
+              />
             </VStack>
           </div>
 
@@ -1961,13 +2022,14 @@ function NetworkSection({
               ))}
 
               {/* Add Virtual LAN Button */}
-              <button
-                className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} />}
                 onClick={addVirtualLAN}
               >
-                <IconCirclePlus size={12} />
                 Add virtual LAN
-              </button>
+              </Button>
             </VStack>
           </div>
 
@@ -1975,7 +2037,7 @@ function NetworkSection({
 
           {/* Security groups Section */}
           <div className="py-6">
-            <VStack gap={4} align="stretch">
+            <VStack gap={2} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Security groups
@@ -2013,6 +2075,7 @@ function NetworkSection({
                 totalPages={sgTotalPages}
                 totalItems={filteredSGs.length}
                 onPageChange={setSgPage}
+                selectedCount={selectedSecurityGroups.size}
               />
 
               {/* Security group Table */}
@@ -2023,18 +2086,13 @@ function NetworkSection({
                 onRowClick={(row) => handleSecurityGroupToggle(row.id)}
               />
 
-              {/* Error Message or Selection Indicator for Security Groups */}
-              {sgError && selectedSGs.length === 0 ? (
-                <div className="mt-2">
-                  <InlineMessage variant="error">{sgError}</InlineMessage>
-                </div>
-              ) : (
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
-                  onRemove={(id) => handleSecurityGroupToggle(id)}
-                />
-              )}
+              {/* Selection Indicator for Security Groups */}
+              <SelectionIndicator
+                selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
+                onRemove={(id) => handleSecurityGroupToggle(id)}
+                error={!!sgError}
+                errorMessage={sgError || undefined}
+              />
             </VStack>
           </div>
 
@@ -2056,7 +2114,7 @@ function NetworkSection({
               </button>
 
               {portExpanded && (
-                <VStack gap={3} align="stretch">
+                <VStack gap={2} align="stretch">
                   {/* Port Search */}
                   <SearchInput
                     placeholder="Search ports by attributes"
@@ -2079,6 +2137,7 @@ function NetworkSection({
                     totalPages={portTotalPages}
                     totalItems={filteredPorts.length}
                     onPageChange={setPortPage}
+                    selectedCount={selectedPortIds.size}
                   />
 
                   {/* Port Table */}
@@ -2091,7 +2150,6 @@ function NetworkSection({
 
                   {/* Selection Indicator for Ports */}
                   <SelectionIndicator
-                    className="mt-2"
                     selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
                     onRemove={(id) => handlePortToggle(id)}
                   />
@@ -2199,7 +2257,6 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2256,29 +2313,24 @@ function AuthenticationSection({
                     onRowClick={(row) => handleSelectKeyPair(row.id)}
                   />
 
-                  {/* Error Message or Selection Indicator for Key Pair */}
-                  {authError && !selectedKeyPairId ? (
-                    <div className="mt-2">
-                      <InlineMessage variant="error">{authError}</InlineMessage>
-                    </div>
-                  ) : (
-                    <SelectionIndicator
-                      className="mt-2"
-                      selectedItems={
-                        selectedKeyPairId
-                          ? [
-                              {
-                                id: selectedKeyPairId,
-                                label:
-                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                  selectedKeyPairId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => onSelectKeyPair('')}
-                    />
-                  )}
+                  {/* Selection Indicator for Key Pair */}
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedKeyPairId
+                        ? [
+                            {
+                              id: selectedKeyPairId,
+                              label:
+                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                selectedKeyPairId,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => onSelectKeyPair('')}
+                    error={!!authError}
+                    errorMessage={authError || undefined}
+                  />
                 </VStack>
               </div>
             </>
@@ -2378,7 +2430,6 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2434,14 +2485,15 @@ function AdvancedSection({
               )}
 
               <HStack gap={3} align="center">
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
                   onClick={handleAddTag}
                   disabled={tags.length >= MAX_TAGS}
-                  className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <IconCirclePlus size={12} />
                   Add tag
-                </button>
+                </Button>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   {tags.length} / {MAX_TAGS} tags
                 </span>
@@ -2462,13 +2514,15 @@ function AdvancedSection({
               </VStack>
 
               <VStack gap={3} align="stretch">
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconUpload size={12} />}
                   onClick={handleFileUpload}
-                  className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
+                  className="w-fit"
                 >
-                  <IconUpload size={12} />
                   Upload a file
-                </button>
+                </Button>
 
                 <VStack gap={2} align="stretch">
                   <Textarea
@@ -2548,9 +2602,7 @@ export function CreateTemplatePage() {
 
   // Network state
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
-  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(
-    new Set(['sg2'])
-  );
+  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set());
 
   // Authentication state
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');

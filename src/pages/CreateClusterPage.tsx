@@ -429,7 +429,7 @@ export function CreateClusterPage() {
                     Select the external network for outbound access.
                   </FormField.Description>
                   <FormField.Control>
-                    <VStack gap={3}>
+                    <VStack gap={2}>
                       <SearchInput
                         placeholder="Search network by attributes"
                         value={externalNetworkSearch}
@@ -471,7 +471,7 @@ export function CreateClusterPage() {
                     Select a tenant network for your cluster resources.
                   </FormField.Description>
                   <FormField.Control>
-                    <VStack gap={3}>
+                    <VStack gap={2}>
                       <SearchInput
                         placeholder="Search network by attributes"
                         value={tenantNetworkSearch}
@@ -573,7 +573,7 @@ export function CreateClusterPage() {
                         control plane nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <Tabs
                             value={cpFlavorFilter}
                             onChange={setCpFlavorFilter}

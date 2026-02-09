@@ -27,7 +27,6 @@ import {
   Checkbox,
   Disclosure,
   Tooltip,
-  InlineMessage,
   SelectionIndicator,
   PageShell,
   fixedColumns,
@@ -971,6 +970,28 @@ export default function CreateLoadBalancerPage() {
         key: 'select',
         label: '',
         width: fixedColumns.select,
+        headerRender: () => {
+          const visibleIds = mockSniCertificates.map((row) => row.id);
+          const allSelected =
+            visibleIds.length > 0 && visibleIds.every((id) => selectedSniCertificates.has(id));
+          const someSelected = visibleIds.some((id) => selectedSniCertificates.has(id));
+          return (
+            <Checkbox
+              checked={allSelected}
+              indeterminate={someSelected && !allSelected}
+              onChange={() => {
+                const newSet = new Set(selectedSniCertificates);
+                if (allSelected) {
+                  visibleIds.forEach((id) => newSet.delete(id));
+                } else {
+                  visibleIds.forEach((id) => newSet.add(id));
+                }
+                setSelectedSniCertificates(newSet);
+              }}
+              aria-label="Select all"
+            />
+          );
+        },
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Checkbox
@@ -1375,29 +1396,24 @@ export default function CreateLoadBalancerPage() {
                           </div>
                         )}
 
-                        {/* Error Message or Selection Indicator for Network */}
-                        {networkError && !selectedNetwork ? (
-                          <div className="mt-2">
-                            <InlineMessage variant="error">{networkError}</InlineMessage>
-                          </div>
-                        ) : (
-                          <SelectionIndicator
-                            className="mt-2"
-                            selectedItems={
-                              selectedNetwork
-                                ? [
-                                    {
-                                      id: selectedNetwork,
-                                      label:
-                                        mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
-                                        selectedNetwork,
-                                    },
-                                  ]
-                                : []
-                            }
-                            onRemove={() => setSelectedNetwork('')}
-                          />
-                        )}
+                        {/* Selection Indicator for Network */}
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedNetwork
+                              ? [
+                                  {
+                                    id: selectedNetwork,
+                                    label:
+                                      mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
+                                      selectedNetwork,
+                                  },
+                                ]
+                              : []
+                          }
+                          onRemove={() => setSelectedNetwork('')}
+                          error={!!networkError}
+                          errorMessage={networkError || undefined}
+                        />
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1681,7 +1697,6 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Selection Indicator for Certificate */}
                             <SelectionIndicator
-                              className="mt-2"
                               selectedItems={
                                 selectedCertificate
                                   ? [
@@ -1738,7 +1753,6 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Selection Indicator for CA Certificate */}
                             <SelectionIndicator
-                              className="mt-2"
                               selectedItems={
                                 selectedCaCertificate
                                   ? [
@@ -1786,7 +1800,7 @@ export default function CreateLoadBalancerPage() {
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="py-6">
-                          <VStack gap={4} align="stretch">
+                          <VStack gap={2} align="stretch">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               SNI Certificates
                             </span>
@@ -1805,6 +1819,7 @@ export default function CreateLoadBalancerPage() {
                               totalPages={5}
                               totalItems={115}
                               onPageChange={setSniCertificatePage}
+                              selectedCount={selectedSniCertificates.size}
                             />
 
                             {/* SNI Certificate Table */}
@@ -1816,7 +1831,6 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Selection Indicator for SNI Certificates */}
                             <SelectionIndicator
-                              className="mt-2"
                               selectedItems={Array.from(selectedSniCertificates).map((id) => ({
                                 id,
                                 label: mockSniCertificates.find((c) => c.id === id)?.name || id,

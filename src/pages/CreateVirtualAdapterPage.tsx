@@ -25,7 +25,6 @@ import {
   Radio,
   Toggle,
   Checkbox,
-  InlineMessage,
   SelectionIndicator,
   PageShell,
   fixedColumns,
@@ -354,6 +353,28 @@ export default function CreateVirtualAdapterPage() {
         key: 'select',
         label: '',
         width: fixedColumns.select,
+        headerRender: () => {
+          const visibleIds = mockSecurityGroups.map((row) => row.id);
+          const allSelected =
+            visibleIds.length > 0 && visibleIds.every((id) => selectedSecurityGroups.includes(id));
+          const someSelected = visibleIds.some((id) => selectedSecurityGroups.includes(id));
+          return (
+            <Checkbox
+              checked={allSelected}
+              indeterminate={someSelected && !allSelected}
+              onChange={() => {
+                if (allSelected) {
+                  setSelectedSecurityGroups((prev) =>
+                    prev.filter((id) => !visibleIds.includes(id))
+                  );
+                } else {
+                  setSelectedSecurityGroups((prev) => [...new Set([...prev, ...visibleIds])]);
+                }
+              }}
+              aria-label="Select all"
+            />
+          );
+        },
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Checkbox
@@ -658,7 +679,7 @@ export default function CreateVirtualAdapterPage() {
                         </Tabs>
 
                         {/* Network Table Body */}
-                        <VStack gap={3} align="stretch">
+                        <VStack gap={2} align="stretch">
                           {/* Search and Pagination */}
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
@@ -685,7 +706,6 @@ export default function CreateVirtualAdapterPage() {
 
                           {/* Selection Indicator for Network */}
                           <SelectionIndicator
-                            className="mt-2"
                             selectedItems={
                               selectedNetwork
                                 ? [
@@ -699,6 +719,8 @@ export default function CreateVirtualAdapterPage() {
                                 : []
                             }
                             onRemove={() => setSelectedNetwork(null)}
+                            error={!!networkError}
+                            errorMessage={networkError || undefined}
                           />
                         </VStack>
                       </VStack>
@@ -828,15 +850,6 @@ export default function CreateVirtualAdapterPage() {
                         </FormField>
                       </VStack>
                     </div>
-                    {/* Network Error Message */}
-                    {networkError && (
-                      <>
-                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                        <div className="py-6">
-                          <InlineMessage variant="error">{networkError}</InlineMessage>
-                        </div>
-                      </>
-                    )}
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Next Button */}
                     <HStack justify="end" className="pt-3">
@@ -925,7 +938,7 @@ export default function CreateVirtualAdapterPage() {
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="py-6">
-                          <VStack gap={3} align="stretch">
+                          <VStack gap={2} align="stretch">
                             <VStack gap={1.5} align="stretch">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Security groups
@@ -959,6 +972,7 @@ export default function CreateVirtualAdapterPage() {
                               totalPages={5}
                               totalItems={115}
                               onPageChange={setSecurityGroupPage}
+                              selectedCount={selectedSecurityGroups.length}
                             />
 
                             {/* Security Groups Table */}
@@ -970,7 +984,6 @@ export default function CreateVirtualAdapterPage() {
 
                             {/* Selection Indicator for Security Groups */}
                             <SelectionIndicator
-                              className="mt-2"
                               selectedItems={selectedSecurityGroups.map((id) => ({
                                 id,
                                 label: mockSecurityGroups.find((sg) => sg.id === id)?.name || id,

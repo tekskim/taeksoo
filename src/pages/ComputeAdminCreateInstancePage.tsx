@@ -529,7 +529,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
@@ -615,7 +614,6 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1229,7 +1227,6 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1369,7 +1366,6 @@ function ImageSection({
 
             {/* Selected / Error Message */}
             <SelectionIndicator
-              className="mt-2"
               selectedItems={
                 selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
               }
@@ -1693,7 +1689,6 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1730,56 +1725,52 @@ function FlavorSection({
             </Tabs>
           </VStack>
 
-          {/* Search */}
-          <SearchInput
-            placeholder="Search flavors by attributes"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onClear={() => {
-              setSearchQuery('');
-              setCurrentPage(1);
-            }}
-            size="sm"
-            className="w-[var(--search-input-width)] mb-2"
-          />
+          {/* Search, Pagination, Table, and Selection Indicator */}
+          <VStack gap={2}>
+            <SearchInput
+              placeholder="Search flavors by attributes"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onClear={() => {
+                setSearchQuery('');
+                setCurrentPage(1);
+              }}
+              size="sm"
+              className="w-[var(--search-input-width)]"
+            />
 
-          {/* Pagination */}
-          <div className="mb-2">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               totalItems={filteredFlavors.length}
               onPageChange={setCurrentPage}
             />
-          </div>
 
-          {/* Flavor Table */}
-          <Table
-            columns={flavorColumns}
-            data={paginatedFlavors}
-            rowKey="id"
-            onRowClick={(row) => handleSelectFlavor(row.id)}
-          />
+            <Table
+              columns={flavorColumns}
+              data={paginatedFlavors}
+              rowKey="id"
+              onRowClick={(row) => handleSelectFlavor(row.id)}
+            />
 
-          {/* Error Message or Selection Indicator */}
-          <SelectionIndicator
-            className="mt-2"
-            selectedItems={
-              selectedFlavorId
-                ? [
-                    {
-                      id: selectedFlavorId,
-                      label:
-                        mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                        selectedFlavorId,
-                    },
-                  ]
-                : []
-            }
-            onRemove={() => onSelectFlavor('')}
-            error={!!flavorError}
-            errorMessage={flavorError}
-          />
+            <SelectionIndicator
+              selectedItems={
+                selectedFlavorId
+                  ? [
+                      {
+                        id: selectedFlavorId,
+                        label:
+                          mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                          selectedFlavorId,
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => onSelectFlavor('')}
+              error={!!flavorError}
+              errorMessage={flavorError}
+            />
+          </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
           {!isEditing && (
@@ -2003,9 +1994,7 @@ function NetworkSection({
   const [fipPage, setFipPage] = useState(1);
 
   // Security groups
-  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(
-    new Set(['sg2'])
-  );
+  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set());
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
   const [securityGroupError, setSecurityGroupError] = useState<string | null>(null);
@@ -2043,6 +2032,28 @@ function NetworkSection({
       key: 'select',
       label: '',
       width: fixedColumns.select,
+      headerRender: () => {
+        const visibleIds = filteredNetworks.map((row) => row.id);
+        const allSelected =
+          visibleIds.length > 0 && visibleIds.every((id) => selectedNetworkIds.has(id));
+        const someSelected = visibleIds.some((id) => selectedNetworkIds.has(id));
+        return (
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onChange={() => {
+              const newSet = new Set(selectedNetworkIds);
+              if (allSelected) {
+                visibleIds.forEach((id) => newSet.delete(id));
+              } else {
+                visibleIds.forEach((id) => newSet.add(id));
+              }
+              setSelectedNetworkIds(newSet);
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -2116,6 +2127,28 @@ function NetworkSection({
       key: 'select',
       label: '',
       width: fixedColumns.select,
+      headerRender: () => {
+        const visibleIds = filteredExistingFips.map((row) => row.id);
+        const allSelected =
+          visibleIds.length > 0 && visibleIds.every((id) => selectedExistingFip.has(id));
+        const someSelected = visibleIds.some((id) => selectedExistingFip.has(id));
+        return (
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onChange={() => {
+              const newSet = new Set(selectedExistingFip);
+              if (allSelected) {
+                visibleIds.forEach((id) => newSet.delete(id));
+              } else {
+                visibleIds.forEach((id) => newSet.add(id));
+              }
+              setSelectedExistingFip(newSet);
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -2301,7 +2334,6 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2318,7 +2350,7 @@ function NetworkSection({
       <SectionCard.Content>
         <VStack gap={4} className="pt-2">
           {/* Network Sub-section */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">
               Network
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -2340,6 +2372,7 @@ function NetworkSection({
               totalPages={Math.ceil(filteredNetworks.length / 5) || 1}
               totalItems={filteredNetworks.length}
               onPageChange={setNetworkPage}
+              selectedCount={selectedNetworkIds.size}
             />
 
             {/* Network Table */}
@@ -2364,7 +2397,6 @@ function NetworkSection({
 
             {/* Error Message or Selection Indicator for Networks */}
             <SelectionIndicator
-              className="mt-2"
               selectedItems={mockNetworks
                 .filter((n) => selectedNetworkIds.has(n.id))
                 .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
@@ -2488,6 +2520,7 @@ function NetworkSection({
                   totalPages={Math.ceil(filteredExistingFips.length / 5) || 1}
                   totalItems={filteredExistingFips.length}
                   onPageChange={setFipPage}
+                  selectedCount={selectedExistingFip.size}
                 />
                 <Table
                   columns={existingFipColumns}
@@ -2511,7 +2544,7 @@ function NetworkSection({
           <div className="h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">
               Security groups
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -2549,6 +2582,7 @@ function NetworkSection({
               totalPages={Math.ceil(filteredSecurityGroups.length / 5) || 1}
               totalItems={filteredSecurityGroups.length}
               onPageChange={setSgPage}
+              selectedCount={selectedSecurityGroups.size}
             />
 
             <Table
@@ -2572,7 +2606,6 @@ function NetworkSection({
 
             {/* Selection Indicator for Security Groups */}
             <SelectionIndicator
-              className="mt-2"
               selectedItems={mockSecurityGroups
                 .filter((sg) => selectedSecurityGroups.has(sg.id))
                 .map((sg) => ({ id: sg.id, label: sg.name }))}
@@ -2598,7 +2631,7 @@ function NetworkSection({
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
-              <VStack gap={3} className="pt-3">
+              <VStack gap={2} className="pt-3">
                 <SearchInput
                   placeholder="Search floating IP by attributes"
                   value={portSearch}
@@ -2622,7 +2655,6 @@ function NetworkSection({
 
                 {/* Selection Indicator for Port */}
                 <SelectionIndicator
-                  className="mt-2"
                   selectedItems={
                     selectedPortId
                       ? [
@@ -2780,7 +2812,6 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2853,7 +2884,6 @@ function AuthenticationSection({
 
                 {/* Selection Indicator for Key Pair */}
                 <SelectionIndicator
-                  className="mt-2"
                   selectedItems={
                     selectedKeyPairId
                       ? [
@@ -3115,7 +3145,6 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3140,7 +3169,7 @@ function AdvancedSection({
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
-              <VStack gap={3} className="pt-3">
+              <VStack gap={2} className="pt-3">
                 {/* Search */}
                 <SearchInput
                   placeholder="Search server group by attributes"
@@ -3169,7 +3198,6 @@ function AdvancedSection({
 
                 {/* Selection Indicator for Server Group */}
                 <SelectionIndicator
-                  className="mt-2"
                   selectedItems={
                     selectedServerGroupId
                       ? [
@@ -3387,7 +3415,6 @@ function TemplatesSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Launch type"
-        showDivider
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3431,7 +3458,7 @@ function TemplatesSection({
         </VStack>
 
         {/* Templates Sub-section */}
-        <VStack gap={3} align="start" className="w-full">
+        <VStack gap={2} align="start" className="w-full">
           <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
           <span className="text-body-md text-[var(--color-text-subtle)]">
             Select the template to use for creating the instance. A template includes predefined
@@ -3581,7 +3608,6 @@ function TemplatesSection({
 
           {/* Selection Indicator for Templates */}
           <SelectionIndicator
-            className="mt-2"
             selectedItems={
               selectedId
                 ? [
@@ -3661,9 +3687,7 @@ export function ComputeAdminCreateInstancePage() {
 
   // Network state
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
-  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(
-    new Set(['sg2'])
-  );
+  const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<Set<string>>(new Set());
   const [floatingIpOption, setFloatingIpOption] = useState<'none' | 'auto' | 'existing'>('none');
 
   // Authentication state
