@@ -268,7 +268,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (value: string) => (
         <StatusIndicator
           status={
@@ -522,7 +522,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       flex: 1,
-      sortable: true,
+      sortable: false,
     },
     {
       key: 'message',

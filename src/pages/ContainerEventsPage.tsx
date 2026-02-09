@@ -251,7 +251,7 @@ export function ContainerEventsPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-body-md text-[var(--color-text-default)] truncate block"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
         >
           {value}
@@ -292,7 +292,7 @@ export function ContainerEventsPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
           title={value}
         >
           {value}

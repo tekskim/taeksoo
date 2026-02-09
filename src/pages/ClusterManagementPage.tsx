@@ -137,7 +137,7 @@ export function ClusterManagementPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      sortable: true,
+      sortable: false,
       align: 'center',
       render: (status) => (
         <StatusIndicator status={statusMap[status as ClusterStatus]} layout="icon-only" />

@@ -221,7 +221,7 @@ export function ContainerNodesPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      sortable: true,
+      sortable: false,
       align: 'center',
       render: (value: string) => (
         <StatusIndicator

@@ -230,7 +230,7 @@ export function CronJobsPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      sortable: true,
+      sortable: false,
       align: 'center',
       render: (value: string) => (
         <StatusIndicator

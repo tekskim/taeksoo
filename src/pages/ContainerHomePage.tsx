@@ -149,7 +149,7 @@ export function ContainerHomePage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      sortable: true,
+      sortable: false,
       render: (value: string) => (
         <StatusIndicator
           status={value === 'Running' ? 'active' : value === 'Creating' ? 'building' : 'suspended'}
