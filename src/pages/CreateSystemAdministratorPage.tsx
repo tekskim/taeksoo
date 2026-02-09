@@ -645,7 +645,7 @@ function BasicInformationSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Basic information"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -659,10 +659,13 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Username */}
-          <div className="flex flex-col pt-2 pb-6">
+          <div className="flex flex-col py-6">
             <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Username <span className="text-[var(--color-state-danger)]">*</span>
             </label>
@@ -844,7 +847,7 @@ function DefaultDomainSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Default domain"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -869,7 +872,9 @@ function DefaultDomainSection({
         }
       />
       <SectionCard.Content showDividers={false}>
-        <VStack gap={0} className="pt-2 pb-6">
+        <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <FormField required error={!!domainError && !selectedDomain}>
             <FormField.Label>Domains</FormField.Label>
             <FormField.Description>

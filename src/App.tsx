@@ -9,6 +9,10 @@ import { EntryPage } from '@/pages/EntryPage';
 
 // Pages - Settings
 import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
+import SettingsGeneralPage from '@/pages/SettingsGeneralPage';
+import SettingsAccountPage from '@/pages/SettingsAccountPage';
+import SettingsNotificationsPage from '@/pages/SettingsNotificationsPage';
+import SettingsInformationPage from '@/pages/SettingsInformationPage';
 
 // Pages - Mail Template
 import { MailTemplatePage } from '@/pages/MailTemplatePage';
@@ -347,6 +351,10 @@ function AppRoutes() {
 
       {/* Settings & Mail Template Routes */}
       <Route path="/settings" element={<SettingsPageWrapper />} />
+      <Route path="/settings/general" element={<SettingsGeneralPage />} />
+      <Route path="/settings/account" element={<SettingsAccountPage />} />
+      <Route path="/settings/notifications" element={<SettingsNotificationsPage />} />
+      <Route path="/settings/information" element={<SettingsInformationPage />} />
       <Route path="/mail-template" element={<MailTemplatePage />} />
       <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
       <Route path="/link-expired" element={<LinkExpiredPage />} />

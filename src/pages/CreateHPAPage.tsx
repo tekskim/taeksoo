@@ -448,7 +448,7 @@ export default function CreateHPAPage() {
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
             Create Horizontal Pod Autoscaler
           </h1>
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
             real-time resource usage to maintain stable application performance.
           </p>
@@ -838,7 +838,7 @@ export default function CreateHPAPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Labels
                       </label>
-                      <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                      <p className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </p>
                     </VStack>
@@ -907,7 +907,7 @@ export default function CreateHPAPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </label>
-                      <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                      <p className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </p>

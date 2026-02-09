@@ -698,8 +698,11 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Username */}
-          <div className="pt-2 pb-6">
+          <div className="py-6">
             <FormField required error={!!usernameError}>
               <FormField.Label>Username</FormField.Label>
               <FormField.Description>
@@ -919,7 +922,7 @@ function UserGroupSection({
     <SectionCard isActive>
       <SectionCard.Header
         title="Add user to the group"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -943,8 +946,10 @@ function UserGroupSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={0} className="pt-2 pb-6">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)]">User groups</span>

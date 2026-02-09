@@ -615,7 +615,7 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -629,10 +629,12 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
-          <VStack gap={2} className="pt-2 pb-6">
+          <VStack gap={2} className="py-6">
             <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
@@ -1229,7 +1231,7 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1243,10 +1245,12 @@ function ImageSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
-          <VStack gap={2} className="pt-2">
+          <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -1693,7 +1697,7 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1707,10 +1711,12 @@ function FlavorSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Flavors Label & Description */}
-          <VStack gap={2} className="pt-2 pb-4">
+          <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -2301,7 +2307,7 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2315,10 +2321,12 @@ function NetworkSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={4} className="pt-2">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Network Sub-section */}
-          <VStack gap={3}>
+          <VStack gap={3} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Network
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -2378,26 +2386,29 @@ function NetworkSection({
             />
           </VStack>
 
-          {/* Virtual LAN Disclosure */}
-          <Disclosure open={vlanOpen} onChange={setVlanOpen}>
-            <Disclosure.Trigger>
-              <HStack gap={2} align="center">
-                <span className="text-label-lg">Virtual LAN</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-              </HStack>
-            </Disclosure.Trigger>
-            <Disclosure.Panel>
-              <div className="pt-3 text-[var(--color-text-subtle)]">
-                Virtual LAN configuration options will be displayed here.
-              </div>
-            </Disclosure.Panel>
-          </Disclosure>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Divider */}
-          <div className="h-px bg-[var(--color-border-subtle)]" />
+          {/* Virtual LAN Disclosure */}
+          <div className="py-6">
+            <Disclosure open={vlanOpen} onChange={setVlanOpen}>
+              <Disclosure.Trigger>
+                <HStack gap={2} align="center">
+                  <span className="text-label-lg">Virtual LAN</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </HStack>
+              </Disclosure.Trigger>
+              <Disclosure.Panel>
+                <div className="pt-3 text-[var(--color-text-subtle)]">
+                  Virtual LAN configuration options will be displayed here.
+                </div>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Floating IP Section */}
-          <VStack gap={3}>
+          <VStack gap={3} className="py-6">
             <span className="text-label-lg">Floating IP</span>
 
             {/* Radio Options */}
@@ -2507,11 +2518,10 @@ function NetworkSection({
             )}
           </VStack>
 
-          {/* Divider */}
-          <div className="h-px bg-[var(--color-border-subtle)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
-          <VStack gap={3}>
+          <VStack gap={3} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Security groups
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -2586,64 +2596,67 @@ function NetworkSection({
             />
           </VStack>
 
-          {/* Divider */}
-          <div className="h-px bg-[var(--color-border-subtle)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Port Disclosure */}
-          <Disclosure open={portOpen} onChange={setPortOpen}>
-            <Disclosure.Trigger>
-              <HStack gap={2} align="center">
-                <span className="text-label-lg">Port</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-              </HStack>
-            </Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={3} className="pt-3">
-                <SearchInput
-                  placeholder="Search floating IP by attributes"
-                  value={portSearch}
-                  onChange={(e) => setPortSearch(e.target.value)}
-                  onClear={() => setPortSearch('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
-                <Pagination
-                  currentPage={portPage}
-                  totalPages={Math.ceil(filteredPorts.length / 5) || 1}
-                  totalItems={filteredPorts.length}
-                  onPageChange={setPortPage}
-                />
-                <Table
-                  columns={portColumns}
-                  data={filteredPorts}
-                  rowKey="id"
-                  onRowClick={(row) => setSelectedPortId(row.id)}
-                />
+          <div className="py-6">
+            <Disclosure open={portOpen} onChange={setPortOpen}>
+              <Disclosure.Trigger>
+                <HStack gap={2} align="center">
+                  <span className="text-label-lg">Port</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </HStack>
+              </Disclosure.Trigger>
+              <Disclosure.Panel>
+                <VStack gap={3} className="pt-3">
+                  <SearchInput
+                    placeholder="Search floating IP by attributes"
+                    value={portSearch}
+                    onChange={(e) => setPortSearch(e.target.value)}
+                    onClear={() => setPortSearch('')}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                  />
+                  <Pagination
+                    currentPage={portPage}
+                    totalPages={Math.ceil(filteredPorts.length / 5) || 1}
+                    totalItems={filteredPorts.length}
+                    onPageChange={setPortPage}
+                  />
+                  <Table
+                    columns={portColumns}
+                    data={filteredPorts}
+                    rowKey="id"
+                    onRowClick={(row) => setSelectedPortId(row.id)}
+                  />
 
-                {/* Selection Indicator for Port */}
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={
-                    selectedPortId
-                      ? [
-                          {
-                            id: selectedPortId,
-                            label:
-                              mockPorts.find((p) => p.id === selectedPortId)?.name ||
-                              selectedPortId,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => setSelectedPortId(null)}
-                />
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
+                  {/* Selection Indicator for Port */}
+                  <SelectionIndicator
+                    className="mt-2"
+                    selectedItems={
+                      selectedPortId
+                        ? [
+                            {
+                              id: selectedPortId,
+                              label:
+                                mockPorts.find((p) => p.id === selectedPortId)?.name ||
+                                selectedPortId,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => setSelectedPortId(null)}
+                  />
+                </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
-            <HStack justify="end" className="w-full pt-2">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
@@ -2780,7 +2793,7 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2810,143 +2823,102 @@ function AuthenticationSection({
           </HStack>
         </Button>
       </SectionCard.Header>
-      <SectionCard.Content>
-        <VStack gap={4} className="pt-2">
-          {/* Login type Header */}
-          <span className="text-label-lg">Login type</span>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Login type Tabs */}
-          <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
-            <TabList>
-              <Tab value="keypair">Key pair</Tab>
-              <Tab value="password">Password</Tab>
-            </TabList>
+          {/* Login type */}
+          <VStack gap={4} className="py-6">
+            <span className="text-label-lg">Login type</span>
 
-            {/* Key pair Tab Content */}
-            <TabPanel value="keypair" className="pt-4">
-              <VStack gap={3}>
-                {/* Search */}
-                <SearchInput
-                  placeholder="Search key pair by attributes"
-                  value={keyPairSearch}
-                  onChange={(e) => setKeyPairSearch(e.target.value)}
-                  onClear={() => setKeyPairSearch('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
+            {/* Login type Tabs */}
+            <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
+              <TabList>
+                <Tab value="keypair">Key pair</Tab>
+                <Tab value="password">Password</Tab>
+              </TabList>
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={keyPairPage}
-                  totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
-                  totalItems={filteredKeyPairs.length}
-                  onPageChange={setKeyPairPage}
-                />
-
-                {/* Key pair Table */}
-                <Table
-                  columns={keyPairColumns}
-                  data={filteredKeyPairs}
-                  rowKey="id"
-                  onRowClick={(row) => handleSelectKeyPair(row.id)}
-                />
-
-                {/* Selection Indicator for Key Pair */}
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={
-                    selectedKeyPairId
-                      ? [
-                          {
-                            id: selectedKeyPairId,
-                            label:
-                              mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                              selectedKeyPairId,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => setSelectedKeyPairId(null)}
-                />
-              </VStack>
-            </TabPanel>
-
-            {/* Password Tab Content */}
-            <TabPanel value="password" className="pt-4">
-              <VStack gap={4}>
-                <div>
-                  <label className="block text-label-lg mb-2">Login Name</label>
-                  <Input
-                    value={loginName}
-                    onChange={(e) => {
-                      setLoginName(e.target.value);
-                      setAuthError(null);
-                    }}
-                    placeholder="Input login name"
+              {/* Key pair Tab Content */}
+              <TabPanel value="keypair" className="pt-4">
+                <VStack gap={3}>
+                  {/* Search */}
+                  <SearchInput
+                    placeholder="Search key pair by attributes"
+                    value={keyPairSearch}
+                    onChange={(e) => setKeyPairSearch(e.target.value)}
+                    onClear={() => setKeyPairSearch('')}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
                   />
-                </div>
-                <div>
-                  <label className="block text-label-lg mb-2">Password</label>
-                  <div className="relative">
+
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={keyPairPage}
+                    totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
+                    totalItems={filteredKeyPairs.length}
+                    onPageChange={setKeyPairPage}
+                  />
+
+                  {/* Key pair Table */}
+                  <Table
+                    columns={keyPairColumns}
+                    data={filteredKeyPairs}
+                    rowKey="id"
+                    onRowClick={(row) => handleSelectKeyPair(row.id)}
+                  />
+
+                  {/* Selection Indicator for Key Pair */}
+                  <SelectionIndicator
+                    className="mt-2"
+                    selectedItems={
+                      selectedKeyPairId
+                        ? [
+                            {
+                              id: selectedKeyPairId,
+                              label:
+                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                selectedKeyPairId,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => setSelectedKeyPairId(null)}
+                  />
+                </VStack>
+              </TabPanel>
+
+              {/* Password Tab Content */}
+              <TabPanel value="password" className="pt-4">
+                <VStack gap={4}>
+                  <div>
+                    <label className="block text-label-lg mb-2">Login Name</label>
                     <Input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
+                      value={loginName}
                       onChange={(e) => {
-                        setPassword(e.target.value);
+                        setLoginName(e.target.value);
                         setAuthError(null);
                       }}
-                      placeholder="Input password"
+                      placeholder="Input login name"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                    >
-                      {showPassword ? (
-                        <svg
-                          className="w-4 h-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                          <line x1="1" y1="1" x2="23" y2="23" />
-                        </svg>
-                      ) : (
-                        <svg
-                          className="w-4 h-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
-                      )}
-                    </button>
                   </div>
-                </div>
-                <div>
-                  <label className="block text-label-lg mb-2">Confirm Password</label>
-                  <VStack gap={1}>
+                  <div>
+                    <label className="block text-label-lg mb-2">Password</label>
                     <div className="relative">
                       <Input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        value={confirmPassword}
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
                         onChange={(e) => {
-                          setConfirmPassword(e.target.value);
+                          setPassword(e.target.value);
                           setAuthError(null);
                         }}
                         placeholder="Input password"
                       />
                       <button
                         type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                       >
-                        {showConfirmPassword ? (
+                        {showPassword ? (
                           <svg
                             className="w-4 h-4"
                             viewBox="0 0 24 24"
@@ -2971,20 +2943,67 @@ function AuthenticationSection({
                         )}
                       </button>
                     </div>
-                    {authError && loginType === 'password' && (
-                      <span className="text-body-sm text-[var(--color-state-danger)]">
-                        {authError}
-                      </span>
-                    )}
-                  </VStack>
-                </div>
-              </VStack>
-            </TabPanel>
-          </Tabs>
+                  </div>
+                  <div>
+                    <label className="block text-label-lg mb-2">Confirm Password</label>
+                    <VStack gap={1}>
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        >
+                          {showConfirmPassword ? (
+                            <svg
+                              className="w-4 h-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                              <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-4 h-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                      {authError && loginType === 'password' && (
+                        <span className="text-body-sm text-[var(--color-state-danger)]">
+                          {authError}
+                        </span>
+                      )}
+                    </VStack>
+                  </div>
+                </VStack>
+              </TabPanel>
+            </Tabs>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
-            <HStack justify="end" className="w-full pt-2">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
@@ -3115,7 +3134,7 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3129,126 +3148,132 @@ function AdvancedSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={4} className="pt-2">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Server group Disclosure */}
-          <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
-            <Disclosure.Trigger>
-              <HStack gap={2} align="center">
-                <span className="text-label-lg">Server group</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-              </HStack>
-            </Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={3} className="pt-3">
-                {/* Search */}
-                <SearchInput
-                  placeholder="Search server group by attributes"
-                  value={serverGroupSearch}
-                  onChange={(e) => setServerGroupSearch(e.target.value)}
-                  onClear={() => setServerGroupSearch('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
+          <div className="py-6">
+            <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
+              <Disclosure.Trigger>
+                <HStack gap={2} align="center">
+                  <span className="text-label-lg">Server group</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </HStack>
+              </Disclosure.Trigger>
+              <Disclosure.Panel>
+                <VStack gap={3} className="pt-3">
+                  {/* Search */}
+                  <SearchInput
+                    placeholder="Search server group by attributes"
+                    value={serverGroupSearch}
+                    onChange={(e) => setServerGroupSearch(e.target.value)}
+                    onClear={() => setServerGroupSearch('')}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                  />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={serverGroupPage}
-                  totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
-                  totalItems={filteredServerGroups.length}
-                  onPageChange={setServerGroupPage}
-                />
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={serverGroupPage}
+                    totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
+                    totalItems={filteredServerGroups.length}
+                    onPageChange={setServerGroupPage}
+                  />
 
-                {/* Server group Table */}
-                <Table
-                  columns={serverGroupColumns}
-                  data={filteredServerGroups}
-                  rowKey="id"
-                  onRowClick={(row) => setSelectedServerGroupId(row.id)}
-                />
+                  {/* Server group Table */}
+                  <Table
+                    columns={serverGroupColumns}
+                    data={filteredServerGroups}
+                    rowKey="id"
+                    onRowClick={(row) => setSelectedServerGroupId(row.id)}
+                  />
 
-                {/* Selection Indicator for Server Group */}
-                <SelectionIndicator
-                  className="mt-2"
-                  selectedItems={
-                    selectedServerGroupId
-                      ? [
-                          {
-                            id: selectedServerGroupId,
-                            label:
-                              mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                ?.name || selectedServerGroupId,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => setSelectedServerGroupId(null)}
-                />
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
+                  {/* Selection Indicator for Server Group */}
+                  <SelectionIndicator
+                    className="mt-2"
+                    selectedItems={
+                      selectedServerGroupId
+                        ? [
+                            {
+                              id: selectedServerGroupId,
+                              label:
+                                mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
+                                  ?.name || selectedServerGroupId,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => setSelectedServerGroupId(null)}
+                  />
+                </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[var(--color-border-subtle)]" />
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* User data Disclosure */}
-          <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
-            <Disclosure.Trigger>
-              <HStack gap={2} align="center">
-                <span className="text-label-lg">User data</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-              </HStack>
-            </Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={3} className="pt-3">
-                {/* Upload Button */}
-                <div>
-                  <input
-                    type="file"
-                    id="user-data-file"
-                    className="hidden"
-                    onChange={handleFileUpload}
-                    accept=".txt,.sh,.yaml,.yml,.json"
-                  />
-                  <label htmlFor="user-data-file">
-                    <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
-                      <HStack gap={1} align="center">
-                        <IconUpload size={12} stroke={1.5} />
-                        <span>Upload a file</span>
-                      </HStack>
-                    </Button>
-                  </label>
-                </div>
-
-                {/* User data Textarea */}
-                <div className="w-full">
-                  <Textarea
-                    value={userData}
-                    onChange={handleUserDataChange}
-                    placeholder="input user data"
-                    rows={6}
-                    fullWidth
-                    className="font-mono text-body-md"
-                    error={!!userDataError}
-                  />
-                  <div className="flex justify-between items-start mt-1.5">
-                    <span className="text-body-sm text-[var(--color-state-danger)]">
-                      {userDataError || ''}
-                    </span>
-                    <span
-                      className={`text-body-sm ${userDataError ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
-                    >
-                      {(new Blob([userData]).size / 1024).toFixed(1)} / 16 KB
-                    </span>
+          <div className="py-6">
+            <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
+              <Disclosure.Trigger>
+                <HStack gap={2} align="center">
+                  <span className="text-label-lg">User data</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </HStack>
+              </Disclosure.Trigger>
+              <Disclosure.Panel>
+                <VStack gap={3} className="pt-3">
+                  {/* Upload Button */}
+                  <div>
+                    <input
+                      type="file"
+                      id="user-data-file"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                      accept=".txt,.sh,.yaml,.yml,.json"
+                    />
+                    <label htmlFor="user-data-file">
+                      <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
+                        <HStack gap={1} align="center">
+                          <IconUpload size={12} stroke={1.5} />
+                          <span>Upload a file</span>
+                        </HStack>
+                      </Button>
+                    </label>
                   </div>
-                </div>
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
+
+                  {/* User data Textarea */}
+                  <div className="w-full">
+                    <Textarea
+                      value={userData}
+                      onChange={handleUserDataChange}
+                      placeholder="input user data"
+                      rows={6}
+                      fullWidth
+                      className="font-mono text-body-md"
+                      error={!!userDataError}
+                    />
+                    <div className="flex justify-between items-start mt-1.5">
+                      <span className="text-body-sm text-[var(--color-state-danger)]">
+                        {userDataError || ''}
+                      </span>
+                      <span
+                        className={`text-body-sm ${userDataError ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
+                      >
+                        {(new Blob([userData]).size / 1024).toFixed(1)} / 16 KB
+                      </span>
+                    </div>
+                  </div>
+                </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
-            <HStack justify="end" className="w-full pt-2">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={onNext}>
                 Next
               </Button>
@@ -3387,7 +3412,7 @@ function TemplatesSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Launch type"
-        showDivider
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3401,212 +3426,224 @@ function TemplatesSection({
           ) : undefined
         }
       />
-      <SectionCard.Content gap={6} className="pt-2">
-        {/* Resource type */}
-        <VStack gap={2} align="start">
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Resource type <span className="text-[var(--color-state-danger)]">*</span>
-          </span>
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            Choose the resource category to apply to the flavor.
-          </span>
-          <VStack gap={2} align="start">
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                value="vm"
-                checked={resourceType === 'vm'}
-                onChange={() => setResourceType('vm')}
-              />
-              <span className="text-body-md text-[var(--color-text-default)]">Virtual machine</span>
-            </label>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                value="baremetal"
-                checked={resourceType === 'baremetal'}
-                onChange={() => setResourceType('baremetal')}
-              />
-              <span className="text-body-md text-[var(--color-text-default)]">Bare metal</span>
-            </label>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Resource type */}
+          <VStack gap={2} align="start" className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Resource type <span className="text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Choose the resource category to apply to the flavor.
+            </span>
+            <VStack gap={2} align="start">
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Radio
+                  value="vm"
+                  checked={resourceType === 'vm'}
+                  onChange={() => setResourceType('vm')}
+                />
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  Virtual machine
+                </span>
+              </label>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Radio
+                  value="baremetal"
+                  checked={resourceType === 'baremetal'}
+                  onChange={() => setResourceType('baremetal')}
+                />
+                <span className="text-body-md text-[var(--color-text-default)]">Bare metal</span>
+              </label>
+            </VStack>
           </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Templates Sub-section */}
+          <VStack gap={3} align="start" className="w-full py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the template to use for creating the instance. A template includes predefined
+              settings such as the image, flavor, and network configuration required for the
+              instance.
+            </span>
+
+            {/* Tabs */}
+            <Tabs
+              value={activeTab}
+              onChange={setActiveTab}
+              size="sm"
+              variant="underline"
+              className="w-full"
+            >
+              <TabList>
+                <Tab value="favorites">Favorites</Tab>
+                <Tab value="current-tenant">Current tenant</Tab>
+                <Tab value="public">Public</Tab>
+              </TabList>
+
+              <TabPanel value="favorites" className="pt-3">
+                <VStack gap={2} className="w-full">
+                  {/* Action Bar - Search + Create Button */}
+                  <HStack justify="between" align="center" className="w-full">
+                    <SearchInput
+                      placeholder="Search templates by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button variant="outline" size="sm">
+                      <span>Create a new template</span>
+                      <IconExternalLink size={12} stroke={1.5} />
+                    </Button>
+                  </HStack>
+
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                    totalItems={filteredTemplates.length}
+                    onPageChange={setCurrentPage}
+                  />
+
+                  {/* Table with Selection */}
+                  {filteredTemplates.length > 0 ? (
+                    <Table
+                      columns={columns}
+                      data={filteredTemplates}
+                      rowKey="id"
+                      onRowClick={(row) => onSelect(row.id)}
+                    />
+                  ) : (
+                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                      No favorite templates
+                    </div>
+                  )}
+                </VStack>
+              </TabPanel>
+
+              <TabPanel value="current-tenant" className="pt-3">
+                <VStack gap={2} className="w-full">
+                  {/* Action Bar - Search + Create Button */}
+                  <HStack justify="between" align="center" className="w-full">
+                    <SearchInput
+                      placeholder="Search templates by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button variant="outline" size="sm">
+                      <span>Create a new template</span>
+                      <IconExternalLink size={12} stroke={1.5} />
+                    </Button>
+                  </HStack>
+
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                    totalItems={filteredTemplates.length}
+                    onPageChange={setCurrentPage}
+                  />
+
+                  {/* Table with Selection */}
+                  {filteredTemplates.length > 0 ? (
+                    <Table
+                      columns={columns}
+                      data={filteredTemplates}
+                      rowKey="id"
+                      onRowClick={(row) => onSelect(row.id)}
+                    />
+                  ) : (
+                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                      No templates in current tenant
+                    </div>
+                  )}
+                </VStack>
+              </TabPanel>
+
+              <TabPanel value="public" className="pt-3">
+                <VStack gap={2} className="w-full">
+                  {/* Action Bar - Search + Create Button */}
+                  <HStack justify="between" align="center" className="w-full">
+                    <SearchInput
+                      placeholder="Search templates by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button variant="outline" size="sm">
+                      <span>Create a new template</span>
+                      <IconExternalLink size={12} stroke={1.5} />
+                    </Button>
+                  </HStack>
+
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                    totalItems={filteredTemplates.length}
+                    onPageChange={setCurrentPage}
+                  />
+
+                  {/* Table with Selection */}
+                  {filteredTemplates.length > 0 ? (
+                    <Table
+                      columns={columns}
+                      data={filteredTemplates}
+                      rowKey="id"
+                      onRowClick={(row) => onSelect(row.id)}
+                    />
+                  ) : (
+                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                      No public templates available
+                    </div>
+                  )}
+                </VStack>
+              </TabPanel>
+            </Tabs>
+
+            {/* Selection Indicator for Templates */}
+            <SelectionIndicator
+              className="mt-2"
+              selectedItems={
+                selectedId
+                  ? [
+                      {
+                        id: selectedId,
+                        label: templates.find((t) => t.id === selectedId)?.name || selectedId,
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => onSelect('')}
+            />
+          </VStack>
+
+          {/* Action Buttons - only show when not editing */}
+          {!isEditing && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <HStack gap={2} justify="end" className="pt-3">
+                <Button variant="outline" onClick={onSkip} className="min-w-[80px]">
+                  Skip
+                </Button>
+                <Button variant="primary" onClick={onNext} className="min-w-[80px]">
+                  Next
+                </Button>
+              </HStack>
+            </>
+          )}
         </VStack>
-
-        {/* Templates Sub-section */}
-        <VStack gap={3} align="start" className="w-full">
-          <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            Select the template to use for creating the instance. A template includes predefined
-            settings such as the image, flavor, and network configuration required for the instance.
-          </span>
-
-          {/* Tabs */}
-          <Tabs
-            value={activeTab}
-            onChange={setActiveTab}
-            size="sm"
-            variant="underline"
-            className="w-full"
-          >
-            <TabList>
-              <Tab value="favorites">Favorites</Tab>
-              <Tab value="current-tenant">Current tenant</Tab>
-              <Tab value="public">Public</Tab>
-            </TabList>
-
-            <TabPanel value="favorites" className="pt-3">
-              <VStack gap={2} className="w-full">
-                {/* Action Bar - Search + Create Button */}
-                <HStack justify="between" align="center" className="w-full">
-                  <SearchInput
-                    placeholder="Search templates by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="outline" size="sm">
-                    <span>Create a new template</span>
-                    <IconExternalLink size={12} stroke={1.5} />
-                  </Button>
-                </HStack>
-
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                  totalItems={filteredTemplates.length}
-                  onPageChange={setCurrentPage}
-                />
-
-                {/* Table with Selection */}
-                {filteredTemplates.length > 0 ? (
-                  <Table
-                    columns={columns}
-                    data={filteredTemplates}
-                    rowKey="id"
-                    onRowClick={(row) => onSelect(row.id)}
-                  />
-                ) : (
-                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                    No favorite templates
-                  </div>
-                )}
-              </VStack>
-            </TabPanel>
-
-            <TabPanel value="current-tenant" className="pt-3">
-              <VStack gap={2} className="w-full">
-                {/* Action Bar - Search + Create Button */}
-                <HStack justify="between" align="center" className="w-full">
-                  <SearchInput
-                    placeholder="Search templates by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="outline" size="sm">
-                    <span>Create a new template</span>
-                    <IconExternalLink size={12} stroke={1.5} />
-                  </Button>
-                </HStack>
-
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                  totalItems={filteredTemplates.length}
-                  onPageChange={setCurrentPage}
-                />
-
-                {/* Table with Selection */}
-                {filteredTemplates.length > 0 ? (
-                  <Table
-                    columns={columns}
-                    data={filteredTemplates}
-                    rowKey="id"
-                    onRowClick={(row) => onSelect(row.id)}
-                  />
-                ) : (
-                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                    No templates in current tenant
-                  </div>
-                )}
-              </VStack>
-            </TabPanel>
-
-            <TabPanel value="public" className="pt-3">
-              <VStack gap={2} className="w-full">
-                {/* Action Bar - Search + Create Button */}
-                <HStack justify="between" align="center" className="w-full">
-                  <SearchInput
-                    placeholder="Search templates by attributes"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onClear={() => setSearchQuery('')}
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="outline" size="sm">
-                    <span>Create a new template</span>
-                    <IconExternalLink size={12} stroke={1.5} />
-                  </Button>
-                </HStack>
-
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                  totalItems={filteredTemplates.length}
-                  onPageChange={setCurrentPage}
-                />
-
-                {/* Table with Selection */}
-                {filteredTemplates.length > 0 ? (
-                  <Table
-                    columns={columns}
-                    data={filteredTemplates}
-                    rowKey="id"
-                    onRowClick={(row) => onSelect(row.id)}
-                  />
-                ) : (
-                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                    No public templates available
-                  </div>
-                )}
-              </VStack>
-            </TabPanel>
-          </Tabs>
-
-          {/* Selection Indicator for Templates */}
-          <SelectionIndicator
-            className="mt-2"
-            selectedItems={
-              selectedId
-                ? [
-                    {
-                      id: selectedId,
-                      label: templates.find((t) => t.id === selectedId)?.name || selectedId,
-                    },
-                  ]
-                : []
-            }
-            onRemove={() => onSelect('')}
-          />
-        </VStack>
-
-        {/* Action Buttons - only show when not editing */}
-        {!isEditing && (
-          <HStack gap={2} justify="end" className="pt-2 w-full">
-            <Button variant="outline" onClick={onSkip} className="min-w-[80px]">
-              Skip
-            </Button>
-            <Button variant="primary" onClick={onNext} className="min-w-[80px]">
-              Next
-            </Button>
-          </HStack>
-        )}
       </SectionCard.Content>
     </SectionCard>
   );

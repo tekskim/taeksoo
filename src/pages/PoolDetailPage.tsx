@@ -25,7 +25,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -388,7 +388,9 @@ export default function PoolDetailPage() {
   // Health Monitor columns
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar

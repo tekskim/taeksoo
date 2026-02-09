@@ -483,38 +483,39 @@ function OpenSectionDemo() {
   return (
     <SectionCard isActive>
       <SectionCard.Header title="Basic information" showDivider={false} />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Instance name */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+          <VStack gap={2} className="py-6">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
-            <Input
-              placeholder="Enter instance name"
-              fullWidth
-              value={instanceName}
-              onChange={handleInstanceNameChange}
-              error={!!instanceNameError}
-            />
-            <div className="flex flex-col gap-1 mt-1">
+            <VStack gap={1}>
+              <Input
+                placeholder="Enter instance name"
+                fullWidth
+                value={instanceName}
+                onChange={handleInstanceNameChange}
+                error={!!instanceNameError}
+              />
               {instanceNameError && (
-                <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
                   {instanceNameError}
                 </span>
               )}
-              <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                You can use letters, numbers, and special characters (+=.@-_).
-              </span>
-            </div>
-          </div>
+            </VStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              You can use letters, numbers, and special characters (+=.@-_).
+            </span>
+          </VStack>
 
-          {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* AZ */}
+          {/* AZ (Availability zone) */}
           <VStack gap={2} className="py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               AZ (Availability zone){' '}
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
@@ -529,12 +530,11 @@ function OpenSectionDemo() {
               placeholder="Select AZ"
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               Select the availability zone for the instance.
             </span>
           </VStack>
 
-          {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button */}
@@ -703,14 +703,16 @@ function OpenSectionTableDemo() {
     <div className="w-[840px]">
       <SectionCard isActive>
         <SectionCard.Header title="Source" showDivider={false} />
-        <SectionCard.Content>
+        <SectionCard.Content showDividers={false}>
           <VStack gap={0}>
+            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
             {/* Start Source */}
-            <VStack gap={2} className="pt-2">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <VStack gap={2} className="py-6">
+              <label className="text-label-lg text-[var(--color-text-default)]">
                 Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+              </label>
+              <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
                 Select a template to launch the instance. You can start from an OS image, a
                 snapshot, or an existing volume.
               </span>
@@ -810,7 +812,7 @@ function OpenSectionTableDemo() {
             </VStack>
 
             {/* Divider + Next Button */}
-            <div className="w-full h-px bg-[var(--color-border-subtle)] mt-6" />
+            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
             <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next

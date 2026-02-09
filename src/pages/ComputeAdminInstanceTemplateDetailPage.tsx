@@ -358,6 +358,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Get template based on URL id
   const originalTemplate = id

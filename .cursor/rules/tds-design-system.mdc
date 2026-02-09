@@ -1258,26 +1258,80 @@ import { ErrorState } from '@/design-system';
 />
 ```
 
-## Wizard (Create Page) 패턴
+## Wizard (Create Page) — OpenSection 간격 패턴
 
-Create 페이지에서 여러 단계가 필요할 때 Wizard 컴포넌트를 사용합니다.
+Create 페이지에서 SectionCard가 열린(active) 상태일 때의 간격 규칙:
 
-```tsx
-import { Wizard } from '@/design-system';
-
-<Wizard
-  steps={[
-    { id: 'basic', label: 'Basic Info' },
-    { id: 'network', label: 'Network' },
-    { id: 'storage', label: 'Storage' },
-    { id: 'review', label: 'Review' },
-  ]}
-  activeStep={currentStep}
-  onStepChange={setCurrentStep}
->
-  {/* 각 스텝의 콘텐츠 */}
-</Wizard>
+### 간격 구조
 ```
+헤더 타이틀 (28px)
+  ↕ 12px (SectionCard gap-3)
+디바이더 ─────────────────
+  ↕ 24px (py-6)
+폼 필드 1
+  ↕ 24px (py-6)
+디바이더 ─────────────────
+  ↕ 24px (py-6)
+폼 필드 2
+  ↕ 24px (py-6)
+디바이더 ─────────────────
+  ↕ 12px (pt-3)
+Next 버튼
+```
+
+### 핵심 규칙
+- **Header**: `showDivider={false}` — 디바이더를 Content 안으로 이동
+- **Content**: `showDividers={false}` — 자동 디바이더 비활성화 (수동 관리)
+- **필드 간격**: 모든 필드 `py-6` (24px) — 첫 번째/중간 필드 구분 없이 동일
+- **라벨**: `text-label-lg` (13px/18px, font-weight 500)
+- **헬퍼 텍스트**: `text-body-sm text-[var(--color-text-subtle)]`
+- **Description**: `text-body-md text-[var(--color-text-subtle)]` (라벨 하단)
+
+### OpenSection 코드 패턴
+```tsx
+<SectionCard isActive>
+  <SectionCard.Header title="Basic information" showDivider={false} />
+  <SectionCard.Content showDividers={false}>
+    <VStack gap={0}>
+      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+      {/* 첫 번째 필드 */}
+      <VStack gap={2} className="py-6">
+        <label className="text-label-lg text-[var(--color-text-default)]">
+          Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+        </label>
+        <Input placeholder="Enter instance name" fullWidth />
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Helper text</span>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+      {/* 두 번째 필드 */}
+      <VStack gap={2} className="py-6">
+        <label className="text-label-lg text-[var(--color-text-default)]">
+          AZ (Availability zone) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+        </label>
+        <Select options={options} placeholder="Select AZ" fullWidth />
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Helper text</span>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+      <HStack justify="end" className="pt-3">
+        <Button variant="primary">Next</Button>
+      </HStack>
+    </VStack>
+  </SectionCard.Content>
+</SectionCard>
+```
+
+### 하드코딩 금지 (OpenSection 내부)
+| 금지 | 권장 |
+|---|---|
+| `text-[14px] font-medium` | `text-label-lg` |
+| `text-[11px]` (helper) | `text-body-sm` |
+| `text-[12px]` (description) | `text-body-md` |
+| `pt-2 pb-6` (첫 필드) | `py-6` (모든 필드 동일) |
 
 ## 사이드바 너비 참조
 

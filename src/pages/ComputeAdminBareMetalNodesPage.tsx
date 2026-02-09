@@ -294,7 +294,7 @@ export function ComputeAdminBareMetalNodesPage() {
           <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/bare-metal-nodes/${row.id}`}
-              className="font-medium text-[var(--color-text-default)] hover:underline hover:underline-offset-2"
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.name}
@@ -382,7 +382,7 @@ export function ComputeAdminBareMetalNodesPage() {
       {
         key: 'actions',
         label: 'Action',
-        width: fixedColumns.actionWide,
+        width: '110px',
         align: 'center',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>

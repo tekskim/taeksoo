@@ -307,9 +307,7 @@ function SummarySectionHeader({
         ) : (
           <div className="w-3" />
         )}
-        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)]">{label}</span>
       </div>
       <StatusIcon status={status} />
     </button>
@@ -547,9 +545,7 @@ function BasicInfoSection({
               fullWidth
             />
             {nameError && (
-              <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
-                {nameError}
-              </span>
+              <span className="text-body-sm text-[var(--color-state-danger)]">{nameError}</span>
             )}
           </VStack>
 
@@ -558,7 +554,7 @@ function BasicInfoSection({
             <label className="text-label-lg text-[var(--color-text-default)]">
               Replicas<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select the number of pod replicas to create.
             </p>
             <NumberInput
@@ -1755,7 +1751,7 @@ export function CreateCronJobPage() {
           <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
             Create CronJob
           </h1>
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Create a CronJob to schedule Jobs to run periodically at specified times or intervals.
           </p>
         </VStack>
@@ -2003,7 +1999,7 @@ export function CreateCronJobPage() {
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content>
                     <VStack gap={6}>
-                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         Pod Policy
                       </span>
                       <VStack gap={1} className="w-full">
@@ -2043,7 +2039,7 @@ export function CreateCronJobPage() {
                     <VStack gap={6}>
                       {/* Network Settings */}
                       <VStack gap={6}>
-                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
                           Network Settings
                         </span>
                         <div className="grid grid-cols-2 gap-x-6 gap-y-4 w-full items-end">
@@ -3745,7 +3741,7 @@ export function CreateCronJobPage() {
                               )}
 
                               <VStack gap={1.5}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[21px]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Access Modes{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -3855,7 +3851,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Content>
                         <VStack gap={6}>
                           <VStack gap={2} className="w-full">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Container Name
                             </span>
                             <Input
@@ -3895,7 +3891,7 @@ export function CreateCronJobPage() {
                           <div className="grid grid-cols-2 gap-4 w-full">
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Container Image{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -3917,7 +3913,7 @@ export function CreateCronJobPage() {
                             </VStack>
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Policy
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -3945,7 +3941,7 @@ export function CreateCronJobPage() {
                           <div className="grid grid-cols-2 gap-4 w-full">
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Secrets
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4094,7 +4090,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Content>
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
                             </span>
                             <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4124,7 +4120,7 @@ export function CreateCronJobPage() {
                           {/* Post Start */}
                           <VStack gap={6}>
                             <VStack gap={2}>
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Post Start
                               </span>
                               <RadioGroup
@@ -4143,7 +4139,7 @@ export function CreateCronJobPage() {
 
                             {config.lifecycleHooks?.postStart?.type === 'exec' && (
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Execute Command
                                 </span>
                                 <Input
@@ -4161,11 +4157,11 @@ export function CreateCronJobPage() {
 
                             {config.lifecycleHooks?.postStart?.type === 'httpGet' && (
                               <VStack gap={3}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Host IP
                                   </span>
                                   <Input
@@ -4183,7 +4179,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Path
                                   </span>
                                   <Input
@@ -4201,7 +4197,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Port <span className="text-[var(--color-state-danger)]">*</span>
                                   </span>
                                   <Input
@@ -4219,7 +4215,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Scheme
                                   </span>
                                   <Select
@@ -4242,7 +4238,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={3}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -4367,7 +4363,7 @@ export function CreateCronJobPage() {
                           {/* Pre Stop */}
                           <VStack gap={6}>
                             <VStack gap={3}>
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
                               </span>
                               <RadioGroup
@@ -4386,7 +4382,7 @@ export function CreateCronJobPage() {
 
                             {config.lifecycleHooks?.preStop?.type === 'exec' && (
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Execute Command
                                 </span>
                                 <Input
@@ -4404,11 +4400,11 @@ export function CreateCronJobPage() {
 
                             {config.lifecycleHooks?.preStop?.type === 'httpGet' && (
                               <VStack gap={3}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Host IP
                                   </span>
                                   <Input
@@ -4426,7 +4422,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Path
                                   </span>
                                   <Input
@@ -4444,7 +4440,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Port <span className="text-[var(--color-state-danger)]">*</span>
                                   </span>
                                   <Input
@@ -4462,7 +4458,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Scheme
                                   </span>
                                   <Select
@@ -4485,7 +4481,7 @@ export function CreateCronJobPage() {
                                   />
                                 </VStack>
                                 <VStack gap={3}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -4616,12 +4612,12 @@ export function CreateCronJobPage() {
                         <VStack gap={6}>
                           {/* Readiness Check */}
                           <VStack gap={6}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4662,7 +4658,7 @@ export function CreateCronJobPage() {
                                       config.readinessProbe?.type === 'tcpSocket') && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4698,7 +4694,7 @@ export function CreateCronJobPage() {
                                     {config.readinessProbe?.type === 'exec' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4723,7 +4719,7 @@ export function CreateCronJobPage() {
                                     )}
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4756,7 +4752,7 @@ export function CreateCronJobPage() {
                                     {config.readinessProbe?.type === 'httpGet' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Request Path
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4780,7 +4776,7 @@ export function CreateCronJobPage() {
                                     )}
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4811,7 +4807,7 @@ export function CreateCronJobPage() {
                                     {config.readinessProbe?.type !== 'httpGet' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4846,7 +4842,7 @@ export function CreateCronJobPage() {
                                     {config.readinessProbe?.type === 'httpGet' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4877,7 +4873,7 @@ export function CreateCronJobPage() {
                                     )}
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4899,7 +4895,7 @@ export function CreateCronJobPage() {
                                     {config.readinessProbe?.type !== 'httpGet' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4924,7 +4920,7 @@ export function CreateCronJobPage() {
                                   {config.readinessProbe?.type === 'httpGet' && (
                                     <VStack gap={3}>
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -4946,7 +4942,7 @@ export function CreateCronJobPage() {
                                   )}
                                   {config.readinessProbe?.type === 'httpGet' && (
                                     <VStack gap={3}>
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -5068,12 +5064,12 @@ export function CreateCronJobPage() {
 
                           {/* Liveness Check */}
                           <VStack gap={6}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5115,7 +5111,7 @@ export function CreateCronJobPage() {
                                         config.livenessProbe?.type === 'tcpSocket') && (
                                         <VStack gap={3} className="flex-1">
                                           <VStack gap={1}>
-                                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                            <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
                                             </span>
                                             <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5151,7 +5147,7 @@ export function CreateCronJobPage() {
                                       {config.livenessProbe?.type === 'exec' && (
                                         <VStack gap={3} className="flex-1">
                                           <VStack gap={1}>
-                                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                            <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
                                             </span>
                                             <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5176,7 +5172,7 @@ export function CreateCronJobPage() {
                                       )}
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5208,7 +5204,7 @@ export function CreateCronJobPage() {
                                     <div className="flex gap-6 w-full">
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5238,7 +5234,7 @@ export function CreateCronJobPage() {
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5271,7 +5267,7 @@ export function CreateCronJobPage() {
                                     <div className="flex gap-6 w-full">
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5292,7 +5288,7 @@ export function CreateCronJobPage() {
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5319,12 +5315,12 @@ export function CreateCronJobPage() {
 
                           {/* Startup Check */}
                           <VStack gap={6}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Startup Check
                             </span>
                             <VStack gap={3}>
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5365,7 +5361,7 @@ export function CreateCronJobPage() {
                                       config.startupProbe?.type === 'tcpSocket') && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5401,7 +5397,7 @@ export function CreateCronJobPage() {
                                     {config.startupProbe?.type === 'exec' && (
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
                                           </span>
                                           <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5426,7 +5422,7 @@ export function CreateCronJobPage() {
                                     )}
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5457,7 +5453,7 @@ export function CreateCronJobPage() {
                                   <div className="flex gap-6 w-full">
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5487,7 +5483,7 @@ export function CreateCronJobPage() {
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Timeout
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5519,7 +5515,7 @@ export function CreateCronJobPage() {
                                   <div className="flex gap-6 w-full">
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5540,7 +5536,7 @@ export function CreateCronJobPage() {
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
                                       <VStack gap={1}>
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
                                         </span>
                                         <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5577,7 +5573,7 @@ export function CreateCronJobPage() {
                           <div className="flex gap-4 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Reservation
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5601,7 +5597,7 @@ export function CreateCronJobPage() {
                             </VStack>
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Limit
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5628,7 +5624,7 @@ export function CreateCronJobPage() {
                           <div className="flex gap-4 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Reservation
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5652,7 +5648,7 @@ export function CreateCronJobPage() {
                             </VStack>
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Limit
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -5687,7 +5683,7 @@ export function CreateCronJobPage() {
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-4 w-full">
                             <VStack gap={3} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
                               </span>
                               <VStack gap={2}>
@@ -5720,7 +5716,7 @@ export function CreateCronJobPage() {
                               </VStack>
                             </VStack>
                             <VStack gap={3} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privilege Escalation
                               </span>
                               <VStack gap={2}>
@@ -5756,7 +5752,7 @@ export function CreateCronJobPage() {
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
                           <div className="flex gap-4 w-full">
                             <VStack gap={3} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
                               </span>
                               <VStack gap={2}>
@@ -5789,7 +5785,7 @@ export function CreateCronJobPage() {
                               </VStack>
                             </VStack>
                             <VStack gap={3} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Read-Only Root Filesystem
                               </span>
                               <VStack gap={2}>
@@ -5824,7 +5820,7 @@ export function CreateCronJobPage() {
                           </div>
                           {/* Row 3: Run as User ID (half width) */}
                           <VStack gap={2} className="w-1/2">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Run as User ID
                             </span>
                             <Input
@@ -5841,7 +5837,7 @@ export function CreateCronJobPage() {
                           {/* Row 4: Add Capabilities + Drop Capabilities */}
                           <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Add Capabilities
                               </span>
                               <Select
@@ -5863,7 +5859,7 @@ export function CreateCronJobPage() {
                               />
                             </VStack>
                             <VStack gap={2} className="flex-1">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Drop Capabilities
                               </span>
                               <Select
@@ -5915,7 +5911,7 @@ export function CreateCronJobPage() {
                                     className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                   >
                                     <VStack gap={2}>
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-lg text-[var(--color-text-default)]">
                                         {selectedVol.volumeName} ({selectedVol.volumeType})
                                       </span>
                                       {/* Mount rows */}

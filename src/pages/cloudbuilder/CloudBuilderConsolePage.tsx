@@ -32,6 +32,7 @@ import {
   IconBell,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
+import { useTabs } from '@/contexts/TabContext';
 import {
   CLOUD_BUILDER_SLUGS,
   getCloudBuilderListConfig,
@@ -167,10 +168,21 @@ function buildTableColumns(
 export function CloudBuilderConsolePage() {
   const navigate = useNavigate();
   const params = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const {
+    tabs,
+    activeTabId: shellActiveTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+  } = useTabs();
 
   // /cloudbuilder 또는 /cloudbuilder/:slug
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'discovery';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
+
+  const breadcrumbItems = [{ label: 'Proj-1', href: '/project' }, { label: config.title }];
 
   const hasTabs = !!config.tabs && config.tabs.length > 0;
   const [activeTabId, setActiveTabId] = useState<string>(config.tabs?.[0]?.id ?? '');
@@ -414,7 +426,7 @@ export function CloudBuilderConsolePage() {
       tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-          activeTab={activeTabId}
+          activeTab={shellActiveTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabAdd={addNewTab}

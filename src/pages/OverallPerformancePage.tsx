@@ -19,10 +19,9 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { StorageSidebar } from '@/components/StorageSidebar';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { useTabs } from '@/contexts/TabContext';
-import { useSidebar } from '@/contexts/SidebarContext';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconBell,
@@ -941,7 +940,7 @@ function EmptyStateChartCard({
    ---------------------------------------- */
 
 export function OverallPerformancePage() {
-  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('pools');
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
@@ -1102,7 +1101,9 @@ export function OverallPerformancePage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -1119,7 +1120,7 @@ export function OverallPerformancePage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={openSidebar}
+          onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}

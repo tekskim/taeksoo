@@ -16,9 +16,8 @@ import {
   MonitoringToolbar,
   PageShell,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { useSidebar } from '@/contexts/SidebarContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
@@ -460,7 +459,7 @@ const latencyData = {
 
 export function ImageDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('performance');
 
@@ -502,7 +501,9 @@ export function ImageDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
