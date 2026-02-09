@@ -70,10 +70,10 @@ const themeStyles = {
   },
   // Subtle variants (light bg + colored text) - uses semantic tokens for dark mode support
   subtle: {
-    blue: 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info-text)]',
-    red: 'bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger-text)]',
-    green: 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success-text)]',
-    yellow: 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning-text)]',
+    blue: 'bg-[var(--color-blue-100)] text-[var(--color-state-info-text)]',
+    red: 'bg-[var(--color-red-100)] text-[var(--color-state-danger-text)]',
+    green: 'bg-[var(--color-green-100)] text-[var(--color-state-success-text)]',
+    yellow: 'bg-[var(--color-orange-100)] text-[var(--color-state-warning-text)]',
     gray: 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
   },
 } as const;

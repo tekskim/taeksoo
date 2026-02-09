@@ -146,7 +146,6 @@ function LineChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15],
       },
       boundaryGap: false,
     },
@@ -325,7 +324,7 @@ function InventoryStatBox({ value, label }: InventoryStatBoxProps) {
 
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
+      <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
@@ -519,7 +518,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">{title}</h6>
+      <h6 className="text-heading-h7 mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -629,14 +628,14 @@ export function StorageHomePage() {
       }
     >
       {/* EntryPage Content */}
-      <div className="px-8 py-6">
+      <div className="py-2">
         {/* Top Row - 2 Cards: Inventory and Capacity */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* INVENTORY */}
           <Card title="INVENTORY" className="flex flex-col">
             {/* Total */}
             <div className="mb-4">
-              <div className="text-heading-h3 text-[var(--color-text-default)]">54</div>
+              <div className="text-heading-h2 text-[var(--color-text-default)]">54</div>
               <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
             </div>
             {/* Stats Grid */}
@@ -663,9 +662,7 @@ export function StorageHomePage() {
         <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h6 className="text-heading-h6 text-[var(--color-text-default)]">
-              CLUSTER UTILIZATION
-            </h6>
+            <h6 className="text-heading-h7">CLUSTER UTILIZATION</h6>
             <MonitoringToolbar
               timeRange={timeRange}
               onTimeRangeChange={setTimeRange}
