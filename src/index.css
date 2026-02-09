@@ -1514,15 +1514,15 @@ input[type='search']::-webkit-search-decoration {
 
 /* ============== Chart Card ============== */
 /* Chart height calculation:
-   - Total card: 334px
-   - Padding: 12px top + 4px bottom = 16px
+   - Total card: 338px
+   - Padding: 12px top + 8px bottom = 20px
    - Header: ~28px (with margin-bottom: 8px)
-   - Chart area: 334 - 16 - 28 = 290px
+   - Chart area: 338 - 20 - 28 = 290px
 */
 .chartCard {
-  --chart-card-height: 334px;
+  --chart-card-height: 338px;
   --chart-header-height: 28px;
-  --chart-padding-y: 16px;
+  --chart-padding-y: 20px;
   --chart-area-height: calc(
     var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y)
   );
@@ -1530,7 +1530,7 @@ input[type='search']::-webkit-search-decoration {
   background: var(--color-surface-default);
   border: 1px solid var(--color-border-default);
   border-radius: 8px;
-  padding: 12px 12px 4px 12px;
+  padding: 12px 20px 8px 20px;
   height: var(--chart-card-height);
   width: 100%;
   min-width: 0;
@@ -1556,9 +1556,9 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .chartTitle {
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 20px;
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-20);
   color: var(--color-text-default);
 }
 
@@ -1732,10 +1732,10 @@ input[type='search']::-webkit-search-decoration {
   top: 100%;
   right: 0;
   background: var(--color-surface-default);
-  border: 1px solid var(--color-border-default);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 140px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--context-menu-radius);
+  box-shadow: var(--shadow-md);
+  width: max-content;
   z-index: 100;
   overflow: hidden;
 }
@@ -1744,8 +1744,9 @@ input[type='search']::-webkit-search-decoration {
 .contextMenuItemLast {
   display: block;
   width: 100%;
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: var(--context-menu-padding-y) var(--context-menu-padding-x);
+  font-size: 11px;
+  line-height: 16px;
   text-align: left;
   background: transparent;
   border: none;

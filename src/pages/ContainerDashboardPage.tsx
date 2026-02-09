@@ -139,7 +139,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
           className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] transition-all"
           style={{
             width: `${Math.min(percentage, 100)}%`,
-            backgroundColor: 'var(--color-text-muted)',
+            backgroundColor: colors.fill,
             minWidth: percentage > 0 ? 4 : 0,
           }}
         />
@@ -153,7 +153,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
             <div className="flex items-center gap-1.5">
               <div
                 className="w-[5px] h-[5px] rounded-[1px]"
-                style={{ backgroundColor: 'var(--color-text-muted)' }}
+                style={{ backgroundColor: colors.fill }}
               />
               <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Used: {used} {unit} ({percentage}%)
@@ -196,7 +196,7 @@ function Card({
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
-        <h6 className="text-heading-h7">{title}</h6>
+        <h6 className="text-heading-h6">{title}</h6>
         {actions}
       </div>
       {children}

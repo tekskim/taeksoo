@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  PageShell,
+  Badge,
+  ProgressBar,
+} from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -27,29 +35,12 @@ interface PercentageBadgeProps {
 }
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const getColors = () => {
-    if (percentage >= 100)
-      return {
-        bg: 'bg-[var(--color-state-danger-bg)]',
-        text: 'text-[var(--color-state-danger-text)]',
-      };
-    if (percentage >= 70)
-      return {
-        bg: 'bg-[var(--color-state-warning-bg)]',
-        text: 'text-[var(--color-state-warning-text)]',
-      };
-    return {
-      bg: 'bg-[var(--color-state-success-bg)]',
-      text: 'text-[var(--color-state-success-text)]',
-    };
-  };
-
-  const colors = getColors();
+  const theme = percentage >= 100 ? 'red' : percentage >= 70 ? 'yellow' : 'green';
 
   return (
-    <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <span className={`text-label-sm ${colors.text}`}>{percentage}%</span>
-    </div>
+    <Badge size="sm" type="subtle" theme={theme}>
+      {percentage}%
+    </Badge>
   );
 }
 
@@ -77,12 +68,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -141,12 +127,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -200,7 +181,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h7 mb-4">{title}</h6>
+      <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
     </div>
   );

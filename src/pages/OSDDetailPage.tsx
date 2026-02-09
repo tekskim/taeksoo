@@ -416,7 +416,7 @@ function OSDPerformanceChart({
       data: timeLabels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
       boundaryGap: false,
     },
     yAxis: {

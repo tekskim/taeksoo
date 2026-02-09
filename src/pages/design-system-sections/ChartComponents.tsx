@@ -43,6 +43,53 @@ export const primaryChartColors = [
    Base Chart Options (from storage-dashboard)
    ---------------------------------------- */
 
+/**
+ * Convert hex color to rgba string.
+ */
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
+ * Create a gradient area style that fades from the line to transparent.
+ * Prevents accumulated opacity when multiple series overlap or stack.
+ */
+export function getAreaGradient(color: string) {
+  return {
+    color: {
+      type: 'linear' as const,
+      x: 0,
+      y: 0,
+      x2: 0,
+      y2: 1,
+      colorStops: [
+        { offset: 0, color: hexToRgba(color, 0.25) },
+        { offset: 1, color: hexToRgba(color, 0.02) },
+      ],
+    },
+  };
+}
+
+/**
+ * Calculate nice y-axis scale with exactly 5 labels (4 intervals).
+ * Finds the smallest "nice" interval (1, 2, 2.5, or 5 × 10^n) that fits the data.
+ */
+export function getNiceScale(dataMax: number): { max: number; interval: number } {
+  if (dataMax <= 0) return { max: 4, interval: 1 };
+
+  const rawInterval = dataMax / 4;
+  const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval)));
+  const niceMultiples = [1, 2, 2.5, 5, 10];
+  const interval =
+    niceMultiples.map((n) => n * magnitude).find((n) => n >= rawInterval) ?? 10 * magnitude;
+  const max = interval * 4;
+
+  return { max, interval };
+}
+
 /** Read a CSS variable value at runtime (for ECharts which can't use CSS vars directly) */
 function getCSSColor(cssVar: string, fallback: string): string {
   if (typeof window !== 'undefined') {
@@ -68,7 +115,6 @@ export const baseChartOptions = {
     axisLabel: {
       color: chartColors.slate400,
       fontSize: 10,
-      padding: [0, 0, 0, 15],
     },
     boundaryGap: false,
   },
@@ -319,11 +365,10 @@ export function LineChart({
     if (onFullScreen) onFullScreen();
   };
 
-  // Calculate y-axis bounds for exactly 5 labels
+  // Calculate y-axis bounds for exactly 5 labels using nice-number algorithm
   const visibleData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
-  const niceMax = Math.ceil(dataMax / 4) * 4; // Round up to nearest multiple of 4
-  const yInterval = niceMax / 4; // 4 intervals = 5 labels
+  const { max: niceMax, interval: yInterval } = getNiceScale(dataMax);
 
   const option = {
     animation: false,
@@ -342,7 +387,6 @@ export function LineChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15],
       },
       boundaryGap: false,
     },
@@ -405,7 +449,7 @@ export function LineChart({
         showSymbol: false,
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
-        areaStyle: { color: s.color, opacity: 0.1 },
+        areaStyle: getAreaGradient(s.color),
         data: s.data,
       })),
   };
@@ -601,15 +645,21 @@ export function QuotaBarDemo({
       return {
         bg: 'bg-[var(--color-status-error-subtle)]',
         text: 'text-[var(--color-status-error)]',
+        bar: 'bg-[var(--color-state-danger)]',
+        dot: 'bg-[var(--color-state-danger)]',
       };
     if (percentage >= 70)
       return {
         bg: 'bg-[var(--color-status-warning-subtle)]',
         text: 'text-[var(--color-status-warning)]',
+        bar: 'bg-[var(--color-state-warning)]',
+        dot: 'bg-[var(--color-state-warning)]',
       };
     return {
       bg: 'bg-[var(--color-status-success-subtle)]',
       text: 'text-[var(--color-status-success)]',
+      bar: 'bg-[var(--color-state-success)]',
+      dot: 'bg-[var(--color-state-success)]',
     };
   };
 
@@ -636,7 +686,7 @@ export function QuotaBarDemo({
         content={
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[var(--color-text-muted)]" />
+              <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
               <span>Used: {used}</span>
             </div>
           </div>
@@ -646,7 +696,7 @@ export function QuotaBarDemo({
         <div className="w-full">
           <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden cursor-pointer">
             <div
-              className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
+              className={`h-full rounded-sm ${colors.bar} transition-all`}
               style={{ width: `${Math.min(percentage, 100)}%` }}
             />
           </div>
