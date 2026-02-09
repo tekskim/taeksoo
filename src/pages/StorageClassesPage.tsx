@@ -244,7 +244,6 @@ export function StorageClassesPage() {
       key: 'actions',
       label: 'Action',
       width: fixedColumns.actions,
-      minWidth: columnMinWidths.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
