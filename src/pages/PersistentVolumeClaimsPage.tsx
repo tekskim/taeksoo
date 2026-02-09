@@ -215,7 +215,7 @@ export function PersistentVolumeClaimsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -234,7 +234,7 @@ export function PersistentVolumeClaimsPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
-      minWidth: '80px',
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
@@ -268,13 +268,13 @@ export function PersistentVolumeClaimsPage() {
       key: 'storageClass',
       label: 'Storage Class',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.storageClass,
     },
     {
       key: 'volumeAttributesClass',
       label: 'VolumeAttributesClass',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.volumeAttributesClass,
       sortable: true,
       render: (value: string) =>
         value ? value : <span className="text-[var(--color-text-subtle)]">-</span>,

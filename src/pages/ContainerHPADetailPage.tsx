@@ -271,7 +271,6 @@ function ConditionsTab() {
       key: 'status',
       label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.conditionStatus,
       sortable: false,
     },
     {

@@ -309,7 +309,7 @@ interface ConditionCardProps {
 
 function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
   return (
-    <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 min-w-0">
       <HStack justify="between" align="center">
         <HStack gap={2} align="center">
           <div
@@ -362,7 +362,7 @@ function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
           {used} of {total} {unit} / {percentage}% Used
         </span>
       </HStack>
-      <ProgressBar value={percentage} size="sm" />
+      <ProgressBar value={percentage} max={100} showValue={false} size="sm" />
     </div>
   );
 }
@@ -395,6 +395,7 @@ function PodsTab({ pods }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
@@ -402,19 +403,30 @@ function PodsTab({ pods }: PodsTabProps) {
         </span>
       ),
     },
-    { key: 'namespace', label: 'Namespace', flex: 1, sortable: true },
-    { key: 'image', label: 'Image', flex: 1 },
-    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready, align: 'left' },
+    {
+      key: 'namespace',
+      label: 'Namespace',
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
+      sortable: true,
+    },
+    { key: 'image', label: 'Image', flex: 1, minWidth: columnMinWidths.image },
+    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready },
     {
       key: 'restarts',
       label: 'Restarts',
       flex: 1,
       minWidth: columnMinWidths.restarts,
-      align: 'left',
     },
-    { key: 'ip', label: 'IP', flex: 1 },
-    { key: 'node', label: 'Node', flex: 1 },
-    { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
+    { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
+    { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
   ];
 
   return (
@@ -727,8 +739,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       render: () => (
         <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
@@ -926,12 +937,17 @@ export function NodeDetailPage() {
               label={`Labels (${Object.keys(node.labels).length})`}
               value={
                 Object.keys(node.labels).length > 0 ? (
-                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
                         <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
                       ))}
+                    {Object.keys(node.labels).length > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(node.labels).length - 1})
+                      </span>
+                    )}
                   </div>
                 ) : (
                   '-'
@@ -942,12 +958,17 @@ export function NodeDetailPage() {
               label={`Annotations (${Object.keys(node.annotations).length})`}
               value={
                 Object.keys(node.annotations).length > 0 ? (
-                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
                         <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
                       ))}
+                    {Object.keys(node.annotations).length > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(node.annotations).length - 1})
+                      </span>
+                    )}
                   </div>
                 ) : (
                   '-'

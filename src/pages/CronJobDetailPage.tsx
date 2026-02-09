@@ -272,8 +272,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: JobRow) => (
         <ContextMenu items={createJobMenuItems(row)} trigger="click" align="right">
@@ -404,8 +403,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">

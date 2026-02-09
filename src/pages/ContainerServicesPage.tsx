@@ -243,7 +243,6 @@ export function ContainerServicesPage() {
       key: 'actions',
       label: 'Action',
       width: fixedColumns.actions,
-      minWidth: columnMinWidths.actions,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

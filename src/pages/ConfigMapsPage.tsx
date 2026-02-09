@@ -171,6 +171,7 @@ export function ConfigMapsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -189,6 +190,7 @@ export function ConfigMapsPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-text-default)]">{value}</span>

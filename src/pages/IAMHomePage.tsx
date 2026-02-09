@@ -183,7 +183,7 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <div className="flex flex-col gap-1.5">
         <span className={`text-label-sm ${textColor}`}>{label}</span>
-        <span className={`text-heading-h2 ${textColor}`}>{value}</span>
+        <span className={`text-heading-h3 ${textColor}`}>{value}</span>
       </div>
     </div>
   );
