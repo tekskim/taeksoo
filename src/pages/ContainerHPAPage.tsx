@@ -222,8 +222,7 @@ export function ContainerHPAPage() {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

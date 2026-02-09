@@ -17,6 +17,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -188,6 +189,7 @@ export function NetworkPoliciesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -203,6 +205,7 @@ export function NetworkPoliciesPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },

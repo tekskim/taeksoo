@@ -360,7 +360,6 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       flex: 1,
       minWidth: columnMinWidths.count,
       sortable: true,
-      align: 'left',
     },
     {
       key: 'processing',
@@ -368,7 +367,6 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       flex: 1,
       minWidth: columnMinWidths.count,
       sortable: true,
-      align: 'left',
     },
     {
       key: 'error',
@@ -376,7 +374,6 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       flex: 1,
       minWidth: columnMinWidths.count,
       sortable: true,
-      align: 'left',
     },
     {
       key: 'total',
@@ -384,7 +381,6 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       flex: 1,
       minWidth: columnMinWidths.count,
       sortable: true,
-      align: 'left',
     },
   ];
 
@@ -584,8 +580,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.action,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu
@@ -653,7 +648,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.conditionStatus,
       sortable: false,
     },
     {
