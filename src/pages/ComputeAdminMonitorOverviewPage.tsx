@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import ReactECharts from 'echarts-for-react';
 import {
+  Badge,
   VStack,
   TabBar,
   TopBar,
@@ -10,6 +11,7 @@ import {
   MonitoringToolbar,
   PageShell,
   PageHeader,
+  ProgressBar,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -21,6 +23,10 @@ import {
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
+import {
+  ChartWithFullScreen,
+  getAreaGradient,
+} from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Chart Colors
@@ -113,7 +119,7 @@ function AlertCard({ title, value }: { title: string; value: number }) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-5 flex-1 flex flex-col">
       <span className="chartTitle">{title}</span>
-      <div className="flex-1 flex items-center justify-center text-[48px] font-normal text-[var(--color-text-default)] leading-[48px]">
+      <div className="flex-1 flex items-center justify-center text-heading-h1 text-[var(--color-text-default)]">
         {value}
       </div>
     </div>
@@ -387,21 +393,10 @@ function HostUsageCard({
   data: typeof hostUsageData;
   type: 'cpu' | 'ram';
 }) {
-  const getColors = (percent: number) => {
-    if (percent >= 100)
-      return {
-        bg: 'bg-[var(--color-status-error-subtle)]',
-        text: 'text-[var(--color-status-error)]',
-      };
-    if (percent >= 70)
-      return {
-        bg: 'bg-[var(--color-status-warning-subtle)]',
-        text: 'text-[var(--color-status-warning)]',
-      };
-    return {
-      bg: 'bg-[var(--color-status-success-subtle)]',
-      text: 'text-[var(--color-status-success)]',
-    };
+  const getBadgeTheme = (percent: number): 'red' | 'yellow' | 'green' => {
+    if (percent >= 100) return 'red';
+    if (percent >= 70) return 'yellow';
+    return 'green';
   };
 
   return (
@@ -409,10 +404,9 @@ function HostUsageCard({
       <div className="chartTitle mb-4">{title}</div>
       <div className="space-y-[22px]">
         {data.map((node) => {
-          const percent = type === 'cpu' ? node.cpuPercent : node.ramPercent;
           const used = type === 'cpu' ? node.cpuUsed : node.ramUsed;
           const total = type === 'cpu' ? node.cpuTotal : node.ramTotal;
-          const colors = getColors(percent);
+          const percent = type === 'cpu' ? node.cpuPercent : node.ramPercent;
           return (
             <div key={node.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
@@ -421,17 +415,12 @@ function HostUsageCard({
                   <span className="text-body-sm text-[var(--color-text-muted)]">
                     {used}/{total} GiB
                   </span>
-                  <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span className={`text-label-sm ${colors.text}`}>{percent}%</span>
-                  </div>
+                  <Badge size="sm" type="subtle" theme={getBadgeTheme(percent)}>
+                    {percent}%
+                  </Badge>
                 </div>
               </div>
-              <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-                <div
-                  className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
-                  style={{ width: `${Math.min(percent, 100)}%` }}
-                />
-              </div>
+              <ProgressBar value={used} max={total} showValue={false} />
             </div>
           );
         })}
@@ -442,233 +431,30 @@ function HostUsageCard({
 
 function AreaChartCard({
   title,
-  labels,
   series,
   colors,
   legendLabels,
   yAxisUnit,
 }: {
   title: string;
-  labels: string[];
   series: number[][];
   colors: string[];
   legendLabels: string[];
   yAxisUnit: string;
 }) {
-  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(legendLabels.map((label) => [label, true]))
-  );
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showDataView, setShowDataView] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [fullScreenTimeRange, setFullScreenTimeRange] = useState<TimeRangeValue>('1h');
-
-  const fullScreenTimeRangeOptions = [
-    { label: '1h', value: '1h' as TimeRangeValue },
-    { label: '3h', value: '3h' as TimeRangeValue },
-    { label: '1d', value: '1d' as TimeRangeValue },
-    { label: '1w', value: '1w' as TimeRangeValue },
-  ];
-
-  const allVisible = Object.values(visibleSeries).every((v) => v);
-  const toggleAll = () => {
-    const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(legendLabels.map((label) => [label, newState])));
-  };
-
-  // Close fullscreen on ESC key
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isFullScreen) {
-        setIsFullScreen(false);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isFullScreen]);
-
-  // Convert series data to format expected by DataViewDrawer
-  const drawerSeries = legendLabels.map((label, index) => ({
+  // Convert to LineChartSeries format used by ChartWithFullScreen
+  const chartSeries = legendLabels.map((label, index) => ({
     name: label,
     data: series[index],
     color: colors[index],
   }));
 
-  const getOption = () => ({
-    animation: false,
-    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
-    xAxis: {
-      type: 'category' as const,
-      data: labels,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
-      boundaryGap: false,
-    },
-    yAxis: {
-      type: 'value' as const,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
-      axisLabel: {
-        color: chartColors.slate400,
-        fontSize: 10,
-        formatter: (value: number) => `${value} ${yAxisUnit}`,
-      },
-    },
-    tooltip: {
-      trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
-      textStyle: { color: chartColors.slate800, fontSize: 11 },
-    },
-    series: series
-      .filter((_, index) => visibleSeries[legendLabels[index]])
-      .map((data, filteredIndex) => {
-        const actualIndex = legendLabels.indexOf(
-          legendLabels.filter((l) => visibleSeries[l])[filteredIndex]
-        );
-        return {
-          name: legendLabels[actualIndex],
-          type: 'line',
-          data,
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 6,
-          showSymbol: false,
-          lineStyle: { color: colors[actualIndex], width: 1 },
-          itemStyle: { color: colors[actualIndex] },
-          areaStyle: { color: colors[actualIndex], opacity: 0.1 },
-        };
-      }),
-  });
-
-  // Render chart content with unique key to force fresh re-render
-  const renderChartContent = (mode: 'normal' | 'fullscreen') => (
-    <div
-      key={`chart-container-${mode}`}
-      className={`chartCard flex-1 ${mode === 'fullscreen' ? 'chartCardFullScreen' : ''}`}
-      style={mode === 'normal' && isFullScreen ? { visibility: 'hidden' } : undefined}
-    >
-      {/* Header */}
-      <div className="chartHeader">
-        <span className="chartTitle">{title}</span>
-        {/* Fullscreen Toolbar - centered */}
-        {mode === 'fullscreen' && (
-          <div className="chartHeaderCenter">
-            <MonitoringToolbar
-              timeRangeOptions={fullScreenTimeRangeOptions}
-              timeRange={fullScreenTimeRange}
-              onTimeRangeChange={setFullScreenTimeRange}
-              onRefresh={() => console.log('Refresh chart')}
-            />
-          </div>
-        )}
-        <div className="chartControls">
-          {legendLabels.length > 1 && (
-            <>
-              <button className="toggleBtn" onClick={toggleAll}>
-                <span className={`toggleSwitch ${allVisible ? 'toggleSwitchActive' : ''}`} />
-                <span>{allVisible ? 'Hide All' : 'View All'}</span>
-              </button>
-              <span className="toggleDivider">|</span>
-            </>
-          )}
-          <div className="menuContainer">
-            <button
-              className="menuTrigger"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuOpen(!menuOpen);
-              }}
-            >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} />
-            </button>
-            {menuOpen && (
-              <div className="contextMenu">
-                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download Image
-                </button>
-                <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
-                  Download CSV
-                </button>
-                <button
-                  className="contextMenuItemLast"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setShowDataView(true);
-                  }}
-                >
-                  View Data
-                </button>
-              </div>
-            )}
-          </div>
-          <button
-            className="expandTrigger"
-            title={mode === 'fullscreen' ? 'Minimize' : 'Expand'}
-            onClick={() => setIsFullScreen(mode !== 'fullscreen')}
-          >
-            {mode === 'fullscreen' ? (
-              <IconArrowsMinimize size={16} stroke={1.5} />
-            ) : (
-              <IconArrowsMaximize size={16} stroke={1.5} />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Chart Body */}
-      <div className="chartBody">
-        <div className="chartWrapper">
-          <ReactECharts
-            key={`echart-${mode}`}
-            option={getOption()}
-            style={{ height: '100%', width: '100%' }}
-            notMerge={true}
-            opts={{ devicePixelRatio: window.devicePixelRatio }}
-          />
-        </div>
-        <div className="chartLegend">
-          {legendLabels.map((label, index) => (
-            <div
-              key={label}
-              className={`legendItem ${!visibleSeries[label] ? 'legendItemHidden' : ''}`}
-              onClick={() => setVisibleSeries((prev) => ({ ...prev, [label]: !prev[label] }))}
-            >
-              <div className="legendDot" style={{ backgroundColor: colors[index] }} />
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
-    <>
-      {/* Normal mode - always render in place */}
-      {renderChartContent('normal')}
-
-      {/* Fullscreen mode - render via portal to document.body */}
-      {isFullScreen &&
-        createPortal(
-          <>
-            <div className="fullScreenOverlay" onClick={() => setIsFullScreen(false)} />
-            <div className="fullScreenFloating">{renderChartContent('fullscreen')}</div>
-          </>,
-          document.body
-        )}
-
-      {/* Data View Drawer */}
-      <DataViewDrawer
-        isOpen={showDataView}
-        onClose={() => setShowDataView(false)}
-        title={`${title} (RAW)`}
-        series={drawerSeries}
-        timeLabels={labels}
-      />
-    </>
+    <ChartWithFullScreen
+      title={title}
+      series={chartSeries}
+      yAxisFormatter={(v: number) => `${v} ${yAxisUnit}`}
+    />
   );
 }
 
@@ -723,7 +509,7 @@ function AlarmTrendCard() {
       data: alarmTrendData.labels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
       boundaryGap: false,
     },
     yAxis: {
@@ -753,7 +539,7 @@ function AlarmTrendCard() {
         showSymbol: false,
         lineStyle: { color: colors[index], width: 1 },
         itemStyle: { color: colors[index] },
-        areaStyle: { color: colors[index], opacity: 0.1 },
+        areaStyle: getAreaGradient(colors[index]),
       })),
   });
 
@@ -969,14 +755,16 @@ export default function ComputeAdminMonitorOverviewPage() {
         />
 
         {/* Row 1: Alert Cards + Alarm Trend */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <AlertCard title="Today CPU usage > 80% alert" value={0} />
           <AlertCard title="Today RAM usage > 80% alert" value={0} />
-          <AlarmTrendCard />
+          <div className="col-span-2">
+            <AlarmTrendCard />
+          </div>
         </div>
 
         {/* Row 2: Gauge Charts + Pie Chart */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <GaugeCard title="Physical CPU usage" value={70} used={7} total={10} unit="vCPU" />
           <GaugeCard title="Total RAM usage" value={70} used={8} total={10} unit="GiB" />
           <GaugeCard title="Physical storage usage" value={70} used={8} total={10} unit="TiB" />
@@ -993,7 +781,6 @@ export default function ComputeAdminMonitorOverviewPage() {
         <div className="flex gap-4">
           <AreaChartCard
             title="Host disk average IOPS"
-            labels={diskIOPSData.labels}
             series={[diskIOPSData.reads, diskIOPSData.writes]}
             colors={[chartColors.cyan400, chartColors.emerald400]}
             legendLabels={['Reads', 'Writes']}
@@ -1001,7 +788,6 @@ export default function ComputeAdminMonitorOverviewPage() {
           />
           <AreaChartCard
             title="Host average network IO"
-            labels={networkIOData.labels}
             series={[networkIOData.receive, networkIOData.transmit]}
             colors={[chartColors.cyan400, chartColors.emerald400]}
             legendLabels={['Receive', 'Transmit']}

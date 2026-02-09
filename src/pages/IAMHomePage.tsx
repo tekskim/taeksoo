@@ -164,12 +164,13 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
 interface StatCardProps {
   label: string;
   value: string | number;
-  variant?: 'default' | 'success' | 'warning' | 'danger';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'primary';
 }
 
 function StatCard({ label, value, variant = 'default' }: StatCardProps) {
   const colorStyles = {
     default: 'text-[var(--color-text-default)]',
+    primary: 'text-[var(--color-action-primary)]',
     success: 'text-[var(--color-state-success)]',
     warning: 'text-[var(--color-state-warning)]',
     danger: 'text-[var(--color-state-danger)]',
@@ -182,7 +183,7 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <div className="flex flex-col gap-1.5">
         <span className={`text-label-sm ${textColor}`}>{label}</span>
-        <span className={`text-heading-h3 ${textColor}`}>{value}</span>
+        <span className={`text-heading-h2 ${textColor}`}>{value}</span>
       </div>
     </div>
   );
@@ -201,7 +202,7 @@ function ResourceCard({ label, value }: ResourceCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
       <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
-      <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
+      <p className="text-heading-h3 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
 }
@@ -286,7 +287,7 @@ export function IAMHomePage() {
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* Domain Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
-            <h6 className="text-heading-h7">DOMAIN INFO</h6>
+            <h6 className="text-heading-h6">Domain Info</h6>
             <h2 className="text-heading-h2 text-[var(--color-text-default)]">DomainA</h2>
             <VStack gap={4} className="mt-auto">
               <div>
@@ -302,7 +303,7 @@ export function IAMHomePage() {
 
           {/* Authentication Summary Card */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-            <h6 className="text-heading-h7">AUTHENTICATION SUMMARY</h6>
+            <h6 className="text-heading-h6">Authentication Summary</h6>
 
             <div className="grid grid-cols-2 gap-4">
               {/* Today's Sign-ins */}
@@ -366,12 +367,12 @@ export function IAMHomePage() {
 
         {/* Row 2: User Status */}
         <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-          <h6 className="text-heading-h7">USER STATUS</h6>
+          <h6 className="text-heading-h6">User Status</h6>
           <div className="grid grid-cols-4 gap-4">
             <StatCard label="Total" value="150" variant="default" />
             <StatCard label="Online" value="50" variant="success" />
             <StatCard label="Disabled" value="27" variant="danger" />
-            <StatCard label="Locked" value="3" variant="warning" />
+            <StatCard label="Locked" value="3" variant="primary" />
           </div>
         </div>
 
@@ -379,7 +380,7 @@ export function IAMHomePage() {
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* IAM Resources */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-            <h6 className="text-heading-h7">IAM RESOURCES</h6>
+            <h6 className="text-heading-h6">IAM Resources</h6>
             <VStack gap={2}>
               <ResourceCard label="User group" value="13" />
               <ResourceCard label="Roles" value="13" />
@@ -389,7 +390,7 @@ export function IAMHomePage() {
 
           {/* Recent Events */}
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
-            <h6 className="text-heading-h7">RECENT EVENTS</h6>
+            <h6 className="text-heading-h6">Recent Events</h6>
             <div className="overflow-x-auto">
               <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
             </div>

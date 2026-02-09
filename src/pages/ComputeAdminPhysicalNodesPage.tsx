@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import ReactECharts from 'echarts-for-react';
 import {
+  Badge,
   VStack,
   TabBar,
   TopBar,
@@ -11,6 +12,7 @@ import {
   Select,
   PageShell,
   PageHeader,
+  ProgressBar,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -22,6 +24,7 @@ import {
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
+import { getNiceScale, getAreaGradient } from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Chart Colors
@@ -109,9 +112,7 @@ function StatCard({
         <span className="chartTitle">{title}</span>
       </div>
       <div className="flex items-baseline justify-center gap-1 font-medium">
-        <span className="text-heading-h1 font-normal leading-[48px] text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="text-heading-h1 text-[var(--color-text-default)]">{value}</span>
         {unit && <span className="text-body-lg text-[var(--color-text-muted)]">{unit}</span>}
       </div>
     </div>
@@ -124,51 +125,32 @@ function FileSystemCard() {
     { name: '/dev/sda3/boot', used: 22.12, total: 25, percent: 88 },
   ];
 
-  const getColors = (percent: number) => {
-    if (percent >= 100)
-      return {
-        bg: 'bg-[var(--color-status-error-subtle)]',
-        text: 'text-[var(--color-status-error)]',
-      };
-    if (percent >= 70)
-      return {
-        bg: 'bg-[var(--color-status-warning-subtle)]',
-        text: 'text-[var(--color-status-warning)]',
-      };
-    return {
-      bg: 'bg-[var(--color-status-success-subtle)]',
-      text: 'text-[var(--color-status-success)]',
-    };
+  const getBadgeTheme = (percent: number): 'red' | 'yellow' | 'green' => {
+    if (percent >= 100) return 'red';
+    if (percent >= 70) return 'yellow';
+    return 'green';
   };
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl p-4 flex-1 min-w-0">
       <div className="chartTitle mb-4">File System Used Space</div>
       <div className="space-y-[22px]">
-        {filesystems.map((fs) => {
-          const colors = getColors(fs.percent);
-          return (
-            <div key={fs.name} className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-label-sm text-[var(--color-text-default)]">{fs.name}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-body-sm text-[var(--color-text-muted)]">
-                    {fs.used}/{fs.total} GiB
-                  </span>
-                  <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span className={`text-label-sm ${colors.text}`}>{fs.percent}%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="h-[3px] rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-                <div
-                  className="h-full rounded-sm bg-[var(--color-text-muted)] transition-all"
-                  style={{ width: `${Math.min(fs.percent, 100)}%` }}
-                />
+        {filesystems.map((fs) => (
+          <div key={fs.name} className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-label-sm text-[var(--color-text-default)]">{fs.name}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-body-sm text-[var(--color-text-muted)]">
+                  {fs.used}/{fs.total} GiB
+                </span>
+                <Badge size="sm" type="subtle" theme={getBadgeTheme(fs.percent)}>
+                  {fs.percent}%
+                </Badge>
               </div>
             </div>
-          );
-        })}
+            <ProgressBar value={fs.used} max={fs.total} showValue={false} />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -236,6 +218,31 @@ function AreaChartCard({
     color: colors[index],
   }));
 
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleIndices = legendLabels
+    .map((l, i) => ({ label: l, index: i }))
+    .filter(({ label }) => visibleSeries[label]);
+
+  let dataMax: number;
+  if (stacked && visibleIndices.length > 0) {
+    // For stacked: find max sum across x positions
+    const numPoints = series[0]?.length || 0;
+    let maxSum = 0;
+    for (let x = 0; x < numPoints; x++) {
+      let sum = 0;
+      for (const { index } of visibleIndices) {
+        sum += series[index][x] || 0;
+      }
+      maxSum = Math.max(maxSum, sum);
+    }
+    dataMax = maxSum;
+  } else {
+    // For non-stacked: max of individual values
+    const allData = visibleIndices.flatMap(({ index }) => series[index]);
+    dataMax = allData.length > 0 ? Math.max(...allData) : 100;
+  }
+  const { max: niceMax, interval: yInterval } = getNiceScale(dataMax);
+
   const getOption = () => ({
     animation: false,
     grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
@@ -244,11 +251,14 @@ function AreaChartCard({
       data: labels,
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
       boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
@@ -281,7 +291,7 @@ function AreaChartCard({
           stack: stacked ? 'total' : undefined,
           lineStyle: { color: colors[actualIndex], width: 1 },
           itemStyle: { color: colors[actualIndex] },
-          areaStyle: { color: colors[actualIndex], opacity: 0.1 },
+          areaStyle: getAreaGradient(colors[actualIndex]),
         };
       }),
   });
@@ -472,6 +482,13 @@ function SystemLoadCard() {
     color,
   }));
 
+  // Calculate y-axis bounds for exactly 5 labels
+  const visibleData = Object.entries(selectedNodes)
+    .filter(([, active]) => active)
+    .flatMap(([node]) => systemLoadData[node as keyof typeof systemLoadData]);
+  const sysDataMax = visibleData.length > 0 ? Math.max(...visibleData) : 1;
+  const { max: sysNiceMax, interval: sysYInterval } = getNiceScale(sysDataMax);
+
   const getOption = () => {
     const activeSeries = Object.entries(selectedNodes)
       .filter(([, active]) => active)
@@ -485,7 +502,7 @@ function SystemLoadCard() {
         showSymbol: false,
         lineStyle: { color: colors[node as keyof typeof colors], width: 1 },
         itemStyle: { color: colors[node as keyof typeof colors] },
-        areaStyle: { color: colors[node as keyof typeof colors], opacity: 0.1 },
+        areaStyle: getAreaGradient(colors[node as keyof typeof colors]),
       }));
 
     return {
@@ -496,11 +513,14 @@ function SystemLoadCard() {
         data: timeLabels,
         axisLine: { show: false },
         axisTick: { show: false },
-        axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
+        axisLabel: { color: chartColors.slate400, fontSize: 10 },
         boundaryGap: false,
       },
       yAxis: {
         type: 'value' as const,
+        min: 0,
+        max: sysNiceMax,
+        interval: sysYInterval,
         axisLine: { show: false },
         axisTick: { show: false },
         splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
@@ -732,11 +752,15 @@ export default function ComputeAdminPhysicalNodesPage() {
         </div>
 
         {/* Row 1: Stat Cards */}
-        <div className="flex gap-4">
-          <StatCard title="CPU Cores" value={0} />
-          <StatCard title="Total RAM" value="2.56" unit="GiB" />
-          <StatCard title="System running time" value="2.56" unit="weeks" />
-          <FileSystemCard />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex gap-4">
+            <StatCard title="CPU Cores" value={0} />
+            <StatCard title="Total RAM" value="2.56" unit="GiB" />
+          </div>
+          <div className="flex gap-4">
+            <StatCard title="System running time" value="2.56" unit="weeks" />
+            <FileSystemCard />
+          </div>
         </div>
 
         {/* Row 2: CPU Usage & RAM Usage */}

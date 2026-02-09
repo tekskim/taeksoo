@@ -79,9 +79,9 @@ describe('ProgressBar', () => {
       expect(filledBar).toBeInTheDocument();
     });
 
-    it('uses info color as default for default variant', () => {
+    it('auto-computes color based on percentage for default variant', () => {
       const { container } = render(<ProgressBar value={50} max={100} />);
-      const filledBar = container.querySelector('[style*="var(--color-state-info)"]');
+      const filledBar = container.querySelector('[style*="var(--color-state-success)"]');
       expect(filledBar).toBeInTheDocument();
     });
 

@@ -679,7 +679,6 @@ function PerformanceChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        padding: [0, 0, 0, 15],
       },
       boundaryGap: false,
     },

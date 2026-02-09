@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, PageShell } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  PageShell,
+  Badge,
+  ProgressBar,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconChevronRight, IconBell, IconCpu, IconServer } from '@tabler/icons-react';
@@ -14,29 +22,12 @@ interface PercentageBadgeProps {
 }
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const getColors = () => {
-    if (percentage >= 100)
-      return {
-        bg: 'bg-[var(--color-state-danger-bg)]',
-        text: 'text-[var(--color-state-danger-text)]',
-      };
-    if (percentage >= 70)
-      return {
-        bg: 'bg-[var(--color-state-warning-bg)]',
-        text: 'text-[var(--color-state-warning-text)]',
-      };
-    return {
-      bg: 'bg-[var(--color-state-success-bg)]',
-      text: 'text-[var(--color-state-success-text)]',
-    };
-  };
-
-  const colors = getColors();
+  const theme = percentage >= 100 ? 'red' : percentage >= 70 ? 'yellow' : 'green';
 
   return (
-    <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <span className={`text-label-sm ${colors.text}`}>{percentage}%</span>
-    </div>
+    <Badge size="sm" type="subtle" theme={theme}>
+      {percentage}%
+    </Badge>
   );
 }
 
@@ -64,12 +55,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -91,7 +77,7 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
     <div
       className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
     >
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
+      <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
@@ -120,15 +106,10 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
         <PercentageBadge percentage={percentage} />
       </div>
       <div className="flex items-baseline mb-3">
-        <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
-        <span className="text-body-lg text-[var(--color-text-muted)] pt-1.5">/{total}</span>
+        <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
+        <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
-        <div
-          className="h-full rounded-sm bg-[var(--color-text-muted)]"
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
+      <ProgressBar value={used} max={total} showValue={false} />
     </div>
   );
 }
@@ -218,7 +199,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h7 mb-4">{title}</h6>
+      <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -287,7 +268,7 @@ export function ComputeAdminHomePage() {
       {/* Top Row - 3 Cards */}
       <div className="grid grid-cols-3 gap-6 mb-6">
         {/* CAPACITY SUMMARY */}
-        <Card title="CAPACITY SUMMARY">
+        <Card title="Capacity Summary">
           <div className="space-y-[22px]">
             <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
             <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
@@ -297,11 +278,9 @@ export function ComputeAdminHomePage() {
         </Card>
 
         {/* INSTANCE SUMMARY */}
-        <Card title="INSTANCE SUMMARY" className="flex flex-col">
+        <Card title="Instance Summary" className="flex flex-col">
           <div className="mb-4">
-            <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
-              13
-            </div>
+            <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
           </div>
           <div className="space-y-2 mt-auto">
@@ -317,9 +296,9 @@ export function ComputeAdminHomePage() {
         </Card>
 
         {/* BARE METAL SUMMARY */}
-        <Card title="BARE METAL SUMMARY" className="flex flex-col">
+        <Card title="Bare Metal Summary" className="flex flex-col">
           <div className="mb-4">
-            <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">8</div>
+            <div className="text-heading-h2 text-[var(--color-text-default)]">8</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
           </div>
           <div className="space-y-2 mt-auto">
@@ -336,7 +315,7 @@ export function ComputeAdminHomePage() {
       </div>
 
       {/* Bottom Row - Tenant Usages */}
-      <Card title="TENANT USAGES">
+      <Card title="Tenant Usages">
         <div className="space-y-6">
           <TenantRow
             name="Tenant A"
