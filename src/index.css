@@ -1260,6 +1260,12 @@ html.theme-transition *::after {
    ======================================== */
 
 @layer utilities {
+  /* Invert dark-colored SVG icons in dark mode */
+  .dark .icon-theme-adaptive {
+    filter: invert(1) brightness(2);
+    opacity: 0.85;
+  }
+
   .container {
     width: 100%;
     margin-inline: auto;
@@ -2877,13 +2883,13 @@ input[type='search']::-webkit-search-decoration {
   font-weight: var(--font-weight-semibold);
 }
 
-/* h7 - Card/Section title style (12px, semibold, uppercase, muted) */
+/* h7 - Card/Section title style (12px, semibold, uppercase) */
 .text-heading-h7 {
   font-size: var(--font-size-12);
   line-height: var(--line-height-18);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  color: var(--semantic-color-text-muted);
+  color: var(--color-text-default);
 }
 
 /* Body - All regular (400) */

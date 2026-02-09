@@ -510,7 +510,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               aria-label="Toggle sidebar"
             >
               <IconLayoutSidebar
-                size={16}
+                size={14}
                 className="text-[var(--color-text-muted)] pointer-events-none"
                 stroke={1.5}
               />

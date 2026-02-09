@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   PageShell,
+  PageHeader,
   Button,
   FilterSearchInput,
   Table,
@@ -423,7 +424,7 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/ports/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -442,12 +443,12 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -466,7 +467,7 @@ export function ComputeAdminPortsPage() {
                     ? `/compute-admin/routers/${row.attachedToId}`
                     : `/compute-admin/instances/${row.attachedToId}`
                 }
-                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo}
@@ -478,9 +479,9 @@ export function ComputeAdminPortsPage() {
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
                 {row.attachedType === 'router' ? (
-                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -499,12 +500,12 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/networks/${row.ownedNetworkId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID: {row.ownedNetworkId}
           </span>
         </div>
@@ -522,7 +523,7 @@ export function ComputeAdminPortsPage() {
           </span>
           {row.securityGroupId && (
             <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.securityGroupId}
+              ID: {row.securityGroupId}
             </span>
           )}
         </div>

@@ -43,6 +43,15 @@ export const primaryChartColors = [
    Base Chart Options (from storage-dashboard)
    ---------------------------------------- */
 
+/** Read a CSS variable value at runtime (for ECharts which can't use CSS vars directly) */
+function getCSSColor(cssVar: string, fallback: string): string {
+  if (typeof window !== 'undefined') {
+    const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+    return val || fallback;
+  }
+  return fallback;
+}
+
 export const baseChartOptions = {
   animation: false,
   grid: {
@@ -68,7 +77,10 @@ export const baseChartOptions = {
     axisLine: { show: false },
     axisTick: { show: false },
     splitLine: {
-      lineStyle: { color: chartColors.slate100, opacity: 0.5 },
+      lineStyle: {
+        color: getCSSColor('--color-border-subtle', chartColors.slate100),
+        opacity: 0.5,
+      },
     },
     axisLabel: {
       color: chartColors.slate400,
@@ -124,7 +136,12 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
           max: 100,
           axisLine: { show: false },
           axisTick: { show: false },
-          splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+          splitLine: {
+            lineStyle: {
+              color: getCSSColor('--color-border-subtle', chartColors.slate100),
+              opacity: 0.5,
+            },
+          },
           axisLabel: { color: chartColors.slate400, fontSize: 10 },
         },
         yAxis: {
@@ -337,7 +354,10 @@ export function LineChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
-        lineStyle: { color: chartColors.slate100, opacity: 0.5 },
+        lineStyle: {
+          color: getCSSColor('--color-border-subtle', chartColors.slate100),
+          opacity: 0.5,
+        },
       },
       axisLabel: {
         color: chartColors.slate400,

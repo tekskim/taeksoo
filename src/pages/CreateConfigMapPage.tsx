@@ -334,7 +334,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                 size="sm"
                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                 onClick={addDataEntry}
-                className="bg-white"
+                className="bg-[var(--color-surface-default)]"
               >
                 Add Data Entry
               </Button>
@@ -346,7 +346,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                   // TODO: Implement file reading functionality
                   console.log('Read from file clicked');
                 }}
-                className="bg-white"
+                className="bg-[var(--color-surface-default)]"
               >
                 Read from File
               </Button>
@@ -435,7 +435,7 @@ function BinaryDataSection({
                 size="sm"
                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                 onClick={addBinaryDataEntry}
-                className="bg-white"
+                className="bg-[var(--color-surface-default)]"
               >
                 Add Data Entry
               </Button>
@@ -447,7 +447,7 @@ function BinaryDataSection({
                   // TODO: Implement file reading functionality
                   console.log('Read from file clicked');
                 }}
-                className="bg-white"
+                className="bg-[var(--color-surface-default)]"
               >
                 Read from File
               </Button>
