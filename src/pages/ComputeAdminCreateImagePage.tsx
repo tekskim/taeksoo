@@ -174,9 +174,15 @@ export function ComputeAdminCreateImagePage() {
   // Validation error state
   const [showTenantError, setShowTenantError] = useState(false);
   const [showImageNameError, setShowImageNameError] = useState(false);
+  const [showSourceUrlError, setShowSourceUrlError] = useState(false);
+  const [showDiskFormatError, setShowDiskFormatError] = useState(false);
+  const [showOsError, setShowOsError] = useState(false);
+  const [showOsVersionError, setShowOsVersionError] = useState(false);
+  const [showOsAdminError, setShowOsAdminError] = useState(false);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -320,6 +326,55 @@ export function ComputeAdminCreateImagePage() {
         if (hasError) return;
       }
 
+      // Validate source section
+      if (currentSection === 'source') {
+        let hasError = false;
+
+        if (sourceType === 'url' && !sourceUrl.trim()) {
+          setShowSourceUrlError(true);
+          hasError = true;
+        } else {
+          setShowSourceUrlError(false);
+        }
+
+        if (hasError) return;
+      }
+
+      // Validate specification section
+      if (currentSection === 'specification') {
+        let hasError = false;
+
+        if (!diskFormat) {
+          setShowDiskFormatError(true);
+          hasError = true;
+        } else {
+          setShowDiskFormatError(false);
+        }
+
+        if (!os) {
+          setShowOsError(true);
+          hasError = true;
+        } else {
+          setShowOsError(false);
+        }
+
+        if (!osVersion.trim()) {
+          setShowOsVersionError(true);
+          hasError = true;
+        } else {
+          setShowOsVersionError(false);
+        }
+
+        if (!osAdmin.trim()) {
+          setShowOsAdminError(true);
+          hasError = true;
+        } else {
+          setShowOsAdminError(false);
+        }
+
+        if (hasError) return;
+      }
+
       const currentIndex = SECTION_ORDER.indexOf(currentSection);
       const nextSection = SECTION_ORDER[currentIndex + 1];
 
@@ -331,7 +386,7 @@ export function ComputeAdminCreateImagePage() {
         }));
       }
     },
-    [selectedTenantIds, imageName]
+    [selectedTenantIds, imageName, sourceType, sourceUrl, diskFormat, os, osVersion, osAdmin]
   );
 
   const editSection = useCallback((section: SectionStep) => {
@@ -367,7 +422,10 @@ export function ComputeAdminCreateImagePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-          showAddButton={false}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
         />
       }
       topBar={
@@ -414,205 +472,237 @@ export function ComputeAdminCreateImagePage() {
                 }
               />
               {sectionStatus['basic-info'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  <FormField required error={showImageNameError}>
-                    <FormField.Label>Image name</FormField.Label>
-                    <FormField.Control>
-                      <Input
-                        value={imageName}
-                        onChange={(e) => {
-                          setImageName(e.target.value);
-                          if (e.target.value.trim()) {
-                            setShowImageNameError(false);
-                          }
-                        }}
-                        placeholder="Enter image name"
-                        fullWidth
-                        error={showImageNameError}
-                      />
-                    </FormField.Control>
-                    {showImageNameError && (
-                      <FormField.ErrorMessage>Please enter an image name.</FormField.ErrorMessage>
-                    )}
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_), and the length
-                      must be between 2-128 characters.
-                    </FormField.HelperText>
-                  </FormField>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  <FormField>
-                    <FormField.Label>Description</FormField.Label>
-                    <FormField.Control>
-                      <Input
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Enter description"
-                        fullWidth
-                      />
-                    </FormField.Control>
-                    <FormField.HelperText>
-                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                      maximum 255 characters.
-                    </FormField.HelperText>
-                  </FormField>
-
-                  {/* Owned tenant section */}
-                  <div className="flex flex-col gap-[8px]">
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                          Owned tenant
-                        </span>
-                        <span className="text-[var(--color-state-danger)]">*</span>
-                      </div>
-                      <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                        Select the tenant that will own the image.
-                      </span>
+                    {/* Image name */}
+                    <div className="py-6">
+                      <FormField required error={showImageNameError}>
+                        <FormField.Label>Image name</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={imageName}
+                            onChange={(e) => {
+                              setImageName(e.target.value);
+                              if (e.target.value.trim()) {
+                                setShowImageNameError(false);
+                              }
+                            }}
+                            placeholder="Enter image name"
+                            fullWidth
+                            error={showImageNameError}
+                          />
+                        </FormField.Control>
+                        {showImageNameError && (
+                          <FormField.ErrorMessage>
+                            Please enter an image name.
+                          </FormField.ErrorMessage>
+                        )}
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-128 characters.
+                        </FormField.HelperText>
+                      </FormField>
                     </div>
 
-                    {/* Search */}
-                    <SearchInput
-                      value={tenantSearch}
-                      onChange={(e) => setTenantSearch(e.target.value)}
-                      placeholder="Search tenants by attributes"
-                    />
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={tenantCurrentPage}
-                      totalPages={totalTenantPages}
-                      onPageChange={setTenantCurrentPage}
-                      totalItems={filteredTenants.length}
-                      selectedCount={selectedTenantIds.length}
-                    />
-
-                    {/* Tenant Table */}
-                    <Table<Tenant>
-                      columns={tenantColumns}
-                      data={paginatedTenants}
-                      rowKey="id"
-                      emptyMessage="No tenants found"
-                      selectable
-                      selectedKeys={selectedTenantIds}
-                      onSelectionChange={(keys) => {
-                        setSelectedTenantIds(keys);
-                        if (keys.length > 0) {
-                          setShowTenantError(false);
-                        }
-                      }}
-                    />
-
-                    {/* Selection Indicator */}
-                    <SelectionIndicator
-                      selectedItems={selectedTenants.map((t) => ({
-                        id: t.id,
-                        label: `${t.name} (ID: ${t.id})`,
-                      }))}
-                      onRemove={(id) =>
-                        setSelectedTenantIds((prev) => prev.filter((tid) => tid !== id))
-                      }
-                      error={showTenantError}
-                      errorMessage="Please select a tenant."
-                    />
-                  </div>
-
-                  {/* Visibility section */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                        Visibility
-                      </span>
-                      <span className="text-[var(--color-state-danger)]">*</span>
+                    {/* Description */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Enter description"
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
                     </div>
-                    <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                      Specifies the availability scope of the image based on its visibility setting.
-                    </span>
-                    <RadioGroup
-                      value={visibility}
-                      onChange={(val) => setVisibility(val as 'public' | 'shared' | 'private')}
-                    >
-                      <Radio value="public" label="Public" />
-                      <Radio value="shared" label="Shared" />
-                      <Radio value="private" label="Private" />
-                    </RadioGroup>
 
-                    {/* Shared tenants table - shown when visibility is 'shared' */}
-                    {visibility === 'shared' && (
-                      <div className="flex flex-col gap-[8px] mt-2">
-                        <div className="flex flex-col gap-2">
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Owned tenant section */}
+                    <VStack gap={3} className="py-6">
+                      <VStack gap={2}>
+                        <div className="flex items-center gap-1.5">
                           <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                            Tenants
+                            Owned tenant
                           </span>
-                          <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                            Select the tenants to share the image with.
-                          </span>
+                          <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
+                        <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                          Select the tenant that will own the image.
+                        </span>
+                      </VStack>
 
-                        {/* Search */}
-                        <SearchInput
-                          value={sharedTenantSearch}
-                          onChange={(e) => setSharedTenantSearch(e.target.value)}
-                          placeholder="Search tenants by attributes"
-                        />
+                      {/* Search */}
+                      <SearchInput
+                        value={tenantSearch}
+                        onChange={(e) => setTenantSearch(e.target.value)}
+                        placeholder="Search tenants by attributes"
+                        className="w-[280px]"
+                      />
 
-                        {/* Pagination */}
-                        <Pagination
-                          currentPage={sharedTenantCurrentPage}
-                          totalPages={totalSharedTenantPages}
-                          onPageChange={setSharedTenantCurrentPage}
-                          totalItems={filteredSharedTenants.length}
-                          selectedCount={sharedTenantIds.length}
-                        />
+                      {/* Pagination */}
+                      <Pagination
+                        currentPage={tenantCurrentPage}
+                        totalPages={totalTenantPages}
+                        onPageChange={setTenantCurrentPage}
+                        totalItems={filteredTenants.length}
+                        selectedCount={selectedTenantIds.length}
+                      />
 
-                        {/* Shared Tenant Table */}
+                      {/* Tenant Table + Selection Indicator */}
+                      <VStack gap={2}>
                         <Table<Tenant>
                           columns={tenantColumns}
-                          data={paginatedSharedTenants}
+                          data={paginatedTenants}
                           rowKey="id"
                           emptyMessage="No tenants found"
                           selectable
-                          selectedKeys={sharedTenantIds}
+                          selectedKeys={selectedTenantIds}
                           onSelectionChange={(keys) => {
-                            setSharedTenantIds(keys);
+                            setSelectedTenantIds(keys);
+                            if (keys.length > 0) {
+                              setShowTenantError(false);
+                            }
                           }}
                         />
 
                         {/* Selection Indicator */}
                         <SelectionIndicator
-                          selectedItems={selectedSharedTenants.map((t) => ({
+                          selectedItems={selectedTenants.map((t) => ({
                             id: t.id,
                             label: `${t.name} (ID: ${t.id})`,
                           }))}
                           onRemove={(id) =>
-                            setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                            setSelectedTenantIds((prev) => prev.filter((tid) => tid !== id))
                           }
+                          error={showTenantError}
+                          errorMessage="Please select a tenant."
                         />
-                      </div>
-                    )}
-                  </div>
+                      </VStack>
+                    </VStack>
 
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                        Protected
-                      </span>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                        Protected images cannot be deleted, preventing accidental removal.
-                      </span>
-                    </div>
-                    <HStack gap={2} align="center">
-                      <Toggle checked={isProtected} onChange={setIsProtected} />
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        {isProtected ? 'Yes' : 'No'}
-                      </span>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Visibility section */}
+                    <VStack gap={3} className="py-6">
+                      <VStack gap={2}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                            Visibility
+                          </span>
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </div>
+                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                          Specifies the availability scope of the image based on its visibility
+                          setting.
+                        </span>
+                      </VStack>
+                      <RadioGroup
+                        value={visibility}
+                        onChange={(val) => setVisibility(val as 'public' | 'shared' | 'private')}
+                      >
+                        <Radio value="public" label="Public" />
+                        <Radio value="shared" label="Shared" />
+                        <Radio value="private" label="Private" />
+                      </RadioGroup>
+
+                      {/* Shared tenants table - shown when visibility is 'shared' */}
+                      {visibility === 'shared' && (
+                        <VStack gap={3}>
+                          <VStack gap={2}>
+                            <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              Tenants
+                            </span>
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              Select the tenants to share the image with.
+                            </span>
+                          </VStack>
+
+                          {/* Search */}
+                          <SearchInput
+                            value={sharedTenantSearch}
+                            onChange={(e) => setSharedTenantSearch(e.target.value)}
+                            placeholder="Search tenants by attributes"
+                            className="w-[280px]"
+                          />
+
+                          {/* Pagination */}
+                          <Pagination
+                            currentPage={sharedTenantCurrentPage}
+                            totalPages={totalSharedTenantPages}
+                            onPageChange={setSharedTenantCurrentPage}
+                            totalItems={filteredSharedTenants.length}
+                            selectedCount={sharedTenantIds.length}
+                          />
+
+                          {/* Shared Tenant Table + Selection Indicator */}
+                          <VStack gap={2}>
+                            <Table<Tenant>
+                              columns={tenantColumns}
+                              data={paginatedSharedTenants}
+                              rowKey="id"
+                              emptyMessage="No tenants found"
+                              selectable
+                              selectedKeys={sharedTenantIds}
+                              onSelectionChange={(keys) => {
+                                setSharedTenantIds(keys);
+                              }}
+                            />
+
+                            {/* Selection Indicator */}
+                            <SelectionIndicator
+                              selectedItems={selectedSharedTenants.map((t) => ({
+                                id: t.id,
+                                label: `${t.name} (ID: ${t.id})`,
+                              }))}
+                              onRemove={(id) =>
+                                setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                              }
+                            />
+                          </VStack>
+                        </VStack>
+                      )}
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Protected */}
+                    <VStack gap={3} className="py-6">
+                      <VStack gap={2}>
+                        <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                          Protected
+                        </span>
+                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                          Protected images cannot be deleted, preventing accidental removal.
+                        </span>
+                      </VStack>
+                      <HStack gap={2} align="center">
+                        <Toggle checked={isProtected} onChange={setIsProtected} />
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {isProtected ? 'Yes' : 'No'}
+                        </span>
+                      </HStack>
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('basic-info')}>
+                        Next
+                      </Button>
                     </HStack>
-                  </div>
-
-                  <div className="flex items-center justify-end w-full">
-                    <Button variant="primary" onClick={() => goToNextSection('basic-info')}>
-                      Next
-                    </Button>
-                  </div>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['basic-info'] === 'done' && (
@@ -665,74 +755,85 @@ export function ComputeAdminCreateImagePage() {
                 }
               />
               {sectionStatus['source'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  {/* Upload type Label */}
-                  <div className="flex flex-col gap-2 w-full">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                        Upload type
-                      </span>
-                      <span className="text-[var(--color-state-danger)]">*</span>
-                    </div>
-                    <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                      Registers an image by uploading a file or entering a file URL.
-                    </span>
-                  </div>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* Upload type Tabs */}
-                  <div className="flex flex-col gap-3 w-full">
-                    <Tabs
-                      value={sourceType}
-                      onChange={(value) => setSourceType(value as 'file' | 'url')}
-                      variant="underline"
-                      size="sm"
-                    >
-                      <TabList>
-                        <Tab value="file">Upload file</Tab>
-                        <Tab value="url">File URL</Tab>
-                      </TabList>
-                    </Tabs>
-
-                    {/* File Upload */}
-                    {sourceType === 'file' && (
-                      <VStack gap={3} align="start">
-                        <Button variant="secondary" size="sm" leftIcon={<IconUpload size={12} />}>
-                          Choose File
-                        </Button>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                    {/* Upload type */}
+                    <VStack gap={3} className="py-6">
+                      <VStack gap={2}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                            Upload type
+                          </span>
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </div>
+                        <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                          Registers an image by uploading a file or entering a file URL.
                         </span>
                       </VStack>
-                    )}
 
-                    {/* File URL */}
-                    {sourceType === 'url' && (
-                      <VStack gap={3} align="stretch">
-                        <Input
-                          value={sourceUrl}
-                          onChange={(e) => setSourceUrl(e.target.value)}
-                          placeholder="e.g. https://example.com/image.qcow2"
-                          fullWidth
-                        />
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          The URL must start with http:// or https://.
-                        </span>
-                      </VStack>
-                    )}
-                  </div>
+                      {/* Upload type Tabs */}
+                      <Tabs
+                        value={sourceType}
+                        onChange={(value) => setSourceType(value as 'file' | 'url')}
+                        variant="underline"
+                        size="sm"
+                      >
+                        <TabList>
+                          <Tab value="file">Upload file</Tab>
+                          <Tab value="url">File URL</Tab>
+                        </TabList>
+                      </Tabs>
 
-                  {/* Divider */}
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      {/* File Upload */}
+                      {sourceType === 'file' && (
+                        <VStack gap={3} align="start">
+                          <Button variant="secondary" size="sm" leftIcon={<IconUpload size={12} />}>
+                            Choose File
+                          </Button>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                          </span>
+                        </VStack>
+                      )}
 
-                  <div className="flex items-center justify-end w-full">
-                    <Button
-                      variant="primary"
-                      onClick={() => goToNextSection('source')}
-                      disabled={sourceType === 'url' && !sourceUrl.trim()}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                      {/* File URL */}
+                      {sourceType === 'url' && (
+                        <VStack gap={2} align="stretch">
+                          <Input
+                            value={sourceUrl}
+                            onChange={(e) => {
+                              setSourceUrl(e.target.value);
+                              if (e.target.value.trim()) {
+                                setShowSourceUrlError(false);
+                              }
+                            }}
+                            placeholder="e.g. https://example.com/image.qcow2"
+                            fullWidth
+                            error={showSourceUrlError}
+                          />
+                          {showSourceUrlError ? (
+                            <span className="text-body-sm text-[var(--color-state-danger)]">
+                              Please enter a file URL.
+                            </span>
+                          ) : (
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              The URL must start with http:// or https://.
+                            </span>
+                          )}
+                        </VStack>
+                      )}
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('source')}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['source'] === 'done' && (
@@ -772,159 +873,213 @@ export function ComputeAdminCreateImagePage() {
                 }
               />
               {sectionStatus['specification'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  {/* Disk format */}
-                  <FormField required>
-                    <FormField.Label>Disk format</FormField.Label>
-                    <FormField.Description>
-                      Select the disk format for the image. It must match the actual type of the
-                      uploaded file.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <Select
-                        value={diskFormat}
-                        onChange={(value) => setDiskFormat(value)}
-                        placeholder="Select disk format"
-                        options={[
-                          { value: 'raw', label: 'RAW' },
-                          { value: 'qcow2', label: 'QCOW2' },
-                          { value: 'vhd', label: 'VHD' },
-                          { value: 'vmdk', label: 'VMDK' },
-                          { value: 'iso', label: 'ISO' },
-                          { value: 'aki', label: 'AKI' },
-                          { value: 'ari', label: 'ARI' },
-                        ]}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* OS */}
-                  <FormField required>
-                    <FormField.Label>OS</FormField.Label>
-                    <FormField.Description>
-                      Select the operating system type for the image.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <Select
-                        value={os}
-                        onChange={(value) => setOs(value)}
-                        placeholder="Select OS"
-                        options={[
-                          { value: 'ubuntu', label: 'Ubuntu' },
-                          { value: 'centos', label: 'CentOS' },
-                          { value: 'debian', label: 'Debian' },
-                          { value: 'rhel', label: 'Red Hat Enterprise Linux' },
-                          { value: 'windows', label: 'Windows' },
-                          { value: 'other', label: 'Other' },
-                        ]}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
+                    {/* Disk format */}
+                    <div className="py-6">
+                      <FormField required error={showDiskFormatError}>
+                        <FormField.Label>Disk format</FormField.Label>
+                        <FormField.Description>
+                          Select the disk format for the image. It must match the actual type of the
+                          uploaded file.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Select
+                            value={diskFormat}
+                            onChange={(value) => {
+                              setDiskFormat(value);
+                              if (value) setShowDiskFormatError(false);
+                            }}
+                            placeholder="Select disk format"
+                            options={[
+                              { value: 'raw', label: 'RAW' },
+                              { value: 'qcow2', label: 'QCOW2' },
+                              { value: 'vhd', label: 'VHD' },
+                              { value: 'vmdk', label: 'VMDK' },
+                              { value: 'iso', label: 'ISO' },
+                              { value: 'aki', label: 'AKI' },
+                              { value: 'ari', label: 'ARI' },
+                            ]}
+                            fullWidth
+                            error={showDiskFormatError}
+                          />
+                        </FormField.Control>
+                        {showDiskFormatError && (
+                          <FormField.ErrorMessage>
+                            Please select a disk format.
+                          </FormField.ErrorMessage>
+                        )}
+                      </FormField>
+                    </div>
 
-                  {/* OS Version */}
-                  <FormField required>
-                    <FormField.Label>OS version</FormField.Label>
-                    <FormField.Description>
-                      This metadata helps categorize image.
-                    </FormField.Description>
-                    <FormField.Control>
-                      <Input
-                        value={osVersion}
-                        onChange={(e) => setOsVersion(e.target.value)}
-                        placeholder="e.g. 22.04, 8, 2019"
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* OS Admin */}
-                  <FormField required>
-                    <FormField.Label>OS admin</FormField.Label>
-                    <FormField.HelperText>
-                      Enter the default administrator account used when launching instances from
-                      this image.
-                    </FormField.HelperText>
-                    <FormField.Control>
-                      <Input
-                        value={osAdmin}
-                        onChange={(e) => setOsAdmin(e.target.value)}
-                        placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
+                    {/* OS */}
+                    <div className="py-6">
+                      <FormField required error={showOsError}>
+                        <FormField.Label>OS</FormField.Label>
+                        <FormField.Description>
+                          Select the operating system type for the image.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Select
+                            value={os}
+                            onChange={(value) => {
+                              setOs(value);
+                              if (value) setShowOsError(false);
+                            }}
+                            placeholder="Select OS"
+                            options={[
+                              { value: 'ubuntu', label: 'Ubuntu' },
+                              { value: 'centos', label: 'CentOS' },
+                              { value: 'debian', label: 'Debian' },
+                              { value: 'rhel', label: 'Red Hat Enterprise Linux' },
+                              { value: 'windows', label: 'Windows' },
+                              { value: 'other', label: 'Other' },
+                            ]}
+                            fullWidth
+                            error={showOsError}
+                          />
+                        </FormField.Control>
+                        {showOsError && (
+                          <FormField.ErrorMessage>Please select an OS.</FormField.ErrorMessage>
+                        )}
+                      </FormField>
+                    </div>
 
-                  {/* Advanced Section */}
-                  <Disclosure open={specAdvancedOpen} onChange={setSpecAdvancedOpen}>
-                    <DisclosureTrigger>Advanced</DisclosureTrigger>
-                    <DisclosurePanel>
-                      <VStack gap={4} align="stretch" className="pt-3">
-                        {/* Min system Disk */}
-                        <div className="flex flex-col gap-2">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Min system disk
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)]">
-                            Defines the minimum disk size required to boot an instance from this
-                            image.
-                          </span>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={minDisk}
-                              onChange={setMinDisk}
-                              min={0}
-                              max={500}
-                              width="sm"
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              GiB
-                            </span>
-                          </HStack>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            0-500 GiB
-                          </span>
-                        </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                        {/* Min RAM */}
-                        <div className="flex flex-col gap-2">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Min RAM
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)]">
-                            Defines the minimum amount of RAM required to boot an instance from this
-                            image.
-                          </span>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={minRam}
-                              onChange={setMinRam}
-                              min={0}
-                              max={500}
-                              width="sm"
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              GiB
-                            </span>
-                          </HStack>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            0-500 GiB
-                          </span>
-                        </div>
-                      </VStack>
-                    </DisclosurePanel>
-                  </Disclosure>
+                    {/* OS Version */}
+                    <div className="py-6">
+                      <FormField required error={showOsVersionError}>
+                        <FormField.Label>OS version</FormField.Label>
+                        <FormField.Description>
+                          This metadata helps categorize image.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Input
+                            value={osVersion}
+                            onChange={(e) => {
+                              setOsVersion(e.target.value);
+                              if (e.target.value.trim()) setShowOsVersionError(false);
+                            }}
+                            placeholder="e.g. 22.04, 8, 2019"
+                            fullWidth
+                            error={showOsVersionError}
+                          />
+                        </FormField.Control>
+                        {showOsVersionError && (
+                          <FormField.ErrorMessage>
+                            Please enter an OS version.
+                          </FormField.ErrorMessage>
+                        )}
+                      </FormField>
+                    </div>
 
-                  <div className="flex items-center justify-end w-full">
-                    <Button
-                      variant="primary"
-                      onClick={() => goToNextSection('specification')}
-                      disabled={!diskFormat || !os || !osVersion.trim() || !osAdmin.trim()}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* OS Admin */}
+                    <div className="py-6">
+                      <FormField required error={showOsAdminError}>
+                        <FormField.Label>OS admin</FormField.Label>
+                        <FormField.HelperText>
+                          Enter the default administrator account used when launching instances from
+                          this image.
+                        </FormField.HelperText>
+                        <FormField.Control>
+                          <Input
+                            value={osAdmin}
+                            onChange={(e) => {
+                              setOsAdmin(e.target.value);
+                              if (e.target.value.trim()) setShowOsAdminError(false);
+                            }}
+                            placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
+                            fullWidth
+                            error={showOsAdminError}
+                          />
+                        </FormField.Control>
+                        {showOsAdminError && (
+                          <FormField.ErrorMessage>
+                            Please enter an OS admin account.
+                          </FormField.ErrorMessage>
+                        )}
+                      </FormField>
+                    </div>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Advanced Section */}
+                    <div className="py-6">
+                      <Disclosure open={specAdvancedOpen} onChange={setSpecAdvancedOpen}>
+                        <DisclosureTrigger>Advanced</DisclosureTrigger>
+                        <DisclosurePanel>
+                          <VStack gap={4} align="stretch" className="pt-3">
+                            {/* Min system Disk */}
+                            <div className="flex flex-col gap-2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Min system disk
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Defines the minimum disk size required to boot an instance from this
+                                image.
+                              </span>
+                              <HStack gap={2} align="center">
+                                <NumberInput
+                                  value={minDisk}
+                                  onChange={setMinDisk}
+                                  min={0}
+                                  max={500}
+                                  width="sm"
+                                />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  GiB
+                                </span>
+                              </HStack>
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                0-500 GiB
+                              </span>
+                            </div>
+
+                            {/* Min RAM */}
+                            <div className="flex flex-col gap-2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Min RAM
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Defines the minimum amount of RAM required to boot an instance from
+                                this image.
+                              </span>
+                              <HStack gap={2} align="center">
+                                <NumberInput
+                                  value={minRam}
+                                  onChange={setMinRam}
+                                  min={0}
+                                  max={500}
+                                  width="sm"
+                                />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  GiB
+                                </span>
+                              </HStack>
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                0-500 GiB
+                              </span>
+                            </div>
+                          </VStack>
+                        </DisclosurePanel>
+                      </Disclosure>
+                    </div>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('specification')}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['specification'] === 'done' && (
@@ -969,92 +1124,106 @@ export function ComputeAdminCreateImagePage() {
                 }
               />
               {sectionStatus['advanced'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  {/* QEMU Guest Agent */}
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-label-lg text-[var(--color-text-default)]">
-                        QEMU guest agent
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Enables communication and status retrieval between the hypervisor and the
-                        instance.
-                      </span>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* QEMU Guest Agent */}
+                    <VStack gap={3} className="py-6">
+                      <VStack gap={2}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          QEMU guest agent
+                        </span>
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          Enables communication and status retrieval between the hypervisor and the
+                          instance.
+                        </span>
+                      </VStack>
+                      <HStack gap={2} align="center">
+                        <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {qemuGuestAgent ? 'On' : 'Off'}
+                        </span>
+                      </HStack>
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* CPU Policy */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>CPU policy</FormField.Label>
+                        <FormField.HelperText>
+                          Policy that defines how vCPUs are allocated.
+                        </FormField.HelperText>
+                        <FormField.Control>
+                          <Select
+                            value={cpuPolicy}
+                            onChange={(value) => setCpuPolicy(value)}
+                            options={[
+                              { value: 'none', label: 'None' },
+                              { value: 'dedicated', label: 'Dedicated' },
+                              { value: 'shared', label: 'Shared' },
+                            ]}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                      </FormField>
                     </div>
-                    <HStack gap={2} align="center">
-                      <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        {qemuGuestAgent ? 'On' : 'Off'}
-                      </span>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* CPU Thread Policy */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>CPU thread policy</FormField.Label>
+                        <FormField.HelperText>
+                          Policy defining how hyperthreads are used for vCPU placement.
+                        </FormField.HelperText>
+                        <FormField.Control>
+                          <Select
+                            value={cpuThreadPolicy}
+                            onChange={(value) => setCpuThreadPolicy(value)}
+                            options={[
+                              { value: 'none', label: 'None' },
+                              { value: 'prefer', label: 'Prefer' },
+                              { value: 'isolate', label: 'Isolate' },
+                              { value: 'require', label: 'Require' },
+                            ]}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Action Buttons */}
+                    <HStack justify="end" gap={2} className="pt-3">
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          // Reset to default values
+                          setQemuGuestAgent(true);
+                          setCpuPolicy('none');
+                          setCpuThreadPolicy('none');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setSectionStatus((prev) => ({
+                            ...prev,
+                            advanced: 'done',
+                          }));
+                        }}
+                      >
+                        Done
+                      </Button>
                     </HStack>
-                  </div>
-
-                  {/* CPU Policy */}
-                  <FormField>
-                    <FormField.Label>CPU policy</FormField.Label>
-                    <FormField.HelperText>
-                      Policy that defines how vCPUs are allocated.
-                    </FormField.HelperText>
-                    <FormField.Control>
-                      <Select
-                        value={cpuPolicy}
-                        onChange={(value) => setCpuPolicy(value)}
-                        options={[
-                          { value: 'none', label: 'None' },
-                          { value: 'dedicated', label: 'Dedicated' },
-                          { value: 'shared', label: 'Shared' },
-                        ]}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* CPU Thread Policy */}
-                  <FormField>
-                    <FormField.Label>CPU thread policy</FormField.Label>
-                    <FormField.HelperText>
-                      Policy defining how hyperthreads are used for vCPU placement.
-                    </FormField.HelperText>
-                    <FormField.Control>
-                      <Select
-                        value={cpuThreadPolicy}
-                        onChange={(value) => setCpuThreadPolicy(value)}
-                        options={[
-                          { value: 'none', label: 'None' },
-                          { value: 'prefer', label: 'Prefer' },
-                          { value: 'isolate', label: 'Isolate' },
-                          { value: 'require', label: 'Require' },
-                        ]}
-                        fullWidth
-                      />
-                    </FormField.Control>
-                  </FormField>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center justify-end gap-2 w-full">
-                    <Button
-                      variant="secondary"
-                      onClick={() => {
-                        // Reset to default values
-                        setQemuGuestAgent(true);
-                        setCpuPolicy('none');
-                        setCpuThreadPolicy('none');
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        setSectionStatus((prev) => ({
-                          ...prev,
-                          advanced: 'done',
-                        }));
-                      }}
-                    >
-                      Done
-                    </Button>
-                  </div>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['advanced'] === 'done' && (
