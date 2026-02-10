@@ -438,7 +438,8 @@ export function ComputeImagesPage() {
           {
             id: 'delete',
             label: 'Delete',
-            variant: 'danger',
+            status: 'danger',
+            divider: true,
             onClick: () => handleDeleteClick(row),
           },
         ];
