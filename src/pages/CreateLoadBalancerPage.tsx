@@ -44,6 +44,7 @@ import {
   IconCirclePlus,
   IconAlertCircle,
   IconTrash,
+  IconX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -470,6 +471,10 @@ export default function CreateLoadBalancerPage() {
   const [lbNameError, setLbNameError] = useState<string | null>(null);
   const [providerError, setProviderError] = useState<string | null>(null);
   const [networkError, setNetworkError] = useState<string | null>(null);
+  const [listenerNameError, setListenerNameError] = useState<string | null>(null);
+  const [listenerProtocolError, setListenerProtocolError] = useState<string | null>(null);
+  const [protocolPortError, setProtocolPortError] = useState<string | null>(null);
+  const [certificateError, setCertificateError] = useState<string | null>(null);
 
   // Handler to change provider and reset listener protocol if incompatible
   const handleProviderChange = (newProvider: 'ovn' | 'amphora') => {
@@ -808,7 +813,10 @@ export default function CreateLoadBalancerPage() {
             <Radio
               value={row.id}
               checked={selectedCertificate === row.id}
-              onChange={() => setSelectedCertificate(row.id)}
+              onChange={() => {
+                setSelectedCertificate(row.id);
+                setCertificateError(null);
+              }}
               disabled={row.status !== 'active'}
             />
           </div>
@@ -1082,6 +1090,153 @@ export default function CreateLoadBalancerPage() {
     [selectedSniCertificates]
   );
 
+  // Port columns for member selection table
+  const portColumns: TableColumn<PortRow>[] = useMemo(
+    () => [
+      {
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        minWidth: columnMinWidths.name,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <HStack gap={1.5} align="center">
+              <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'attachedInstance',
+        label: 'Attached instance',
+        flex: 1,
+        render: (_value, row) =>
+          row.attachedInstance ? (
+            <VStack gap={0.5} align="start">
+              <HStack gap={1.5} align="center">
+                <span className="text-label-md text-[var(--color-action-primary)]">
+                  {row.attachedInstance}
+                </span>
+                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              </HStack>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                ID: {row.attachedInstanceId}
+              </span>
+            </VStack>
+          ) : (
+            <span className="text-body-md text-[var(--color-text-default)]">-</span>
+          ),
+      },
+      {
+        key: 'ipAddresses',
+        label: 'IP Address',
+        flex: 1,
+        render: (_value, row) =>
+          row.ipAddresses.length > 0 ? (
+            <Select
+              options={row.ipAddresses.map((ip) => ({ value: ip, label: ip }))}
+              value={portIpSelections[row.id] || row.ipAddresses[0]}
+              onChange={(value) => setPortIpSelections((prev) => ({ ...prev, [row.id]: value }))}
+              width="sm"
+            />
+          ) : (
+            <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
+          ),
+      },
+      {
+        key: 'action',
+        label: 'Action',
+        width: 140,
+        align: 'center' as const,
+        render: (_value, row) => (
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} />}
+            disabled={row.ipAddresses.length === 0}
+            className="whitespace-nowrap"
+            onClick={() => {
+              const selectedIp = portIpSelections[row.id] || row.ipAddresses[0];
+              if (
+                selectedIp &&
+                !allocatedMembers.find((m) => m.portId === row.id && m.ipAddress === selectedIp)
+              ) {
+                setAllocatedMembers((prev) => [
+                  ...prev,
+                  {
+                    id: `member-${Date.now()}`,
+                    portId: row.id,
+                    portName: row.name,
+                    ipAddress: selectedIp,
+                    instanceName: row.attachedInstance,
+                    weight: 1,
+                    monitorPort: 80,
+                    monitorAddress: selectedIp,
+                    backup: false,
+                    adminStateUp: true,
+                  },
+                ]);
+              }
+            }}
+          >
+            Add member
+          </Button>
+        ),
+      },
+    ],
+    [portIpSelections, allocatedMembers]
+  );
+
+  // Allocated members table columns
+  const allocatedMemberColumns: TableColumn<AllocatedMember>[] = useMemo(
+    () => [
+      {
+        key: 'ipAddress',
+        label: 'IP Address',
+        flex: 1,
+      },
+      {
+        key: 'portName',
+        label: 'Port',
+        flex: 1,
+        render: (_value, row) => (
+          <VStack gap={0.5} align="start">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.portName}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.portId}</span>
+          </VStack>
+        ),
+      },
+      {
+        key: 'instanceName',
+        label: 'Instance',
+        flex: 1,
+        render: (_value, row) => (
+          <span className="text-body-md text-[var(--color-text-default)]">
+            {row.instanceName || '-'}
+          </span>
+        ),
+      },
+      {
+        key: 'action',
+        label: 'Action',
+        width: fixedColumns.actions,
+        align: 'center' as const,
+        render: (_value, row) => (
+          <button
+            type="button"
+            className="inline-flex items-center justify-center w-[25px] h-[25px] rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors duration-[var(--duration-fast)]"
+            onClick={() => setAllocatedMembers((prev) => prev.filter((m) => m.id !== row.id))}
+          >
+            <IconTrash size={14} stroke={1.5} />
+          </button>
+        ),
+      },
+    ],
+    []
+  );
+
   // Tab bar management
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1132,6 +1287,43 @@ export default function CreateLoadBalancerPage() {
 
     if (!hasError) {
       goToNextSection('basic-info');
+    }
+  };
+
+  // Validation handler for listener section
+  const handleListenerNext = () => {
+    let hasError = false;
+
+    if (!listenerName.trim()) {
+      setListenerNameError('Please enter a listener name.');
+      hasError = true;
+    } else {
+      setListenerNameError(null);
+    }
+
+    if (!listenerProtocol) {
+      setListenerProtocolError('Please select a protocol.');
+      hasError = true;
+    } else {
+      setListenerProtocolError(null);
+    }
+
+    if (!protocolPort) {
+      setProtocolPortError('Please enter a protocol port.');
+      hasError = true;
+    } else {
+      setProtocolPortError(null);
+    }
+
+    if (listenerProtocol === 'HTTP' && !selectedCertificate) {
+      setCertificateError('Please select a server certificate.');
+      hasError = true;
+    } else {
+      setCertificateError(null);
+    }
+
+    if (!hasError) {
+      goToNextSection('listener');
     }
   };
 
@@ -1225,7 +1417,7 @@ export default function CreateLoadBalancerPage() {
             <SectionCard isActive={activeSection === 'basic-info'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={activeSection === 'basic-info'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -1510,28 +1702,19 @@ export default function CreateLoadBalancerPage() {
               )}
               {sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Load balancer name"
-                    value={loadBalancerName}
-                    showDivider
-                  />
-                  {description && (
-                    <SectionCard.DataRow label="Description" value={description} showDivider />
-                  )}
+                  <SectionCard.DataRow label="Load balancer name" value={loadBalancerName} />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
                   <SectionCard.DataRow
                     label="Provider"
                     value={provider === 'ovn' ? 'OVN' : 'Amphora'}
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="Owned network"
                     value={selectedNetworkDetails?.name || '-'}
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="VIP Address"
                     value={`${subnet || 'Not selected'} / ${vipMode === 'auto' ? 'Auto-assign' : manualVip}`}
-                    showDivider
                   />
                   <SectionCard.DataRow label="Admin state" value={adminStateUp ? 'Up' : 'Down'} />
                 </SectionCard.Content>
@@ -1542,7 +1725,7 @@ export default function CreateLoadBalancerPage() {
             <SectionCard isActive={activeSection === 'listener'}>
               <SectionCard.Header
                 title={SECTION_LABELS['listener']}
-                showDivider={activeSection === 'listener'}
+                showDivider={sectionStatus['listener'] === 'done'}
                 actions={
                   sectionStatus['listener'] === 'done' && (
                     <Button
@@ -1562,16 +1745,20 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Listener name */}
                     <div className="py-6">
-                      <FormField required>
+                      <FormField required error={!!listenerNameError}>
                         <FormField.Label>Listener name</FormField.Label>
                         <FormField.Control>
                           <Input
                             value={listenerName}
-                            onChange={(e) => setListenerName(e.target.value)}
+                            onChange={(e) => {
+                              setListenerName(e.target.value);
+                              setListenerNameError(null);
+                            }}
                             placeholder="Enter listener name"
                             fullWidth
                           />
                         </FormField.Control>
+                        <FormField.ErrorMessage>{listenerNameError}</FormField.ErrorMessage>
                         <FormField.HelperText>
                           You can use letters, numbers, and special characters (+=,.@-_), and the
                           length must be between 2-128 characters.
@@ -1600,7 +1787,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Listener protocol */}
                     <div className="py-6">
-                      <FormField required>
+                      <FormField required error={!!listenerProtocolError}>
                         <FormField.Label>Listener protocol</FormField.Label>
                         <FormField.Description>
                           Select the protocol used to handle client requests.
@@ -1608,7 +1795,10 @@ export default function CreateLoadBalancerPage() {
                         <FormField.Control>
                           <Select
                             value={listenerProtocol}
-                            onChange={handleListenerProtocolChange}
+                            onChange={(value) => {
+                              handleListenerProtocolChange(value);
+                              setListenerProtocolError(null);
+                            }}
                             options={
                               provider === 'ovn'
                                 ? [
@@ -1627,6 +1817,7 @@ export default function CreateLoadBalancerPage() {
                             width="sm"
                           />
                         </FormField.Control>
+                        <FormField.ErrorMessage>{listenerProtocolError}</FormField.ErrorMessage>
                       </FormField>
                     </div>
                     {/* SSL Parsing Method - shown when HTTP is selected */}
@@ -1710,6 +1901,8 @@ export default function CreateLoadBalancerPage() {
                                   : []
                               }
                               onRemove={() => setSelectedCertificate('')}
+                              error={!!certificateError}
+                              errorMessage={certificateError || undefined}
                             />
                           </VStack>
                         </div>
@@ -1848,7 +2041,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Protocol port */}
                     <div className="py-6">
-                      <FormField required>
+                      <FormField required error={!!protocolPortError}>
                         <FormField.Label>Protocol port</FormField.Label>
                         <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                           The port on which the listener receives client requests.
@@ -1856,12 +2049,16 @@ export default function CreateLoadBalancerPage() {
                         <FormField.Control>
                           <NumberInput
                             value={protocolPort}
-                            onChange={setProtocolPort}
+                            onChange={(val) => {
+                              setProtocolPort(val);
+                              setProtocolPortError(null);
+                            }}
                             min={1}
                             max={65535}
                             width="sm"
                           />
                         </FormField.Control>
+                        <FormField.ErrorMessage>{protocolPortError}</FormField.ErrorMessage>
                         <FormField.HelperText>1-65535</FormField.HelperText>
                       </FormField>
                     </div>
@@ -2077,11 +2274,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Next button */}
                     <HStack justify="end" className="pt-3">
-                      <Button
-                        variant="primary"
-                        onClick={() => goToNextSection('listener')}
-                        disabled={!listenerName.trim() || !listenerProtocol || !protocolPort}
-                      >
+                      <Button variant="primary" onClick={handleListenerNext}>
                         Next
                       </Button>
                     </HStack>
@@ -2115,7 +2308,7 @@ export default function CreateLoadBalancerPage() {
             <SectionCard isActive={activeSection === 'pool'}>
               <SectionCard.Header
                 title={SECTION_LABELS['pool']}
-                showDivider={activeSection === 'pool'}
+                showDivider={sectionStatus['pool'] === 'done'}
                 actions={
                   sectionStatus['pool'] === 'done' && (
                     <Button
@@ -2330,27 +2523,27 @@ export default function CreateLoadBalancerPage() {
               {sectionStatus['pool'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create Pool" value={createPool ? 'Yes' : 'No'} />
+                  {createPool && <SectionCard.DataRow label="Pool name" value={poolName} />}
                   {createPool && (
-                    <>
-                      <SectionCard.DataRow label="Pool name" value={poolName} />
-                      <SectionCard.DataRow
-                        label="Pool algorithm"
-                        value={
-                          poolAlgorithm === 'ROUND_ROBIN'
-                            ? 'Round Robin'
-                            : poolAlgorithm === 'LEAST_CONNECTIONS'
-                              ? 'Least Connections'
-                              : poolAlgorithm === 'SOURCE_IP'
-                                ? 'Source IP'
-                                : 'Source IP Port'
-                        }
-                      />
-                      <SectionCard.DataRow label="Pool protocol" value={poolProtocol} />
-                      <SectionCard.DataRow
-                        label="Pool admin state"
-                        value={poolAdminState ? 'Up' : 'Down'}
-                      />
-                    </>
+                    <SectionCard.DataRow
+                      label="Pool algorithm"
+                      value={
+                        poolAlgorithm === 'ROUND_ROBIN'
+                          ? 'Round Robin'
+                          : poolAlgorithm === 'LEAST_CONNECTIONS'
+                            ? 'Least Connections'
+                            : poolAlgorithm === 'SOURCE_IP'
+                              ? 'Source IP'
+                              : 'Source IP Port'
+                      }
+                    />
+                  )}
+                  {createPool && <SectionCard.DataRow label="Pool protocol" value={poolProtocol} />}
+                  {createPool && (
+                    <SectionCard.DataRow
+                      label="Pool admin state"
+                      value={poolAdminState ? 'Up' : 'Down'}
+                    />
                   )}
                 </SectionCard.Content>
               )}
@@ -2360,7 +2553,7 @@ export default function CreateLoadBalancerPage() {
             <SectionCard isActive={activeSection === 'member'}>
               <SectionCard.Header
                 title={SECTION_LABELS['member']}
-                showDivider={activeSection === 'member'}
+                showDivider={sectionStatus['member'] === 'done'}
                 actions={
                   sectionStatus['member'] === 'done' && (
                     <Button
@@ -2408,137 +2601,24 @@ export default function CreateLoadBalancerPage() {
                         </VStack>
 
                         {/* Ports Table */}
-                        <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
-                          {/* Table Header */}
-                          <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                              Name
-                            </div>
-                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                              Attached instance
-                            </div>
-                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                              IP Address
-                            </div>
-                            <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
-                              Action
-                            </div>
-                          </div>
-                          {/* Table Rows */}
-                          {mockPorts.map((port) => (
-                            <div
-                              key={port.id}
-                              className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
-                            >
-                              {/* Name Cell */}
-                              <div className="flex-1 px-3 py-2">
-                                <VStack gap={0.5} align="start">
-                                  <HStack gap={1.5} align="center">
-                                    <span className="text-label-md text-[var(--color-action-primary)]">
-                                      {port.name}
-                                    </span>
-                                    <IconExternalLink
-                                      size={12}
-                                      className="text-[var(--color-action-primary)]"
-                                    />
-                                  </HStack>
-                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                    ID: {port.id}
-                                  </span>
-                                </VStack>
-                              </div>
-                              {/* Attached Instance Cell */}
-                              <div className="flex-1 px-3 py-2">
-                                {port.attachedInstance ? (
-                                  <VStack gap={0.5} align="start">
-                                    <HStack gap={1.5} align="center">
-                                      <span className="text-label-md text-[var(--color-action-primary)]">
-                                        {port.attachedInstance}
-                                      </span>
-                                      <IconExternalLink
-                                        size={12}
-                                        className="text-[var(--color-action-primary)]"
-                                      />
-                                    </HStack>
-                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                      ID: {port.attachedInstanceId}
-                                    </span>
-                                  </VStack>
-                                ) : (
-                                  <span className="text-body-md text-[var(--color-text-default)]">
-                                    -
-                                  </span>
-                                )}
-                              </div>
-                              {/* IP Address Cell */}
-                              <div className="flex-1 px-3 py-2 flex items-center">
-                                {port.ipAddresses.length > 0 ? (
-                                  <Select
-                                    options={port.ipAddresses.map((ip) => ({
-                                      value: ip,
-                                      label: ip,
-                                    }))}
-                                    value={portIpSelections[port.id] || port.ipAddresses[0]}
-                                    onChange={(value) =>
-                                      setPortIpSelections((prev) => ({
-                                        ...prev,
-                                        [port.id]: value,
-                                      }))
-                                    }
-                                    style={{ width: '152px' }}
-                                  />
-                                ) : (
-                                  <span className="text-body-md text-[var(--color-text-subtle)]">
-                                    -
-                                  </span>
-                                )}
-                              </div>
-                              {/* Action Cell */}
-                              <div className="flex-1 px-3 py-2 flex items-center justify-center">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} />}
-                                  disabled={port.ipAddresses.length === 0}
-                                  onClick={() => {
-                                    const selectedIp =
-                                      portIpSelections[port.id] || port.ipAddresses[0];
-                                    if (
-                                      selectedIp &&
-                                      !allocatedMembers.find(
-                                        (m) => m.portId === port.id && m.ipAddress === selectedIp
-                                      )
-                                    ) {
-                                      setAllocatedMembers((prev) => [
-                                        ...prev,
-                                        {
-                                          id: `member-${Date.now()}`,
-                                          portId: port.id,
-                                          portName: port.name,
-                                          ipAddress: selectedIp,
-                                          instanceName: port.attachedInstance,
-                                          weight: 1,
-                                          monitorPort: 80,
-                                          monitorAddress: selectedIp,
-                                          backup: false,
-                                          adminStateUp: true,
-                                        },
-                                      ]);
-                                    }
-                                  }}
-                                >
-                                  Add Member
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                        <Table columns={portColumns} data={mockPorts} getRowId={(row) => row.id} />
+
+                        {/* Selection Indicator for added members */}
+                        <SelectionIndicator
+                          selectedItems={allocatedMembers.map((m) => ({
+                            id: m.id,
+                            label: `${m.portName} (${m.ipAddress})`,
+                          }))}
+                          onRemove={(id) =>
+                            setAllocatedMembers((prev) => prev.filter((m) => m.id !== id))
+                          }
+                        />
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Allocated Members Section */}
                     <div className="py-6">
-                      <VStack gap={3} align="start">
+                      <VStack gap={3} align="stretch">
                         <VStack gap={2} align="start">
                           <HStack gap={1} align="center">
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2556,6 +2636,7 @@ export default function CreateLoadBalancerPage() {
                           variant="secondary"
                           size="sm"
                           leftIcon={<IconCirclePlus size={12} />}
+                          className="w-fit"
                           onClick={() => {
                             setExternalMembers((prev) => [
                               ...prev,
@@ -2613,7 +2694,7 @@ export default function CreateLoadBalancerPage() {
                                 }}
                                 min={1}
                                 max={65535}
-                                width="sm"
+                                fullWidth
                               />
                             </div>
                             {/* Weights */}
@@ -2636,77 +2717,27 @@ export default function CreateLoadBalancerPage() {
                               />
                             </div>
                             {/* Remove Button */}
-                            <Button
-                              variant="secondary"
-                              size="sm"
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center w-[25px] h-[25px] rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors duration-[var(--duration-fast)] shrink-0 self-end mb-[3.5px]"
                               onClick={() => {
                                 setExternalMembers((prev) =>
                                   prev.filter((m) => m.id !== extMember.id)
                                 );
                               }}
                             >
-                              Remove
-                            </Button>
+                              <IconX size={14} stroke={1.5} />
+                            </button>
                           </div>
                         ))}
 
                         {/* Allocated Members Table (shown when there are members) */}
                         {allocatedMembers.length > 0 && (
-                          <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
-                            <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                                IP Address
-                              </div>
-                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                                Port
-                              </div>
-                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                                Instance
-                              </div>
-                              <div className="w-[80px] px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
-                                Action
-                              </div>
-                            </div>
-                            {allocatedMembers.map((member) => (
-                              <div
-                                key={member.id}
-                                className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
-                              >
-                                <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                  {member.ipAddress}
-                                </div>
-                                <div className="flex-1 px-3 py-2">
-                                  <VStack gap={0.5} align="start">
-                                    <span className="text-body-md text-[var(--color-action-primary)]">
-                                      {member.portName}
-                                    </span>
-                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                      ID: {member.portId}
-                                    </span>
-                                  </VStack>
-                                </div>
-                                <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                  {member.instanceName || '-'}
-                                </div>
-                                <div className="w-[80px] px-3 py-2 flex items-center justify-center">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() =>
-                                      setAllocatedMembers((prev) =>
-                                        prev.filter((m) => m.id !== member.id)
-                                      )
-                                    }
-                                  >
-                                    <IconTrash
-                                      size={14}
-                                      className="text-[var(--color-state-danger)]"
-                                    />
-                                  </Button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                          <Table
+                            columns={allocatedMemberColumns}
+                            data={allocatedMembers}
+                            getRowId={(row) => row.id}
+                          />
                         )}
                       </VStack>
                     </div>
@@ -2741,7 +2772,7 @@ export default function CreateLoadBalancerPage() {
             <SectionCard isActive={activeSection === 'health-monitor'}>
               <SectionCard.Header
                 title={SECTION_LABELS['health-monitor']}
-                showDivider={activeSection === 'health-monitor'}
+                showDivider={sectionStatus['health-monitor'] === 'done'}
                 actions={
                   sectionStatus['health-monitor'] === 'done' && (
                     <Button
@@ -2922,23 +2953,28 @@ export default function CreateLoadBalancerPage() {
                     value={createHealthMonitor ? 'Yes' : 'No'}
                   />
                   {createHealthMonitor && (
-                    <>
-                      <SectionCard.DataRow label="Health monitor name" value={healthMonitorName} />
-                      <SectionCard.DataRow label="Health monitor type" value={healthMonitorType} />
-                      <SectionCard.DataRow
-                        label="Interval"
-                        value={`${healthMonitorInterval} sec`}
-                      />
-                      <SectionCard.DataRow label="Timeout" value={`${healthMonitorTimeout} sec`} />
-                      <SectionCard.DataRow
-                        label="Max retries"
-                        value={healthMonitorMaxRetries.toString()}
-                      />
-                      <SectionCard.DataRow
-                        label="Admin state"
-                        value={healthMonitorAdminState ? 'Up' : 'Down'}
-                      />
-                    </>
+                    <SectionCard.DataRow label="Health monitor name" value={healthMonitorName} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Health monitor type" value={healthMonitorType} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Interval" value={`${healthMonitorInterval} sec`} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Timeout" value={`${healthMonitorTimeout} sec`} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow
+                      label="Max retries"
+                      value={healthMonitorMaxRetries.toString()}
+                    />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow
+                      label="Admin state"
+                      value={healthMonitorAdminState ? 'Up' : 'Down'}
+                    />
                   )}
                 </SectionCard.Content>
               )}

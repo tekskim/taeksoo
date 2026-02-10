@@ -1266,7 +1266,7 @@ function ImageSection({
     inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
     ${
       active
-        ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+        ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'
         : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
     }
   `;
@@ -2227,7 +2227,7 @@ function NetworkSection({
           </VStack>
 
           {/* Virtual LAN Section */}
-          <VStack gap={4} align="stretch">
+          <VStack gap={2} align="stretch">
             <VStack gap={2} align="start">
               <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                 Virtual LAN
@@ -2792,7 +2792,7 @@ function AdvancedSection({
 export function ComputeAdminCreateTemplatePage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const { tabs, activeTabId, selectTab, closeTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
 
   // Section status tracking
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
@@ -3026,6 +3026,8 @@ export function ComputeAdminCreateTemplatePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
       }

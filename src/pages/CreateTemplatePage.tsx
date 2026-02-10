@@ -684,7 +684,7 @@ function TemplateInformationSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Template name */}
-          <div className="py-6">
+          <div className="pt-3 pb-6">
             <VStack gap={2}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Template name <span className="text-[var(--color-state-danger)]">*</span>
@@ -964,11 +964,10 @@ function ImageSection({
           <HStack gap={1} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
@@ -1004,7 +1003,7 @@ function ImageSection({
     inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
     ${
       active
-        ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+        ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'
         : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
     }
   `;
@@ -1321,12 +1320,11 @@ function FlavorSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
@@ -1690,12 +1688,11 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </VStack>
@@ -1764,12 +1761,11 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </VStack>
@@ -1831,12 +1827,11 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
@@ -1854,12 +1849,11 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.ownedNetworkId}
@@ -1972,7 +1966,7 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={4} align="stretch">
+            <VStack gap={2} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -2027,6 +2021,7 @@ function NetworkSection({
                 size="sm"
                 leftIcon={<IconCirclePlus size={12} />}
                 onClick={addVirtualLAN}
+                className="w-fit"
               >
                 Add virtual LAN
               </Button>
@@ -2566,7 +2561,7 @@ function AdvancedSection({
 export function CreateTemplatePage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const { tabs, activeTabId, selectTab, closeTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Section status tracking
@@ -2798,6 +2793,8 @@ export function CreateTemplatePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
       }

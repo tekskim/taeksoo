@@ -387,7 +387,7 @@ export default function CreateNetworkPage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={sectionStatus['basic-info'] === 'active'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -741,7 +741,7 @@ export default function CreateNetworkPage() {
             <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['subnet']}
-                showDivider={sectionStatus['subnet'] === 'active'}
+                showDivider={sectionStatus['subnet'] === 'done'}
                 actions={
                   sectionStatus['subnet'] === 'done' && (
                     <Button
