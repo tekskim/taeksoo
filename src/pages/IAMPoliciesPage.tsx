@@ -553,7 +553,7 @@ export default function IAMPoliciesPage() {
             <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
               Edited at
             </div>
-            <div className="w-[72px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+            <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
               Action
             </div>
           </div>
@@ -615,7 +615,7 @@ export default function IAMPoliciesPage() {
                   {policy.editedAt}
                 </div>
                 {/* Action */}
-                <div className="w-[72px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
                   <ContextMenu
                     items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
                     trigger="click"

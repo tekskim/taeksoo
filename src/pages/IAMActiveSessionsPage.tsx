@@ -224,7 +224,7 @@ export default function IAMActiveSessionsPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">

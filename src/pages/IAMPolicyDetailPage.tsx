@@ -512,7 +512,7 @@ export default function IAMPolicyDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const isBuiltIn = row.type === 'Built-in';

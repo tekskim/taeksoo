@@ -332,7 +332,7 @@ export function PoolsPage() {
             <Button
               variant="secondary"
               size="sm"
-              icon={<IconRefresh size={14} stroke={1.5} />}
+              icon={<IconRefresh size={12} stroke={1.5} />}
               aria-label="Refresh"
               onClick={() => console.log('Refresh clicked')}
             />

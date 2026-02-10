@@ -26,8 +26,4 @@
   --color-state-warning-bg: var(--semantic-color-state-warning-bg);
   --color-state-danger: var(--semantic-color-state-danger);
   --color-state-danger-bg: var(--semantic-color-state-danger-bg);
-  --color-state-info-text: var(--semantic-color-state-info-text);
-  --color-state-success-text: var(--semantic-color-state-success-text);
-  --color-state-warning-text: var(--semantic-color-state-warning-text);
-  --color-state-danger-text: var(--semantic-color-state-danger-text);
 }

@@ -201,7 +201,7 @@ export default function IAMDomainsPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_value, row) => (
         <HStack gap={1} align="center" justify="center">

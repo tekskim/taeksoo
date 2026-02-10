@@ -14,6 +14,7 @@ import {
   Pagination,
   StatusIndicator,
   SelectionIndicator,
+  SearchInput,
   FormField,
   Tooltip,
   PageShell,
@@ -27,7 +28,6 @@ import {
   IconEyeOff,
   IconCircle,
   IconCircleCheck,
-  IconSearch,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -871,9 +871,9 @@ function DefaultDomainSection({
         }
       />
       <SectionCard.Content showDividers={false}>
-        <VStack gap={0}>
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        {/* Divider */}
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        <VStack gap={0} className="py-6">
           <FormField required error={!!domainError && !selectedDomain}>
             <FormField.Label>Domains</FormField.Label>
             <FormField.Description>
@@ -883,36 +883,31 @@ function DefaultDomainSection({
             <FormField.Control>
               {/* Search */}
               <div className="mt-4">
-                <div className="relative w-[var(--search-input-width)]">
-                  <input
-                    type="text"
-                    placeholder="Search domains by attributes"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    className="w-full h-8 pl-3 pr-9 text-body-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
-                  />
-                  <IconSearch
-                    size={14}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
-                  />
-                </div>
+                <SearchInput
+                  placeholder="Search domains by attributes"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
               </div>
 
               {/* Pagination above table */}
               {totalPages > 0 && (
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-3">
                   <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={setCurrentPage}
+                    totalItems={filteredDomains.length}
                   />
-                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">
-                    {filteredDomains.length} items
-                  </span>
                 </div>
               )}
 
@@ -985,24 +980,25 @@ function DefaultDomainSection({
 
               {/* Selection indicator */}
               <div className="mt-2">
-                {selectedDomain ? (
-                  <SelectionIndicator
-                    selectedItems={[
-                      {
-                        id: selectedDomain,
-                        label:
-                          mockDomains.find((d) => d.id === selectedDomain)?.name || selectedDomain,
-                      },
-                    ]}
-                    onRemove={() => onSelectionChange(null)}
-                    emptyText="No Item Selected"
-                  />
-                ) : null}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedDomain
+                      ? [
+                          {
+                            id: selectedDomain,
+                            label:
+                              mockDomains.find((d) => d.id === selectedDomain)?.name ||
+                              selectedDomain,
+                          },
+                        ]
+                      : []
+                  }
+                  onRemove={() => onSelectionChange(null)}
+                  error={!!domainError && !selectedDomain}
+                  errorMessage={domainError || undefined}
+                />
               </div>
             </FormField.Control>
-            {domainError && !selectedDomain && (
-              <FormField.ErrorMessage>{domainError}</FormField.ErrorMessage>
-            )}
           </FormField>
         </VStack>
         {/* Next Button (only when not editing) */}

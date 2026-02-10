@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
-import { IconDownload, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import {
+  IconDownload,
+  IconChevronDown,
+  IconChevronRight,
+  IconChevronUp,
+  IconSelector,
+} from '@tabler/icons-react';
 import {
   Button,
   Pagination,
   SearchInput,
+  Badge,
   TopBar,
   Breadcrumb,
   VStack,
@@ -356,6 +363,8 @@ export default function IAMEventLogsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -383,6 +392,27 @@ export default function IAMEventLogsPage() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // Sort handler
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
+  };
+
+  // Sort icon renderer
+  const renderSortIcon = (key: string) => {
+    if (sortKey !== key) {
+      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />;
+    }
+    if (sortDirection === 'asc') {
+      return <IconChevronUp size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
+    }
+    return <IconChevronDown size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
+  };
 
   // Toggle expanded log
   const toggleExpanded = (logId: string) => {
@@ -461,30 +491,28 @@ export default function IAMEventLogsPage() {
           {/* Custom Table */}
           <div className="w-full flex flex-col gap-1">
             {/* Table Header */}
-            <div className="flex items-stretch min-h-[40px] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center">
-                <span>Event</span>
-                <IconChevronDown size={16} className="ml-1.5" />
-              </div>
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                <span>Time</span>
-                <IconChevronDown size={16} className="ml-1.5" />
-              </div>
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                <span>User</span>
-                <IconChevronDown size={16} className="ml-1.5" />
-              </div>
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                <span>Target</span>
-                <IconChevronDown size={16} className="ml-1.5" />
-              </div>
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                <span>Result</span>
-              </div>
-              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                <span>IP address</span>
-                <IconChevronDown size={16} className="ml-1.5" />
-              </div>
+            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+              {[
+                { key: 'eventName', label: 'Event', sortable: true },
+                { key: 'timestamp', label: 'Time', sortable: true },
+                { key: 'user', label: 'User', sortable: true },
+                { key: 'target', label: 'Target', sortable: true },
+                { key: 'result', label: 'Result', sortable: false },
+                { key: 'ipAddress', label: 'IP address', sortable: true },
+              ].map((col, idx) => (
+                <div
+                  key={col.key}
+                  className={`flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center ${col.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''} ${idx > 0 ? 'border-l border-[var(--color-border-default)]' : ''}`}
+                  onClick={col.sortable ? () => handleSort(col.key) : undefined}
+                >
+                  <div className="flex items-center gap-1">
+                    <span className="whitespace-nowrap truncate">{col.label}</span>
+                    {col.sortable && (
+                      <span className="flex-shrink-0">{renderSortIcon(col.key)}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Table Rows */}
@@ -549,11 +577,9 @@ export default function IAMEventLogsPage() {
 
                     {/* Result Cell */}
                     <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                      <span
-                        className={`text-body-md ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
-                      >
+                      <Badge variant={log.result === 'success' ? 'info' : 'error'} size="sm">
                         {log.result === 'success' ? 'Success' : 'Failure'}
-                      </span>
+                      </Badge>
                     </div>
 
                     {/* IP Address Cell */}

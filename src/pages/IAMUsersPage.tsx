@@ -283,7 +283,7 @@ export function IAMUsersPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';

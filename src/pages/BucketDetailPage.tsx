@@ -799,7 +799,7 @@ export function BucketDetailPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          icon={<IconRefresh size={14} stroke={1.5} />}
+                          icon={<IconRefresh size={12} stroke={1.5} />}
                           aria-label="Refresh"
                         />
                       </ListToolbar.Actions>
@@ -809,7 +809,7 @@ export function BucketDetailPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          leftIcon={<IconTrash size={14} stroke={1.5} />}
+                          leftIcon={<IconTrash size={12} stroke={1.5} />}
                         >
                           Delete
                         </Button>
