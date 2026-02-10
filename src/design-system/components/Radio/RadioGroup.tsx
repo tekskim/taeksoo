@@ -135,7 +135,7 @@ export function RadioGroup({
       }}
     >
       <fieldset
-        className={twMerge('flex flex-col', className)}
+        className={twMerge('flex flex-col gap-0', className)}
         aria-labelledby={labelId}
         aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
         aria-invalid={error || undefined}

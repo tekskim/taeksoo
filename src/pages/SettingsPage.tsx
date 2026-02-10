@@ -581,7 +581,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                       <>
                         {/* Password change description */}
                         <p className="text-body-md text-[var(--color-text-subtle)]">
-                          Enter your new password below.
+                          key 'auth.password (en)' returned an object instead of string.
                         </p>
                         {/* New Password Field */}
                         <Input
@@ -602,9 +602,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowNewPassword(!showNewPassword)}
                             >
                               {showNewPassword ? (
-                                <IconEye size={16} />
+                                <IconEye size={12} stroke={1.5} />
                               ) : (
-                                <IconEyeClosed size={16} />
+                                <IconEyeClosed size={12} stroke={1.5} />
                               )}
                             </button>
                           }
@@ -628,9 +628,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
                               {showConfirmPassword ? (
-                                <IconEye size={16} />
+                                <IconEye size={12} stroke={1.5} />
                               ) : (
-                                <IconEyeClosed size={16} />
+                                <IconEyeClosed size={12} stroke={1.5} />
                               )}
                             </button>
                           }
@@ -657,7 +657,11 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                       <div className="flex items-center justify-between p-3 border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-subtle)]">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center justify-center">
-                            <IconLock size={16} className="text-[var(--color-text-subtle)]" />
+                            <IconLock
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
                           </div>
                           <div className="flex flex-col gap-1">
                             <span className="text-label-sm text-[var(--color-text-subtle)]">
@@ -727,7 +731,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
                 {/* Logout */}
                 <div className="mt-6 flex justify-end min-w-[600px]">
-                  <Button variant="secondary" size="lg" onClick={() => setShowLogoutModal(true)}>
+                  <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
                     Logout
                   </Button>
                 </div>
