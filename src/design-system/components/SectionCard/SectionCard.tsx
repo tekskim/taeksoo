@@ -114,7 +114,7 @@ function SectionCardContent({
       <div
         className={twMerge(
           'flex flex-col w-full',
-          gap !== undefined ? `gap-[${gap * 4}px]` : 'gap-3',
+          gap !== undefined ? `gap-[${gap * 4}px]` : 'gap-0',
           className
         )}
         style={gap !== undefined ? { gap: `${gap * 4}px` } : undefined}

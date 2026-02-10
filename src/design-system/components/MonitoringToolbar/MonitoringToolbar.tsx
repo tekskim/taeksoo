@@ -304,7 +304,7 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
           onClick={onRefresh}
           aria-label="Refresh"
         >
-          <IconRefresh size={14} stroke={1.5} />
+          <IconRefresh size={12} stroke={1.5} />
         </button>
       )}
     </div>

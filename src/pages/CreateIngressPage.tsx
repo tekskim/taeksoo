@@ -195,7 +195,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/container/ingresses')}>
+          <Button variant="secondary" size="md" onClick={() => navigate('/container/ingresses')}>
             Cancel
           </Button>
           <Button variant="primary" size="md" className="flex-1">

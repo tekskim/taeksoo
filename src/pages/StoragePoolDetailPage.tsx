@@ -360,7 +360,7 @@ function MonitoringTimeControls({ onTimeRangeChange, onRefresh }: MonitoringTime
 
       {/* Refresh Button */}
       <button className="refreshButton" onClick={onRefresh}>
-        <IconRefresh size={14} stroke={1.5} />
+        <IconRefresh size={12} stroke={1.5} />
       </button>
     </div>
   );
