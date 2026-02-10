@@ -179,13 +179,13 @@ export const Controlled: Story = {
     const [value, setValue] = useState('option2');
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <RadioGroup value={value} onChange={setValue}>
           <Radio value="option1" label="Option 1" />
           <Radio value="option2" label="Option 2" />
           <Radio value="option3" label="Option 3" />
         </RadioGroup>
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Selected: <strong>{value}</strong>
         </p>
       </div>
@@ -196,16 +196,20 @@ export const Controlled: Story = {
 // Disabled
 export const Disabled: Story = {
   render: () => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
       <div>
-        <p className="text-sm font-medium mb-2">All disabled</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          All disabled
+        </p>
         <RadioGroup disabled defaultValue="option1">
           <Radio value="option1" label="Option 1" />
           <Radio value="option2" label="Option 2" />
         </RadioGroup>
       </div>
       <div>
-        <p className="text-sm font-medium mb-2">Individual disabled</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Individual disabled
+        </p>
         <RadioGroup defaultValue="option1">
           <Radio value="option1" label="Option 1" />
           <Radio value="option2" label="Option 2 (disabled)" disabled />
@@ -264,7 +268,7 @@ export const PlanSelection: Story = {
           {plans.map((p) => (
             <div
               key={p.value}
-              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+              className={`p-[var(--primitive-spacing-4)] border rounded-[var(--primitive-radius-lg)] cursor-pointer transition-colors ${
                 plan === p.value
                   ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]'
                   : 'border-[var(--color-border-default)]'
@@ -273,13 +277,13 @@ export const PlanSelection: Story = {
             >
               <div className="flex items-start justify-between">
                 <Radio value={p.value}>
-                  <span className="font-medium">{p.label}</span>
+                  <span className="text-label-lg">{p.label}</span>
                 </Radio>
-                <span className="text-sm font-medium text-[var(--color-action-primary)]">
-                  {p.price}
-                </span>
+                <span className="text-label-md text-[var(--color-action-primary)]">{p.price}</span>
               </div>
-              <p className="ml-6 mt-1 text-sm text-[var(--color-text-muted)]">{p.description}</p>
+              <p className="ml-[var(--primitive-spacing-6)] mt-[var(--primitive-spacing-1)] text-body-md text-[var(--color-text-muted)]">
+                {p.description}
+              </p>
             </div>
           ))}
         </RadioGroup>
@@ -291,9 +295,11 @@ export const PlanSelection: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
       <div>
-        <p className="text-sm font-medium mb-2">Default</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Default
+        </p>
         <RadioGroup defaultValue="option1">
           <Radio value="option1" label="Option 1" />
           <Radio value="option2" label="Option 2" />
@@ -301,7 +307,9 @@ export const AllStates: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">With descriptions</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          With descriptions
+        </p>
         <RadioGroup defaultValue="option1">
           <Radio value="option1" label="Option 1" description="Description for option 1" />
           <Radio value="option2" label="Option 2" description="Description for option 2" />
@@ -309,7 +317,9 @@ export const AllStates: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">Horizontal</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Horizontal
+        </p>
         <RadioGroup direction="horizontal" defaultValue="option1">
           <Radio value="option1" label="Left" />
           <Radio value="option2" label="Center" />
@@ -318,7 +328,9 @@ export const AllStates: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">Disabled</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Disabled
+        </p>
         <RadioGroup disabled defaultValue="option1">
           <Radio value="option1" label="Disabled checked" />
           <Radio value="option2" label="Disabled unchecked" />
@@ -326,7 +338,9 @@ export const AllStates: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">Error</p>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Error
+        </p>
         <RadioGroup error errorMessage="This field is required" defaultValue="">
           <Radio value="option1" label="Option 1" />
           <Radio value="option2" label="Option 2" />

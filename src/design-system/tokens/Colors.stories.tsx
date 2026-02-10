@@ -44,16 +44,16 @@ const ColorSwatch = ({
   variable: string;
   description?: string;
 }) => (
-  <div className="flex items-center gap-4 py-2">
+  <div className="flex items-center gap-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
     <div
-      className="w-12 h-12 rounded-lg border border-[var(--color-border-default)] shrink-0"
+      className="w-12 h-12 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] shrink-0"
       style={{ background: `var(${variable})` }}
     />
     <div className="flex-1">
-      <div className="font-mono text-sm">{variable}</div>
-      <div className="text-xs text-[var(--color-text-muted)]">{name}</div>
+      <div className="font-mono text-body-md">{variable}</div>
+      <div className="text-body-xs text-[var(--color-text-muted)]">{name}</div>
       {description && (
-        <div className="text-xs text-[var(--color-text-subtle)] mt-0.5">{description}</div>
+        <div className="text-body-xs text-[var(--color-text-subtle)] mt-0.5">{description}</div>
       )}
     </div>
   </div>
@@ -66,11 +66,11 @@ const ColorSection = ({
   title: string;
   colors: Array<{ name: string; variable: string; description?: string }>;
 }) => (
-  <div className="mb-8">
-    <h3 className="text-sm font-semibold mb-4 pb-2 border-b border-[var(--color-border-default)]">
+  <div className="mb-[var(--primitive-spacing-8)]">
+    <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)] pb-[var(--primitive-spacing-2)] border-b border-[var(--color-border-default)]">
       {title}
     </h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--primitive-spacing-2)]">
       {colors.map((color) => (
         <ColorSwatch key={color.variable} {...color} />
       ))}

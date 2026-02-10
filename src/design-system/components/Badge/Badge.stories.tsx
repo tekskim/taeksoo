@@ -132,7 +132,7 @@ export const Default: Story = {
 // All Themes (Solid)
 export const ThemesSolid: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="blue">Blue</Badge>
       <Badge theme="red">Red</Badge>
       <Badge theme="green">Green</Badge>
@@ -145,7 +145,7 @@ export const ThemesSolid: Story = {
 // All Themes (Subtle)
 export const ThemesSubtle: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="blue" type="subtle">
         Blue
       </Badge>
@@ -168,7 +168,7 @@ export const ThemesSubtle: Story = {
 // Sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-2)]">
       <Badge size="sm">Small</Badge>
       <Badge size="md">Medium</Badge>
       <Badge size="lg">Large</Badge>
@@ -179,7 +179,7 @@ export const Sizes: Story = {
 // With Dot
 export const WithDot: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="blue" dot>
         Active
       </Badge>
@@ -202,7 +202,7 @@ export const WithDot: Story = {
 // With Dot (Subtle)
 export const WithDotSubtle: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="blue" type="subtle" dot>
         Active
       </Badge>
@@ -225,7 +225,7 @@ export const WithDotSubtle: Story = {
 // With Icons
 export const WithIcons: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="green" leftIcon={<IconCheck size={12} />}>
         Approved
       </Badge>
@@ -245,7 +245,7 @@ export const WithIcons: Story = {
 // Status Badges
 export const StatusBadges: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge theme="green" type="subtle" dot>
         Active
       </Badge>
@@ -265,11 +265,13 @@ export const StatusBadges: Story = {
 // Use Cases
 export const UseCases: Story = {
   render: () => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
       {/* Table Status */}
       <div>
-        <p className="text-sm font-medium mb-2">Table Status</p>
-        <div className="flex gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Table Status
+        </p>
+        <div className="flex gap-[var(--primitive-spacing-2)]">
           <Badge theme="green" type="subtle">
             Running
           </Badge>
@@ -287,8 +289,10 @@ export const UseCases: Story = {
 
       {/* Tags */}
       <div>
-        <p className="text-sm font-medium mb-2">Tags</p>
-        <div className="flex gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Tags
+        </p>
+        <div className="flex gap-[var(--primitive-spacing-2)]">
           <Badge theme="blue" type="subtle" size="sm">
             React
           </Badge>
@@ -303,9 +307,11 @@ export const UseCases: Story = {
 
       {/* Notifications */}
       <div>
-        <p className="text-sm font-medium mb-2">Notifications</p>
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Messages</span>
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Notifications
+        </p>
+        <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+          <span className="text-body-md text-[var(--color-text-default)]">Messages</span>
           <Badge theme="red" size="sm">
             5
           </Badge>
@@ -314,8 +320,10 @@ export const UseCases: Story = {
 
       {/* Versioning */}
       <div>
-        <p className="text-sm font-medium mb-2">Versions</p>
-        <div className="flex gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Versions
+        </p>
+        <div className="flex gap-[var(--primitive-spacing-2)]">
           <Badge theme="blue">v2.0.0</Badge>
           <Badge theme="green" type="subtle">
             Stable
@@ -332,7 +340,7 @@ export const UseCases: Story = {
 // Legacy Variants
 export const LegacyVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Badge variant="default">Default</Badge>
       <Badge variant="primary">Primary</Badge>
       <Badge variant="success">Success</Badge>

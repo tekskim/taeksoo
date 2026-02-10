@@ -77,9 +77,9 @@ export const SingleMode: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker mode="single" value={date} onChange={setDate} />
-        <p className="text-sm text-gray-600">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Selected: {date ? date.toLocaleDateString() : 'None'}
         </p>
       </div>
@@ -96,9 +96,9 @@ export const RangeMode: Story = {
     });
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker mode="range" rangeValue={range} onRangeChange={setRange} />
-        <p className="text-sm text-gray-600">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Range: {range.start?.toLocaleDateString() || 'Start'} ~{' '}
           {range.end?.toLocaleDateString() || 'End'}
         </p>
@@ -155,9 +155,9 @@ export const WithEventDates: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker mode="single" value={date} onChange={setDate} eventDates={eventDates} />
-        <p className="text-xs text-gray-500">Dates with dots have events</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">Dates with dots have events</p>
       </div>
     );
   },
@@ -179,7 +179,7 @@ export const WithMinMaxDates: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker
           mode="single"
           value={date}
@@ -187,7 +187,9 @@ export const WithMinMaxDates: Story = {
           minDate={minDate}
           maxDate={maxDate}
         />
-        <p className="text-xs text-gray-500">Only dates within ±2 weeks are selectable</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Only dates within ±2 weeks are selectable
+        </p>
       </div>
     );
   },
@@ -203,9 +205,9 @@ export const MondayStart: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker mode="single" value={date} onChange={setDate} firstDayOfWeek={1} />
-        <p className="text-xs text-gray-500">Week starts on Monday</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">Week starts on Monday</p>
       </div>
     );
   },
@@ -217,9 +219,9 @@ export const SundayStart: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
         <DatePicker mode="single" value={date} onChange={setDate} firstDayOfWeek={0} />
-        <p className="text-xs text-gray-500">Week starts on Sunday</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">Week starts on Sunday</p>
       </div>
     );
   },
@@ -256,8 +258,8 @@ export const BookingCalendar: Story = {
     const [date, setDate] = useState<Date | null>(null);
 
     return (
-      <div className="flex flex-col gap-4 items-center">
-        <h3 className="text-sm font-medium">Select Check-in Date</h3>
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
+        <h3 className="text-label-lg text-[var(--color-text-default)]">Select Check-in Date</h3>
         <DatePicker
           mode="single"
           value={date}
@@ -265,13 +267,13 @@ export const BookingCalendar: Story = {
           eventDates={bookedDates}
           minDate={today}
         />
-        <div className="flex items-center gap-4 text-xs text-gray-500">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+        <div className="flex items-center gap-[var(--primitive-spacing-4)] text-body-sm text-[var(--color-text-subtle)]">
+          <span className="flex items-center gap-[var(--primitive-spacing-1)]">
+            <span className="w-2 h-2 rounded-full bg-[var(--color-state-info)]"></span>
             Booked
           </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full ring-1 ring-blue-500"></span>
+          <span className="flex items-center gap-[var(--primitive-spacing-1)]">
+            <span className="w-2 h-2 rounded-full ring-1 ring-[var(--color-border-focus)]"></span>
             Today
           </span>
         </div>
@@ -295,8 +297,8 @@ export const TravelDateRange: Story = {
         : 0;
 
     return (
-      <div className="flex flex-col gap-4 items-center">
-        <h3 className="text-sm font-medium">Select Travel Dates</h3>
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
+        <h3 className="text-label-lg text-[var(--color-text-default)]">Select Travel Dates</h3>
         <DatePicker
           mode="range"
           rangeValue={range}
@@ -305,7 +307,7 @@ export const TravelDateRange: Story = {
           firstDayOfWeek={1}
         />
         {nights > 0 && (
-          <p className="text-sm text-blue-600 font-medium">
+          <p className="text-label-md text-[var(--color-state-info)]">
             {nights} night{nights > 1 ? 's' : ''} selected
           </p>
         )}
@@ -333,13 +335,17 @@ export const EventScheduler: Story = {
       events.find((e) => e.getDate() === date.getDate() && e.getMonth() === date.getMonth());
 
     return (
-      <div className="flex flex-col gap-4 items-center">
-        <h3 className="text-sm font-medium">Upcoming Events</h3>
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] items-center">
+        <h3 className="text-label-lg text-[var(--color-text-default)]">Upcoming Events</h3>
         <DatePicker mode="single" value={date} onChange={setDate} eventDates={events} />
         {selectedEvent ? (
-          <p className="text-sm text-green-600">Event on {selectedEvent.toLocaleDateString()}</p>
+          <p className="text-body-md text-[var(--color-state-success)]">
+            Event on {selectedEvent.toLocaleDateString()}
+          </p>
         ) : (
-          <p className="text-xs text-gray-500">Click on a date with a dot to see the event</p>
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
+            Click on a date with a dot to see the event
+          </p>
         )}
       </div>
     );

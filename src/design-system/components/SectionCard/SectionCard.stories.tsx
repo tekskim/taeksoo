@@ -103,7 +103,7 @@ export const WithHeaderActions: Story = {
       <SectionCard.Header
         title="Configuration"
         actions={
-          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
+          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>
             Edit
           </Button>
         }

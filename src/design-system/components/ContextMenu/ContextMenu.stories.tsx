@@ -91,7 +91,7 @@ export const Default: Story = {
     items: basicItems,
     trigger: 'contextmenu',
     children: (
-      <div className="w-64 h-32 bg-gray-100 rounded-lg flex items-center justify-center text-sm text-gray-600 border-2 border-dashed border-gray-300">
+      <div className="w-64 h-32 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex items-center justify-center text-body-md text-[var(--color-text-muted)] border-2 border-dashed border-[var(--color-border-default)]">
         Right-click here
       </div>
     ),
@@ -267,7 +267,7 @@ export const RightAligned: Story = {
   args: {
     items: basicItems,
     trigger: 'click',
-    align: 'center',
+    align: 'right',
     children: <Button variant="secondary">Right-aligned menu</Button>,
   },
 };
@@ -304,23 +304,33 @@ export const TableRowMenu: Story = {
     ];
 
     return (
-      <div className="border border-gray-200 rounded-lg overflow-hidden w-96">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50">
+      <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden w-96">
+        <table className="w-full text-body-md">
+          <thead className="bg-[var(--color-surface-subtle)]">
             <tr>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 w-10"></th>
+              <th className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] text-left">
+                Name
+              </th>
+              <th className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] text-left">
+                Status
+              </th>
+              <th className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] w-10"></th>
             </tr>
           </thead>
           <tbody>
             {['Item 1', 'Item 2', 'Item 3'].map((item, i) => (
-              <tr key={i} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-2">{item}</td>
-                <td className="px-4 py-2">Active</td>
-                <td className="px-4 py-2">
+              <tr key={i} className="border-t hover:bg-[var(--color-surface-subtle)]">
+                <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+                  {item}
+                </td>
+                <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+                  Active
+                </td>
+                <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
                   <ContextMenu items={rowMenuItems} trigger="click" align="right">
-                    <button className="p-1 hover:bg-gray-100 rounded">⋮</button>
+                    <button className="p-[var(--primitive-spacing-1)] hover:bg-[var(--color-surface-hover)] rounded-[var(--primitive-radius-sm)]">
+                      ⋮
+                    </button>
                   </ContextMenu>
                 </td>
               </tr>
@@ -361,15 +371,19 @@ export const FileExplorerMenu: Story = {
 
     return (
       <ContextMenu items={fileMenuItems} trigger="contextmenu">
-        <div className="w-80 p-4 bg-gray-50 rounded-lg">
-          <div className="flex items-center gap-3 p-3 bg-white rounded border hover:bg-gray-50 cursor-default">
-            <IconFile size={24} className="text-blue-500" />
+        <div className="w-80 p-[var(--primitive-spacing-4)] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+          <div className="flex items-center gap-[var(--primitive-spacing-3)] p-[var(--primitive-spacing-3)] bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] cursor-default">
+            <IconFile size={24} className="text-[var(--color-state-info)]" />
             <div>
-              <p className="font-medium">document.pdf</p>
-              <p className="text-xs text-gray-500">2.4 MB • Modified today</p>
+              <p className="text-label-md text-[var(--color-text-default)]">document.pdf</p>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                2.4 MB • Modified today
+              </p>
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-3 text-center">Right-click on the file</p>
+          <p className="text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-3)] text-center">
+            Right-click on the file
+          </p>
         </div>
       </ContextMenu>
     );

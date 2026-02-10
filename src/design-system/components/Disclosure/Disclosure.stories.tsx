@@ -75,7 +75,7 @@ export const Default: Story = {
     <Disclosure>
       <Disclosure.Trigger>Click to expand</Disclosure.Trigger>
       <Disclosure.Panel>
-        <div className="pt-2 pl-5 text-sm text-gray-600">
+        <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
           This is the hidden content that appears when you click the trigger. It can contain any
           content you want.
         </div>
@@ -90,7 +90,7 @@ export const DefaultOpen: Story = {
     <Disclosure defaultOpen>
       <Disclosure.Trigger>Already expanded</Disclosure.Trigger>
       <Disclosure.Panel>
-        <div className="pt-2 pl-5 text-sm text-gray-600">
+        <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
           This disclosure starts in the open state.
         </div>
       </Disclosure.Panel>
@@ -107,21 +107,23 @@ export const Controlled: Story = {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+        <div className="flex items-center gap-[var(--primitive-spacing-2)]">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="px-3 py-1 text-sm bg-blue-500 text-white rounded"
+            className="px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-1)] text-body-md bg-[var(--color-action-primary)] text-[var(--color-on-primary)] rounded-[var(--primitive-radius-md)]"
           >
             {isOpen ? 'Close' : 'Open'} from outside
           </button>
-          <span className="text-sm text-gray-500">State: {isOpen ? 'Open' : 'Closed'}</span>
+          <span className="text-body-md text-[var(--color-text-subtle)]">
+            State: {isOpen ? 'Open' : 'Closed'}
+          </span>
         </div>
 
         <Disclosure open={isOpen} onChange={setIsOpen}>
           <Disclosure.Trigger>Controlled disclosure</Disclosure.Trigger>
           <Disclosure.Panel>
-            <div className="pt-2 pl-5 text-sm text-gray-600">
+            <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
               This disclosure is controlled by external state.
             </div>
           </Disclosure.Panel>
@@ -138,31 +140,31 @@ export const Controlled: Story = {
 export const Multiple: Story = {
   name: 'Multiple Disclosures',
   render: () => (
-    <div className="flex flex-col gap-2 w-full">
-      <Disclosure className="border border-gray-200 rounded-lg p-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-2)] w-full">
+      <Disclosure className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-3)]">
         <Disclosure.Trigger>Section 1: Getting Started</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             Learn how to get started with our product. This section covers installation, setup, and
             basic configuration.
           </div>
         </Disclosure.Panel>
       </Disclosure>
 
-      <Disclosure className="border border-gray-200 rounded-lg p-3">
+      <Disclosure className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-3)]">
         <Disclosure.Trigger>Section 2: Advanced Features</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             Explore advanced features and customization options. This includes API integrations and
             plugins.
           </div>
         </Disclosure.Panel>
       </Disclosure>
 
-      <Disclosure className="border border-gray-200 rounded-lg p-3">
+      <Disclosure className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-3)]">
         <Disclosure.Trigger>Section 3: Troubleshooting</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             Common issues and their solutions. Contact support if you need additional help.
           </div>
         </Disclosure.Panel>
@@ -178,33 +180,35 @@ export const Multiple: Story = {
 export const FAQ: Story = {
   name: 'Use Case - FAQ',
   render: () => (
-    <div className="flex flex-col gap-3 w-full">
-      <h3 className="text-lg font-semibold mb-2">Frequently Asked Questions</h3>
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)] w-full">
+      <h3 className="text-heading-h4 mb-[var(--primitive-spacing-2)]">
+        Frequently Asked Questions
+      </h3>
 
-      <Disclosure className="border-b border-gray-200 pb-3">
+      <Disclosure className="border-b border-[var(--color-border-default)] pb-3">
         <Disclosure.Trigger>What is your return policy?</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             We offer a 30-day return policy for all unused items in their original packaging. Please
             contact our support team to initiate a return.
           </div>
         </Disclosure.Panel>
       </Disclosure>
 
-      <Disclosure className="border-b border-gray-200 pb-3">
+      <Disclosure className="border-b border-[var(--color-border-default)] pb-3">
         <Disclosure.Trigger>How long does shipping take?</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             Standard shipping takes 5-7 business days. Express shipping is available for 2-3
             business day delivery at an additional cost.
           </div>
         </Disclosure.Panel>
       </Disclosure>
 
-      <Disclosure className="border-b border-gray-200 pb-3">
+      <Disclosure className="border-b border-[var(--color-border-default)] pb-3">
         <Disclosure.Trigger>Do you offer international shipping?</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-2 pl-5 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-muted)]">
             Yes, we ship to over 50 countries worldwide. International shipping rates and delivery
             times vary by location.
           </div>
@@ -221,20 +225,20 @@ export const FAQ: Story = {
 export const SettingsPanel: Story = {
   name: 'Use Case - Settings Panel',
   render: () => (
-    <div className="flex flex-col gap-4 w-full bg-gray-50 p-4 rounded-lg">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)] rounded-[var(--primitive-radius-lg)]">
       <Disclosure defaultOpen>
         <Disclosure.Trigger>General Settings</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-3 pl-5 flex flex-col gap-2">
-            <label className="flex items-center gap-2 text-sm">
+          <div className="pt-[var(--primitive-spacing-3)] pl-[var(--primitive-spacing-5)] flex flex-col gap-[var(--primitive-spacing-2)]">
+            <label className="flex items-center gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)]">
               <input type="checkbox" defaultChecked />
               Enable notifications
             </label>
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex items-center gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)]">
               <input type="checkbox" />
               Dark mode
             </label>
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex items-center gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)]">
               <input type="checkbox" defaultChecked />
               Auto-save
             </label>
@@ -245,12 +249,12 @@ export const SettingsPanel: Story = {
       <Disclosure>
         <Disclosure.Trigger>Privacy Settings</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-3 pl-5 flex flex-col gap-2">
-            <label className="flex items-center gap-2 text-sm">
+          <div className="pt-[var(--primitive-spacing-3)] pl-[var(--primitive-spacing-5)] flex flex-col gap-[var(--primitive-spacing-2)]">
+            <label className="flex items-center gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)]">
               <input type="checkbox" defaultChecked />
               Share usage data
             </label>
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex items-center gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)]">
               <input type="checkbox" />
               Allow third-party cookies
             </label>
@@ -261,7 +265,7 @@ export const SettingsPanel: Story = {
       <Disclosure>
         <Disclosure.Trigger>Advanced Settings</Disclosure.Trigger>
         <Disclosure.Panel>
-          <div className="pt-3 pl-5 flex flex-col gap-2 text-sm text-gray-600">
+          <div className="pt-[var(--primitive-spacing-3)] pl-[var(--primitive-spacing-5)] flex flex-col gap-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-muted)]">
             <p>Developer mode: Disabled</p>
             <p>API Version: v2.1.0</p>
             <p>Cache: Enabled</p>
@@ -279,23 +283,29 @@ export const SettingsPanel: Story = {
 export const Nested: Story = {
   name: 'Nested Disclosures',
   render: () => (
-    <Disclosure className="border border-gray-200 rounded-lg p-4">
+    <Disclosure className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-4)]">
       <Disclosure.Trigger>Parent Section</Disclosure.Trigger>
       <Disclosure.Panel>
-        <div className="pt-3 pl-5 flex flex-col gap-2">
-          <p className="text-sm text-gray-600 mb-2">This section contains nested disclosures.</p>
+        <div className="pt-[var(--primitive-spacing-3)] pl-[var(--primitive-spacing-5)] flex flex-col gap-[var(--primitive-spacing-2)]">
+          <p className="text-body-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+            This section contains nested disclosures.
+          </p>
 
-          <Disclosure className="border border-gray-100 rounded p-2 bg-gray-50">
+          <Disclosure className="border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] p-[var(--primitive-spacing-2)] bg-[var(--color-surface-subtle)]">
             <Disclosure.Trigger>Child Section A</Disclosure.Trigger>
             <Disclosure.Panel>
-              <div className="pt-2 pl-5 text-sm text-gray-500">Content for child section A</div>
+              <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-subtle)]">
+                Content for child section A
+              </div>
             </Disclosure.Panel>
           </Disclosure>
 
-          <Disclosure className="border border-gray-100 rounded p-2 bg-gray-50">
+          <Disclosure className="border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] p-[var(--primitive-spacing-2)] bg-[var(--color-surface-subtle)]">
             <Disclosure.Trigger>Child Section B</Disclosure.Trigger>
             <Disclosure.Panel>
-              <div className="pt-2 pl-5 text-sm text-gray-500">Content for child section B</div>
+              <div className="pt-[var(--primitive-spacing-2)] pl-[var(--primitive-spacing-5)] text-body-md text-[var(--color-text-subtle)]">
+                Content for child section B
+              </div>
             </Disclosure.Panel>
           </Disclosure>
         </div>

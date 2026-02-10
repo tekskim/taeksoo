@@ -132,7 +132,7 @@ export const Default: Story = {
           title="Modal Title"
           description="This is a description text that provides more context about the modal."
         >
-          <div className="text-sm text-[var(--color-text-default)]">
+          <div className="text-body-md text-[var(--color-text-default)]">
             Modal content goes here. You can put any content inside the modal.
           </div>
         </Modal>
@@ -208,10 +208,10 @@ export const WithForm: Story = {
           title="Edit Profile"
           description="Update your profile information."
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
             <Input label="Name" placeholder="Enter your name" fullWidth />
             <Input label="Email" type="email" placeholder="Enter your email" fullWidth />
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-[var(--primitive-spacing-2)] mt-[var(--primitive-spacing-2)]">
               <Button variant="outline" onClick={() => setIsOpen(false)} fullWidth>
                 Cancel
               </Button>
@@ -306,7 +306,7 @@ export const NoBackdropClose: Story = {
           closeOnBackdropClick={false}
           closeOnEscape={false}
         >
-          <div className="flex gap-2">
+          <div className="flex gap-[var(--primitive-spacing-2)]">
             <Button variant="outline" onClick={() => setIsOpen(false)} fullWidth>
               Got it
             </Button>

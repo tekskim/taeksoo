@@ -38,7 +38,7 @@ export const Default: Story = {
 export const WithChildren: Story = {
   render: () => (
     <InfoBox label="Labels (3)">
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex flex-wrap items-center gap-[var(--primitive-spacing-1)]">
         <Chip label="app=nginx" size="sm" />
         <Chip label="env=production" size="sm" />
         <Chip label="version=1.0" size="sm" />

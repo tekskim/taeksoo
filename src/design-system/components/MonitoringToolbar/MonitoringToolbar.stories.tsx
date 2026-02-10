@@ -80,13 +80,13 @@ export const Controlled: Story = {
     >('1h');
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <MonitoringToolbar
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
           onRefresh={() => console.log('Refresh')}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">Selected: {timeRange}</p>
+        <p className="text-body-md text-[var(--color-text-muted)]">Selected: {timeRange}</p>
       </div>
     );
   },
@@ -131,7 +131,7 @@ export const WithCustomPeriod: Story = {
     });
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <MonitoringToolbar
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
@@ -139,7 +139,7 @@ export const WithCustomPeriod: Story = {
           onCustomPeriodChange={setCustomPeriod}
           onRefresh={() => console.log('Refresh')}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           {customPeriod
             ? `Custom: ${customPeriod.start.toLocaleDateString()} - ${customPeriod.end.toLocaleDateString()}`
             : `Selected: ${timeRange}`}
@@ -152,16 +152,16 @@ export const WithCustomPeriod: Story = {
 // In Dashboard Context
 export const InDashboardContext: Story = {
   render: () => (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">CPU Usage</h2>
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-4)]">
+      <div className="flex items-center justify-between mb-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h4">CPU Usage</h2>
         <MonitoringToolbar
           defaultTimeRange="1h"
           onTimeRangeChange={(range) => console.log('Time range:', range)}
           onRefresh={() => console.log('Refresh')}
         />
       </div>
-      <div className="h-[200px] bg-[var(--color-surface-subtle)] rounded flex items-center justify-center text-[var(--color-text-muted)]">
+      <div className="h-[200px] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex items-center justify-center text-[var(--color-text-muted)]">
         Chart Placeholder
       </div>
     </div>

@@ -141,15 +141,15 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
     if (label !== undefined) {
       return (
         <FormFieldContext.Provider value={contextValue}>
-          <div ref={ref} className={twMerge('flex flex-col gap-[8px]', className)} {...props}>
+          <div ref={ref} className={twMerge('flex flex-col', className)} {...props}>
             {/* Label */}
             <FormFieldLabel size={labelSize}>{label}</FormFieldLabel>
 
-            {/* Description (below label) */}
+            {/* Description (below label, 4px gap from label) */}
             {description && <FormFieldDescription>{description}</FormFieldDescription>}
 
-            {/* Control with auto-injected props */}
-            <FormFieldControl>
+            {/* Control with auto-injected props (8px gap from label/description) */}
+            <FormFieldControl className="mt-[var(--primitive-spacing-2)]">
               {Children.map(children, (child) => {
                 if (isValidElement(child)) {
                   // Auto-inject id, error, disabled props to form controls
@@ -176,7 +176,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
     // Compound API mode: traditional usage with sub-components
     return (
       <FormFieldContext.Provider value={contextValue}>
-        <div ref={ref} className={twMerge('flex flex-col gap-[8px]', className)} {...props}>
+        <div ref={ref} className={twMerge('flex flex-col', className)} {...props}>
           {children}
         </div>
       </FormFieldContext.Provider>
@@ -227,7 +227,11 @@ FormFieldLabel.displayName = 'FormField.Label';
 const FormFieldControl = forwardRef<HTMLDivElement, FormFieldControlProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={twMerge('w-full', className)} {...props}>
+      <div
+        ref={ref}
+        className={twMerge('w-full mt-[var(--primitive-spacing-2)]', className)}
+        {...props}
+      >
         {children}
       </div>
     );
@@ -245,13 +249,16 @@ const FormFieldDescription = forwardRef<HTMLParagraphElement, FormFieldDescripti
   ({ children, className, ...props }, ref) => {
     const { id } = useFormField();
 
-    // Label ↔ Description: 4px (8px gap - 4px = -4px margin-top)
+    // Label ↔ Description: 4px
     // Description uses text-body-md (12px/18px), HelperText uses text-body-sm (11px/16px)
     return (
       <p
         ref={ref}
         id={id ? `${id}-description` : undefined}
-        className={`text-body-md text-[var(--color-text-subtle)] -mt-[4px] ${className || ''}`}
+        className={twMerge(
+          'text-body-md text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-1)]',
+          className
+        )}
         {...props}
       >
         {children}
@@ -270,13 +277,16 @@ const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperText
   ({ children, className, ...props }, ref) => {
     const { id } = useFormField();
 
-    // HelperText uses text-body-sm (11px/16px)
+    // HelperText uses text-body-sm (11px/16px), 8px gap from input
     // Always visible — shown alongside ErrorMessage, not replaced by it
     return (
       <p
         ref={ref}
         id={id ? `${id}-helper` : undefined}
-        className={`text-body-sm text-[var(--color-text-subtle)] ${className || ''}`}
+        className={twMerge(
+          'text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-2)]',
+          className
+        )}
         {...props}
       >
         {children}
@@ -303,7 +313,10 @@ const FormFieldErrorMessage = forwardRef<HTMLParagraphElement, FormFieldErrorMes
         ref={ref}
         id={id ? `${id}-error` : undefined}
         role="alert"
-        className={`text-body-sm text-[var(--color-state-danger)] ${className || ''}`}
+        className={twMerge(
+          'text-body-sm text-[var(--color-state-danger)] mt-[var(--primitive-spacing-2)]',
+          className
+        )}
         {...props}
       >
         {children}

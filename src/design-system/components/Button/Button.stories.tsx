@@ -202,7 +202,7 @@ export const Link: Story = {
 // Sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
       <Button size="sm">Small</Button>
       <Button size="md">Medium</Button>
       <Button size="lg">Large</Button>
@@ -213,7 +213,7 @@ export const Sizes: Story = {
 // All Variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-4)]">
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="outline">Outline</Button>
@@ -229,22 +229,22 @@ export const AllVariants: Story = {
 // With Icons
 export const WithLeftIcon: Story = {
   args: {
-    leftIcon: <IconPlus size={16} />,
+    leftIcon: <IconPlus size={12} />,
     children: 'Add Item',
   },
 };
 
 export const WithRightIcon: Story = {
   args: {
-    rightIcon: <IconDownload size={16} />,
+    rightIcon: <IconDownload size={12} />,
     children: 'Download',
   },
 };
 
 export const WithBothIcons: Story = {
   args: {
-    leftIcon: <IconCheck size={16} />,
-    rightIcon: <IconDownload size={16} />,
+    leftIcon: <IconCheck size={12} />,
+    rightIcon: <IconDownload size={12} />,
     children: 'Confirm & Download',
   },
 };
@@ -252,7 +252,7 @@ export const WithBothIcons: Story = {
 // Icon Only
 export const IconOnly: Story = {
   args: {
-    icon: <IconPlus size={16} />,
+    icon: <IconPlus size={12} />,
     'aria-label': 'Add item',
     variant: 'secondary',
   },
@@ -260,11 +260,11 @@ export const IconOnly: Story = {
 
 export const IconOnlyVariants: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <Button icon={<IconPlus size={16} />} aria-label="Add" variant="primary" />
-      <Button icon={<IconEdit size={16} />} aria-label="Edit" variant="secondary" />
-      <Button icon={<IconTrash size={16} />} aria-label="Delete" variant="danger" />
-      <Button icon={<IconDownload size={16} />} aria-label="Download" variant="ghost" />
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <Button icon={<IconPlus size={12} />} aria-label="Add" variant="primary" />
+      <Button icon={<IconEdit size={12} />} aria-label="Edit" variant="secondary" />
+      <Button icon={<IconTrash size={12} />} aria-label="Delete" variant="danger" />
+      <Button icon={<IconDownload size={12} />} aria-label="Download" variant="ghost" />
     </div>
   ),
 };
@@ -286,7 +286,7 @@ export const Disabled: Story = {
 
 export const DisabledVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-4">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-4)]">
       <Button variant="primary" disabled>
         Primary
       </Button>

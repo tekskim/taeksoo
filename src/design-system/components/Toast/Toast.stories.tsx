@@ -212,7 +212,7 @@ export const NonDismissible: Story = {
 // All Variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <Toast
         toast={createMockToast({ variant: 'success', message: 'Success message' })}
         onDismiss={() => {}}
@@ -238,7 +238,7 @@ function InteractiveDemo() {
   const { success, warning, error, info, dismissAll } = useToast();
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Button
         size="sm"
         variant="primary"
