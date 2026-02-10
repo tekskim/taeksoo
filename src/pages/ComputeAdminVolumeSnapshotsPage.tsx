@@ -404,7 +404,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

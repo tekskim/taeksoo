@@ -475,7 +475,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -506,7 +506,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: StaticRoute) => (
         <div onClick={(e) => e.stopPropagation()}>

@@ -367,13 +367,13 @@ export function RoutersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { label: 'Connect subnet', onClick: () => {} },
-              { label: 'Disconnect subnet', onClick: () => {} },
-              { label: 'External gateway Setting', onClick: () => {} },
-              { label: 'Enable SNAT', onClick: () => {} },
-              { label: 'Disable SNAT', onClick: () => {} },
-              { label: 'Edit', onClick: () => {} },
-              { label: 'Delete', onClick: () => {}, variant: 'danger' },
+              { id: 'connect-subnet', label: 'Connect subnet', onClick: () => {} },
+              { id: 'disconnect-subnet', label: 'Disconnect subnet', onClick: () => {} },
+              { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
+              { id: 'enable-snat', label: 'Enable SNAT', onClick: () => {} },
+              { id: 'disable-snat', label: 'Disable SNAT', onClick: () => {} },
+              { id: 'edit', label: 'Edit', onClick: () => {} },
+              { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger', divider: true },
             ]}
             trigger="click"
           >

@@ -598,12 +598,18 @@ export default function RouterDetailPage() {
             </Button>
             <ContextMenu
               items={[
-                { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
-                { label: 'External gateway Setting', onClick: () => {} },
-                { label: 'Enable SNAT', onClick: () => {} },
-                { label: 'Disable SNAT', onClick: () => {} },
-                { label: 'Create static Route', onClick: () => {} },
-                { label: 'Edit', onClick: () => {} },
+                {
+                  id: 'disconnect-subnet',
+                  label: 'Disconnect subnet',
+                  onClick: () => {},
+                  status: 'danger',
+                  divider: true,
+                },
+                { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
+                { id: 'enable-snat', label: 'Enable SNAT', onClick: () => {} },
+                { id: 'disable-snat', label: 'Disable SNAT', onClick: () => {} },
+                { id: 'create-static-route', label: 'Create static Route', onClick: () => {} },
+                { id: 'edit', label: 'Edit', onClick: () => {} },
               ]}
               trigger="click"
             >

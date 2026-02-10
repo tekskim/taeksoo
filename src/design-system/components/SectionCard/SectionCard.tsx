@@ -61,7 +61,14 @@ function SectionCardHeader({
   ...props
 }: SectionCardHeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div
+      className={twMerge('flex flex-col w-full', showDivider ? '' : 'gap-3')}
+      style={
+        showDivider
+          ? { paddingBottom: '12px', borderBottom: '1px solid var(--color-border-default)' }
+          : undefined
+      }
+    >
       <div
         className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}
@@ -73,9 +80,8 @@ function SectionCardHeader({
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       {description && (
-        <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] mt-3">{description}</span>
       )}
-      {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
     </div>
   );
 }

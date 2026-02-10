@@ -417,14 +417,14 @@ export function ComputeAdminRoutersPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { label: 'Edit', onClick: () => {} },
-              { label: 'Delete', onClick: () => {}, variant: 'danger' },
+              { id: 'edit', label: 'Edit', onClick: () => {} },
+              { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger', divider: true },
             ]}
             trigger="click"
           >
