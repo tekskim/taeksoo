@@ -140,7 +140,7 @@ export const LongMessage: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full">
       <InlineMessage variant="info">Info: This is an informational message.</InlineMessage>
       <InlineMessage variant="success">
         Success: Your operation completed successfully.
@@ -158,7 +158,7 @@ export const AllVariants: Story = {
 export const FormValidation: Story = {
   name: 'Use Case - Form Validation',
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full">
       <InlineMessage variant="error">
         Password must be at least 8 characters long and contain a number.
       </InlineMessage>
@@ -183,7 +183,7 @@ export const FeatureAnnouncement: Story = {
 export const DeploymentStatus: Story = {
   name: 'Use Case - Deployment Status',
   render: () => (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full">
       <InlineMessage variant="success">
         Deployment successful! Your application is now live.
       </InlineMessage>

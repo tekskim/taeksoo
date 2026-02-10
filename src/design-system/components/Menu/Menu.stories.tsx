@@ -20,7 +20,7 @@ const meta: Meta<typeof MenuItem> = {
   decorators: [
     (Story) => (
       <BrowserRouter>
-        <div className="bg-[var(--color-surface-default)] p-4 rounded-lg border border-[var(--color-border-default)] w-fit">
+        <div className="bg-[var(--color-surface-default)] p-[var(--primitive-spacing-4)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] w-fit">
           <Story />
         </div>
       </BrowserRouter>
@@ -133,7 +133,7 @@ export const WithoutIcon: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-[var(--primitive-spacing-1)]">
       <MenuItem icon={<IconHome size={14} stroke={1.5} />} label="Default" />
       <MenuItem icon={<IconFolder size={14} stroke={1.5} />} label="Active" active />
       <MenuItem icon={<IconSettings size={14} stroke={1.5} />} label="Disabled" disabled />
@@ -145,7 +145,7 @@ export const AllStates: Story = {
 // Sidebar Menu Example
 export const SidebarMenu: Story = {
   render: () => (
-    <div className="flex flex-col gap-1 w-[200px]">
+    <div className="flex flex-col gap-[var(--primitive-spacing-1)] w-[200px]">
       <MenuSection label="Main" />
       <MenuItem
         icon={<IconHome size={14} stroke={1.5} />}

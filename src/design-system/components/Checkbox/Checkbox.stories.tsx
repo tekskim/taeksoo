@@ -156,7 +156,7 @@ export const Indeterminate: Story = {
 // Disabled States
 export const Disabled: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Checkbox label="Disabled unchecked" disabled />
       <Checkbox label="Disabled checked" disabled defaultChecked />
     </div>
@@ -178,13 +178,13 @@ export const Controlled: Story = {
     const [checked, setChecked] = useState(false);
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <Checkbox
           label="Controlled checkbox"
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Checked: <strong>{checked ? 'Yes' : 'No'}</strong>
         </p>
       </div>
@@ -213,14 +213,14 @@ export const SelectAllPattern: Story = {
     };
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
         <Checkbox
           label="Select all"
           checked={allChecked}
           indeterminate={someChecked}
           onChange={handleSelectAll}
         />
-        <div className="ml-6 flex flex-col gap-2">
+        <div className="ml-[var(--primitive-spacing-6)] flex flex-col gap-[var(--primitive-spacing-2)]">
           {items.map((item) => (
             <Checkbox
               key={item.id}
@@ -238,7 +238,7 @@ export const SelectAllPattern: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Checkbox label="Default" />
       <Checkbox label="Checked" defaultChecked />
       <Checkbox label="Indeterminate" indeterminate />
@@ -269,9 +269,9 @@ export const GroupExample: Story = {
     };
 
     return (
-      <div className="flex flex-col gap-4">
-        <p className="text-sm font-medium">Select frameworks:</p>
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+        <p className="text-label-md text-[var(--color-text-default)]">Select frameworks:</p>
+        <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
           {options.map((option) => (
             <Checkbox
               key={option.value}
@@ -281,7 +281,7 @@ export const GroupExample: Story = {
             />
           ))}
         </div>
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Selected: <strong>{selected.join(', ') || 'None'}</strong>
         </p>
       </div>

@@ -162,7 +162,7 @@ export const Removable: Story = {
     if (!visible) {
       return (
         <button
-          className="text-sm text-[var(--color-action-primary)]"
+          className="text-body-md text-[var(--color-action-primary)]"
           onClick={() => setVisible(true)}
         >
           Reset chip
@@ -188,7 +188,7 @@ export const RemovableWithLabel: Story = {
     };
 
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
         {chips.map((chip) => (
           <Chip
             key={chip.id}
@@ -198,7 +198,7 @@ export const RemovableWithLabel: Story = {
           />
         ))}
         {chips.length === 0 && (
-          <span className="text-sm text-[var(--color-text-muted)]">All chips removed</span>
+          <span className="text-body-md text-[var(--color-text-muted)]">All chips removed</span>
         )}
       </div>
     );
@@ -252,8 +252,8 @@ export const FilterTags: Story = {
     };
 
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+        <div className="flex items-center gap-[var(--primitive-spacing-2)] flex-wrap">
           {filters.map((filter) => (
             <Chip
               key={filter.id}
@@ -265,7 +265,7 @@ export const FilterTags: Story = {
           ))}
           {filters.length > 0 && (
             <button
-              className="text-xs text-[var(--color-action-primary)] hover:underline"
+              className="text-body-sm text-[var(--color-action-primary)] hover:underline"
               onClick={handleClearAll}
             >
               Clear all
@@ -273,7 +273,7 @@ export const FilterTags: Story = {
           )}
         </div>
         {filters.length === 0 && (
-          <p className="text-sm text-[var(--color-text-muted)]">No active filters</p>
+          <p className="text-body-md text-[var(--color-text-muted)]">No active filters</p>
         )}
       </div>
     );
@@ -283,10 +283,12 @@ export const FilterTags: Story = {
 // All Variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <p className="text-sm font-medium mb-2">Default</p>
-        <div className="flex flex-wrap gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Default
+        </p>
+        <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
           <Chip value="Basic" />
           <Chip label="Status" value="Active" />
           <Chip value="With Icon" icon={<IconTag size={12} />} />
@@ -295,8 +297,10 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">Selected</p>
-        <div className="flex flex-wrap gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Selected
+        </p>
+        <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
           <Chip value="Basic" variant="selected" />
           <Chip label="Status" value="Active" variant="selected" />
           <Chip value="With Icon" icon={<IconTag size={12} />} variant="selected" />
@@ -305,8 +309,10 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <p className="text-sm font-medium mb-2">Disabled</p>
-        <div className="flex flex-wrap gap-2">
+        <p className="text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Disabled
+        </p>
+        <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
           <Chip value="Disabled" disabled />
           <Chip label="Status" value="Active" disabled />
           <Chip value="With Remove" disabled onRemove={() => {}} />
@@ -338,8 +344,10 @@ export const TagInput: Story = {
 
     return (
       <div className="w-[400px]">
-        <label className="block text-sm font-medium mb-2">Tags</label>
-        <div className="flex flex-wrap gap-2 p-2 border border-[var(--color-border-default)] rounded min-h-[80px]">
+        <label className="block text-label-md text-[var(--color-text-default)] mb-[var(--primitive-spacing-2)]">
+          Tags
+        </label>
+        <div className="flex flex-wrap gap-[var(--primitive-spacing-2)] p-[var(--primitive-spacing-2)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] min-h-[80px]">
           {tags.map((tag) => (
             <Chip key={tag} value={tag} onRemove={() => handleRemove(tag)} />
           ))}
@@ -349,10 +357,12 @@ export const TagInput: Story = {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add tag..."
-            className="flex-1 min-w-[100px] outline-none bg-transparent text-sm"
+            className="flex-1 min-w-[100px] outline-none bg-transparent text-body-md"
           />
         </div>
-        <p className="text-xs text-[var(--color-text-muted)] mt-1">Press Enter to add a tag</p>
+        <p className="text-body-sm text-[var(--color-text-muted)] mt-[var(--primitive-spacing-1)]">
+          Press Enter to add a tag
+        </p>
       </div>
     );
   },

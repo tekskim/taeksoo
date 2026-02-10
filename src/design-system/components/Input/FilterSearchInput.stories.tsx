@@ -191,9 +191,11 @@ export const Sizes: Story = {
     const [filters2, setFilters2] = useState<AppliedFilter[]>([]);
 
     return (
-      <div className="flex flex-col gap-4 w-[400px]">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-[400px]">
         <div>
-          <p className="text-label-sm text-[var(--color-text-muted)] mb-2">Small</p>
+          <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+            Small
+          </p>
           <FilterSearchInput
             filters={sampleFilters}
             appliedFilters={filters1}
@@ -203,7 +205,9 @@ export const Sizes: Story = {
           />
         </div>
         <div>
-          <p className="text-label-sm text-[var(--color-text-muted)] mb-2">Medium</p>
+          <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+            Medium
+          </p>
           <FilterSearchInput
             filters={sampleFilters}
             appliedFilters={filters2}
@@ -232,7 +236,7 @@ export const HiddenAppliedFilters: Story = {
 
     return (
       <div className="w-[400px]">
-        <p className="text-body-sm text-[var(--color-text-muted)] mb-2">
+        <p className="text-body-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
           hideAppliedFilters=true — 필터 칩이 입력 아래에 표시되지 않음 (ListToolbar에서 별도
           렌더링)
         </p>
@@ -265,7 +269,7 @@ export const SimpleSearch: Story = {
 
     return (
       <div className="w-[320px]">
-        <p className="text-body-sm text-[var(--color-text-muted)] mb-2">
+        <p className="text-body-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
           필터 없이 단순 검색만 사용하는 경우
         </p>
         <FilterSearchInput
@@ -275,7 +279,7 @@ export const SimpleSearch: Story = {
           size="sm"
         />
         {searchValue && (
-          <p className="text-body-sm text-[var(--color-text-subtle)] mt-2">
+          <p className="text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-2)]">
             검색어: &quot;{searchValue}&quot;
           </p>
         )}

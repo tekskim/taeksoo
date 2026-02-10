@@ -190,16 +190,16 @@ export const Controlled: Story = {
     const [expanded, setExpanded] = useState<string[]>(['item-1']);
 
     return (
-      <div className="w-[400px] space-y-4">
-        <div className="flex gap-2">
+      <div className="w-[400px] flex flex-col gap-[var(--primitive-spacing-4)]">
+        <div className="flex gap-[var(--primitive-spacing-2)]">
           <button
-            className="px-3 py-1.5 text-body-sm bg-[var(--color-surface-muted)] rounded hover:bg-[var(--color-surface-subtle)]"
+            className="px-3 py-1.5 text-body-sm bg-[var(--color-surface-muted)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-subtle)]"
             onClick={() => setExpanded(['item-1', 'item-2', 'item-3'])}
           >
             Expand All
           </button>
           <button
-            className="px-3 py-1.5 text-body-sm bg-[var(--color-surface-muted)] rounded hover:bg-[var(--color-surface-subtle)]"
+            className="px-3 py-1.5 text-body-sm bg-[var(--color-surface-muted)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-subtle)]"
             onClick={() => setExpanded([])}
           >
             Collapse All
@@ -261,7 +261,7 @@ export const DisabledItems: Story = {
 export const FAQExample: Story = {
   render: () => (
     <div className="w-[500px]">
-      <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
+      <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-4)]">
         Frequently Asked Questions
       </h2>
       <Accordion.Root variant="separated">
@@ -313,12 +313,14 @@ export const FAQExample: Story = {
 export const SettingsExample: Story = {
   render: () => (
     <div className="w-[400px]">
-      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Settings</h3>
+      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-[var(--primitive-spacing-3)]">
+        Settings
+      </h3>
       <Accordion.Root variant="bordered" allowMultiple>
         <Accordion.Item id="general">
           <Accordion.Trigger>General</Accordion.Trigger>
           <Accordion.Panel>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
               <div className="flex justify-between items-center">
                 <span className="text-body-md">Language</span>
                 <span className="text-body-md text-[var(--color-text-muted)]">English</span>
@@ -333,7 +335,7 @@ export const SettingsExample: Story = {
         <Accordion.Item id="notifications">
           <Accordion.Trigger>Notifications</Accordion.Trigger>
           <Accordion.Panel>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
               <div className="flex justify-between items-center">
                 <span className="text-body-md">Email</span>
                 <span className="text-body-md text-[var(--color-state-success)]">Enabled</span>
@@ -348,7 +350,7 @@ export const SettingsExample: Story = {
         <Accordion.Item id="security">
           <Accordion.Trigger>Security</Accordion.Trigger>
           <Accordion.Panel>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
               <div className="flex justify-between items-center">
                 <span className="text-body-md">Two-factor auth</span>
                 <span className="text-body-md text-[var(--color-state-success)]">Active</span>

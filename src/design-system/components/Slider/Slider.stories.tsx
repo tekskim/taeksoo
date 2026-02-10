@@ -221,7 +221,7 @@ export const Controlled: Story = {
     const [value, setValue] = useState(50);
 
     return (
-      <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-full">
         <Slider
           min={0}
           max={100}
@@ -230,26 +230,28 @@ export const Controlled: Story = {
           showValue
           aria-label="Controlled slider"
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-[var(--primitive-spacing-2)]">
           <button
             onClick={() => setValue(0)}
-            className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+            className="px-[var(--primitive-spacing-2)] py-[var(--primitive-spacing-1)] text-body-sm bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-sm)] hover:bg-[var(--color-surface-hover)]"
           >
             Min
           </button>
           <button
             onClick={() => setValue(50)}
-            className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+            className="px-[var(--primitive-spacing-2)] py-[var(--primitive-spacing-1)] text-body-sm bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-sm)] hover:bg-[var(--color-surface-hover)]"
           >
             50%
           </button>
           <button
             onClick={() => setValue(100)}
-            className="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200"
+            className="px-[var(--primitive-spacing-2)] py-[var(--primitive-spacing-1)] text-body-sm bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-sm)] hover:bg-[var(--color-surface-hover)]"
           >
             Max
           </button>
-          <span className="text-sm text-gray-500 ml-auto">Current: {value}</span>
+          <span className="text-body-md text-[var(--color-text-subtle)] ml-auto">
+            Current: {value}
+          </span>
         </div>
       </div>
     );
@@ -266,8 +268,8 @@ export const VolumeControl: Story = {
     const [volume, setVolume] = useState(70);
 
     return (
-      <div className="flex flex-col gap-2 w-full">
-        <label className="text-sm font-medium">Volume</label>
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)] w-full">
+        <label className="text-label-lg text-[var(--color-text-default)]">Volume</label>
         <Slider
           min={0}
           max={100}
@@ -288,8 +290,8 @@ export const BrightnessControl: Story = {
     const [brightness, setBrightness] = useState(80);
 
     return (
-      <div className="flex flex-col gap-2 w-full">
-        <label className="text-sm font-medium">Brightness</label>
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)] w-full">
+        <label className="text-label-lg text-[var(--color-text-default)]">Brightness</label>
         <Slider
           min={10}
           max={100}
@@ -310,10 +312,10 @@ export const PriceFilter: Story = {
     const [maxPrice, setMaxPrice] = useState(500);
 
     return (
-      <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between text-sm">
-          <span className="font-medium">Max Price</span>
-          <span className="text-gray-500">${maxPrice}</span>
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)] w-full">
+        <div className="flex justify-between text-body-md">
+          <span className="text-label-lg">Max Price</span>
+          <span className="text-[var(--color-text-subtle)]">${maxPrice}</span>
         </div>
         <Slider
           min={0}
@@ -323,7 +325,7 @@ export const PriceFilter: Story = {
           onChange={setMaxPrice}
           aria-label="Maximum price filter"
         />
-        <div className="flex justify-between text-xs text-gray-400">
+        <div className="flex justify-between text-body-sm text-[var(--color-text-subtle)]">
           <span>$0</span>
           <span>$1,000</span>
         </div>
@@ -338,10 +340,10 @@ export const ZoomLevel: Story = {
     const [zoom, setZoom] = useState(100);
 
     return (
-      <div className="flex items-center gap-3 w-full">
+      <div className="flex items-center gap-[var(--primitive-spacing-3)] w-full">
         <button
           onClick={() => setZoom(Math.max(25, zoom - 25))}
-          className="p-1 text-gray-500 hover:text-gray-700"
+          className="p-[var(--primitive-spacing-1)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
         >
           −
         </button>
@@ -357,7 +359,7 @@ export const ZoomLevel: Story = {
         />
         <button
           onClick={() => setZoom(Math.min(200, zoom + 25))}
-          className="p-1 text-gray-500 hover:text-gray-700"
+          className="p-[var(--primitive-spacing-1)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
         >
           +
         </button>
@@ -373,17 +375,17 @@ export const ZoomLevel: Story = {
 export const MultipleSliders: Story = {
   name: 'Multiple Sliders',
   render: () => (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Red</label>
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)] w-full">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
+        <label className="text-label-lg text-[var(--color-text-default)]">Red</label>
         <Slider min={0} max={255} defaultValue={128} showValue aria-label="Red channel" />
       </div>
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Green</label>
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
+        <label className="text-label-lg text-[var(--color-text-default)]">Green</label>
         <Slider min={0} max={255} defaultValue={200} showValue aria-label="Green channel" />
       </div>
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Blue</label>
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
+        <label className="text-label-lg text-[var(--color-text-default)]">Blue</label>
         <Slider min={0} max={255} defaultValue={64} showValue aria-label="Blue channel" />
       </div>
     </div>

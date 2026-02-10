@@ -47,7 +47,7 @@ export const Controlled: Story = {
     const [value, setValue] = useState('cherry');
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <Dropdown.Root value={value} onChange={setValue}>
           <Dropdown.Select placeholder="Select a fruit" width="md">
             <Dropdown.Option value="apple">Apple</Dropdown.Option>
@@ -99,7 +99,9 @@ export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-4 items-start">
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Small</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Small
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" size="sm" width="sm">
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -108,7 +110,9 @@ export const Sizes: Story = {
         </Dropdown.Root>
       </div>
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Medium (default)</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Medium (default)
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" size="md" width="md">
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -124,7 +128,9 @@ export const Widths: Story = {
   render: () => (
     <div className="flex flex-col gap-4 items-start">
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Small (160px)</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Small (160px)
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" width="sm">
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -133,7 +139,9 @@ export const Widths: Story = {
         </Dropdown.Root>
       </div>
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Medium (240px)</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Medium (240px)
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" width="md">
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -142,7 +150,9 @@ export const Widths: Story = {
         </Dropdown.Root>
       </div>
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Large (320px)</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Large (320px)
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" width="lg">
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -151,7 +161,9 @@ export const Widths: Story = {
         </Dropdown.Root>
       </div>
       <div className="w-full max-w-md">
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Full Width</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Full Width
+        </h3>
         <Dropdown.Root>
           <Dropdown.Select placeholder="Select" fullWidth>
             <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -213,7 +225,7 @@ export const WithDividers: Story = {
 
 export const ErrorState: Story = {
   render: () => (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
       <Dropdown.Root>
         <Dropdown.Select placeholder="Select a value" width="md" error>
           <Dropdown.Option value="a">Option A</Dropdown.Option>
@@ -269,7 +281,7 @@ export const ThakiUIStyle: Story = {
     const [value, setValue] = useState('');
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <h3 className="text-heading-h6 text-[var(--color-text-default)]">
           thaki-ui Compound Component Pattern
         </h3>

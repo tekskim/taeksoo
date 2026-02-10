@@ -86,10 +86,10 @@ interface BadgeItemProps {
 function BadgeItem({ badge }: BadgeItemProps) {
   const variantClasses = {
     default: 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]',
-    success: 'bg-green-50 text-green-600',
-    info: 'bg-blue-50 text-blue-500',
-    warning: 'bg-amber-50 text-amber-600',
-    muted: 'bg-gray-100 text-[var(--color-text-muted)]',
+    success: 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success)]',
+    info: 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info)]',
+    warning: 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)]',
+    muted: 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]',
   };
 
   return (

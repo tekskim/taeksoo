@@ -65,10 +65,10 @@ export const Default: Story = {
       <div className="flex items-start justify-between">
         <DetailHeader.Title>nginx-deployment</DetailHeader.Title>
         <DetailHeader.Actions>
-          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
+          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>
             Edit
           </Button>
-          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>
+          <Button size="sm" variant="danger" leftIcon={<IconTrash size={12} />}>
             Delete
           </Button>
         </DetailHeader.Actions>
@@ -104,7 +104,7 @@ export const WithStatus: Story = {
       <DetailHeader.Title>production-service</DetailHeader.Title>
       <DetailHeader.InfoGrid>
         <DetailHeader.InfoCard label="Status" status="active" value="" />
-        <DetailHeader.InfoCard label="Health" status="success" value="" />
+        <DetailHeader.InfoCard label="Health" status="active" value="" />
         <DetailHeader.InfoCard label="Endpoints" value="3 active" />
       </DetailHeader.InfoGrid>
     </DetailHeader>
@@ -121,8 +121,8 @@ export const WithCustomValue: Story = {
           label="Labels"
           value={
             <HStack gap={1}>
-              <Chip value="app=web" variant="muted" />
-              <Chip value="env=prod" variant="muted" />
+              <Chip value="app=web" variant="default" />
+              <Chip value="env=prod" variant="default" />
             </HStack>
           }
         />
@@ -140,13 +140,13 @@ export const VMDetail: Story = {
       <div className="flex items-start justify-between">
         <DetailHeader.Title>production-vm-01</DetailHeader.Title>
         <DetailHeader.Actions>
-          <Button size="sm" variant="secondary" leftIcon={<IconPlayerStop size={14} />}>
+          <Button size="sm" variant="secondary" leftIcon={<IconPlayerStop size={12} />}>
             Stop
           </Button>
-          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
+          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>
             Edit
           </Button>
-          <Button size="sm" variant="danger" leftIcon={<IconTrash size={14} />}>
+          <Button size="sm" variant="danger" leftIcon={<IconTrash size={12} />}>
             Delete
           </Button>
         </DetailHeader.Actions>

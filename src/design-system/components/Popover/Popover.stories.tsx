@@ -69,7 +69,7 @@ type Story = StoryObj<typeof Popover>;
 export const Default: Story = {
   args: {
     content: (
-      <div className="p-4">
+      <div className="p-[var(--primitive-spacing-4)]">
         <p className="text-body-md text-[var(--color-text-default)]">
           This is a popover with interactive content.
         </p>
@@ -85,7 +85,7 @@ export const Default: Story = {
 export const HoverTrigger: Story = {
   args: {
     content: (
-      <div className="p-3">
+      <div className="p-[var(--primitive-spacing-3)]">
         <p className="text-body-sm text-[var(--color-text-muted)]">Hover to see more information</p>
       </div>
     ),
@@ -102,17 +102,17 @@ export const WithMenu: Story = {
       trigger="click"
       position="bottom"
       content={
-        <VStack gap={1} className="p-2 min-w-[160px]">
-          <button className="flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] rounded-[var(--primitive-radius-sm)] w-full text-left">
+        <VStack gap={1} className="p-[var(--primitive-spacing-2)] min-w-[160px]">
+          <button className="flex items-center gap-[var(--primitive-spacing-2)] px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] rounded-[var(--primitive-radius-sm)] w-full text-left">
             <IconUser size={16} />
             Profile
           </button>
-          <button className="flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] rounded-[var(--primitive-radius-sm)] w-full text-left">
+          <button className="flex items-center gap-[var(--primitive-spacing-2)] px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] rounded-[var(--primitive-radius-sm)] w-full text-left">
             <IconSettings size={16} />
             Settings
           </button>
-          <div className="w-full h-px bg-[var(--color-border-subtle)] my-1" />
-          <button className="flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-state-danger)] hover:bg-[var(--color-state-danger-bg)] rounded-[var(--primitive-radius-sm)] w-full text-left">
+          <div className="w-full h-px bg-[var(--color-border-subtle)] my-[var(--primitive-spacing-1)]" />
+          <button className="flex items-center gap-[var(--primitive-spacing-2)] px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] text-body-md text-[var(--color-state-danger)] hover:bg-[var(--color-state-danger-bg)] rounded-[var(--primitive-radius-sm)] w-full text-left">
             <IconLogout size={16} />
             Logout
           </button>
@@ -134,7 +134,7 @@ export const Positions: Story = {
           trigger="click"
           position={position}
           content={
-            <div className="p-3">
+            <div className="p-[var(--primitive-spacing-3)]">
               <p className="text-body-md text-[var(--color-text-default)]">Position: {position}</p>
             </div>
           }
@@ -150,7 +150,7 @@ export const Positions: Story = {
 export const NoArrow: Story = {
   args: {
     content: (
-      <div className="p-4">
+      <div className="p-[var(--primitive-spacing-4)]">
         <p className="text-body-md text-[var(--color-text-default)]">Popover without arrow</p>
       </div>
     ),
@@ -167,15 +167,15 @@ export const WithForm: Story = {
       trigger="click"
       position="bottom"
       content={
-        <VStack gap={3} className="p-4 w-[280px]">
+        <VStack gap={3} className="p-[var(--primitive-spacing-4)] w-[280px]">
           <h4 className="text-heading-h6 text-[var(--color-text-default)]">Quick Settings</h4>
           <div>
-            <label className="text-label-sm text-[var(--color-text-muted)] block mb-1">
+            <label className="text-label-sm text-[var(--color-text-muted)] block mb-[var(--primitive-spacing-1)]">
               Display Name
             </label>
             <input
               type="text"
-              className="w-full px-3 py-2 text-body-md border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] bg-[var(--color-surface-default)]"
+              className="w-full px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] text-body-md border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] bg-[var(--color-surface-default)]"
               placeholder="Enter name"
             />
           </div>
@@ -207,14 +207,14 @@ export const Controlled: Story = {
           isOpen={isOpen}
           onOpenChange={setIsOpen}
           content={
-            <div className="p-4">
+            <div className="p-[var(--primitive-spacing-4)]">
               <p className="text-body-md text-[var(--color-text-default)]">
                 Controlled popover state: {isOpen ? 'Open' : 'Closed'}
               </p>
               <Button
                 variant="secondary"
                 size="sm"
-                className="mt-2"
+                className="mt-[var(--primitive-spacing-2)]"
                 onClick={() => setIsOpen(false)}
               >
                 Close
@@ -236,7 +236,7 @@ export const Controlled: Story = {
 export const Disabled: Story = {
   args: {
     content: (
-      <div className="p-3">
+      <div className="p-[var(--primitive-spacing-3)]">
         <p className="text-body-md">This won't show</p>
       </div>
     ),
@@ -257,7 +257,7 @@ export const WithFormField: Story = {
       trigger="click"
       position="bottom"
       content={
-        <VStack gap={3} className="p-4 w-[280px]">
+        <VStack gap={3} className="p-[var(--primitive-spacing-4)] w-[280px]">
           <h4 className="text-heading-h6 text-[var(--color-text-default)]">Quick Settings</h4>
           <FormField label="Display Name" helperText="2-64 characters">
             <Input placeholder="Enter name" fullWidth />

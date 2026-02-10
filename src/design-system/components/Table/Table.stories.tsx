@@ -171,7 +171,7 @@ export const Selectable: Story = {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <Table
           columns={basicColumns}
           data={sampleUsers}
@@ -180,7 +180,7 @@ export const Selectable: Story = {
           selectedKeys={selectedKeys}
           onSelectionChange={setSelectedKeys}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Selected: {selectedKeys.length > 0 ? selectedKeys.join(', ') : 'None'}
         </p>
       </div>
@@ -215,17 +215,17 @@ export const WithActions: Story = {
         width: '100px',
         align: 'center',
         render: (_value, row) => (
-          <div className="flex items-center justify-end gap-1">
+          <div className="flex items-center justify-end gap-[var(--primitive-spacing-1)]">
             <Button
               variant="ghost"
               size="sm"
-              icon={<IconEdit size={14} />}
+              icon={<IconEdit size={12} />}
               aria-label={`Edit ${row.name}`}
             />
             <Button
               variant="ghost"
               size="sm"
-              icon={<IconTrash size={14} />}
+              icon={<IconTrash size={12} />}
               aria-label={`Delete ${row.name}`}
             />
           </div>
@@ -306,7 +306,7 @@ export const ComplexExample: Story = {
         sortable: true,
         render: (value, row) => (
           <div className="flex flex-col">
-            <span className="font-medium">{value}</span>
+            <span className="text-label-lg">{value}</span>
             <span className="text-body-sm text-[var(--color-text-muted)]">{row.email}</span>
           </div>
         ),
@@ -347,7 +347,7 @@ export const ComplexExample: Story = {
           <Button
             variant="ghost"
             size="sm"
-            icon={<IconDotsVertical size={14} />}
+            icon={<IconDotsVertical size={12} />}
             aria-label="More actions"
           />
         ),
@@ -355,10 +355,10 @@ export const ComplexExample: Story = {
     ];
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         {selectedKeys.length > 0 && (
-          <div className="flex items-center gap-2 p-2 bg-[var(--color-surface-subtle)] rounded">
-            <span className="text-sm">{selectedKeys.length} selected</span>
+          <div className="flex items-center gap-[var(--primitive-spacing-2)] p-[var(--primitive-spacing-2)] bg-[var(--color-surface-subtle)] rounded">
+            <span className="text-body-md">{selectedKeys.length} selected</span>
             <Button variant="ghost" size="sm" onClick={() => setSelectedKeys([])}>
               Clear
             </Button>
