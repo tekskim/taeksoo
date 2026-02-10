@@ -118,7 +118,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel}>
+          <Button variant="secondary" size="md" onClick={onCancel}>
             Cancel
           </Button>
           <Button

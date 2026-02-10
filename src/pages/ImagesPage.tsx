@@ -373,13 +373,13 @@ export function ImagesPage() {
               <Button
                 variant="secondary"
                 size="sm"
-                icon={<IconDownload size={14} stroke={1.5} />}
+                icon={<IconDownload size={12} stroke={1.5} />}
                 aria-label="Download"
               />
               <Button
                 variant="secondary"
                 size="sm"
-                icon={<IconRefresh size={14} stroke={1.5} />}
+                icon={<IconRefresh size={12} stroke={1.5} />}
                 aria-label="Refresh"
                 onClick={() => console.log('Refresh clicked')}
               />

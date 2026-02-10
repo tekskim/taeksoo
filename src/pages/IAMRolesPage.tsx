@@ -257,7 +257,7 @@ export default function IAMRolesPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu

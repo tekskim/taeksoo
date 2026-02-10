@@ -17,7 +17,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconCheck } from '@tabler/icons-react';
+import { IconBell, IconEdit, IconCheck, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -550,14 +550,9 @@ function SettingsSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Tags */}
-          <VStack gap={4} className="py-6">
-            <HStack justify="between" align="center">
-              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-              <Button variant="secondary" size="sm" onClick={onAddTag}>
-                Add
-              </Button>
-            </HStack>
-            <VStack gap={1} align="stretch">
+          <VStack gap={2} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
+            <VStack gap={2} align="stretch">
               {tags.map((tag) => (
                 <div
                   key={tag.id}
@@ -570,7 +565,7 @@ function SettingsSection({
                     <Input
                       value={tag.key}
                       onChange={(e) => onUpdateTag(tag.id, 'key', e.target.value)}
-                      style={{ width: '120px' }}
+                      style={{ width: '240px' }}
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
@@ -580,20 +575,30 @@ function SettingsSection({
                     <Input
                       value={tag.value}
                       onChange={(e) => onUpdateTag(tag.id, 'value', e.target.value)}
-                      style={{ width: '80px' }}
+                      style={{ width: '240px' }}
                     />
                   </HStack>
-                  <Button
-                    variant="secondary"
-                    size="sm"
+                  <div className="flex-1" />
+                  <button
+                    type="button"
                     onClick={() => onRemoveTag(tag.id)}
-                    className="text-[var(--color-state-danger)]"
+                    className="w-[25px] h-[25px] flex items-center justify-center rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
                   >
-                    Delete
-                  </Button>
+                    <IconX size={14} stroke={1.5} />
+                  </button>
                 </div>
               ))}
             </VStack>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} />}
+                onClick={onAddTag}
+              >
+                Add Tags
+              </Button>
+            </div>
           </VStack>
 
           {/* Divider */}
@@ -796,6 +801,7 @@ function PolicySection({
 export default function CreateBucketPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();

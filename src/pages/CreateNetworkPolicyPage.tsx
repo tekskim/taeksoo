@@ -198,7 +198,7 @@ function SummarySidebar({
         <HStack gap={2}>
           <Button
             variant="secondary"
-            size="sm"
+            size="md"
             onClick={() => navigate('/container/network-policies')}
           >
             Cancel

@@ -316,7 +316,7 @@ function OSDMonitoringTimeControls({
         )}
       </div>
       <button className="refreshButton" onClick={onRefresh}>
-        <IconRefresh size={14} stroke={1.5} />
+        <IconRefresh size={12} stroke={1.5} />
       </button>
     </div>
   );

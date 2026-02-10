@@ -243,7 +243,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'id',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
