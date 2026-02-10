@@ -399,7 +399,7 @@ export function ComputeAdminCreateImagePage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={sectionStatus['basic-info'] === 'active'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -617,8 +617,8 @@ export function ComputeAdminCreateImagePage() {
               )}
               {sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Image name" value={imageName || '-'} showDivider />
-                  <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
+                  <SectionCard.DataRow label="Image name" value={imageName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
                   <SectionCard.DataRow
                     label="Owned tenant"
                     value={
@@ -626,12 +626,10 @@ export function ComputeAdminCreateImagePage() {
                         ? selectedTenants.map((t) => `${t.name} (ID: ${t.id})`).join(', ')
                         : '-'
                     }
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="Visibility"
                     value={visibility.charAt(0).toUpperCase() + visibility.slice(1)}
-                    showDivider
                   />
                   {visibility === 'shared' && (
                     <SectionCard.DataRow
@@ -641,14 +639,9 @@ export function ComputeAdminCreateImagePage() {
                           ? selectedSharedTenants.map((t) => `${t.name} (ID: ${t.id})`).join(', ')
                           : '-'
                       }
-                      showDivider
                     />
                   )}
-                  <SectionCard.DataRow
-                    label="Protected"
-                    value={isProtected ? 'Yes' : 'No'}
-                    showDivider
-                  />
+                  <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -657,7 +650,7 @@ export function ComputeAdminCreateImagePage() {
             <SectionCard isActive={sectionStatus['source'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['source']}
-                showDivider={sectionStatus['source'] === 'active'}
+                showDivider={sectionStatus['source'] === 'done'}
                 actions={
                   sectionStatus['source'] === 'done' && (
                     <Button
@@ -747,10 +740,9 @@ export function ComputeAdminCreateImagePage() {
                   <SectionCard.DataRow
                     label="Upload type"
                     value={sourceType === 'file' ? 'Upload File' : 'File URL'}
-                    showDivider
                   />
                   {sourceType === 'url' && (
-                    <SectionCard.DataRow label="URL" value={sourceUrl || '-'} showDivider />
+                    <SectionCard.DataRow label="URL" value={sourceUrl || '-'} />
                   )}
                 </SectionCard.Content>
               )}
@@ -760,7 +752,7 @@ export function ComputeAdminCreateImagePage() {
             <SectionCard isActive={sectionStatus['specification'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['specification']}
-                showDivider={sectionStatus['specification'] === 'active'}
+                showDivider={sectionStatus['specification'] === 'done'}
                 actions={
                   sectionStatus['specification'] === 'done' && (
                     <HStack gap={3} align="center">
@@ -937,23 +929,17 @@ export function ComputeAdminCreateImagePage() {
               )}
               {sectionStatus['specification'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Disk format"
-                    value={diskFormat.toUpperCase()}
-                    showDivider
-                  />
-                  <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
-                  <SectionCard.DataRow label="OS Version" value={osVersion || '-'} showDivider />
-                  <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} showDivider />
+                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow label="OS" value={os || '-'} />
+                  <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
+                  <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
                   <SectionCard.DataRow
                     label="Min system Disk"
                     value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="Min RAM"
                     value={minRam !== undefined ? `${minRam} GiB` : '-'}
-                    showDivider
                   />
                 </SectionCard.Content>
               )}
@@ -963,7 +949,7 @@ export function ComputeAdminCreateImagePage() {
             <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['advanced']}
-                showDivider={sectionStatus['advanced'] === 'active'}
+                showDivider={sectionStatus['advanced'] === 'done'}
                 actions={
                   sectionStatus['advanced'] === 'done' && (
                     <HStack gap={3} align="center">
@@ -1076,7 +1062,6 @@ export function ComputeAdminCreateImagePage() {
                   <SectionCard.DataRow
                     label="QEMU Guest Agent"
                     value={qemuGuestAgent ? 'On' : 'Off'}
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="CPU Policy"
@@ -1085,7 +1070,6 @@ export function ComputeAdminCreateImagePage() {
                         ? 'None'
                         : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)
                     }
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="CPU Thread Policy"
@@ -1094,7 +1078,6 @@ export function ComputeAdminCreateImagePage() {
                         ? 'None'
                         : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)
                     }
-                    showDivider
                   />
                 </SectionCard.Content>
               )}

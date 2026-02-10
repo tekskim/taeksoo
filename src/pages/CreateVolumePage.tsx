@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -25,10 +25,11 @@ import {
   IconRocky,
   SelectionIndicator,
   PageShell,
+  WizardSummary,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import type { TableColumn, WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -36,7 +37,7 @@ import {
   IconDots,
   IconExternalLink,
   IconAlertCircle,
-  IconCheck,
+  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -230,35 +231,8 @@ const azOptions = [
    Summary Sidebar Component
    ---------------------------------------- */
 
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
 interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'>;
+  sectionStatus: Record<SectionStep, WizardSectionState>;
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
@@ -270,40 +244,33 @@ function SummarySidebar({
   onCreate,
   isCreateDisabled,
 }: SummarySidebarProps) {
+  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
+    key,
+    label: SECTION_LABELS[key],
+    status: sectionStatus[key],
+  }));
+
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={4}>
-            <span className="text-heading-h5">Summary</span>
-            <VStack gap={0}>
-              {SECTION_ORDER.map((step) => (
-                <HStack key={step} justify="between" className="py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStatus[step]} />
-                </HStack>
-              ))}
-            </VStack>
-          </VStack>
-        </div>
+        <WizardSummary items={summaryItems} />
 
-        {/* Button row */}
-        <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </HStack>
+        {/* Action Buttons */}
+        <div className="flex flex-col w-full">
+          <div className="flex gap-2 items-center justify-end w-full">
+            <Button variant="secondary" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={onCreate}
+              disabled={isCreateDisabled}
+              className="flex-1"
+            >
+              Create
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -343,9 +310,17 @@ export function CreateVolumePage() {
   const [volumeNameError, setVolumeNameError] = useState<string | null>(null);
   const [azError, setAzError] = useState<string | null>(null);
   const [sourceError, setSourceError] = useState<string | null>(null);
+  const [volumeTypeError, setVolumeTypeError] = useState<string | null>(null);
+
+  // Wizard section states
+  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
+    'basic-info': 'active',
+    source: 'pre',
+    configuration: 'pre',
+  });
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel } = useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -426,9 +401,15 @@ export function CreateVolumePage() {
 
   const validateConfiguration = () => {
     if (sourceType === 'snapshot') {
+      setVolumeTypeError(null);
       return true; // Volume type is auto-set for snapshots
     }
-    return selectedVolumeType.length > 0;
+    if (selectedVolumeType.length === 0) {
+      setVolumeTypeError('Please select a volume type.');
+      return false;
+    }
+    setVolumeTypeError(null);
+    return true;
   };
 
   const handleCancel = () => {
@@ -436,15 +417,6 @@ export function CreateVolumePage() {
   };
 
   const handleCreate = () => {
-    // Validate all sections before creating
-    const isBasicInfoValid = validateBasicInfo();
-    const isSourceValid = validateSource();
-    const isConfigurationValid = validateConfiguration();
-
-    if (!isBasicInfoValid || !isSourceValid || !isConfigurationValid) {
-      return;
-    }
-
     console.log('Creating volume:', {
       volumeName,
       availabilityZone,
@@ -458,66 +430,57 @@ export function CreateVolumePage() {
     navigate('/compute/volumes');
   };
 
-  // Calculate section statuses for summary sidebar
-  const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    if (section === 'basic-info') {
-      return volumeName.trim() && availabilityZone ? 'done' : 'active';
-    }
-    if (section === 'source') {
-      if (sourceType === 'blank') {
-        return 'done';
+  // Section navigation with validation
+  const goToNextSection = useCallback(
+    (currentSection: SectionStep) => {
+      // Validate current section before proceeding
+      let isValid = true;
+      if (currentSection === 'basic-info') {
+        isValid = validateBasicInfo();
+      } else if (currentSection === 'source') {
+        isValid = validateSource();
+      } else if (currentSection === 'configuration') {
+        isValid = validateConfiguration();
       }
-      if (sourceType === 'image' && selectedImage.length > 0) {
-        return 'done';
+
+      if (!isValid) return;
+
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
+
+      if (nextSection) {
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+          [nextSection]: 'active',
+        }));
+      } else {
+        // Last section
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+        }));
       }
-      if (sourceType === 'snapshot' && selectedSnapshot.length > 0) {
-        return 'done';
-      }
-      return 'active';
-    }
-    if (section === 'configuration') {
-      if (sourceType === 'snapshot') {
-        return 'done'; // Volume type is auto-set for snapshots
-      }
-      return selectedVolumeType.length > 0 ? 'done' : 'active';
-    }
-    return 'pending';
-  };
+    },
+    [validateBasicInfo, validateSource, validateConfiguration]
+  );
 
-  const sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'> = {
-    'basic-info': getSectionStatus('basic-info'),
-    source: getSectionStatus('source'),
-    configuration: getSectionStatus('configuration'),
-  };
+  const editSection = useCallback((section: SectionStep) => {
+    setSectionStatus((prev) => {
+      const newStatus = { ...prev };
+      SECTION_ORDER.forEach((s) => {
+        if (s === section) {
+          newStatus[s] = 'active';
+        } else if (newStatus[s] === 'active') {
+          newStatus[s] = 'done';
+        }
+      });
+      return newStatus;
+    });
+  }, []);
 
-  // Check if create button should be disabled (without triggering setState)
-  const isCreateDisabled = useMemo(() => {
-    // Basic info validation
-    const isBasicInfoValid = volumeName.trim() !== '' && availabilityZone !== '';
-
-    // Source validation
-    let isSourceValid = true;
-    if (sourceType === 'image' && selectedImage.length === 0) {
-      isSourceValid = false;
-    } else if (sourceType === 'snapshot' && selectedSnapshot.length === 0) {
-      isSourceValid = false;
-    }
-
-    // Configuration validation
-    let isConfigurationValid = true;
-    if (sourceType !== 'snapshot' && selectedVolumeType.length === 0) {
-      isConfigurationValid = false;
-    }
-
-    return !isBasicInfoValid || !isSourceValid || !isConfigurationValid;
-  }, [
-    volumeName,
-    availabilityZone,
-    sourceType,
-    selectedImage,
-    selectedSnapshot,
-    selectedVolumeType,
-  ]);
+  // Check if create button should be enabled
+  const isCreateDisabled = !volumeName.trim() || sectionStatus['basic-info'] === 'active';
 
   // Image table columns
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -637,6 +600,7 @@ export function CreateVolumePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
           showAddButton={true}
           showWindowControls={true}
         />
@@ -664,26 +628,42 @@ export function CreateVolumePage() {
       }
       contentClassName="pt-3 px-8 pb-20"
     >
-      {/* Page Title */}
-      <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
-        <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create volume</h1>
-      </div>
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create volume</h1>
+        </div>
 
-      <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
-        {/* Left Column - Main Content */}
-        <div className="flex-1 min-w-0">
-          <VStack gap={4} align="stretch">
+        {/* Content Area */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Main Content */}
+          <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard>
-              <SectionCard.Header title={SECTION_LABELS['basic-info']} />
-              <SectionCard.Content showDividers={false}>
-                <VStack gap={0}>
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                  <div className="py-6">
-                    <FormField required error={!!volumeNameError}>
-                      <FormField.Label>Volume name</FormField.Label>
-                      <FormField.Control>
-                        <VStack gap={1}>
+            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['basic-info']}
+                showDivider={sectionStatus['basic-info'] === 'done'}
+                actions={
+                  sectionStatus['basic-info'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('basic-info')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['basic-info'] === 'active' && (
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="py-6">
+                      <FormField required error={!!volumeNameError}>
+                        <FormField.Label>Volume name</FormField.Label>
+                        <FormField.Control>
                           <Input
                             value={volumeName}
                             onChange={(e) => {
@@ -692,30 +672,23 @@ export function CreateVolumePage() {
                             }}
                             placeholder="Enter volume name"
                             fullWidth
-                            error={!!volumeNameError}
                           />
-                          {volumeNameError && (
-                            <span className="text-body-sm text-[var(--color-state-danger)]">
-                              {volumeNameError}
-                            </span>
-                          )}
-                        </VStack>
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        You can use letters, numbers, and special characters (+=,.@-_), and the
-                        length must be between 2-64 characters.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                  <div className="py-6">
-                    <FormField required error={!!azError}>
-                      <FormField.Label>AZ (Availability zone)</FormField.Label>
-                      <FormField.Description>
-                        Select the availability zone for the volume.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <VStack gap={1}>
+                        </FormField.Control>
+                        <FormField.ErrorMessage>{volumeNameError}</FormField.ErrorMessage>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-64 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="py-6">
+                      <FormField required error={!!azError}>
+                        <FormField.Label>AZ (Availability zone)</FormField.Label>
+                        <FormField.Description>
+                          Select the availability zone for the volume.
+                        </FormField.Description>
+                        <FormField.Control>
                           <Select
                             value={availabilityZone}
                             onChange={(value) => {
@@ -726,395 +699,506 @@ export function CreateVolumePage() {
                             options={azOptions}
                             fullWidth
                           />
-                          {azError && (
-                            <span className="text-body-sm text-[var(--color-state-danger)]">
-                              {azError}
-                            </span>
-                          )}
-                        </VStack>
-                      </FormField.Control>
-                    </FormField>
-                  </div>
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                  <div className="py-6">
-                    <FormField>
-                      <FormField.Label>Description</FormField.Label>
-                      <FormField.Control>
-                        <Input
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          placeholder="Enter description"
-                          fullWidth
-                        />
-                      </FormField.Control>
-                      <FormField.HelperText>
-                        You can use letters, numbers, and special characters (+=,.@-_()), and
-                        maximum 255 characters.
-                      </FormField.HelperText>
-                    </FormField>
-                  </div>
-                </VStack>
-              </SectionCard.Content>
+                        </FormField.Control>
+                        <FormField.ErrorMessage>{azError}</FormField.ErrorMessage>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Enter description"
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('basic-info')}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['basic-info'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Volume name" value={volumeName || '-'} />
+                  <SectionCard.DataRow label="AZ" value={availabilityZone || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
+                </SectionCard.Content>
+              )}
             </SectionCard>
 
             {/* Source Section */}
-            <SectionCard>
-              <SectionCard.Header title={SECTION_LABELS['source']} />
-              <SectionCard.Content showDividers={false}>
-                <VStack gap={0}>
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                  <VStack gap={6} className="py-6">
-                    <FormField required>
-                      <FormField.Label>Volume source type</FormField.Label>
-                      <FormField.Description>
-                        Select the source for the new volume. You can create a blank volume or
-                        generate a volume from an image or an existing volume.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <RadioGroup
-                          value={sourceType}
-                          onChange={(value) => {
-                            setSourceType(value as SourceType);
-                            setSelectedImage([]);
-                            setSelectedSnapshot([]);
-                          }}
-                        >
-                          <Radio value="blank" label="Blank volume" />
-                          <Radio value="image" label="Image" />
-                          <Radio value="snapshot" label="Volume snapshot" />
-                        </RadioGroup>
-                      </FormField.Control>
-                    </FormField>
+            <SectionCard isActive={sectionStatus['source'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['source']}
+                showDivider={sectionStatus['source'] === 'done'}
+                actions={
+                  sectionStatus['source'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('source')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['source'] === 'active' && (
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <VStack gap={6} className="py-6">
+                      <FormField required>
+                        <FormField.Label>Volume source type</FormField.Label>
+                        <FormField.Description>
+                          Select the source for the new volume. You can create a blank volume or
+                          generate a volume from an image or an existing volume.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <RadioGroup
+                            value={sourceType}
+                            onChange={(value) => {
+                              setSourceType(value as SourceType);
+                              setSelectedImage([]);
+                              setSelectedSnapshot([]);
+                              setSourceError(null);
+                            }}
+                          >
+                            <Radio value="blank" label="Blank volume" />
+                            <Radio value="image" label="Image" />
+                            <Radio value="snapshot" label="Volume snapshot" />
+                          </RadioGroup>
+                        </FormField.Control>
+                      </FormField>
 
-                    {/* Image Selection */}
-                    {sourceType === 'image' && (
-                      <VStack gap={2} align="stretch">
-                        {/* OS Filter Tabs */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                          {[
-                            { id: 'all', label: 'Others', icon: IconDots },
-                            { id: 'ubuntu', label: 'Ubuntu', icon: IconUbuntu },
-                            { id: 'windows', label: 'Windows', icon: IconGrid },
-                            { id: 'rocky', label: 'Rocky', icon: IconRocky },
-                          ].map((tab) => {
-                            const isSelected = imageOsFilter === tab.id;
-                            const Icon = tab.icon;
-                            return (
-                              <button
-                                key={tab.id}
-                                onClick={() => setImageOsFilter(tab.id)}
-                                className={`
-                                      inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
-                                      ${
-                                        isSelected
-                                          ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
-                                          : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
-                                      }
-                                    `}
-                              >
-                                <Icon size={14} />
-                                <span>{tab.label}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search images by attribute"
-                            value={imageSearchQuery}
-                            onChange={(e) => setImageSearchQuery(e.target.value)}
-                            onClear={() => setImageSearchQuery('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-
-                        <Pagination
-                          currentPage={imageCurrentPage}
-                          totalPages={Math.ceil(filteredImages.length / 5)}
-                          onPageChange={setImageCurrentPage}
-                          totalItems={filteredImages.length}
-                          selectedCount={selectedImage.length}
-                        />
-
-                        <Table<ImageRow>
-                          columns={imageColumns}
-                          data={filteredImages.slice(
-                            (imageCurrentPage - 1) * 5,
-                            imageCurrentPage * 5
-                          )}
-                          rowKey="id"
-                          emptyMessage="No images found"
-                          selectable
-                          hideSelectAll
-                          selectedKeys={selectedImage}
-                          onSelectionChange={(keys) => {
-                            setSelectedImage(keys);
-                            setSourceError(null);
-                          }}
-                        />
-
-                        {/* Selection Indicator for Images */}
-                        <SelectionIndicator
-                          selectedItems={selectedImage.map((id) => {
-                            const image = mockImages.find((img) => img.id === id);
-                            return { id, label: image?.name || id };
-                          })}
-                          onRemove={(id) => setSelectedImage(selectedImage.filter((i) => i !== id))}
-                          error={!!sourceError}
-                          errorMessage={sourceError || undefined}
-                        />
-                      </VStack>
-                    )}
-
-                    {/* Snapshot Selection */}
-                    {sourceType === 'snapshot' && (
-                      <VStack gap={4} align="stretch">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search snapshots by attribute"
-                            value={snapshotSearchQuery}
-                            onChange={(e) => setSnapshotSearchQuery(e.target.value)}
-                            onClear={() => setSnapshotSearchQuery('')}
-                            size="sm"
-                            fullWidth
-                          />
-                        </div>
-
-                        <Pagination
-                          currentPage={snapshotCurrentPage}
-                          totalPages={Math.ceil(filteredSnapshots.length / 5)}
-                          onPageChange={setSnapshotCurrentPage}
-                          totalItems={filteredSnapshots.length}
-                          selectedCount={selectedSnapshot.length}
-                        />
-
-                        <Table<SnapshotRow>
-                          columns={snapshotColumns}
-                          data={filteredSnapshots.slice(
-                            (snapshotCurrentPage - 1) * 5,
-                            snapshotCurrentPage * 5
-                          )}
-                          rowKey="id"
-                          emptyMessage="No snapshots found"
-                          selectable
-                          hideSelectAll
-                          selectedKeys={selectedSnapshot}
-                          onSelectionChange={(keys) => {
-                            setSelectedSnapshot(keys);
-                            setSourceError(null);
-                          }}
-                        />
-
-                        {/* Selection Indicator for Snapshots */}
-                        <SelectionIndicator
-                          selectedItems={selectedSnapshot.map((id) => {
-                            const snapshot = mockSnapshots.find((s) => s.id === id);
-                            return { id, label: snapshot?.name || id };
-                          })}
-                          onRemove={(id) =>
-                            setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
-                          }
-                          error={!!sourceError}
-                          errorMessage={sourceError || undefined}
-                        />
-                      </VStack>
-                    )}
-                  </VStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Configuration Section */}
-            <SectionCard>
-              <SectionCard.Header title={SECTION_LABELS['configuration']} />
-              <SectionCard.Content showDividers={false}>
-                <VStack gap={0}>
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                  {/* Different content for snapshot vs other sources */}
-                  {sourceType === 'snapshot' ? (
-                    <>
-                      {/* Volume type - Read-only for snapshot */}
-                      <div className="py-6">
-                        <VStack gap={4} align="stretch">
-                          <VStack gap={3} align="start">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Volume type{' '}
-                              <span className="text-[var(--color-state-danger)]">*</span>
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Automatically set to the volume type of the source volume used to
-                              create the snapshot.
-                            </span>
-                          </VStack>
-                          <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {selectedSnapshot.length > 0
-                                ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])
-                                    ?.volumeType || '_DEFAULT_'
-                                : '_DEFAULT_'}
-                            </span>
-                          </div>
-                        </VStack>
-                      </div>
-
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-                      {/* Volume type capacity */}
-                      <div className="py-6">
-                        <FormField required>
-                          <FormField.Label>Volume type capacity</FormField.Label>
-                          <FormField.Description>
-                            Defines the size of the volume. Depending on the selected source, a
-                            minimum required size may apply.
-                          </FormField.Description>
-                          <FormField.Control>
-                            <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                              <div className="flex-1">
-                                <Slider
-                                  value={volumeCapacity}
-                                  onChange={setVolumeCapacity}
-                                  min={1}
-                                  max={1460}
-                                />
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <div>
-                                  <NumberInput
-                                    value={volumeCapacity}
-                                    onChange={(val) => setVolumeCapacity(val ?? 64)}
-                                    min={1}
-                                    max={1460}
-                                    width="sm"
-                                  />
-                                </div>
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
-                              </div>
-                            </div>
-                          </FormField.Control>
-                          <FormField.HelperText>1-1460 GiB</FormField.HelperText>
-                        </FormField>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* Standard Volume type selection for blank/image sources */}
-                      <div className="py-6">
-                        <FormField required>
-                          <FormField.Label>Volume type</FormField.Label>
-                          <FormField.Description>
-                            Select the volume type that determines performance characteristics for
-                            the volume.
-                          </FormField.Description>
-                        </FormField>
-                      </div>
-
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-                      <div className="py-6">
+                      {/* Image Selection */}
+                      {sourceType === 'image' && (
                         <VStack gap={2} align="stretch">
+                          {/* OS Filter Tabs */}
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
+                            {[
+                              { id: 'all', label: 'Others', icon: IconDots },
+                              { id: 'ubuntu', label: 'Ubuntu', icon: IconUbuntu },
+                              { id: 'windows', label: 'Windows', icon: IconGrid },
+                              { id: 'rocky', label: 'Rocky', icon: IconRocky },
+                            ].map((tab) => {
+                              const isSelected = imageOsFilter === tab.id;
+                              const Icon = tab.icon;
+                              return (
+                                <button
+                                  key={tab.id}
+                                  onClick={() => setImageOsFilter(tab.id)}
+                                  className={`
+                                        inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
+                                        ${
+                                          isSelected
+                                            ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+                                            : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
+                                        }
+                                      `}
+                                >
+                                  <Icon size={14} />
+                                  <span>{tab.label}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
-                              placeholder="Search volume types"
-                              value={volumeTypeSearchQuery}
-                              onChange={(e) => setVolumeTypeSearchQuery(e.target.value)}
-                              onClear={() => setVolumeTypeSearchQuery('')}
+                              placeholder="Search images by attributes"
+                              value={imageSearchQuery}
+                              onChange={(e) => setImageSearchQuery(e.target.value)}
+                              onClear={() => setImageSearchQuery('')}
                               size="sm"
                               fullWidth
                             />
                           </div>
 
                           <Pagination
-                            currentPage={volumeTypeCurrentPage}
-                            totalPages={Math.ceil(filteredVolumeTypes.length / 5)}
-                            onPageChange={setVolumeTypeCurrentPage}
-                            totalItems={filteredVolumeTypes.length}
-                            selectedCount={selectedVolumeType.length}
+                            currentPage={imageCurrentPage}
+                            totalPages={Math.ceil(filteredImages.length / 5)}
+                            onPageChange={setImageCurrentPage}
+                            totalItems={filteredImages.length}
+                            selectedCount={selectedImage.length}
                           />
 
-                          <Table<VolumeTypeRow>
-                            columns={volumeTypeColumns}
-                            data={filteredVolumeTypes.slice(
-                              (volumeTypeCurrentPage - 1) * 5,
-                              volumeTypeCurrentPage * 5
+                          <Table<ImageRow>
+                            columns={imageColumns}
+                            data={filteredImages.slice(
+                              (imageCurrentPage - 1) * 5,
+                              imageCurrentPage * 5
                             )}
                             rowKey="id"
-                            emptyMessage="No volume types found"
+                            emptyMessage="No images found"
                             selectable
-                            selectedKeys={selectedVolumeType}
-                            onSelectionChange={setSelectedVolumeType}
+                            hideSelectAll
+                            selectedKeys={selectedImage}
+                            onSelectionChange={(keys) => {
+                              setSelectedImage(keys);
+                              setSourceError(null);
+                            }}
                           />
 
-                          {/* Selection Indicator for Volume Types */}
+                          {/* Selection Indicator for Images */}
                           <SelectionIndicator
-                            selectedItems={selectedVolumeType.map((id) => {
-                              const volumeType = mockVolumeTypes.find((v) => v.id === id);
-                              return { id, label: volumeType?.name || id };
+                            selectedItems={selectedImage.map((id) => {
+                              const image = mockImages.find((img) => img.id === id);
+                              return { id, label: image?.name || id };
                             })}
                             onRemove={(id) =>
-                              setSelectedVolumeType(selectedVolumeType.filter((i) => i !== id))
+                              setSelectedImage(selectedImage.filter((i) => i !== id))
                             }
+                            error={!!sourceError}
+                            errorMessage={sourceError || undefined}
                           />
                         </VStack>
-                      </div>
+                      )}
 
-                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                      {/* Snapshot Selection */}
+                      {sourceType === 'snapshot' && (
+                        <VStack gap={4} align="stretch">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              placeholder="Search snapshots by attributes"
+                              value={snapshotSearchQuery}
+                              onChange={(e) => setSnapshotSearchQuery(e.target.value)}
+                              onClear={() => setSnapshotSearchQuery('')}
+                              size="sm"
+                              fullWidth
+                            />
+                          </div>
 
-                      <div className="py-6">
-                        <FormField required>
-                          <FormField.Label>Volume type capacity</FormField.Label>
-                          <FormField.Description>
-                            Defines the size of the volume. Depending on the selected source, and
-                            minimum required size may apply.
-                          </FormField.Description>
-                          <FormField.Control>
-                            <div className="flex items-center gap-4 w-full">
-                              <div className="flex-1">
-                                <Slider
-                                  value={volumeCapacity}
-                                  onChange={setVolumeCapacity}
-                                  min={1}
-                                  max={1000}
-                                />
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div>
-                                  <NumberInput
+                          <Pagination
+                            currentPage={snapshotCurrentPage}
+                            totalPages={Math.ceil(filteredSnapshots.length / 5)}
+                            onPageChange={setSnapshotCurrentPage}
+                            totalItems={filteredSnapshots.length}
+                            selectedCount={selectedSnapshot.length}
+                          />
+
+                          <Table<SnapshotRow>
+                            columns={snapshotColumns}
+                            data={filteredSnapshots.slice(
+                              (snapshotCurrentPage - 1) * 5,
+                              snapshotCurrentPage * 5
+                            )}
+                            rowKey="id"
+                            emptyMessage="No snapshots found"
+                            selectable
+                            hideSelectAll
+                            selectedKeys={selectedSnapshot}
+                            onSelectionChange={(keys) => {
+                              setSelectedSnapshot(keys);
+                              setSourceError(null);
+                            }}
+                          />
+
+                          {/* Selection Indicator for Snapshots */}
+                          <SelectionIndicator
+                            selectedItems={selectedSnapshot.map((id) => {
+                              const snapshot = mockSnapshots.find((s) => s.id === id);
+                              return { id, label: snapshot?.name || id };
+                            })}
+                            onRemove={(id) =>
+                              setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
+                            }
+                            error={!!sourceError}
+                            errorMessage={sourceError || undefined}
+                          />
+                        </VStack>
+                      )}
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('source')}>
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['source'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Source type"
+                    value={
+                      sourceType === 'blank'
+                        ? 'Blank volume'
+                        : sourceType === 'image'
+                          ? 'Image'
+                          : 'Volume snapshot'
+                    }
+                  />
+                  {sourceType === 'image' && selectedImage.length > 0 && (
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={
+                        mockImages.find((img) => img.id === selectedImage[0])?.name ||
+                        selectedImage[0]
+                      }
+                    />
+                  )}
+                  {sourceType === 'snapshot' && selectedSnapshot.length > 0 && (
+                    <SectionCard.DataRow
+                      label="Snapshot"
+                      value={
+                        mockSnapshots.find((s) => s.id === selectedSnapshot[0])?.name ||
+                        selectedSnapshot[0]
+                      }
+                    />
+                  )}
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+
+            {/* Configuration Section */}
+            <SectionCard isActive={sectionStatus['configuration'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['configuration']}
+                showDivider={sectionStatus['configuration'] === 'done'}
+                actions={
+                  sectionStatus['configuration'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('configuration')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['configuration'] === 'active' && (
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Different content for snapshot vs other sources */}
+                    {sourceType === 'snapshot' ? (
+                      <>
+                        {/* Volume type - Read-only for snapshot */}
+                        <div className="py-6">
+                          <VStack gap={4} align="stretch">
+                            <VStack gap={3} align="start">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Volume type{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Automatically set to the volume type of the source volume used to
+                                create the snapshot.
+                              </span>
+                            </VStack>
+                            <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {selectedSnapshot.length > 0
+                                  ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])
+                                      ?.volumeType || '_DEFAULT_'
+                                  : '_DEFAULT_'}
+                              </span>
+                            </div>
+                          </VStack>
+                        </div>
+
+                        {/* Volume type capacity */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Volume type capacity</FormField.Label>
+                            <FormField.Description>
+                              Defines the size of the volume. Depending on the selected source, a
+                              minimum required size may apply.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
+                                <div className="flex-1">
+                                  <Slider
                                     value={volumeCapacity}
-                                    onChange={(val) => setVolumeCapacity(val ?? 10)}
+                                    onChange={setVolumeCapacity}
                                     min={1}
-                                    max={1000}
-                                    width="sm"
+                                    max={1460}
                                   />
                                 </div>
-                                <span className="text-body-lg text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
+                                <div className="flex items-center gap-1.5">
+                                  <div>
+                                    <NumberInput
+                                      value={volumeCapacity}
+                                      onChange={(val) => setVolumeCapacity(val ?? 64)}
+                                      min={1}
+                                      max={1460}
+                                      width="sm"
+                                    />
+                                  </div>
+                                  <span className="text-body-md text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
+                                </div>
                               </div>
+                            </FormField.Control>
+                            <FormField.HelperText>1-1460 GiB</FormField.HelperText>
+                          </FormField>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Standard Volume type selection for blank/image sources */}
+                        <div className="py-6">
+                          <VStack gap={3} align="stretch">
+                            <FormField required>
+                              <FormField.Label>Volume type</FormField.Label>
+                              <FormField.Description>
+                                Select the volume type that determines performance characteristics
+                                for the volume.
+                              </FormField.Description>
+                            </FormField>
+
+                            <div className="w-[var(--search-input-width)]">
+                              <SearchInput
+                                placeholder="Search volume types by attributes"
+                                value={volumeTypeSearchQuery}
+                                onChange={(e) => setVolumeTypeSearchQuery(e.target.value)}
+                                onClear={() => setVolumeTypeSearchQuery('')}
+                                size="sm"
+                                fullWidth
+                              />
                             </div>
-                          </FormField.Control>
-                          <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
-                        </FormField>
-                      </div>
-                    </>
-                  )}
-                </VStack>
-              </SectionCard.Content>
+
+                            <Pagination
+                              currentPage={volumeTypeCurrentPage}
+                              totalPages={Math.ceil(filteredVolumeTypes.length / 5)}
+                              onPageChange={setVolumeTypeCurrentPage}
+                              totalItems={filteredVolumeTypes.length}
+                              selectedCount={selectedVolumeType.length}
+                            />
+
+                            <Table<VolumeTypeRow>
+                              columns={volumeTypeColumns}
+                              data={filteredVolumeTypes.slice(
+                                (volumeTypeCurrentPage - 1) * 5,
+                                volumeTypeCurrentPage * 5
+                              )}
+                              rowKey="id"
+                              emptyMessage="No volume types found"
+                              selectable
+                              selectedKeys={selectedVolumeType}
+                              onSelectionChange={(keys) => {
+                                setSelectedVolumeType(keys);
+                                setVolumeTypeError(null);
+                              }}
+                            />
+
+                            {/* Selection Indicator for Volume Types */}
+                            <SelectionIndicator
+                              selectedItems={selectedVolumeType.map((id) => {
+                                const volumeType = mockVolumeTypes.find((v) => v.id === id);
+                                return { id, label: volumeType?.name || id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedVolumeType(selectedVolumeType.filter((i) => i !== id))
+                              }
+                              error={!!volumeTypeError}
+                              errorMessage={volumeTypeError || undefined}
+                            />
+                          </VStack>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Volume type capacity</FormField.Label>
+                            <FormField.Description>
+                              Defines the size of the volume. Depending on the selected source, and
+                              minimum required size may apply.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <div className="flex items-center gap-4 w-1/2">
+                                <div className="flex-1">
+                                  <Slider
+                                    value={volumeCapacity}
+                                    onChange={setVolumeCapacity}
+                                    min={1}
+                                    max={1000}
+                                  />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div>
+                                    <NumberInput
+                                      value={volumeCapacity}
+                                      onChange={(val) => setVolumeCapacity(val ?? 10)}
+                                      min={1}
+                                      max={1000}
+                                      width="sm"
+                                    />
+                                  </div>
+                                  <span className="text-body-lg text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
+                                </div>
+                              </div>
+                            </FormField.Control>
+                            <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
+                          </FormField>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <HStack justify="end" className="pt-3">
+                      <Button variant="primary" onClick={() => goToNextSection('configuration')}>
+                        Done
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['configuration'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Volume type"
+                    value={
+                      sourceType === 'snapshot'
+                        ? (selectedSnapshot.length > 0
+                            ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])?.volumeType
+                            : '_DEFAULT_') || '_DEFAULT_'
+                        : selectedVolumeType.length > 0
+                          ? mockVolumeTypes.find((v) => v.id === selectedVolumeType[0])?.name ||
+                            selectedVolumeType[0]
+                          : '-'
+                    }
+                  />
+                  <SectionCard.DataRow label="Capacity" value={`${volumeCapacity} GiB`} />
+                </SectionCard.Content>
+              )}
             </SectionCard>
           </VStack>
-        </div>
 
-        {/* Right Column - Summary Sidebar */}
-        <SummarySidebar
-          sectionStatus={sectionStatus}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
-      </div>
+          {/* Right Column - Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
     </PageShell>
   );
 }

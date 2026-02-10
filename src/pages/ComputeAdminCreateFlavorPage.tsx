@@ -356,7 +356,7 @@ export function ComputeAdminCreateFlavorPage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={sectionStatus['basic-info'] === 'active'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -558,13 +558,12 @@ export function ComputeAdminCreateFlavorPage() {
               )}
               {sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Flavor name" value={flavorName || '-'} showDivider />
+                  <SectionCard.DataRow label="Flavor name" value={flavorName || '-'} />
                   <SectionCard.DataRow
                     label="Category"
                     value={category === 'bare-metal' ? 'Bare Metal' : category.toUpperCase()}
-                    showDivider
                   />
-                  <SectionCard.DataRow label="Public" value={isPublic ? 'On' : 'Off'} showDivider />
+                  <SectionCard.DataRow label="Public" value={isPublic ? 'On' : 'Off'} />
                   {!isPublic && (
                     <SectionCard.DataRow
                       label="Tenants"
@@ -573,7 +572,6 @@ export function ComputeAdminCreateFlavorPage() {
                           ? 'None selected'
                           : `${selectedTenants.length} tenant${selectedTenants.length > 1 ? 's' : ''} selected`
                       }
-                      showDivider
                     />
                   )}
                 </SectionCard.Content>
@@ -584,7 +582,7 @@ export function ComputeAdminCreateFlavorPage() {
             <SectionCard isActive={sectionStatus['resources'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['resources']}
-                showDivider={sectionStatus['resources'] === 'active'}
+                showDivider={sectionStatus['resources'] === 'done'}
                 actions={
                   sectionStatus['resources'] === 'done' && (
                     <Button
@@ -706,23 +704,11 @@ export function ComputeAdminCreateFlavorPage() {
               )}
               {sectionStatus['resources'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="vCPU" value={`${vcpu ?? 0} cores`} showDivider />
-                  <SectionCard.DataRow label="RAM" value={`${ram ?? 0} GiB`} showDivider />
-                  <SectionCard.DataRow
-                    label="Root disk"
-                    value={`${rootDisk ?? 0} GiB`}
-                    showDivider
-                  />
-                  <SectionCard.DataRow
-                    label="Ephemeral disk"
-                    value={`${ephemeralDisk ?? 0} GiB`}
-                    showDivider
-                  />
-                  <SectionCard.DataRow
-                    label="Swap disk"
-                    value={`${swapDisk ?? 0} MiB`}
-                    showDivider
-                  />
+                  <SectionCard.DataRow label="vCPU" value={`${vcpu ?? 0} cores`} />
+                  <SectionCard.DataRow label="RAM" value={`${ram ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Root disk" value={`${rootDisk ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Ephemeral disk" value={`${ephemeralDisk ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Swap disk" value={`${swapDisk ?? 0} MiB`} />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -731,7 +717,7 @@ export function ComputeAdminCreateFlavorPage() {
             <SectionCard isActive={sectionStatus['metadata'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['metadata']}
-                showDivider={sectionStatus['metadata'] === 'active'}
+                showDivider={sectionStatus['metadata'] === 'done'}
                 actions={
                   sectionStatus['metadata'] === 'done' && (
                     <Button
@@ -1013,15 +999,9 @@ export function ComputeAdminCreateFlavorPage() {
                   <SectionCard.DataRow
                     label="Metadata count"
                     value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`}
-                    showDivider
                   />
                   {selectedMetadata.slice(0, 3).map((item, index) => (
-                    <SectionCard.DataRow
-                      key={index}
-                      label={item.key}
-                      value={item.value || '-'}
-                      showDivider
-                    />
+                    <SectionCard.DataRow key={index} label={item.key} value={item.value || '-'} />
                   ))}
                   {selectedMetadata.length > 3 && (
                     <span className="text-body-md text-[var(--color-text-muted)]">

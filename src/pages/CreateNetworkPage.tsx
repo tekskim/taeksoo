@@ -229,7 +229,7 @@ export default function CreateNetworkPage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={false}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -396,18 +396,10 @@ export default function CreateNetworkPage() {
               )}
               {sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Network name" value={networkName} showDivider />
-                  <SectionCard.DataRow
-                    label="Admin state"
-                    value={adminState ? 'Up' : 'Down'}
-                    showDivider
-                  />
-                  <SectionCard.DataRow
-                    label="Port security"
-                    value={portSecurity ? 'On' : 'Off'}
-                    showDivider
-                  />
-                  {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} showDivider />}
+                  <SectionCard.DataRow label="Network name" value={networkName} />
+                  <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
+                  <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
+                  {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
                   {description && <SectionCard.DataRow label="Description" value={description} />}
                 </SectionCard.Content>
               )}
@@ -417,7 +409,7 @@ export default function CreateNetworkPage() {
             <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['subnet']}
-                showDivider={false}
+                showDivider={sectionStatus['subnet'] === 'done'}
                 actions={
                   sectionStatus['subnet'] === 'done' && (
                     <Button
@@ -471,16 +463,20 @@ export default function CreateNetworkPage() {
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* CIDR */}
                         <div className="py-6">
-                          <FormField required>
+                          <FormField required error={!!cidrError}>
                             <FormField.Label>CIDR</FormField.Label>
                             <FormField.Control>
                               <Input
                                 placeholder="e.g. 192.168.0.0/24"
                                 value={cidr}
-                                onChange={(e) => setCidr(e.target.value)}
+                                onChange={(e) => {
+                                  setCidr(e.target.value);
+                                  setCidrError(null);
+                                }}
                                 fullWidth
                               />
                             </FormField.Control>
+                            <FormField.ErrorMessage>{cidrError}</FormField.ErrorMessage>
                             <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
                           </FormField>
                         </div>
@@ -594,12 +590,16 @@ export default function CreateNetworkPage() {
                       <Button
                         variant="primary"
                         onClick={() => {
+                          if (createSubnet && !cidr.trim()) {
+                            setCidrError('Please enter a CIDR.');
+                            return;
+                          }
+                          setCidrError(null);
                           setSectionStatus((prev) => ({
                             ...prev,
                             subnet: 'done',
                           }));
                         }}
-                        disabled={createSubnet && !cidr.trim()}
                       >
                         Done
                       </Button>
@@ -609,25 +609,18 @@ export default function CreateNetworkPage() {
               )}
               {sectionStatus['subnet'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Create subnet"
-                    value={createSubnet ? 'Yes' : 'No'}
-                    showDivider
-                  />
-                  {createSubnet && (
-                    <>
-                      {subnetName && (
-                        <SectionCard.DataRow label="Subnet name" value={subnetName} showDivider />
-                      )}
-                      <SectionCard.DataRow label="CIDR" value={cidr} showDivider />
-                      <SectionCard.DataRow
-                        label="Gateway"
-                        value={gateway ? gatewayIp || 'Auto' : 'Off'}
-                        showDivider
-                      />
-                      <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />
-                    </>
+                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
+                  {createSubnet && subnetName && (
+                    <SectionCard.DataRow label="Subnet name" value={subnetName} />
                   )}
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow
+                      label="Gateway"
+                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                    />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
                 </SectionCard.Content>
               )}
             </SectionCard>
