@@ -9,6 +9,7 @@ import {
   TopBar,
   Input,
   SectionCard,
+  SearchInput,
   Checkbox,
   Select,
   FormField,
@@ -22,7 +23,6 @@ import {
   IconCirclePlus,
   IconChevronDown,
   IconChevronRight,
-  IconSearch,
   IconX,
 } from '@tabler/icons-react';
 
@@ -756,9 +756,9 @@ function PolicyEditorSection({
         }
       />
       <SectionCard.Content showDividers={false}>
-        <VStack gap={6}>
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        {/* Divider */}
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        <VStack gap={4} className="py-6">
           {/* Permissions Label */}
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
@@ -817,7 +817,7 @@ function PolicyEditorSection({
                         { value: 'compute', label: 'compute' },
                         { value: 'container', label: 'container' },
                       ]}
-                      size="sm"
+                      size="md"
                       fullWidth
                     />
                     <span className="text-body-md text-[var(--color-text-default)]">:</span>
@@ -831,7 +831,7 @@ function PolicyEditorSection({
                         }
                       }}
                       options={[{ value: '*all', label: '*all' }]}
-                      size="sm"
+                      size="md"
                       fullWidth
                     />
                     <span className="text-body-md text-[var(--color-text-default)]">:</span>
@@ -845,7 +845,7 @@ function PolicyEditorSection({
                         }
                       }}
                       options={[{ value: '*all', label: '*all' }]}
-                      size="sm"
+                      size="md"
                       fullWidth
                     />
                     <span className="text-body-md text-[var(--color-text-default)]">:</span>
@@ -859,7 +859,7 @@ function PolicyEditorSection({
                         }
                       }}
                       options={[{ value: '*all', label: '*all' }]}
-                      size="sm"
+                      size="md"
                       fullWidth
                     />
                   </div>
@@ -889,19 +889,14 @@ function PolicyEditorSection({
 
                   {/* Search and All Actions */}
                   <div className="flex items-center gap-2">
-                    <div className="relative w-[var(--search-input-width)]">
-                      <input
-                        type="text"
-                        placeholder="Search actions"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full h-8 pl-3 pr-8 text-body-sm bg-white border border-[var(--color-border-strong)] rounded-[6px] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)]"
-                      />
-                      <IconSearch
-                        size={16}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-default)]"
-                      />
-                    </div>
+                    <SearchInput
+                      placeholder="Search actions by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <label className="flex items-center gap-1.5 cursor-pointer">
                       <Checkbox
@@ -1037,9 +1032,10 @@ function PolicyEditorSection({
           {/* Add Permission Button */}
           <Button
             variant="secondary"
+            size="sm"
             leftIcon={<IconCirclePlus size={12} />}
             onClick={addPermission}
-            className="text-[var(--color-action-primary)]"
+            className="w-fit"
           >
             Add Permission
           </Button>

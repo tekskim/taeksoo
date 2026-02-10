@@ -11,6 +11,7 @@ import {
   SectionCard,
   Pagination,
   SelectionIndicator,
+  SearchInput,
   Chip,
   Checkbox,
   FormField,
@@ -22,7 +23,6 @@ import {
   IconEdit,
   IconCheck,
   IconExternalLink,
-  IconSearch,
   IconChevronDown,
   IconChevronRight,
 } from '@tabler/icons-react';
@@ -748,9 +748,9 @@ function AddPoliciesSection({
         }
       />
       <SectionCard.Content showDividers={false}>
-        <VStack gap={0}>
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        {/* Divider */}
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        <VStack gap={0} className="py-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)]">Policies</span>
@@ -764,36 +764,32 @@ function AddPoliciesSection({
 
           {/* Search */}
           <div className="mt-4">
-            <div className="relative w-[var(--search-input-width)]">
-              <input
-                type="text"
-                placeholder="Search policies by attributes"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full h-8 pl-3 pr-9 text-body-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
-              />
-              <IconSearch
-                size={14}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
-              />
-            </div>
+            <SearchInput
+              placeholder="Search policies by attributes"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              onClear={() => {
+                setSearchQuery('');
+                setCurrentPage(1);
+              }}
+              size="sm"
+              className="w-[var(--search-input-width)]"
+            />
           </div>
 
           {/* Pagination above table */}
           {totalPages > 0 && (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
+                totalItems={filteredPolicies.length}
+                selectedCount={selectedPolicies.length}
               />
-              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                {filteredPolicies.length} items
-              </span>
             </div>
           )}
 
@@ -900,17 +896,19 @@ function AddPoliciesSection({
           </div>
 
           {/* Selection indicator */}
-          <SelectionIndicator
-            selectedItems={selectedPolicies.map((policyId) => {
-              const policy = mockPolicies.find((p) => p.id === policyId);
-              return { id: policyId, label: policy?.name || policyId };
-            })}
-            onRemove={(id) => {
-              onSelectionChange(selectedPolicies.filter((pId) => pId !== id));
-            }}
-            error={!!policiesError}
-            errorMessage={policiesError || undefined}
-          />
+          <div className="mt-2">
+            <SelectionIndicator
+              selectedItems={selectedPolicies.map((policyId) => {
+                const policy = mockPolicies.find((p) => p.id === policyId);
+                return { id: policyId, label: policy?.name || policyId };
+              })}
+              onRemove={(id) => {
+                onSelectionChange(selectedPolicies.filter((pId) => pId !== id));
+              }}
+              error={!!policiesError}
+              errorMessage={policiesError || undefined}
+            />
+          </div>
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (
