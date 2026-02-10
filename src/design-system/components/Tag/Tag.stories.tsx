@@ -40,7 +40,7 @@ export const Default: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag variant="default">Default</Tag>
       <Tag variant="primary">Primary</Tag>
       <Tag variant="success">Success</Tag>
@@ -53,7 +53,7 @@ export const Variants: Story = {
 
 export const OutlineVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag variant="default" outline>
         Default
       </Tag>
@@ -82,7 +82,7 @@ export const OutlineVariants: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-2)]">
       <Tag size="sm">Small</Tag>
       <Tag size="md">Medium</Tag>
       <Tag size="lg">Large</Tag>
@@ -96,7 +96,7 @@ export const Sizes: Story = {
 
 export const Rounded: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag rounded>Default</Tag>
       <Tag variant="primary" rounded>
         Primary
@@ -117,7 +117,7 @@ export const Rounded: Story = {
 
 export const WithIcon: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag icon={<IconTag size={12} />}>Category</Tag>
       <Tag variant="primary" icon={<IconUser size={12} />}>
         User
@@ -158,7 +158,7 @@ export const Closable: Story = {
 
 export const ClosableVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag variant="default" closable onClose={() => {}}>
         Default
       </Tag>
@@ -190,7 +190,7 @@ export const Clickable: Story = {
     const tags = ['react', 'vue', 'angular', 'svelte'];
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <TagGroup>
           {tags.map((tag) => (
             <Tag
@@ -217,7 +217,7 @@ export const Clickable: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
       <Tag disabled>Disabled</Tag>
       <Tag variant="primary" disabled>
         Disabled Primary
@@ -235,9 +235,11 @@ export const Disabled: Story = {
 
 export const TagGroupExample: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Small Gap</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Small Gap
+        </h4>
         <TagGroup gap="sm">
           <Tag>Tag 1</Tag>
           <Tag>Tag 2</Tag>
@@ -245,7 +247,9 @@ export const TagGroupExample: Story = {
         </TagGroup>
       </div>
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Medium Gap (default)</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Medium Gap (default)
+        </h4>
         <TagGroup gap="md">
           <Tag>Tag 1</Tag>
           <Tag>Tag 2</Tag>
@@ -253,7 +257,9 @@ export const TagGroupExample: Story = {
         </TagGroup>
       </div>
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Large Gap</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Large Gap
+        </h4>
         <TagGroup gap="lg">
           <Tag>Tag 1</Tag>
           <Tag>Tag 2</Tag>
@@ -270,8 +276,10 @@ export const TagGroupExample: Story = {
 
 export const SkillTags: Story = {
   render: () => (
-    <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Skills</h3>
+    <div className="p-[var(--primitive-spacing-4)] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-[var(--primitive-spacing-3)]">
+        Skills
+      </h3>
       <TagGroup>
         <Tag variant="primary">JavaScript</Tag>
         <Tag variant="primary">TypeScript</Tag>
@@ -287,20 +295,20 @@ export const SkillTags: Story = {
 
 export const StatusTags: Story = {
   render: () => (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <span className="text-body-md text-[var(--color-text-default)] w-24">Production:</span>
         <Tag variant="success" size="sm">
           Healthy
         </Tag>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <span className="text-body-md text-[var(--color-text-default)] w-24">Staging:</span>
         <Tag variant="warning" size="sm">
           Deploying
         </Tag>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <span className="text-body-md text-[var(--color-text-default)] w-24">Development:</span>
         <Tag variant="danger" size="sm">
           Failed
@@ -319,7 +327,7 @@ export const FilterTags: Story = {
     };
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
         <div className="text-label-sm text-[var(--color-text-subtle)]">Active Filters</div>
         <TagGroup>
           {filters.map((filter) => (

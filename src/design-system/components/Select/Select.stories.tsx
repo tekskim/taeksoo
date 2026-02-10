@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Select } from './Select';
+import { FormField } from '../FormField';
 import { useState } from 'react';
 
 const defaultOptions = [
@@ -52,19 +53,17 @@ const meta: Meta<typeof Select> = {
 
 ### 예시
 \`\`\`tsx
-import { Select } from '@thaki/tds';
+import { Select, FormField } from '@thaki/tds';
 
 const options = [
   { value: 'kr', label: '대한민국' },
   { value: 'us', label: 'United States' },
 ];
 
-// 기본 사용
-<Select 
-  label="국가"
-  options={options}
-  placeholder="선택하세요"
-/>
+// FormField와 함께 사용
+<FormField label="국가">
+  <Select options={options} placeholder="선택하세요" fullWidth />
+</FormField>
 
 // Controlled
 <Select 
@@ -181,68 +180,62 @@ export const Default: Story = {
   },
 };
 
-// With Label
+// With Label (FormField 사용)
 export const WithLabel: Story = {
-  args: {
-    label: 'Category',
-    options: defaultOptions,
-    placeholder: 'Select category',
-  },
+  render: () => (
+    <FormField label="Category">
+      <Select options={defaultOptions} placeholder="Select category" fullWidth />
+    </FormField>
+  ),
 };
 
-// Required Field
+// Required Field (FormField 사용)
 export const Required: Story = {
-  args: {
-    label: 'Country',
-    options: countryOptions,
-    placeholder: 'Select country',
-    required: true,
-  },
+  render: () => (
+    <FormField label="Country" required>
+      <Select options={countryOptions} placeholder="Select country" fullWidth />
+    </FormField>
+  ),
 };
 
-// With Helper Text
+// With Helper Text (FormField 사용)
 export const WithHelperText: Story = {
-  args: {
-    label: 'Status',
-    options: statusOptions,
-    placeholder: 'Select status',
-    helperText: 'Choose the current status of the item',
-  },
+  render: () => (
+    <FormField label="Status" helperText="Choose the current status of the item">
+      <Select options={statusOptions} placeholder="Select status" fullWidth />
+    </FormField>
+  ),
 };
 
-// Error State
+// Error State (FormField 사용)
 export const WithError: Story = {
-  args: {
-    label: 'Category',
-    options: defaultOptions,
-    placeholder: 'Select category',
-    error: 'Please select a category',
-  },
+  render: () => (
+    <FormField label="Category" errorMessage="Please select a category" error>
+      <Select options={defaultOptions} placeholder="Select category" fullWidth />
+    </FormField>
+  ),
 };
 
-// With Default Value
+// With Default Value (FormField 사용)
 export const WithDefaultValue: Story = {
-  args: {
-    label: 'Country',
-    options: countryOptions,
-    defaultValue: 'kr',
-  },
+  render: () => (
+    <FormField label="Country">
+      <Select options={countryOptions} defaultValue="kr" fullWidth />
+    </FormField>
+  ),
 };
 
-// Controlled
+// Controlled (FormField 사용)
 export const Controlled: Story = {
   render: function ControlledSelect() {
     const [value, setValue] = useState('option2');
 
     return (
-      <div className="flex flex-col gap-4">
-        <Select
-          label="Controlled Select"
-          options={defaultOptions}
-          value={value}
-          onChange={setValue}
-        />
-        <p className="text-sm text-[var(--color-text-muted)]">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+        <FormField label="Controlled Select">
+          <Select options={defaultOptions} value={value} onChange={setValue} fullWidth />
+        </FormField>
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Selected value: <strong>{value || 'None'}</strong>
         </p>
       </div>
@@ -250,31 +243,34 @@ export const Controlled: Story = {
   },
 };
 
-// Clearable
+// Clearable (FormField 사용)
 export const Clearable: Story = {
-  args: {
-    label: 'Clearable Select',
-    options: defaultOptions,
-    defaultValue: 'option1',
-    clearable: true,
-    clearLabel: 'Clear selection',
-  },
+  render: () => (
+    <FormField label="Clearable Select">
+      <Select
+        options={defaultOptions}
+        defaultValue="option1"
+        clearable
+        clearLabel="Clear selection"
+        fullWidth
+      />
+    </FormField>
+  ),
 };
 
-// With Disabled Options
+// With Disabled Options (FormField 사용)
 export const WithDisabledOptions: Story = {
-  args: {
-    label: 'Status',
-    options: statusOptions,
-    placeholder: 'Select status',
-    helperText: '"Archived" option is disabled',
-  },
+  render: () => (
+    <FormField label="Status" helperText={'"Archived" option is disabled'}>
+      <Select options={statusOptions} placeholder="Select status" fullWidth />
+    </FormField>
+  ),
 };
 
 // Sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Select size="sm" options={defaultOptions} placeholder="Small (sm)" />
       <Select size="md" options={defaultOptions} placeholder="Medium (md)" />
     </div>
@@ -284,7 +280,7 @@ export const Sizes: Story = {
 // Width Variants
 export const Widths: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Select width="xs" options={defaultOptions} placeholder="XS (80px)" />
       <Select width="sm" options={defaultOptions} placeholder="Small (160px)" />
       <Select width="md" options={defaultOptions} placeholder="Medium (240px)" />
@@ -295,83 +291,62 @@ export const Widths: Story = {
   ),
 };
 
-// Full Width
+// Full Width (FormField 사용)
 export const FullWidth: Story = {
-  args: {
-    label: 'Full Width Select',
-    options: defaultOptions,
-    placeholder: 'This select takes full width',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-// Disabled
-export const Disabled: Story = {
-  args: {
-    label: 'Disabled Select',
-    options: defaultOptions,
-    placeholder: 'Cannot select',
-    disabled: true,
-  },
-};
-
-// Form Example
-export const FormExample: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-[320px]">
-      <Select
-        label="Country"
-        options={countryOptions}
-        placeholder="Select country"
-        required
-        fullWidth
-      />
-      <Select
-        label="Status"
-        options={statusOptions}
-        placeholder="Select status"
-        helperText="Choose the current status"
-        fullWidth
-      />
-      <Select
-        label="Category"
-        options={defaultOptions}
-        placeholder="Select category"
-        clearable
-        fullWidth
-      />
+    <div style={{ width: '400px' }}>
+      <FormField label="Full Width Select">
+        <Select options={defaultOptions} placeholder="This select takes full width" fullWidth />
+      </FormField>
     </div>
   ),
 };
 
-// All States
+// Disabled (FormField 사용)
+export const Disabled: Story = {
+  render: () => (
+    <FormField label="Disabled Select">
+      <Select options={defaultOptions} placeholder="Cannot select" disabled fullWidth />
+    </FormField>
+  ),
+};
+
+// Form Example (FormField 사용)
+export const FormExample: Story = {
+  render: () => (
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-[320px]">
+      <FormField label="Country" required>
+        <Select options={countryOptions} placeholder="Select country" fullWidth />
+      </FormField>
+      <FormField label="Status" helperText="Choose the current status">
+        <Select options={statusOptions} placeholder="Select status" fullWidth />
+      </FormField>
+      <FormField label="Category">
+        <Select options={defaultOptions} placeholder="Select category" clearable fullWidth />
+      </FormField>
+    </div>
+  ),
+};
+
+// All States (FormField 사용)
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-[320px]">
-      <Select label="Default" options={defaultOptions} placeholder="Default state" fullWidth />
-      <Select label="With Value" options={defaultOptions} defaultValue="option1" fullWidth />
-      <Select label="Disabled" options={defaultOptions} placeholder="Disabled" disabled fullWidth />
-      <Select
-        label="Error"
-        options={defaultOptions}
-        placeholder="Select option"
-        error="This field has an error"
-        fullWidth
-      />
-      <Select
-        label="Clearable with Value"
-        options={defaultOptions}
-        defaultValue="option2"
-        clearable
-        fullWidth
-      />
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-[320px]">
+      <FormField label="Default">
+        <Select options={defaultOptions} placeholder="Default state" fullWidth />
+      </FormField>
+      <FormField label="With Value">
+        <Select options={defaultOptions} defaultValue="option1" fullWidth />
+      </FormField>
+      <FormField label="Disabled">
+        <Select options={defaultOptions} placeholder="Disabled" disabled fullWidth />
+      </FormField>
+      <FormField label="Error" errorMessage="This field has an error" error>
+        <Select options={defaultOptions} placeholder="Select option" fullWidth />
+      </FormField>
+      <FormField label="Clearable with Value">
+        <Select options={defaultOptions} defaultValue="option2" clearable fullWidth />
+      </FormField>
     </div>
   ),
 };

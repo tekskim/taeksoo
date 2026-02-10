@@ -264,7 +264,7 @@ export const WithCheckbox: Story = {
 export const LabelSizes: Story = {
   name: 'Label Sizes',
   render: () => (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)] w-full">
       <FormField id="small-label">
         <FormField.Label size="sm">Small Label</FormField.Label>
         <FormField.Control>
@@ -288,7 +288,7 @@ export const LabelSizes: Story = {
 export const CompleteForm: Story = {
   name: 'Complete Form Example',
   render: () => (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)] w-full">
       <FormField id="form-name" required>
         <FormField.Label>Full Name</FormField.Label>
         <FormField.Control>

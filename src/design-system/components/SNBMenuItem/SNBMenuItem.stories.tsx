@@ -121,7 +121,7 @@ export const TextTypeSelected: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className="flex gap-[var(--primitive-spacing-2)]">
       <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="default" />
       <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="hover" />
       <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="selected" />
@@ -132,7 +132,7 @@ export const AllStates: Story = {
 // Navigation Menu Example
 export const NavigationMenu: Story = {
   render: () => (
-    <div className="flex flex-col gap-1 bg-[var(--color-surface-default)] p-2 rounded-lg border border-[var(--color-border-default)] w-fit">
+    <div className="flex flex-col gap-[var(--primitive-spacing-1)] bg-[var(--color-surface-default)] p-[var(--primitive-spacing-2)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] w-fit">
       <SNBMenuItem
         icon={<IconHome size={22} stroke={1.5} />}
         isSelected
@@ -154,7 +154,7 @@ export const NavigationMenu: Story = {
         icon={<IconFolder size={22} stroke={1.5} />}
         onClick={() => console.log('Files')}
       />
-      <div className="h-px bg-[var(--color-border-subtle)] my-1" />
+      <div className="h-px bg-[var(--color-border-subtle)] my-[var(--primitive-spacing-1)]" />
       <SNBMenuItem
         icon={<IconSettings size={22} stroke={1.5} />}
         onClick={() => console.log('Settings')}
@@ -166,7 +166,7 @@ export const NavigationMenu: Story = {
 // With isSelected Prop
 export const WithIsSelected: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className="flex gap-[var(--primitive-spacing-2)]">
       <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} isSelected={false} />
       <SNBMenuItem icon={<IconSettings size={22} stroke={1.5} />} isSelected={true} />
     </div>
@@ -177,8 +177,10 @@ export const WithIsSelected: Story = {
 export const Interactive: Story = {
   render: () => {
     return (
-      <div className="flex flex-col gap-1 bg-[var(--color-surface-default)] p-2 rounded-lg border border-[var(--color-border-default)] w-fit">
-        <p className="text-xs text-[var(--color-text-muted)] mb-2 px-1">Hover to see effect</p>
+      <div className="flex flex-col gap-[var(--primitive-spacing-1)] bg-[var(--color-surface-default)] p-[var(--primitive-spacing-2)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] w-fit">
+        <p className="text-body-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)] px-[var(--primitive-spacing-1)]">
+          Hover to see effect
+        </p>
         <SNBMenuItem
           icon={<IconHome size={22} stroke={1.5} />}
           onClick={() => alert('Home clicked!')}

@@ -48,16 +48,16 @@ export const IconOnly: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="default" label="Default" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Default</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="ghost" label="Ghost" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Ghost</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="outline" label="Outline" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Outline</span>
       </div>
@@ -67,16 +67,16 @@ export const Variants: Story = {
 
 export const VariantsIconOnly: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="default" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Default</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="ghost" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Ghost</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" variant="outline" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Outline</span>
       </div>
@@ -90,16 +90,16 @@ export const VariantsIconOnly: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="sm" label="Small" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Small</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="md" label="Medium" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Medium</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="lg" label="Large" />
         <span className="text-body-sm text-[var(--color-text-muted)]">Large</span>
       </div>
@@ -109,16 +109,16 @@ export const Sizes: Story = {
 
 export const SizesIconOnly: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="sm" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Small</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="md" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Medium</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <CopyButton value="text" size="lg" iconOnly />
         <span className="text-body-sm text-[var(--color-text-muted)]">Large</span>
       </div>
@@ -197,17 +197,23 @@ export const CopyableTruncated: Story = {
 
 export const CopyableExamples: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Instance ID</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Instance ID
+        </h4>
         <Copyable value="i-0123456789abcdef0" />
       </div>
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">IP Address</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          IP Address
+        </h4>
         <Copyable value="192.168.1.100" />
       </div>
       <div>
-        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Long ID (truncated)</h4>
+        <h4 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Long ID (truncated)
+        </h4>
         <Copyable
           value="arn:aws:ec2:us-east-1:123456789012:instance/i-0123456789abcdef0"
           truncate
@@ -224,8 +230,8 @@ export const CopyableExamples: Story = {
 
 export const InlineUsage: Story = {
   render: () => (
-    <div className="p-4 bg-[var(--color-surface-subtle)] rounded-lg">
-      <div className="flex items-center justify-between gap-4 mb-3">
+    <div className="p-[var(--primitive-spacing-4)] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+      <div className="flex items-center justify-between gap-[var(--primitive-spacing-4)] mb-[var(--primitive-spacing-3)]">
         <span className="text-label-sm text-[var(--color-text-subtle)]">API Key</span>
         <CopyButton
           value="sk_live_abcdefghijklmnop"
@@ -245,7 +251,7 @@ export const InlineUsage: Story = {
 export const CodeBlock: Story = {
   render: () => (
     <div className="relative">
-      <pre className="p-4 pr-12 bg-[var(--color-surface-muted)] rounded-lg text-body-md text-[var(--color-text-default)] overflow-x-auto">
+      <pre className="p-[var(--primitive-spacing-4)] pr-12 bg-[var(--color-surface-muted)] rounded-[var(--primitive-radius-lg)] text-body-md text-[var(--color-text-default)] overflow-x-auto">
         <code>{`npm install @tds/design-system`}</code>
       </pre>
       <div className="absolute top-2 right-2">
@@ -266,24 +272,28 @@ export const TableCell: Story = {
     <table className="w-full border-collapse">
       <thead>
         <tr className="border-b border-[var(--color-border-subtle)]">
-          <th className="p-3 text-left text-label-sm text-[var(--color-text-subtle)]">Name</th>
-          <th className="p-3 text-left text-label-sm text-[var(--color-text-subtle)]">ID</th>
+          <th className="p-[var(--primitive-spacing-3)] text-left text-label-sm text-[var(--color-text-subtle)]">
+            Name
+          </th>
+          <th className="p-[var(--primitive-spacing-3)] text-left text-label-sm text-[var(--color-text-subtle)]">
+            ID
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr className="border-b border-[var(--color-border-subtle)]">
-          <td className="p-3 text-body-md">Instance 1</td>
-          <td className="p-3">
-            <div className="flex items-center gap-2">
+          <td className="p-[var(--primitive-spacing-3)] text-body-md">Instance 1</td>
+          <td className="p-[var(--primitive-spacing-3)]">
+            <div className="flex items-center gap-[var(--primitive-spacing-2)]">
               <span className="text-body-md text-[var(--color-text-default)]">i-abc123</span>
               <CopyButton value="i-abc123" variant="ghost" size="sm" iconOnly />
             </div>
           </td>
         </tr>
         <tr className="border-b border-[var(--color-border-subtle)]">
-          <td className="p-3 text-body-md">Instance 2</td>
-          <td className="p-3">
-            <div className="flex items-center gap-2">
+          <td className="p-[var(--primitive-spacing-3)] text-body-md">Instance 2</td>
+          <td className="p-[var(--primitive-spacing-3)]">
+            <div className="flex items-center gap-[var(--primitive-spacing-2)]">
               <span className="text-body-md text-[var(--color-text-default)]">i-def456</span>
               <CopyButton value="i-def456" variant="ghost" size="sm" iconOnly />
             </div>

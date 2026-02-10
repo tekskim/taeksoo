@@ -217,7 +217,7 @@ export const FullExample: Story = {
     const [selectedCount, setSelectedCount] = useState(3);
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <Pagination
           currentPage={page}
           totalPages={20}
@@ -227,7 +227,7 @@ export const FullExample: Story = {
           onSettingsClick={() => alert('Open settings')}
           onPageChange={setPage}
         />
-        <div className="flex gap-4 text-sm">
+        <div className="flex gap-[var(--primitive-spacing-4)] text-body-md">
           <button
             className="text-[var(--color-action-primary)]"
             onClick={() => setSelectedCount((s) => s + 1)}

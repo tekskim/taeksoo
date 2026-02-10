@@ -243,7 +243,7 @@ export const QuotaUnlimited: Story = {
 export const AllStatuses: Story = {
   name: 'All Status Colors',
   render: () => (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)] w-full">
       <ProgressBar
         variant="default"
         value={50}
@@ -295,7 +295,7 @@ export const AllStatuses: Story = {
 export const QuotaLevels: Story = {
   name: 'Quota - All Levels',
   render: () => (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-[var(--primitive-spacing-6)] w-full">
       <ProgressBar variant="quota" value={3} newValue={1} max={10} label="Normal (40%)" showValue />
       <ProgressBar
         variant="quota"

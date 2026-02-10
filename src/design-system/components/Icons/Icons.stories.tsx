@@ -22,13 +22,15 @@ interface IconGridProps {
 
 function IconGrid({ icons, title }: IconGridProps) {
   return (
-    <div className="mb-8">
-      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4">{title}</h3>
-      <div className="grid grid-cols-6 gap-4">
+    <div className="mb-[var(--primitive-spacing-8)]">
+      <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-[var(--primitive-spacing-4)]">
+        {title}
+      </h3>
+      <div className="grid grid-cols-6 gap-[var(--primitive-spacing-4)]">
         {icons.map(({ name, Icon }) => (
           <div
             key={name}
-            className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-[var(--color-surface-subtle)] transition-colors"
+            className="flex flex-col items-center gap-[var(--primitive-spacing-2)] p-[var(--primitive-spacing-3)] rounded-[var(--primitive-radius-lg)] hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
             <Icon size={24} stroke={1.5} />
             <span className="text-body-sm text-[var(--color-text-muted)] text-center truncate w-full">
@@ -51,21 +53,21 @@ export const AllIcons: Story = {
     const icons = iconEntries.map(([name, Icon]) => ({ name, Icon }));
 
     return (
-      <div className="p-4">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-6">
+      <div className="p-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-6)]">
           TDS Icons ({icons.length} icons)
         </h2>
-        <p className="text-body-md text-[var(--color-text-muted)] mb-8">
+        <p className="text-body-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-8)]">
           사용법:{' '}
-          <code className="bg-[var(--color-surface-subtle)] px-2 py-1 rounded">
+          <code className="bg-[var(--color-surface-subtle)] px-[var(--primitive-spacing-2)] py-[var(--primitive-spacing-1)] rounded-[var(--primitive-radius-md)]">
             {'<Icons.ChevronDown size={12} />'}
           </code>
         </p>
-        <div className="grid grid-cols-8 gap-3">
+        <div className="grid grid-cols-8 gap-[var(--primitive-spacing-3)]">
           {icons.map(({ name, Icon }) => (
             <div
               key={name}
-              className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-[var(--color-surface-subtle)] transition-colors cursor-pointer"
+              className="flex flex-col items-center gap-[var(--primitive-spacing-2)] p-[var(--primitive-spacing-3)] rounded-[var(--primitive-radius-lg)] hover:bg-[var(--color-surface-subtle)] transition-colors cursor-pointer"
               title={name}
             >
               <Icon size={20} stroke={1.5} />
@@ -129,8 +131,10 @@ export const ByCategory: Story = {
     };
 
     return (
-      <div className="p-4">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-6">Icons by Category</h2>
+      <div className="p-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-6)]">
+          Icons by Category
+        </h2>
         {Object.entries(categories).map(([category, iconNames]) => (
           <IconGrid
             key={category}
@@ -157,11 +161,13 @@ export const Sizes: Story = {
     const sizes = [12, 14, 16, 20, 24, 32];
 
     return (
-      <div className="p-4">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-6">Icon Sizes</h2>
-        <div className="flex items-end gap-6">
+      <div className="p-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-6)]">
+          Icon Sizes
+        </h2>
+        <div className="flex items-end gap-[var(--primitive-spacing-6)]">
           {sizes.map((size) => (
-            <div key={size} className="flex flex-col items-center gap-2">
+            <div key={size} className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
               <Icons.Settings size={size} stroke={1.5} />
               <span className="text-body-sm text-[var(--color-text-muted)]">{size}px</span>
             </div>
@@ -181,11 +187,16 @@ export const StrokeWidth: Story = {
     const strokes = [1, 1.5, 2, 2.5];
 
     return (
-      <div className="p-4">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-6">Stroke Width</h2>
-        <div className="flex items-center gap-8">
+      <div className="p-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-6)]">
+          Stroke Width
+        </h2>
+        <div className="flex items-center gap-[var(--primitive-spacing-8)]">
           {strokes.map((stroke) => (
-            <div key={stroke} className="flex flex-col items-center gap-2">
+            <div
+              key={stroke}
+              className="flex flex-col items-center gap-[var(--primitive-spacing-2)]"
+            >
               <Icons.Settings size={24} stroke={stroke} />
               <span className="text-body-sm text-[var(--color-text-muted)]">stroke={stroke}</span>
             </div>
@@ -212,11 +223,13 @@ export const Colors: Story = {
     ];
 
     return (
-      <div className="p-4">
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-6">Icon Colors</h2>
-        <div className="flex items-center gap-6">
+      <div className="p-[var(--primitive-spacing-4)]">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] mb-[var(--primitive-spacing-6)]">
+          Icon Colors
+        </h2>
+        <div className="flex items-center gap-[var(--primitive-spacing-6)]">
           {colors.map(({ name, class: colorClass }) => (
-            <div key={name} className="flex flex-col items-center gap-2">
+            <div key={name} className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
               <Icons.CheckCircle size={24} stroke={1.5} className={colorClass} />
               <span className="text-body-sm text-[var(--color-text-muted)]">{name}</span>
             </div>
@@ -233,13 +246,15 @@ export const Colors: Story = {
 
 export const UsageExample: Story = {
   render: () => (
-    <div className="p-4 space-y-6">
+    <div className="p-[var(--primitive-spacing-4)] flex flex-col gap-[var(--primitive-spacing-6)]">
       <h2 className="text-heading-h5 text-[var(--color-text-default)]">Usage Examples</h2>
 
       {/* In Button */}
       <div>
-        <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">In Button</h3>
-        <button className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-action-primary)] text-white rounded-md">
+        <h3 className="text-label-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-3)]">
+          In Button
+        </h3>
+        <button className="inline-flex items-center gap-[var(--primitive-spacing-2)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] bg-[var(--color-action-primary)] text-[var(--color-on-primary)] rounded-[var(--primitive-radius-md)]">
           <Icons.Add size={12} stroke={2} />
           <span>Create New</span>
         </button>
@@ -247,15 +262,17 @@ export const UsageExample: Story = {
 
       {/* Status Indicator */}
       <div>
-        <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">Status Indicators</h3>
-        <div className="flex items-center gap-4">
-          <span className="inline-flex items-center gap-1 text-[var(--color-state-success)]">
+        <h3 className="text-label-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-3)]">
+          Status Indicators
+        </h3>
+        <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+          <span className="inline-flex items-center gap-[var(--primitive-spacing-1)] text-[var(--color-state-success)]">
             <Icons.CheckCircle size={12} /> Active
           </span>
-          <span className="inline-flex items-center gap-1 text-[var(--color-state-warning)]">
+          <span className="inline-flex items-center gap-[var(--primitive-spacing-1)] text-[var(--color-state-warning)]">
             <Icons.Warning size={12} /> Warning
           </span>
-          <span className="inline-flex items-center gap-1 text-[var(--color-state-danger)]">
+          <span className="inline-flex items-center gap-[var(--primitive-spacing-1)] text-[var(--color-state-danger)]">
             <Icons.Error size={12} /> Error
           </span>
         </div>
@@ -263,8 +280,10 @@ export const UsageExample: Story = {
 
       {/* Navigation */}
       <div>
-        <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">Navigation</h3>
-        <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
+        <h3 className="text-label-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-3)]">
+          Navigation
+        </h3>
+        <div className="flex items-center gap-[var(--primitive-spacing-2)] text-[var(--color-text-muted)]">
           <Icons.Home size={12} />
           <Icons.ChevronRight size={12} />
           <span>Settings</span>

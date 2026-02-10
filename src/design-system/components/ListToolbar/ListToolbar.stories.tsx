@@ -207,8 +207,8 @@ export const CustomChildren: Story = {
     <ListToolbar>
       <div className="flex items-center justify-between w-full">
         <SearchInput placeholder="Search..." size="sm" />
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-[var(--color-text-muted)]">Showing 1-10 of 100</span>
+        <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+          <span className="text-body-md text-[var(--color-text-muted)]">Showing 1-10 of 100</span>
           <Button variant="primary" size="sm">
             Create New
           </Button>

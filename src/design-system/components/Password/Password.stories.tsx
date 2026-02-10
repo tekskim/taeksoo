@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Password } from './Password';
+import { Button } from '../Button';
+import { FormField } from '../FormField';
 import { VStack } from '../../layouts';
 
 const meta: Meta<typeof Password> = {
@@ -31,26 +33,27 @@ export const Default: Story = {
 };
 
 export const WithLabel: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter your password',
-  },
+  render: () => (
+    <FormField label="Password">
+      <Password placeholder="Enter your password" />
+    </FormField>
+  ),
 };
 
 export const Required: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter your password',
-    required: true,
-  },
+  render: () => (
+    <FormField label="Password" required>
+      <Password placeholder="Enter your password" />
+    </FormField>
+  ),
 };
 
 export const WithHelperText: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter your password',
-    helperText: 'Password must be at least 8 characters',
-  },
+  render: () => (
+    <FormField label="Password" helperText="Password must be at least 8 characters">
+      <Password placeholder="Enter your password" />
+    </FormField>
+  ),
 };
 
 /* ----------------------------------------
@@ -61,11 +64,15 @@ export const Sizes: Story = {
   render: () => (
     <VStack gap={4}>
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Small</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Small
+        </h3>
         <Password size="sm" placeholder="Small password input" />
       </div>
       <div>
-        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-2">Medium (default)</h3>
+        <h3 className="text-label-sm text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-2)]">
+          Medium (default)
+        </h3>
         <Password size="md" placeholder="Medium password input" />
       </div>
     </VStack>
@@ -77,37 +84,35 @@ export const Sizes: Story = {
    ---------------------------------------- */
 
 export const Disabled: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    disabled: true,
-    value: 'secret123',
-  },
+  render: () => (
+    <FormField label="Password">
+      <Password placeholder="Enter password" disabled value="secret123" />
+    </FormField>
+  ),
 };
 
 export const ReadOnly: Story = {
-  args: {
-    label: 'Password',
-    value: 'secret123',
-    readOnly: true,
-  },
+  render: () => (
+    <FormField label="Password">
+      <Password value="secret123" readOnly />
+    </FormField>
+  ),
 };
 
 export const Error: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    error: 'Password is required',
-  },
+  render: () => (
+    <FormField label="Password" errorMessage="Password is required" error>
+      <Password placeholder="Enter password" />
+    </FormField>
+  ),
 };
 
 export const ErrorBoolean: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    error: true,
-    helperText: 'This field has an error',
-  },
+  render: () => (
+    <FormField label="Password" helperText="This field has an error" error>
+      <Password placeholder="Enter password" />
+    </FormField>
+  ),
 };
 
 /* ----------------------------------------
@@ -115,20 +120,23 @@ export const ErrorBoolean: Story = {
    ---------------------------------------- */
 
 export const WithoutToggle: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    showToggle: false,
-  },
+  render: () => (
+    <FormField label="Password">
+      <Password placeholder="Enter password" showToggle={false} />
+    </FormField>
+  ),
 };
 
 export const CustomToggleLabels: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    showLabel: '비밀번호 보기',
-    hideLabel: '비밀번호 숨기기',
-  },
+  render: () => (
+    <FormField label="Password">
+      <Password
+        placeholder="Enter password"
+        showLabel="비밀번호 보기"
+        hideLabel="비밀번호 숨기기"
+      />
+    </FormField>
+  ),
 };
 
 /* ----------------------------------------
@@ -136,18 +144,13 @@ export const CustomToggleLabels: Story = {
    ---------------------------------------- */
 
 export const FullWidth: Story = {
-  args: {
-    label: 'Password',
-    placeholder: 'Enter password',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Password">
+        <Password placeholder="Enter password" fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
 /* ----------------------------------------
@@ -173,17 +176,21 @@ export const Controlled: Story = {
 
     return (
       <VStack gap={4}>
-        <Password
+        <FormField
           label="Password"
-          placeholder="Enter a strong password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            validatePassword(e.target.value);
-          }}
-          error={error}
           helperText={!error ? 'Min 8 characters, 1 uppercase, 1 number' : undefined}
-        />
+          errorMessage={error || undefined}
+          error={!!error}
+        >
+          <Password
+            placeholder="Enter a strong password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              validatePassword(e.target.value);
+            }}
+          />
+        </FormField>
         <p className="text-body-sm text-[var(--color-text-muted)]">
           Password length: {password.length}
         </p>
@@ -229,49 +236,58 @@ export const FormExample: Story = {
     return (
       <form onSubmit={handleSubmit} style={{ width: '320px' }}>
         <VStack gap={4}>
-          <Password
+          <FormField
             label="Current Password"
-            placeholder="Enter current password"
-            value={formData.currentPassword}
-            onChange={(e) => {
-              setFormData({ ...formData, currentPassword: e.target.value });
-              setErrors({ ...errors, currentPassword: '' });
-            }}
-            error={errors.currentPassword}
-            fullWidth
             required
-          />
-          <Password
-            label="New Password"
-            placeholder="Enter new password"
-            value={formData.newPassword}
-            onChange={(e) => {
-              setFormData({ ...formData, newPassword: e.target.value });
-              setErrors({ ...errors, newPassword: '' });
-            }}
-            error={errors.newPassword}
-            helperText="Minimum 8 characters"
-            fullWidth
-            required
-          />
-          <Password
-            label="Confirm Password"
-            placeholder="Confirm new password"
-            value={formData.confirmPassword}
-            onChange={(e) => {
-              setFormData({ ...formData, confirmPassword: e.target.value });
-              setErrors({ ...errors, confirmPassword: '' });
-            }}
-            error={errors.confirmPassword}
-            fullWidth
-            required
-          />
-          <button
-            type="submit"
-            className="w-full h-9 bg-[var(--color-action-primary)] text-white rounded-md text-body-md font-medium hover:opacity-90 transition-opacity"
+            errorMessage={errors.currentPassword || undefined}
+            error={!!errors.currentPassword}
           >
+            <Password
+              placeholder="Enter current password"
+              value={formData.currentPassword}
+              onChange={(e) => {
+                setFormData({ ...formData, currentPassword: e.target.value });
+                setErrors({ ...errors, currentPassword: '' });
+              }}
+              fullWidth
+            />
+          </FormField>
+          <FormField
+            label="New Password"
+            required
+            helperText="Minimum 8 characters"
+            errorMessage={errors.newPassword || undefined}
+            error={!!errors.newPassword}
+          >
+            <Password
+              placeholder="Enter new password"
+              value={formData.newPassword}
+              onChange={(e) => {
+                setFormData({ ...formData, newPassword: e.target.value });
+                setErrors({ ...errors, newPassword: '' });
+              }}
+              fullWidth
+            />
+          </FormField>
+          <FormField
+            label="Confirm Password"
+            required
+            errorMessage={errors.confirmPassword || undefined}
+            error={!!errors.confirmPassword}
+          >
+            <Password
+              placeholder="Confirm new password"
+              value={formData.confirmPassword}
+              onChange={(e) => {
+                setFormData({ ...formData, confirmPassword: e.target.value });
+                setErrors({ ...errors, confirmPassword: '' });
+              }}
+              fullWidth
+            />
+          </FormField>
+          <Button type="submit" variant="primary" size="md" fullWidth>
             Change Password
-          </button>
+          </Button>
         </VStack>
       </form>
     );

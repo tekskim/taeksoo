@@ -77,7 +77,7 @@ type Story = StoryObj<typeof FloatingCard>;
 // Default (non-portal for Storybook)
 export const Default: Story = {
   render: () => (
-    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Create Instance"
         portal={false}
@@ -107,7 +107,7 @@ export const Default: Story = {
 // With Quota
 export const WithQuota: Story = {
   render: () => (
-    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Create VM Instance"
         portal={false}
@@ -136,7 +136,7 @@ export const WithQuota: Story = {
 // With Instance Count
 export const WithInstanceCount: Story = {
   render: () => (
-    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Deploy Application"
         portal={false}
@@ -163,7 +163,7 @@ export const WithInstanceCount: Story = {
 // All Statuses
 export const AllStatuses: Story = {
   render: () => (
-    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Status Examples"
         portal={false}
@@ -188,7 +188,7 @@ export const AllStatuses: Story = {
 // Action Enabled
 export const ActionEnabled: Story = {
   render: () => (
-    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Ready to Create"
         portal={false}
@@ -211,7 +211,7 @@ export const ActionEnabled: Story = {
 // With Close Button
 export const WithCloseButton: Story = {
   render: () => (
-    <div className="relative h-[400px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[400px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Summary"
         portal={false}
@@ -226,7 +226,7 @@ export const WithCloseButton: Story = {
 // Multiple Sections
 export const MultipleSections: Story = {
   render: () => (
-    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-4">
+    <div className="relative h-[600px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
       <FloatingCard
         title="Create Kubernetes Deployment"
         portal={false}

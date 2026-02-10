@@ -329,12 +329,12 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
 
     // Size styles
     const sizeStyles = {
-      sm: 'h-[var(--input-height-sm)] px-2 text-body-sm leading-4',
-      md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
+      sm: 'h-[var(--input-height-sm)] px-[var(--primitive-spacing-2)] text-body-sm',
+      md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-body-md',
     };
 
     const triggerClasses = twMerge(
-      'flex items-center justify-between gap-2',
+      'flex items-center justify-between gap-[var(--primitive-spacing-2)]',
       getWidthClass(),
       sizeStyles[size],
       'bg-[var(--select-bg)]',
@@ -359,7 +359,7 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
       'shadow-[var(--select-menu-shadow)]',
       'overflow-hidden',
       'focus:outline-none',
-      'py-1'
+      'py-[var(--primitive-spacing-1)]'
     );
 
     return (
@@ -473,7 +473,7 @@ export function DropdownOption({
       className={twMerge(
         'flex items-center justify-between',
         'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-        'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
+        'text-body-md',
         'cursor-pointer transition-colors duration-[var(--duration-fast)]',
         disabled
           ? 'text-[var(--color-text-subtle)] cursor-not-allowed'
@@ -502,7 +502,10 @@ export function DropdownDivider({ className, ...props }: DropdownDividerProps) {
   return (
     <div
       role="separator"
-      className={twMerge('h-px bg-[var(--color-border-subtle)] my-1', className)}
+      className={twMerge(
+        'h-px bg-[var(--color-border-subtle)] my-[var(--primitive-spacing-1)]',
+        className
+      )}
       {...props}
     />
   );
@@ -516,7 +519,7 @@ export function DropdownGroup({ label, children, className, ...props }: Dropdown
   return (
     <div role="group" aria-label={label} className={className} {...props}>
       {label && (
-        <div className="px-[var(--select-item-padding-x)] py-1 text-body-sm text-[var(--color-text-subtle)] font-medium">
+        <div className="px-[var(--select-item-padding-x)] py-[var(--primitive-spacing-1)] text-label-sm text-[var(--color-text-subtle)]">
           {label}
         </div>
       )}

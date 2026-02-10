@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from './Input';
+import { FormField } from '../FormField';
 import { IconSearch, IconMail, IconLock, IconEye, IconEyeOff } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -31,13 +32,17 @@ const meta: Meta<typeof Input> = {
 
 ### 예시
 \`\`\`tsx
-import { Input } from '@thaki/tds';
+import { Input, FormField } from '@thaki/tds';
 
-// 기본 사용
-<Input label="이름" placeholder="홍길동" />
+// 기본 사용 (FormField와 함께)
+<FormField label="이름">
+  <Input placeholder="홍길동" fullWidth />
+</FormField>
 
 // 에러 상태
-<Input label="이메일" error="유효하지 않은 이메일입니다" />
+<FormField label="이메일" errorMessage="유효하지 않은 이메일입니다" error>
+  <Input fullWidth />
+</FormField>
 
 // 아이콘 포함
 <Input 
@@ -149,47 +154,46 @@ export const Default: Story = {
   },
 };
 
-// With Label
+// With Label (FormField 사용)
 export const WithLabel: Story = {
-  args: {
-    label: 'Username',
-    placeholder: 'Enter username',
-  },
+  render: () => (
+    <FormField label="Username">
+      <Input placeholder="Enter username" fullWidth />
+    </FormField>
+  ),
 };
 
-// Required Field
+// Required Field (FormField 사용)
 export const Required: Story = {
-  args: {
-    label: 'Email',
-    placeholder: 'Enter email',
-    required: true,
-  },
+  render: () => (
+    <FormField label="Email" required>
+      <Input placeholder="Enter email" fullWidth />
+    </FormField>
+  ),
 };
 
-// With Helper Text
+// With Helper Text (FormField 사용)
 export const WithHelperText: Story = {
-  args: {
-    label: 'Password',
-    type: 'password',
-    placeholder: 'Enter password',
-    helperText: 'Must be at least 8 characters long',
-  },
+  render: () => (
+    <FormField label="Password" helperText="Must be at least 8 characters long">
+      <Input type="password" placeholder="Enter password" fullWidth />
+    </FormField>
+  ),
 };
 
-// Error State
+// Error State (FormField 사용)
 export const WithError: Story = {
-  args: {
-    label: 'Email',
-    placeholder: 'Enter email',
-    error: 'Please enter a valid email address',
-    defaultValue: 'invalid-email',
-  },
+  render: () => (
+    <FormField label="Email" errorMessage="Please enter a valid email address" error>
+      <Input placeholder="Enter email" defaultValue="invalid-email" fullWidth />
+    </FormField>
+  ),
 };
 
 // Sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Input size="sm" placeholder="Small input" />
       <Input size="md" placeholder="Medium input (default)" />
     </div>
@@ -199,7 +203,7 @@ export const Sizes: Story = {
 // Variants
 export const Variants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Input variant="default" placeholder="Default variant" />
       <Input variant="search" placeholder="Search variant" leftElement={<IconSearch size={12} />} />
       <Input variant="code" placeholder="Code variant" />
@@ -231,99 +235,107 @@ export const WithBothIcons: Story = {
   },
 };
 
-// Password Toggle Example
+// Password Toggle Example (FormField 사용)
 export const PasswordToggle: Story = {
   render: function PasswordToggleComponent() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-      <Input
-        label="Password"
-        type={showPassword ? 'text' : 'password'}
-        placeholder="Enter password"
-        leftElement={<IconLock size={12} />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="hover:text-[var(--color-text-default)]"
-          >
-            {showPassword ? <IconEyeOff size={12} /> : <IconEye size={12} />}
-          </button>
-        }
-      />
+      <FormField label="Password">
+        <Input
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Enter password"
+          leftElement={<IconLock size={12} />}
+          rightElement={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="hover:text-[var(--color-text-default)]"
+            >
+              {showPassword ? <IconEyeOff size={12} /> : <IconEye size={12} />}
+            </button>
+          }
+          fullWidth
+        />
+      </FormField>
     );
   },
 };
 
-// States
+// States (FormField 사용)
 export const Disabled: Story = {
-  args: {
-    label: 'Disabled Input',
-    placeholder: 'Cannot type here',
-    disabled: true,
-  },
+  render: () => (
+    <FormField label="Disabled Input">
+      <Input placeholder="Cannot type here" disabled fullWidth />
+    </FormField>
+  ),
 };
 
 export const ReadOnly: Story = {
-  args: {
-    label: 'Read Only',
-    defaultValue: 'This value is read-only',
-    readOnly: true,
-  },
-};
-
-// Full Width
-export const FullWidth: Story = {
-  args: {
-    label: 'Full Width Input',
-    placeholder: 'This input takes full width',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-// Form Example
-export const FormExample: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-[320px]">
-      <Input label="Full Name" placeholder="John Doe" required fullWidth />
-      <Input
-        label="Email"
-        type="email"
-        placeholder="john@example.com"
-        leftElement={<IconMail size={12} />}
-        required
-        fullWidth
-      />
-      <Input
-        label="Password"
-        type="password"
-        placeholder="Enter password"
-        leftElement={<IconLock size={12} />}
-        helperText="Must be at least 8 characters"
-        required
-        fullWidth
-      />
+    <FormField label="Read Only">
+      <Input defaultValue="This value is read-only" readOnly fullWidth />
+    </FormField>
+  ),
+};
+
+// Full Width (FormField 사용)
+export const FullWidth: Story = {
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Full Width Input">
+        <Input placeholder="This input takes full width" fullWidth />
+      </FormField>
     </div>
   ),
 };
 
-// All States
+// Form Example (FormField 사용)
+export const FormExample: Story = {
+  render: () => (
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-[320px]">
+      <FormField label="Full Name" required>
+        <Input placeholder="John Doe" fullWidth />
+      </FormField>
+      <FormField label="Email" required>
+        <Input
+          type="email"
+          placeholder="john@example.com"
+          leftElement={<IconMail size={12} />}
+          fullWidth
+        />
+      </FormField>
+      <FormField label="Password" helperText="Must be at least 8 characters" required>
+        <Input
+          type="password"
+          placeholder="Enter password"
+          leftElement={<IconLock size={12} />}
+          fullWidth
+        />
+      </FormField>
+    </div>
+  ),
+};
+
+// All States (FormField 사용)
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 w-[320px]">
-      <Input label="Default" placeholder="Default state" fullWidth />
-      <Input label="With Value" defaultValue="Some value" fullWidth />
-      <Input label="Disabled" placeholder="Disabled" disabled fullWidth />
-      <Input label="Read Only" defaultValue="Read only value" readOnly fullWidth />
-      <Input label="Error" defaultValue="Invalid" error="This field has an error" fullWidth />
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)] w-[320px]">
+      <FormField label="Default">
+        <Input placeholder="Default state" fullWidth />
+      </FormField>
+      <FormField label="With Value">
+        <Input defaultValue="Some value" fullWidth />
+      </FormField>
+      <FormField label="Disabled">
+        <Input placeholder="Disabled" disabled fullWidth />
+      </FormField>
+      <FormField label="Read Only">
+        <Input defaultValue="Read only value" readOnly fullWidth />
+      </FormField>
+      <FormField label="Error" errorMessage="This field has an error" error>
+        <Input defaultValue="Invalid" fullWidth />
+      </FormField>
     </div>
   ),
 };

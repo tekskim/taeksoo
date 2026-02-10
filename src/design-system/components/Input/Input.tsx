@@ -180,7 +180,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       return widthStyles[width];
     };
 
-    const wrapperClasses = twMerge('flex flex-col gap-[var(--input-label-gap)]', getWidthClass());
+    const wrapperClasses = twMerge(
+      'flex flex-col gap-[var(--primitive-spacing-2)]',
+      getWidthClass()
+    );
 
     return (
       <div className={wrapperClasses}>
@@ -225,7 +228,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
 
-        {error && (
+        {typeof error === 'string' && error && (
           <p id={`${inputId}-error`} className="text-body-sm text-[var(--color-state-danger)]">
             {error}
           </p>
