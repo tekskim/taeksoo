@@ -362,7 +362,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={sectionStatus['basic-info'] === 'active'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -597,7 +597,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
             <SectionCard isActive={sectionStatus['configuration'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['configuration']}
-                showDivider={sectionStatus['configuration'] === 'active'}
+                showDivider={sectionStatus['configuration'] === 'done'}
                 actions={
                   sectionStatus['configuration'] === 'done' && (
                     <Button

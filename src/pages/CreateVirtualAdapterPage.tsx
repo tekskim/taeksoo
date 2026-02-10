@@ -529,7 +529,7 @@ export default function CreateVirtualAdapterPage() {
             <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
-                showDivider={sectionStatus['basic-info'] === 'active'}
+                showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
@@ -621,11 +621,7 @@ export default function CreateVirtualAdapterPage() {
               )}
               {sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Virtual adapter Name"
-                    value={adapterName}
-                    showDivider
-                  />
+                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName} />
                   {description && <SectionCard.DataRow label="Description" value={description} />}
                 </SectionCard.Content>
               )}
@@ -635,7 +631,7 @@ export default function CreateVirtualAdapterPage() {
             <SectionCard isActive={sectionStatus['network'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['network']}
-                showDivider={sectionStatus['network'] === 'active'}
+                showDivider={sectionStatus['network'] === 'done'}
                 actions={
                   sectionStatus['network'] === 'done' && (
                     <Button
@@ -813,7 +809,7 @@ export default function CreateVirtualAdapterPage() {
                           leftIcon={<IconCirclePlus size={12} />}
                           disabled={!selectedNetwork}
                           onClick={addFixedIP}
-                          style={{ width: '110px', height: '32px' }}
+                          className="w-fit"
                         >
                           Add fixed IP
                         </Button>
@@ -879,9 +875,8 @@ export default function CreateVirtualAdapterPage() {
                   <SectionCard.DataRow
                     label="Network"
                     value={selectedNetworkDetails?.name || '-'}
-                    showDivider
                   />
-                  <SectionCard.DataRow label="Fixed IP" value="Auto-allocate" showDivider />
+                  <SectionCard.DataRow label="Fixed IP" value="Auto-allocate" />
                   <SectionCard.DataRow
                     label="MAC address"
                     value={
@@ -896,7 +891,7 @@ export default function CreateVirtualAdapterPage() {
             <SectionCard isActive={sectionStatus['security'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['security']}
-                showDivider={sectionStatus['security'] === 'active'}
+                showDivider={sectionStatus['security'] === 'done'}
                 actions={
                   sectionStatus['security'] === 'done' && (
                     <Button
@@ -1021,7 +1016,6 @@ export default function CreateVirtualAdapterPage() {
                   <SectionCard.DataRow
                     label="Port security"
                     value={portSecurityEnabled ? 'Enabled' : 'Disabled'}
-                    showDivider
                   />
                   <SectionCard.DataRow
                     label="Security groups"
