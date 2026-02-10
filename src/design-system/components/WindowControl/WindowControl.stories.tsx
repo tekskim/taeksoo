@@ -91,7 +91,7 @@ export const Disabled: Story = {
 // All Controls
 export const AllControls: Story = {
   render: () => (
-    <div className="flex gap-2">
+    <div className="flex gap-[var(--primitive-spacing-2)]">
       <WindowControl type="minimize" onClick={() => console.log('Minimize')} />
       <WindowControl type="maximize" onClick={() => console.log('Maximize')} />
       <WindowControl type="close" onClick={() => console.log('Close')} />
@@ -113,9 +113,11 @@ export const ControlsGroup: Story = {
 // Partial Controls
 export const PartialControls: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <p className="text-xs text-[var(--color-text-muted)] mb-2">Close only</p>
+        <p className="text-body-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+          Close only
+        </p>
         <WindowControls
           showMinimize={false}
           showMaximize={false}
@@ -123,7 +125,9 @@ export const PartialControls: Story = {
         />
       </div>
       <div>
-        <p className="text-xs text-[var(--color-text-muted)] mb-2">Minimize & Close</p>
+        <p className="text-body-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">
+          Minimize & Close
+        </p>
         <WindowControls
           showMaximize={false}
           onMinimize={() => console.log('Minimize')}
@@ -137,8 +141,8 @@ export const PartialControls: Story = {
 // In Header Context
 export const InHeaderContext: Story = {
   render: () => (
-    <div className="flex items-center justify-between bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-2">
-      <span className="text-sm font-medium">Application Window</span>
+    <div className="flex items-center justify-between bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+      <span className="text-label-md text-[var(--color-text-default)]">Application Window</span>
       <WindowControls
         onMinimize={() => console.log('Minimize')}
         onMaximize={() => console.log('Maximize')}

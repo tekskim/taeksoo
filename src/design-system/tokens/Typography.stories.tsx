@@ -39,10 +39,10 @@ const TypographySample = ({
   lineHeight: string;
   weight?: string;
 }) => (
-  <div className="flex items-baseline gap-8 py-4 border-b border-[var(--color-border-subtle)]">
+  <div className="flex items-baseline gap-[var(--primitive-spacing-8)] py-[var(--primitive-spacing-4)] border-b border-[var(--color-border-subtle)]">
     <div className="w-24 shrink-0">
-      <div className="text-sm font-medium">{name}</div>
-      <div className="text-xs text-[var(--color-text-muted)] font-mono">
+      <div className="text-label-md">{name}</div>
+      <div className="text-body-xs text-[var(--color-text-muted)] font-mono">
         {fontSize}/{lineHeight}
       </div>
     </div>
@@ -61,7 +61,7 @@ const TypographySample = ({
 export const Headings: Story = {
   render: () => (
     <div className="flex flex-col">
-      <h3 className="text-sm font-semibold mb-4">Headings</h3>
+      <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)]">Headings</h3>
       <TypographySample
         name="H1"
         fontSize="--font-size-40"
@@ -105,7 +105,7 @@ export const Headings: Story = {
 export const Body: Story = {
   render: () => (
     <div className="flex flex-col">
-      <h3 className="text-sm font-semibold mb-4">Body Text</h3>
+      <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)]">Body Text</h3>
       <TypographySample name="body.lg" fontSize="--font-size-14" lineHeight="--line-height-20" />
       <TypographySample name="body.md" fontSize="--font-size-12" lineHeight="--line-height-18" />
       <TypographySample name="body.sm" fontSize="--font-size-11" lineHeight="--line-height-16" />
@@ -116,14 +116,14 @@ export const Body: Story = {
 
 export const FontSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold">Font Size Variables</h3>
-      <table className="w-full text-sm">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+      <h3 className="text-heading-h7">Font Size Variables</h3>
+      <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">
-            <th className="text-left py-2">Variable</th>
-            <th className="text-left py-2">Size</th>
-            <th className="text-left py-2">Example</th>
+            <th className="text-left py-[var(--primitive-spacing-2)]">Variable</th>
+            <th className="text-left py-[var(--primitive-spacing-2)]">Size</th>
+            <th className="text-left py-[var(--primitive-spacing-2)]">Example</th>
           </tr>
         </thead>
         <tbody>
@@ -139,9 +139,9 @@ export const FontSizes: Story = {
             { var: '--font-size-40', size: '40px' },
           ].map(({ var: v, size }) => (
             <tr key={v} className="border-b border-[var(--color-border-subtle)]">
-              <td className="py-2 font-mono text-xs">{v}</td>
-              <td className="py-2">{size}</td>
-              <td className="py-2" style={{ fontSize: `var(${v})` }}>
+              <td className="py-[var(--primitive-spacing-2)] font-mono text-body-xs">{v}</td>
+              <td className="py-[var(--primitive-spacing-2)]">{size}</td>
+              <td className="py-[var(--primitive-spacing-2)]" style={{ fontSize: `var(${v})` }}>
                 Aa
               </td>
             </tr>
@@ -154,13 +154,13 @@ export const FontSizes: Story = {
 
 export const LineHeights: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold">Line Height Variables</h3>
-      <table className="w-full text-sm">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+      <h3 className="text-heading-h7">Line Height Variables</h3>
+      <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">
-            <th className="text-left py-2">Variable</th>
-            <th className="text-left py-2">Value</th>
+            <th className="text-left py-[var(--primitive-spacing-2)]">Variable</th>
+            <th className="text-left py-[var(--primitive-spacing-2)]">Value</th>
           </tr>
         </thead>
         <tbody>
@@ -176,8 +176,8 @@ export const LineHeights: Story = {
             { var: '--line-height-48', value: '48px' },
           ].map(({ var: v, value }) => (
             <tr key={v} className="border-b border-[var(--color-border-subtle)]">
-              <td className="py-2 font-mono text-xs">{v}</td>
-              <td className="py-2">{value}</td>
+              <td className="py-[var(--primitive-spacing-2)] font-mono text-body-xs">{v}</td>
+              <td className="py-[var(--primitive-spacing-2)]">{value}</td>
             </tr>
           ))}
         </tbody>

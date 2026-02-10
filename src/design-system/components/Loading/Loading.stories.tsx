@@ -208,18 +208,18 @@ export const ButtonSubmitting: Story = {
 export const AllSizes: Story = {
   name: 'All Sizes',
   render: () => (
-    <div className="flex items-end gap-8">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-end gap-[var(--primitive-spacing-8)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading variant="spinner" size="sm" text="Small" />
-        <span className="text-xs text-gray-500">sm</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">sm</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading variant="spinner" size="md" text="Medium" />
-        <span className="text-xs text-gray-500">md</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">md</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading variant="spinner" size="lg" text="Large" />
-        <span className="text-xs text-gray-500">lg</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">lg</span>
       </div>
     </div>
   ),
@@ -232,12 +232,14 @@ export const AllSizes: Story = {
 export const AllVariants: Story = {
   name: 'All Variants',
   render: () => (
-    <div className="flex flex-col gap-12 items-center">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col gap-[var(--primitive-spacing-12)] items-center">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading variant="spinner" size="md" text="Loading data..." />
-        <span className="text-xs text-gray-500 mt-2">spinner</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-2)]">
+          spinner
+        </span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading
           variant="progress"
           text="Uploading file"
@@ -245,11 +247,15 @@ export const AllVariants: Story = {
           progress={65}
           statusText="65% complete"
         />
-        <span className="text-xs text-gray-500 mt-2">progress</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-2)]">
+          progress
+        </span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <Loading variant="button" buttonLabel="Saving..." />
-        <span className="text-xs text-gray-500 mt-2">button</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-2)]">
+          button
+        </span>
       </div>
     </div>
   ),

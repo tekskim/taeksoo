@@ -139,7 +139,7 @@ export const WithoutLabel: Story = {
 // Disabled States
 export const Disabled: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Toggle label="Disabled off" disabled />
       <Toggle label="Disabled on" disabled defaultChecked />
     </div>
@@ -152,13 +152,13 @@ export const Controlled: Story = {
     const [enabled, setEnabled] = useState(false);
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <Toggle
           label="Notifications"
           checked={enabled}
           onChange={(e) => setEnabled(e.target.checked)}
         />
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-body-md text-[var(--color-text-muted)]">
           Status: <strong>{enabled ? 'Enabled' : 'Disabled'}</strong>
         </p>
       </div>
@@ -181,10 +181,10 @@ export const SettingsExample: Story = {
     };
 
     return (
-      <div className="w-[320px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-        <h3 className="text-body-lg font-semibold">Settings</h3>
+      <div className="w-[320px] flex flex-col gap-[var(--primitive-spacing-4)] p-[var(--primitive-spacing-4)] bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
+        <h3 className="text-heading-h6">Settings</h3>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
           <div className="flex items-center justify-between">
             <span className="text-body-md">Push notifications</span>
             <Toggle
@@ -216,7 +216,7 @@ export const SettingsExample: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <Toggle label="Default (off)" />
       <Toggle label="Default (on)" defaultChecked />
       <Toggle label="Disabled (off)" disabled />

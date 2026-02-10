@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { PageHeader } from './PageHeader';
 import { Button } from '../Button';
-import { Badge } from '../Badge';
+
 import { ContextMenu } from '../ContextMenu';
 import { IconPlus, IconChevronDown } from '@tabler/icons-react';
 
@@ -51,27 +51,10 @@ export const WithDropdownAction: Story = {
         trigger="click"
         align="right"
       >
-        <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+        <Button variant="primary" size="md" rightIcon={<IconChevronDown size={12} stroke={1.5} />}>
           Create Pod
         </Button>
       </ContextMenu>
-    ),
-  },
-};
-
-// 제목에 뱃지 추가
-export const WithTitleExtra: Story = {
-  args: {
-    title: 'Security Groups',
-    titleExtra: (
-      <Badge variant="info" size="sm">
-        12
-      </Badge>
-    ),
-    actions: (
-      <Button variant="primary" size="md" leftIcon={<IconPlus size={12} stroke={1.5} />}>
-        Create Security Group
-      </Button>
     ),
   },
 };

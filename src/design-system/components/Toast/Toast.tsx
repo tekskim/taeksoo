@@ -126,13 +126,13 @@ export interface ToastContextValue {
 
 const variantIcons: Record<ToastVariant, ReactNode> = {
   success: (
-    <IconCircleCheck size={20} className="text-[var(--toast-success-icon)]" strokeWidth={1.5} />
+    <IconCircleCheck size={20} className="text-[var(--color-state-success)]" strokeWidth={1.5} />
   ),
   warning: (
-    <IconAlertTriangle size={20} className="text-[var(--toast-warning-icon)]" strokeWidth={1.5} />
+    <IconAlertTriangle size={20} className="text-[var(--color-state-warning)]" strokeWidth={1.5} />
   ),
-  error: <IconCircleX size={20} className="text-[var(--toast-error-icon)]" strokeWidth={1.5} />,
-  info: <IconInfoCircle size={20} className="text-[var(--toast-info-icon)]" strokeWidth={1.5} />,
+  error: <IconCircleX size={20} className="text-[var(--color-state-danger)]" strokeWidth={1.5} />,
+  info: <IconInfoCircle size={20} className="text-[var(--color-state-info)]" strokeWidth={1.5} />,
 };
 
 /* ----------------------------------------
@@ -140,12 +140,12 @@ const variantIcons: Record<ToastVariant, ReactNode> = {
    ---------------------------------------- */
 
 const positionStyles: Record<ToastPosition, string> = {
-  'top-right': 'top-[var(--toast-container-offset)] right-[var(--toast-container-offset)]',
-  'top-left': 'top-[var(--toast-container-offset)] left-[var(--toast-container-offset)]',
-  'bottom-right': 'bottom-[var(--toast-container-offset)] right-[var(--toast-container-offset)]',
-  'bottom-left': 'bottom-[var(--toast-container-offset)] left-[var(--toast-container-offset)]',
-  'top-center': 'top-[var(--toast-container-offset)] left-1/2 -translate-x-1/2',
-  'bottom-center': 'bottom-[var(--toast-container-offset)] left-1/2 -translate-x-1/2',
+  'top-right': 'top-[var(--primitive-spacing-4)] right-[var(--primitive-spacing-4)]',
+  'top-left': 'top-[var(--primitive-spacing-4)] left-[var(--primitive-spacing-4)]',
+  'bottom-right': 'bottom-[var(--primitive-spacing-4)] right-[var(--primitive-spacing-4)]',
+  'bottom-left': 'bottom-[var(--primitive-spacing-4)] left-[var(--primitive-spacing-4)]',
+  'top-center': 'top-[var(--primitive-spacing-4)] left-1/2 -translate-x-1/2',
+  'bottom-center': 'bottom-[var(--primitive-spacing-4)] left-1/2 -translate-x-1/2',
 };
 
 /* ----------------------------------------
@@ -232,13 +232,13 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
     <div
       role="alert"
       className={twMerge(
-        'flex flex-col gap-[var(--toast-gap)]',
-        'w-[var(--toast-width)]',
-        'p-[var(--toast-padding)]',
-        'rounded-[var(--toast-radius)]',
-        'bg-[var(--toast-bg)]',
+        'flex flex-col gap-[var(--primitive-spacing-2)]',
+        'w-[360px]',
+        'p-[var(--primitive-spacing-3)]',
+        'rounded-[var(--primitive-radius-lg)]',
+        'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
-        'shadow-[var(--toast-shadow)]',
+        'shadow-lg',
         // Hover state
         'hover:border-[var(--color-action-primary)] hover:border-2',
         // Animation
@@ -250,43 +250,41 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
       onMouseLeave={handleMouseLeave}
     >
       {/* Header Row */}
-      <div className="flex gap-[var(--space-2)]">
+      <div className="flex gap-[var(--primitive-spacing-2)]">
         {/* Icon */}
         <span className="shrink-0 mt-0.5">{variantIcons[toast.variant]}</span>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-2)]">
+        <div className="flex-1 min-w-0 flex flex-col gap-[var(--primitive-spacing-1)]">
           {/* Title */}
           {toast.title && (
             <p className="text-label-md text-[var(--color-text-default)]">{toast.title}</p>
           )}
 
           {/* Message */}
-          <p className="text-[length:var(--toast-font-size)] leading-[var(--toast-line-height)] text-[var(--toast-text)]">
-            {toast.message}
-          </p>
+          <p className="text-body-md text-[var(--color-text-muted)]">{toast.message}</p>
 
           {/* Project Badge */}
           {toast.project && (
-            <span className="inline-flex self-start px-[var(--space-1-5)] py-[var(--space-0-5)] text-body-sm text-[var(--toast-project-text)] bg-[var(--toast-project-bg)] rounded-[var(--radius-sm)]">
+            <span className="inline-flex self-start px-[var(--primitive-spacing-1-5)] py-[var(--primitive-spacing-0-5)] text-body-sm text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-sm)]">
               {toast.project}
             </span>
           )}
         </div>
 
         {/* Right Actions */}
-        <div className="shrink-0 flex flex-col items-end gap-1">
+        <div className="shrink-0 flex flex-col items-end gap-[var(--primitive-spacing-1)]">
           {/* Close Button */}
           {dismissible && (
             <button
               type="button"
               onClick={handleDismiss}
               className={twMerge(
-                'p-1 -m-1',
-                'rounded-[var(--radius-sm)]',
-                'text-[var(--toast-close-color)]',
-                'hover:text-[var(--toast-close-hover)]',
-                'hover:bg-[var(--toast-close-hover-bg)]',
+                'p-[var(--primitive-spacing-1)] -m-[var(--primitive-spacing-1)]',
+                'rounded-[var(--primitive-radius-sm)]',
+                'text-[var(--color-text-subtle)]',
+                'hover:text-[var(--color-text-default)]',
+                'hover:bg-[var(--color-surface-hover)]',
                 'transition-colors duration-[var(--duration-fast)]',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
               )}
@@ -297,7 +295,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
 
           {/* Timestamp */}
-          <span className="text-body-sm text-[var(--toast-time-color)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             {formatTime(timestamp)}
           </span>
 
@@ -307,11 +305,11 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
               type="button"
               onClick={toast.action.onClick}
               className={twMerge(
-                'p-1.5',
-                'rounded-[var(--radius-sm)]',
-                'text-[var(--toast-action-color)]',
-                'bg-[var(--toast-action-bg)]',
-                'hover:bg-[var(--toast-action-hover-bg)]',
+                'p-[var(--primitive-spacing-1-5)]',
+                'rounded-[var(--primitive-radius-sm)]',
+                'text-[var(--color-text-muted)]',
+                'bg-[var(--color-surface-subtle)]',
+                'hover:bg-[var(--color-surface-hover)]',
                 'transition-colors duration-[var(--duration-fast)]',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
               )}
@@ -325,17 +323,17 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
       {/* Link Section */}
       {toast.link && (
-        <div className="flex items-center justify-end gap-[var(--space-1-5)]">
+        <div className="flex items-center justify-end gap-[var(--primitive-spacing-1-5)]">
           <button
             type="button"
             onClick={handleLinkClick}
             className={twMerge(
-              'inline-flex items-center gap-[var(--space-1)]',
+              'inline-flex items-center gap-[var(--primitive-spacing-1)]',
               'text-label-md',
               'text-[var(--color-action-primary)]',
               'hover:underline hover:underline-offset-2',
               'transition-colors duration-[var(--duration-fast)]',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--radius-sm)]'
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--primitive-radius-sm)]'
             )}
           >
             <span>{toast.link.label}</span>
@@ -346,18 +344,18 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
       {/* Detail Section */}
       {toast.detail && (
-        <div className="flex flex-col gap-[var(--space-3)]">
+        <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
           {/* View Detail Toggle */}
           <button
             type="button"
             onClick={toggleDetail}
             className={twMerge(
-              'inline-flex items-center justify-end gap-[var(--space-1-5)] w-full',
+              'inline-flex items-center justify-end gap-[var(--primitive-spacing-1-5)] w-full',
               'text-label-md',
               'text-[var(--color-text-default)]',
               'hover:text-[var(--color-text-muted)]',
               'transition-colors duration-[var(--duration-fast)]',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--radius-sm)]'
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] rounded-[var(--primitive-radius-sm)]'
             )}
             aria-expanded={isDetailExpanded}
           >
@@ -374,7 +372,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
           {/* Detail Content */}
           {isDetailExpanded && (
-            <div className="flex flex-col gap-[var(--space-1-5)] px-[var(--space-4)] py-[var(--space-3)] bg-[var(--color-gray-50)] rounded-[var(--radius-base)]">
+            <div className="flex flex-col gap-[var(--primitive-spacing-1-5)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-3)] bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               {toast.detail.code && (
                 <p className="text-label-md text-[var(--color-text-default)]">
                   code: {toast.detail.code}
@@ -405,8 +403,8 @@ export function ToastContainer({
   return (
     <div
       className={twMerge(
-        'fixed z-[var(--z-toast)]',
-        'flex flex-col gap-[var(--toast-container-gap)]',
+        'fixed z-50',
+        'flex flex-col gap-[var(--primitive-spacing-2)]',
         positionStyles[position],
         isBottom && 'flex-col-reverse',
         className

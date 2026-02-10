@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NumberInput } from './NumberInput';
+import { FormField } from '../FormField';
 import { useState } from 'react';
 
 const meta: Meta<typeof NumberInput> = {
@@ -107,7 +108,7 @@ export const Controlled: Story = {
     const [value, setValue] = useState(5);
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
         <NumberInput value={value} onChange={setValue} width="sm" />
         <p className="text-body-sm text-[var(--color-text-subtle)]">현재 값: {value}</p>
       </div>
@@ -121,7 +122,7 @@ export const WithMinMax: Story = {
     const [value, setValue] = useState(5);
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
         <NumberInput value={value} onChange={setValue} min={0} max={10} width="sm" />
         <p className="text-body-sm text-[var(--color-text-subtle)]">범위: 0 ~ 10, 현재: {value}</p>
       </div>
@@ -135,7 +136,7 @@ export const WithStep: Story = {
     const [value, setValue] = useState(0);
 
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
         <NumberInput value={value} onChange={setValue} step={5} min={0} max={100} width="sm" />
         <p className="text-body-sm text-[var(--color-text-subtle)]">Step: 5, 현재: {value}</p>
       </div>
@@ -146,21 +147,29 @@ export const WithStep: Story = {
 // Width Variants
 export const WidthVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">xs (80px)</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          xs (80px)
+        </p>
         <NumberInput defaultValue={1} width="xs" />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">sm (160px)</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          sm (160px)
+        </p>
         <NumberInput defaultValue={10} width="sm" />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">md (240px)</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          md (240px)
+        </p>
         <NumberInput defaultValue={100} width="md" />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">lg (320px)</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          lg (320px)
+        </p>
         <NumberInput defaultValue={1000} width="lg" />
       </div>
     </div>
@@ -185,14 +194,13 @@ export const WithError: Story = {
   },
 };
 
-// With Label (deprecated — use FormField)
+// With Label (FormField 사용)
 export const WithLabel: Story = {
-  args: {
-    label: 'Port Number',
-    defaultValue: 8080,
-    width: 'sm',
-    helperText: '1024-65535 범위의 포트 번호',
-  },
+  render: () => (
+    <FormField label="Port Number" helperText="1024-65535 범위의 포트 번호">
+      <NumberInput defaultValue={8080} width="sm" />
+    </FormField>
+  ),
 };
 
 // Disabled
@@ -207,21 +215,29 @@ export const Disabled: Story = {
 // All States
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">Default</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          Default
+        </p>
         <NumberInput defaultValue={10} width="sm" />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">Disabled</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          Disabled
+        </p>
         <NumberInput defaultValue={10} width="sm" disabled />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">Error</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          Error
+        </p>
         <NumberInput defaultValue={-1} width="sm" error="Invalid value" />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">Hide Steppers</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          Hide Steppers
+        </p>
         <NumberInput defaultValue={42} width="sm" hideSteppers />
       </div>
     </div>

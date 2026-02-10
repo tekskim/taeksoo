@@ -137,7 +137,7 @@ export const SlashSeparator: Story = {
       { label: 'Users', href: '/users' },
       { label: 'John Doe' },
     ],
-    separator: <IconSlash size={16} className="text-gray-400" />,
+    separator: <IconSlash size={16} className="text-[var(--color-text-muted)]" />,
   },
 };
 
@@ -149,7 +149,7 @@ export const TextSeparator: Story = {
       { label: 'Products', href: '/products' },
       { label: 'Electronics' },
     ],
-    separator: <span className="text-gray-400 text-sm">/</span>,
+    separator: <span className="text-[var(--color-text-muted)] text-body-md">/</span>,
   },
 };
 

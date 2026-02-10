@@ -84,26 +84,26 @@ type Story = StoryObj<typeof WizardSection>;
 export const StatusIcons: Story = {
   name: 'Status Icons',
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <WizardSectionStatusIcon status="pre" />
-        <span className="text-sm">Pre (Waiting)</span>
+        <span className="text-body-md">Pre (Waiting)</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <WizardSectionStatusIcon status="active" />
-        <span className="text-sm">Active</span>
+        <span className="text-body-md">Active</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <WizardSectionStatusIcon status="writing" />
-        <span className="text-sm">Writing</span>
+        <span className="text-body-md">Writing</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <WizardSectionStatusIcon status="done" />
-        <span className="text-sm">Done</span>
+        <span className="text-body-md">Done</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-[var(--primitive-spacing-2)]">
         <WizardSectionStatusIcon status="skipped" />
-        <span className="text-sm">Skipped</span>
+        <span className="text-body-md">Skipped</span>
       </div>
     </div>
   ),
@@ -163,7 +163,7 @@ export const AllStates: Story = {
         <SectionCard isActive>
           <SectionCard.Header title="Step 2: Configuration" />
           <SectionCard.Content>
-            <p className="text-sm text-[var(--color-text-muted)]">
+            <p className="text-body-md text-[var(--color-text-muted)]">
               Configure your instance settings here...
             </p>
           </SectionCard.Content>
@@ -220,7 +220,7 @@ export const FullWizardExample: Story = {
         <SectionCard isActive>
           <SectionCard.Header title="Network Configuration" />
           <SectionCard.Content>
-            <div className="text-sm text-[var(--color-text-muted)] py-4">
+            <div className="text-body-md text-[var(--color-text-muted)] py-[var(--primitive-spacing-4)]">
               Select VPC, subnet, and security group settings...
             </div>
           </SectionCard.Content>
@@ -262,7 +262,7 @@ export const WithSkippedSteps: Story = {
         <SectionCard isActive>
           <SectionCard.Header title="Review" />
           <SectionCard.Content>
-            <p className="text-sm text-[var(--color-text-muted)]">
+            <p className="text-body-md text-[var(--color-text-muted)]">
               Review your configuration before creating...
             </p>
           </SectionCard.Content>

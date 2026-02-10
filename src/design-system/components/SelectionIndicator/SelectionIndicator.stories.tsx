@@ -161,17 +161,17 @@ export const CustomEmptyText: Story = {
 // In Form Context
 export const InFormContext: Story = {
   render: () => (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-[var(--color-text-default)]">
-        Selected Instances
-      </label>
+    <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
+      <label className="text-label-md text-[var(--color-text-default)]">Selected Instances</label>
       <SelectionIndicator
         selectedItems={[
           { id: '1', label: 'prod-web-01' },
           { id: '2', label: 'prod-web-02' },
         ]}
         onRemove={(id) => console.log('Remove:', id)}
-        rightContent={<span className="text-xs text-[var(--color-text-muted)]">2 selected</span>}
+        rightContent={
+          <span className="text-body-sm text-[var(--color-text-muted)]">2 selected</span>
+        }
       />
     </div>
   ),

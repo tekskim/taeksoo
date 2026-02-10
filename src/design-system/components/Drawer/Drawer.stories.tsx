@@ -136,7 +136,7 @@ export const Default: Story = {
       <>
         <Button onClick={() => setIsOpen(true)}>Open Drawer</Button>
         <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Drawer Title">
-          <p className="text-sm text-[var(--color-text-muted)]">
+          <p className="text-body-md text-[var(--color-text-muted)]">
             This is the drawer content. You can put any content here.
           </p>
         </Drawer>
@@ -160,14 +160,23 @@ export const LeftSide: Story = {
           side="left"
           width={280}
         >
-          <nav className="flex flex-col gap-2">
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+          <nav className="flex flex-col gap-[var(--primitive-spacing-2)]">
+            <a
+              href="#"
+              className="px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] rounded hover:bg-[var(--color-surface-subtle)]"
+            >
               Dashboard
             </a>
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+            <a
+              href="#"
+              className="px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] rounded hover:bg-[var(--color-surface-subtle)]"
+            >
               Projects
             </a>
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+            <a
+              href="#"
+              className="px-[var(--primitive-spacing-3)] py-[var(--primitive-spacing-2)] rounded hover:bg-[var(--color-surface-subtle)]"
+            >
               Settings
             </a>
           </nav>
@@ -190,7 +199,7 @@ export const WithFooter: Story = {
           onClose={() => setIsOpen(false)}
           title="Edit Item"
           footer={
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-[var(--primitive-spacing-2)] justify-end">
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
@@ -198,7 +207,7 @@ export const WithFooter: Story = {
             </div>
           }
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
             <Input label="Name" placeholder="Enter name" fullWidth />
             <Input label="Description" placeholder="Enter description" fullWidth />
           </div>
@@ -222,7 +231,7 @@ export const EditForm: Story = {
           title="Instance Settings"
           width={400}
           footer={
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-[var(--primitive-spacing-2)] justify-end">
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
@@ -230,9 +239,9 @@ export const EditForm: Story = {
             </div>
           }
         >
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
-              <h3 className="text-sm font-medium">General</h3>
+          <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
+            <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+              <h3 className="text-label-lg text-[var(--color-text-default)]">General</h3>
               <Input label="Instance Name" defaultValue="my-instance-01" fullWidth />
               <Select
                 label="Region"
@@ -246,18 +255,18 @@ export const EditForm: Story = {
               />
             </div>
 
-            <div className="flex flex-col gap-4">
-              <h3 className="text-sm font-medium">Features</h3>
+            <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+              <h3 className="text-label-lg text-[var(--color-text-default)]">Features</h3>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Auto-scaling</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Auto-scaling</span>
                 <Toggle defaultChecked />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Monitoring</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Monitoring</span>
                 <Toggle defaultChecked />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Backup</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Backup</span>
                 <Toggle />
               </div>
             </div>
@@ -277,11 +286,11 @@ export const WideDrawer: Story = {
       <>
         <Button onClick={() => setIsOpen(true)}>Open Wide Drawer</Button>
         <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Detailed View" width={600}>
-          <div className="flex flex-col gap-4">
-            <p className="text-sm text-[var(--color-text-muted)]">
+          <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+            <p className="text-body-md text-[var(--color-text-muted)]">
               This drawer is wider than the default to accommodate more content.
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-[var(--primitive-spacing-4)]">
               <Input label="First Name" placeholder="John" />
               <Input label="Last Name" placeholder="Doe" />
               <Input label="Email" placeholder="john@example.com" />
@@ -309,7 +318,7 @@ export const NoBackdropClose: Story = {
           closeOnBackdropClick={false}
           closeOnEscape={false}
           footer={
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-[var(--primitive-spacing-2)] justify-end">
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Discard
               </Button>
@@ -317,7 +326,7 @@ export const NoBackdropClose: Story = {
             </div>
           }
         >
-          <p className="text-sm text-[var(--color-text-muted)]">
+          <p className="text-body-md text-[var(--color-text-muted)]">
             This drawer can only be closed by clicking the buttons. Clicking the backdrop or
             pressing ESC won't close it.
           </p>
@@ -336,9 +345,9 @@ export const NoTitle: Story = {
       <>
         <Button onClick={() => setIsOpen(true)}>Open Drawer</Button>
         <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <div className="text-center py-8">
-            <h2 className="text-lg font-semibold mb-2">Custom Header</h2>
-            <p className="text-sm text-[var(--color-text-muted)]">
+          <div className="text-center py-[var(--primitive-spacing-8)]">
+            <h2 className="text-heading-h5 mb-[var(--primitive-spacing-2)]">Custom Header</h2>
+            <p className="text-body-md text-[var(--color-text-muted)]">
               This drawer doesn't have a built-in title
             </p>
           </div>
@@ -366,11 +375,14 @@ export const ScrollableContent: Story = {
             </Button>
           }
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
             {Array.from({ length: 20 }, (_, i) => (
-              <div key={i} className="p-4 border border-[var(--color-border-default)] rounded">
-                <h3 className="font-medium">Item {i + 1}</h3>
-                <p className="text-sm text-[var(--color-text-muted)]">
+              <div
+                key={i}
+                className="p-[var(--primitive-spacing-4)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]"
+              >
+                <h3 className="text-label-lg">Item {i + 1}</h3>
+                <p className="text-body-md text-[var(--color-text-muted)]">
                   This is the description for item {i + 1}. It contains some text to demonstrate
                   scrollable content.
                 </p>

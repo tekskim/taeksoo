@@ -111,7 +111,7 @@ export const Default: Story = {
 // Positions
 export const Positions: Story = {
   render: () => (
-    <div className="flex gap-8 p-12 justify-center">
+    <div className="flex gap-[var(--primitive-spacing-8)] p-[var(--primitive-spacing-12)] justify-center">
       <Tooltip content="Top tooltip" position="top">
         <Button variant="secondary">Top</Button>
       </Tooltip>
@@ -131,10 +131,10 @@ export const Positions: Story = {
 // With Icons
 export const WithIcon: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
-      <span className="text-sm">Instance type</span>
+    <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+      <span className="text-body-md">Instance type</span>
       <Tooltip content="Select the compute capacity for your instance">
-        <IconInfoCircle size={16} className="text-[var(--color-text-muted)] cursor-help" />
+        <IconInfoCircle size={12} className="text-[var(--color-text-muted)] cursor-help" />
       </Tooltip>
     </div>
   ),
@@ -143,7 +143,7 @@ export const WithIcon: Story = {
 // On Button
 export const OnButton: Story = {
   render: () => (
-    <div className="flex gap-4">
+    <div className="flex gap-[var(--primitive-spacing-4)]">
       <Tooltip content="Create a new item">
         <Button>Create</Button>
       </Tooltip>
@@ -170,13 +170,13 @@ export const WithJSXContent: Story = {
   render: () => (
     <Tooltip
       content={
-        <div className="flex items-center gap-2">
-          <IconHelpCircle size={14} />
+        <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+          <IconHelpCircle size={12} />
           <span>Click for more help</span>
         </div>
       }
     >
-      <Button variant="ghost" icon={<IconHelpCircle size={16} />} aria-label="Help" />
+      <Button variant="ghost" icon={<IconHelpCircle size={12} />} aria-label="Help" />
     </Tooltip>
   ),
 };
@@ -184,7 +184,7 @@ export const WithJSXContent: Story = {
 // Different Delays
 export const Delays: Story = {
   render: () => (
-    <div className="flex gap-4">
+    <div className="flex gap-[var(--primitive-spacing-4)]">
       <Tooltip content="Instant (0ms)" delay={0}>
         <Button variant="secondary">Instant</Button>
       </Tooltip>
@@ -213,11 +213,11 @@ export const Disabled: Story = {
 // Focus Support
 export const FocusSupport: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm text-[var(--color-text-muted)]">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+      <p className="text-body-md text-[var(--color-text-muted)]">
         Tab through the buttons to see tooltips on focus
       </p>
-      <div className="flex gap-4">
+      <div className="flex gap-[var(--primitive-spacing-4)]">
         <Tooltip content="First action">
           <Button variant="secondary">Action 1</Button>
         </Tooltip>
@@ -235,33 +235,33 @@ export const FocusSupport: Story = {
 // Real-world Example
 export const RealWorldExample: Story = {
   render: () => (
-    <div className="w-[400px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex flex-col gap-4">
+    <div className="w-[400px] p-[var(--primitive-spacing-4)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)]">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">CPU Usage</span>
+          <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+            <span className="text-label-lg">CPU Usage</span>
             <Tooltip content="Current CPU utilization across all cores">
-              <IconInfoCircle size={14} className="text-[var(--color-text-muted)] cursor-help" />
+              <IconInfoCircle size={12} className="text-[var(--color-text-muted)] cursor-help" />
             </Tooltip>
           </div>
           <span className="text-[var(--color-state-success)]">23%</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">Memory</span>
+          <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+            <span className="text-label-lg">Memory</span>
             <Tooltip content="RAM usage including cache and buffers">
-              <IconInfoCircle size={14} className="text-[var(--color-text-muted)] cursor-help" />
+              <IconInfoCircle size={12} className="text-[var(--color-text-muted)] cursor-help" />
             </Tooltip>
           </div>
           <span className="text-[var(--color-state-warning)]">67%</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">Disk I/O</span>
+          <div className="flex items-center gap-[var(--primitive-spacing-2)]">
+            <span className="text-label-lg">Disk I/O</span>
             <Tooltip content="Read/Write operations per second">
-              <IconInfoCircle size={14} className="text-[var(--color-text-muted)] cursor-help" />
+              <IconInfoCircle size={12} className="text-[var(--color-text-muted)] cursor-help" />
             </Tooltip>
           </div>
           <span>1.2K IOPS</span>

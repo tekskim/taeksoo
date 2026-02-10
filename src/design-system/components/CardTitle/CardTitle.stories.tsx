@@ -8,7 +8,7 @@ const meta: Meta<typeof CardTitle> = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div className="max-w-md p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+      <div className="max-w-md p-[var(--primitive-spacing-4)] bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
         <Story />
       </div>
     ),
@@ -158,7 +158,7 @@ export const WithIcon: Story = {
 // All Status Colors
 export const AllStatusColors: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <CardTitle title="Success Status" showStatus statusColor="success" />
       <CardTitle title="Warning Status" showStatus statusColor="warning" />
       <CardTitle title="Error Status" showStatus statusColor="error" />
@@ -171,7 +171,7 @@ export const AllStatusColors: Story = {
 // Badge Variants
 export const BadgeVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
       <CardTitle
         title="Badge Examples"
         badges={[

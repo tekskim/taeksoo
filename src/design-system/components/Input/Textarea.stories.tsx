@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Textarea } from './Textarea';
+import { FormField } from '../FormField';
 import { useState } from 'react';
 
 const meta: Meta<typeof Textarea> = {
@@ -125,100 +126,84 @@ export const Default: Story = {
   ],
 };
 
-// With Label
+// With Label (FormField 사용)
 export const WithLabel: Story = {
-  args: {
-    label: 'Description',
-    placeholder: 'Enter a detailed description...',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Description">
+        <Textarea placeholder="Enter a detailed description..." fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
-// Required
+// Required (FormField 사용)
 export const Required: Story = {
-  args: {
-    label: 'Notes',
-    placeholder: 'Enter notes...',
-    required: true,
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Notes" required>
+        <Textarea placeholder="Enter notes..." fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
-// With Helper Text
+// With Helper Text (FormField 사용)
 export const WithHelperText: Story = {
-  args: {
-    label: 'Description',
-    placeholder: 'Enter description...',
-    helperText: 'Provide a detailed description of the resource.',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Description" helperText="Provide a detailed description of the resource.">
+        <Textarea placeholder="Enter description..." fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
-// Character Count
+// Character Count (FormField 사용)
 export const WithCharacterCount: Story = {
   render: function CharacterCountExample() {
     const [value, setValue] = useState('');
 
     return (
       <div style={{ width: '400px' }}>
-        <Textarea
-          label="Bio"
-          placeholder="Tell us about yourself..."
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          maxLength={200}
-          showCount
-          fullWidth
-        />
+        <FormField label="Bio">
+          <Textarea
+            placeholder="Tell us about yourself..."
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            maxLength={200}
+            showCount
+            fullWidth
+          />
+        </FormField>
       </div>
     );
   },
 };
 
-// Error State
+// Error State (FormField 사용)
 export const WithError: Story = {
-  args: {
-    label: 'Description',
-    defaultValue: 'Too short',
-    error: 'Description must be at least 20 characters.',
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField
+        label="Description"
+        errorMessage="Description must be at least 20 characters."
+        error
+      >
+        <Textarea defaultValue="Too short" fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
-// Code Variant
+// Code Variant (FormField 사용)
 export const CodeVariant: Story = {
-  args: {
-    variant: 'code',
-    label: 'YAML Configuration',
-    defaultValue: `apiVersion: v1
+  render: () => (
+    <div style={{ width: '500px' }}>
+      <FormField label="YAML Configuration">
+        <Textarea
+          variant="code"
+          defaultValue={`apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
@@ -229,35 +214,34 @@ spec:
     - name: nginx
       image: nginx:latest
       ports:
-        - containerPort: 80`,
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '500px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+        - containerPort: 80`}
+          fullWidth
+        />
+      </FormField>
+    </div>
+  ),
 };
 
-// Auto Resize
+// Auto Resize (FormField 사용)
 export const AutoResize: Story = {
   render: function AutoResizeExample() {
     const [value, setValue] = useState('Type here and watch the textarea grow...');
 
     return (
       <div style={{ width: '400px' }}>
-        <Textarea
+        <FormField
           label="Auto-resize Textarea"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          autoResize
-          minRows={2}
-          maxRows={10}
-          fullWidth
           helperText="높이가 내용에 따라 자동 조절됩니다 (최소 2줄, 최대 10줄)"
-        />
+        >
+          <Textarea
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            autoResize
+            minRows={2}
+            maxRows={10}
+            fullWidth
+          />
+        </FormField>
       </div>
     );
   },
@@ -266,69 +250,77 @@ export const AutoResize: Story = {
 // Resize Options
 export const ResizeOptions: Story = {
   render: () => (
-    <div className="flex flex-col gap-4" style={{ width: '400px' }}>
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]" style={{ width: '400px' }}>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">resize=&quot;none&quot;</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          resize=&quot;none&quot;
+        </p>
         <Textarea placeholder="Cannot resize" resize="none" fullWidth />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
           resize=&quot;vertical&quot; (default)
         </p>
         <Textarea placeholder="Vertical resize only" resize="vertical" fullWidth />
       </div>
       <div>
-        <p className="text-label-sm text-[var(--color-text-muted)] mb-1">resize=&quot;both&quot;</p>
+        <p className="text-label-sm text-[var(--color-text-muted)] mb-[var(--primitive-spacing-1)]">
+          resize=&quot;both&quot;
+        </p>
         <Textarea placeholder="Resize in any direction" resize="both" fullWidth />
       </div>
     </div>
   ),
 };
 
-// Disabled
+// Disabled (FormField 사용)
 export const Disabled: Story = {
-  args: {
-    label: 'Disabled Textarea',
-    defaultValue: 'This textarea is disabled.',
-    disabled: true,
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Disabled Textarea">
+        <Textarea defaultValue="This textarea is disabled." disabled fullWidth />
+      </FormField>
+    </div>
+  ),
 };
 
-// Read Only
+// Read Only (FormField 사용)
 export const ReadOnly: Story = {
-  args: {
-    label: 'Read Only',
-    defaultValue: 'This content is read-only. You can select and copy the text but cannot edit it.',
-    readOnly: true,
-    fullWidth: true,
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
+  render: () => (
+    <div style={{ width: '400px' }}>
+      <FormField label="Read Only">
+        <Textarea
+          defaultValue="This content is read-only. You can select and copy the text but cannot edit it."
+          readOnly
+          fullWidth
+        />
+      </FormField>
+    </div>
+  ),
 };
 
-// All States
+// All States (FormField 사용)
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4" style={{ width: '400px' }}>
-      <Textarea label="Default" placeholder="Default state" fullWidth />
-      <Textarea label="With Value" defaultValue="Some content here" fullWidth />
-      <Textarea label="Disabled" defaultValue="Disabled content" disabled fullWidth />
-      <Textarea label="Read Only" defaultValue="Read only content" readOnly fullWidth />
-      <Textarea label="Error" defaultValue="Invalid" error="This field has an error" fullWidth />
-      <Textarea label="Code" variant="code" defaultValue="const x = 42;" fullWidth />
+    <div className="flex flex-col gap-[var(--primitive-spacing-4)]" style={{ width: '400px' }}>
+      <FormField label="Default">
+        <Textarea placeholder="Default state" fullWidth />
+      </FormField>
+      <FormField label="With Value">
+        <Textarea defaultValue="Some content here" fullWidth />
+      </FormField>
+      <FormField label="Disabled">
+        <Textarea defaultValue="Disabled content" disabled fullWidth />
+      </FormField>
+      <FormField label="Read Only">
+        <Textarea defaultValue="Read only content" readOnly fullWidth />
+      </FormField>
+      <FormField label="Error" errorMessage="This field has an error" error>
+        <Textarea defaultValue="Invalid" fullWidth />
+      </FormField>
+      <FormField label="Code">
+        <Textarea variant="code" defaultValue="const x = 42;" fullWidth />
+      </FormField>
     </div>
   ),
 };

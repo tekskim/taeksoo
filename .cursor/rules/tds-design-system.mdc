@@ -1472,8 +1472,6 @@ import { EmptyState } from '@/design-system';
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
 - 페이지 패턴 스토리: Storybook > Patterns > Page Patterns
 
-## 버전
-
-- **Current Version**: 1.1.0
+## 버전- **Current Version**: 1.1.0
 - **Last Updated**: 2026-02-07
 - **Changelog**: `/CHANGELOG.md`

@@ -146,7 +146,7 @@ export function RadioGroup({
         {label && (
           <legend
             id={labelId}
-            className={`text-label-lg text-[var(--color-text-default)] ${description ? 'mb-[4px]' : 'mb-[12px]'}`}
+            className={`text-label-lg text-[var(--color-text-default)] ${description ? 'mb-[var(--primitive-spacing-1)]' : 'mb-[var(--primitive-spacing-3)]'}`}
           >
             {label}
           </legend>
@@ -156,7 +156,10 @@ export function RadioGroup({
         {/* Description ↔ Options: 12px */}
         {/* Description uses text-body-md (12px/18px) */}
         {description && (
-          <p id={descriptionId} className="text-body-md text-[var(--color-text-subtle)] mb-[12px]">
+          <p
+            id={descriptionId}
+            className="text-body-md text-[var(--color-text-subtle)] mb-[var(--primitive-spacing-3)]"
+          >
             {description}
           </p>
         )}
@@ -174,12 +177,12 @@ export function RadioGroup({
           {renderContent()}
         </div>
 
-        {/* Error message */}
+        {/* Error message — 8px gap from options */}
         {error && errorMessage && (
           <p
             id={errorId}
             role="alert"
-            className="text-[length:var(--radio-error-size)] leading-[var(--radio-error-line-height)] text-[var(--radio-error-text)]"
+            className="text-body-sm text-[var(--color-state-danger)] mt-[var(--primitive-spacing-2)]"
           >
             {errorMessage}
           </p>

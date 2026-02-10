@@ -154,18 +154,18 @@ export const BadgeLayout: Story = {
 export const AllSizes: Story = {
   name: 'All Sizes (Icon Only)',
   render: () => (
-    <div className="flex items-center gap-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex items-center gap-[var(--primitive-spacing-4)]">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <StatusIndicator status="active" layout="icon-only" size="sm" />
-        <span className="text-xs text-gray-500">sm</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">sm</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <StatusIndicator status="active" layout="icon-only" size="md" />
-        <span className="text-xs text-gray-500">md</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">md</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-[var(--primitive-spacing-2)]">
         <StatusIndicator status="active" layout="icon-only" size="lg" />
-        <span className="text-xs text-gray-500">lg</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">lg</span>
       </div>
     </div>
   ),
@@ -178,7 +178,7 @@ export const AllSizes: Story = {
 export const SuccessStatuses: Story = {
   name: 'Category - Success (Green)',
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="active" layout="default" />
     </div>
   ),
@@ -187,7 +187,7 @@ export const SuccessStatuses: Story = {
 export const DangerStatuses: Story = {
   name: 'Category - Danger (Red)',
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="error" layout="default" />
     </div>
   ),
@@ -196,7 +196,7 @@ export const DangerStatuses: Story = {
 export const InfoStatuses: Story = {
   name: 'Category - Info (Blue)',
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="building" layout="default" />
       <StatusIndicator status="deleting" layout="default" />
     </div>
@@ -206,7 +206,7 @@ export const InfoStatuses: Story = {
 export const WarningStatuses: Story = {
   name: 'Category - Warning (Orange)',
   render: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="verify-resized" layout="default" />
       <StatusIndicator status="degraded" layout="default" />
       <StatusIndicator status="no-monitor" layout="default" />
@@ -217,7 +217,7 @@ export const WarningStatuses: Story = {
 export const MutedStatuses: Story = {
   name: 'Category - Muted (Gray)',
   render: () => (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex flex-wrap gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="suspended" layout="default" />
       <StatusIndicator status="shelved" layout="default" />
       <StatusIndicator status="mounted" layout="default" />
@@ -263,10 +263,10 @@ export const AllStatuses: Story = {
     ];
 
     return (
-      <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-3 gap-4">
+      <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
+        <div className="grid grid-cols-3 gap-[var(--primitive-spacing-4)]">
           {statuses.map((status) => (
-            <div key={status} className="flex items-center gap-3">
+            <div key={status} className="flex items-center gap-[var(--primitive-spacing-3)]">
               <StatusIndicator status={status} layout="icon-only" size="md" />
               <StatusIndicator status={status} layout="default" />
             </div>
@@ -297,36 +297,48 @@ export const CustomLabel: Story = {
 export const InstanceTable: Story = {
   name: 'Use Case - Instance Table',
   render: () => (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-gray-50">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+      <table className="w-full text-body-md">
+        <thead className="bg-[var(--color-surface-subtle)]">
           <tr>
-            <th className="px-4 py-2 text-left">Instance</th>
-            <th className="px-4 py-2 text-left">Status</th>
+            <th className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] text-left">
+              Instance
+            </th>
+            <th className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] text-left">
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-t">
-            <td className="px-4 py-2">web-server-01</td>
-            <td className="px-4 py-2">
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+              web-server-01
+            </td>
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
               <StatusIndicator status="active" layout="icon-only" size="sm" />
             </td>
           </tr>
           <tr className="border-t">
-            <td className="px-4 py-2">web-server-02</td>
-            <td className="px-4 py-2">
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+              web-server-02
+            </td>
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
               <StatusIndicator status="building" layout="icon-only" size="sm" />
             </td>
           </tr>
           <tr className="border-t">
-            <td className="px-4 py-2">db-server-01</td>
-            <td className="px-4 py-2">
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+              db-server-01
+            </td>
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
               <StatusIndicator status="error" layout="icon-only" size="sm" />
             </td>
           </tr>
           <tr className="border-t">
-            <td className="px-4 py-2">cache-server-01</td>
-            <td className="px-4 py-2">
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+              cache-server-01
+            </td>
+            <td className="px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
               <StatusIndicator status="shutoff" layout="icon-only" size="sm" />
             </td>
           </tr>
@@ -339,12 +351,12 @@ export const InstanceTable: Story = {
 export const ResourceCard: Story = {
   name: 'Use Case - Resource Card',
   render: () => (
-    <div className="border border-gray-200 rounded-lg p-4 w-64">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-medium">Production Server</h3>
+    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-[var(--primitive-spacing-4)] w-64">
+      <div className="flex items-center justify-between mb-[var(--primitive-spacing-3)]">
+        <h3 className="text-label-lg text-[var(--color-text-default)]">Production Server</h3>
         <StatusIndicator status="active" layout="badge" />
       </div>
-      <div className="text-sm text-gray-600">
+      <div className="text-body-md text-[var(--color-text-muted)]">
         <p>CPU: 45%</p>
         <p>Memory: 2.4 GB / 8 GB</p>
         <p>Uptime: 15 days</p>

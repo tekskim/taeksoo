@@ -74,27 +74,27 @@ export function Breadcrumb({ items, separator, className = '', maxItems = 0 }: B
               ) : isLast ? (
                 <span
                   aria-current="page"
-                  className="text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-current)]"
+                  className="inline-flex items-center text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-current)]"
                 >
-                  {item.icon && <span className="mr-1">{item.icon}</span>}
+                  {item.icon && <span className="mr-1 flex items-center">{item.icon}</span>}
                   {item.label}
                 </span>
               ) : item.href ? (
                 <Link
                   to={item.href}
                   onClick={item.onClick}
-                  className="text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-color)] hover:text-[var(--breadcrumb-text-hover)] transition-colors duration-[var(--duration-fast)]"
+                  className="inline-flex items-center text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-color)] hover:text-[var(--breadcrumb-text-hover)] transition-colors duration-[var(--duration-fast)]"
                 >
-                  {item.icon && <span className="mr-1">{item.icon}</span>}
+                  {item.icon && <span className="mr-1 flex items-center">{item.icon}</span>}
                   {item.label}
                 </Link>
               ) : (
                 <button
                   type="button"
                   onClick={item.onClick}
-                  className="text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-color)] hover:text-[var(--breadcrumb-text-hover)] transition-colors duration-[var(--duration-fast)] bg-transparent border-none cursor-pointer p-0"
+                  className="inline-flex items-center text-[length:var(--breadcrumb-font-size)] leading-[var(--breadcrumb-line-height)] font-medium text-[var(--breadcrumb-text-color)] hover:text-[var(--breadcrumb-text-hover)] transition-colors duration-[var(--duration-fast)] bg-transparent border-none cursor-pointer p-0"
                 >
-                  {item.icon && <span className="mr-1">{item.icon}</span>}
+                  {item.icon && <span className="mr-1 flex items-center">{item.icon}</span>}
                   {item.label}
                 </button>
               )}
