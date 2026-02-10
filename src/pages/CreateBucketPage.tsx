@@ -798,7 +798,7 @@ export default function CreateBucketPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab } = useTabs();
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1054,6 +1054,8 @@ export default function CreateBucketPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          showAddButton={true}
           showWindowControls={true}
         />
       }

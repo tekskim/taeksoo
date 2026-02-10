@@ -342,7 +342,7 @@ export function Table<T extends Record<string, any>>({
                           leading-[var(--table-line-height)]
                           text-[var(--color-text-default)]
                           min-w-0
-                          overflow-hidden
+                          ${column.render ? '' : 'overflow-hidden'}
                           ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
                           ${showCellDivider ? 'border-l border-transparent' : ''}
                         `}
@@ -351,7 +351,7 @@ export function Table<T extends Record<string, any>>({
                         >
                           {column.render ? (
                             <span
-                              className={`truncate w-full ${column.align === 'center' ? 'flex justify-center' : column.align === 'right' ? 'flex justify-end' : ''}`}
+                              className={`w-full overflow-visible ${column.align === 'center' ? 'flex justify-center' : column.align === 'right' ? 'flex justify-end' : ''}`}
                             >
                               {column.render(row[column.key], row, rowIndex)}
                             </span>
