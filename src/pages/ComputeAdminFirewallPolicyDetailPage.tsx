@@ -338,7 +338,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
                     className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
                     aria-label="Download"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </button>
                 </div>
 

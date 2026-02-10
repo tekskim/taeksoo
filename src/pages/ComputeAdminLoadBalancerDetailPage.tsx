@@ -661,7 +661,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
                         />
                       </div>
                       <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                        <IconDownload size={14} stroke={1.5} />
+                        <IconDownload size={12} stroke={1.5} />
                       </button>
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -720,7 +720,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
                         />
                       </div>
                       <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                        <IconDownload size={14} stroke={1.5} />
+                        <IconDownload size={12} stroke={1.5} />
                       </button>
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />

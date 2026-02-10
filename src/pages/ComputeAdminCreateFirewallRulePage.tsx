@@ -141,7 +141,7 @@ function SummarySidebar({
 
 export default function ComputeAdminCreateFirewallRulePage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, closeTab, selectTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
 
   // Section status state
@@ -317,6 +317,8 @@ export default function ComputeAdminCreateFirewallRulePage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
         />
@@ -377,209 +379,224 @@ export default function ComputeAdminCreateFirewallRulePage() {
                 }
               />
               {sectionStatus['basic-info'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  {/* Rule name */}
-                  <VStack gap={2} align="stretch">
-                    <div className="flex gap-[3px]">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Rule name
-                      </span>
-                      <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                        *
-                      </span>
-                    </div>
-                    <Input
-                      placeholder="Enter rule name"
-                      value={ruleName}
-                      onChange={(e) => {
-                        setRuleName(e.target.value);
-                        setRuleNameError(null);
-                      }}
-                      fullWidth
-                      error={!!ruleNameError}
-                    />
-                    {ruleNameError && (
-                      <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                        {ruleNameError}
-                      </span>
-                    )}
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      You can use letters, numbers, and special characters (+=,.@-_), and the length
-                      must be between 2-128 characters.
-                    </span>
-                  </VStack>
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* Description */}
-                  <VStack gap={2} align="stretch">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Description
-                    </span>
-                    <Input
-                      placeholder="Enter description "
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      fullWidth
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                      maximum 255 characters.
-                    </span>
-                  </VStack>
-
-                  {/* Owned tenant */}
-                  <VStack gap={2} align="stretch">
-                    <VStack gap={2} align="start">
+                    {/* Rule name */}
+                    <VStack gap={3} align="stretch" className="py-6">
                       <div className="flex gap-[3px]">
                         <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                          Owned tenant
+                          Rule name
                         </span>
                         <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                           *
                         </span>
                       </div>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Select the tenant that will own the rule.
+                      <Input
+                        placeholder="Enter rule name"
+                        value={ruleName}
+                        onChange={(e) => {
+                          setRuleName(e.target.value);
+                          setRuleNameError(null);
+                        }}
+                        fullWidth
+                        error={!!ruleNameError}
+                      />
+                      {ruleNameError && (
+                        <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                          {ruleNameError}
+                        </span>
+                      )}
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        You can use letters, numbers, and special characters (+=,.@-_), and the
+                        length must be between 2-128 characters.
                       </span>
                     </VStack>
 
-                    {/* Tenant Search */}
-                    <SearchInput
-                      placeholder="Search tenants by attributes"
-                      value={tenantSearch}
-                      onChange={(e) => {
-                        setTenantSearch(e.target.value);
-                        setTenantPage(1);
-                      }}
-                    />
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Tenant Pagination */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="size-6 flex items-center justify-center disabled:opacity-40"
-                        disabled={tenantPage === 1}
-                        onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
-                      >
-                        <IconChevronLeft size={16} stroke={1.5} />
-                      </button>
-                      {Array.from({ length: Math.min(5, totalTenantPages) }, (_, i) => i + 1).map(
-                        (page) => (
-                          <button
-                            key={page}
-                            className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
-                              page === tenantPage
-                                ? 'bg-[var(--color-action-primary)] text-white'
-                                : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
-                            }`}
-                            onClick={() => setTenantPage(page)}
-                          >
-                            {page}
-                          </button>
-                        )
-                      )}
-                      <button
-                        className="size-6 flex items-center justify-center disabled:opacity-40"
-                        disabled={tenantPage === totalTenantPages}
-                        onClick={() => setTenantPage((p) => Math.min(totalTenantPages, p + 1))}
-                      >
-                        <IconChevronRight size={16} stroke={1.5} />
-                      </button>
-                      <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        {filteredTenants.length} items
+                    {/* Description */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                        Description
                       </span>
-                    </div>
+                      <Input
+                        placeholder="Enter description "
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        fullWidth
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                        maximum 255 characters.
+                      </span>
+                    </VStack>
 
-                    {/* Tenant Table with Radio Selection */}
-                    <div className="w-full">
-                      <Table
-                        columns={tenantColumns}
-                        data={paginatedTenants}
-                        rowKey="id"
-                        emptyMessage="No tenants found"
-                        onRowClick={(row) => {
-                          if (row.status !== 'deactivated') {
-                            setSelectedTenant(row.id);
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Owned tenant */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <VStack gap={2} align="start">
+                        <div className="flex gap-[3px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                            Owned tenant
+                          </span>
+                          <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                            *
+                          </span>
+                        </div>
+                        <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                          Select the tenant that will own the rule.
+                        </span>
+                      </VStack>
+
+                      {/* Tenant Search */}
+                      <SearchInput
+                        placeholder="Search tenants by attributes"
+                        value={tenantSearch}
+                        onChange={(e) => {
+                          setTenantSearch(e.target.value);
+                          setTenantPage(1);
+                        }}
+                        className="w-[280px]"
+                      />
+
+                      {/* Tenant Pagination */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="size-6 flex items-center justify-center disabled:opacity-40"
+                          disabled={tenantPage === 1}
+                          onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
+                        >
+                          <IconChevronLeft size={16} stroke={1.5} />
+                        </button>
+                        {Array.from({ length: Math.min(5, totalTenantPages) }, (_, i) => i + 1).map(
+                          (page) => (
+                            <button
+                              key={page}
+                              className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
+                                page === tenantPage
+                                  ? 'bg-[var(--color-action-primary)] text-white'
+                                  : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
+                              }`}
+                              onClick={() => setTenantPage(page)}
+                            >
+                              {page}
+                            </button>
+                          )
+                        )}
+                        <button
+                          className="size-6 flex items-center justify-center disabled:opacity-40"
+                          disabled={tenantPage === totalTenantPages}
+                          onClick={() => setTenantPage((p) => Math.min(totalTenantPages, p + 1))}
+                        >
+                          <IconChevronRight size={16} stroke={1.5} />
+                        </button>
+                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          {filteredTenants.length} items
+                        </span>
+                      </div>
+
+                      {/* Tenant Table with Radio Selection */}
+                      <div className="w-full">
+                        <Table
+                          columns={tenantColumns}
+                          data={paginatedTenants}
+                          rowKey="id"
+                          emptyMessage="No tenants found"
+                          onRowClick={(row) => {
+                            if (row.status !== 'deactivated') {
+                              setSelectedTenant(row.id);
+                              setTenantError(false);
+                            }
+                          }}
+                        />
+                      </div>
+
+                      {/* Selection indicator */}
+                      <SelectionIndicator
+                        selectedItems={selectedTenantItems}
+                        onRemove={() => setSelectedTenant(null)}
+                        emptyText="No item selected"
+                        error={tenantError}
+                        errorMessage="Please select a tenant"
+                      />
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Enabled */}
+                    <VStack gap={3} align="start" className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                        Enabled
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                        Indicates whether the rule is enabled.
+                      </span>
+                      <Toggle
+                        checked={enabled}
+                        onChange={(e) => setEnabled(e.target.checked)}
+                        label={enabled ? 'On' : 'Off'}
+                      />
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Shared */}
+                    <VStack gap={3} align="start" className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                        Shared
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                        Indicates whether the rule is shared with other tenants.
+                      </span>
+                      <Toggle
+                        checked={shared}
+                        onChange={(e) => setShared(e.target.checked)}
+                        label={shared ? 'Yes' : 'No'}
+                      />
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Next Button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          // Validate required fields
+                          let hasError = false;
+
+                          if (!ruleName.trim()) {
+                            setRuleNameError('Please enter a rule name.');
+                            hasError = true;
+                          } else {
+                            setRuleNameError(null);
+                          }
+
+                          if (!selectedTenant) {
+                            setTenantError(true);
+                            hasError = true;
+                          } else {
                             setTenantError(false);
                           }
+
+                          // Only proceed to next section if no errors
+                          if (!hasError) {
+                            setSectionStatus((prev) => ({
+                              ...prev,
+                              'basic-info': 'done',
+                              configuration: 'active',
+                            }));
+                          }
                         }}
-                      />
-                    </div>
-
-                    {/* Selection indicator */}
-                    <SelectionIndicator
-                      selectedItems={selectedTenantItems}
-                      onRemove={() => setSelectedTenant(null)}
-                      emptyText="No item selected"
-                      error={tenantError}
-                      errorMessage="Please select a tenant"
-                    />
+                      >
+                        Next
+                      </Button>
+                    </HStack>
                   </VStack>
-
-                  {/* Enabled */}
-                  <VStack gap={2} align="start">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Enabled
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                      Indicates whether the rule is enabled.
-                    </span>
-                    <Toggle
-                      checked={enabled}
-                      onChange={(e) => setEnabled(e.target.checked)}
-                      label={enabled ? 'On' : 'Off'}
-                    />
-                  </VStack>
-
-                  {/* Shared */}
-                  <VStack gap={2} align="start">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Shared
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                      Indicates whether the rule is shared with other tenants.
-                    </span>
-                    <Toggle
-                      checked={shared}
-                      onChange={(e) => setShared(e.target.checked)}
-                      label={shared ? 'Yes' : 'No'}
-                    />
-                  </VStack>
-
-                  {/* Next Button */}
-                  <div className="flex items-center justify-end w-full">
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        // Validate required fields
-                        let hasError = false;
-
-                        if (!ruleName.trim()) {
-                          setRuleNameError('Please enter a rule name.');
-                          hasError = true;
-                        } else {
-                          setRuleNameError(null);
-                        }
-
-                        if (!selectedTenant) {
-                          setTenantError(true);
-                          hasError = true;
-                        } else {
-                          setTenantError(false);
-                        }
-
-                        // Only proceed to next section if no errors
-                        if (!hasError) {
-                          setSectionStatus((prev) => ({
-                            ...prev,
-                            'basic-info': 'done',
-                            configuration: 'active',
-                          }));
-                        }
-                      }}
-                    >
-                      Next
-                    </Button>
-                  </div>
                 </SectionCard.Content>
               )}
               {sectionStatus['basic-info'] === 'done' && (
@@ -612,146 +629,162 @@ export default function ComputeAdminCreateFirewallRulePage() {
                 }
               />
               {sectionStatus['configuration'] === 'active' && (
-                <SectionCard.Content gap={6}>
-                  {/* Protocol */}
-                  <VStack gap={2} align="stretch">
-                    <div className="flex gap-[3px]">
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Protocol */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <div className="flex gap-[3px]">
+                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                          Protocol
+                        </span>
+                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                          *
+                        </span>
+                      </div>
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                        Select the protocol to which the rule applies.
+                      </span>
+                      <div>
+                        <Select
+                          options={[
+                            { value: 'tcp', label: 'TCP' },
+                            { value: 'udp', label: 'UDP' },
+                            { value: 'icmp', label: 'ICMP' },
+                            { value: 'any', label: 'Any' },
+                          ]}
+                          value={protocol}
+                          onChange={setProtocol}
+                          placeholder="Select a protocol"
+                          fullWidth
+                        />
+                      </div>
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Action */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <div className="flex gap-[6px] items-center">
+                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                          Action
+                        </span>
+                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                          *
+                        </span>
+                      </div>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Choose whether to allow or deny the traffic.
+                      </span>
+                      <RadioGroup value={action} onChange={setAction} orientation="vertical">
+                        <Radio value="allow" label="Allow" />
+                        <Radio value="deny" label="Deny" />
+                        <Radio value="reject" label="Reject" />
+                      </RadioGroup>
+                    </VStack>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Source CIDR */}
+                    <VStack gap={3} align="stretch" className="py-6">
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Protocol
+                        Source CIDR
                       </span>
-                      <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                        *
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Specifies the source network or IP address in CIDR format.
                       </span>
-                    </div>
-                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                      Select the protocol to which the rule applies.
-                    </span>
-                    <div>
-                      <Select
-                        options={[
-                          { value: 'tcp', label: 'TCP' },
-                          { value: 'udp', label: 'UDP' },
-                          { value: 'icmp', label: 'ICMP' },
-                          { value: 'any', label: 'Any' },
-                        ]}
-                        value={protocol}
-                        onChange={setProtocol}
-                        placeholder="Select a protocol"
+                      <Input
+                        placeholder="e.g. 192.168.0.0/24"
+                        value={sourceIp}
+                        onChange={(e) => setSourceIp(e.target.value)}
                         fullWidth
                       />
-                    </div>
-                  </VStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Must be entered in CIDR format (IP/prefix).
+                      </span>
+                    </VStack>
 
-                  {/* Action */}
-                  <VStack gap={2} align="stretch">
-                    <div className="flex gap-[6px] items-center">
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Source Port */}
+                    <VStack gap={3} align="stretch" className="py-6">
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Action
+                        Source Port
                       </span>
-                      <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                        *
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Specifies the port range to which the rule applies.
                       </span>
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Choose whether to allow or deny the traffic.
-                    </span>
-                    <RadioGroup value={action} onChange={setAction} orientation="vertical">
-                      <Radio value="allow" label="Allow" />
-                      <Radio value="deny" label="Deny" />
-                      <Radio value="reject" label="Reject" />
-                    </RadioGroup>
-                  </VStack>
+                      <Input
+                        placeholder="e.g. 80 or 80–443"
+                        value={sourcePort}
+                        onChange={(e) => setSourcePort(e.target.value)}
+                        fullWidth
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Must be a number between 1–65535 or a "start–end" range.
+                      </span>
+                    </VStack>
 
-                  {/* Source CIDR */}
-                  <VStack gap={2} align="stretch">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Source CIDR
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Specifies the source network or IP address in CIDR format.
-                    </span>
-                    <Input
-                      placeholder="e.g. 192.168.0.0/24"
-                      value={sourceIp}
-                      onChange={(e) => setSourceIp(e.target.value)}
-                      fullWidth
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Must be entered in CIDR format (IP/prefix).
-                    </span>
-                  </VStack>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* Source Port */}
-                  <VStack gap={2} align="stretch">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Source Port
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Specifies the port range to which the rule applies.
-                    </span>
-                    <Input
-                      placeholder="e.g. 80 or 80–443"
-                      value={sourcePort}
-                      onChange={(e) => setSourcePort(e.target.value)}
-                      fullWidth
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Must be a number between 1–65535 or a "start–end" range.
-                    </span>
-                  </VStack>
+                    {/* Destination CIDR */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                        Destination CIDR
+                      </span>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Specifies the destination network or IP address in CIDR format.
+                      </span>
+                      <Input
+                        placeholder="e.g. 10.0.0.0/16"
+                        value={destinationIp}
+                        onChange={(e) => setDestinationIp(e.target.value)}
+                        fullWidth
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Must be entered in CIDR format (IP/prefix).
+                      </span>
+                    </VStack>
 
-                  {/* Destination CIDR */}
-                  <VStack gap={2} align="stretch">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Destination CIDR
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Specifies the destination network or IP address in CIDR format.
-                    </span>
-                    <Input
-                      placeholder="e.g. 10.0.0.0/16"
-                      value={destinationIp}
-                      onChange={(e) => setDestinationIp(e.target.value)}
-                      fullWidth
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Must be entered in CIDR format (IP/prefix).
-                    </span>
-                  </VStack>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                  {/* Destination Port */}
-                  <VStack gap={2} align="stretch">
-                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                      Destination Port
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Defines the network address (CIDR) for the subnet.
-                    </span>
-                    <Input
-                      placeholder="e.g. 443 or 3000–4000"
-                      value={destinationPort}
-                      onChange={(e) => setDestinationPort(e.target.value)}
-                      fullWidth
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                      Must be a number between 1–65535 or a "start–end" range.
-                    </span>
-                  </VStack>
+                    {/* Destination Port */}
+                    <VStack gap={3} align="stretch" className="py-6">
+                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                        Destination Port
+                      </span>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Defines the network address (CIDR) for the subnet.
+                      </span>
+                      <Input
+                        placeholder="e.g. 443 or 3000–4000"
+                        value={destinationPort}
+                        onChange={(e) => setDestinationPort(e.target.value)}
+                        fullWidth
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Must be a number between 1–65535 or a "start–end" range.
+                      </span>
+                    </VStack>
 
-                  {/* Next Button */}
-                  <div className="flex items-center justify-end w-full">
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        setSectionStatus((prev) => ({
-                          ...prev,
-                          configuration: 'done',
-                        }));
-                      }}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    {/* Next Button */}
+                    <HStack justify="end" className="pt-3">
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setSectionStatus((prev) => ({
+                            ...prev,
+                            configuration: 'done',
+                          }));
+                        }}
+                      >
+                        Next
+                      </Button>
+                    </HStack>
+                  </VStack>
                 </SectionCard.Content>
               )}
               {sectionStatus['configuration'] === 'done' && (

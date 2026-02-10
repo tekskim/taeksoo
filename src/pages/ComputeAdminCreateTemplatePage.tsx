@@ -756,175 +756,188 @@ function TemplateInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content gap={6} className="pt-2">
-        {/* Template name */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Template name <span className="text-[var(--color-state-danger)]">*</span>
-          </span>
-          <VStack gap={1}>
-            <Input
-              placeholder="Enter instance template name"
-              value={templateName}
-              onChange={(e) => handleNameChange(e.target.value)}
-              fullWidth
-              error={!!templateNameError}
-            />
-            {templateNameError && (
-              <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                {templateNameError}
-              </span>
-            )}
-          </VStack>
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
-            between 2-128 characters.
-          </span>
-        </VStack>
-
-        {/* Description */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
-          <Input
-            placeholder="Enter description"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            fullWidth
-          />
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
-            characters.
-          </span>
-        </VStack>
-
-        {/* Visibility */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Visibility<span className="text-[var(--color-state-danger)]">*</span>
-          </span>
-          <RadioGroup
-            value={isFavorite ? 'public' : 'private'}
-            onChange={(value) => onIsFavoriteChange(value === 'public')}
-            orientation="horizontal"
-          >
-            <Radio value="public" label="Public" />
-            <Radio value="private" label="Private" />
-          </RadioGroup>
-        </VStack>
-
-        {/* Tenant Section - shown when Private is selected */}
-        {!isFavorite && (
-          <VStack gap={4}>
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Tenant<span className="text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the tenant that can use the template.
-              </span>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          {/* Template name */}
+          <VStack gap={2} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Template name <span className="text-[var(--color-state-danger)]">*</span>
+            </span>
+            <VStack gap={1}>
+              <Input
+                placeholder="Enter instance template name"
+                value={templateName}
+                onChange={(e) => handleNameChange(e.target.value)}
+                fullWidth
+                error={!!templateNameError}
+              />
+              {templateNameError && (
+                <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                  {templateNameError}
+                </span>
+              )}
             </VStack>
-
-            {/* Search */}
-            <SearchInput
-              placeholder="Search tenants by attributes"
-              value={tenantSearchQuery}
-              onChange={(e) => {
-                setTenantSearchQuery(e.target.value);
-                setTenantCurrentPage(1);
-              }}
-              size="sm"
-            />
-
-            {/* Pagination */}
-            <Pagination
-              currentPage={tenantCurrentPage}
-              totalPages={totalTenantPages}
-              totalItems={filteredTenants.length}
-              onPageChange={setTenantCurrentPage}
-            />
-
-            {/* Tenant Table */}
-            <Table<Tenant>
-              columns={[
-                {
-                  key: 'id',
-                  label: '',
-                  width: fixedColumns.select,
-                  align: 'center',
-                  render: (_, row) => (
-                    <Radio
-                      value={row.id}
-                      checked={selectedTenant === row.id}
-                      onChange={() => handleTenantSelect(row.id)}
-                    />
-                  ),
-                },
-                {
-                  key: 'status',
-                  label: 'Status',
-                  width: fixedColumns.status,
-                  align: 'center',
-                  render: (_, row) => (
-                    <StatusIndicator
-                      status={row.status === 'active' ? 'active' : 'deactivated'}
-                      layout="icon-only"
-                    />
-                  ),
-                },
-                {
-                  key: 'name',
-                  label: 'Name',
-                  sortable: true,
-                  render: (value: string, row: Tenant) => (
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-medium text-[var(--color-action-primary)]">
-                        {value}
-                      </span>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID: {row.id}
-                      </span>
-                    </div>
-                  ),
-                },
-                {
-                  key: 'description',
-                  label: 'Description',
-                  sortable: true,
-                },
-              ]}
-              data={paginatedTenants}
-              rowKey="id"
-              onRowClick={(row) => handleTenantSelect(row.id)}
-            />
-
-            {/* Selection indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedTenant
-                  ? [
-                      {
-                        id: selectedTenant,
-                        label:
-                          mockTenants.find((t) => t.id === selectedTenant)?.name || selectedTenant,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectedTenantChange(null)}
-              emptyText="No item selected"
-              error={!!tenantError}
-              errorMessage={tenantError || undefined}
-            />
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+              between 2-128 characters.
+            </span>
           </VStack>
-        )}
 
-        {!isEditing && (
-          <HStack justify="end">
-            <Button variant="primary" onClick={handleNextClick}>
-              Next
-            </Button>
-          </HStack>
-        )}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Description */}
+          <VStack gap={2} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
+            <Input
+              placeholder="Enter description"
+              value={description}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              fullWidth
+            />
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+              characters.
+            </span>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Visibility */}
+          <VStack gap={3} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Visibility<span className="text-[var(--color-state-danger)]">*</span>
+            </span>
+            <RadioGroup
+              value={isFavorite ? 'public' : 'private'}
+              onChange={(value) => onIsFavoriteChange(value === 'public')}
+              orientation="horizontal"
+            >
+              <Radio value="public" label="Public" />
+              <Radio value="private" label="Private" />
+            </RadioGroup>
+          </VStack>
+
+          {/* Tenant Section - shown when Private is selected */}
+          {!isFavorite && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <VStack gap={4} className="py-6">
+                <VStack gap={2}>
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    Tenant<span className="text-[var(--color-state-danger)]">*</span>
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                    Select the tenant that can use the template.
+                  </span>
+                </VStack>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search tenants by attributes"
+                  value={tenantSearchQuery}
+                  onChange={(e) => {
+                    setTenantSearchQuery(e.target.value);
+                    setTenantCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={tenantCurrentPage}
+                  totalPages={totalTenantPages}
+                  totalItems={filteredTenants.length}
+                  onPageChange={setTenantCurrentPage}
+                />
+
+                {/* Tenant Table + Selection indicator */}
+                <VStack gap={2}>
+                  <Table<Tenant>
+                    columns={[
+                      {
+                        key: 'id',
+                        label: '',
+                        width: fixedColumns.select,
+                        align: 'center',
+                        render: (_, row) => (
+                          <Radio
+                            value={row.id}
+                            checked={selectedTenant === row.id}
+                            onChange={() => handleTenantSelect(row.id)}
+                          />
+                        ),
+                      },
+                      {
+                        key: 'status',
+                        label: 'Status',
+                        width: fixedColumns.status,
+                        align: 'center',
+                        render: (_, row) => (
+                          <StatusIndicator
+                            status={row.status === 'active' ? 'active' : 'deactivated'}
+                            layout="icon-only"
+                          />
+                        ),
+                      },
+                      {
+                        key: 'name',
+                        label: 'Name',
+                        sortable: true,
+                        render: (value: string, row: Tenant) => (
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-medium text-[var(--color-action-primary)]">
+                              {value}
+                            </span>
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              ID: {row.id}
+                            </span>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 'description',
+                        label: 'Description',
+                        sortable: true,
+                      },
+                    ]}
+                    data={paginatedTenants}
+                    rowKey="id"
+                    onRowClick={(row) => handleTenantSelect(row.id)}
+                  />
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedTenant
+                        ? [
+                            {
+                              id: selectedTenant,
+                              label:
+                                mockTenants.find((t) => t.id === selectedTenant)?.name ||
+                                selectedTenant,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => onSelectedTenantChange(null)}
+                    emptyText="No item selected"
+                    error={!!tenantError}
+                    errorMessage={tenantError || undefined}
+                  />
+                </VStack>
+              </VStack>
+            </>
+          )}
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {!isEditing && (
+            <HStack justify="end" className="pt-3">
+              <Button variant="primary" onClick={handleNextClick}>
+                Next
+              </Button>
+            </HStack>
+          )}
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -976,31 +989,36 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content gap={6} className="pt-2">
-        {/* AZ (Availability zone) */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            AZ (Availability zone)
-          </span>
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            Select the availability zone for the instance.
-          </span>
-          <Select
-            options={azOptions}
-            value={availabilityZone}
-            onChange={onAvailabilityZoneChange}
-            placeholder="Select AZ"
-            fullWidth
-          />
-        </VStack>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          {/* AZ (Availability zone) */}
+          <VStack gap={2} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              AZ (Availability zone)
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the availability zone for the instance.
+            </span>
+            <Select
+              options={azOptions}
+              value={availabilityZone}
+              onChange={onAvailabilityZoneChange}
+              placeholder="Select AZ"
+              fullWidth
+            />
+          </VStack>
 
-        {!isEditing && (
-          <HStack justify="end">
-            <Button variant="primary" onClick={onNext}>
-              Next
-            </Button>
-          </HStack>
-        )}
+          {!isEditing && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <HStack justify="end" className="pt-3">
+                <Button variant="primary" onClick={onNext}>
+                  Next
+                </Button>
+              </HStack>
+            </>
+          )}
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -1288,187 +1306,197 @@ function ImageSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={4} className="pt-2">
-          {/* Start Source */}
-          <VStack gap={2}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Select a template to launch the instance. You can start from an OS image, a snapshot,
-              or an existing volume.
-            </span>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+          <div className="py-6">
+            {/* Start Source */}
+            <VStack gap={3}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select a template to launch the instance. You can start from an OS image, a
+                snapshot, or an existing volume.
+              </span>
 
-            {/* Source Tabs */}
-            <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance snapshot</Tab>
-                <Tab value="volume">Bootable volume</Tab>
-              </TabList>
-            </Tabs>
+              {/* Source Tabs */}
+              <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="image">Image</Tab>
+                  <Tab value="snapshot">Instance snapshot</Tab>
+                  <Tab value="volume">Bootable volume</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* OS Filter Chips Container - Only for Image tab */}
-            {sourceTab === 'image' && (
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                <button
-                  className={osChipStyle(osFilter === 'other')}
-                  onClick={() => {
-                    setOsFilter('other');
-                    setCurrentPage(1);
-                  }}
-                >
-                  <IconDots size={14} />
-                  <span>Others</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'ubuntu')}
-                  onClick={() => {
-                    setOsFilter('ubuntu');
-                    setCurrentPage(1);
-                  }}
-                >
-                  <IconUbuntu size={14} />
-                  <span>Ubuntu</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'windows')}
-                  onClick={() => {
-                    setOsFilter('windows');
-                    setCurrentPage(1);
-                  }}
-                >
-                  <IconGrid size={14} />
-                  <span>Windows</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'rocky')}
-                  onClick={() => {
-                    setOsFilter('rocky');
-                    setCurrentPage(1);
-                  }}
-                >
-                  <IconRocky size={14} />
-                  <span>Rocky</span>
-                </button>
-              </div>
-            )}
+              {/* OS Filter Chips Container - Only for Image tab */}
+              {sourceTab === 'image' && (
+                <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
+                  <button
+                    className={osChipStyle(osFilter === 'other')}
+                    onClick={() => {
+                      setOsFilter('other');
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <IconDots size={14} />
+                    <span>Others</span>
+                  </button>
+                  <button
+                    className={osChipStyle(osFilter === 'ubuntu')}
+                    onClick={() => {
+                      setOsFilter('ubuntu');
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <IconUbuntu size={14} />
+                    <span>Ubuntu</span>
+                  </button>
+                  <button
+                    className={osChipStyle(osFilter === 'windows')}
+                    onClick={() => {
+                      setOsFilter('windows');
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <IconGrid size={14} />
+                    <span>Windows</span>
+                  </button>
+                  <button
+                    className={osChipStyle(osFilter === 'rocky')}
+                    onClick={() => {
+                      setOsFilter('rocky');
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <IconRocky size={14} />
+                    <span>Rocky</span>
+                  </button>
+                </div>
+              )}
 
-            {/* Search */}
-            <SearchInput
-              placeholder="Search image by attributes"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              onClear={() => {
-                setSearchQuery('');
-                setCurrentPage(1);
-              }}
-              size="sm"
-            />
+              {/* Search */}
+              <SearchInput
+                placeholder="Search image by attributes"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                onClear={() => {
+                  setSearchQuery('');
+                  setCurrentPage(1);
+                }}
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
 
-            {/* Pagination - Above Table */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={filteredImages.length}
-              itemsPerPage={itemsPerPage}
-            />
+              {/* Pagination - Above Table */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={filteredImages.length}
+                itemsPerPage={itemsPerPage}
+              />
 
-            {/* Image Table */}
-            <Table
-              columns={
-                sourceTab === 'snapshot'
-                  ? snapshotColumns
-                  : sourceTab === 'volume'
-                    ? volumeColumns
-                    : imageColumns
-              }
-              data={paginatedImages}
-              onRowClick={(row) => handleSelectImage(row.id)}
-            />
+              {/* Image Table + Selection Indicator */}
+              <VStack gap={2}>
+                <Table
+                  columns={
+                    sourceTab === 'snapshot'
+                      ? snapshotColumns
+                      : sourceTab === 'volume'
+                        ? volumeColumns
+                        : imageColumns
+                  }
+                  data={paginatedImages}
+                  onRowClick={(row) => handleSelectImage(row.id)}
+                />
+                <SelectionIndicator
+                  selectedItems={
+                    selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                  }
+                  onRemove={() => onSelectImage('')}
+                />
+              </VStack>
+            </VStack>
+          </div>
 
-            {/* Selection Indicator for Image */}
-            <SelectionIndicator
-              selectedItems={
-                selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-              }
-              onRemove={() => onSelectImage('')}
-            />
-          </VStack>
-
-          {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* System disk Section */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Configure whether to create a system disk for booting.
-            </span>
+          <div className="py-6">
+            {/* System disk Section */}
+            <VStack gap={3}>
+              <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Configure whether to create a system disk for booting.
+              </span>
 
-            {/* Toggle */}
-            <Toggle
-              checked={createSystemDisk}
-              onChange={setCreateSystemDisk}
-              label="Create a new system disk"
-            />
+              {/* Toggle */}
+              <Toggle
+                checked={createSystemDisk}
+                onChange={setCreateSystemDisk}
+                label="Create a new system disk"
+              />
 
-            {/* Storage Type Row - Bordered Container */}
-            {createSystemDisk && (
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
-                <HStack gap={6} align="center">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                    <Select
-                      options={storageTypeOptions}
-                      value={storageType}
-                      onChange={onStorageTypeChange}
+              {/* Storage Type Row - Bordered Container */}
+              {createSystemDisk && (
+                <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+                  <HStack gap={6} align="center">
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
+                      <Select
+                        options={storageTypeOptions}
+                        value={storageType}
+                        onChange={onStorageTypeChange}
+                      />
+                    </HStack>
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
+                      <NumberInput
+                        value={storageSize}
+                        onChange={onStorageSizeChange}
+                        min={10}
+                        max={1000}
+                        width="sm"
+                      />
+                      <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+                    </HStack>
+                    <Checkbox
+                      label="Deleted with the instance"
+                      checked={deleteWithInstance}
+                      onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
                     />
                   </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                    <NumberInput
-                      value={storageSize}
-                      onChange={onStorageSizeChange}
-                      min={10}
-                      max={1000}
-                      width="sm"
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-                  </HStack>
-                  <Checkbox
-                    label="Deleted with the instance"
-                    checked={deleteWithInstance}
-                    onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
-                  />
-                </HStack>
-              </div>
-            )}
-          </VStack>
+                </div>
+              )}
+            </VStack>
+          </div>
 
-          {/* Data disk Section */}
-          <VStack gap={3} align="start">
-            <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Attach additional volumes for data storage.
-            </span>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} />}
-              onClick={handleAddDataDisk}
-            >
-              Add Data disk
-            </Button>
-          </VStack>
+          <div className="py-6">
+            {/* Data disk Section */}
+            <VStack gap={3} align="start">
+              <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Attach additional volumes for data storage.
+              </span>
 
-          {/* Next Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} />}
+                onClick={handleAddDataDisk}
+              >
+                Add Data disk
+              </Button>
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {!isEditing && (
-            <HStack justify="end" className="w-full">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
@@ -1622,85 +1650,90 @@ function FlavorSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={6} className="pt-2">
-          {/* Flavors Label & Description */}
-          <VStack gap={2} align="start">
-            <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-              Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
-            </span>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-              Select a flavor from the list to use for the instance.
-            </span>
-          </VStack>
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+          <VStack gap={3} className="py-6">
+            {/* Flavors Label & Description */}
+            <VStack gap={2} align="start">
+              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                Select a flavor from the list to use for the instance.
+              </span>
+            </VStack>
 
-          {/* Flavor Type Tabs */}
-          <VStack gap={2} align="stretch">
-            <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="cpu">CPU</Tab>
-                <Tab value="gpu">GPU</Tab>
-                <Tab value="npu">NPU</Tab>
-              </TabList>
-            </Tabs>
+            {/* Flavor Type Tabs */}
+            <VStack gap={2} align="stretch">
+              <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="cpu">CPU</Tab>
+                  <Tab value="gpu">GPU</Tab>
+                  <Tab value="npu">NPU</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* Search & Download */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search flavors by attributes"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onClear={() => {
-                  setSearchQuery('');
-                  setCurrentPage(1);
-                }}
-                size="sm"
+              {/* Search & Download */}
+              <HStack gap={1} align="center">
+                <SearchInput
+                  placeholder="Search flavors by attributes"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <button
+                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
+                  title="Download"
+                >
+                  <IconDownload size={12} stroke={1.5} />
+                </button>
+              </HStack>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredFlavors.length}
+                onPageChange={setCurrentPage}
               />
-              <button
-                className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
-                title="Download"
-              >
-                <IconDownload size={12} stroke={1.5} />
-              </button>
-            </HStack>
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredFlavors.length}
-              onPageChange={setCurrentPage}
-            />
+              {/* Flavor Table */}
+              <Table
+                columns={flavorColumns}
+                data={paginatedFlavors}
+                rowKey="id"
+                onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
+              />
 
-            {/* Flavor Table */}
-            <Table
-              columns={flavorColumns}
-              data={paginatedFlavors}
-              rowKey="id"
-              onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
-            />
-
-            {/* Selection Indicator for Flavor */}
-            <SelectionIndicator
-              selectedItems={
-                selectedFlavor
-                  ? [
-                      {
-                        id: selectedFlavor.id,
-                        label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectFlavor('')}
-              error={!!flavorError}
-              errorMessage={flavorError || undefined}
-            />
+              {/* Selection Indicator for Flavor */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFlavor
+                    ? [
+                        {
+                          id: selectedFlavor.id,
+                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => onSelectFlavor('')}
+                error={!!flavorError}
+                errorMessage={flavorError || undefined}
+              />
+            </VStack>
           </VStack>
 
-          {/* Next Button - hidden in edit mode */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {!isEditing && (
-            <HStack justify="end">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
@@ -2149,261 +2182,295 @@ function NetworkSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={6} className="pt-2">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Networks Section */}
-          <VStack gap={2} align="stretch">
-            <VStack gap={2} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                If you select a port, selecting a network is optional. You may still add another
-                network if required.
-              </span>
-            </VStack>
+          <div className="py-6">
+            <VStack gap={3} align="stretch">
+              <VStack gap={2} align="start">
+                <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                  Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                  If you select a port, selecting a network is optional. You may still add another
+                  network if required.
+                </span>
+              </VStack>
 
-            {/* Network Tabs */}
-            <Tabs
-              value={networkTab}
-              onChange={(v) => {
-                setNetworkTab(v);
-                setNetworkPage(1);
-              }}
-              variant="underline"
-              size="sm"
-            >
-              <TabList>
-                <Tab value="current">Current tenant</Tab>
-                <Tab value="shared">Shared</Tab>
-                <Tab value="external">External</Tab>
-              </TabList>
-            </Tabs>
-
-            {/* Network Search & Create Button */}
-            <HStack justify="between" align="center">
-              <SearchInput
-                placeholder="Search networks by attributes"
-                value={networkSearch}
-                onChange={(e) => {
-                  setNetworkSearch(e.target.value);
+              {/* Network Tabs */}
+              <Tabs
+                value={networkTab}
+                onChange={(v) => {
+                  setNetworkTab(v);
                   setNetworkPage(1);
                 }}
-                onClear={() => {
-                  setNetworkSearch('');
-                  setNetworkPage(1);
-                }}
+                variant="underline"
                 size="sm"
-              />
-              <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
-                Create a new network
-              </Button>
-            </HStack>
-
-            {/* Network Pagination */}
-            <Pagination
-              currentPage={networkPage}
-              totalPages={networkTotalPages}
-              totalItems={filteredNetworks.length}
-              onPageChange={setNetworkPage}
-              selectedCount={selectedNetworkIds.size}
-            />
-
-            {/* Network Table */}
-            <Table
-              columns={networkColumns}
-              data={paginatedNetworks}
-              rowKey="id"
-              onRowClick={(row) => handleNetworkToggle(row.id)}
-            />
-
-            {/* Selection Indicator for Networks */}
-            <SelectionIndicator
-              selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
-              onRemove={(id) => handleNetworkToggle(id)}
-              error={!!networkError}
-              errorMessage={networkError || undefined}
-            />
-          </VStack>
-
-          {/* Virtual LAN Section */}
-          <VStack gap={2} align="stretch">
-            <VStack gap={2} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                Virtual LAN
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                Each selected network requires at least one Virtual LAN configuration. Each VLAN
-                represents a virtual network card (NIC) attached to the selected network.
-              </span>
-            </VStack>
-
-            {/* Virtual LAN Rows */}
-            {virtualLANs.map((vlan) => (
-              <div
-                key={vlan.id}
-                className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
               >
-                <HStack gap={4} align="center">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Network</span>
-                    <Select
-                      options={[{ value: 'network', label: 'network' }]}
-                      value={vlan.network}
-                      onChange={() => {}}
-                    />
-                  </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Subnet</span>
-                    <Select
-                      options={[{ value: 'subnet', label: 'subnet' }]}
-                      value={vlan.subnet}
-                      onChange={() => {}}
-                    />
-                  </HStack>
-                  <Select
-                    options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
-                    value={vlan.autoAssign}
-                    onChange={() => {}}
-                  />
-                </HStack>
-                <button
-                  className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => removeVirtualLAN(vlan.id)}
-                >
-                  <IconX size={12} className="text-[var(--color-text-subtle)]" />
-                </button>
-              </div>
-            ))}
+                <TabList>
+                  <Tab value="current">Current tenant</Tab>
+                  <Tab value="shared">Shared</Tab>
+                  <Tab value="external">External</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* Add Virtual LAN Button */}
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} />}
-              onClick={addVirtualLAN}
-            >
-              Add virtual LAN
-            </Button>
-          </VStack>
-
-          {/* Security groups Section */}
-          <VStack gap={2} align="stretch">
-            <VStack gap={2} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                Security groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                Security groups apply to all networks except ports with security disabled.
-              </span>
-            </VStack>
-
-            {/* Security group Search & Create Button */}
-            <HStack justify="between" align="center">
-              <SearchInput
-                placeholder="Search security groups by attributes"
-                value={sgSearch}
-                onChange={(e) => {
-                  setSgSearch(e.target.value);
-                  setSgPage(1);
-                }}
-                onClear={() => {
-                  setSgSearch('');
-                  setSgPage(1);
-                }}
-                size="sm"
-              />
-              <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
-                Create a new security group
-              </Button>
-            </HStack>
-
-            {/* Security group Pagination */}
-            <Pagination
-              currentPage={sgPage}
-              totalPages={sgTotalPages}
-              totalItems={filteredSGs.length}
-              onPageChange={setSgPage}
-              selectedCount={selectedSecurityGroups.size}
-            />
-
-            {/* Security group Table */}
-            <Table
-              columns={sgColumns}
-              data={paginatedSGs}
-              rowKey="id"
-              onRowClick={(row) => handleSecurityGroupToggle(row.id)}
-            />
-
-            {/* Selection Indicator for Security Groups */}
-            <SelectionIndicator
-              selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
-              onRemove={(id) => handleSecurityGroupToggle(id)}
-              error={!!sgError}
-              errorMessage={sgError || undefined}
-            />
-          </VStack>
-
-          {/* Port Section (Collapsible) */}
-          <VStack gap={3} align="stretch">
-            <button
-              className="flex items-center gap-1 text-label-lg text-[var(--color-text-default)]"
-              onClick={() => setPortExpanded(!portExpanded)}
-            >
-              {portExpanded ? (
-                <IconCaretDownFilled size={12} />
-              ) : (
-                <IconCaretRightFilled size={12} />
-              )}
-              Port
-            </button>
-
-            {portExpanded && (
-              <VStack gap={2} align="stretch">
-                {/* Port Search */}
+              {/* Network Search & Create Button */}
+              <HStack justify="between" align="center">
                 <SearchInput
-                  placeholder="Search ports by attributes"
-                  value={portSearch}
+                  placeholder="Search networks by attributes"
+                  value={networkSearch}
                   onChange={(e) => {
-                    setPortSearch(e.target.value);
-                    setPortPage(1);
+                    setNetworkSearch(e.target.value);
+                    setNetworkPage(1);
                   }}
                   onClear={() => {
-                    setPortSearch('');
-                    setPortPage(1);
+                    setNetworkSearch('');
+                    setNetworkPage(1);
                   }}
                   size="sm"
+                  className="w-[var(--search-input-width)]"
                 />
+                <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
+                  Create a new network
+                </Button>
+              </HStack>
 
-                {/* Port Pagination */}
-                <Pagination
-                  currentPage={portPage}
-                  totalPages={portTotalPages}
-                  totalItems={filteredPorts.length}
-                  onPageChange={setPortPage}
-                  selectedCount={selectedPortIds.size}
-                />
+              {/* Network Pagination */}
+              <Pagination
+                currentPage={networkPage}
+                totalPages={networkTotalPages}
+                totalItems={filteredNetworks.length}
+                onPageChange={setNetworkPage}
+                selectedCount={selectedNetworkIds.size}
+              />
 
-                {/* Port Table */}
+              {/* Network Table + Selection Indicator */}
+              <VStack gap={2}>
                 <Table
-                  columns={portColumns}
-                  data={paginatedPorts}
+                  columns={networkColumns}
+                  data={paginatedNetworks}
                   rowKey="id"
-                  onRowClick={(row) => handlePortToggle(row.id)}
+                  onRowClick={(row) => handleNetworkToggle(row.id)}
                 />
 
-                {/* Selection Indicator for Ports */}
+                {/* Selection Indicator for Networks */}
                 <SelectionIndicator
-                  selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
-                  onRemove={(id) => handlePortToggle(id)}
+                  selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
+                  onRemove={(id) => handleNetworkToggle(id)}
+                  error={!!networkError}
+                  errorMessage={networkError || undefined}
                 />
               </VStack>
-            )}
-          </VStack>
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Virtual LAN Section */}
+          <div className="py-6">
+            <VStack gap={3} align="stretch">
+              <VStack gap={2} align="start">
+                <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                  Virtual LAN
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                  Each selected network requires at least one Virtual LAN configuration. Each VLAN
+                  represents a virtual network card (NIC) attached to the selected network.
+                </span>
+              </VStack>
+
+              {/* Virtual LAN Rows + Add Button */}
+              <VStack gap={2}>
+                {virtualLANs.map((vlan) => (
+                  <div
+                    key={vlan.id}
+                    className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
+                  >
+                    <HStack gap={4} align="center">
+                      <HStack gap={1.5} align="center">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Network
+                        </span>
+                        <Select
+                          options={[{ value: 'network', label: 'network' }]}
+                          value={vlan.network}
+                          onChange={() => {}}
+                        />
+                      </HStack>
+                      <HStack gap={1.5} align="center">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Subnet
+                        </span>
+                        <Select
+                          options={[{ value: 'subnet', label: 'subnet' }]}
+                          value={vlan.subnet}
+                          onChange={() => {}}
+                        />
+                      </HStack>
+                      <Select
+                        options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
+                        value={vlan.autoAssign}
+                        onChange={() => {}}
+                      />
+                    </HStack>
+                    <button
+                      className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                      onClick={() => removeVirtualLAN(vlan.id)}
+                    >
+                      <IconX size={12} className="text-[var(--color-text-subtle)]" />
+                    </button>
+                  </div>
+                ))}
+
+                {/* Add Virtual LAN Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={addVirtualLAN}
+                  className="self-start"
+                >
+                  Add virtual LAN
+                </Button>
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Security groups Section */}
+          <div className="py-6">
+            <VStack gap={3} align="stretch">
+              <VStack gap={2} align="start">
+                <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                  Security groups
+                  <span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                  Security groups apply to all networks except ports with security disabled.
+                </span>
+              </VStack>
+
+              {/* Security group Search & Create Button */}
+              <HStack justify="between" align="center">
+                <SearchInput
+                  placeholder="Search security groups by attributes"
+                  value={sgSearch}
+                  onChange={(e) => {
+                    setSgSearch(e.target.value);
+                    setSgPage(1);
+                  }}
+                  onClear={() => {
+                    setSgSearch('');
+                    setSgPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
+                  Create a new security group
+                </Button>
+              </HStack>
+
+              {/* Security group Pagination */}
+              <Pagination
+                currentPage={sgPage}
+                totalPages={sgTotalPages}
+                totalItems={filteredSGs.length}
+                onPageChange={setSgPage}
+                selectedCount={selectedSecurityGroups.size}
+              />
+
+              {/* Security group Table + Selection Indicator */}
+              <VStack gap={2}>
+                <Table
+                  columns={sgColumns}
+                  data={paginatedSGs}
+                  rowKey="id"
+                  onRowClick={(row) => handleSecurityGroupToggle(row.id)}
+                />
+
+                {/* Selection Indicator for Security Groups */}
+                <SelectionIndicator
+                  selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
+                  onRemove={(id) => handleSecurityGroupToggle(id)}
+                  error={!!sgError}
+                  errorMessage={sgError || undefined}
+                />
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Port Section (Collapsible) */}
+          <div className="py-6">
+            <VStack gap={3} align="stretch">
+              <button
+                className="flex items-center gap-1 text-label-lg text-[var(--color-text-default)]"
+                onClick={() => setPortExpanded(!portExpanded)}
+              >
+                {portExpanded ? (
+                  <IconCaretDownFilled size={12} />
+                ) : (
+                  <IconCaretRightFilled size={12} />
+                )}
+                Port
+              </button>
+
+              {portExpanded && (
+                <VStack gap={3} align="stretch">
+                  {/* Port Search */}
+                  <SearchInput
+                    placeholder="Search ports by attributes"
+                    value={portSearch}
+                    onChange={(e) => {
+                      setPortSearch(e.target.value);
+                      setPortPage(1);
+                    }}
+                    onClear={() => {
+                      setPortSearch('');
+                      setPortPage(1);
+                    }}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                  />
+
+                  {/* Port Pagination */}
+                  <Pagination
+                    currentPage={portPage}
+                    totalPages={portTotalPages}
+                    totalItems={filteredPorts.length}
+                    onPageChange={setPortPage}
+                    selectedCount={selectedPortIds.size}
+                  />
+
+                  {/* Port Table + Selection Indicator */}
+                  <VStack gap={2}>
+                    <Table
+                      columns={portColumns}
+                      data={paginatedPorts}
+                      rowKey="id"
+                      onRowClick={(row) => handlePortToggle(row.id)}
+                    />
+
+                    {/* Selection Indicator for Ports */}
+                    <SelectionIndicator
+                      selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
+                      onRemove={(id) => handlePortToggle(id)}
+                    />
+                  </VStack>
+                </VStack>
+              )}
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
-            <HStack justify="end">
+            <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={handleNextClick}>
                 Next
               </Button>
@@ -2511,9 +2578,10 @@ function AuthenticationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
-          <VStack gap={2} className="pt-2">
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+          <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Login type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -2535,46 +2603,48 @@ function AuthenticationSection({
 
           {loginType === 'keypair' && (
             <>
-              <div className="w-full h-px bg-[var(--color-border-subtle)] my-6" />
-              <VStack gap={2}>
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-                <span className="text-body-md text-[var(--color-text-muted)] mb-4">
-                  Select the key pair for SSH access.
-                </span>
-                <Table
-                  columns={keyPairColumns}
-                  data={mockKeyPairs}
-                  onRowClick={(row) => handleSelectKeyPair(row.id)}
-                />
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <div className="py-6">
+                <VStack gap={2}>
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-muted)] mb-4">
+                    Select the key pair for SSH access.
+                  </span>
+                  <Table
+                    columns={keyPairColumns}
+                    data={mockKeyPairs}
+                    onRowClick={(row) => handleSelectKeyPair(row.id)}
+                  />
 
-                {/* Selection Indicator for Key Pair */}
-                <SelectionIndicator
-                  selectedItems={
-                    selectedKeyPairId
-                      ? [
-                          {
-                            id: selectedKeyPairId,
-                            label:
-                              mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                              selectedKeyPairId,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => onSelectKeyPair('')}
-                  error={!!authError}
-                  errorMessage={authError || undefined}
-                />
-              </VStack>
+                  {/* Selection Indicator for Key Pair */}
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedKeyPairId
+                        ? [
+                            {
+                              id: selectedKeyPairId,
+                              label:
+                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                selectedKeyPairId,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => onSelectKeyPair('')}
+                    error={!!authError}
+                    errorMessage={authError || undefined}
+                  />
+                </VStack>
+              </div>
             </>
           )}
 
           {!isEditing && (
             <>
-              <div className="w-full h-px bg-[var(--color-border-subtle)] my-6" />
-              <HStack justify="end">
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <HStack justify="end" className="pt-3">
                 <Button variant="primary" onClick={handleNextClick}>
                   Next
                 </Button>
@@ -2678,99 +2748,108 @@ function AdvancedSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
-        <VStack gap={6} className="pt-2">
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Tags Section */}
-          <VStack gap={3} align="stretch">
-            <VStack gap={2} align="stretch">
-              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                A tag consists of a Key that defines the resource category and a Value that
-                describes it. Each resource can have up to 50 tags.
-              </span>
-            </VStack>
-
-            {/* Tag entries */}
-            {tags.length > 0 && (
-              <VStack gap={2} align="stretch">
-                {tags.map((tag, index) => (
-                  <HStack key={index} gap={3} align="center">
-                    <Input
-                      placeholder="Key"
-                      value={tag.key}
-                      onChange={(e) => handleTagChange(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Value"
-                      value={tag.value}
-                      onChange={(e) => handleTagChange(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => handleRemoveTag(index)}
-                      className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                    >
-                      <IconX size={12} />
-                    </button>
-                  </HStack>
-                ))}
-              </VStack>
-            )}
-
-            <HStack gap={3} align="center">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={handleAddTag}
-                disabled={tags.length >= MAX_TAGS}
-              >
-                Add tag
-              </Button>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                {tags.length} / {MAX_TAGS} tags
-              </span>
-            </HStack>
-          </VStack>
-
-          {/* User data Section */}
-          <VStack gap={3} align="stretch">
-            <VStack gap={2} align="stretch">
-              <span className="text-label-lg text-[var(--color-text-default)]">User data</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Enter a script or cloud-init configuration to run when the instance first boots.
-              </span>
-            </VStack>
-
+          <div className="py-6">
             <VStack gap={3} align="stretch">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconUpload size={12} />}
-                onClick={handleFileUpload}
-                className="w-fit"
-              >
-                Upload a file
-              </Button>
-
               <VStack gap={2} align="stretch">
-                <Textarea
-                  placeholder="e.g. #!/bin/bash ...  or  #cloud-config ..."
-                  value={userData}
-                  onChange={(e) => onUserDataChange(e.target.value)}
-                  fullWidth
-                  rows={4}
-                />
+                <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
-                  {userDataSizeDisplay} / {MAX_USER_DATA_KB} KB
+                  A tag consists of a Key that defines the resource category and a Value that
+                  describes it. Each resource can have up to 50 tags.
                 </span>
               </VStack>
+
+              {/* Tag entries */}
+              {tags.length > 0 && (
+                <VStack gap={2} align="stretch">
+                  {tags.map((tag, index) => (
+                    <HStack key={index} gap={3} align="center">
+                      <Input
+                        placeholder="Key"
+                        value={tag.key}
+                        onChange={(e) => handleTagChange(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={tag.value}
+                        onChange={(e) => handleTagChange(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => handleRemoveTag(index)}
+                        className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                      >
+                        <IconX size={12} />
+                      </button>
+                    </HStack>
+                  ))}
+                </VStack>
+              )}
+
+              <HStack gap={3} align="center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={handleAddTag}
+                  disabled={tags.length >= MAX_TAGS}
+                >
+                  Add tag
+                </Button>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  {tags.length} / {MAX_TAGS} tags
+                </span>
+              </HStack>
             </VStack>
-          </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* User data Section */}
+          <div className="py-6">
+            <VStack gap={3} align="stretch">
+              <VStack gap={2} align="stretch">
+                <span className="text-label-lg text-[var(--color-text-default)]">User data</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Enter a script or cloud-init configuration to run when the instance first boots.
+                </span>
+              </VStack>
+
+              <VStack gap={3} align="stretch">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconUpload size={12} />}
+                  onClick={handleFileUpload}
+                  className="w-fit"
+                >
+                  Upload a file
+                </Button>
+
+                <VStack gap={2} align="stretch">
+                  <Textarea
+                    placeholder="e.g. #!/bin/bash ...  or  #cloud-config ..."
+                    value={userData}
+                    onChange={(e) => onUserDataChange(e.target.value)}
+                    fullWidth
+                    rows={4}
+                  />
+                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                    {userDataSizeDisplay} / {MAX_USER_DATA_KB} KB
+                  </span>
+                </VStack>
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {!isEditing && (
-            <HStack justify="end" gap={2}>
+            <HStack justify="end" gap={2} className="pt-3">
               <Button variant="secondary" onClick={onEditCancel}>
                 Cancel
               </Button>

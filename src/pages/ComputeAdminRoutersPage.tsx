@@ -417,7 +417,7 @@ export function ComputeAdminRoutersPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
