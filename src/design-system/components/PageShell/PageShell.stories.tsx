@@ -6,7 +6,7 @@ import { TopBar } from '../TopBar';
 import { Breadcrumb } from '../Breadcrumb';
 import { SNBMenuItem } from '../SNBMenuItem';
 import { PageHeader } from '../PageHeader';
-import { VStack } from '../Stack';
+import { VStack } from '../../layouts/Stack';
 import { Button } from '../Button';
 import { Table } from '../Table';
 import { Badge } from '../Badge';

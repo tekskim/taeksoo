@@ -321,7 +321,7 @@ export default function SubnetDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>

@@ -6917,12 +6917,6 @@ outline: 2px solid var(--color-border-focus);`}
                       />
                     </VStack>
 
-                    {/* Custom Empty Text */}
-                    <VStack gap={3}>
-                      <Label>Custom Empty Text</Label>
-                      <SelectionIndicator emptyText="Select a network to continue" />
-                    </VStack>
-
                     {/* Non-removable */}
                     <VStack gap={3}>
                       <Label>Non-removable (Read-only)</Label>

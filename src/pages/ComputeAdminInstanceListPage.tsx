@@ -1265,7 +1265,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1422,7 +1422,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

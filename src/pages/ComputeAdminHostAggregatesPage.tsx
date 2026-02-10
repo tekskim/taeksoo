@@ -352,7 +352,7 @@ export function ComputeAdminHostAggregatesPage() {
                 <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                   <span>Created at</span>
                 </div>
-                <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[72px] border-l border-[var(--color-border-default)]">
+                <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[64px] border-l border-[var(--color-border-default)]">
                   <span>Action</span>
                 </div>
               </div>
@@ -418,7 +418,7 @@ export function ComputeAdminHostAggregatesPage() {
                       </div>
 
                       {/* Action Cell */}
-                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[72px]">
+                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[64px]">
                         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
                           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                             <IconDotsCircleHorizontal
