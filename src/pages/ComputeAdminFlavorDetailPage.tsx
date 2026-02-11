@@ -617,7 +617,7 @@ export function ComputeAdminFlavorDetailPage() {
             <DetailHeader.InfoCard label="Category" value={flavor.category} />
             <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
             <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
-            <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
+            <DetailHeader.InfoCard label="Root disk" value="0GiB" />
             <DetailHeader.InfoCard label="Public" value="On" />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -649,9 +649,9 @@ export function ComputeAdminFlavorDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
                     <SectionCard.DataRow label="RAM" value={flavor.ram} />
-                    <SectionCard.DataRow label="Root Disk" value="0GiB" />
+                    <SectionCard.DataRow label="Root disk" value="0GiB" />
                     <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
-                    <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
+                    <SectionCard.DataRow label="Swap disk" value={flavor.numaNodes} />
                   </SectionCard.Content>
                 </SectionCard>
 

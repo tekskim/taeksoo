@@ -112,7 +112,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Member
+            Edit member
           </h2>
         </VStack>
 
@@ -126,7 +126,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
         {/* IP Address (Read-only) */}
         <FormField>
-          <FormField.Label>IP Address</FormField.Label>
+          <FormField.Label>IP address</FormField.Label>
           <FormField.Control>
             <Input value={member.ipAddress} readOnly disabled fullWidth />
           </FormField.Control>
@@ -167,14 +167,14 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
             ) : (
               <IconChevronRight size={16} stroke={1} />
             )}
-            Advanced Options
+            Advanced options
           </button>
 
           {isAdvancedExpanded && (
             <VStack gap={6} className="w-full pt-4">
               {/* Monitor IP Address */}
               <FormField>
-                <FormField.Label>Monitor IP Address</FormField.Label>
+                <FormField.Label>Monitor IP address</FormField.Label>
                 <FormField.Control>
                   <Input
                     value={monitorIpAddress}
@@ -187,7 +187,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
               {/* Monitor Port */}
               <FormField>
-                <FormField.Label>Monitor Port</FormField.Label>
+                <FormField.Label>Monitor port</FormField.Label>
                 <FormField.Control>
                   <NumberInput
                     value={monitorPort ?? undefined}
@@ -216,7 +216,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
               {/* Admin State */}
               <FormField>
-                <FormField.Label>Admin State</FormField.Label>
+                <FormField.Label>Admin state</FormField.Label>
                 <FormField.Control>
                   <HStack gap={2} className="items-center">
                     <Toggle

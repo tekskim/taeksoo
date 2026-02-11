@@ -151,12 +151,12 @@ export function CreateVolumeFromSnapshotDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Quota"
+              label="Volume quota"
               used={volumeQuota.used}
               total={volumeQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
             />
@@ -195,7 +195,7 @@ export function CreateVolumeFromSnapshotDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume from Instance Snapshot
+              Create volume from instance snapshot
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               The new volume will contain the same data as the snapshot's system disk and can be

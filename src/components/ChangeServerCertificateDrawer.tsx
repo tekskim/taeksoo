@@ -152,7 +152,7 @@ export function ChangeServerCertificateDrawer({
           ? `${row.listeners} (+${row.listenersCount})`
           : row.listeners,
     },
-    { key: 'expiresAt', label: 'Expires At' },
+    { key: 'expiresAt', label: 'Expires at' },
   ];
 
   const handleChange = async () => {
@@ -206,7 +206,7 @@ export function ChangeServerCertificateDrawer({
         <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
           <VStack gap={1.5}>
             <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Current Server Certificate
+              Current server certificate
             </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {currentCertificate.name} (expired on {currentCertificate.expiresAt})
@@ -217,7 +217,7 @@ export function ChangeServerCertificateDrawer({
         {/* New Server Certificate Section */}
         <VStack gap={3} className="pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            New Server Certificate
+            New server certificate
           </h3>
 
           {/* Search */}
@@ -255,7 +255,7 @@ export function ChangeServerCertificateDrawer({
                   : []
               }
               onRemove={() => setSelectedCertificateId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedCertificateId}
               errorMessage="Please select a certificate."
               className="w-full"

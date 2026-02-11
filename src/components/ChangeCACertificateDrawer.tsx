@@ -129,7 +129,7 @@ export function ChangeCACertificateDrawer({
       ),
     },
     { key: 'listeners', label: 'Listeners' },
-    { key: 'expiresAt', label: 'Expires At' },
+    { key: 'expiresAt', label: 'Expires at' },
   ];
 
   // Reset state when drawer opens
@@ -193,14 +193,14 @@ export function ChangeCACertificateDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Change CA Certificate
+            Change CA certificate
           </h2>
 
           {/* Current Certificate Info Box */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
               <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Current CA Certificate
+                Current CA certificate
               </span>
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {currentCertificate.name} (expired on {currentCertificate.expiredOn})
@@ -212,7 +212,7 @@ export function ChangeCACertificateDrawer({
         {/* New Certificate Section */}
         <VStack gap={3} className="w-full pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            New CA Certificate
+            New CA certificate
           </h3>
 
           {/* Search */}
@@ -250,7 +250,7 @@ export function ChangeCACertificateDrawer({
                   : []
               }
               onRemove={() => setSelectedCertificateId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedCertificateId}
               errorMessage="Please select a certificate."
               className="shrink-0"

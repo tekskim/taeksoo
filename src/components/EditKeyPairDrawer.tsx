@@ -92,7 +92,7 @@ export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKe
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Key Pair
+          Edit key pair
         </h2>
 
         {/* Key Pair Name Input */}

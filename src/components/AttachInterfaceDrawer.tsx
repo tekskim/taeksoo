@@ -163,7 +163,7 @@ export function AttachInterfaceDrawer({
     },
     {
       key: 'inThisProject' as keyof NetworkItem,
-      label: 'In This Project',
+      label: 'In this project',
       render: (_value, row) => <span>{row.inThisProject ? 'Yes' : 'No'}</span>,
     },
   ];
@@ -206,7 +206,7 @@ export function AttachInterfaceDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance name</div>
             <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>

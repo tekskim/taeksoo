@@ -167,7 +167,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Rule Type */}
         <FormField>
-          <FormField.Label>Rule Type</FormField.Label>
+          <FormField.Label>Rule type</FormField.Label>
           <FormField.Description>
             Select the part of the incoming request to inspect, such as the URL path or a specific
             HTTP header.
@@ -222,7 +222,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Compare Type */}
         <FormField required error={hasAttemptedSubmit && !compareType}>
-          <FormField.Label>Compare Type</FormField.Label>
+          <FormField.Label>Compare type</FormField.Label>
           <FormField.Description>
             Select how the value is compared. Regex is for advanced matching.
           </FormField.Description>
@@ -271,7 +271,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
         {/* Admin State */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
+            Admin state
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

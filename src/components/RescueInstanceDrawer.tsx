@@ -153,7 +153,7 @@ export function RescueInstanceDrawer({
     },
     { key: 'version', label: 'Version' },
     { key: 'size', label: 'Size' },
-    { key: 'minDisk', label: 'Min Disk' },
+    { key: 'minDisk', label: 'Min disk' },
     { key: 'minRam', label: 'Min RAM' },
     { key: 'visibility', label: 'Visibility' },
   ];
@@ -229,7 +229,7 @@ export function RescueInstanceDrawer({
 
         {/* Current Image Field */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Current Image</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Current image</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
             <span className="text-body-md text-[var(--color-text-default)]">
               {instance.currentImage}
@@ -283,8 +283,8 @@ export function RescueInstanceDrawer({
             >
               <TabList>
                 <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance Snapshot</Tab>
-                <Tab value="bootable">Bootable Volume</Tab>
+                <Tab value="snapshot">Instance snapshot</Tab>
+                <Tab value="bootable">Bootable volume</Tab>
               </TabList>
             </Tabs>
 

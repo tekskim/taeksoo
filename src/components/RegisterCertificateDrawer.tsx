@@ -297,8 +297,8 @@ export function RegisterCertificateDrawer({
               onChange={(value) => setCertificateType(value as CertificateType)}
             >
               <VStack gap={2}>
-                <Radio value="server" label="Server Certificate" />
-                <Radio value="ca" label="CA Certificate" />
+                <Radio value="server" label="Server certificate" />
+                <Radio value="ca" label="CA certificate" />
               </VStack>
             </RadioGroup>
           </FormField.Control>
@@ -306,7 +306,7 @@ export function RegisterCertificateDrawer({
 
         {/* Certificate Name Input */}
         <FormField required error={hasAttemptedSubmit && !certificateName.trim()}>
-          <FormField.Label>Certificate Name</FormField.Label>
+          <FormField.Label>Certificate name</FormField.Label>
           <FormField.Control>
             <Input
               value={certificateName}
@@ -347,7 +347,7 @@ export function RegisterCertificateDrawer({
         {/* Certificate Body */}
         <VStack gap={2} className="w-full">
           <FileUploadSection
-            label="Certificate Body"
+            label="Certificate body"
             description="Paste the full contents of your server certificate file (.crt, .pem), including the BEGIN/END lines."
             value={certificateBody}
             onChange={(v) => {
@@ -364,7 +364,7 @@ export function RegisterCertificateDrawer({
         {certificateType === 'server' && (
           <VStack gap={2} className="w-full">
             <FileUploadSection
-              label="Private Key"
+              label="Private key"
               description="Paste the contents of the private key file (.key) for your certificate."
               value={privateKey}
               onChange={(v) => {

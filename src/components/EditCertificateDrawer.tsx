@@ -88,13 +88,13 @@ export function EditCertificateDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Certificate
+            Edit certificate
           </h2>
         </VStack>
 
-        {/* Certificate Name Input */}
+        {/* Certificate name Input */}
         <FormField required error={hasAttemptedSubmit && !name.trim()}>
-          <FormField.Label>Certificate Name</FormField.Label>
+          <FormField.Label>Certificate name</FormField.Label>
           <FormField.Control>
             <Input
               value={name}

@@ -98,7 +98,7 @@ export function CreateInstanceSnapshotDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Instance Snapshot
+              Create instance snapshot
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a snapshot of this instance to capture its current system state as an image.

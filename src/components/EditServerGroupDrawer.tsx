@@ -95,12 +95,12 @@ export function EditServerGroupDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Server Group
+          Edit server group
         </h2>
 
-        {/* Server Group Name Input */}
+        {/* Server group name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
-          <FormField.Label>Server Group Name</FormField.Label>
+          <FormField.Label>Server group name</FormField.Label>
           <FormField.Control>
             <Input
               value={groupName}

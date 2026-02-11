@@ -183,13 +183,13 @@ export function EditListenerDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Listener
+            Edit listener
           </h2>
         </VStack>
 
         {/* Listener Name */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
-          <FormField.Label>Listener Name</FormField.Label>
+          <FormField.Label>Listener name</FormField.Label>
           <FormField.Control>
             <Input
               value={listenerName}
@@ -240,10 +240,10 @@ export function EditListenerDrawer({
           </FormField.Control>
         </FormField>
 
-        {/* Connection Limit */}
+        {/* Connection limit */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Connection Limit
+            Connection limit
           </label>
           <RadioGroup
             value={connectionLimitType}
@@ -305,7 +305,7 @@ export function EditListenerDrawer({
 
               {/* Client Data Timeout */}
               <FormField>
-                <FormField.Label>Client Data Timeout (ms)</FormField.Label>
+                <FormField.Label>Client data timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait for client request data.
                 </FormField.Description>
@@ -321,7 +321,7 @@ export function EditListenerDrawer({
 
               {/* Member Connect Timeout */}
               <FormField>
-                <FormField.Label>Member Connect Timeout (ms)</FormField.Label>
+                <FormField.Label>Member connect timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait when establishing a connection to a backend member.
                 </FormField.Description>
@@ -337,7 +337,7 @@ export function EditListenerDrawer({
 
               {/* Member Data Timeout */}
               <FormField>
-                <FormField.Label>Member Data Timeout (ms)</FormField.Label>
+                <FormField.Label>Member data timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait for response data from a backend member.
                 </FormField.Description>
@@ -353,7 +353,7 @@ export function EditListenerDrawer({
 
               {/* TCP Inspect Timeout */}
               <FormField>
-                <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
+                <FormField.Label>TCP inspect timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Timeout for TCP packet inspection or handshake. 0 disables this feature.
                 </FormField.Description>
@@ -420,7 +420,7 @@ export function EditListenerDrawer({
 
               {/* Listener Admin State */}
               <FormField>
-                <FormField.Label>Listener Admin State</FormField.Label>
+                <FormField.Label>Listener admin state</FormField.Label>
                 <FormField.Control>
                   <HStack gap={2} className="items-center">
                     <Toggle

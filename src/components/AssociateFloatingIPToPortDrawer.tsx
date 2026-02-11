@@ -209,7 +209,7 @@ export function AssociateFloatingIPToPortDrawer({
       ),
     },
     { key: 'fixedIp', label: 'Fixed IP', flex: 1, sortable: true },
-    { key: 'macAddress', label: 'MAC Address', flex: 1 },
+    { key: 'macAddress', label: 'MAC address', flex: 1 },
     { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
   ];
 
@@ -359,7 +359,7 @@ export function AssociateFloatingIPToPortDrawer({
                 selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []
               }
               onRemove={() => setSelectedFixedIpId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>
@@ -405,7 +405,7 @@ export function AssociateFloatingIPToPortDrawer({
                   : []
               }
               onRemove={() => setSelectedFloatingIpId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>

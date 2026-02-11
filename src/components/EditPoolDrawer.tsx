@@ -61,7 +61,7 @@ const algorithmDescriptions: Record<AlgorithmType, string> = {
 const sessionPersistenceOptions = [
   { value: 'NONE', label: 'None' },
   { value: 'SOURCE_IP', label: 'Source IP' },
-  { value: 'HTTP_COOKIE', label: 'HTTP Cookie' },
+  { value: 'HTTP_COOKIE', label: 'HTTP cookie' },
   { value: 'APP_COOKIE', label: 'App cookie' },
 ];
 
@@ -165,7 +165,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Pool</h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit pool</h2>
         </VStack>
 
         {/* Pool Name Input */}
@@ -258,12 +258,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
               {sessionPersistenceType === 'APP_COOKIE' && (
                 <FormField>
-                  <FormField.Label>Cookie Name</FormField.Label>
+                  <FormField.Label>Cookie name</FormField.Label>
                   <FormField.Control>
                     <Input
                       value={cookieName}
                       onChange={(e) => setCookieName(e.target.value)}
-                      placeholder="Input Cookie Name"
+                      placeholder="Input cookie name"
                       fullWidth
                     />
                   </FormField.Control>
@@ -293,7 +293,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
                 <Textarea
                   value={tlsCiphers}
                   onChange={(e) => setTlsCiphers(e.target.value)}
-                  placeholder="Input Custom Cipher String (Leave blank to use safe defaults)"
+                  placeholder="Input custom cipher string (leave blank to use safe defaults)"
                   rows={3}
                   fullWidth
                 />
@@ -308,7 +308,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
         {/* Admin State */}
         <FormField>
-          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Label>Admin state</FormField.Label>
           <FormField.Control>
             <HStack gap={2} className="items-center">
               <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

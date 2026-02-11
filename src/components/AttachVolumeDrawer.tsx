@@ -276,7 +276,7 @@ export function AttachVolumeDrawer({
                 selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
               }
               onRemove={() => setSelectedInstanceId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedInstanceId}
               errorMessage="Please select an instance."
               className="shrink-0 w-full"

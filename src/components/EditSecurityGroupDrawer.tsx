@@ -88,14 +88,14 @@ export function EditSecurityGroupDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Security Group
+            Edit security group
           </h2>
         </VStack>
 
         {/* Security Group Name Input */}
         <VStack gap={2} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Security Group name
+            Security group name
           </label>
           <Input
             value={name}
@@ -106,7 +106,7 @@ export function EditSecurityGroupDrawer({
           />
           {hasAttemptedSubmit && !name.trim() && (
             <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Security Group name is required
+              Security group name is required
             </p>
           )}
           <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">

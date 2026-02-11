@@ -156,7 +156,7 @@ export function CreateSecurityGroupRuleDrawer({
 
   const remoteTypeOptions = [
     { value: 'cidr', label: 'CIDR' },
-    { value: 'security_group', label: 'Security Group' },
+    { value: 'security_group', label: 'Security group' },
   ];
 
   // Check if protocol requires port input
@@ -197,7 +197,7 @@ export function CreateSecurityGroupRuleDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Security Group Rule Quota"
+              label="Security group rule quota"
               used={ruleQuota.used}
               total={ruleQuota.total}
             />
@@ -224,7 +224,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Rule
+            Create rule
           </h2>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             A security group rule defines allowed inbound or outbound network traffic.
@@ -269,7 +269,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
           <FormField>
-            <FormField.Label>Port Range</FormField.Label>
+            <FormField.Label>Port range</FormField.Label>
             <FormField.Control>
               <Select
                 options={portRangeOptions}
@@ -303,7 +303,7 @@ export function CreateSecurityGroupRuleDrawer({
           <>
             <VStack gap={2} className="w-full">
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP Type(optional)
+                ICMP type (optional)
               </label>
               <NumberInput
                 value={icmpType}
@@ -317,7 +317,7 @@ export function CreateSecurityGroupRuleDrawer({
 
             <VStack gap={2} className="w-full">
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP Code(optional)
+                ICMP code (optional)
               </label>
               <NumberInput
                 value={icmpCode}

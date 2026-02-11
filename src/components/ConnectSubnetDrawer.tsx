@@ -289,7 +289,7 @@ export function ConnectSubnetDrawer({
         </div>
       ),
     },
-    { key: 'allocationPools', label: 'Allocation Pools', flex: 1 },
+    { key: 'allocationPools', label: 'Allocation pools', flex: 1 },
   ];
 
   // Handle submit
@@ -377,7 +377,7 @@ export function ConnectSubnetDrawer({
                 selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
               }
               onRemove={() => setSelectedNetworkId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>
@@ -425,7 +425,7 @@ export function ConnectSubnetDrawer({
                 selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
               }
               onRemove={() => setSelectedSubnetId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>

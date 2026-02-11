@@ -98,12 +98,12 @@ export function EditVolumeBackupDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Volume Backup
+          Edit volume backup
         </h2>
 
         {/* Volume Snapshot Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
-          <FormField.Label>Volume Snapshot Name</FormField.Label>
+          <FormField.Label>Volume snapshot name</FormField.Label>
           <FormField.Control>
             <Input
               value={backupName}

@@ -154,7 +154,7 @@ export function CreateServerGroupDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Server Group Quota"
+              label="Server group quota"
               used={serverGroupQuota.used}
               total={serverGroupQuota.total}
             />
@@ -181,7 +181,7 @@ export function CreateServerGroupDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Server Group
+            Create server group
           </h2>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Create a server group to control how instances are placed across compute hosts.
@@ -190,7 +190,7 @@ export function CreateServerGroupDrawer({
 
         {/* Server Group Name Input */}
         <FormField required error={hasAttemptedSubmit && !groupName.trim()}>
-          <FormField.Label>Server Group name</FormField.Label>
+          <FormField.Label>Server group name</FormField.Label>
           <FormField.Control>
             <Input
               value={groupName}
@@ -200,7 +200,7 @@ export function CreateServerGroupDrawer({
               error={hasAttemptedSubmit && !groupName.trim()}
             />
           </FormField.Control>
-          <FormField.ErrorMessage>Server Group name is required</FormField.ErrorMessage>
+          <FormField.ErrorMessage>Server group name is required</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>
@@ -224,12 +224,12 @@ export function CreateServerGroupDrawer({
                 />
                 <PolicyRadioOption
                   value="soft-anti-affinity"
-                  label="Soft-Anti-affinity"
+                  label="Soft anti-affinity"
                   tooltip={policyDescriptions['soft-anti-affinity']}
                 />
                 <PolicyRadioOption
                   value="soft-affinity"
-                  label="Soft-affinity"
+                  label="Soft affinity"
                   tooltip={policyDescriptions['soft-affinity']}
                 />
               </VStack>

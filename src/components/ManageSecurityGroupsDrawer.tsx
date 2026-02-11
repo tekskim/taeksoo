@@ -114,8 +114,8 @@ const interfaceColumns: TableColumn<InterfaceItem>[] = [
       </div>
     ),
   },
-  { key: 'ipAddress', label: 'IP Address' },
-  { key: 'macAddress', label: 'Mac Address' },
+  { key: 'ipAddress', label: 'IP address' },
+  { key: 'macAddress', label: 'MAC address' },
 ];
 
 const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
@@ -139,7 +139,7 @@ const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
     ),
   },
   { key: 'description', label: 'Description' },
-  { key: 'createdAt', label: 'Created At' },
+  { key: 'createdAt', label: 'Created at' },
 ];
 
 /* ----------------------------------------
@@ -253,7 +253,7 @@ export function ManageSecurityGroupsDrawer({
         <VStack gap={3}>
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage Security Groups
+              Manage security groups
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               You can attach or detach security groups for the selected interface. These rules
@@ -322,7 +322,7 @@ export function ManageSecurityGroupsDrawer({
                   : []
               }
               onRemove={() => setSelectedInterfaceId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedInterfaceId}
               errorMessage="Please select an interface."
               className="shrink-0"
@@ -373,7 +373,7 @@ export function ManageSecurityGroupsDrawer({
               onRemove={(id) =>
                 setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
               }
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>

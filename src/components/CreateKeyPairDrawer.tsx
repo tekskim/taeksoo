@@ -130,7 +130,7 @@ export function CreateKeyPairDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Key Pair Quota"
+              label="Key pair quota"
               used={keyPairQuota.used}
               total={keyPairQuota.total}
             />
@@ -174,7 +174,7 @@ export function CreateKeyPairDrawer({
             >
               <VStack gap={2}>
                 <Radio value="create" label="Create key pair" />
-                <Radio value="import" label="Import Key Pair" />
+                <Radio value="import" label="Import key pair" />
               </VStack>
             </RadioGroup>
           </FormField.Control>

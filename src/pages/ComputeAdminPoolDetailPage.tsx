@@ -499,7 +499,7 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Health monitor" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Health Monitor Name" value={healthMonitor.name} />
+                    <SectionCard.DataRow label="Health monitor name" value={healthMonitor.name} />
                     <SectionCard.DataRow label="State" value={healthMonitor.state} />
                     <SectionCard.DataRow label="Admin state" value={healthMonitor.adminState} />
                     <SectionCard.DataRow label="Type" value={healthMonitor.type} />

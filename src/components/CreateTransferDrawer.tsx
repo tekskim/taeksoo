@@ -106,7 +106,7 @@ export function CreateTransferDrawer({
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a transfer request to share this volume with another project. The recipient
-              will need the generated Transfer ID and Auth Key to accept it.
+              will need the generated Transfer ID and auth key to accept it.
             </p>
           </VStack>
 

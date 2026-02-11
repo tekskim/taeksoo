@@ -161,7 +161,7 @@ export function DetachInterfaceDrawer({
     },
     {
       key: 'macAddress',
-      label: 'MAC Address',
+      label: 'MAC address',
     },
   ];
 

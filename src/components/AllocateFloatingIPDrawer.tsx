@@ -260,7 +260,7 @@ export function AllocateFloatingIPDrawer({
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
                 <span className="text-label-lg text-[var(--color-text-default)]">
-                  Floating IP Quota
+                  Floating IP quota
                 </span>
                 <span className="text-body-md text-[var(--color-text-default)]">
                   {floatingIPQuota.used}/{floatingIPQuota.total}
@@ -347,7 +347,7 @@ export function AllocateFloatingIPDrawer({
                 selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
               }
               onRemove={() => setSelectedNetworkId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedNetworkId}
               errorMessage="Please select a network."
               className="shrink-0"
@@ -365,17 +365,17 @@ export function AllocateFloatingIPDrawer({
                 <Radio
                   checked={allocationMode === 'automatic-single'}
                   onChange={() => setAllocationMode('automatic-single')}
-                  label="Automatic (Single)"
+                  label="Automatic (single)"
                 />
                 <Radio
                   checked={allocationMode === 'manual-single'}
                   onChange={() => setAllocationMode('manual-single')}
-                  label="Manual (Single)"
+                  label="Manual (single)"
                 />
                 <Radio
                   checked={allocationMode === 'automatic-batch'}
                   onChange={() => setAllocationMode('automatic-batch')}
-                  label="Automatic (Batch)"
+                  label="Automatic (batch)"
                 />
               </VStack>
 

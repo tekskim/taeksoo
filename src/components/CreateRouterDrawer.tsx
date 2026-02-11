@@ -254,7 +254,7 @@ export function CreateRouterDrawer({
           {/* Quota Section */}
           <VStack gap={4} className="w-full">
             <QuotaProgressBar
-              label="Router Quota"
+              label="Router quota"
               used={routerQuota.used}
               total={routerQuota.total}
             />
@@ -333,14 +333,14 @@ export function CreateRouterDrawer({
 
           {/* Advanced Options Disclosure */}
           <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-            <Disclosure.Trigger>Lable</Disclosure.Trigger>
+            <Disclosure.Trigger>Label</Disclosure.Trigger>
             <Disclosure.Panel>
               <VStack gap={6} className="mt-3">
-                {/* Admin State */}
+                {/* Admin state */}
                 <VStack gap={3}>
                   <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                      Admin State
+                      Admin state
                     </span>
                     <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                       Setting it to "Down" disables all related network or control operations,
@@ -414,7 +414,7 @@ export function CreateRouterDrawer({
                     selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
                   }
                   onRemove={() => setSelectedNetworkId(null)}
-                  emptyText="No item Selected"
+                  emptyText="No item selected"
                 />
               </VStack>
             </VStack>

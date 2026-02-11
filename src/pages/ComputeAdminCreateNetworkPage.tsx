@@ -659,7 +659,7 @@ export default function CreateNetworkPage() {
                     {/* Admin State */}
                     <VStack gap={2} className="py-6">
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Admin State
+                        Admin state
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Indicates whether the load balancer's administrative state is Up or Down.
@@ -676,7 +676,7 @@ export default function CreateNetworkPage() {
                     {/* Port Security */}
                     <VStack gap={2} className="py-6">
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Port Security
+                        Port security
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Enhances security by allowing only permitted devices to access this network.
@@ -764,7 +764,7 @@ export default function CreateNetworkPage() {
                   />
                   {externalNetwork && (
                     <SectionCard.DataRow
-                      label="Provider Network Type"
+                      label="Provider network type"
                       value={providerNetworkType.toUpperCase()}
                     />
                   )}

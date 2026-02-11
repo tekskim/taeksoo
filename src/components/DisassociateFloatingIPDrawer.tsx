@@ -142,7 +142,7 @@ export function DisassociateFloatingIPDrawer({
       ),
     },
     { key: 'fixedIp', label: 'Fixed IP' },
-    { key: 'createdAt', label: 'Created At' },
+    { key: 'createdAt', label: 'Created at' },
   ];
 
   return (

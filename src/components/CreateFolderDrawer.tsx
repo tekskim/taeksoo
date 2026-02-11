@@ -307,7 +307,7 @@ export function CreateFolderDrawer({
 
         {/* Folder Name Input */}
         <FormField required error={!!error}>
-          <FormField.Label>Folder Name</FormField.Label>
+          <FormField.Label>Folder name</FormField.Label>
           <FormField.Control>
             <Input
               value={folderName}

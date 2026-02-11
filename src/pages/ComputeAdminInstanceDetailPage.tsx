@@ -1236,7 +1236,7 @@ export function ComputeAdminInstanceDetailPage() {
                       isLink
                       linkHref="/compute-admin/server-groups"
                     />
-                    <SectionCard.DataRow label="User Data" value="Provided at creation" />
+                    <SectionCard.DataRow label="User data" value="Provided at creation" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

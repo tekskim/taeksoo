@@ -108,7 +108,7 @@ const getSnapshotColumns = (
     sortable: true,
     render: (_, row) => <>{row.size}GiB</>,
   },
-  { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
+  { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
 ];
 
 /* ----------------------------------------
@@ -266,7 +266,7 @@ export function RestoreFromSnapshotDrawer({
                 selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []
               }
               onRemove={() => setSelectedSnapshotId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedSnapshotId}
               errorMessage="Please select a snapshot."
               className="shrink-0 w-full"

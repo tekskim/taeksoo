@@ -125,12 +125,12 @@ export function EditObjectDrawer({
     >
       <VStack gap={3}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Object</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit object</h2>
 
         <VStack gap={4} className="w-full">
-          {/* Folder Name Input */}
+          {/* Folder name Input */}
           <FormField required error={!!nameError}>
-            <FormField.Label>Folder Name</FormField.Label>
+            <FormField.Label>Folder name</FormField.Label>
             <FormField.Control>
               <Input
                 value={name}
@@ -138,7 +138,7 @@ export function EditObjectDrawer({
                   setName(e.target.value);
                   if (nameError) setNameError(null);
                 }}
-                placeholder="{Current Folder Name}"
+                placeholder="{Current Folder name}"
                 fullWidth
                 error={!!nameError}
               />
