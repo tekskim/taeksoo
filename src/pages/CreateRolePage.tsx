@@ -794,109 +794,111 @@ function AddPoliciesSection({
           )}
 
           {/* Table */}
-          <div className="mt-3 w-full flex flex-col gap-1">
-            {/* Table Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              {/* Checkbox column */}
-              <div className="w-[40px] flex items-center justify-center px-3 py-2">
-                <Checkbox
-                  checked={
-                    selectedPolicies.length > 0 &&
-                    selectedPolicies.length === paginatedPolicies.length
-                  }
-                  indeterminate={
-                    selectedPolicies.length > 0 &&
-                    selectedPolicies.length < paginatedPolicies.length
-                  }
-                  onChange={(e) => toggleAllSelection(e.target.checked)}
-                />
+          <VStack gap={2}>
+            <div className="mt-3 w-full flex flex-col gap-1">
+              {/* Table Header */}
+              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                {/* Checkbox column */}
+                <div className="w-[40px] flex items-center justify-center px-3 py-2">
+                  <Checkbox
+                    checked={
+                      selectedPolicies.length > 0 &&
+                      selectedPolicies.length === paginatedPolicies.length
+                    }
+                    indeterminate={
+                      selectedPolicies.length > 0 &&
+                      selectedPolicies.length < paginatedPolicies.length
+                    }
+                    onChange={(e) => toggleAllSelection(e.target.checked)}
+                  />
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Name
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Type
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Apps
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Roles
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Description
+                </div>
+                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  Edited at
+                </div>
               </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Name
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Type
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Apps
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Roles
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Description
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Edited at
-              </div>
+
+              {/* Table Rows */}
+              {paginatedPolicies.map((policy) => (
+                <div
+                  key={policy.id}
+                  className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+                >
+                  {/* Main Row */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
+                    {/* Checkbox */}
+                    <div className="w-[40px] flex items-center justify-center px-3 py-2">
+                      <Checkbox
+                        checked={selectedPolicies.includes(policy.id)}
+                        onChange={() => toggleRowSelection(policy.id)}
+                      />
+                    </div>
+                    {/* Name with expand icon */}
+                    <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <button
+                        onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
+                        className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                      >
+                        {expandedPolicies.has(policy.id) ? (
+                          <IconChevronDown size={12} stroke={1.5} />
+                        ) : (
+                          <IconChevronRight size={12} stroke={1.5} />
+                        )}
+                      </button>
+                      <HStack gap={1.5} align="center">
+                        <span className="text-label-md text-[var(--color-action-primary)]">
+                          {policy.name}
+                        </span>
+                        <IconExternalLink
+                          size={12}
+                          className="text-[var(--color-action-primary)]"
+                        />
+                      </HStack>
+                    </div>
+                    {/* Type */}
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {policy.type}
+                    </div>
+                    {/* Apps */}
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {policy.apps}
+                    </div>
+                    {/* Roles */}
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {policy.roles}
+                    </div>
+                    {/* Description */}
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {policy.description}
+                    </div>
+                    {/* Edited at */}
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      {policy.editedAt}
+                    </div>
+                  </div>
+
+                  {/* Expanded Policy Details */}
+                  {expandedPolicies.has(policy.id) && policy.permissions && (
+                    <PolicyDetails permissions={policy.permissions} />
+                  )}
+                </div>
+              ))}
             </div>
 
-            {/* Table Rows */}
-            {paginatedPolicies.map((policy) => (
-              <div
-                key={policy.id}
-                className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
-              >
-                {/* Main Row */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
-                  {/* Checkbox */}
-                  <div className="w-[40px] flex items-center justify-center px-3 py-2">
-                    <Checkbox
-                      checked={selectedPolicies.includes(policy.id)}
-                      onChange={() => toggleRowSelection(policy.id)}
-                    />
-                  </div>
-                  {/* Name with expand icon */}
-                  <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    <button
-                      onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                      className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
-                    >
-                      {expandedPolicies.has(policy.id) ? (
-                        <IconChevronDown size={12} stroke={1.5} />
-                      ) : (
-                        <IconChevronRight size={12} stroke={1.5} />
-                      )}
-                    </button>
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-md text-[var(--color-action-primary)]">
-                        {policy.name}
-                      </span>
-                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                    </HStack>
-                  </div>
-                  {/* Type */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.type}
-                  </div>
-                  {/* Apps */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.apps}
-                  </div>
-                  {/* Roles */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.roles}
-                  </div>
-                  {/* Description */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.description}
-                  </div>
-                  {/* Edited at */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.editedAt}
-                  </div>
-                </div>
-
-                {/* Expanded Policy Details */}
-                {expandedPolicies.has(policy.id) && policy.permissions && (
-                  <PolicyDetails permissions={policy.permissions} />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Selection indicator */}
-          <div className="mt-2">
             <SelectionIndicator
               selectedItems={selectedPolicies.map((policyId) => {
                 const policy = mockPolicies.find((p) => p.id === policyId);
@@ -908,7 +910,7 @@ function AddPoliciesSection({
               error={!!policiesError}
               errorMessage={policiesError || undefined}
             />
-          </div>
+          </VStack>
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (

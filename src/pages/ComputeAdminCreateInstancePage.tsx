@@ -1333,46 +1333,48 @@ function ImageSection({
             />
 
             {/* Table - Dynamic based on tab */}
-            {sourceTab === 'image' && (
-              <Table
-                columns={imageColumns}
-                data={paginatedImages}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
-            {sourceTab === 'snapshot' && (
-              <Table
-                columns={snapshotColumns}
-                data={filteredSnapshots.slice(
-                  (currentPage - 1) * itemsPerPage,
-                  currentPage * itemsPerPage
-                )}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
-            {sourceTab === 'volume' && (
-              <Table
-                columns={volumeColumns}
-                data={filteredVolumes.slice(
-                  (currentPage - 1) * itemsPerPage,
-                  currentPage * itemsPerPage
-                )}
-                rowKey="id"
-                onRowClick={(row) => onSelectImage(row.id)}
-              />
-            )}
+            <VStack gap={2}>
+              {sourceTab === 'image' && (
+                <Table
+                  columns={imageColumns}
+                  data={paginatedImages}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
+              {sourceTab === 'snapshot' && (
+                <Table
+                  columns={snapshotColumns}
+                  data={filteredSnapshots.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
+              {sourceTab === 'volume' && (
+                <Table
+                  columns={volumeColumns}
+                  data={filteredVolumes.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => onSelectImage(row.id)}
+                />
+              )}
 
-            {/* Selected / Error Message */}
-            <SelectionIndicator
-              selectedItems={
-                selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-              }
-              onRemove={() => onSelectImage('')}
-              error={!!sourceError}
-              errorMessage={sourceError}
-            />
+              {/* Selected / Error Message */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                }
+                onRemove={() => onSelectImage('')}
+                error={!!sourceError}
+                errorMessage={sourceError}
+              />
+            </VStack>
           </VStack>
 
           {/* Divider */}
@@ -2377,38 +2379,40 @@ function NetworkSection({
               />
 
               {/* Network Table */}
-              <Table
-                columns={networkColumns}
-                data={filteredNetworks}
-                rowKey="id"
-                onRowClick={(row) => {
-                  const newSet = new Set(selectedNetworkIds);
-                  if (newSet.has(row.id)) {
-                    newSet.delete(row.id);
-                  } else {
-                    newSet.add(row.id);
-                  }
-                  setSelectedNetworkIds(newSet);
-                  // Clear error when network is selected
-                  if (newSet.size > 0) {
-                    setNetworkError(null);
-                  }
-                }}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={networkColumns}
+                  data={filteredNetworks}
+                  rowKey="id"
+                  onRowClick={(row) => {
+                    const newSet = new Set(selectedNetworkIds);
+                    if (newSet.has(row.id)) {
+                      newSet.delete(row.id);
+                    } else {
+                      newSet.add(row.id);
+                    }
+                    setSelectedNetworkIds(newSet);
+                    // Clear error when network is selected
+                    if (newSet.size > 0) {
+                      setNetworkError(null);
+                    }
+                  }}
+                />
 
-              {/* Error Message or Selection Indicator for Networks */}
-              <SelectionIndicator
-                selectedItems={mockNetworks
-                  .filter((n) => selectedNetworkIds.has(n.id))
-                  .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
-                onRemove={(id) => {
-                  const newSet = new Set(selectedNetworkIds);
-                  newSet.delete(id);
-                  setSelectedNetworkIds(newSet);
-                }}
-                error={!!networkError}
-                errorMessage={networkError}
-              />
+                {/* Error Message or Selection Indicator for Networks */}
+                <SelectionIndicator
+                  selectedItems={mockNetworks
+                    .filter((n) => selectedNetworkIds.has(n.id))
+                    .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
+                  onRemove={(id) => {
+                    const newSet = new Set(selectedNetworkIds);
+                    newSet.delete(id);
+                    setSelectedNetworkIds(newSet);
+                  }}
+                  error={!!networkError}
+                  errorMessage={networkError}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -2592,38 +2596,40 @@ function NetworkSection({
                 selectedCount={selectedSecurityGroups.size}
               />
 
-              <Table
-                columns={securityGroupColumns}
-                data={filteredSecurityGroups}
-                rowKey="id"
-                onRowClick={(row) => {
-                  const newSet = new Set(selectedSecurityGroups);
-                  if (newSet.has(row.id)) {
-                    newSet.delete(row.id);
-                  } else {
-                    newSet.add(row.id);
-                  }
-                  setSelectedSecurityGroups(newSet);
-                  // Clear error when security group is selected
-                  if (newSet.size > 0) {
-                    setSecurityGroupError(null);
-                  }
-                }}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={securityGroupColumns}
+                  data={filteredSecurityGroups}
+                  rowKey="id"
+                  onRowClick={(row) => {
+                    const newSet = new Set(selectedSecurityGroups);
+                    if (newSet.has(row.id)) {
+                      newSet.delete(row.id);
+                    } else {
+                      newSet.add(row.id);
+                    }
+                    setSelectedSecurityGroups(newSet);
+                    // Clear error when security group is selected
+                    if (newSet.size > 0) {
+                      setSecurityGroupError(null);
+                    }
+                  }}
+                />
 
-              {/* Selection Indicator for Security Groups */}
-              <SelectionIndicator
-                selectedItems={mockSecurityGroups
-                  .filter((sg) => selectedSecurityGroups.has(sg.id))
-                  .map((sg) => ({ id: sg.id, label: sg.name }))}
-                onRemove={(id) => {
-                  const newSet = new Set(selectedSecurityGroups);
-                  newSet.delete(id);
-                  setSelectedSecurityGroups(newSet);
-                }}
-                error={!!securityGroupError}
-                errorMessage={securityGroupError}
-              />
+                {/* Selection Indicator for Security Groups */}
+                <SelectionIndicator
+                  selectedItems={mockSecurityGroups
+                    .filter((sg) => selectedSecurityGroups.has(sg.id))
+                    .map((sg) => ({ id: sg.id, label: sg.name }))}
+                  onRemove={(id) => {
+                    const newSet = new Set(selectedSecurityGroups);
+                    newSet.delete(id);
+                    setSelectedSecurityGroups(newSet);
+                  }}
+                  error={!!securityGroupError}
+                  errorMessage={securityGroupError}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -2888,29 +2894,31 @@ function AuthenticationSection({
                     />
 
                     {/* Key pair Table */}
-                    <Table
-                      columns={keyPairColumns}
-                      data={filteredKeyPairs}
-                      rowKey="id"
-                      onRowClick={(row) => handleSelectKeyPair(row.id)}
-                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={keyPairColumns}
+                        data={filteredKeyPairs}
+                        rowKey="id"
+                        onRowClick={(row) => handleSelectKeyPair(row.id)}
+                      />
 
-                    {/* Selection Indicator for Key Pair */}
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedKeyPairId
-                          ? [
-                              {
-                                id: selectedKeyPairId,
-                                label:
-                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                  selectedKeyPairId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => setSelectedKeyPairId(null)}
-                    />
+                      {/* Selection Indicator for Key Pair */}
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedKeyPairId
+                            ? [
+                                {
+                                  id: selectedKeyPairId,
+                                  label:
+                                    mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                    selectedKeyPairId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => setSelectedKeyPairId(null)}
+                      />
+                    </VStack>
                   </VStack>
                 </TabPanel>
 
@@ -3621,36 +3629,39 @@ function TemplatesSection({
                     />
 
                     {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
+                    <VStack gap={2}>
+                      {filteredTemplates.length > 0 ? (
+                        <Table
+                          columns={columns}
+                          data={filteredTemplates}
+                          rowKey="id"
+                          onRowClick={(row) => onSelect(row.id)}
+                        />
+                      ) : (
+                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                          No public templates available
+                        </div>
+                      )}
+
+                      {/* Selection Indicator for Templates */}
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedId
+                            ? [
+                                {
+                                  id: selectedId,
+                                  label:
+                                    templates.find((t) => t.id === selectedId)?.name || selectedId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => onSelect('')}
                       />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No public templates available
-                      </div>
-                    )}
+                    </VStack>
                   </VStack>
                 </TabPanel>
               </Tabs>
-
-              {/* Selection Indicator for Templates */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedId
-                    ? [
-                        {
-                          id: selectedId,
-                          label: templates.find((t) => t.id === selectedId)?.name || selectedId,
-                        },
-                      ]
-                    : []
-                }
-                onRemove={() => onSelect('')}
-              />
             </VStack>
           </div>
 

@@ -179,166 +179,177 @@ export function DetachInterfaceDrawer({
             <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
-          {/* Interfaces Table */}
-          <div
-            className="flex-1 overflow-y-auto sidebar-scroll"
-            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
-          >
-            {/* Header */}
+          <VStack gap={2}>
+            {/* Interfaces Table */}
             <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '40px', flexShrink: 0 }}
-                className="flex items-center justify-center"
-              />
-              <div
-                style={{ width: '59px', flexShrink: 0 }}
-                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-              </div>
-              <div
-                style={{ width: '125px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '108px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
-              </div>
-              <div
-                style={{ width: '108px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
-              </div>
-              <div
-                style={{ width: '148px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">MAC Address</span>
-              </div>
-            </div>
-
-            {/* Rows */}
-            <div
+              className="flex-1 overflow-y-auto sidebar-scroll"
               style={{
                 width: '648px',
                 maxWidth: '648px',
-                marginTop: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
+                overflowX: 'hidden',
+                paddingRight: '2px',
               }}
             >
-              {filteredInterfaces.map((iface) => (
+              {/* Header */}
+              <div
+                style={{ display: 'flex', width: '648px', height: '40px' }}
+                className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
+              >
                 <div
-                  key={iface.id}
-                  style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                  className={`border rounded-md cursor-pointer transition-all ${
-                    selectedInterfaceId === iface.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                  onClick={() => setSelectedInterfaceId(iface.id)}
+                  style={{ width: '40px', flexShrink: 0 }}
+                  className="flex items-center justify-center"
+                />
+                <div
+                  style={{ width: '59px', flexShrink: 0 }}
+                  className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
                 >
-                  {/* Radio */}
+                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
+                </div>
+                <div
+                  style={{ width: '125px', flexShrink: 0 }}
+                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
+                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                </div>
+                <div
+                  style={{ width: '108px', flexShrink: 0 }}
+                  className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
+                </div>
+                <div
+                  style={{ width: '108px', flexShrink: 0 }}
+                  className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    Floating IP
+                  </span>
+                </div>
+                <div
+                  style={{ width: '148px', flexShrink: 0 }}
+                  className="flex items-center px-3 border-l border-[var(--color-border-default)]"
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    MAC Address
+                  </span>
+                </div>
+              </div>
+
+              {/* Rows */}
+              <div
+                style={{
+                  width: '648px',
+                  maxWidth: '648px',
+                  marginTop: '4px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                }}
+              >
+                {filteredInterfaces.map((iface) => (
                   <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                    onClick={(e) => e.stopPropagation()}
+                    key={iface.id}
+                    style={{ display: 'flex', width: '648px', minHeight: '40px' }}
+                    className={`border rounded-md cursor-pointer transition-all ${
+                      selectedInterfaceId === iface.id
+                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
+                        : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
+                    }`}
+                    onClick={() => setSelectedInterfaceId(iface.id)}
                   >
-                    <Radio
-                      name="interface-select"
-                      value={iface.id}
-                      checked={selectedInterfaceId === iface.id}
-                      onChange={() => setSelectedInterfaceId(iface.id)}
-                    />
-                  </div>
-                  {/* Status */}
-                  <div
-                    style={{ width: '59px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    <StatusIndicator status="active" layout="icon-only" size="sm" />
-                  </div>
-                  {/* Name */}
-                  <div
-                    style={{ width: '125px', flexShrink: 0 }}
-                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {iface.name}
-                      </span>
-                      <IconExternalLink
-                        size={12}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-action-primary)]"
+                    {/* Radio */}
+                    <div
+                      style={{ width: '40px', flexShrink: 0 }}
+                      className="flex items-center justify-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Radio
+                        name="interface-select"
+                        value={iface.id}
+                        checked={selectedInterfaceId === iface.id}
+                        onChange={() => setSelectedInterfaceId(iface.id)}
                       />
                     </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 17kfj123
-                    </span>
+                    {/* Status */}
+                    <div
+                      style={{ width: '59px', flexShrink: 0 }}
+                      className="flex items-center justify-center"
+                    >
+                      <StatusIndicator status="active" layout="icon-only" size="sm" />
+                    </div>
+                    {/* Name */}
+                    <div
+                      style={{ width: '125px', flexShrink: 0 }}
+                      className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
+                          {iface.name}
+                        </span>
+                        <IconExternalLink
+                          size={12}
+                          stroke={1.5}
+                          className="shrink-0 text-[var(--color-action-primary)]"
+                        />
+                      </div>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                        ID : 17kfj123
+                      </span>
+                    </div>
+                    {/* Fixed IP */}
+                    <div
+                      style={{ width: '108px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
+                        {iface.fixedIp}
+                      </span>
+                    </div>
+                    {/* Floating IP */}
+                    <div
+                      style={{ width: '108px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
+                        {iface.floatingIp}
+                      </span>
+                    </div>
+                    {/* MAC Address */}
+                    <div
+                      style={{ width: '148px', flexShrink: 0 }}
+                      className="flex items-center px-3 py-2 overflow-hidden"
+                    >
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
+                        {iface.macAddress}
+                      </span>
+                    </div>
                   </div>
-                  {/* Fixed IP */}
-                  <div
-                    style={{ width: '108px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {iface.fixedIp}
-                    </span>
-                  </div>
-                  {/* Floating IP */}
-                  <div
-                    style={{ width: '108px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {iface.floatingIp}
-                    </span>
-                  </div>
-                  {/* MAC Address */}
-                  <div
-                    style={{ width: '148px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {iface.macAddress}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </VStack>
 
-        {/* Selection Indicator */}
-        <SelectionIndicator
-          selectedItems={
-            selectedInterfaceId
-              ? [
-                  {
-                    id: selectedInterfaceId,
-                    label: interfaces.find((i) => i.id === selectedInterfaceId)?.name || '',
-                  },
-                ]
-              : []
-          }
-          onRemove={() => setSelectedInterfaceId(null)}
-          emptyText="No item selected"
-          className="shrink-0"
-          style={{ width: '648px' }}
-          error={hasAttemptedSubmit && !selectedInterfaceId}
-          errorMessage="Please select an interface"
-        />
+            {/* Selection Indicator */}
+            <SelectionIndicator
+              selectedItems={
+                selectedInterfaceId
+                  ? [
+                      {
+                        id: selectedInterfaceId,
+                        label: interfaces.find((i) => i.id === selectedInterfaceId)?.name || '',
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => setSelectedInterfaceId(null)}
+              emptyText="No item selected"
+              className="shrink-0"
+              style={{ width: '648px' }}
+              error={hasAttemptedSubmit && !selectedInterfaceId}
+              errorMessage="Please select an interface"
+            />
+          </VStack>
+        </VStack>
       </VStack>
     </Drawer>
   );
