@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -258,27 +258,30 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
-          <HStack className="justify-between w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                value={capacity}
+                onChange={setCapacity}
+                min={minCapacity}
+                max={maxCapacity}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={(val) => setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity))}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-          <VStack gap={5} className="w-full">
-            <Slider value={capacity} onChange={setCapacity} min={minCapacity} max={maxCapacity} />
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => {
-                const val = parseInt(e.target.value) || minCapacity;
-                setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity));
-              }}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
           </VStack>
         </VStack>
 

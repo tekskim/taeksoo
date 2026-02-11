@@ -82,6 +82,8 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
   const [adminStateUp, setAdminStateUp] = useState(pool.adminStateUp ?? true);
   const [isSessionPersistenceExpanded, setIsSessionPersistenceExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or pool changes
   useEffect(() => {
@@ -95,11 +97,22 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       setTlsCiphers(pool.tlsCiphers || '');
       setAdminStateUp(pool.adminStateUp ?? true);
       setIsSessionPersistenceExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, pool]);
 
   const handleSubmit = async () => {
-    if (!name.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!name.trim()) {
+      setNameError('Pool name is required');
+      return;
+    }
+    if (name.trim().length > 128) {
+      setNameError('Pool name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -121,6 +134,8 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -154,18 +169,24 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         </VStack>
 
         {/* Pool Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Pool name</FormField.Label>
           <FormField.Control>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. pool-http"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
           </FormField.HelperText>
         </FormField>
 

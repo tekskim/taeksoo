@@ -349,7 +349,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
         {/* Backup Mode */}
         <VStack gap={3}>
           <span className="text-label-lg text-[var(--color-text-default)]">Backup mode</span>
-          <VStack gap={3}>
+          <VStack gap={2}>
             <Radio
               name="backup-mode"
               value="full"

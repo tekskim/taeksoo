@@ -7,9 +7,11 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -108,20 +110,6 @@ const MOCK_SUBNETS: SubnetItem[] = [
 ];
 
 /* ----------------------------------------
-   Sort Icon Component
-   ---------------------------------------- */
-
-function SortIcon({ active, direction }: { active: boolean; direction: 'asc' | 'desc' }) {
-  return (
-    <IconChevronDown
-      size={16}
-      className={`transition-transform ${active && direction === 'asc' ? 'rotate-180' : ''}`}
-      stroke={1.5}
-    />
-  );
-}
-
-/* ----------------------------------------
    Component
    ---------------------------------------- */
 
@@ -148,14 +136,12 @@ export function ConnectSubnetDrawer({
   const [subnetSortDir, setSubnetSortDir] = useState<'asc' | 'desc'>('asc');
 
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-  const [selectionError, setSelectionError] = useState<string | null>(null);
 
   const itemsPerPage = 5;
 
   useEffect(() => {
     if (!isOpen) {
       setHasAttemptedSubmit(false);
-      setSelectionError(null);
     }
   }, [isOpen]);
 
@@ -215,39 +201,104 @@ export function ConnectSubnetDrawer({
     subnetPage * itemsPerPage
   );
 
-  // Toggle network sort
-  const toggleNetworkSort = (key: 'name' | 'size' | 'access') => {
-    if (networkSortKey === key) {
-      setNetworkSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setNetworkSortKey(key);
-      setNetworkSortDir('asc');
-    }
-  };
-
-  // Toggle subnet sort
-  const toggleSubnetSort = (key: 'name') => {
-    if (subnetSortKey === key) {
-      setSubnetSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSubnetSortKey(key);
-      setSubnetSortDir('asc');
-    }
-  };
-
   // Find selected items
   const selectedNetwork = networks.find((n) => n.id === selectedNetworkId);
   const selectedSubnet = subnets.find((s) => s.id === selectedSubnetId);
+
+  const networkColumns: TableColumn<NetworkItem>[] = [
+    {
+      key: 'id' as keyof NetworkItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="network-select"
+            value={row.id}
+            checked={selectedNetworkId === row.id}
+            onChange={() => {
+              setSelectedNetworkId(row.id);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    { key: 'size', label: 'Size', flex: 1 },
+    { key: 'access', label: 'Access', flex: 1 },
+    { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
+  ];
+
+  const subnetColumns: TableColumn<SubnetItem>[] = [
+    {
+      key: 'id' as keyof SubnetItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="subnet-select"
+            value={row.id}
+            checked={selectedSubnetId === row.id}
+            onChange={() => {
+              setSelectedSubnetId(row.id);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    { key: 'allocationPools', label: 'Allocation Pools', flex: 1 },
+  ];
 
   // Handle submit
   const handleSubmit = () => {
     setHasAttemptedSubmit(true);
 
     if (!selectedNetworkId || !selectedSubnetId) {
-      setSelectionError('Please select both a network and a subnet.');
       return;
     }
-    setSelectionError(null);
 
     onSubmit?.({ networkId: selectedNetworkId, subnetId: selectedSubnetId });
     handleClose();
@@ -287,7 +338,7 @@ export function ConnectSubnetDrawer({
         </div>
 
         {/* Network Section */}
-        <VStack gap={3} className="w-full pb-5">
+        <VStack gap={3} className="w-full">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Network</h3>
 
           {/* Search */}
@@ -312,105 +363,15 @@ export function ConnectSubnetDrawer({
           />
 
           <VStack gap={2}>
-            {/* Network Table */}
-            <div className="w-full flex flex-col gap-1">
-              {/* Header */}
-              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="w-[40px] p-3" />
-                <div className="w-[59px] px-3 py-2 border-l border-[var(--color-border-default)] flex items-center justify-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => toggleNetworkSort('name')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                  <SortIcon active={networkSortKey === 'name'} direction={networkSortDir} />
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => toggleNetworkSort('size')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                  <SortIcon active={networkSortKey === 'size'} direction={networkSortDir} />
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => toggleNetworkSort('access')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Access</span>
-                  <SortIcon active={networkSortKey === 'access'} direction={networkSortDir} />
-                </div>
-                <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Subnet CIDR
-                  </span>
-                </div>
-              </div>
-
-              {/* Rows */}
-              {paginatedNetworks.map((network) => (
-                <div
-                  key={network.id}
-                  className={`flex items-center bg-white border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                    selectedNetworkId === network.id
-                      ? 'ring-2 ring-[var(--color-action-primary)]'
-                      : ''
-                  }`}
-                  onClick={() => {
-                    setSelectedNetworkId(network.id);
-                    setSelectionError(null);
-                  }}
-                >
-                  <div className="w-[40px] p-3 flex items-center justify-center">
-                    <Radio
-                      checked={selectedNetworkId === network.id}
-                      onChange={() => {
-                        setSelectedNetworkId(network.id);
-                        setSelectionError(null);
-                      }}
-                    />
-                  </div>
-                  <div className="w-[59px] p-2 flex items-center justify-center">
-                    <StatusIndicator status={network.status} />
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <VStack gap={0.5}>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-md text-[var(--color-action-primary)]">
-                          {network.name}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID : {network.id}
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {network.size}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {network.access}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {network.subnetCidr}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator for Network */}
+            <Table<NetworkItem>
+              columns={networkColumns}
+              data={paginatedNetworks}
+              rowKey="id"
+              onRowClick={(row) => {
+                setSelectedNetworkId(row.id);
+              }}
+              emptyMessage="No networks found"
+            />
             <SelectionIndicator
               selectedItems={
                 selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
@@ -425,7 +386,7 @@ export function ConnectSubnetDrawer({
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
         {/* Subnet Section */}
-        <VStack gap={3} className="w-full pb-5">
+        <VStack gap={3} className="w-full pb-6">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
 
           {/* Search */}
@@ -450,75 +411,15 @@ export function ConnectSubnetDrawer({
           />
 
           <VStack gap={2}>
-            {/* Subnet Table */}
-            <div className="w-full flex flex-col gap-1">
-              {/* Header */}
-              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="w-[40px] p-3" />
-                <div
-                  className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => toggleSubnetSort('name')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                  <SortIcon active={subnetSortKey === 'name'} direction={subnetSortDir} />
-                </div>
-                <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Allocation Pools
-                  </span>
-                </div>
-              </div>
-
-              {/* Rows */}
-              {paginatedSubnets.map((subnet) => (
-                <div
-                  key={subnet.id}
-                  className={`flex items-center bg-white border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                    selectedSubnetId === subnet.id
-                      ? 'ring-2 ring-[var(--color-action-primary)]'
-                      : ''
-                  }`}
-                  onClick={() => {
-                    setSelectedSubnetId(subnet.id);
-                    setSelectionError(null);
-                  }}
-                >
-                  <div className="w-[40px] p-3 flex items-center justify-center">
-                    <Radio
-                      checked={selectedSubnetId === subnet.id}
-                      onChange={() => {
-                        setSelectedSubnetId(subnet.id);
-                        setSelectionError(null);
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <VStack gap={0.5}>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-md text-[var(--color-action-primary)]">
-                          {subnet.name}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID : {subnet.id}
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {subnet.allocationPools}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator for Subnet */}
+            <Table<SubnetItem>
+              columns={subnetColumns}
+              data={paginatedSubnets}
+              rowKey="id"
+              onRowClick={(row) => {
+                setSelectedSubnetId(row.id);
+              }}
+              emptyMessage="No subnets found"
+            />
             <SelectionIndicator
               selectedItems={
                 selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
@@ -528,10 +429,6 @@ export function ConnectSubnetDrawer({
             />
           </VStack>
         </VStack>
-
-        {selectionError && (
-          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
-        )}
       </VStack>
     </Drawer>
   );

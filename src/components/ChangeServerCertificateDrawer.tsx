@@ -7,9 +7,11 @@ import {
   Radio,
   SelectionIndicator,
   StatusIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -97,6 +99,62 @@ export function ChangeServerCertificateDrawer({
     currentPage * ITEMS_PER_PAGE
   );
 
+  const certificateColumns: TableColumn<ServerCertificateItem>[] = [
+    {
+      key: 'id' as keyof ServerCertificateItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="certificate-select"
+            value={row.id}
+            checked={selectedCertificateId === row.id}
+            onChange={() => setSelectedCertificateId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'domain', label: 'Domain' },
+    {
+      key: 'listeners',
+      label: 'Listeners',
+      render: (_value, row) =>
+        row.listenersCount && row.listenersCount > 0
+          ? `${row.listeners} (+${row.listenersCount})`
+          : row.listeners,
+    },
+    { key: 'expiresAt', label: 'Expires At' },
+  ];
+
   const handleChange = async () => {
     setHasAttemptedSubmit(true);
 
@@ -182,123 +240,27 @@ export function ChangeServerCertificateDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Certificates Table */}
-          <div className="flex flex-col gap-1" style={{ width: '648px', maxWidth: '648px' }}>
-            {/* Header */}
-            <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div className="w-[40px] flex items-center justify-center shrink-0" />
-              <div className="w-[59px] flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                  Status
-                </span>
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                  Name
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                  Domain
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                  Listeners
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                  Expires At
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedCertificates.map((cert) => (
-              <div
-                key={cert.id}
-                className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                  selectedCertificateId === cert.id
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => setSelectedCertificateId(cert.id)}
-              >
-                {/* Radio */}
-                <div
-                  className="w-[40px] flex items-center justify-center shrink-0"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Radio
-                    name="certificate-select"
-                    value={cert.id}
-                    checked={selectedCertificateId === cert.id}
-                    onChange={() => setSelectedCertificateId(cert.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center p-2 shrink-0">
-                  <StatusIndicator status={cert.status} />
-                </div>
-                {/* Name */}
-                <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
-                      {cert.name}
-                    </span>
-                    <IconExternalLink
-                      size={12}
-                      stroke={1.5}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </div>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
-                    ID : {cert.id}
-                  </span>
-                </div>
-                {/* Domain */}
-                <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                    {cert.domain}
-                  </span>
-                </div>
-                {/* Listeners */}
-                <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                    {cert.listeners}
-                    {cert.listenersCount && cert.listenersCount > 0
-                      ? ` (+${cert.listenersCount})`
-                      : ''}
-                  </span>
-                </div>
-                {/* Expires At */}
-                <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                    {cert.expiresAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - Below table */}
-          <SelectionIndicator
-            selectedItems={
-              selectedCertificate
-                ? [{ id: selectedCertificate.id, label: selectedCertificate.name }]
-                : []
-            }
-            onRemove={() => setSelectedCertificateId(null)}
-            emptyText="No item Selected"
-            error={hasAttemptedSubmit && !selectedCertificateId}
-            errorMessage="Please select a certificate."
-            className="w-full"
-          />
+          <VStack gap={2}>
+            <Table<ServerCertificateItem>
+              columns={certificateColumns}
+              data={paginatedCertificates}
+              rowKey="id"
+              onRowClick={(row) => setSelectedCertificateId(row.id)}
+              emptyMessage="No certificates found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedCertificate
+                  ? [{ id: selectedCertificate.id, label: selectedCertificate.name }]
+                  : []
+              }
+              onRemove={() => setSelectedCertificateId(null)}
+              emptyText="No item Selected"
+              error={hasAttemptedSubmit && !selectedCertificateId}
+              errorMessage="Please select a certificate."
+              className="w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

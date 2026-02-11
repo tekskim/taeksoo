@@ -215,7 +215,7 @@ export function CreateVolumeBackupDrawer({
         <FormField>
           <FormField.Label>Backup mode</FormField.Label>
           <FormField.Control>
-            <VStack gap={3}>
+            <VStack gap={2}>
               <Radio
                 name="backup-mode"
                 value="full"
@@ -233,7 +233,7 @@ export function CreateVolumeBackupDrawer({
                 />
                 <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
                   <IconHelp
-                    size={16}
+                    size={12}
                     className="text-[var(--color-text-subtle)] cursor-help"
                     stroke={1.5}
                   />

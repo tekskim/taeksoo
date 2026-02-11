@@ -7,9 +7,11 @@ import {
   StatusIndicator,
   Radio,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -95,6 +97,54 @@ export function DisassociateFloatingIPDrawer({
     onClose();
   };
 
+  const floatingIpColumns: TableColumn<FloatingIPItem>[] = [
+    {
+      key: 'id' as keyof FloatingIPItem,
+      label: '',
+      width: 40,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="floating-ip-select"
+            value={row.id}
+            checked={selectedFloatingIpId === row.id}
+            onChange={() => setSelectedFloatingIpId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: 60,
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.floatingIp}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'fixedIp', label: 'Fixed IP' },
+    { key: 'createdAt', label: 'Created At' },
+  ];
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -103,15 +153,15 @@ export function DisassociateFloatingIPDrawer({
       description="Remove the association between this floating IP and the instance. Once disassociated, the instance will lose external network access through this IP."
       width={700}
       footer={
-        <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+        <HStack gap={2} justify="center" className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleDisassociate}
             disabled={false}
-            className="flex-1 h-8"
+            className="w-[152px] h-8"
           >
             Disassociate
           </Button>
@@ -148,144 +198,32 @@ export function DisassociateFloatingIPDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Floating IP Table */}
-          <div style={{ width: '648px', maxWidth: '648px' }}>
-            {/* Header */}
-            <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '40px', flexShrink: 0 }}
-                className="flex items-center justify-center"
-              />
-              <div
-                style={{ width: '59px', flexShrink: 0 }}
-                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-              </div>
-              <div
-                style={{ width: '183px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '183px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '183px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-            </div>
-
-            {/* Body */}
-            <div
-              style={{
-                width: '648px',
-                maxWidth: '648px',
-                marginTop: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              {paginatedFloatingIps.map((fip) => (
-                <div
-                  key={fip.id}
-                  onClick={() => setSelectedFloatingIpId(fip.id)}
-                  style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                  className={`border rounded-md cursor-pointer transition-all ${
-                    selectedFloatingIpId === fip.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                >
-                  <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    <Radio
-                      name="floating-ip-select"
-                      value={fip.id}
-                      checked={selectedFloatingIpId === fip.id}
-                      onChange={() => setSelectedFloatingIpId(fip.id)}
-                    />
-                  </div>
-                  <div
-                    style={{ width: '59px', flexShrink: 0 }}
-                    className="flex items-center justify-center px-3"
-                  >
-                    <StatusIndicator status="active" layout="icon-only" size="sm" />
-                  </div>
-                  <div
-                    style={{ width: '183px', flexShrink: 0 }}
-                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {fip.floatingIp}
-                      </span>
-                      <IconExternalLink
-                        size={12}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 17kfj123
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '183px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {fip.fixedIp}
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '183px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {fip.createdAt}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            className="shrink-0"
-            style={{ width: '648px' }}
-            selectedItems={
-              selectedFloatingIpId
-                ? [
-                    {
-                      id: selectedFloatingIpId,
-                      label:
-                        floatingIps.find((f) => f.id === selectedFloatingIpId)?.floatingIp || '',
-                    },
-                  ]
-                : []
-            }
-            onRemove={() => setSelectedFloatingIpId(null)}
-            emptyText="No item selected"
-            error={hasAttemptedSubmit && !selectedFloatingIpId}
-            errorMessage="Please select a floating IP."
-          />
+          <VStack gap={2}>
+            <Table<FloatingIPItem>
+              columns={floatingIpColumns}
+              data={paginatedFloatingIps}
+              rowKey="id"
+              onRowClick={(row) => setSelectedFloatingIpId(row.id)}
+              emptyMessage="No floating IPs found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedFloatingIpId
+                  ? [
+                      {
+                        id: selectedFloatingIpId,
+                        label:
+                          floatingIps.find((f) => f.id === selectedFloatingIpId)?.floatingIp || '',
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => setSelectedFloatingIpId(null)}
+              emptyText="No item selected"
+              error={hasAttemptedSubmit && !selectedFloatingIpId}
+              errorMessage="Please select a floating IP."
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

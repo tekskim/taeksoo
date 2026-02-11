@@ -5,12 +5,12 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
-  Radio,
-  Checkbox,
+  Table,
   SelectionIndicator,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -67,6 +67,80 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (
 }));
 
 const ITEMS_PER_PAGE = 5;
+
+const interfaceColumns: TableColumn<InterfaceItem>[] = [
+  {
+    key: 'status',
+    label: 'Status',
+    width: '59px',
+    align: 'center',
+    render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+  },
+  {
+    key: 'portName',
+    label: 'Network',
+    render: (_value, row) => (
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <div className="flex items-center gap-1.5">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.portName}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
+        </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  {
+    key: 'networkName',
+    label: 'Port ID',
+    render: (_value, row) => (
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <div className="flex items-center gap-1.5">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.networkName}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
+        </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  { key: 'ipAddress', label: 'IP Address' },
+  { key: 'macAddress', label: 'Mac Address' },
+];
+
+const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    render: (_value, row) => (
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <div className="flex items-center gap-1.5">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
+        </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  { key: 'description', label: 'Description' },
+  { key: 'createdAt', label: 'Created At' },
+];
 
 /* ----------------------------------------
    ManageSecurityGroupsDrawer Component
@@ -219,154 +293,20 @@ export function ManageSecurityGroupsDrawer({
           />
 
           <VStack gap={2}>
-            {/* Interfaces Table */}
             <div style={{ width: '648px', maxWidth: '648px' }}>
-              {/* Header */}
-              <div
-                style={{ display: 'flex', width: '648px', height: '40px' }}
-                className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-              >
-                <div
-                  style={{ width: '40px', flexShrink: 0 }}
-                  className="flex items-center justify-center"
-                />
-                <div
-                  style={{ width: '59px', flexShrink: 0 }}
-                  className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-                </div>
-                <div
-                  style={{ width: '137px', flexShrink: 0 }}
-                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div
-                  style={{ width: '137px', flexShrink: 0 }}
-                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Port ID</span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div
-                  style={{ width: '137px', flexShrink: 0 }}
-                  className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">IP Address</span>
-                </div>
-                <div
-                  style={{ width: '138px', flexShrink: 0 }}
-                  className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Mac Address
-                  </span>
-                </div>
-              </div>
-
-              {/* Rows */}
-              <div
-                style={{
-                  width: '648px',
-                  maxWidth: '648px',
-                  marginTop: '4px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                }}
-              >
-                {paginatedInterfaces.map((iface) => (
-                  <div
-                    key={iface.id}
-                    style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                    className={`border rounded-md cursor-pointer transition-all ${
-                      selectedInterfaceId === iface.id
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                        : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                    }`}
-                    onClick={() => setSelectedInterfaceId(iface.id)}
-                  >
-                    {/* Radio */}
-                    <div
-                      style={{ width: '40px', flexShrink: 0 }}
-                      className="flex items-center justify-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Radio
-                        name="interface-select"
-                        value={iface.id}
-                        checked={selectedInterfaceId === iface.id}
-                        onChange={() => setSelectedInterfaceId(iface.id)}
-                      />
-                    </div>
-                    {/* Status */}
-                    <div
-                      style={{ width: '59px', flexShrink: 0 }}
-                      className="flex items-center justify-center"
-                    >
-                      <StatusIndicator status="active" layout="icon-only" size="sm" />
-                    </div>
-                    {/* Network */}
-                    <div
-                      style={{ width: '137px', flexShrink: 0 }}
-                      className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                          {iface.portName}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="shrink-0 text-[var(--color-action-primary)]"
-                        />
-                      </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                        ID : 17kfj123
-                      </span>
-                    </div>
-                    {/* Port ID */}
-                    <div
-                      style={{ width: '137px', flexShrink: 0 }}
-                      className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                          {iface.networkName}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="shrink-0 text-[var(--color-action-primary)]"
-                        />
-                      </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                        ID : 17kfj123
-                      </span>
-                    </div>
-                    {/* IP Address */}
-                    <div
-                      style={{ width: '137px', flexShrink: 0 }}
-                      className="flex items-center px-3 py-2 overflow-hidden"
-                    >
-                      <span className="text-body-md text-[var(--color-text-default)] truncate">
-                        {iface.ipAddress}
-                      </span>
-                    </div>
-                    {/* MAC Address */}
-                    <div
-                      style={{ width: '138px', flexShrink: 0 }}
-                      className="flex items-center px-3 py-2 overflow-hidden"
-                    >
-                      <span className="text-body-md text-[var(--color-text-default)] truncate">
-                        {iface.macAddress}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <Table<InterfaceItem>
+                columns={interfaceColumns}
+                data={paginatedInterfaces}
+                rowKey="id"
+                selectable
+                hideSelectAll
+                selectedKeys={selectedInterfaceId ? [selectedInterfaceId] : []}
+                onSelectionChange={(keys) =>
+                  setSelectedInterfaceId(keys.length > 0 ? keys[keys.length - 1] : null)
+                }
+                onRowClick={(row) => setSelectedInterfaceId(row.id)}
+                emptyMessage="No interfaces found"
+              />
             </div>
 
             {/* Interface Selection Indicator */}
@@ -416,118 +356,15 @@ export function ManageSecurityGroupsDrawer({
           </div>
 
           <VStack gap={2}>
-            {/* Security Groups Table */}
-            <div style={{ width: '648px', maxWidth: '648px' }}>
-              {/* Header */}
-              <div
-                style={{ display: 'flex', width: '648px', height: '40px' }}
-                className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-              >
-                <div
-                  style={{ width: '40px', flexShrink: 0 }}
-                  className="flex items-center justify-center"
-                />
-                <div
-                  style={{ width: '203px', flexShrink: 0 }}
-                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div
-                  style={{ width: '203px', flexShrink: 0 }}
-                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Description
-                  </span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div
-                  style={{ width: '202px', flexShrink: 0 }}
-                  className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-              </div>
-
-              {/* Rows */}
-              <div
-                style={{
-                  width: '648px',
-                  maxWidth: '648px',
-                  marginTop: '4px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                }}
-              >
-                {paginatedSecurityGroups.map((sg) => (
-                  <div
-                    key={sg.id}
-                    style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                    className={`border rounded-md cursor-pointer transition-all ${
-                      selectedSecurityGroupIds.includes(sg.id)
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                        : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                    }`}
-                    onClick={() => handleSecurityGroupToggle(sg.id)}
-                  >
-                    {/* Checkbox */}
-                    <div
-                      style={{ width: '40px', flexShrink: 0 }}
-                      className="flex items-center justify-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Checkbox
-                        checked={selectedSecurityGroupIds.includes(sg.id)}
-                        onChange={() => handleSecurityGroupToggle(sg.id)}
-                      />
-                    </div>
-                    {/* Name */}
-                    <div
-                      style={{ width: '203px', flexShrink: 0 }}
-                      className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                          {sg.name}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="shrink-0 text-[var(--color-action-primary)]"
-                        />
-                      </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                        ID : 21stu345
-                      </span>
-                    </div>
-                    {/* Description */}
-                    <div
-                      style={{ width: '203px', flexShrink: 0 }}
-                      className="flex items-center px-3 py-2 overflow-hidden"
-                    >
-                      <span className="text-body-md text-[var(--color-text-default)] truncate">
-                        {sg.description}
-                      </span>
-                    </div>
-                    {/* Created At */}
-                    <div
-                      style={{ width: '202px', flexShrink: 0 }}
-                      className="flex items-center px-3 py-2 overflow-hidden"
-                    >
-                      <span className="text-body-md text-[var(--color-text-default)] truncate">
-                        {sg.createdAt}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Security Groups Selection Indicator */}
+            <Table<SecurityGroupItem>
+              columns={securityGroupColumns}
+              data={paginatedSecurityGroups}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedSecurityGroupIds}
+              onSelectionChange={(keys) => setSelectedSecurityGroupIds(keys as string[])}
+              emptyMessage="No security groups found"
+            />
             <SelectionIndicator
               selectedItems={selectedSecurityGroupIds.map((id) => ({
                 id,
@@ -537,8 +374,6 @@ export function ManageSecurityGroupsDrawer({
                 setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
               }
               emptyText="No item Selected"
-              className="shrink-0"
-              style={{ width: '648px' }}
             />
           </VStack>
         </VStack>

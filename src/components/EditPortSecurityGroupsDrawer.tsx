@@ -4,12 +4,13 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Checkbox,
+  Table,
   Toggle,
   SelectionIndicator,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconX } from '@tabler/icons-react';
+import { IconExternalLink, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -49,6 +50,32 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (
 }));
 
 const ITEMS_PER_PAGE = 5;
+
+const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    render: (_value, row) => (
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <div className="flex items-center gap-1.5">
+          <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
+            {row.name}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
+        </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
+          ID : {row.id}
+        </span>
+      </div>
+    ),
+  },
+  { key: 'description', label: 'Description' },
+  { key: 'createdAt', label: 'Created At' },
+];
 
 /* ----------------------------------------
    Filter Tag Component
@@ -275,114 +302,17 @@ export function EditPortSecurityGroupsDrawer({
             />
 
             <VStack gap={2}>
-              {/* Security Groups Table */}
-              <div className="flex flex-col gap-1" style={{ width: '648px', maxWidth: '648px' }}>
-                {/* Header */}
-                <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-                  <div className="w-[40px] flex items-center justify-center shrink-0">
-                    <Checkbox
-                      checked={
-                        paginatedSecurityGroups.length > 0 &&
-                        paginatedSecurityGroups.every((sg) =>
-                          selectedSecurityGroupIds.includes(sg.id)
-                        )
-                      }
-                      indeterminate={
-                        paginatedSecurityGroups.some((sg) =>
-                          selectedSecurityGroupIds.includes(sg.id)
-                        ) &&
-                        !paginatedSecurityGroups.every((sg) =>
-                          selectedSecurityGroupIds.includes(sg.id)
-                        )
-                      }
-                      onChange={() => {
-                        const allSelected = paginatedSecurityGroups.every((sg) =>
-                          selectedSecurityGroupIds.includes(sg.id)
-                        );
-                        if (allSelected) {
-                          // Deselect all on current page
-                          setSelectedSecurityGroupIds((prev) =>
-                            prev.filter((id) => !paginatedSecurityGroups.some((sg) => sg.id === id))
-                          );
-                        } else {
-                          // Select all on current page
-                          setSelectedSecurityGroupIds((prev) => [
-                            ...new Set([...prev, ...paginatedSecurityGroups.map((sg) => sg.id)]),
-                          ]);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)]">
-                    <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Name
-                    </span>
-                  </div>
-                  <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                    <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Description
-                    </span>
-                    <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                    <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Created At
-                    </span>
-                    <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                  </div>
-                </div>
-
-                {/* Rows */}
-                {paginatedSecurityGroups.map((sg) => (
-                  <div
-                    key={sg.id}
-                    className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                      selectedSecurityGroupIds.includes(sg.id)
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                        : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                    }`}
-                    onClick={() => handleSecurityGroupToggle(sg.id)}
-                  >
-                    {/* Checkbox */}
-                    <div
-                      className="w-[40px] flex items-center justify-center shrink-0"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Checkbox
-                        checked={selectedSecurityGroupIds.includes(sg.id)}
-                        onChange={() => handleSecurityGroupToggle(sg.id)}
-                      />
-                    </div>
-                    {/* Name */}
-                    <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
-                          {sg.name}
-                        </span>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="shrink-0 text-[var(--color-action-primary)]"
-                        />
-                      </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
-                        ID : {sg.id}
-                      </span>
-                    </div>
-                    {/* Description */}
-                    <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                      <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                        {sg.description}
-                      </span>
-                    </div>
-                    {/* Created At */}
-                    <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                      <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                        {sg.createdAt}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+              <div style={{ width: '648px', maxWidth: '648px' }}>
+                <Table<SecurityGroupItem>
+                  columns={securityGroupColumns}
+                  data={paginatedSecurityGroups}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedSecurityGroupIds}
+                  onSelectionChange={setSelectedSecurityGroupIds}
+                  onRowClick={(row) => handleSecurityGroupToggle(row.id)}
+                  emptyMessage="No security groups found"
+                />
               </div>
 
               {/* Selection Indicator - Below table */}

@@ -40,6 +40,8 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
   );
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or network changes
   useEffect(() => {
@@ -49,12 +51,24 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
       setAdminStateUp(network.adminStateUp ?? true);
       setPortSecurityEnabled(network.portSecurityEnabled ?? true);
       setIsAdvancedExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, network]);
 
   const handleSubmit = async () => {
-    if (!networkName.trim()) return;
+    setHasAttemptedSubmit(true);
 
+    if (!networkName.trim()) {
+      setNameError('Network name is required');
+      return;
+    }
+    if (networkName.trim().length > 128) {
+      setNameError('Network name must be 128 characters or fewer');
+      return;
+    }
+
+    setNameError(null);
     setIsSubmitting(true);
     try {
       await onSubmit?.(networkName, description, adminStateUp, portSecurityEnabled);
@@ -65,6 +79,8 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -100,16 +116,21 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         </VStack>
 
         {/* Network Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Network name</FormField.Label>
           <FormField.Control>
             <Input
               value={networkName}
-              onChange={(e) => setNetworkName(e.target.value)}
+              onChange={(e) => {
+                setNetworkName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. my-network"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

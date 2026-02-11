@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -232,30 +232,29 @@ export function CreateVolumeFromImageDrawer({
 
         {/* Capacity Slider */}
         <FormField>
-          <HStack className="w-full justify-between items-center">
-            <FormField.Label>Capacity (GiB)</FormField.Label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              {minCapacity} - {maxCapacity} GiB
-            </span>
-          </HStack>
+          <FormField.Label>Capacity (GiB)</FormField.Label>
           <FormField.Control>
-            <VStack gap={5} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
               <Slider
                 min={minCapacity}
                 max={maxCapacity}
                 value={capacity}
                 onChange={handleCapacityChange}
+                className="flex-1"
               />
-              <Input
-                type="number"
-                value={capacity.toString()}
-                onChange={(e) => handleCapacityChange(Number(e.target.value))}
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
                 min={minCapacity}
                 max={maxCapacity}
-                fullWidth
+                width="xs"
+                className="shrink-0"
               />
-            </VStack>
+            </HStack>
           </FormField.Control>
+          <FormField.HelperText>
+            {minCapacity} - {maxCapacity} GiB
+          </FormField.HelperText>
         </FormField>
 
         {/* Volume Type Select */}
