@@ -315,7 +315,8 @@ export function ManageSecurityGroupsDrawer({
                         {iface.portName}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
+                        stroke={1.5}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
@@ -333,7 +334,8 @@ export function ManageSecurityGroupsDrawer({
                         {iface.networkName}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
+                        stroke={1.5}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
@@ -486,7 +488,8 @@ export function ManageSecurityGroupsDrawer({
                         {sg.name}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
+                        stroke={1.5}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

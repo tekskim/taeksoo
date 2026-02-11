@@ -216,11 +216,8 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
               error={hasAttemptedSubmit && !value.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !value.trim() ? (
-            <FormField.ErrorMessage>Value is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>Allowed: 1–255 characters.</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Value is required</FormField.ErrorMessage>
+          <FormField.HelperText>Allowed: 1–255 characters.</FormField.HelperText>
         </FormField>
 
         {/* Invert */}

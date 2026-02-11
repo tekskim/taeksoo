@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   Button,
@@ -147,7 +147,17 @@ export function ConnectSubnetDrawer({
   const [subnetSortKey, setSubnetSortKey] = useState<'name'>('name');
   const [subnetSortDir, setSubnetSortDir] = useState<'asc' | 'desc'>('asc');
 
-  const itemsPerPage = 6;
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
+
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasAttemptedSubmit(false);
+      setSelectionError(null);
+    }
+  }, [isOpen]);
 
   // Reset state function
   const resetState = () => {
@@ -231,10 +241,16 @@ export function ConnectSubnetDrawer({
 
   // Handle submit
   const handleSubmit = () => {
-    if (selectedNetworkId && selectedSubnetId) {
-      onSubmit?.({ networkId: selectedNetworkId, subnetId: selectedSubnetId });
-      handleClose();
+    setHasAttemptedSubmit(true);
+
+    if (!selectedNetworkId || !selectedSubnetId) {
+      setSelectionError('Please select both a network and a subnet.');
+      return;
     }
+    setSelectionError(null);
+
+    onSubmit?.({ networkId: selectedNetworkId, subnetId: selectedSubnetId });
+    handleClose();
   };
 
   return (
@@ -248,12 +264,7 @@ export function ConnectSubnetDrawer({
           <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={!selectedNetworkId || !selectedSubnetId}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
             Connect
           </Button>
         </HStack>
@@ -343,12 +354,18 @@ export function ConnectSubnetDrawer({
                     ? 'ring-2 ring-[var(--color-action-primary)]'
                     : ''
                 }`}
-                onClick={() => setSelectedNetworkId(network.id)}
+                onClick={() => {
+                  setSelectedNetworkId(network.id);
+                  setSelectionError(null);
+                }}
               >
                 <div className="w-[40px] p-3 flex items-center justify-center">
                   <Radio
                     checked={selectedNetworkId === network.id}
-                    onChange={() => setSelectedNetworkId(network.id)}
+                    onChange={() => {
+                      setSelectedNetworkId(network.id);
+                      setSelectionError(null);
+                    }}
                   />
                 </div>
                 <div className="w-[59px] p-2 flex items-center justify-center">
@@ -361,9 +378,9 @@ export function ConnectSubnetDrawer({
                         {network.name}
                       </span>
                       <IconExternalLink
-                        size={16}
-                        className="text-[var(--color-action-primary)]"
+                        size={12}
                         stroke={1.5}
+                        className="text-[var(--color-action-primary)]"
                       />
                     </HStack>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -454,12 +471,18 @@ export function ConnectSubnetDrawer({
                 className={`flex items-center bg-white border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
                   selectedSubnetId === subnet.id ? 'ring-2 ring-[var(--color-action-primary)]' : ''
                 }`}
-                onClick={() => setSelectedSubnetId(subnet.id)}
+                onClick={() => {
+                  setSelectedSubnetId(subnet.id);
+                  setSelectionError(null);
+                }}
               >
                 <div className="w-[40px] p-3 flex items-center justify-center">
                   <Radio
                     checked={selectedSubnetId === subnet.id}
-                    onChange={() => setSelectedSubnetId(subnet.id)}
+                    onChange={() => {
+                      setSelectedSubnetId(subnet.id);
+                      setSelectionError(null);
+                    }}
                   />
                 </div>
                 <div className="flex-1 px-3 py-2">
@@ -469,9 +492,9 @@ export function ConnectSubnetDrawer({
                         {subnet.name}
                       </span>
                       <IconExternalLink
-                        size={16}
-                        className="text-[var(--color-action-primary)]"
+                        size={12}
                         stroke={1.5}
+                        className="text-[var(--color-action-primary)]"
                       />
                     </HStack>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -497,6 +520,10 @@ export function ConnectSubnetDrawer({
             emptyText="No item Selected"
           />
         </VStack>
+
+        {selectionError && (
+          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
+        )}
       </VStack>
     </Drawer>
   );

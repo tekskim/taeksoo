@@ -105,11 +105,8 @@ export function CreateAllowedAddressPairDrawer({
               error={hasAttemptedSubmit && !cidr.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !cidr.trim() ? (
-            <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
+          <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
         </FormField>
 
         {/* MAC Address Radio Group */}

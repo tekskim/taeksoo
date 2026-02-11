@@ -143,13 +143,10 @@ export function CreateSecurityGroupDrawer({
               error={hasAttemptedSubmit && !name.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !name.trim() ? (
-            <FormField.ErrorMessage>Security Group name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Security Group name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

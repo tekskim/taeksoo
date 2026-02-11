@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   Button,
@@ -135,7 +135,17 @@ export function AssociateFloatingIPToPortDrawer({
   >('floatingIp');
   const [floatingIpSortDirection, setFloatingIpSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
+
   const itemsPerPage = 5;
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasAttemptedSubmit(false);
+      setSelectionError(null);
+    }
+  }, [isOpen]);
 
   // Reset state function
   const resetState = () => {
@@ -223,7 +233,15 @@ export function AssociateFloatingIPToPortDrawer({
   };
 
   const handleSubmit = () => {
-    if (selectedFixedIpId && selectedFloatingIpId && onSubmit) {
+    setHasAttemptedSubmit(true);
+
+    if (!selectedFixedIpId || !selectedFloatingIpId) {
+      setSelectionError('Please select both a fixed IP and a floating IP.');
+      return;
+    }
+    setSelectionError(null);
+
+    if (onSubmit) {
       onSubmit({ fixedIpId: selectedFixedIpId, floatingIpId: selectedFloatingIpId });
     }
     handleClose();
@@ -240,12 +258,7 @@ export function AssociateFloatingIPToPortDrawer({
           <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={!selectedFixedIpId || !selectedFloatingIpId}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
             Associate
           </Button>
         </HStack>
@@ -315,12 +328,18 @@ export function AssociateFloatingIPToPortDrawer({
                 className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
                   selectedFixedIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
                 }`}
-                onClick={() => setSelectedFixedIpId(item.id)}
+                onClick={() => {
+                  setSelectedFixedIpId(item.id);
+                  setSelectionError(null);
+                }}
               >
                 <div className="w-[40px] p-3 flex items-center justify-center">
                   <Radio
                     checked={selectedFixedIpId === item.id}
-                    onChange={() => setSelectedFixedIpId(item.id)}
+                    onChange={() => {
+                      setSelectedFixedIpId(item.id);
+                      setSelectionError(null);
+                    }}
                   />
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
@@ -424,12 +443,18 @@ export function AssociateFloatingIPToPortDrawer({
                 className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
                   selectedFloatingIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
                 }`}
-                onClick={() => setSelectedFloatingIpId(item.id)}
+                onClick={() => {
+                  setSelectedFloatingIpId(item.id);
+                  setSelectionError(null);
+                }}
               >
                 <div className="w-[40px] p-3 flex items-center justify-center">
                   <Radio
                     checked={selectedFloatingIpId === item.id}
-                    onChange={() => setSelectedFloatingIpId(item.id)}
+                    onChange={() => {
+                      setSelectedFloatingIpId(item.id);
+                      setSelectionError(null);
+                    }}
                   />
                 </div>
                 <div className="w-[59px] p-2 flex items-center justify-center">
@@ -477,6 +502,10 @@ export function AssociateFloatingIPToPortDrawer({
             emptyText="No item Selected"
           />
         </VStack>
+
+        {selectionError && (
+          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
+        )}
       </VStack>
     </Drawer>
   );

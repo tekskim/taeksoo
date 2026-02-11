@@ -280,13 +280,10 @@ export function CreateSecurityGroupRuleDrawer({
                     error={hasAttemptedSubmit && !portRange.trim()}
                   />
                 </FormField.Control>
-                {hasAttemptedSubmit && !portRange.trim() ? (
-                  <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
-                ) : (
-                  <FormField.HelperText>
-                    e.g. single port '8080', port range '7000-7005'
-                  </FormField.HelperText>
-                )}
+                <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
+                <FormField.HelperText>
+                  e.g. single port '8080', port range '7000-7005'
+                </FormField.HelperText>
               </>
             )}
           </FormField>

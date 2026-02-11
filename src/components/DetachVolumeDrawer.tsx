@@ -7,9 +7,12 @@ import {
   StatusIndicator,
   Radio,
   SelectionIndicator,
+  Table,
+  InlineMessage,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconAlertCircle } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -99,6 +102,75 @@ export function DetachVolumeDrawer({
     v.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const paginatedVolumes = filteredVolumes.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const volumeColumns: TableColumn<VolumeItem>[] = [
+    {
+      key: 'radio',
+      label: '',
+      width: '40px',
+      render: (_, row) => (
+        <Radio
+          name="volume-select"
+          value={row.id}
+          checked={selectedVolumeId === row.id}
+          onChange={() => setSelectedVolumeId(row.id)}
+        />
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: () => <StatusIndicator status="active" layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <span className="flex flex-col gap-0.5">
+          <span className="flex items-center gap-1.5">
+            <span className="font-medium text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : 30ujh345
+          </span>
+        </span>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'size',
+      label: 'Size',
+      flex: 1,
+      sortable: true,
+    },
+    {
+      key: 'diskTag',
+      label: 'Disk Tag',
+      flex: 1,
+      sortable: true,
+    },
+  ];
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -136,16 +208,10 @@ export function DetachVolumeDrawer({
           </VStack>
 
           {/* Warning Message */}
-          <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before detaching a
-              volume.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before detaching a
+            volume.
+          </InlineMessage>
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
@@ -193,166 +259,31 @@ export function DetachVolumeDrawer({
           </HStack>
 
           {/* Volume Table */}
-          <div
-            className="flex-1 overflow-y-auto sidebar-scroll"
-            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
-          >
-            {/* Header */}
-            <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '40px', flexShrink: 0 }}
-                className="flex items-center justify-center"
-              />
-              <div
-                style={{ width: '59px', flexShrink: 0 }}
-                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-              </div>
-              <div
-                style={{ width: '137px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '137px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '137px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '138px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Disk Tag</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-            </div>
-
-            {/* Rows */}
-            <div
-              style={{
-                width: '648px',
-                maxWidth: '648px',
-                marginTop: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              {filteredVolumes.slice(0, itemsPerPage).map((volume) => (
-                <div
-                  key={volume.id}
-                  style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                  className={`border rounded-md cursor-pointer transition-all ${
-                    selectedVolumeId === volume.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                  onClick={() => setSelectedVolumeId(volume.id)}
-                >
-                  {/* Radio */}
-                  <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Radio
-                      name="volume-select"
-                      value={volume.id}
-                      checked={selectedVolumeId === volume.id}
-                      onChange={() => setSelectedVolumeId(volume.id)}
-                    />
-                  </div>
-                  {/* Status */}
-                  <div
-                    style={{ width: '59px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    <StatusIndicator status="active" layout="icon-only" size="sm" />
-                  </div>
-                  {/* Name */}
-                  <div
-                    style={{ width: '137px', flexShrink: 0 }}
-                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {volume.name}
-                      </span>
-                      <IconExternalLink
-                        size={12}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 30ujh345
-                    </span>
-                  </div>
-                  {/* Type */}
-                  <div
-                    style={{ width: '137px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {volume.type}
-                    </span>
-                  </div>
-                  {/* Size */}
-                  <div
-                    style={{ width: '137px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {volume.size}
-                    </span>
-                  </div>
-                  {/* Disk Tag */}
-                  <div
-                    style={{ width: '138px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {volume.diskTag}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={
-              selectedVolumeId
-                ? [
-                    {
-                      id: selectedVolumeId,
-                      label: volumes.find((v) => v.id === selectedVolumeId)?.name || '',
-                    },
-                  ]
-                : []
-            }
-            onRemove={() => setSelectedVolumeId(null)}
-            emptyText="No item selected"
-            error={hasAttemptedSubmit && !selectedVolumeId}
-            errorMessage="Please select a volume."
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+          <VStack gap={2}>
+            <Table<VolumeItem>
+              columns={volumeColumns}
+              data={paginatedVolumes}
+              rowKey="id"
+              onRowClick={(row) => setSelectedVolumeId(row.id)}
+              emptyMessage="No volumes found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedVolumeId
+                  ? [
+                      {
+                        id: selectedVolumeId,
+                        label: volumes.find((v) => v.id === selectedVolumeId)?.name || '',
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => setSelectedVolumeId(null)}
+              emptyText="No item selected"
+              error={hasAttemptedSubmit && !selectedVolumeId}
+              errorMessage="Please select a volume."
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

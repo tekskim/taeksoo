@@ -220,14 +220,13 @@ export function CreateSubnetDrawer({
             fullWidth
             error={hasAttemptedSubmit && !cidr.trim()}
           />
-          {hasAttemptedSubmit && !cidr.trim() ? (
+          {hasAttemptedSubmit && !cidr.trim() && (
             <span className="text-body-sm text-[var(--color-state-danger)]">CIDR is required</span>
-          ) : (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
-              192.168.0.0/16
-            </span>
           )}
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
+            192.168.0.0/16
+          </span>
         </VStack>
 
         {/* Gateway */}

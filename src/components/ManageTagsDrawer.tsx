@@ -147,62 +147,58 @@ export function ManageTagsDrawer({
             </div>
           </VStack>
 
-          {/* Add Tag Button */}
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleAddTag}
-            disabled={tags.length >= maxTags}
-            className="w-fit"
-          >
-            <IconCirclePlus size={16} className="mr-1.5" />
-            Add Tag
-          </Button>
-
-          {/* Tag Rows */}
-          <VStack gap={2}>
-            {tags.map((tag) => (
-              <div
-                key={tag.id}
-                className="flex items-center gap-6 px-4 py-2 border border-[var(--color-border-default)] rounded-md bg-white"
-                style={{ width: '648px' }}
-              >
-                {/* Key Field */}
-                <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                    Key
-                  </span>
-                  <Input
-                    value={tag.key}
-                    onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
-                    placeholder="e.g. team"
-                    fullWidth
-                  />
-                </HStack>
-
-                {/* Value Field */}
-                <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+          {/* Tag Container */}
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <VStack gap={2}>
+              {tags.length > 0 && (
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <span className="block text-label-lg text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-lg text-[var(--color-text-default)]">
                     Value
                   </span>
+                  <div />
+                </div>
+              )}
+              {tags.map((tag) => (
+                <div
+                  key={tag.id}
+                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                >
                   <Input
-                    value={tag.value}
-                    onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
-                    placeholder="e.g. team"
+                    placeholder="tag key"
+                    value={tag.key}
+                    onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
                     fullWidth
                   />
-                </HStack>
+                  <Input
+                    placeholder="tag value"
+                    value={tag.value}
+                    onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
+                    fullWidth
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag.id)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  >
+                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </button>
+                </div>
+              ))}
 
-                {/* Remove Tag Button */}
-                <button
-                  onClick={() => handleRemoveTag(tag.id)}
-                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded shrink-0"
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={handleAddTag}
+                  disabled={tags.length >= maxTags}
                 >
-                  <IconX size={16} className="text-[var(--color-text-default)]" />
-                </button>
+                  Add Tag
+                </Button>
               </div>
-            ))}
-          </VStack>
+            </VStack>
+          </div>
         </VStack>
       </VStack>
     </Drawer>

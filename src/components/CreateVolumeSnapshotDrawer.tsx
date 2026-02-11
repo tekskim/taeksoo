@@ -205,13 +205,10 @@ export function CreateVolumeSnapshotDrawer({
               error={hasAttemptedSubmit && !snapshotName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !snapshotName.trim() ? (
-            <FormField.ErrorMessage>Snapshot name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Snapshot name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

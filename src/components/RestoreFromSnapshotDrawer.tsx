@@ -7,9 +7,12 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
+  fixedColumns,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -51,6 +54,62 @@ const defaultSnapshots: VolumeSnapshotItem[] = Array.from({ length: 115 }, (_, i
 }));
 
 const ITEMS_PER_PAGE = 5;
+
+/* ----------------------------------------
+   Column definitions
+   ---------------------------------------- */
+
+const getSnapshotColumns = (
+  selectedSnapshotId: string | null,
+  onSelect: (id: string) => void
+): TableColumn<VolumeSnapshotItem>[] => [
+  {
+    key: 'radio' as keyof VolumeSnapshotItem,
+    label: '',
+    width: '40px',
+    render: (_, row) => (
+      <Radio
+        name="snapshot-select"
+        value={row.id}
+        checked={selectedSnapshotId === row.id}
+        onChange={() => onSelect(row.id)}
+      />
+    ),
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    width: fixedColumns.status,
+    align: 'center',
+    render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+  },
+  {
+    key: 'name',
+    label: 'Name',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => (
+      <div className="flex flex-col gap-0.5">
+        <span className="flex items-center gap-1.5">
+          <span className="font-medium text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+        </span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  { key: 'type', label: 'Type', flex: 1 },
+  {
+    key: 'size',
+    label: 'Size',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => <>{row.size}GiB</>,
+  },
+  { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
+];
 
 /* ----------------------------------------
    RestoreFromSnapshotDrawer Component
@@ -117,6 +176,7 @@ export function RestoreFromSnapshotDrawer({
   };
 
   const selectedSnapshot = snapshots.find((s) => s.id === selectedSnapshotId);
+  const snapshotColumns = getSnapshotColumns(selectedSnapshotId, setSelectedSnapshotId);
 
   return (
     <Drawer
@@ -191,110 +251,27 @@ export function RestoreFromSnapshotDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Snapshots Table */}
-          <div
-            className="flex flex-col gap-[var(--table-row-gap)]"
-            style={{ width: '648px', maxWidth: '648px' }}
-          >
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Name
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Type
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Size
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Created At
-                <IconChevronDown size={16} />
-              </div>
-            </div>
+          {/* Snapshots Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<VolumeSnapshotItem>
+              columns={snapshotColumns}
+              data={paginatedSnapshots}
+              rowKey="id"
+              onRowClick={(row) => setSelectedSnapshotId(row.id)}
+              emptyMessage="No snapshots found"
+            />
 
-            {/* Rows */}
-            {paginatedSnapshots.map((snap) => (
-              <div
-                key={snap.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedSnapshotId === snap.id
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => setSelectedSnapshotId(snap.id)}
-              >
-                {/* Radio */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Radio
-                    name="snapshot-select"
-                    value={snap.id}
-                    checked={selectedSnapshotId === snap.id}
-                    onChange={() => setSelectedSnapshotId(snap.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={snap.status} layout="icon-only" size="sm" />
-                </div>
-                {/* Name with ID */}
-                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                      {snap.name}
-                    </span>
-                    <IconExternalLink
-                      size={16}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                    ID : {snap.id}
-                  </span>
-                </div>
-                {/* Type */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {snap.type}
-                  </span>
-                </div>
-                {/* Size */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {snap.size}GiB
-                  </span>
-                </div>
-                {/* Created At */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {snap.createdAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={
-              selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []
-            }
-            onRemove={() => setSelectedSnapshotId(null)}
-            emptyText="No item Selected"
-            error={hasAttemptedSubmit && !selectedSnapshotId}
-            errorMessage="Please select a snapshot."
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+            <SelectionIndicator
+              selectedItems={
+                selectedSnapshot ? [{ id: selectedSnapshot.id, label: selectedSnapshot.name }] : []
+              }
+              onRemove={() => setSelectedSnapshotId(null)}
+              emptyText="No item Selected"
+              error={hasAttemptedSubmit && !selectedSnapshotId}
+              errorMessage="Please select a snapshot."
+              className="shrink-0 w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

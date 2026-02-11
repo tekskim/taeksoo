@@ -192,13 +192,10 @@ export function CreateKeyPairDrawer({
               error={hasAttemptedSubmit && !keyPairName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !keyPairName.trim() ? (
-            <FormField.ErrorMessage>Key pair name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Key pair name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Public Key Input (only for Import) */}

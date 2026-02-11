@@ -243,13 +243,10 @@ export function CreateVolumeFromBackupDrawer({
               error={hasAttemptedSubmit && !volumeName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !volumeName.trim() ? (
-            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

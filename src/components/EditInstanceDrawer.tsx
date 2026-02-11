@@ -24,16 +24,27 @@ export function EditInstanceDrawer({
   const [instanceName, setInstanceName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen && instance) {
       setInstanceName(instance.name);
       setDescription(instance.description ?? '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, instance]);
 
   const handleSubmit = async () => {
-    if (!instanceName.trim()) return;
+    setHasAttemptedSubmit(true);
+
+    if (!instanceName.trim()) {
+      setNameError('Please enter an instance name.');
+      return;
+    }
+    setNameError(null);
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(instanceName, description);
@@ -44,6 +55,8 @@ export function EditInstanceDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -77,16 +90,21 @@ export function EditInstanceDrawer({
         </h2>
 
         {/* Instance Name Input */}
-        <FormField required>
+        <FormField required error={!!nameError}>
           <FormField.Label>Instance name</FormField.Label>
           <FormField.Control>
             <Input
               value={instanceName}
-              onChange={(e) => setInstanceName(e.target.value)}
+              onChange={(e) => {
+                setInstanceName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="Enter instance name"
               fullWidth
+              error={!!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

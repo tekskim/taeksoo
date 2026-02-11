@@ -205,13 +205,10 @@ export function CreateVolumeBackupDrawer({
               error={hasAttemptedSubmit && !backupName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !backupName.trim() ? (
-            <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Backup Mode */}

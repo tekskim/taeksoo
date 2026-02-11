@@ -4,11 +4,12 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Checkbox,
+  Table,
   SelectionIndicator,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -45,6 +46,28 @@ const defaultRoles: RoleItem[] = Array.from({ length: 25 }, (_, i) => ({
 
 const ITEMS_PER_PAGE = 5;
 
+const roleColumns: TableColumn<RoleItem>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => (
+      <span className="flex items-center gap-1.5">
+        <span className="font-medium text-[var(--color-action-primary)] truncate">{row.name}</span>
+        <IconExternalLink
+          size={12}
+          stroke={1.5}
+          className="shrink-0 text-[var(--color-action-primary)]"
+        />
+      </span>
+    ),
+  },
+  { key: 'type', label: 'Type', flex: 1 },
+  { key: 'policies', label: 'Policies', flex: 1 },
+  { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
+];
+
 /* ----------------------------------------
    ManageRolesDrawer Component
    ---------------------------------------- */
@@ -58,7 +81,7 @@ export function ManageRolesDrawer({
   onSubmit,
 }: ManageRolesDrawerProps) {
   // Role selection state
-  const [selectedRoleIds, setSelectedRoleIds] = useState<Set<string>>(new Set(initialSelectedIds));
+  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([...initialSelectedIds]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,37 +105,25 @@ export function ManageRolesDrawer({
   // Reset state when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedRoleIds(new Set(initialSelectedIds));
+      setSelectedRoleIds([...initialSelectedIds]);
       setSearchQuery('');
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
-  const handleToggleRole = (roleId: string) => {
-    setSelectedRoleIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(roleId)) {
-        newSet.delete(roleId);
-      } else {
-        newSet.add(roleId);
-      }
-      return newSet;
-    });
-  };
-
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
 
     // Validate required fields
-    if (selectedRoleIds.size === 0) {
+    if (selectedRoleIds.length === 0) {
       return; // Don't submit if no roles selected
     }
 
     setIsSubmitting(true);
     try {
       await onSubmit?.({
-        roleIds: Array.from(selectedRoleIds),
+        roleIds: selectedRoleIds,
       });
       onClose();
     } finally {
@@ -121,7 +132,7 @@ export function ManageRolesDrawer({
   };
 
   const handleClose = () => {
-    setSelectedRoleIds(new Set(initialSelectedIds));
+    setSelectedRoleIds([...initialSelectedIds]);
     setSearchQuery('');
     setCurrentPage(1);
     setHasAttemptedSubmit(false);
@@ -129,40 +140,13 @@ export function ManageRolesDrawer({
   };
 
   const handleRemoveSelection = (roleId: string) => {
-    setSelectedRoleIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(roleId);
-      return newSet;
-    });
+    setSelectedRoleIds((prev) => prev.filter((id) => id !== roleId));
   };
 
   // Get selected items for SelectionIndicator
   const selectedItems = roles
-    .filter((role) => selectedRoleIds.has(role.id))
+    .filter((role) => selectedRoleIds.includes(role.id))
     .map((role) => ({ id: role.id, label: role.name }));
-
-  // Select all logic
-  const allCurrentPageSelected =
-    paginatedRoles.length > 0 && paginatedRoles.every((role) => selectedRoleIds.has(role.id));
-  const someCurrentPageSelected = paginatedRoles.some((role) => selectedRoleIds.has(role.id));
-
-  const handleSelectAll = () => {
-    if (allCurrentPageSelected) {
-      // Deselect all on current page
-      setSelectedRoleIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedRoles.forEach((role) => newSet.delete(role.id));
-        return newSet;
-      });
-    } else {
-      // Select all on current page
-      setSelectedRoleIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedRoles.forEach((role) => newSet.add(role.id));
-        return newSet;
-      });
-    }
-  };
 
   return (
     <Drawer
@@ -244,100 +228,31 @@ export function ManageRolesDrawer({
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={filteredRoles.length}
-            selectedCount={selectedRoleIds.size > 0 ? selectedRoleIds.size : undefined}
+            selectedCount={selectedRoleIds.length > 0 ? selectedRoleIds.length : undefined}
             onPageChange={setCurrentPage}
           />
 
-          {/* Roles Table */}
-          <div className="w-full flex flex-col gap-[var(--table-row-gap)]">
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                <Checkbox
-                  checked={allCurrentPageSelected}
-                  indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-                  onChange={handleSelectAll}
-                />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Name
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Type
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Policies
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Created at
-                <IconChevronDown size={16} />
-              </div>
-            </div>
+          {/* Roles Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<RoleItem>
+              columns={roleColumns}
+              data={paginatedRoles}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedRoleIds}
+              onSelectionChange={setSelectedRoleIds}
+              emptyMessage="No roles found"
+            />
 
-            {/* Rows */}
-            {paginatedRoles.map((role) => (
-              <div
-                key={role.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedRoleIds.has(role.id)
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => handleToggleRole(role.id)}
-              >
-                {/* Checkbox */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Checkbox
-                    checked={selectedRoleIds.has(role.id)}
-                    onChange={() => handleToggleRole(role.id)}
-                  />
-                </div>
-                {/* Name with link */}
-                <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                    {role.name}
-                  </span>
-                  <IconExternalLink
-                    size={16}
-                    stroke={1.5}
-                    className="shrink-0 text-[var(--color-action-primary)]"
-                  />
-                </div>
-                {/* Type */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {role.type}
-                  </span>
-                </div>
-                {/* Policies */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {role.policies}
-                  </span>
-                </div>
-                {/* Created at */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {role.createdAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - directly under the table */}
-          <SelectionIndicator
-            selectedItems={selectedItems}
-            onRemove={handleRemoveSelection}
-            emptyText="No items selected"
-            error={hasAttemptedSubmit && selectedRoleIds.size === 0}
-            errorMessage="Please select at least one role."
-            className="shrink-0 w-full"
-          />
+            <SelectionIndicator
+              selectedItems={selectedItems}
+              onRemove={handleRemoveSelection}
+              emptyText="No items selected"
+              error={hasAttemptedSubmit && selectedRoleIds.length === 0}
+              errorMessage="Please select at least one role."
+              className="shrink-0 w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>
