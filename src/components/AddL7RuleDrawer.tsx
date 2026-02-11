@@ -87,13 +87,21 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    if (!compareType || !value.trim()) return;
 
-    if (ruleTypesWithKey.includes(ruleType) && !key.trim()) {
-      setKeyError('Key is required for this rule type');
-      return;
+    // Validate all fields together
+    let hasError = false;
+
+    if (requiresKey) {
+      const error = validateKey(key);
+      setKeyError(error);
+      if (error) hasError = true;
+    } else {
+      setKeyError(null);
     }
-    setKeyError(null);
+
+    if (!compareType || !value.trim()) hasError = true;
+
+    if (hasError) return;
 
     setIsSubmitting(true);
     try {
@@ -118,6 +126,13 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
   };
 
   const requiresKey = ruleTypesWithKey.includes(ruleType);
+
+  const validateKey = (val: string): string | null => {
+    if (!val.trim()) return 'Key is required for this rule type';
+    if (val.length > 255) return 'Key must be 255 characters or fewer';
+    if (!/^[a-zA-Z0-9-]+$/.test(val)) return 'Key can only contain letters, numbers, and "-"';
+    return null;
+  };
 
   return (
     <Drawer
@@ -173,14 +188,19 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
         {requiresKey && (
-          <FormField required error={hasAttemptedSubmit && !!keyError}>
+          <FormField required error={!!keyError}>
             <FormField.Label>Key</FormField.Label>
             <FormField.Control>
               <Input
                 value={key}
                 onChange={(e) => {
-                  setKey(e.target.value);
-                  if (keyError) setKeyError(null);
+                  const newVal = e.target.value;
+                  setKey(newVal);
+                  if (hasAttemptedSubmit) {
+                    setKeyError(validateKey(newVal));
+                  } else if (keyError) {
+                    setKeyError(null);
+                  }
                 }}
                 placeholder={
                   ruleType === 'HEADER'
@@ -190,12 +210,10 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
                       : 'e.g. CN'
                 }
                 fullWidth
-                error={hasAttemptedSubmit && !!keyError}
+                error={!!keyError}
               />
             </FormField.Control>
-            {hasAttemptedSubmit && keyError && (
-              <FormField.ErrorMessage>{keyError}</FormField.ErrorMessage>
-            )}
+            {keyError && <FormField.ErrorMessage>{keyError}</FormField.ErrorMessage>}
             <FormField.HelperText>
               Allowed: 1–255 characters, letters, numbers, "-".
             </FormField.HelperText>

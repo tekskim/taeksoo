@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, NumberInput, Select, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -158,24 +158,26 @@ export function AddL7PolicyDrawer({
         <FormField>
           <FormField.Label>Action</FormField.Label>
           <FormField.Control>
-            <Select
-              value={action}
-              onChange={(value) => setAction(value)}
-              options={ACTION_OPTIONS}
-              fullWidth
-            />
-
-            {/* Target Pool Select (shown when action is forward_to_pool) */}
-            {action === 'forward_to_pool' && (
+            <VStack gap={2} className="w-full">
               <Select
-                value={targetPool}
-                onChange={(value) => setTargetPool(value)}
-                options={pools}
-                placeholder="Select a target pool"
+                value={action}
+                onChange={(value) => setAction(value)}
+                options={ACTION_OPTIONS}
                 fullWidth
-                error={hasAttemptedSubmit && !targetPool}
               />
-            )}
+
+              {/* Target Pool Select (shown when action is forward_to_pool) */}
+              {action === 'forward_to_pool' && (
+                <Select
+                  value={targetPool}
+                  onChange={(value) => setTargetPool(value)}
+                  options={pools}
+                  placeholder="Select a target pool"
+                  fullWidth
+                  error={hasAttemptedSubmit && !targetPool}
+                />
+              )}
+            </VStack>
           </FormField.Control>
           {action === 'forward_to_pool' && hasAttemptedSubmit && !targetPool && (
             <FormField.ErrorMessage>Target pool is required</FormField.ErrorMessage>
@@ -189,10 +191,9 @@ export function AddL7PolicyDrawer({
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </FormField.Label>
           <FormField.Control>
-            <Input
-              type="number"
-              value={position.toString()}
-              onChange={(e) => setPosition(Math.max(1, parseInt(e.target.value) || 1))}
+            <NumberInput
+              value={position}
+              onChange={(value) => setPosition(value ?? 1)}
               min={1}
               fullWidth
             />

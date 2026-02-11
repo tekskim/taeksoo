@@ -247,9 +247,16 @@ export function DisconnectSubnetDrawer({
       label: 'Network',
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
-          <span className="text-label-md text-[var(--color-text-default)] truncate">
-            {row.networkName}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.networkName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
           <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.networkId}
           </span>
