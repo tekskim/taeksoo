@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Radio, RadioGroup, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  NumberInput,
+  Select,
+  Radio,
+  RadioGroup,
+  FormField,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -296,10 +305,9 @@ export function CreateSecurityGroupRuleDrawer({
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                 ICMP Type(optional)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={icmpType}
-                onChange={(e) => setIcmpType(Math.min(255, Math.max(0, Number(e.target.value))))}
+                onChange={(value) => setIcmpType(value ?? 0)}
                 min={0}
                 max={255}
                 fullWidth
@@ -311,10 +319,9 @@ export function CreateSecurityGroupRuleDrawer({
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                 ICMP Code(optional)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={icmpCode}
-                onChange={(e) => setIcmpCode(Math.min(255, Math.max(0, Number(e.target.value))))}
+                onChange={(value) => setIcmpCode(value ?? 0)}
                 min={0}
                 max={255}
                 fullWidth

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, NumberInput, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -40,8 +40,8 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
   const [weight, setWeight] = useState(member.weight);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [monitorIpAddress, setMonitorIpAddress] = useState(member.monitorIpAddress || '');
-  const [monitorPort, setMonitorPort] = useState<string>(
-    member.monitorPort ? String(member.monitorPort) : ''
+  const [monitorPort, setMonitorPort] = useState<number | undefined>(
+    member.monitorPort ?? undefined
   );
   const [backup, setBackup] = useState(member.backup);
   const [adminStateUp, setAdminStateUp] = useState(member.adminStateUp);
@@ -53,7 +53,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
       setWeight(member.weight);
       setIsAdvancedExpanded(true);
       setMonitorIpAddress(member.monitorIpAddress || '');
-      setMonitorPort(member.monitorPort ? String(member.monitorPort) : '');
+      setMonitorPort(member.monitorPort ?? undefined);
       setBackup(member.backup);
       setAdminStateUp(member.adminStateUp);
     }
@@ -62,14 +62,14 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
   const handleSubmit = async () => {
     // Validation
     if (weight < 1 || weight > 256) return;
-    if (monitorPort && (parseInt(monitorPort) < 1 || parseInt(monitorPort) > 65535)) return;
+    if (monitorPort !== undefined && (monitorPort < 1 || monitorPort > 65535)) return;
 
     setIsSubmitting(true);
     try {
       await onSubmit?.({
         weight,
         monitorIpAddress: monitorIpAddress || undefined,
-        monitorPort: monitorPort ? parseInt(monitorPort) : undefined,
+        monitorPort: monitorPort ?? undefined,
         backup,
         adminStateUp,
       });
@@ -144,10 +144,9 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
         <FormField required>
           <FormField.Label>Weight</FormField.Label>
           <FormField.Control>
-            <Input
-              type="number"
-              value={String(weight)}
-              onChange={(e) => setWeight(parseInt(e.target.value) || 1)}
+            <NumberInput
+              value={weight}
+              onChange={(value) => setWeight(value ?? 1)}
               min={1}
               max={256}
               fullWidth
@@ -190,10 +189,11 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
               <FormField>
                 <FormField.Label>Monitor Port</FormField.Label>
                 <FormField.Control>
-                  <Input
-                    type="number"
-                    value={monitorPort}
-                    onChange={(e) => setMonitorPort(e.target.value)}
+                  <NumberInput
+                    value={monitorPort ?? undefined}
+                    onChange={(value) => setMonitorPort(value ?? undefined)}
+                    min={1}
+                    max={65535}
                     placeholder="e.g. 8080"
                     fullWidth
                   />
