@@ -103,7 +103,7 @@ export function CreateSecurityGroupDrawer({
         <VStack gap={4} className="w-full">
           {/* Quota Section */}
           <div className="w-full border-t border-[var(--color-border-subtle)] pt-4">
-            <QuotaProgressBar label="Security Group Quota" used={quota.used} limit={quota.limit} />
+            <QuotaProgressBar label="Security group quota" used={quota.used} limit={quota.limit} />
           </div>
 
           {/* Buttons */}
@@ -127,13 +127,13 @@ export function CreateSecurityGroupDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Security Group
+            Create security group
           </h2>
         </VStack>
 
         {/* Security Group Name Input */}
         <FormField required error={hasAttemptedSubmit && !name.trim()}>
-          <FormField.Label>Security Group name</FormField.Label>
+          <FormField.Label>Security group name</FormField.Label>
           <FormField.Control>
             <Input
               value={name}
@@ -143,13 +143,10 @@ export function CreateSecurityGroupDrawer({
               error={hasAttemptedSubmit && !name.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !name.trim() ? (
-            <FormField.ErrorMessage>Security Group name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Security group name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

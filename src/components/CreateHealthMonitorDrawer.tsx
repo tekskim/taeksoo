@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, NumberInput, Select, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -180,21 +180,17 @@ export function CreateHealthMonitorDrawer({
           <FormField.Label>Interval (sec)</FormField.Label>
           <FormField.Description>Time between consecutive health checks.</FormField.Description>
           <FormField.Control>
-            <Input
-              type="number"
-              value={String(interval)}
-              onChange={(e) => setInterval(parseInt(e.target.value) || 1)}
+            <NumberInput
+              value={interval}
+              onChange={(value) => setInterval(value ?? 1)}
               min={1}
               max={3600}
               fullWidth
               error={hasAttemptedSubmit && !isIntervalValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isIntervalValid ? (
-            <FormField.ErrorMessage>Interval must be between 1-3600</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 3600; Timeout &lt; Delay</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Interval must be between 1-3600</FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 3600; Timeout &lt; Delay</FormField.HelperText>
         </FormField>
 
         {/* Timeout (sec) */}
@@ -202,52 +198,44 @@ export function CreateHealthMonitorDrawer({
           <FormField.Label>Timeout (sec)</FormField.Label>
           <FormField.Description>Maximum time to wait for response</FormField.Description>
           <FormField.Control>
-            <Input
-              type="number"
-              value={String(timeout)}
-              onChange={(e) => setTimeout(parseInt(e.target.value) || 1)}
+            <NumberInput
+              value={timeout}
+              onChange={(value) => setTimeout(value ?? 1)}
               min={1}
               max={3599}
               fullWidth
               error={hasAttemptedSubmit && !isTimeoutValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isTimeoutValid ? (
-            <FormField.ErrorMessage>
-              Timeout must be between 1-3599 and less than Interval
-            </FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 3599; Timeout &lt; Delay</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>
+            Timeout must be between 1-3599 and less than Interval
+          </FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 3599; Timeout &lt; Delay</FormField.HelperText>
         </FormField>
 
         {/* Max Retries */}
         <FormField error={hasAttemptedSubmit && !isMaxRetriesValid}>
-          <FormField.Label>Max Retries</FormField.Label>
+          <FormField.Label>Max retries</FormField.Label>
           <FormField.Description>
             Number of failed attempts before marking member OFFLINE.
           </FormField.Description>
           <FormField.Control>
-            <Input
-              type="number"
-              value={String(maxRetries)}
-              onChange={(e) => setMaxRetries(parseInt(e.target.value) || 1)}
+            <NumberInput
+              value={maxRetries}
+              onChange={(value) => setMaxRetries(value ?? 1)}
               min={1}
               max={10}
               fullWidth
               error={hasAttemptedSubmit && !isMaxRetriesValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isMaxRetriesValid ? (
-            <FormField.ErrorMessage>Max Retries must be between 1-10</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 10</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Max retries must be between 1-10</FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 10</FormField.HelperText>
         </FormField>
 
         {/* Admin State */}
         <FormField>
-          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Label>Admin state</FormField.Label>
           <FormField.Control>
             <HStack gap={2} className="items-center">
               <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

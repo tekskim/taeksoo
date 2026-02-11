@@ -4,13 +4,14 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Checkbox,
+  Table,
   Toggle,
   StatusIndicator,
   SelectionIndicator,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -48,6 +49,38 @@ const defaultCertificates: SNICertificateItem[] = Array.from({ length: 115 }, (_
 }));
 
 const ITEMS_PER_PAGE = 5;
+
+const certificateColumns: TableColumn<SNICertificateItem>[] = [
+  {
+    key: 'status',
+    label: 'Status',
+    width: '59px',
+    align: 'center',
+    render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+  },
+  {
+    key: 'name',
+    label: 'Name',
+    render: (_value, row) => (
+      <div className="flex flex-col gap-0.5 overflow-hidden">
+        <HStack gap={1.5} align="center">
+          <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
+        </HStack>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  { key: 'domain', label: 'Domain' },
+  { key: 'listeners', label: 'Listeners' },
+  { key: 'expiresAt', label: 'Expires at' },
+];
 
 /* ----------------------------------------
    ManageSNICertificateDrawer Component
@@ -143,32 +176,6 @@ export function ManageSNICertificateDrawer({
     .filter((cert) => selectedCertificateIds.has(cert.id))
     .map((cert) => ({ id: cert.id, label: cert.name }));
 
-  // Select all logic
-  const allCurrentPageSelected =
-    paginatedCertificates.length > 0 &&
-    paginatedCertificates.every((cert) => selectedCertificateIds.has(cert.id));
-  const someCurrentPageSelected = paginatedCertificates.some((cert) =>
-    selectedCertificateIds.has(cert.id)
-  );
-
-  const handleSelectAll = () => {
-    if (allCurrentPageSelected) {
-      // Deselect all on current page
-      setSelectedCertificateIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedCertificates.forEach((cert) => newSet.delete(cert.id));
-        return newSet;
-      });
-    } else {
-      // Select all on current page
-      setSelectedCertificateIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedCertificates.forEach((cert) => newSet.add(cert.id));
-        return newSet;
-      });
-    }
-  };
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -195,7 +202,7 @@ export function ManageSNICertificateDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Manage SNI Certificate
+          Manage SNI certificate
         </h2>
 
         {/* SNI Toggle Section */}
@@ -244,112 +251,29 @@ export function ManageSNICertificateDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Certificates Table */}
-          <div
-            className="flex flex-col gap-[var(--table-row-gap)]"
-            style={{ width: '648px', maxWidth: '648px' }}
-          >
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                <Checkbox
-                  checked={allCurrentPageSelected}
-                  indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-                  onChange={handleSelectAll}
-                />
-              </div>
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Name
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Domain
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Listeners
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Expires At
-                <IconChevronDown size={16} />
-              </div>
+          <VStack gap={2}>
+            <div style={{ width: '648px', maxWidth: '648px' }}>
+              <Table<SNICertificateItem>
+                columns={certificateColumns}
+                data={paginatedCertificates}
+                rowKey="id"
+                selectable
+                selectedKeys={Array.from(selectedCertificateIds)}
+                onSelectionChange={(keys) => setSelectedCertificateIds(new Set(keys))}
+                onRowClick={(row) => handleToggleCertificate(row.id)}
+                emptyMessage="No certificates found"
+              />
             </div>
 
-            {/* Rows */}
-            {paginatedCertificates.map((cert) => (
-              <div
-                key={cert.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedCertificateIds.has(cert.id)
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => handleToggleCertificate(cert.id)}
-              >
-                {/* Checkbox */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Checkbox
-                    checked={selectedCertificateIds.has(cert.id)}
-                    onChange={() => handleToggleCertificate(cert.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={cert.status} layout="icon-only" size="sm" />
-                </div>
-                {/* Name with ID */}
-                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                      {cert.name}
-                    </span>
-                    <IconExternalLink
-                      size={16}
-                      stroke={1.5}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                    ID : {cert.id}
-                  </span>
-                </div>
-                {/* Domain */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {cert.domain}
-                  </span>
-                </div>
-                {/* Listeners */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {cert.listeners}
-                  </span>
-                </div>
-                {/* Expires At */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {cert.expiresAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - directly under the table */}
-          <SelectionIndicator
-            selectedItems={selectedItems}
-            onRemove={handleRemoveSelection}
-            emptyText="No item Selected"
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+            {/* Selection Indicator - directly under the table */}
+            <SelectionIndicator
+              selectedItems={selectedItems}
+              onRemove={handleRemoveSelection}
+              emptyText="No item selected"
+              className="shrink-0"
+              style={{ width: '648px' }}
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

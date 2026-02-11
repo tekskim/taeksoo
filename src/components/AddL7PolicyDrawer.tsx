@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, NumberInput, Select, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -30,9 +30,9 @@ export interface AddL7PolicyDrawerProps {
    ---------------------------------------- */
 
 const ACTION_OPTIONS = [
-  { value: 'forward_to_pool', label: 'Forward to Pool' },
+  { value: 'forward_to_pool', label: 'Forward to pool' },
   { value: 'redirect_to_url', label: 'Redirect to URL' },
-  { value: 'redirect_to_prefix', label: 'Redirect to Prefix' },
+  { value: 'redirect_to_prefix', label: 'Redirect to prefix' },
   { value: 'reject', label: 'Reject' },
 ];
 
@@ -117,12 +117,12 @@ export function AddL7PolicyDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Add L7 Policy
+          Add L7 policy
         </h2>
 
         {/* L7 Policy Name Input */}
         <FormField required error={hasAttemptedSubmit && !policyName.trim()}>
-          <FormField.Label>L7 Policy Name</FormField.Label>
+          <FormField.Label>L7 policy name</FormField.Label>
           <FormField.Control>
             <Input
               value={policyName}
@@ -132,13 +132,10 @@ export function AddL7PolicyDrawer({
               error={hasAttemptedSubmit && !policyName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !policyName.trim() ? (
-            <FormField.ErrorMessage>Policy name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Policy name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
@@ -161,24 +158,26 @@ export function AddL7PolicyDrawer({
         <FormField>
           <FormField.Label>Action</FormField.Label>
           <FormField.Control>
-            <Select
-              value={action}
-              onChange={(value) => setAction(value)}
-              options={ACTION_OPTIONS}
-              fullWidth
-            />
-
-            {/* Target Pool Select (shown when action is forward_to_pool) */}
-            {action === 'forward_to_pool' && (
+            <VStack gap={2} className="w-full">
               <Select
-                value={targetPool}
-                onChange={(value) => setTargetPool(value)}
-                options={pools}
-                placeholder="Select a target pool"
+                value={action}
+                onChange={(value) => setAction(value)}
+                options={ACTION_OPTIONS}
                 fullWidth
-                error={hasAttemptedSubmit && !targetPool}
               />
-            )}
+
+              {/* Target Pool Select (shown when action is forward_to_pool) */}
+              {action === 'forward_to_pool' && (
+                <Select
+                  value={targetPool}
+                  onChange={(value) => setTargetPool(value)}
+                  options={pools}
+                  placeholder="Select a target pool"
+                  fullWidth
+                  error={hasAttemptedSubmit && !targetPool}
+                />
+              )}
+            </VStack>
           </FormField.Control>
           {action === 'forward_to_pool' && hasAttemptedSubmit && !targetPool && (
             <FormField.ErrorMessage>Target pool is required</FormField.ErrorMessage>
@@ -192,10 +191,9 @@ export function AddL7PolicyDrawer({
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </FormField.Label>
           <FormField.Control>
-            <Input
-              type="number"
-              value={position.toString()}
-              onChange={(e) => setPosition(Math.max(1, parseInt(e.target.value) || 1))}
+            <NumberInput
+              value={position}
+              onChange={(value) => setPosition(value ?? 1)}
               min={1}
               fullWidth
             />
@@ -205,7 +203,7 @@ export function AddL7PolicyDrawer({
         {/* Admin State Toggle */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
+            Admin state
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

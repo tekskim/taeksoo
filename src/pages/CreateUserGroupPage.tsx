@@ -761,7 +761,7 @@ function AddUsersSection({
           )}
 
           {/* Table */}
-          <div className="mt-3">
+          <VStack gap={2} className="mt-3">
             <Table
               columns={columns}
               data={paginatedUsers}
@@ -770,10 +770,6 @@ function AddUsersSection({
               selectedKeys={selectedUsers}
               onSelectionChange={onSelectionChange}
             />
-          </div>
-
-          {/* Selection indicator */}
-          <div className="mt-2">
             <SelectionIndicator
               selectedItems={selectedUsers.map((userId) => {
                 const user = mockUsers.find((u) => u.id === userId);
@@ -785,7 +781,7 @@ function AddUsersSection({
               error={!!usersError}
               errorMessage={usersError || undefined}
             />
-          </div>
+          </VStack>
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (

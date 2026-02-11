@@ -727,23 +727,25 @@ export function CreateClusterPage() {
                             onPageChange={() => {}}
                             totalItems={115}
                           />
-                          <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
-                          <SelectionIndicator
-                            selectedItems={
-                              nodeFlavor
-                                ? [
-                                    {
-                                      id: nodeFlavor,
-                                      label:
-                                        mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
-                                        nodeFlavor,
-                                    },
-                                  ]
-                                : []
-                            }
-                            emptyText="No flavor selected"
-                            onRemove={() => setNodeFlavor('')}
-                          />
+                          <VStack gap={2}>
+                            <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                            <SelectionIndicator
+                              selectedItems={
+                                nodeFlavor
+                                  ? [
+                                      {
+                                        id: nodeFlavor,
+                                        label:
+                                          mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
+                                          nodeFlavor,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No flavor selected"
+                              onRemove={() => setNodeFlavor('')}
+                            />
+                          </VStack>
                         </VStack>
                       </FormField.Control>
                     </FormField>
@@ -936,7 +938,7 @@ export function CreateClusterPage() {
                 <VStack gap={0}>
                   <SummaryItem label="Basic information" status="in-progress" />
                   <SummaryItem label="Networking" status="in-progress" />
-                  <SummaryItem label="Node Configuration" status="complete" />
+                  <SummaryItem label="Node configuration" status="complete" />
                   <SummaryItem label="Labels & Annotations" status="complete" />
                 </VStack>
               </VStack>

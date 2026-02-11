@@ -129,12 +129,12 @@ export function CreateVolumeBackupDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Backup Quota"
+              label="Volume backup quota"
               used={volumeBackupQuota.used}
               total={volumeBackupQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Backup Capacity Quota(GiB)"
+              label="Volume backup capacity quota (GiB)"
               used={volumeBackupCapacityQuota.used}
               total={volumeBackupCapacityQuota.total}
             />
@@ -163,7 +163,7 @@ export function CreateVolumeBackupDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume Backup
+              Create volume backup
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a full backup of this volume and store it in the backup service. The backup can
@@ -205,24 +205,21 @@ export function CreateVolumeBackupDrawer({
               error={hasAttemptedSubmit && !backupName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !backupName.trim() ? (
-            <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Backup Mode */}
         <FormField>
           <FormField.Label>Backup mode</FormField.Label>
           <FormField.Control>
-            <VStack gap={3}>
+            <VStack gap={2}>
               <Radio
                 name="backup-mode"
                 value="full"
-                label="Full Backup"
+                label="Full backup"
                 checked={backupMode === 'full'}
                 onChange={() => setBackupMode('full')}
               />
@@ -230,13 +227,13 @@ export function CreateVolumeBackupDrawer({
                 <Radio
                   name="backup-mode"
                   value="incremental"
-                  label="Increment Backup"
+                  label="Increment backup"
                   checked={backupMode === 'incremental'}
                   onChange={() => setBackupMode('incremental')}
                 />
                 <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
                   <IconHelp
-                    size={16}
+                    size={12}
                     className="text-[var(--color-text-subtle)] cursor-help"
                     stroke={1.5}
                   />

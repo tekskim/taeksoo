@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -37,6 +37,9 @@ export function EditDomainDrawer({
   const [description, setDescription] = useState(initialData.description);
   const [enabled, setEnabled] = useState(initialData.enabled);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [descriptionError, setDescriptionError] = useState<string | null>(null);
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -44,13 +47,34 @@ export function EditDomainDrawer({
       setName(initialData.name);
       setDescription(initialData.description);
       setEnabled(initialData.enabled);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
+      setDescriptionError(null);
     }
   }, [isOpen, initialData]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+    let hasError = false;
+
     if (!name.trim()) {
-      return;
+      setNameError('Please enter a domain name.');
+      hasError = true;
+    } else if (name.trim().length < 2 || name.trim().length > 128) {
+      setNameError('Name must be between 2-128 characters.');
+      hasError = true;
+    } else {
+      setNameError(null);
     }
+
+    if (description.length > 255) {
+      setDescriptionError('Description must be 255 characters or less.');
+      hasError = true;
+    } else {
+      setDescriptionError(null);
+    }
+
+    if (hasError) return;
 
     setIsSubmitting(true);
     try {
@@ -69,11 +93,11 @@ export function EditDomainDrawer({
     setName(initialData.name);
     setDescription(initialData.description);
     setEnabled(initialData.enabled);
+    setHasAttemptedSubmit(false);
+    setNameError(null);
+    setDescriptionError(null);
     onClose();
   };
-
-  const isNameValid = name.trim().length >= 2 && name.trim().length <= 128;
-  const isDescriptionValid = description.length <= 255;
 
   return (
     <Drawer
@@ -90,7 +114,7 @@ export function EditDomainDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !isNameValid || !isDescriptionValid}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -110,41 +134,48 @@ export function EditDomainDrawer({
         </VStack>
 
         {/* Domain name field */}
-        <VStack gap={2}>
-          <div className="flex items-start gap-[3px]">
-            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Domain name
-            </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
-          </div>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter domain name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required error={!!nameError}>
+          <FormField.Label>Domain name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter domain name"
+              fullWidth
+              error={!!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
             You can use letters, numbers, and special characters (+=,.@-_), and the length must be
             between 2-128 characters.
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description field */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Description
-          </span>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter description"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField error={!!descriptionError}>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                if (descriptionError) setDescriptionError(null);
+              }}
+              placeholder="Enter description"
+              fullWidth
+              error={!!descriptionError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{descriptionError}</FormField.ErrorMessage>
+          <FormField.HelperText>
             You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
             characters.
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Status field */}
         <VStack gap={2}>

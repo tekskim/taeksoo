@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle, IconInfinity } from '@tabler/icons-react';
 
@@ -154,12 +154,12 @@ export function CloneVolumeDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Quota"
+              label="Volume quota"
               used={volumeQuota.used}
               total={volumeQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
             />
@@ -208,7 +208,7 @@ export function CloneVolumeDrawer({
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Source Volume</p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Source volume</p>
             <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
@@ -230,7 +230,7 @@ export function CloneVolumeDrawer({
 
         {/* New Volume Name Input */}
         <FormField required error={hasAttemptedSubmit && !volumeName.trim()}>
-          <FormField.Label>New Volume name</FormField.Label>
+          <FormField.Label>New volume name</FormField.Label>
           <FormField.Control>
             <Input
               value={volumeName}
@@ -240,44 +240,40 @@ export function CloneVolumeDrawer({
               error={hasAttemptedSubmit && !volumeName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !volumeName.trim() ? (
-            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
-          <HStack className="w-full justify-between items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+
+          {/* Slider + NumberInput */}
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                min={minCapacity}
+                max={maxCapacity}
+                value={capacity}
+                onChange={handleCapacityChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-
-          {/* Slider */}
-          <VStack gap={2} className="w-full">
-            <Slider
-              min={minCapacity}
-              max={maxCapacity}
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
-
-            {/* Capacity Input */}
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => handleCapacityChange(Number(e.target.value))}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
           </VStack>
         </VStack>
 

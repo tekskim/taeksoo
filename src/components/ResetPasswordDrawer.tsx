@@ -58,6 +58,8 @@ export function ResetPasswordDrawer({
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -67,6 +69,8 @@ export function ResetPasswordDrawer({
       setConfirmPassword('');
       setShowNewPassword(false);
       setShowConfirmPassword(false);
+      setHasAttemptedSubmit(false);
+      setPasswordError(null);
     }
   }, [isOpen]);
 
@@ -76,7 +80,19 @@ export function ResetPasswordDrawer({
   const canSubmit = resetOption === 'temporary' || (isPasswordValid && doPasswordsMatch);
 
   const handleSubmit = async () => {
-    if (!canSubmit) return;
+    setHasAttemptedSubmit(true);
+
+    if (resetOption === 'manual') {
+      if (!isPasswordValid) {
+        setPasswordError('Password does not meet all requirements.');
+        return;
+      }
+      if (!doPasswordsMatch) {
+        setPasswordError('Passwords do not match.');
+        return;
+      }
+    }
+    setPasswordError(null);
 
     setIsSubmitting(true);
     try {
@@ -115,7 +131,7 @@ export function ResetPasswordDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !canSubmit}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Resetting...' : 'Reset'}
@@ -267,6 +283,11 @@ export function ResetPasswordDrawer({
                   );
                 })}
               </VStack>
+              {passwordError && (
+                <span className="text-body-sm text-[var(--color-state-danger)]">
+                  {passwordError}
+                </span>
+              )}
             </VStack>
           )}
         </VStack>

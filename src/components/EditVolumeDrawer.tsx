@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -27,17 +27,30 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
   const [volumeName, setVolumeName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && volume) {
       setVolumeName(volume.name);
       setDescription(volume.description ?? '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, volume]);
 
   const handleSubmit = async () => {
-    if (!volumeName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!volumeName.trim()) {
+      setNameError('Volume name is required');
+      return;
+    }
+    if (volumeName.trim().length > 128) {
+      setNameError('Volume name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -49,6 +62,8 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -77,23 +92,28 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Volume</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit volume</h2>
 
         {/* Volume Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume name
-          </label>
-          <Input
-            value={volumeName}
-            onChange={(e) => setVolumeName(e.target.value)}
-            placeholder="Enter volume name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Volume name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={volumeName}
+              onChange={(e) => {
+                setVolumeName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter volume name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">

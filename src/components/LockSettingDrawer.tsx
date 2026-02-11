@@ -64,7 +64,7 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Lock Setting</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Lock setting</h2>
 
         {/* Instance Info */}
         {instance && (
@@ -83,7 +83,7 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
         {/* Lock Status */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Lock Status
+            Lock status
           </span>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             When locked, the instance cannot be modified or deleted.

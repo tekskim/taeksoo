@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -35,6 +35,8 @@ export function EditUserDrawer({
   const [displayName, setDisplayName] = useState(initialData?.displayName || '');
   const [enabled, setEnabled] = useState(initialData?.enabled ?? true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -42,10 +44,20 @@ export function EditUserDrawer({
       setEmail(initialData?.email || 'user@example.com');
       setDisplayName(initialData?.displayName || '');
       setEnabled(initialData?.enabled ?? true);
+      setHasAttemptedSubmit(false);
+      setEmailError(null);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+
+    if (!email.trim()) {
+      setEmailError('Please enter an email address.');
+      return;
+    }
+    setEmailError(null);
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -60,6 +72,8 @@ export function EditUserDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setEmailError(null);
     onClose();
   };
 
@@ -78,7 +92,7 @@ export function EditUserDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !email.trim()}
+            disabled={isSubmitting}
             className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
@@ -108,25 +122,22 @@ export function EditUserDrawer({
         </VStack>
 
         {/* Email Address Section */}
-        <VStack gap={2}>
-          <VStack gap={2}>
-            <div className="flex items-start gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                Email address
-              </span>
-              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
-            </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              The email address used for password recovery.
-            </p>
-          </VStack>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email address"
-            fullWidth
-          />
-        </VStack>
+        <FormField required error={!!emailError}>
+          <FormField.Label>Email</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (emailError) setEmailError(null);
+              }}
+              placeholder="Enter email address"
+              fullWidth
+              error={!!emailError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{emailError}</FormField.ErrorMessage>
+        </FormField>
 
         {/* Display Name Section */}
         <VStack gap={2}>

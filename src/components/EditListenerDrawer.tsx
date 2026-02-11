@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle, Checkbox, FormField } from '@/design-system';
+import { Drawer, Button, Input, NumberInput, Toggle, Checkbox, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { RadioGroup, Radio } from '@/design-system/components/Radio';
-import { IconChevronDown, IconChevronRight, IconPlus, IconX } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronRight, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -76,10 +76,11 @@ export function EditListenerDrawer({
   const [memberDataTimeout, setMemberDataTimeout] = useState(listener.memberDataTimeout ?? 50000);
   const [tcpInspectTimeout, setTcpInspectTimeout] = useState(listener.tcpInspectTimeout ?? 0);
   const [allowedCidrs, setAllowedCidrs] = useState<string[]>(listener.allowedCidrs ?? []);
-  const [newCidr, setNewCidr] = useState('');
   const [adminStateUp, setAdminStateUp] = useState(listener.adminStateUp);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -96,13 +97,23 @@ export function EditListenerDrawer({
       setMemberDataTimeout(listener.memberDataTimeout ?? 50000);
       setTcpInspectTimeout(listener.tcpInspectTimeout ?? 0);
       setAllowedCidrs(listener.allowedCidrs ?? []);
-      setNewCidr('');
       setAdminStateUp(listener.adminStateUp);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, listener]);
 
   const handleSubmit = async () => {
-    if (!listenerName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!listenerName.trim()) {
+      setNameError('Listener name is required');
+      return;
+    }
+    if (listenerName.trim().length > 128) {
+      setNameError('Listener name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -126,18 +137,23 @@ export function EditListenerDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
   const handleAddCidr = () => {
-    if (newCidr.trim() && !allowedCidrs.includes(newCidr.trim())) {
-      setAllowedCidrs([...allowedCidrs, newCidr.trim()]);
-      setNewCidr('');
-    }
+    setAllowedCidrs([...allowedCidrs, '']);
   };
 
-  const handleRemoveCidr = (cidr: string) => {
-    setAllowedCidrs(allowedCidrs.filter((c) => c !== cidr));
+  const handleUpdateCidr = (index: number, value: string) => {
+    const updated = [...allowedCidrs];
+    updated[index] = value;
+    setAllowedCidrs(updated);
+  };
+
+  const handleRemoveCidr = (index: number) => {
+    setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
   };
 
   return (
@@ -167,21 +183,26 @@ export function EditListenerDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Listener
+            Edit listener
           </h2>
         </VStack>
 
         {/* Listener Name */}
-        <FormField required>
-          <FormField.Label>Listener Name</FormField.Label>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Listener name</FormField.Label>
           <FormField.Control>
             <Input
               value={listenerName}
-              onChange={(e) => setListenerName(e.target.value)}
+              onChange={(e) => {
+                setListenerName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. listener-http-80"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>
@@ -219,10 +240,10 @@ export function EditListenerDrawer({
           </FormField.Control>
         </FormField>
 
-        {/* Connection Limit */}
+        {/* Connection limit */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Connection Limit
+            Connection limit
           </label>
           <RadioGroup
             value={connectionLimitType}
@@ -233,10 +254,10 @@ export function EditListenerDrawer({
           </RadioGroup>
 
           {connectionLimitType === 'limited' && (
-            <Input
-              type="number"
-              value={String(connectionLimitValue)}
-              onChange={(e) => setConnectionLimitValue(parseInt(e.target.value) || 0)}
+            <NumberInput
+              value={connectionLimitValue}
+              onChange={(value) => setConnectionLimitValue(value ?? 0)}
+              min={0}
               placeholder="Enter connection limit"
               fullWidth
             />
@@ -284,15 +305,15 @@ export function EditListenerDrawer({
 
               {/* Client Data Timeout */}
               <FormField>
-                <FormField.Label>Client Data Timeout (ms)</FormField.Label>
+                <FormField.Label>Client data timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait for client request data.
                 </FormField.Description>
                 <FormField.Control>
-                  <Input
-                    type="number"
-                    value={String(clientDataTimeout)}
-                    onChange={(e) => setClientDataTimeout(parseInt(e.target.value) || 0)}
+                  <NumberInput
+                    value={clientDataTimeout}
+                    onChange={(value) => setClientDataTimeout(value ?? 0)}
+                    min={0}
                     fullWidth
                   />
                 </FormField.Control>
@@ -300,15 +321,15 @@ export function EditListenerDrawer({
 
               {/* Member Connect Timeout */}
               <FormField>
-                <FormField.Label>Member Connect Timeout (ms)</FormField.Label>
+                <FormField.Label>Member connect timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait when establishing a connection to a backend member.
                 </FormField.Description>
                 <FormField.Control>
-                  <Input
-                    type="number"
-                    value={String(memberConnectTimeout)}
-                    onChange={(e) => setMemberConnectTimeout(parseInt(e.target.value) || 0)}
+                  <NumberInput
+                    value={memberConnectTimeout}
+                    onChange={(value) => setMemberConnectTimeout(value ?? 0)}
+                    min={0}
                     fullWidth
                   />
                 </FormField.Control>
@@ -316,15 +337,15 @@ export function EditListenerDrawer({
 
               {/* Member Data Timeout */}
               <FormField>
-                <FormField.Label>Member Data Timeout (ms)</FormField.Label>
+                <FormField.Label>Member data timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Maximum time to wait for response data from a backend member.
                 </FormField.Description>
                 <FormField.Control>
-                  <Input
-                    type="number"
-                    value={String(memberDataTimeout)}
-                    onChange={(e) => setMemberDataTimeout(parseInt(e.target.value) || 0)}
+                  <NumberInput
+                    value={memberDataTimeout}
+                    onChange={(value) => setMemberDataTimeout(value ?? 0)}
+                    min={0}
                     fullWidth
                   />
                 </FormField.Control>
@@ -332,15 +353,15 @@ export function EditListenerDrawer({
 
               {/* TCP Inspect Timeout */}
               <FormField>
-                <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
+                <FormField.Label>TCP inspect timeout (ms)</FormField.Label>
                 <FormField.Description>
                   Timeout for TCP packet inspection or handshake. 0 disables this feature.
                 </FormField.Description>
                 <FormField.Control>
-                  <Input
-                    type="number"
-                    value={String(tcpInspectTimeout)}
-                    onChange={(e) => setTcpInspectTimeout(parseInt(e.target.value) || 0)}
+                  <NumberInput
+                    value={tcpInspectTimeout}
+                    onChange={(value) => setTcpInspectTimeout(value ?? 0)}
+                    min={0}
                     fullWidth
                   />
                 </FormField.Control>
@@ -348,85 +369,58 @@ export function EditListenerDrawer({
 
               {/* Allowed CIDRs */}
               <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Allowed CIDRs
-                </label>
+                <VStack gap={2} className="w-full">
+                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+                    Allowed CIDRs
+                  </label>
+                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                    Defines the client IP ranges allowed to access the listener.
+                  </p>
+                </VStack>
+
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={handleAddCidr}
+                  leftIcon={<IconCirclePlus size={12} />}
                   className="self-start"
                 >
-                  <IconPlus size={16} />
                   Add CIDR
                 </Button>
-
-                {/* CIDR Input Row */}
-                {allowedCidrs.length === 0 && (
-                  <HStack
-                    gap={3}
-                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
-                  >
-                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
-                    <Input
-                      value={newCidr}
-                      onChange={(e) => setNewCidr(e.target.value)}
-                      placeholder="e.g. 10.62.0.32/24"
-                      fullWidth
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleAddCidr();
-                        }
-                      }}
-                    />
-                  </HStack>
-                )}
 
                 {/* CIDR List */}
                 {allowedCidrs.map((cidr, index) => (
                   <HStack
                     key={index}
-                    gap={3}
-                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
+                    gap={6}
+                    align="center"
+                    className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
                   >
-                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
-                    <div className="flex-1 px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md text-body-md text-[var(--color-text-default)]">
-                      {cidr}
-                    </div>
+                    <HStack gap={3} align="center" className="flex-1 min-w-0">
+                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+                        Key
+                      </span>
+                      <Input
+                        value={cidr}
+                        onChange={(e) => handleUpdateCidr(index, e.target.value)}
+                        placeholder="e.g. 10.62.0.32/24"
+                        fullWidth
+                      />
+                    </HStack>
                     <button
                       type="button"
-                      onClick={() => handleRemoveCidr(cidr)}
-                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      onClick={() => handleRemoveCidr(index)}
+                      className="p-0.5 shrink-0 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={16} className="text-[var(--color-text-default)]" />
+                      <IconX size={12} className="text-[var(--color-text-default)]" />
                     </button>
                   </HStack>
                 ))}
-
-                {allowedCidrs.length > 0 && (
-                  <HStack
-                    gap={3}
-                    className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
-                  >
-                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
-                    <Input
-                      value={newCidr}
-                      onChange={(e) => setNewCidr(e.target.value)}
-                      placeholder="e.g. 10.62.0.32/24"
-                      fullWidth
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleAddCidr();
-                        }
-                      }}
-                    />
-                  </HStack>
-                )}
               </VStack>
 
               {/* Listener Admin State */}
               <FormField>
-                <FormField.Label>Listener Admin State</FormField.Label>
+                <FormField.Label>Listener admin state</FormField.Label>
                 <FormField.Control>
                   <HStack gap={2} className="items-center">
                     <Toggle

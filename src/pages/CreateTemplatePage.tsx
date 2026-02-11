@@ -1117,21 +1117,23 @@ function ImageSection({
               />
 
               {/* Image Table */}
-              <Table
-                columns={imageColumns}
-                data={paginatedImages}
-                onRowClick={(row) => handleSelectImage(row.id)}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={imageColumns}
+                  data={paginatedImages}
+                  onRowClick={(row) => handleSelectImage(row.id)}
+                />
 
-              {/* Selection Indicator for Image */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                }
-                onRemove={() => onSelectImage('')}
-                error={!!imageError}
-                errorMessage={imageError || undefined}
-              />
+                {/* Selection Indicator for Image */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                  }
+                  onRemove={() => onSelectImage('')}
+                  error={!!imageError}
+                  errorMessage={imageError || undefined}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -1413,29 +1415,31 @@ function FlavorSection({
               />
 
               {/* Flavor Table */}
-              <Table
-                columns={flavorColumns}
-                data={paginatedFlavors}
-                rowKey="id"
-                onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={flavorColumns}
+                  data={paginatedFlavors}
+                  rowKey="id"
+                  onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
+                />
 
-              {/* Selection Indicator for Flavor */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedFlavor
-                    ? [
-                        {
-                          id: selectedFlavor.id,
-                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
-                        },
-                      ]
-                    : []
-                }
-                onRemove={() => onSelectFlavor('')}
-                error={!!flavorError}
-                errorMessage={flavorError || undefined}
-              />
+                {/* Selection Indicator for Flavor */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedFlavor
+                      ? [
+                          {
+                            id: selectedFlavor.id,
+                            label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
+                          },
+                        ]
+                      : []
+                  }
+                  onRemove={() => onSelectFlavor('')}
+                  error={!!flavorError}
+                  errorMessage={flavorError || undefined}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -1945,20 +1949,22 @@ function NetworkSection({
               />
 
               {/* Network Table */}
-              <Table
-                columns={networkColumns}
-                data={paginatedNetworks}
-                rowKey="id"
-                onRowClick={(row) => handleNetworkToggle(row.id)}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={networkColumns}
+                  data={paginatedNetworks}
+                  rowKey="id"
+                  onRowClick={(row) => handleNetworkToggle(row.id)}
+                />
 
-              {/* Selection Indicator for Networks */}
-              <SelectionIndicator
-                selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
-                onRemove={(id) => handleNetworkToggle(id)}
-                error={!!networkError}
-                errorMessage={networkError || undefined}
-              />
+                {/* Selection Indicator for Networks */}
+                <SelectionIndicator
+                  selectedItems={selectedNetworks.map((n) => ({ id: n.id, label: n.name }))}
+                  onRemove={(id) => handleNetworkToggle(id)}
+                  error={!!networkError}
+                  errorMessage={networkError || undefined}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -2074,20 +2080,22 @@ function NetworkSection({
               />
 
               {/* Security group Table */}
-              <Table
-                columns={sgColumns}
-                data={paginatedSGs}
-                rowKey="id"
-                onRowClick={(row) => handleSecurityGroupToggle(row.id)}
-              />
+              <VStack gap={2}>
+                <Table
+                  columns={sgColumns}
+                  data={paginatedSGs}
+                  rowKey="id"
+                  onRowClick={(row) => handleSecurityGroupToggle(row.id)}
+                />
 
-              {/* Selection Indicator for Security Groups */}
-              <SelectionIndicator
-                selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
-                onRemove={(id) => handleSecurityGroupToggle(id)}
-                error={!!sgError}
-                errorMessage={sgError || undefined}
-              />
+                {/* Selection Indicator for Security Groups */}
+                <SelectionIndicator
+                  selectedItems={selectedSGs.map((sg) => ({ id: sg.id, label: sg.name }))}
+                  onRemove={(id) => handleSecurityGroupToggle(id)}
+                  error={!!sgError}
+                  errorMessage={sgError || undefined}
+                />
+              </VStack>
             </VStack>
           </div>
 
@@ -2136,18 +2144,20 @@ function NetworkSection({
                   />
 
                   {/* Port Table */}
-                  <Table
-                    columns={portColumns}
-                    data={paginatedPorts}
-                    rowKey="id"
-                    onRowClick={(row) => handlePortToggle(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={portColumns}
+                      data={paginatedPorts}
+                      rowKey="id"
+                      onRowClick={(row) => handlePortToggle(row.id)}
+                    />
 
-                  {/* Selection Indicator for Ports */}
-                  <SelectionIndicator
-                    selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
-                    onRemove={(id) => handlePortToggle(id)}
-                  />
+                    {/* Selection Indicator for Ports */}
+                    <SelectionIndicator
+                      selectedItems={selectedPorts.map((p) => ({ id: p.id, label: p.id }))}
+                      onRemove={(id) => handlePortToggle(id)}
+                    />
+                  </VStack>
                 </VStack>
               )}
             </VStack>

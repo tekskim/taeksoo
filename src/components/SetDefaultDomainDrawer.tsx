@@ -5,9 +5,12 @@ import {
   SearchInput,
   Pagination,
   Radio,
+  Table,
   StatusIndicator,
   SelectionIndicator,
+  fixedColumns,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -101,6 +104,30 @@ const mockDomains: DomainItem[] = [
   { id: 'domain-10', name: 'legal', description: '-', status: 'active', createdAt: 'Sep 12, 2025' },
 ];
 
+const getDomainColumns = (
+  selectedDomainId: string | null,
+  onSelect: (id: string) => void
+): TableColumn<DomainItem>[] => [
+  {
+    key: 'radio' as keyof DomainItem,
+    label: '',
+    width: 40,
+    render: (_, row) => (
+      <Radio checked={selectedDomainId === row.id} onChange={() => onSelect(row.id)} />
+    ),
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    width: fixedColumns.status,
+    align: 'center',
+    render: (_, row) => <StatusIndicator status={row.status} />,
+  },
+  { key: 'name', label: 'Name', flex: 1 },
+  { key: 'description', label: 'Description', flex: 1 },
+  { key: 'createdAt', label: 'Created at', flex: 1 },
+];
+
 /* ----------------------------------------
    SetDefaultDomainDrawer Component
    ---------------------------------------- */
@@ -119,7 +146,7 @@ export function SetDefaultDomainDrawer({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // Filter domains based on search
   const filteredDomains = useMemo(() => {
@@ -172,6 +199,11 @@ export function SetDefaultDomainDrawer({
     setHasAttemptedSubmit(false);
     onClose();
   };
+
+  const domainColumns = useMemo(
+    () => getDomainColumns(selectedDomainId, setSelectedDomainId),
+    [selectedDomainId]
+  );
 
   const selectedDomain = selectedDomainId
     ? mockDomains.find((d) => d.id === selectedDomainId)
@@ -267,78 +299,24 @@ export function SetDefaultDomainDrawer({
             itemsPerPage={itemsPerPage}
           />
 
-          {/* Table */}
-          <VStack gap={1} className="w-full">
-            {/* Table Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div className="flex w-[60px] items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] border-l border-[var(--color-border-default)]">
-                <span className="text-[var(--table-header-font-size)] font-medium text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                  Status
-                </span>
-              </div>
-              <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] border-l border-[var(--color-border-default)]">
-                <span className="text-[var(--table-header-font-size)] font-medium text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                  Name
-                </span>
-              </div>
-              <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] border-l border-[var(--color-border-default)]">
-                <span className="text-[var(--table-header-font-size)] font-medium text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                  Description
-                </span>
-              </div>
-              <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] border-l border-[var(--color-border-default)]">
-                <span className="text-[var(--table-header-font-size)] font-medium text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                  Created at
-                </span>
-              </div>
-            </div>
+          {/* Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<DomainItem>
+              columns={domainColumns}
+              data={paginatedDomains}
+              rowKey="id"
+              onRowClick={(row) => setSelectedDomainId(row.id)}
+              emptyMessage="No domains found"
+            />
 
-            {/* Table Rows */}
-            {paginatedDomains.map((domain) => (
-              <div
-                key={domain.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] hover:bg-[var(--table-row-hover-bg)] transition-all cursor-pointer ${
-                  selectedDomainId === domain.id ? 'bg-[var(--color-state-info-bg)]' : ''
-                }`}
-                onClick={() => setSelectedDomainId(domain.id)}
-              >
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                  <Radio
-                    checked={selectedDomainId === domain.id}
-                    onChange={() => setSelectedDomainId(domain.id)}
-                  />
-                </div>
-                <div className="flex w-[60px] items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <StatusIndicator status={domain.status} />
-                </div>
-                <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <span className="text-[var(--table-font-size)] text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                    {domain.name}
-                  </span>
-                </div>
-                <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <span className="text-[var(--table-font-size)] text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                    {domain.description}
-                  </span>
-                </div>
-                <div className="flex flex-[1_0_0] items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <span className="text-[var(--table-font-size)] text-[var(--color-text-default)] leading-[var(--table-line-height)]">
-                    {domain.createdAt}
-                  </span>
-                </div>
-              </div>
-            ))}
+            <SelectionIndicator
+              selectedItems={selectedItems}
+              onRemove={() => setSelectedDomainId(null)}
+              emptyText="No items selected"
+              error={hasAttemptedSubmit && !selectedDomainId}
+              errorMessage="Please select a domain to set as default"
+            />
           </VStack>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={selectedItems}
-            onRemove={() => setSelectedDomainId(null)}
-            emptyText="No items selected"
-            error={hasAttemptedSubmit && !selectedDomainId}
-            errorMessage="Please select a domain to set as default"
-          />
         </VStack>
       </VStack>
     </Drawer>

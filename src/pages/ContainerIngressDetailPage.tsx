@@ -349,7 +349,7 @@ export function ContainerIngressDetailPage() {
               status={getStatusType(ingress.status)}
             />
             <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
-            <DetailHeader.InfoCard label="Ingress Class" value={ingress.ingressClass} />
+            <DetailHeader.InfoCard label="Ingress class" value={ingress.ingressClass} />
             <DetailHeader.InfoCard label="Created at" value={ingress.createdAt} />
           </DetailHeader.InfoGrid>
 

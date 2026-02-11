@@ -17,6 +17,7 @@ import {
   DetailHeader,
   MonitoringToolbar,
   PageShell,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -404,10 +405,11 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     return fallback;
   };
 
-  // Determine status based on percentage thresholds
+  // Determine status based on storage thresholds (85 warning, 95 danger)
   const getStatus = (): GaugeStatus => {
-    if (percentage >= 85) return 'error';
-    if (percentage >= 70) return 'warning';
+    const { warning, danger } = STATUS_THRESHOLDS.storage;
+    if (percentage >= danger) return 'error';
+    if (percentage >= warning) return 'warning';
     return 'success';
   };
 

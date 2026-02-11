@@ -837,35 +837,37 @@ export function CreateVolumePage() {
                             selectedCount={selectedImage.length}
                           />
 
-                          <Table<ImageRow>
-                            columns={imageColumns}
-                            data={filteredImages.slice(
-                              (imageCurrentPage - 1) * 5,
-                              imageCurrentPage * 5
-                            )}
-                            rowKey="id"
-                            emptyMessage="No images found"
-                            selectable
-                            hideSelectAll
-                            selectedKeys={selectedImage}
-                            onSelectionChange={(keys) => {
-                              setSelectedImage(keys);
-                              setSourceError(null);
-                            }}
-                          />
+                          <VStack gap={2}>
+                            <Table<ImageRow>
+                              columns={imageColumns}
+                              data={filteredImages.slice(
+                                (imageCurrentPage - 1) * 5,
+                                imageCurrentPage * 5
+                              )}
+                              rowKey="id"
+                              emptyMessage="No images found"
+                              selectable
+                              hideSelectAll
+                              selectedKeys={selectedImage}
+                              onSelectionChange={(keys) => {
+                                setSelectedImage(keys);
+                                setSourceError(null);
+                              }}
+                            />
 
-                          {/* Selection Indicator for Images */}
-                          <SelectionIndicator
-                            selectedItems={selectedImage.map((id) => {
-                              const image = mockImages.find((img) => img.id === id);
-                              return { id, label: image?.name || id };
-                            })}
-                            onRemove={(id) =>
-                              setSelectedImage(selectedImage.filter((i) => i !== id))
-                            }
-                            error={!!sourceError}
-                            errorMessage={sourceError || undefined}
-                          />
+                            {/* Selection Indicator for Images */}
+                            <SelectionIndicator
+                              selectedItems={selectedImage.map((id) => {
+                                const image = mockImages.find((img) => img.id === id);
+                                return { id, label: image?.name || id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedImage(selectedImage.filter((i) => i !== id))
+                              }
+                              error={!!sourceError}
+                              errorMessage={sourceError || undefined}
+                            />
+                          </VStack>
                         </VStack>
                       )}
 
@@ -891,35 +893,37 @@ export function CreateVolumePage() {
                             selectedCount={selectedSnapshot.length}
                           />
 
-                          <Table<SnapshotRow>
-                            columns={snapshotColumns}
-                            data={filteredSnapshots.slice(
-                              (snapshotCurrentPage - 1) * 5,
-                              snapshotCurrentPage * 5
-                            )}
-                            rowKey="id"
-                            emptyMessage="No snapshots found"
-                            selectable
-                            hideSelectAll
-                            selectedKeys={selectedSnapshot}
-                            onSelectionChange={(keys) => {
-                              setSelectedSnapshot(keys);
-                              setSourceError(null);
-                            }}
-                          />
+                          <VStack gap={2}>
+                            <Table<SnapshotRow>
+                              columns={snapshotColumns}
+                              data={filteredSnapshots.slice(
+                                (snapshotCurrentPage - 1) * 5,
+                                snapshotCurrentPage * 5
+                              )}
+                              rowKey="id"
+                              emptyMessage="No snapshots found"
+                              selectable
+                              hideSelectAll
+                              selectedKeys={selectedSnapshot}
+                              onSelectionChange={(keys) => {
+                                setSelectedSnapshot(keys);
+                                setSourceError(null);
+                              }}
+                            />
 
-                          {/* Selection Indicator for Snapshots */}
-                          <SelectionIndicator
-                            selectedItems={selectedSnapshot.map((id) => {
-                              const snapshot = mockSnapshots.find((s) => s.id === id);
-                              return { id, label: snapshot?.name || id };
-                            })}
-                            onRemove={(id) =>
-                              setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
-                            }
-                            error={!!sourceError}
-                            errorMessage={sourceError || undefined}
-                          />
+                            {/* Selection Indicator for Snapshots */}
+                            <SelectionIndicator
+                              selectedItems={selectedSnapshot.map((id) => {
+                                const snapshot = mockSnapshots.find((s) => s.id === id);
+                                return { id, label: snapshot?.name || id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
+                              }
+                              error={!!sourceError}
+                              errorMessage={sourceError || undefined}
+                            />
+                          </VStack>
                         </VStack>
                       )}
                     </VStack>
@@ -1087,34 +1091,36 @@ export function CreateVolumePage() {
                               selectedCount={selectedVolumeType.length}
                             />
 
-                            <Table<VolumeTypeRow>
-                              columns={volumeTypeColumns}
-                              data={filteredVolumeTypes.slice(
-                                (volumeTypeCurrentPage - 1) * 5,
-                                volumeTypeCurrentPage * 5
-                              )}
-                              rowKey="id"
-                              emptyMessage="No volume types found"
-                              selectable
-                              selectedKeys={selectedVolumeType}
-                              onSelectionChange={(keys) => {
-                                setSelectedVolumeType(keys);
-                                setVolumeTypeError(null);
-                              }}
-                            />
+                            <VStack gap={2}>
+                              <Table<VolumeTypeRow>
+                                columns={volumeTypeColumns}
+                                data={filteredVolumeTypes.slice(
+                                  (volumeTypeCurrentPage - 1) * 5,
+                                  volumeTypeCurrentPage * 5
+                                )}
+                                rowKey="id"
+                                emptyMessage="No volume types found"
+                                selectable
+                                selectedKeys={selectedVolumeType}
+                                onSelectionChange={(keys) => {
+                                  setSelectedVolumeType(keys);
+                                  setVolumeTypeError(null);
+                                }}
+                              />
 
-                            {/* Selection Indicator for Volume Types */}
-                            <SelectionIndicator
-                              selectedItems={selectedVolumeType.map((id) => {
-                                const volumeType = mockVolumeTypes.find((v) => v.id === id);
-                                return { id, label: volumeType?.name || id };
-                              })}
-                              onRemove={(id) =>
-                                setSelectedVolumeType(selectedVolumeType.filter((i) => i !== id))
-                              }
-                              error={!!volumeTypeError}
-                              errorMessage={volumeTypeError || undefined}
-                            />
+                              {/* Selection Indicator for Volume Types */}
+                              <SelectionIndicator
+                                selectedItems={selectedVolumeType.map((id) => {
+                                  const volumeType = mockVolumeTypes.find((v) => v.id === id);
+                                  return { id, label: volumeType?.name || id };
+                                })}
+                                onRemove={(id) =>
+                                  setSelectedVolumeType(selectedVolumeType.filter((i) => i !== id))
+                                }
+                                error={!!volumeTypeError}
+                                errorMessage={volumeTypeError || undefined}
+                              />
+                            </VStack>
                           </VStack>
                         </div>
 

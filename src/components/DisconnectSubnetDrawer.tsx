@@ -7,9 +7,11 @@ import {
   Radio,
   InlineMessage,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -140,7 +142,7 @@ export function DisconnectSubnetDrawer({
   const [sortField, setSortField] = useState<'name' | 'networkName' | null>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -191,6 +193,77 @@ export function DisconnectSubnetDrawer({
     }
     onClose();
   };
+
+  const subnetColumns: TableColumn<SubnetItem>[] = [
+    {
+      key: 'id' as keyof SubnetItem,
+      label: '',
+      width: 40,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="subnet-select"
+            value={row.id}
+            checked={selectedSubnetId === row.id}
+            onChange={() => setSelectedSubnetId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'subnetCidr',
+      label: 'Subnet CIDR',
+    },
+    {
+      key: 'allocationPools',
+      label: 'Allocation pools',
+      render: (_value, row) => (
+        <span className="whitespace-pre-line">{row.allocationPools.replace(' - ', '\n')}</span>
+      ),
+    },
+    {
+      key: 'networkName',
+      label: 'Network',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.networkName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.networkId}
+          </span>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Drawer
@@ -256,100 +329,22 @@ export function DisconnectSubnetDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Subnet Table */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Header */}
-            <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div className="w-[40px] p-3" />
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleSort('name')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-              <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
-              </div>
-              <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Allocation Pools
-                </span>
-              </div>
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleSort('networkName')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedSubnets.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                  selectedSubnetId === item.id ? 'border-[var(--color-action-primary)]' : ''
-                }`}
-                onClick={() => setSelectedSubnetId(item.id)}
-              >
-                <div className="w-[40px] p-3 flex items-center justify-center">
-                  <Radio
-                    checked={selectedSubnetId === item.id}
-                    onChange={() => setSelectedSubnetId(item.id)}
-                  />
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                      {item.name}
-                    </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                    ID : {item.id}
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {item.subnetCidr}
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4 whitespace-pre-line">
-                    {item.allocationPools.replace(' - ', ' -\n')}
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                      {item.networkName}
-                    </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                    ID : {item.networkId}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={
-              selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
-            }
-            onRemove={() => setSelectedSubnetId(null)}
-            emptyText="No item Selected"
-          />
+          <VStack gap={2}>
+            <Table<SubnetItem>
+              columns={subnetColumns}
+              data={paginatedSubnets}
+              rowKey="id"
+              onRowClick={(row) => setSelectedSubnetId(row.id)}
+              emptyMessage="No subnets found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
+              }
+              onRemove={() => setSelectedSubnetId(null)}
+              emptyText="No item selected"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

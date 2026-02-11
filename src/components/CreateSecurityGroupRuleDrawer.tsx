@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Radio, RadioGroup, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  NumberInput,
+  Select,
+  Radio,
+  RadioGroup,
+  FormField,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -147,7 +156,7 @@ export function CreateSecurityGroupRuleDrawer({
 
   const remoteTypeOptions = [
     { value: 'cidr', label: 'CIDR' },
-    { value: 'security_group', label: 'Security Group' },
+    { value: 'security_group', label: 'Security group' },
   ];
 
   // Check if protocol requires port input
@@ -188,7 +197,7 @@ export function CreateSecurityGroupRuleDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Security Group Rule Quota"
+              label="Security group rule quota"
               used={ruleQuota.used}
               total={ruleQuota.total}
             />
@@ -215,7 +224,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Rule
+            Create rule
           </h2>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             A security group rule defines allowed inbound or outbound network traffic.
@@ -230,7 +239,7 @@ export function CreateSecurityGroupRuleDrawer({
               value={direction}
               onChange={(value) => setDirection(value as RuleDirection)}
             >
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <Radio value="ingress" label="Ingress" />
                 <Radio value="egress" label="Egress" />
               </VStack>
@@ -260,7 +269,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
           <FormField>
-            <FormField.Label>Port Range</FormField.Label>
+            <FormField.Label>Port range</FormField.Label>
             <FormField.Control>
               <Select
                 options={portRangeOptions}
@@ -280,13 +289,10 @@ export function CreateSecurityGroupRuleDrawer({
                     error={hasAttemptedSubmit && !portRange.trim()}
                   />
                 </FormField.Control>
-                {hasAttemptedSubmit && !portRange.trim() ? (
-                  <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
-                ) : (
-                  <FormField.HelperText>
-                    e.g. single port '8080', port range '7000-7005'
-                  </FormField.HelperText>
-                )}
+                <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
+                <FormField.HelperText>
+                  e.g. single port '8080', port range '7000-7005'
+                </FormField.HelperText>
               </>
             )}
           </FormField>
@@ -297,12 +303,11 @@ export function CreateSecurityGroupRuleDrawer({
           <>
             <VStack gap={2} className="w-full">
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP Type(optional)
+                ICMP type (optional)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={icmpType}
-                onChange={(e) => setIcmpType(Math.min(255, Math.max(0, Number(e.target.value))))}
+                onChange={(value) => setIcmpType(value ?? 0)}
                 min={0}
                 max={255}
                 fullWidth
@@ -312,12 +317,11 @@ export function CreateSecurityGroupRuleDrawer({
 
             <VStack gap={2} className="w-full">
               <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP Code(optional)
+                ICMP code (optional)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={icmpCode}
-                onChange={(e) => setIcmpCode(Math.min(255, Math.max(0, Number(e.target.value))))}
+                onChange={(value) => setIcmpCode(value ?? 0)}
                 min={0}
                 max={255}
                 fullWidth

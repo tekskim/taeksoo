@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -151,12 +151,12 @@ export function CreateVolumeFromSnapshotDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Quota"
+              label="Volume quota"
               used={volumeQuota.used}
               total={volumeQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
             />
@@ -195,7 +195,7 @@ export function CreateVolumeFromSnapshotDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume from Instance Snapshot
+              Create volume from instance snapshot
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               The new volume will contain the same data as the snapshot's system disk and can be
@@ -226,44 +226,40 @@ export function CreateVolumeFromSnapshotDrawer({
               error={hasAttemptedSubmit && !volumeName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !volumeName.trim() ? (
-            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
         <VStack gap={3} className="w-full">
-          <HStack className="w-full justify-between items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+
+          {/* Slider + NumberInput */}
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                min={minCapacity}
+                max={maxCapacity}
+                value={capacity}
+                onChange={handleCapacityChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-
-          {/* Slider */}
-          <VStack gap={3} className="w-full">
-            <Slider
-              min={minCapacity}
-              max={maxCapacity}
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
-
-            {/* Capacity Input */}
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => handleCapacityChange(Number(e.target.value))}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
           </VStack>
         </VStack>
 

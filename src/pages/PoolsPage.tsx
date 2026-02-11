@@ -11,6 +11,7 @@ import {
   Breadcrumb,
   PageShell,
   PageHeader,
+  STATUS_THRESHOLDS,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -128,10 +129,11 @@ interface UsageCellProps {
 }
 
 function UsageCell({ percent }: UsageCellProps) {
-  // Determine color based on percentage thresholds
+  // Determine color based on storage thresholds (85 warning, 95 danger)
   const getStatusColor = (value: number): string => {
-    if (value >= 95) return 'var(--color-state-danger)';
-    if (value >= 85) return 'var(--color-state-warning)';
+    const { warning, danger } = STATUS_THRESHOLDS.storage;
+    if (value >= danger) return 'var(--color-state-danger)';
+    if (value >= warning) return 'var(--color-state-warning)';
     return 'var(--color-state-success)';
   };
 

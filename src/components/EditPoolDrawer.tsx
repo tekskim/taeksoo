@@ -61,7 +61,7 @@ const algorithmDescriptions: Record<AlgorithmType, string> = {
 const sessionPersistenceOptions = [
   { value: 'NONE', label: 'None' },
   { value: 'SOURCE_IP', label: 'Source IP' },
-  { value: 'HTTP_COOKIE', label: 'HTTP Cookie' },
+  { value: 'HTTP_COOKIE', label: 'HTTP cookie' },
   { value: 'APP_COOKIE', label: 'App cookie' },
 ];
 
@@ -82,6 +82,8 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
   const [adminStateUp, setAdminStateUp] = useState(pool.adminStateUp ?? true);
   const [isSessionPersistenceExpanded, setIsSessionPersistenceExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or pool changes
   useEffect(() => {
@@ -95,11 +97,22 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       setTlsCiphers(pool.tlsCiphers || '');
       setAdminStateUp(pool.adminStateUp ?? true);
       setIsSessionPersistenceExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, pool]);
 
   const handleSubmit = async () => {
-    if (!name.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!name.trim()) {
+      setNameError('Pool name is required');
+      return;
+    }
+    if (name.trim().length > 128) {
+      setNameError('Pool name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -121,6 +134,8 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -150,22 +165,28 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Pool</h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit pool</h2>
         </VStack>
 
         {/* Pool Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Pool name</FormField.Label>
           <FormField.Control>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. pool-http"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
           </FormField.HelperText>
         </FormField>
 
@@ -237,12 +258,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
               {sessionPersistenceType === 'APP_COOKIE' && (
                 <FormField>
-                  <FormField.Label>Cookie Name</FormField.Label>
+                  <FormField.Label>Cookie name</FormField.Label>
                   <FormField.Control>
                     <Input
                       value={cookieName}
                       onChange={(e) => setCookieName(e.target.value)}
-                      placeholder="Input Cookie Name"
+                      placeholder="Input cookie name"
                       fullWidth
                     />
                   </FormField.Control>
@@ -272,7 +293,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
                 <Textarea
                   value={tlsCiphers}
                   onChange={(e) => setTlsCiphers(e.target.value)}
-                  placeholder="Input Custom Cipher String (Leave blank to use safe defaults)"
+                  placeholder="Input custom cipher string (leave blank to use safe defaults)"
                   rows={3}
                   fullWidth
                 />
@@ -287,7 +308,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
         {/* Admin State */}
         <FormField>
-          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Label>Admin state</FormField.Label>
           <FormField.Control>
             <HStack gap={2} className="items-center">
               <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

@@ -1,7 +1,17 @@
 import { useState } from 'react';
-import { Drawer, Button, Input, Select, Radio, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Select,
+  Radio,
+  FormField,
+  Table,
+  fixedColumns,
+} from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconUpload, IconX, IconChevronDown } from '@tabler/icons-react';
+import { IconUpload, IconTrash, IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -45,7 +55,7 @@ export interface CreateObjectDrawerProps {
 const GRANTEE_OPTIONS = [
   { value: 'owner', label: 'Owner' },
   { value: 'everyone', label: 'Everyone' },
-  { value: 'authenticated', label: 'Authenticated User' },
+  { value: 'authenticated', label: 'Authenticated user' },
 ];
 
 const PERMISSION_OPTIONS = [
@@ -77,6 +87,8 @@ export function CreateObjectDrawer({
     { id: '2', key: '30', value: '30' },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [filesError, setFilesError] = useState<string | null>(null);
 
   const handleRemoveFile = (fileId: string) => {
     setFiles((prev) => prev.filter((f) => f.id !== fileId));
@@ -112,6 +124,14 @@ export function CreateObjectDrawer({
   };
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+
+    if (files.length === 0) {
+      setFilesError('Please upload at least one file.');
+      return;
+    }
+    setFilesError(null);
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({ files, aclType, grantee, permission, tags });
@@ -124,6 +144,28 @@ export function CreateObjectDrawer({
   const handleClose = () => {
     onClose();
   };
+
+  const fileColumns: TableColumn<UploadedFile>[] = [
+    { key: 'name', label: 'Name', flex: 1, sortable: true },
+    { key: 'type', label: 'Type', flex: 1, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, sortable: true },
+    { key: 'count', label: 'Count', flex: 1, sortable: true },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: fixedColumns.actions,
+      align: 'center',
+      render: (_, row) => (
+        <button
+          type="button"
+          onClick={() => handleRemoveFile(row.id)}
+          className="text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
+        >
+          <IconTrash size={16} stroke={1.5} />
+        </button>
+      ),
+    },
+  ];
 
   return (
     <Drawer
@@ -140,7 +182,7 @@ export function CreateObjectDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || files.length === 0}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -167,82 +209,39 @@ export function CreateObjectDrawer({
         </FormField>
 
         {/* Upload Files Section */}
-        <VStack gap={2} className="w-full">
+        <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Upload Files
           </label>
-          <Button variant="secondary" size="sm" onClick={handleUploadClick} className="w-fit">
-            <IconUpload size={16} className="mr-1.5" />
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              handleUploadClick();
+              if (filesError) setFilesError(null);
+            }}
+            className="w-fit"
+            leftIcon={<IconUpload size={12} stroke={1.5} />}
+          >
             Upload a File
           </Button>
+          {filesError && (
+            <span className="text-body-sm text-[var(--color-state-danger)]">{filesError}</span>
+          )}
 
           {/* Files Table */}
           {files.length > 0 && (
-            <div className="w-full flex flex-col gap-1">
-              {/* Header */}
-              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
-                </div>
-                <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
-                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
-                </div>
-                <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
-                </div>
-                <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Count</span>
-                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
-                </div>
-                <div className="w-10 p-3" />
-              </div>
-
-              {/* Rows */}
-              {files.map((file) => (
-                <div
-                  key={file.id}
-                  className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                >
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {file.name}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {file.type}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {file.size}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {file.count}
-                    </span>
-                  </div>
-                  <div className="w-10 p-3 flex items-center justify-center">
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFile(file.id)}
-                      className="text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
-                    >
-                      <IconX size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Table<UploadedFile>
+              columns={fileColumns}
+              data={files}
+              rowKey="id"
+              emptyMessage="No files uploaded"
+            />
           )}
         </VStack>
 
         {/* ACL Section */}
-        <VStack gap={4} className="w-full">
+        <VStack gap={6} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">ACL</label>
 
           {/* ACL Type Radio */}
@@ -250,12 +249,12 @@ export function CreateObjectDrawer({
             <Radio
               checked={aclType === 'individual'}
               onChange={() => setAclType('individual')}
-              label="Individual Settings"
+              label="Individual settings"
             />
             <Radio
               checked={aclType === 'inherit'}
               onChange={() => setAclType('inherit')}
-              label="Inherit from Bucket"
+              label="Inherit from bucket"
             />
           </HStack>
 
@@ -296,58 +295,57 @@ export function CreateObjectDrawer({
         </VStack>
 
         {/* Tags Section */}
-        <VStack gap={4} className="w-full">
-          <HStack justify="between" className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">Tags</label>
-            <Button variant="primary" size="sm" onClick={handleAddTag}>
-              Add
-            </Button>
-          </HStack>
+        <VStack gap={3} className="w-full">
+          <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
-          {/* Tags Table */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Header */}
-            <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
-              </div>
-              <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
-              </div>
-              <div className="w-10 p-3" />
-            </div>
-
-            {/* Rows */}
-            {tags.map((tag) => (
-              <div
-                key={tag.id}
-                className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-              >
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <VStack gap={2}>
+              {tags.length > 0 && (
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <span className="block text-label-lg text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                    Value
+                  </span>
+                  <div />
+                </div>
+              )}
+              {tags.map((tag) => (
+                <div
+                  key={tag.id}
+                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                >
                   <Input
+                    placeholder="tag key"
                     value={tag.key}
                     onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
-                    className="w-20"
+                    fullWidth
                   />
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
                   <Input
+                    placeholder="tag value"
                     value={tag.value}
                     onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
-                    className="w-20"
+                    fullWidth
                   />
-                </div>
-                <div className="w-10 p-3 flex items-center justify-center">
                   <button
-                    type="button"
                     onClick={() => handleRemoveTag(tag.id)}
-                    className="text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} />
+                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                   </button>
                 </div>
+              ))}
+
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={handleAddTag}
+                >
+                  Add Tag
+                </Button>
               </div>
-            ))}
+            </VStack>
           </div>
         </VStack>
       </VStack>

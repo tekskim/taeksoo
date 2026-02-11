@@ -36,6 +36,8 @@ export function EditLoadBalancerDrawer({
   const [adminStateUp, setAdminStateUp] = useState(loadBalancer.adminStateUp ?? true);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or loadBalancer changes
   useEffect(() => {
@@ -44,11 +46,22 @@ export function EditLoadBalancerDrawer({
       setDescription(loadBalancer.description || '');
       setAdminStateUp(loadBalancer.adminStateUp ?? true);
       setIsAdvancedExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, loadBalancer]);
 
   const handleSubmit = async () => {
-    if (!name.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!name.trim()) {
+      setNameError('Load balancer name is required');
+      return;
+    }
+    if (name.trim().length > 128) {
+      setNameError('Load balancer name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -60,6 +73,8 @@ export function EditLoadBalancerDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -90,21 +105,26 @@ export function EditLoadBalancerDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Load Balancer
+            Edit load balancer
           </h2>
         </VStack>
 
         {/* Load Balancer Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Load balancer name</FormField.Label>
           <FormField.Control>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. web-lb-01"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

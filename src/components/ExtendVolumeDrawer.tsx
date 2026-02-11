@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Slider } from '@/design-system';
+import { Drawer, Button, Slider, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -89,6 +89,8 @@ export function ExtendVolumeDrawer({
 }: ExtendVolumeDrawerProps) {
   const [capacity, setCapacity] = useState(minCapacity);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [capacityError, setCapacityError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -96,11 +98,19 @@ export function ExtendVolumeDrawer({
       // Set initial capacity to current volume size + 1 or minCapacity
       const initialCapacity = Math.max(volume.size + 1, minCapacity);
       setCapacity(initialCapacity);
+      setHasAttemptedSubmit(false);
+      setCapacityError(null);
     }
   }, [isOpen, volume, minCapacity]);
 
   const handleSubmit = async () => {
-    if (capacity <= (volume?.size ?? 0)) return;
+    setHasAttemptedSubmit(true);
+
+    if (capacity <= (volume?.size ?? 0)) {
+      setCapacityError('New capacity must be greater than the current volume size.');
+      return;
+    }
+    setCapacityError(null);
 
     setIsSubmitting(true);
     try {
@@ -117,6 +127,7 @@ export function ExtendVolumeDrawer({
   };
 
   const handleCapacityChange = (value: number) => {
+    if (capacityError) setCapacityError(null);
     const clampedValue = Math.min(Math.max(value, minCapacity), maxCapacity);
     setCapacity(clampedValue);
   };
@@ -133,7 +144,7 @@ export function ExtendVolumeDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
             />
@@ -152,7 +163,7 @@ export function ExtendVolumeDrawer({
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={capacity <= (volume?.size ?? 0) || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Extending...' : 'Extend'}
@@ -186,34 +197,36 @@ export function ExtendVolumeDrawer({
 
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
-          <HStack className="w-full justify-between items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+
+          {/* Slider + NumberInput */}
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                min={minCapacity}
+                max={maxCapacity}
+                value={capacity}
+                onChange={handleCapacityChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-
-          {/* Slider */}
-          <VStack gap={2} className="w-full">
-            <Slider
-              min={minCapacity}
-              max={maxCapacity}
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
-
-            {/* Capacity Input */}
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => handleCapacityChange(Number(e.target.value))}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
           </VStack>
+          {capacityError && (
+            <span className="text-body-sm text-[var(--color-state-danger)]">{capacityError}</span>
+          )}
         </VStack>
       </VStack>
     </Drawer>

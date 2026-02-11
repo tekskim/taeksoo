@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -32,17 +32,30 @@ export function EditInstanceSnapshotDrawer({
   const [snapshotName, setSnapshotName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && snapshot) {
       setSnapshotName(snapshot.name);
       setDescription(snapshot.description ?? '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, snapshot]);
 
   const handleSubmit = async () => {
-    if (!snapshotName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!snapshotName.trim()) {
+      setNameError('Snapshot name is required');
+      return;
+    }
+    if (snapshotName.trim().length > 128) {
+      setNameError('Snapshot name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -54,6 +67,8 @@ export function EditInstanceSnapshotDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -83,25 +98,31 @@ export function EditInstanceSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Instance Snapshot
+          Edit instance snapshot
         </h2>
 
         {/* Snapshot Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Instance snapshot name
-          </label>
-          <Input
-            value={snapshotName}
-            onChange={(e) => setSnapshotName(e.target.value)}
-            placeholder="Enter snapshot name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            The name should start with upper letter, lower letter or chinese, and be a string of 1
-            to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
-          </p>
-        </VStack>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Instance snapshot name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={snapshotName}
+              onChange={(e) => {
+                setSnapshotName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter snapshot name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
+            {
+              'The name should start with upper letter, lower letter or chinese, and be a string of 1 to 128, characters can only contain "0-9, a-z, A-Z, "-"\'_.".'
+            }
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
