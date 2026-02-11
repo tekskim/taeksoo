@@ -55,7 +55,7 @@ export interface CreateObjectDrawerProps {
 const GRANTEE_OPTIONS = [
   { value: 'owner', label: 'Owner' },
   { value: 'everyone', label: 'Everyone' },
-  { value: 'authenticated', label: 'Authenticated User' },
+  { value: 'authenticated', label: 'Authenticated user' },
 ];
 
 const PERMISSION_OPTIONS = [
@@ -249,12 +249,12 @@ export function CreateObjectDrawer({
             <Radio
               checked={aclType === 'individual'}
               onChange={() => setAclType('individual')}
-              label="Individual Settings"
+              label="Individual settings"
             />
             <Radio
               checked={aclType === 'inherit'}
               onChange={() => setAclType('inherit')}
-              label="Inherit from Bucket"
+              label="Inherit from bucket"
             />
           </HStack>
 

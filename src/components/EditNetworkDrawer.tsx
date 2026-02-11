@@ -111,7 +111,7 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Network
+            Edit network
           </h2>
         </VStack>
 
@@ -169,9 +169,9 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {/* Advanced Options (Collapsible) */}
         {isAdvancedExpanded && (
           <>
-            {/* Admin State */}
+            {/* Admin state */}
             <FormField>
-              <FormField.Label>Admin State</FormField.Label>
+              <FormField.Label>Admin state</FormField.Label>
               <FormField.Description>
                 Setting it to "Down" disables all related network or control operations, regardless
                 of runtime status.
@@ -189,9 +189,9 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
               </FormField.Control>
             </FormField>
 
-            {/* Port Security */}
+            {/* Port security */}
             <FormField>
-              <FormField.Label>Port Security</FormField.Label>
+              <FormField.Label>Port security</FormField.Label>
               <FormField.Description>
                 Enhances security by allowing only permitted devices to access this network. It is
                 recommended to keep this enabled in most cases.

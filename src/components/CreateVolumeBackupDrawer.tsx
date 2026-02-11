@@ -129,12 +129,12 @@ export function CreateVolumeBackupDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Backup Quota"
+              label="Volume backup quota"
               used={volumeBackupQuota.used}
               total={volumeBackupQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Backup Capacity Quota(GiB)"
+              label="Volume backup capacity quota (GiB)"
               used={volumeBackupCapacityQuota.used}
               total={volumeBackupCapacityQuota.total}
             />
@@ -163,7 +163,7 @@ export function CreateVolumeBackupDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume Backup
+              Create volume backup
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a full backup of this volume and store it in the backup service. The backup can
@@ -219,7 +219,7 @@ export function CreateVolumeBackupDrawer({
               <Radio
                 name="backup-mode"
                 value="full"
-                label="Full Backup"
+                label="Full backup"
                 checked={backupMode === 'full'}
                 onChange={() => setBackupMode('full')}
               />
@@ -227,7 +227,7 @@ export function CreateVolumeBackupDrawer({
                 <Radio
                   name="backup-mode"
                   value="incremental"
-                  label="Increment Backup"
+                  label="Increment backup"
                   checked={backupMode === 'incremental'}
                   onChange={() => setBackupMode('incremental')}
                 />

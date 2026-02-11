@@ -101,7 +101,7 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Router
+            Edit router
           </h2>
         </VStack>
 

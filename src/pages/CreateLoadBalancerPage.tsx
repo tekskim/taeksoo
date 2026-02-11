@@ -877,7 +877,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'expiresAt',
-        label: 'Expires At',
+        label: 'Expires at',
         flex: 1,
         minWidth: columnMinWidths.expiresAt,
       },
@@ -957,7 +957,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'expiresAt',
-        label: 'Expires At',
+        label: 'Expires at',
         flex: 1,
         minWidth: columnMinWidths.expiresAt,
       },
@@ -1076,7 +1076,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'expiresAt',
-        label: 'Expires At',
+        label: 'Expires at',
         flex: 1,
         minWidth: columnMinWidths.expiresAt,
       },
@@ -1131,7 +1131,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'ipAddresses',
-        label: 'IP Address',
+        label: 'IP address',
         flex: 1,
         render: (_value, row) =>
           row.ipAddresses.length > 0 ? (
@@ -1194,7 +1194,7 @@ export default function CreateLoadBalancerPage() {
     () => [
       {
         key: 'ipAddress',
-        label: 'IP Address',
+        label: 'IP address',
         flex: 1,
       },
       {
@@ -1614,7 +1614,7 @@ export default function CreateLoadBalancerPage() {
                     {/* VIP Address */}
                     <div className="py-6">
                       <FormField required>
-                        <FormField.Label>VIP Address</FormField.Label>
+                        <FormField.Label>VIP address</FormField.Label>
                         <FormField.Description>
                           Select the subnet for the VIP. You can assign an IP automatically or
                           manually enter one within the subnet range.
@@ -1715,7 +1715,7 @@ export default function CreateLoadBalancerPage() {
                     value={selectedNetworkDetails?.name || '-'}
                   />
                   <SectionCard.DataRow
-                    label="VIP Address"
+                    label="VIP address"
                     value={`${subnet || 'Not selected'} / ${vipMode === 'auto' ? 'Auto-assign' : manualVip}`}
                   />
                   <SectionCard.DataRow label="Admin state" value={adminStateUp ? 'Up' : 'Down'} />
@@ -1857,7 +1857,7 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <VStack gap={4}>
                             <FormField required>
-                              <FormField.Label>Server Certificates</FormField.Label>
+                              <FormField.Label>Server certificates</FormField.Label>
                               <FormField.Description>
                                 Select a server certificate for the listener to handle HTTPS
                                 traffic.
@@ -1920,7 +1920,7 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <VStack gap={4} align="stretch">
                             <FormField required>
-                              <FormField.Label>CA Certificates</FormField.Label>
+                              <FormField.Label>CA certificates</FormField.Label>
                               <FormField.Description>
                                 Select a CA certificate to validate client certificates.
                               </FormField.Description>
@@ -2496,7 +2496,7 @@ export default function CreateLoadBalancerPage() {
                                       {/* App Cookie - only shown when pool protocol is HTTP */}
                                       {poolProtocol === 'HTTP' && (
                                         <VStack gap={2} align="start">
-                                          <Radio value="app_cookie" label="App Cookie" />
+                                          <Radio value="app_cookie" label="App cookie" />
                                           <Input
                                             placeholder="Enter cookie name"
                                             value={cookieName}
@@ -2531,7 +2531,7 @@ export default function CreateLoadBalancerPage() {
               )}
               {sectionStatus['pool'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create Pool" value={createPool ? 'Yes' : 'No'} />
+                  <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
                   {createPool && <SectionCard.DataRow label="Pool name" value={poolName} />}
                   {createPool && (
                     <SectionCard.DataRow
@@ -2676,7 +2676,7 @@ export default function CreateLoadBalancerPage() {
                             {/* IP Address */}
                             <div className="flex-1 flex flex-col gap-2">
                               <span className="text-label-md text-[var(--color-text-default)]">
-                                IP Address
+                                IP address
                               </span>
                               <Input
                                 placeholder="Enter IP address"
@@ -2772,7 +2772,7 @@ export default function CreateLoadBalancerPage() {
               {sectionStatus['member'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
-                    label="Allocated Members"
+                    label="Allocated members"
                     value={
                       allocatedMembers.length > 0
                         ? `${allocatedMembers.length} member(s)`

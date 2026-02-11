@@ -129,7 +129,7 @@ export function CreateVolumeSnapshotDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Snapshot Quota"
+              label="Volume snapshot quota"
               used={volumeSnapshotQuota.used}
               total={volumeSnapshotQuota.total}
             />
@@ -163,7 +163,7 @@ export function CreateVolumeSnapshotDrawer({
           {/* Header */}
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume Snapshot
+              Create volume snapshot
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a snapshot of this volume to back up its current data state. You can use the

@@ -871,7 +871,7 @@ export default function NetworkDetailPage() {
                     />
                     <SectionCard.DataRow label="Shared" value={network.shared ? 'Yes' : 'No'} />
                     <SectionCard.DataRow
-                      label="Router External"
+                      label="Router external"
                       value={network.routerExternal ? 'Yes' : 'No'}
                     />
                   </SectionCard.Content>
@@ -883,11 +883,11 @@ export default function NetworkDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow label="MTU" value={String(network.mtu)} />
                     <SectionCard.DataRow
-                      label="Provider Network Type"
+                      label="Provider network type"
                       value={network.providerNetworkType}
                     />
                     <SectionCard.DataRow
-                      label="Physical Network"
+                      label="Physical network"
                       value={network.providerPhysicalNetwork}
                     />
                     <SectionCard.DataRow label="Segmentation ID" value={network.segmentationId} />

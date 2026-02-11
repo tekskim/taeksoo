@@ -370,7 +370,7 @@ export function ClusterDetailPage() {
                     value={clusterData.networking.externalNetwork}
                   />
                   <SectionCard.DataRow
-                    label="Tenant Network"
+                    label="Tenant network"
                     value={clusterData.networking.tenantNetwork}
                   />
                   <SectionCard.DataRow label="Subnet" value={clusterData.networking.subnet} />

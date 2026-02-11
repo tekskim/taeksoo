@@ -105,7 +105,7 @@ export function EditLoadBalancerDrawer({
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Load Balancer
+            Edit load balancer
           </h2>
         </VStack>
 

@@ -187,7 +187,7 @@ export function AttachPortToInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Attach to Instance"
+      title="Attach to instance"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -255,7 +255,7 @@ export function AttachPortToInstanceDrawer({
                 selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
               }
               onRemove={() => setSelectedInstanceId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedInstanceId}
               errorMessage="Please select an instance."
               className="shrink-0"

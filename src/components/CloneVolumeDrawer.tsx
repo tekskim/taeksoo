@@ -154,12 +154,12 @@ export function CloneVolumeDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Quota"
+              label="Volume quota"
               used={volumeQuota.used}
               total={volumeQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
             />
@@ -208,7 +208,7 @@ export function CloneVolumeDrawer({
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Source Volume</p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Source volume</p>
             <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
@@ -230,7 +230,7 @@ export function CloneVolumeDrawer({
 
         {/* New Volume Name Input */}
         <FormField required error={hasAttemptedSubmit && !volumeName.trim()}>
-          <FormField.Label>New Volume name</FormField.Label>
+          <FormField.Label>New volume name</FormField.Label>
           <FormField.Control>
             <Input
               value={volumeName}

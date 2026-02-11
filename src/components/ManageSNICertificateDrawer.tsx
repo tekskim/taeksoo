@@ -79,7 +79,7 @@ const certificateColumns: TableColumn<SNICertificateItem>[] = [
   },
   { key: 'domain', label: 'Domain' },
   { key: 'listeners', label: 'Listeners' },
-  { key: 'expiresAt', label: 'Expires At' },
+  { key: 'expiresAt', label: 'Expires at' },
 ];
 
 /* ----------------------------------------
@@ -202,7 +202,7 @@ export function ManageSNICertificateDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Manage SNI Certificate
+          Manage SNI certificate
         </h2>
 
         {/* SNI Toggle Section */}
@@ -269,7 +269,7 @@ export function ManageSNICertificateDrawer({
             <SelectionIndicator
               selectedItems={selectedItems}
               onRemove={handleRemoveSelection}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               className="shrink-0"
               style={{ width: '648px' }}
             />

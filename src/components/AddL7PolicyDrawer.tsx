@@ -30,9 +30,9 @@ export interface AddL7PolicyDrawerProps {
    ---------------------------------------- */
 
 const ACTION_OPTIONS = [
-  { value: 'forward_to_pool', label: 'Forward to Pool' },
+  { value: 'forward_to_pool', label: 'Forward to pool' },
   { value: 'redirect_to_url', label: 'Redirect to URL' },
-  { value: 'redirect_to_prefix', label: 'Redirect to Prefix' },
+  { value: 'redirect_to_prefix', label: 'Redirect to prefix' },
   { value: 'reject', label: 'Reject' },
 ];
 
@@ -117,12 +117,12 @@ export function AddL7PolicyDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Add L7 Policy
+          Add L7 policy
         </h2>
 
         {/* L7 Policy Name Input */}
         <FormField required error={hasAttemptedSubmit && !policyName.trim()}>
-          <FormField.Label>L7 Policy Name</FormField.Label>
+          <FormField.Label>L7 policy name</FormField.Label>
           <FormField.Control>
             <Input
               value={policyName}
@@ -203,7 +203,7 @@ export function AddL7PolicyDrawer({
         {/* Admin State Toggle */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
+            Admin state
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

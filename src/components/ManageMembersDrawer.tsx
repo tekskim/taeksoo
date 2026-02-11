@@ -12,7 +12,7 @@ import {
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconCirclePlus, IconCircleMinus } from '@tabler/icons-react';
+import { IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -92,47 +92,46 @@ interface MemberCardProps {
 
 function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCardProps) {
   return (
-    <div className="w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4 flex flex-col gap-3">
-      {/* IP Address */}
-      <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">IP Address</span>
-        <div className="w-full bg-[var(--color-surface-muted)] rounded-md px-2.5 py-2">
-          <span className="text-body-md text-[var(--color-text-muted)] leading-4">
-            {member.ipAddress}
-          </span>
-        </div>
+    <HStack
+      gap={3}
+      align="end"
+      className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
+    >
+      <VStack gap={1}>
+        <span className="text-label-md text-[var(--color-text-default)]">IP address</span>
+        <Input value={member.ipAddress} disabled width="sm" />
       </VStack>
 
-      {/* Port */}
-      <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">Port</span>
+      <VStack gap={1}>
+        <span className="text-label-md text-[var(--color-text-default)]">Port</span>
         <NumberInput
           value={member.port}
           onChange={(value) => onPortChange(value ?? 80)}
           min={1}
           max={65535}
-          fullWidth
+          width="sm"
         />
       </VStack>
 
-      {/* Weight */}
-      <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">Weight</span>
+      <VStack gap={1}>
+        <span className="text-label-md text-[var(--color-text-default)]">Weight</span>
         <NumberInput
           value={member.weight}
           onChange={(value) => onWeightChange(value ?? 1)}
           min={0}
           max={256}
-          fullWidth
+          width="sm"
         />
       </VStack>
 
-      {/* Remove Button */}
-      <Button variant="secondary" size="sm" onClick={onRemove} className="w-fit">
-        <IconCircleMinus size={16} />
-        Remove
-      </Button>
-    </div>
+      <button
+        type="button"
+        onClick={onRemove}
+        className="p-0.5 shrink-0 ml-auto mb-[10px] hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+      >
+        <IconX size={12} className="text-[var(--color-text-default)]" />
+      </button>
+    </HStack>
   );
 }
 
@@ -190,7 +189,7 @@ export function ManageMembersDrawer({
     {
       key: 'name',
       label: 'Name',
-      width: '180px',
+      flex: 1,
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <HStack gap={1.5} align="center">
@@ -206,7 +205,7 @@ export function ManageMembersDrawer({
     {
       key: 'ipAddresses',
       label: 'IP',
-      width: '180px',
+      flex: 1,
       render: (_value, row) => {
         const selectedIp = selectedIps[row.id] || row.ipAddresses[0];
         return (
@@ -214,7 +213,7 @@ export function ManageMembersDrawer({
             value={selectedIp}
             onChange={(value) => setSelectedIps((prev) => ({ ...prev, [row.id]: value }))}
             options={row.ipAddresses.map((ip) => ({ value: ip, label: ip }))}
-            className="w-full"
+            width="sm"
           />
         );
       },
@@ -223,6 +222,7 @@ export function ManageMembersDrawer({
       key: 'id' as keyof InstanceItem,
       label: 'Action',
       flex: 1,
+      align: 'center',
       render: (_value, row) => {
         const selectedIp = selectedIps[row.id] || row.ipAddresses[0];
         return (
@@ -230,10 +230,10 @@ export function ManageMembersDrawer({
             variant="secondary"
             size="sm"
             onClick={() => handleAddMember(row, selectedIp)}
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
             className="w-fit"
           >
-            <IconCirclePlus size={16} />
-            Add Member
+            Add member
           </Button>
         );
       },
@@ -313,7 +313,7 @@ export function ManageMembersDrawer({
         {/* Available Instances Section */}
         <VStack gap={3} className="w-full">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Available Instances
+            Available instances
           </h3>
 
           <div className="w-[280px]">
@@ -345,27 +345,33 @@ export function ManageMembersDrawer({
         {/* Allocated Members Section */}
         <VStack gap={3} className="w-full pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Allocated Members
+            Allocated members
           </h3>
 
-          <Button variant="secondary" onClick={handleAddExternalMember} className="w-fit">
-            <IconCirclePlus size={16} />
-            Add External Member
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleAddExternalMember}
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+            className="w-fit"
+          >
+            Add external member
           </Button>
 
-          {/* Member Cards */}
+          {/* Member Rows */}
           {members.length > 0 && (
-            <div className="grid grid-cols-3 gap-3">
+            <VStack gap={2} className="w-full">
               {members.map((member) =>
                 member.isExternal ? (
-                  <div
+                  <HStack
                     key={member.id}
-                    className="w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4 flex flex-col gap-3"
+                    gap={3}
+                    align="end"
+                    className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
                   >
-                    {/* IP Address Input */}
-                    <VStack gap={2} className="w-full">
-                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
-                        IP Address
+                    <VStack gap={1} className="flex-1 min-w-0">
+                      <span className="text-label-md text-[var(--color-text-default)]">
+                        IP address
                       </span>
                       <Input
                         value={member.ipAddress}
@@ -375,45 +381,36 @@ export function ManageMembersDrawer({
                       />
                     </VStack>
 
-                    {/* Port */}
-                    <VStack gap={2} className="w-full">
-                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
-                        Port
-                      </span>
+                    <VStack gap={1}>
+                      <span className="text-label-md text-[var(--color-text-default)]">Port</span>
                       <NumberInput
                         value={member.port}
                         onChange={(value) => handlePortChange(member.id, value ?? 80)}
                         min={1}
                         max={65535}
-                        fullWidth
+                        width="sm"
                       />
                     </VStack>
 
-                    {/* Weight */}
-                    <VStack gap={2} className="w-full">
-                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
-                        Weight
-                      </span>
+                    <VStack gap={1}>
+                      <span className="text-label-md text-[var(--color-text-default)]">Weight</span>
                       <NumberInput
                         value={member.weight}
                         onChange={(value) => handleWeightChange(member.id, value ?? 1)}
                         min={0}
                         max={256}
-                        fullWidth
+                        width="sm"
                       />
                     </VStack>
 
-                    {/* Remove Button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
+                    <button
+                      type="button"
                       onClick={() => handleRemoveMember(member.id)}
-                      className="w-fit"
+                      className="p-0.5 shrink-0 ml-auto mb-[10px] hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconCircleMinus size={16} />
-                      Remove
-                    </Button>
-                  </div>
+                      <IconX size={12} className="text-[var(--color-text-default)]" />
+                    </button>
+                  </HStack>
                 ) : (
                   <MemberCard
                     key={member.id}
@@ -424,7 +421,7 @@ export function ManageMembersDrawer({
                   />
                 )
               )}
-            </div>
+            </VStack>
           )}
         </VStack>
       </VStack>

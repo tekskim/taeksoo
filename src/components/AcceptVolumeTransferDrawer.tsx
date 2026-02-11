@@ -107,7 +107,7 @@ export function AcceptVolumeTransferDrawer({
 
         {/* Auth Key Input */}
         <FormField required error={hasAttemptedSubmit && !authKey.trim()}>
-          <FormField.Label>Auth Key</FormField.Label>
+          <FormField.Label>Auth key</FormField.Label>
           <FormField.Control>
             <Input
               value={authKey}
@@ -118,7 +118,7 @@ export function AcceptVolumeTransferDrawer({
             />
           </FormField.Control>
           {hasAttemptedSubmit && !authKey.trim() && (
-            <FormField.ErrorMessage>Auth Key is required</FormField.ErrorMessage>
+            <FormField.ErrorMessage>Auth key is required</FormField.ErrorMessage>
           )}
         </FormField>
       </VStack>

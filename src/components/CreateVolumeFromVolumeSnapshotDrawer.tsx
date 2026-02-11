@@ -168,12 +168,12 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
           {/* Quota Section */}
           <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
             <QuotaProgressBar
-              label="Volume Quota"
+              label="Volume quota"
               used={volumeQuota.used}
               total={volumeQuota.total}
             />
             <QuotaProgressBar
-              label="Volume Capacity Quota (GiB)"
+              label="Volume capacity quota (GiB)"
               used={volumeCapacityQuota.used}
               total={volumeCapacityQuota.total}
               adding={capacity}

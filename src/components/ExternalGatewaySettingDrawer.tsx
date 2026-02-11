@@ -200,7 +200,7 @@ export function ExternalGatewaySettingDrawer({
         <VStack gap={3} className="w-[648px]">
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              External Gateway Setting
+              External gateway setting
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Configure or update the external gateway for this router. The external gateway
@@ -271,7 +271,7 @@ export function ExternalGatewaySettingDrawer({
                 selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
               }
               onRemove={() => setSelectedNetworkId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>

@@ -636,7 +636,7 @@ export default function ListenerDetailPage() {
               return [
                 {
                   id: 'change-ca-cert',
-                  label: 'Change CA Certificate',
+                  label: 'Change CA certificate',
                   icon: <IconCertificate size={14} stroke={1.5} />,
                   onClick: () => console.log('Change CA certificate', row.id),
                 },
@@ -926,7 +926,7 @@ export default function ListenerDetailPage() {
                       Change server Certificate
                     </Button>
                     <Button variant="secondary" size="sm">
-                      Change CA Certificate
+                      Change CA certificate
                     </Button>
                     <Button variant="secondary" size="sm">
                       Manage SNI Certificates

@@ -278,7 +278,7 @@ export function MoveFilesDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move Files</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move files</h2>
 
         {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">

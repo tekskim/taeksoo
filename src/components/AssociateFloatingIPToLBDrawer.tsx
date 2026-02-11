@@ -174,7 +174,7 @@ export function AssociateFloatingIPToLBDrawer({
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
     },
   ];
@@ -220,7 +220,7 @@ export function AssociateFloatingIPToLBDrawer({
           <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
             <VStack gap={1.5}>
               <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Owned Network
+                Owned network
               </span>
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {loadBalancer.networkName} (ID : {loadBalancer.networkId})
@@ -268,7 +268,7 @@ export function AssociateFloatingIPToLBDrawer({
                   : []
               }
               onRemove={() => setSelectedFloatingIpId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedFloatingIpId}
               errorMessage="Please select a floating IP."
               className="w-full"

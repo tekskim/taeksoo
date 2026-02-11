@@ -114,7 +114,7 @@ export function CreateAllowedAddressPairDrawer({
           required
           error={macAddressType === 'manual' && hasAttemptedSubmit && !macAddress.trim()}
         >
-          <FormField.Label>MAC Address</FormField.Label>
+          <FormField.Label>MAC address</FormField.Label>
           <FormField.Control>
             <RadioGroup
               value={macAddressType}
@@ -122,7 +122,7 @@ export function CreateAllowedAddressPairDrawer({
             >
               <VStack gap={2}>
                 <HStack gap={2} className="items-center">
-                  <Radio value="from_port" label="From Port" />
+                  <Radio value="from_port" label="From port" />
                   <Tooltip content="Use the MAC address assigned to this port automatically.">
                     <IconHelp
                       size={12}

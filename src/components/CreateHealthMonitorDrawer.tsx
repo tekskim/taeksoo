@@ -215,7 +215,7 @@ export function CreateHealthMonitorDrawer({
 
         {/* Max Retries */}
         <FormField error={hasAttemptedSubmit && !isMaxRetriesValid}>
-          <FormField.Label>Max Retries</FormField.Label>
+          <FormField.Label>Max retries</FormField.Label>
           <FormField.Description>
             Number of failed attempts before marking member OFFLINE.
           </FormField.Description>
@@ -229,13 +229,13 @@ export function CreateHealthMonitorDrawer({
               error={hasAttemptedSubmit && !isMaxRetriesValid}
             />
           </FormField.Control>
-          <FormField.ErrorMessage>Max Retries must be between 1-10</FormField.ErrorMessage>
+          <FormField.ErrorMessage>Max retries must be between 1-10</FormField.ErrorMessage>
           <FormField.HelperText>1 ~ 10</FormField.HelperText>
         </FormField>
 
         {/* Admin State */}
         <FormField>
-          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Label>Admin state</FormField.Label>
           <FormField.Control>
             <HStack gap={2} className="items-center">
               <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

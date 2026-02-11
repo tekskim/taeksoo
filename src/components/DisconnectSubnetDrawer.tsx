@@ -237,7 +237,7 @@ export function DisconnectSubnetDrawer({
     },
     {
       key: 'allocationPools',
-      label: 'Allocation Pools',
+      label: 'Allocation pools',
       render: (_value, row) => (
         <span className="whitespace-pre-line">{row.allocationPools.replace(' - ', '\n')}</span>
       ),
@@ -342,7 +342,7 @@ export function DisconnectSubnetDrawer({
                 selectedSubnet ? [{ id: selectedSubnet.id, label: selectedSubnet.name }] : []
               }
               onRemove={() => setSelectedSubnetId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
             />
           </VStack>
         </VStack>

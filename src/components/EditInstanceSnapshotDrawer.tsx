@@ -98,7 +98,7 @@ export function EditInstanceSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Instance Snapshot
+          Edit instance snapshot
         </h2>
 
         {/* Snapshot Name Input */}

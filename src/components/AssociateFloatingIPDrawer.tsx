@@ -451,7 +451,7 @@ export function AssociateFloatingIPDrawer({
         </div>
       ),
     },
-    { key: 'vipAddress', label: 'VIP Address', flex: 1, sortable: true },
+    { key: 'vipAddress', label: 'VIP address', flex: 1, sortable: true },
   ];
 
   const virtualAdapterColumns: TableColumn<VirtualAdapterItem>[] = [
@@ -539,7 +539,7 @@ export function AssociateFloatingIPDrawer({
         </HStack>
       ),
     },
-    { key: 'macAddress', label: 'MAC Address', flex: 1, sortable: true },
+    { key: 'macAddress', label: 'MAC address', flex: 1, sortable: true },
     { key: 'network', label: 'Network', flex: 1, sortable: true },
   ];
 
@@ -562,7 +562,7 @@ export function AssociateFloatingIPDrawer({
     { key: 'fixedIp', label: 'Fixed IP', flex: 1, sortable: true },
     {
       key: 'ownedSubnet' as keyof FixedIPItem,
-      label: 'Owned Subnet',
+      label: 'Owned subnet',
       flex: 1,
       sortable: true,
       render: (_value, row) => row.ownedSubnet || '-',
@@ -624,8 +624,8 @@ export function AssociateFloatingIPDrawer({
           >
             <TabList>
               <Tab value="instance">Instance</Tab>
-              <Tab value="loadBalancer">Load Balancer</Tab>
-              <Tab value="virtualAdapter">Virtual Adapter</Tab>
+              <Tab value="loadBalancer">Load balancer</Tab>
+              <Tab value="virtualAdapter">Virtual adapter</Tab>
             </TabList>
           </Tabs>
 
@@ -667,7 +667,7 @@ export function AssociateFloatingIPDrawer({
                       : []
                   }
                   onRemove={() => setSelectedInstanceId(null)}
-                  emptyText="No item Selected"
+                  emptyText="No item selected"
                 />
               </VStack>
             </VStack>
@@ -711,7 +711,7 @@ export function AssociateFloatingIPDrawer({
                       : []
                   }
                   onRemove={() => setSelectedLoadBalancerId(null)}
-                  emptyText="No item Selected"
+                  emptyText="No item selected"
                 />
               </VStack>
             </VStack>
@@ -755,7 +755,7 @@ export function AssociateFloatingIPDrawer({
                       : []
                   }
                   onRemove={() => setSelectedVirtualAdapterId(null)}
-                  emptyText="No item Selected"
+                  emptyText="No item selected"
                 />
               </VStack>
             </VStack>
@@ -799,7 +799,7 @@ export function AssociateFloatingIPDrawer({
                     : []
                 }
                 onRemove={() => setSelectedFixedIPId(null)}
-                emptyText="No item Selected"
+                emptyText="No item selected"
               />
             </VStack>
           </VStack>
@@ -842,7 +842,7 @@ export function AssociateFloatingIPDrawer({
                     : []
                 }
                 onRemove={() => setSelectedFixedIPId(null)}
-                emptyText="No item Selected"
+                emptyText="No item selected"
               />
             </VStack>
           </VStack>

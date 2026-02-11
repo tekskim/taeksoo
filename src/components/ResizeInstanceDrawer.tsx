@@ -174,10 +174,10 @@ export function ResizeInstanceDrawer({
     { key: 'vcpu', label: 'vCPU', width: '80px', sortable: true },
     { key: 'ram', label: 'RAM', width: '80px', sortable: true },
     { key: 'disk', label: 'Disk', width: '80px', sortable: true },
-    { key: 'ephemeralDisk', label: 'Ephemeral Disk', width: '100px', sortable: true },
+    { key: 'ephemeralDisk', label: 'Ephemeral disk', width: '100px', sortable: true },
     {
       key: 'internalBandwidth',
-      label: 'Internal Network Bandwidth',
+      label: 'Internal network bandwidth',
       width: '140px',
       sortable: true,
     },
@@ -251,7 +251,7 @@ export function ResizeInstanceDrawer({
     { key: 'vcpu', label: 'vCPU', width: '65px' },
     { key: 'ram', label: 'RAM', width: '65px' },
     { key: 'disk', label: 'Disk', width: '65px' },
-    { key: 'ephemeralDisk', label: 'Ephemeral Disk', width: '95px' },
+    { key: 'ephemeralDisk', label: 'Ephemeral disk', width: '95px' },
     { key: 'gpu', label: 'GPU', width: '65px' },
     { key: 'npu', label: 'NPU', flex: 1 },
   ];
@@ -452,7 +452,7 @@ export function ResizeInstanceDrawer({
 
         {/* Flavor Comparison Section */}
         <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Flavor Comparison</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Flavor comparison</span>
 
           {/* Comparison Table */}
           <Table<ComparisonRow>
@@ -465,7 +465,7 @@ export function ResizeInstanceDrawer({
 
         {/* Approval Method Section */}
         <VStack gap={3} className="pb-5">
-          <span className="text-label-lg text-[var(--color-text-default)]">Approval Method</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Approval method</span>
 
           <VStack gap={3}>
             {/* Manual confirm option */}

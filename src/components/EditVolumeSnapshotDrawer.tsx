@@ -98,12 +98,12 @@ export function EditVolumeSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Volume Snapshots
+          Edit volume snapshots
         </h2>
 
         {/* Volume Snapshot Name Input */}
         <FormField error={hasAttemptedSubmit && !!nameError}>
-          <FormField.Label>Volume Snapshot Name</FormField.Label>
+          <FormField.Label>Volume snapshot name</FormField.Label>
           <FormField.Control>
             <Input
               value={snapshotName}

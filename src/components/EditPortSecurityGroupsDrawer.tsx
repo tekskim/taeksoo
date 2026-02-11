@@ -74,7 +74,7 @@ const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
     ),
   },
   { key: 'description', label: 'Description' },
-  { key: 'createdAt', label: 'Created At' },
+  { key: 'createdAt', label: 'Created at' },
 ];
 
 /* ----------------------------------------
@@ -260,7 +260,7 @@ export function EditPortSecurityGroupsDrawer({
         {portSecurityEnabled && (
           <VStack gap={3} className="pb-5">
             <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Security Groups
+              Security groups
             </h3>
 
             {/* Search */}
@@ -288,7 +288,7 @@ export function EditPortSecurityGroupsDrawer({
                   onClick={handleClearFilters}
                   className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                 >
-                  Clear Filters
+                  Clear filters
                 </button>
               </div>
             )}
@@ -324,7 +324,7 @@ export function EditPortSecurityGroupsDrawer({
                 onRemove={(id) =>
                   setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
                 }
-                emptyText="No item Selected"
+                emptyText="No item selected"
                 className="w-full"
               />
             </VStack>

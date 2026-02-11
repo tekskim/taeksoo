@@ -938,7 +938,7 @@ export function CreateClusterPage() {
                 <VStack gap={0}>
                   <SummaryItem label="Basic information" status="in-progress" />
                   <SummaryItem label="Networking" status="in-progress" />
-                  <SummaryItem label="Node Configuration" status="complete" />
+                  <SummaryItem label="Node configuration" status="complete" />
                   <SummaryItem label="Labels & Annotations" status="complete" />
                 </VStack>
               </VStack>

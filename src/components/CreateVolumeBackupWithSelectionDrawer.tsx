@@ -225,7 +225,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
     },
     {
       key: 'attachedTo',
-      label: 'Attach To',
+      label: 'Attach to',
       flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
@@ -245,7 +245,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
     },
     {
       key: 'diskTag',
-      label: 'Disk Tag',
+      label: 'Disk tag',
       flex: 1,
       sortable: true,
       render: (value) => value || '-',
@@ -264,12 +264,12 @@ export function CreateVolumeBackupWithSelectionDrawer({
           {/* Quota Section */}
           <VStack gap={4} className="w-full">
             <QuotaProgressBar
-              label="Volume Backup Quota"
+              label="Volume backup quota"
               used={volumeBackupQuota.used}
               total={volumeBackupQuota.total}
             />
             <QuotaProgressBar
-              label="_DEFAULT_type Backup Quota"
+              label="_DEFAULT_type backup quota"
               used={typeBackupQuota.used}
               total={typeBackupQuota.total}
             />
@@ -295,7 +295,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Create Volume Backup
+          Create volume backup
         </h2>
 
         {/* Volumes Section */}
@@ -336,7 +336,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
                 selectedVolume ? [{ id: selectedVolume.id, label: selectedVolume.name }] : []
               }
               onRemove={() => setSelectedVolumeId(null)}
-              emptyText="No item Selected"
+              emptyText="No item selected"
               error={!selectedVolumeId && hasAttemptedSubmit}
               errorMessage="Please select a volume"
             />
@@ -355,21 +355,21 @@ export function CreateVolumeBackupWithSelectionDrawer({
               value="full"
               checked={backupMode === 'full'}
               onChange={() => setBackupMode('full')}
-              label="Full Backup"
+              label="Full backup"
             />
             <Radio
               name="backup-mode"
               value="incremental"
               checked={backupMode === 'incremental'}
               onChange={() => setBackupMode('incremental')}
-              label="Increment Backup"
+              label="Increment backup"
             />
           </VStack>
         </VStack>
 
         {/* Volume Backup Name */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Volume Backup name</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Volume backup name</span>
           <Input
             value={backupName}
             onChange={(e) => setBackupName(e.target.value)}
