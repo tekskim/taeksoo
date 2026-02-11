@@ -429,119 +429,124 @@ export function AssociateFloatingIPDrawer({
               {/* Pagination */}
               <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-              {/* Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                {/* Header */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                  <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Status
-                    </span>
+              <VStack gap={2}>
+                {/* Table */}
+                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                  {/* Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Status
+                      </span>
+                    </div>
+                    <div
+                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                      onClick={() => handleInstanceSort('name')}
+                    >
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Name
+                      </span>
+                      {renderSortIcon('name', instanceSort)}
+                    </div>
+                    <div className="w-[62px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Locked
+                      </span>
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Fixed IP
+                      </span>
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Network
+                      </span>
+                    </div>
                   </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleInstanceSort('name')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Name
-                    </span>
-                    {renderSortIcon('name', instanceSort)}
-                  </div>
-                  <div className="w-[62px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Locked
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Fixed IP
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Network
-                    </span>
-                  </div>
+
+                  {/* Rows */}
+                  {filteredInstances.map((instance) => (
+                    <div
+                      key={instance.id}
+                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedInstanceId === instance.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                      onClick={() => {
+                        setSelectedInstanceId(instance.id);
+                        setSelectionError(null);
+                      }}
+                    >
+                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                        <Radio
+                          checked={selectedInstanceId === instance.id}
+                          onChange={() => {
+                            setSelectedInstanceId(instance.id);
+                            setSelectionError(null);
+                          }}
+                        />
+                      </div>
+                      <div className="w-[59px] flex items-center justify-center">
+                        <StatusIndicator status={instance.status} />
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
+                        <HStack gap={1.5} align="center">
+                          <a
+                            href="#"
+                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {instance.name}
+                          </a>
+                          <IconExternalLink
+                            size={12}
+                            stroke={1.5}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                          {instance.hasAlert && (
+                            <IconAlertCircle
+                              size={16}
+                              className="text-[var(--color-state-danger)]"
+                            />
+                          )}
+                        </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          ID : {instance.id}
+                        </span>
+                      </div>
+                      <div className="w-[62px] flex items-center justify-center">
+                        {instance.locked && (
+                          <IconLock
+                            size={16}
+                            stroke={1.5}
+                            className="text-[var(--color-text-default)]"
+                          />
+                        )}
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {instance.fixedIp}
+                        </span>
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {instance.network}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Rows */}
-                {filteredInstances.map((instance) => (
-                  <div
-                    key={instance.id}
-                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedInstanceId === instance.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => {
-                      setSelectedInstanceId(instance.id);
-                      setSelectionError(null);
-                    }}
-                  >
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                      <Radio
-                        checked={selectedInstanceId === instance.id}
-                        onChange={() => {
-                          setSelectedInstanceId(instance.id);
-                          setSelectionError(null);
-                        }}
-                      />
-                    </div>
-                    <div className="w-[59px] flex items-center justify-center">
-                      <StatusIndicator status={instance.status} />
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                      <HStack gap={1.5} align="center">
-                        <a
-                          href="#"
-                          className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {instance.name}
-                        </a>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                        {instance.hasAlert && (
-                          <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
-                        )}
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID : {instance.id}
-                      </span>
-                    </div>
-                    <div className="w-[62px] flex items-center justify-center">
-                      {instance.locked && (
-                        <IconLock
-                          size={16}
-                          stroke={1.5}
-                          className="text-[var(--color-text-default)]"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {instance.fixedIp}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {instance.network}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Selection Indicator */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedInstance
-                    ? [{ id: selectedInstance.id, label: selectedInstance.name }]
-                    : []
-                }
-                onRemove={() => setSelectedInstanceId(null)}
-                emptyText="No item Selected"
-              />
+                {/* Selection Indicator */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedInstance
+                      ? [{ id: selectedInstance.id, label: selectedInstance.name }]
+                      : []
+                  }
+                  onRemove={() => setSelectedInstanceId(null)}
+                  emptyText="No item Selected"
+                />
+              </VStack>
             </VStack>
           )}
 
@@ -561,99 +566,104 @@ export function AssociateFloatingIPDrawer({
               {/* Pagination */}
               <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-              {/* Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                {/* Header */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                  <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Status
-                    </span>
+              <VStack gap={2}>
+                {/* Table */}
+                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                  {/* Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Status
+                      </span>
+                    </div>
+                    <div
+                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                      onClick={() => handleLoadBalancerSort('name')}
+                    >
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Name
+                      </span>
+                      {renderSortIcon('name', loadBalancerSort)}
+                    </div>
+                    <div
+                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                      onClick={() => handleLoadBalancerSort('vipAddress')}
+                    >
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        VIP Address
+                      </span>
+                      {renderSortIcon('vipAddress', loadBalancerSort)}
+                    </div>
                   </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleLoadBalancerSort('name')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Name
-                    </span>
-                    {renderSortIcon('name', loadBalancerSort)}
-                  </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleLoadBalancerSort('vipAddress')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      VIP Address
-                    </span>
-                    {renderSortIcon('vipAddress', loadBalancerSort)}
-                  </div>
+
+                  {/* Rows */}
+                  {filteredLoadBalancers.map((lb) => (
+                    <div
+                      key={lb.id}
+                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedLoadBalancerId === lb.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                      onClick={() => {
+                        setSelectedLoadBalancerId(lb.id);
+                        setSelectionError(null);
+                      }}
+                    >
+                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                        <Radio
+                          checked={selectedLoadBalancerId === lb.id}
+                          onChange={() => {
+                            setSelectedLoadBalancerId(lb.id);
+                            setSelectionError(null);
+                          }}
+                        />
+                      </div>
+                      <div className="w-[59px] flex items-center justify-center">
+                        <StatusIndicator status={lb.status} />
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
+                        <HStack gap={1.5} align="center">
+                          <a
+                            href="#"
+                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {lb.name}
+                          </a>
+                          <IconExternalLink
+                            size={12}
+                            stroke={1.5}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                          {lb.status === 'error' && (
+                            <IconAlertCircle
+                              size={16}
+                              className="text-[var(--color-state-danger)]"
+                            />
+                          )}
+                        </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          ID : {lb.id}
+                        </span>
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {lb.vipAddress}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Rows */}
-                {filteredLoadBalancers.map((lb) => (
-                  <div
-                    key={lb.id}
-                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedLoadBalancerId === lb.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => {
-                      setSelectedLoadBalancerId(lb.id);
-                      setSelectionError(null);
-                    }}
-                  >
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                      <Radio
-                        checked={selectedLoadBalancerId === lb.id}
-                        onChange={() => {
-                          setSelectedLoadBalancerId(lb.id);
-                          setSelectionError(null);
-                        }}
-                      />
-                    </div>
-                    <div className="w-[59px] flex items-center justify-center">
-                      <StatusIndicator status={lb.status} />
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                      <HStack gap={1.5} align="center">
-                        <a
-                          href="#"
-                          className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {lb.name}
-                        </a>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                        {lb.status === 'error' && (
-                          <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
-                        )}
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID : {lb.id}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {lb.vipAddress}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Selection Indicator */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedLoadBalancer
-                    ? [{ id: selectedLoadBalancer.id, label: selectedLoadBalancer.name }]
-                    : []
-                }
-                onRemove={() => setSelectedLoadBalancerId(null)}
-                emptyText="No item Selected"
-              />
+                {/* Selection Indicator */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedLoadBalancer
+                      ? [{ id: selectedLoadBalancer.id, label: selectedLoadBalancer.name }]
+                      : []
+                  }
+                  onRemove={() => setSelectedLoadBalancerId(null)}
+                  emptyText="No item Selected"
+                />
+              </VStack>
             </VStack>
           )}
 
@@ -673,106 +683,108 @@ export function AssociateFloatingIPDrawer({
               {/* Pagination */}
               <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-              {/* Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                {/* Header */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                  <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Status
-                    </span>
+              <VStack gap={2}>
+                {/* Table */}
+                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                  {/* Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Status
+                      </span>
+                    </div>
+                    <div
+                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                      onClick={() => handleVirtualAdapterSort('name')}
+                    >
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Name
+                      </span>
+                      {renderSortIcon('name', virtualAdapterSort)}
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Fixed IP
+                      </span>
+                    </div>
+                    <div
+                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                      onClick={() => handleVirtualAdapterSort('description')}
+                    >
+                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                        Description
+                      </span>
+                      {renderSortIcon('description', virtualAdapterSort)}
+                    </div>
                   </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleVirtualAdapterSort('name')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Name
-                    </span>
-                    {renderSortIcon('name', virtualAdapterSort)}
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Fixed IP
-                    </span>
-                  </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleVirtualAdapterSort('description')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Description
-                    </span>
-                    {renderSortIcon('description', virtualAdapterSort)}
-                  </div>
+
+                  {/* Rows */}
+                  {filteredVirtualAdapters.map((va) => (
+                    <div
+                      key={va.id}
+                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedVirtualAdapterId === va.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                      onClick={() => {
+                        setSelectedVirtualAdapterId(va.id);
+                        setSelectionError(null);
+                      }}
+                    >
+                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                        <Radio
+                          checked={selectedVirtualAdapterId === va.id}
+                          onChange={() => {
+                            setSelectedVirtualAdapterId(va.id);
+                            setSelectionError(null);
+                          }}
+                        />
+                      </div>
+                      <div className="w-[59px] flex items-center justify-center">
+                        <StatusIndicator status={va.status} />
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
+                        <HStack gap={1.5} align="center">
+                          <a
+                            href="#"
+                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {va.name}
+                          </a>
+                          <IconExternalLink
+                            size={12}
+                            stroke={1.5}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          ID : {va.id}
+                        </span>
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {va.fixedIp}
+                        </span>
+                      </div>
+                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {va.description}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Rows */}
-                {filteredVirtualAdapters.map((va) => (
-                  <div
-                    key={va.id}
-                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedVirtualAdapterId === va.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => {
-                      setSelectedVirtualAdapterId(va.id);
-                      setSelectionError(null);
-                    }}
-                  >
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                      <Radio
-                        checked={selectedVirtualAdapterId === va.id}
-                        onChange={() => {
-                          setSelectedVirtualAdapterId(va.id);
-                          setSelectionError(null);
-                        }}
-                      />
-                    </div>
-                    <div className="w-[59px] flex items-center justify-center">
-                      <StatusIndicator status={va.status} />
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                      <HStack gap={1.5} align="center">
-                        <a
-                          href="#"
-                          className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {va.name}
-                        </a>
-                        <IconExternalLink
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        ID : {va.id}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {va.fixedIp}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {va.description}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Selection Indicator */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedVirtualAdapter
-                    ? [{ id: selectedVirtualAdapter.id, label: selectedVirtualAdapter.name }]
-                    : []
-                }
-                onRemove={() => setSelectedVirtualAdapterId(null)}
-                emptyText="No item Selected"
-              />
+                {/* Selection Indicator */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedVirtualAdapter
+                      ? [{ id: selectedVirtualAdapter.id, label: selectedVirtualAdapter.name }]
+                      : []
+                  }
+                  onRemove={() => setSelectedVirtualAdapterId(null)}
+                  emptyText="No item Selected"
+                />
+              </VStack>
             </VStack>
           )}
         </VStack>
@@ -800,85 +812,89 @@ export function AssociateFloatingIPDrawer({
             {/* Pagination */}
             <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-            {/* Table */}
-            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-              {/* Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIPSort('fixedIp')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Fixed IP
-                  </span>
-                  {renderSortIcon('fixedIp', fixedIPSort)}
+            <VStack gap={2}>
+              {/* Table */}
+              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                {/* Header */}
+                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                  <div
+                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                    onClick={() => handleFixedIPSort('fixedIp')}
+                  >
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Fixed IP
+                    </span>
+                    {renderSortIcon('fixedIp', fixedIPSort)}
+                  </div>
+                  <div
+                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                    onClick={() => handleFixedIPSort('macAddress')}
+                  >
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Mac Address
+                    </span>
+                    {renderSortIcon('macAddress', fixedIPSort)}
+                  </div>
+                  <div
+                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                    onClick={() => handleFixedIPSort('network')}
+                  >
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Network
+                    </span>
+                    {renderSortIcon('network', fixedIPSort)}
+                  </div>
                 </div>
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIPSort('macAddress')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Mac Address
-                  </span>
-                  {renderSortIcon('macAddress', fixedIPSort)}
-                </div>
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIPSort('network')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Network
-                  </span>
-                  {renderSortIcon('network', fixedIPSort)}
-                </div>
+
+                {/* Rows */}
+                {filteredFixedIPs.map((fip) => (
+                  <div
+                    key={fip.id}
+                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                    onClick={() => setSelectedFixedIPId(fip.id)}
+                  >
+                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                      <Radio
+                        checked={selectedFixedIPId === fip.id}
+                        onChange={() => setSelectedFixedIPId(fip.id)}
+                      />
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                      <HStack gap={1.5} align="center">
+                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {fip.fixedIp}
+                        </span>
+                        {fip.hasAlert && (
+                          <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
+                        )}
+                      </HStack>
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {fip.macAddress}
+                      </span>
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {fip.network}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Rows */}
-              {filteredFixedIPs.map((fip) => (
-                <div
-                  key={fip.id}
-                  className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                  onClick={() => setSelectedFixedIPId(fip.id)}
-                >
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                    <Radio
-                      checked={selectedFixedIPId === fip.id}
-                      onChange={() => setSelectedFixedIPId(fip.id)}
-                    />
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {fip.fixedIp}
-                      </span>
-                      {fip.hasAlert && (
-                        <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
-                      )}
-                    </HStack>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {fip.macAddress}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {fip.network}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []
-              }
-              onRemove={() => setSelectedFixedIPId(null)}
-              emptyText="No item Selected"
-            />
+              {/* Selection Indicator */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFixedIP
+                    ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }]
+                    : []
+                }
+                onRemove={() => setSelectedFixedIPId(null)}
+                emptyText="No item Selected"
+              />
+            </VStack>
           </VStack>
         )}
 
@@ -900,66 +916,70 @@ export function AssociateFloatingIPDrawer({
             {/* Pagination */}
             <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
 
-            {/* Table */}
-            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-              {/* Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIPSort('fixedIp')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Fixed IP
-                  </span>
-                  {renderSortIcon('fixedIp', fixedIPSort)}
+            <VStack gap={2}>
+              {/* Table */}
+              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
+                {/* Header */}
+                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
+                  <div
+                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                    onClick={() => handleFixedIPSort('fixedIp')}
+                  >
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Fixed IP
+                    </span>
+                    {renderSortIcon('fixedIp', fixedIPSort)}
+                  </div>
+                  <div
+                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                    onClick={() => handleFixedIPSort('ownedSubnet')}
+                  >
+                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Owned Subnet
+                    </span>
+                    {renderSortIcon('ownedSubnet', fixedIPSort)}
+                  </div>
                 </div>
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIPSort('ownedSubnet')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Owned Subnet
-                  </span>
-                  {renderSortIcon('ownedSubnet', fixedIPSort)}
-                </div>
+
+                {/* Rows */}
+                {mockVirtualAdapterFixedIPs.map((fip) => (
+                  <div
+                    key={fip.id}
+                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
+                    onClick={() => setSelectedFixedIPId(fip.id)}
+                  >
+                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
+                      <Radio
+                        checked={selectedFixedIPId === fip.id}
+                        onChange={() => setSelectedFixedIPId(fip.id)}
+                      />
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {fip.fixedIp}
+                      </span>
+                    </div>
+                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                        {fip.ownedSubnet || '-'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Rows */}
-              {mockVirtualAdapterFixedIPs.map((fip) => (
-                <div
-                  key={fip.id}
-                  className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                  onClick={() => setSelectedFixedIPId(fip.id)}
-                >
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                    <Radio
-                      checked={selectedFixedIPId === fip.id}
-                      onChange={() => setSelectedFixedIPId(fip.id)}
-                    />
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {fip.fixedIp}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {fip.ownedSubnet || '-'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedFixedIP ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }] : []
-              }
-              onRemove={() => setSelectedFixedIPId(null)}
-              emptyText="No item Selected"
-            />
+              {/* Selection Indicator */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFixedIP
+                    ? [{ id: selectedFixedIP.id, label: selectedFixedIP.fixedIp }]
+                    : []
+                }
+                onRemove={() => setSelectedFixedIPId(null)}
+                emptyText="No item Selected"
+              />
+            </VStack>
           </VStack>
         )}
 

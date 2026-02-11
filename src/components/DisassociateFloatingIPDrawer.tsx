@@ -265,27 +265,28 @@ export function DisassociateFloatingIPDrawer({
               ))}
             </div>
           </div>
-        </VStack>
 
-        {/* Selection Indicator */}
-        <SelectionIndicator
-          className="shrink-0"
-          style={{ width: '648px' }}
-          selectedItems={
-            selectedFloatingIpId
-              ? [
-                  {
-                    id: selectedFloatingIpId,
-                    label: floatingIps.find((f) => f.id === selectedFloatingIpId)?.floatingIp || '',
-                  },
-                ]
-              : []
-          }
-          onRemove={() => setSelectedFloatingIpId(null)}
-          emptyText="No item selected"
-          error={hasAttemptedSubmit && !selectedFloatingIpId}
-          errorMessage="Please select a floating IP."
-        />
+          {/* Selection Indicator */}
+          <SelectionIndicator
+            className="shrink-0"
+            style={{ width: '648px' }}
+            selectedItems={
+              selectedFloatingIpId
+                ? [
+                    {
+                      id: selectedFloatingIpId,
+                      label:
+                        floatingIps.find((f) => f.id === selectedFloatingIpId)?.floatingIp || '',
+                    },
+                  ]
+                : []
+            }
+            onRemove={() => setSelectedFloatingIpId(null)}
+            emptyText="No item selected"
+            error={hasAttemptedSubmit && !selectedFloatingIpId}
+            errorMessage="Please select a floating IP."
+          />
+        </VStack>
       </VStack>
     </Drawer>
   );

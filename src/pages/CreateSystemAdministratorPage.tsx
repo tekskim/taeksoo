@@ -912,7 +912,7 @@ function DefaultDomainSection({
               )}
 
               {/* Custom Table with radio selection */}
-              <div className="mt-3">
+              <VStack gap={2} className="mt-3">
                 <div className="flex flex-col gap-[var(--table-row-gap)]">
                   {/* Table Header */}
                   <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)]">
@@ -976,10 +976,6 @@ function DefaultDomainSection({
                     ))}
                   </div>
                 </div>
-              </div>
-
-              {/* Selection indicator */}
-              <div className="mt-2">
                 <SelectionIndicator
                   selectedItems={
                     selectedDomain
@@ -997,7 +993,7 @@ function DefaultDomainSection({
                   error={!!domainError && !selectedDomain}
                   errorMessage={domainError || undefined}
                 />
-              </div>
+              </VStack>
             </FormField.Control>
           </FormField>
         </VStack>

@@ -906,26 +906,28 @@ export function ConnectDataSourceDrawer({
             <span>{filteredSources.length} items</span>
           </div>
 
-          {/* Table - following design guidelines */}
-          <Table
-            columns={columns}
-            data={filteredSources}
-            rowKey="id"
-            rowHeight="40px"
-            selectable
-            selectedKeys={selectedSources}
-            onSelectionChange={setSelectedSources}
-            emptyMessage="No data sources found"
-          />
+          <VStack gap={2}>
+            {/* Table - following design guidelines */}
+            <Table
+              columns={columns}
+              data={filteredSources}
+              rowKey="id"
+              rowHeight="40px"
+              selectable
+              selectedKeys={selectedSources}
+              onSelectionChange={setSelectedSources}
+              emptyMessage="No data sources found"
+            />
 
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={selectedSources.map((id) => {
-              const source = dataSources.find((s) => s.id === id);
-              return { id, label: source?.name || id };
-            })}
-            onRemove={(id) => setSelectedSources((prev) => prev.filter((s) => s !== id))}
-          />
+            {/* Selection Indicator */}
+            <SelectionIndicator
+              selectedItems={selectedSources.map((id) => {
+                const source = dataSources.find((s) => s.id === id);
+                return { id, label: source?.name || id };
+              })}
+              onRemove={(id) => setSelectedSources((prev) => prev.filter((s) => s !== id))}
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

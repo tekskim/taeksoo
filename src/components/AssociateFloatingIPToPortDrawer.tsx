@@ -298,77 +298,83 @@ export function AssociateFloatingIPToPortDrawer({
             onPageChange={setFixedIpCurrentPage}
           />
 
-          {/* Fixed IP Table */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Header */}
-            <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div className="w-[40px] p-3" />
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFixedIpSort('fixedIp')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-              <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">MAC Address</span>
-              </div>
-              <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedFixedIPs.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                  selectedFixedIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
-                }`}
-                onClick={() => {
-                  setSelectedFixedIpId(item.id);
-                  setSelectionError(null);
-                }}
-              >
-                <div className="w-[40px] p-3 flex items-center justify-center">
-                  <Radio
-                    checked={selectedFixedIpId === item.id}
-                    onChange={() => {
-                      setSelectedFixedIpId(item.id);
-                      setSelectionError(null);
-                    }}
+          <VStack gap={2}>
+            {/* Fixed IP Table */}
+            <div className="w-full flex flex-col gap-1">
+              {/* Header */}
+              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                <div className="w-[40px] p-3" />
+                <div
+                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFixedIpSort('fixedIp')}
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
+                  <IconChevronDown
+                    size={16}
+                    className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                   />
                 </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {item.fixedIp}
+                <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    MAC Address
                   </span>
                 </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {item.macAddress}
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {item.subnetCidr}
+                <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    Subnet CIDR
                   </span>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Selection Indicator for Fixed IP */}
-          <SelectionIndicator
-            selectedItems={
-              selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []
-            }
-            onRemove={() => setSelectedFixedIpId(null)}
-            emptyText="No item Selected"
-          />
+              {/* Rows */}
+              {paginatedFixedIPs.map((item) => (
+                <div
+                  key={item.id}
+                  className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
+                    selectedFixedIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
+                  }`}
+                  onClick={() => {
+                    setSelectedFixedIpId(item.id);
+                    setSelectionError(null);
+                  }}
+                >
+                  <div className="w-[40px] p-3 flex items-center justify-center">
+                    <Radio
+                      checked={selectedFixedIpId === item.id}
+                      onChange={() => {
+                        setSelectedFixedIpId(item.id);
+                        setSelectionError(null);
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {item.fixedIp}
+                    </span>
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {item.macAddress}
+                    </span>
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {item.subnetCidr}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Selection Indicator for Fixed IP */}
+            <SelectionIndicator
+              selectedItems={
+                selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []
+              }
+              onRemove={() => setSelectedFixedIpId(null)}
+              emptyText="No item Selected"
+            />
+          </VStack>
         </VStack>
 
         {/* Divider */}
@@ -396,111 +402,117 @@ export function AssociateFloatingIPToPortDrawer({
             onPageChange={setFloatingIpCurrentPage}
           />
 
-          {/* Floating IP Table */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Header */}
-            <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-              <div className="w-[40px] p-3" />
-              <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-              </div>
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFloatingIpSort('floatingIp')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFloatingIpSort('networkName')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-              <div
-                className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => handleFloatingIpSort('description')}
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Description</span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedFloatingIPs.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                  selectedFloatingIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
-                }`}
-                onClick={() => {
-                  setSelectedFloatingIpId(item.id);
-                  setSelectionError(null);
-                }}
-              >
-                <div className="w-[40px] p-3 flex items-center justify-center">
-                  <Radio
-                    checked={selectedFloatingIpId === item.id}
-                    onChange={() => {
-                      setSelectedFloatingIpId(item.id);
-                      setSelectionError(null);
-                    }}
+          <VStack gap={2}>
+            {/* Floating IP Table */}
+            <div className="w-full flex flex-col gap-1">
+              {/* Header */}
+              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                <div className="w-[40px] p-3" />
+                <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
+                </div>
+                <div
+                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFloatingIpSort('floatingIp')}
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    Floating IP
+                  </span>
+                  <IconChevronDown
+                    size={16}
+                    className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                   />
                 </div>
-                <div className="w-[59px] p-2 flex items-center justify-center">
-                  <StatusIndicator status={item.status} />
+                <div
+                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFloatingIpSort('networkName')}
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
+                  <IconChevronDown
+                    size={16}
+                    className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                  />
                 </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                      {item.floatingIp}
-                    </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                    ID : {item.id}
+                <div
+                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
+                  onClick={() => handleFloatingIpSort('description')}
+                >
+                  <span className="text-label-sm text-[var(--color-text-default)]">
+                    Description
                   </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                      {item.networkName}
-                    </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                    ID : {item.networkId}
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {item.description}
-                  </span>
+                  <IconChevronDown
+                    size={16}
+                    className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
+                  />
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Selection Indicator for Floating IP */}
-          <SelectionIndicator
-            selectedItems={
-              selectedFloatingIp
-                ? [{ id: selectedFloatingIp.id, label: selectedFloatingIp.floatingIp }]
-                : []
-            }
-            onRemove={() => setSelectedFloatingIpId(null)}
-            emptyText="No item Selected"
-          />
+              {/* Rows */}
+              {paginatedFloatingIPs.map((item) => (
+                <div
+                  key={item.id}
+                  className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
+                    selectedFloatingIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
+                  }`}
+                  onClick={() => {
+                    setSelectedFloatingIpId(item.id);
+                    setSelectionError(null);
+                  }}
+                >
+                  <div className="w-[40px] p-3 flex items-center justify-center">
+                    <Radio
+                      checked={selectedFloatingIpId === item.id}
+                      onChange={() => {
+                        setSelectedFloatingIpId(item.id);
+                        setSelectionError(null);
+                      }}
+                    />
+                  </div>
+                  <div className="w-[59px] p-2 flex items-center justify-center">
+                    <StatusIndicator status={item.status} />
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-md text-[var(--color-action-primary)] leading-4">
+                        {item.floatingIp}
+                      </span>
+                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    </HStack>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+                      ID : {item.id}
+                    </span>
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-md text-[var(--color-action-primary)] leading-4">
+                        {item.networkName}
+                      </span>
+                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    </HStack>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+                      ID : {item.networkId}
+                    </span>
+                  </div>
+                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {item.description}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Selection Indicator for Floating IP */}
+            <SelectionIndicator
+              selectedItems={
+                selectedFloatingIp
+                  ? [{ id: selectedFloatingIp.id, label: selectedFloatingIp.floatingIp }]
+                  : []
+              }
+              onRemove={() => setSelectedFloatingIpId(null)}
+              emptyText="No item Selected"
+            />
+          </VStack>
         </VStack>
 
         {selectionError && (

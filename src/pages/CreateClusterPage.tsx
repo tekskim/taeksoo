@@ -727,23 +727,25 @@ export function CreateClusterPage() {
                             onPageChange={() => {}}
                             totalItems={115}
                           />
-                          <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
-                          <SelectionIndicator
-                            selectedItems={
-                              nodeFlavor
-                                ? [
-                                    {
-                                      id: nodeFlavor,
-                                      label:
-                                        mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
-                                        nodeFlavor,
-                                    },
-                                  ]
-                                : []
-                            }
-                            emptyText="No flavor selected"
-                            onRemove={() => setNodeFlavor('')}
-                          />
+                          <VStack gap={2}>
+                            <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                            <SelectionIndicator
+                              selectedItems={
+                                nodeFlavor
+                                  ? [
+                                      {
+                                        id: nodeFlavor,
+                                        label:
+                                          mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
+                                          nodeFlavor,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No flavor selected"
+                              onRemove={() => setNodeFlavor('')}
+                            />
+                          </VStack>
                         </VStack>
                       </FormField.Control>
                     </FormField>

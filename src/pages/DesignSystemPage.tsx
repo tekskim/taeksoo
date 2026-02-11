@@ -785,25 +785,27 @@ function OpenSectionTableDemo() {
                 onPageChange={setCurrentPage}
               />
 
-              {/* Table */}
-              <div className="w-[806px]">
-                <Table
-                  columns={imageColumns}
-                  data={filteredImages}
-                  rowKey="id"
-                  onRowClick={(row) => handleImageSelect(row.id)}
-                />
-              </div>
+              <VStack gap={2}>
+                {/* Table */}
+                <div className="w-[806px]">
+                  <Table
+                    columns={imageColumns}
+                    data={filteredImages}
+                    rowKey="id"
+                    onRowClick={(row) => handleImageSelect(row.id)}
+                  />
+                </div>
 
-              {/* Selection Indicator (with built-in error state) */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                }
-                onRemove={() => setSelectedImageId(null)}
-                error={!!sourceError}
-                errorMessage={sourceError || undefined}
-              />
+                {/* Selection Indicator (with built-in error state) */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                  }
+                  onRemove={() => setSelectedImageId(null)}
+                  error={!!sourceError}
+                  errorMessage={sourceError || undefined}
+                />
+              </VStack>
             </VStack>
 
             {/* Divider + Next Button */}

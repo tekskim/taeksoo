@@ -500,29 +500,29 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       </div>
 
                       {/* Tenant Table with Radio Selection */}
-                      <div className="w-full">
-                        <Table
-                          columns={tenantColumns}
-                          data={paginatedTenants}
-                          rowKey="id"
-                          emptyMessage="No tenants found"
-                          onRowClick={(row) => {
-                            if (row.status !== 'deactivated') {
-                              setSelectedTenant(row.id);
-                              setTenantError(false);
-                            }
-                          }}
+                      <VStack gap={2}>
+                        <div className="w-full">
+                          <Table
+                            columns={tenantColumns}
+                            data={paginatedTenants}
+                            rowKey="id"
+                            emptyMessage="No tenants found"
+                            onRowClick={(row) => {
+                              if (row.status !== 'deactivated') {
+                                setSelectedTenant(row.id);
+                                setTenantError(false);
+                              }
+                            }}
+                          />
+                        </div>
+                        <SelectionIndicator
+                          selectedItems={selectedTenantItems}
+                          onRemove={() => setSelectedTenant(null)}
+                          emptyText="No item selected"
+                          error={tenantError}
+                          errorMessage="Please select a tenant"
                         />
-                      </div>
-
-                      {/* Selection indicator */}
-                      <SelectionIndicator
-                        selectedItems={selectedTenantItems}
-                        onRemove={() => setSelectedTenant(null)}
-                        emptyText="No item selected"
-                        error={tenantError}
-                        errorMessage="Please select a tenant"
-                      />
+                      </VStack>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

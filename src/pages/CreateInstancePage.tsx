@@ -1336,7 +1336,7 @@ function ImageSection({
               onPageChange={setCurrentPage}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               {/* Table - Dynamic based on tab */}
               {sourceTab === 'image' && (
                 <Table
@@ -1378,7 +1378,7 @@ function ImageSection({
                 error={!!sourceError}
                 errorMessage={sourceError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           {/* Divider */}
@@ -1754,31 +1754,33 @@ function FlavorSection({
             />
 
             {/* Flavor Table */}
-            <Table
-              columns={flavorColumns}
-              data={paginatedFlavors}
-              rowKey="id"
-              onRowClick={(row) => handleSelectFlavor(row.id)}
-            />
+            <VStack gap={2}>
+              <Table
+                columns={flavorColumns}
+                data={paginatedFlavors}
+                rowKey="id"
+                onRowClick={(row) => handleSelectFlavor(row.id)}
+              />
 
-            {/* Error Message or Selection Indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedFlavorId
-                  ? [
-                      {
-                        id: selectedFlavorId,
-                        label:
-                          mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                          selectedFlavorId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectFlavor('')}
-              error={!!flavorError}
-              errorMessage={flavorError}
-            />
+              {/* Error Message or Selection Indicator */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFlavorId
+                    ? [
+                        {
+                          id: selectedFlavorId,
+                          label:
+                            mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                            selectedFlavorId,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => onSelectFlavor('')}
+                error={!!flavorError}
+                errorMessage={flavorError}
+              />
+            </VStack>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2407,7 +2409,7 @@ function NetworkSection({
               selectedCount={selectedNetworkIds.size}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               {/* Network Table */}
               <Table
                 columns={networkColumns}
@@ -2441,7 +2443,7 @@ function NetworkSection({
                 error={!!networkError}
                 errorMessage={networkError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2621,7 +2623,7 @@ function NetworkSection({
               selectedCount={selectedSecurityGroups.size}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               <Table
                 columns={securityGroupColumns}
                 data={filteredSecurityGroups}
@@ -2654,7 +2656,7 @@ function NetworkSection({
                 error={!!securityGroupError}
                 errorMessage={securityGroupError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2684,7 +2686,7 @@ function NetworkSection({
                     totalItems={filteredPorts.length}
                     onPageChange={setPortPage}
                   />
-                  <div className="flex flex-col gap-[8px]">
+                  <VStack gap={2}>
                     <Table
                       columns={portColumns}
                       data={filteredPorts}
@@ -2708,7 +2710,7 @@ function NetworkSection({
                       }
                       onRemove={() => setSelectedPortId(null)}
                     />
-                  </div>
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -2920,29 +2922,31 @@ function AuthenticationSection({
                   />
 
                   {/* Key pair Table */}
-                  <Table
-                    columns={keyPairColumns}
-                    data={filteredKeyPairs}
-                    rowKey="id"
-                    onRowClick={(row) => handleSelectKeyPair(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={keyPairColumns}
+                      data={filteredKeyPairs}
+                      rowKey="id"
+                      onRowClick={(row) => handleSelectKeyPair(row.id)}
+                    />
 
-                  {/* Selection Indicator for Key Pair */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedKeyPairId
-                        ? [
-                            {
-                              id: selectedKeyPairId,
-                              label:
-                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                selectedKeyPairId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedKeyPairId(null)}
-                  />
+                    {/* Selection Indicator for Key Pair */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedKeyPairId
+                          ? [
+                              {
+                                id: selectedKeyPairId,
+                                label:
+                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                  selectedKeyPairId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedKeyPairId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </TabPanel>
 
@@ -3239,29 +3243,31 @@ function AdvancedSection({
                   />
 
                   {/* Server group Table */}
-                  <Table
-                    columns={serverGroupColumns}
-                    data={filteredServerGroups}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedServerGroupId(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={serverGroupColumns}
+                      data={filteredServerGroups}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedServerGroupId(row.id)}
+                    />
 
-                  {/* Selection Indicator for Server Group */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedServerGroupId
-                        ? [
-                            {
-                              id: selectedServerGroupId,
-                              label:
-                                mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                  ?.name || selectedServerGroupId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedServerGroupId(null)}
-                  />
+                    {/* Selection Indicator for Server Group */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedServerGroupId
+                          ? [
+                              {
+                                id: selectedServerGroupId,
+                                label:
+                                  mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
+                                    ?.name || selectedServerGroupId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedServerGroupId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -3567,18 +3573,34 @@ function TemplatesSection({
                   />
 
                   {/* Table with Selection */}
-                  {filteredTemplates.length > 0 ? (
-                    <Table
-                      columns={columns}
-                      data={filteredTemplates}
-                      rowKey="id"
-                      onRowClick={(row) => onSelect(row.id)}
+                  <VStack gap={2}>
+                    {filteredTemplates.length > 0 ? (
+                      <Table
+                        columns={columns}
+                        data={filteredTemplates}
+                        rowKey="id"
+                        onRowClick={(row) => onSelect(row.id)}
+                      />
+                    ) : (
+                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                        No favorite templates
+                      </div>
+                    )}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedId
+                          ? [
+                              {
+                                id: selectedId,
+                                label:
+                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => onSelect('')}
                     />
-                  ) : (
-                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                      No favorite templates
-                    </div>
-                  )}
+                  </VStack>
                 </VStack>
               </TabPanel>
 

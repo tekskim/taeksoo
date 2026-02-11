@@ -988,7 +988,7 @@ function UserGroupSection({
           )}
 
           {/* Table */}
-          <div className="mt-3">
+          <VStack gap={2} className="mt-3">
             <Table
               columns={columns}
               data={paginatedGroups}
@@ -997,10 +997,6 @@ function UserGroupSection({
               selectedKeys={selectedGroups}
               onSelectionChange={onSelectionChange}
             />
-          </div>
-
-          {/* Selection indicator */}
-          <div className="mt-2">
             <SelectionIndicator
               selectedItems={selectedGroups.map((groupId) => {
                 const group = mockUserGroups.find((g) => g.id === groupId);
@@ -1012,7 +1008,7 @@ function UserGroupSection({
               error={!!userGroupError}
               errorMessage={userGroupError || undefined}
             />
-          </div>
+          </VStack>
         </VStack>
         {/* Next Button (only when not editing) */}
         {!isEditing && (

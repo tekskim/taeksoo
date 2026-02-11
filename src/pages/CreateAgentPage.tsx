@@ -720,27 +720,27 @@ export function CreateAgentPage() {
                           />
 
                           {/* Data sources Table */}
-                          <Table
-                            columns={dataSourceColumns}
-                            data={paginatedDataSources}
-                            rowKey="id"
-                            selectable
-                            selectedKeys={selectedDataSources}
-                            onSelectionChange={setSelectedDataSources}
-                          />
-
-                          {/* Selection Indicator for Data Sources */}
-                          <SelectionIndicator
-                            selectedItems={selectedDataSources.map((id) => {
-                              const data = filteredDataSources.find((d) => d.id === id);
-                              return { id, label: data?.name || id };
-                            })}
-                            onRemove={(id) =>
-                              setSelectedDataSources(
-                                selectedDataSources.filter((selectedId) => selectedId !== id)
-                              )
-                            }
-                          />
+                          <VStack gap={2}>
+                            <Table
+                              columns={dataSourceColumns}
+                              data={paginatedDataSources}
+                              rowKey="id"
+                              selectable
+                              selectedKeys={selectedDataSources}
+                              onSelectionChange={setSelectedDataSources}
+                            />
+                            <SelectionIndicator
+                              selectedItems={selectedDataSources.map((id) => {
+                                const data = filteredDataSources.find((d) => d.id === id);
+                                return { id, label: data?.name || id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedDataSources(
+                                  selectedDataSources.filter((selectedId) => selectedId !== id)
+                                )
+                              }
+                            />
+                          </VStack>
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -774,17 +774,15 @@ export function CreateAgentPage() {
                           />
 
                           {/* MCP Tools Table */}
-                          <Table
-                            columns={mcpToolColumns}
-                            data={paginatedMCPTools}
-                            rowKey="id"
-                            selectable
-                            selectedKeys={selectedMCPTools}
-                            onSelectionChange={setSelectedMCPTools}
-                          />
-
-                          {/* Selection Indicator for MCP Tools */}
-                          <div className="mt-2">
+                          <VStack gap={2}>
+                            <Table
+                              columns={mcpToolColumns}
+                              data={paginatedMCPTools}
+                              rowKey="id"
+                              selectable
+                              selectedKeys={selectedMCPTools}
+                              onSelectionChange={setSelectedMCPTools}
+                            />
                             <SelectionIndicator
                               selectedItems={selectedMCPTools.map((id) => {
                                 const tool = filteredMCPTools.find((t) => t.id === id);
@@ -796,7 +794,7 @@ export function CreateAgentPage() {
                                 )
                               }
                             />
-                          </div>
+                          </VStack>
                         </SectionCard.Content>
                       </SectionCard>
 

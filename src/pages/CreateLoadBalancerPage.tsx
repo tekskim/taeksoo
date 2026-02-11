@@ -1572,40 +1572,42 @@ export default function CreateLoadBalancerPage() {
                         />
 
                         {/* Network Table */}
-                        {provider ? (
-                          <Table
-                            columns={networkColumns}
-                            data={mockNetworks}
-                            getRowId={(row) => row.id}
-                            onRowClick={(row) => {
-                              setSelectedNetwork(row.id);
-                              setNetworkError(null);
-                            }}
-                          />
-                        ) : (
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
-                            Select a provider to view the network list.
-                          </div>
-                        )}
+                        <VStack gap={2}>
+                          {provider ? (
+                            <Table
+                              columns={networkColumns}
+                              data={mockNetworks}
+                              getRowId={(row) => row.id}
+                              onRowClick={(row) => {
+                                setSelectedNetwork(row.id);
+                                setNetworkError(null);
+                              }}
+                            />
+                          ) : (
+                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                              Select a provider to view the network list.
+                            </div>
+                          )}
 
-                        {/* Selection Indicator for Network */}
-                        <SelectionIndicator
-                          selectedItems={
-                            selectedNetwork
-                              ? [
-                                  {
-                                    id: selectedNetwork,
-                                    label:
-                                      mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
-                                      selectedNetwork,
-                                  },
-                                ]
-                              : []
-                          }
-                          onRemove={() => setSelectedNetwork('')}
-                          error={!!networkError}
-                          errorMessage={networkError || undefined}
-                        />
+                          {/* Selection Indicator for Network */}
+                          <SelectionIndicator
+                            selectedItems={
+                              selectedNetwork
+                                ? [
+                                    {
+                                      id: selectedNetwork,
+                                      label:
+                                        mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
+                                        selectedNetwork,
+                                    },
+                                  ]
+                                : []
+                            }
+                            onRemove={() => setSelectedNetwork('')}
+                            error={!!networkError}
+                            errorMessage={networkError || undefined}
+                          />
+                        </VStack>
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1880,30 +1882,33 @@ export default function CreateLoadBalancerPage() {
                             />
 
                             {/* Certificate Table */}
-                            <Table
-                              columns={certificateColumns}
-                              data={mockCertificates}
-                              getRowId={(row) => row.id}
-                            />
+                            <VStack gap={2}>
+                              <Table
+                                columns={certificateColumns}
+                                data={mockCertificates}
+                                getRowId={(row) => row.id}
+                              />
 
-                            {/* Selection Indicator for Certificate */}
-                            <SelectionIndicator
-                              selectedItems={
-                                selectedCertificate
-                                  ? [
-                                      {
-                                        id: selectedCertificate,
-                                        label:
-                                          mockCertificates.find((c) => c.id === selectedCertificate)
-                                            ?.name || selectedCertificate,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              onRemove={() => setSelectedCertificate('')}
-                              error={!!certificateError}
-                              errorMessage={certificateError || undefined}
-                            />
+                              {/* Selection Indicator for Certificate */}
+                              <SelectionIndicator
+                                selectedItems={
+                                  selectedCertificate
+                                    ? [
+                                        {
+                                          id: selectedCertificate,
+                                          label:
+                                            mockCertificates.find(
+                                              (c) => c.id === selectedCertificate
+                                            )?.name || selectedCertificate,
+                                        },
+                                      ]
+                                    : []
+                                }
+                                onRemove={() => setSelectedCertificate('')}
+                                error={!!certificateError}
+                                errorMessage={certificateError || undefined}
+                              />
+                            </VStack>
                           </VStack>
                         </div>
                       </>
@@ -1938,29 +1943,31 @@ export default function CreateLoadBalancerPage() {
                             />
 
                             {/* CA Certificate Table */}
-                            <Table
-                              columns={caCertificateColumns}
-                              data={mockCaCertificates}
-                              getRowId={(row) => row.id}
-                            />
+                            <VStack gap={2}>
+                              <Table
+                                columns={caCertificateColumns}
+                                data={mockCaCertificates}
+                                getRowId={(row) => row.id}
+                              />
 
-                            {/* Selection Indicator for CA Certificate */}
-                            <SelectionIndicator
-                              selectedItems={
-                                selectedCaCertificate
-                                  ? [
-                                      {
-                                        id: selectedCaCertificate,
-                                        label:
-                                          mockCaCertificates.find(
-                                            (c) => c.id === selectedCaCertificate
-                                          )?.name || selectedCaCertificate,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              onRemove={() => setSelectedCaCertificate('')}
-                            />
+                              {/* Selection Indicator for CA Certificate */}
+                              <SelectionIndicator
+                                selectedItems={
+                                  selectedCaCertificate
+                                    ? [
+                                        {
+                                          id: selectedCaCertificate,
+                                          label:
+                                            mockCaCertificates.find(
+                                              (c) => c.id === selectedCaCertificate
+                                            )?.name || selectedCaCertificate,
+                                        },
+                                      ]
+                                    : []
+                                }
+                                onRemove={() => setSelectedCaCertificate('')}
+                              />
+                            </VStack>
                           </VStack>
                         </div>
                       </>
@@ -2016,24 +2023,26 @@ export default function CreateLoadBalancerPage() {
                             />
 
                             {/* SNI Certificate Table */}
-                            <Table
-                              columns={sniCertificateColumns}
-                              data={mockSniCertificates}
-                              getRowId={(row) => row.id}
-                            />
+                            <VStack gap={2}>
+                              <Table
+                                columns={sniCertificateColumns}
+                                data={mockSniCertificates}
+                                getRowId={(row) => row.id}
+                              />
 
-                            {/* Selection Indicator for SNI Certificates */}
-                            <SelectionIndicator
-                              selectedItems={Array.from(selectedSniCertificates).map((id) => ({
-                                id,
-                                label: mockSniCertificates.find((c) => c.id === id)?.name || id,
-                              }))}
-                              onRemove={(id) => {
-                                const newSet = new Set(selectedSniCertificates);
-                                newSet.delete(id);
-                                setSelectedSniCertificates(newSet);
-                              }}
-                            />
+                              {/* Selection Indicator for SNI Certificates */}
+                              <SelectionIndicator
+                                selectedItems={Array.from(selectedSniCertificates).map((id) => ({
+                                  id,
+                                  label: mockSniCertificates.find((c) => c.id === id)?.name || id,
+                                }))}
+                                onRemove={(id) => {
+                                  const newSet = new Set(selectedSniCertificates);
+                                  newSet.delete(id);
+                                  setSelectedSniCertificates(newSet);
+                                }}
+                              />
+                            </VStack>
                           </VStack>
                         </div>
                       </>
@@ -2601,18 +2610,24 @@ export default function CreateLoadBalancerPage() {
                         </VStack>
 
                         {/* Ports Table */}
-                        <Table columns={portColumns} data={mockPorts} getRowId={(row) => row.id} />
+                        <VStack gap={2}>
+                          <Table
+                            columns={portColumns}
+                            data={mockPorts}
+                            getRowId={(row) => row.id}
+                          />
 
-                        {/* Selection Indicator for added members */}
-                        <SelectionIndicator
-                          selectedItems={allocatedMembers.map((m) => ({
-                            id: m.id,
-                            label: `${m.portName} (${m.ipAddress})`,
-                          }))}
-                          onRemove={(id) =>
-                            setAllocatedMembers((prev) => prev.filter((m) => m.id !== id))
-                          }
-                        />
+                          {/* Selection Indicator for added members */}
+                          <SelectionIndicator
+                            selectedItems={allocatedMembers.map((m) => ({
+                              id: m.id,
+                              label: `${m.portName} (${m.ipAddress})`,
+                            }))}
+                            onRemove={(id) =>
+                              setAllocatedMembers((prev) => prev.filter((m) => m.id !== id))
+                            }
+                          />
+                        </VStack>
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
