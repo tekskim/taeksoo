@@ -743,6 +743,7 @@ function TemplateInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Template information"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -758,6 +759,7 @@ function TemplateInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Template name */}
           <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -976,6 +978,7 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -991,6 +994,7 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* AZ (Availability zone) */}
           <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -1293,6 +1297,7 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1637,6 +1642,7 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2169,6 +2175,7 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2565,6 +2572,7 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2735,6 +2743,7 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
