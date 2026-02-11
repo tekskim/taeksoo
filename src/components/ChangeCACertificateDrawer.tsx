@@ -7,9 +7,11 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -81,6 +83,54 @@ export function ChangeCACertificateDrawer({
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  const certificateColumns: TableColumn<CACertificateItem>[] = [
+    {
+      key: 'id' as keyof CACertificateItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="certificate-select"
+            value={row.id}
+            checked={selectedCertificateId === row.id}
+            onChange={() => setSelectedCertificateId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col justify-center gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'listeners', label: 'Listeners' },
+    { key: 'expiresAt', label: 'Expires At' },
+  ];
 
   // Reset state when drawer opens
   useEffect(() => {
@@ -186,91 +236,13 @@ export function ChangeCACertificateDrawer({
           />
 
           <VStack gap={2}>
-            {/* Certificates Table */}
-            <div
-              className="flex flex-col gap-[var(--table-row-gap)]"
-              style={{ width: '648px', maxWidth: '648px' }}
-            >
-              {/* Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Status
-                </div>
-                <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  Name
-                  <IconChevronDown size={16} />
-                </div>
-                <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  Listeners
-                  <IconChevronDown size={16} />
-                </div>
-                <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  Expires At
-                  <IconChevronDown size={16} />
-                </div>
-              </div>
-
-              {/* Rows */}
-              {paginatedCertificates.map((cert) => (
-                <div
-                  key={cert.id}
-                  className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                    selectedCertificateId === cert.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                  onClick={() => setSelectedCertificateId(cert.id)}
-                >
-                  {/* Radio */}
-                  <div
-                    className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Radio
-                      name="certificate-select"
-                      value={cert.id}
-                      checked={selectedCertificateId === cert.id}
-                      onChange={() => setSelectedCertificateId(cert.id)}
-                    />
-                  </div>
-                  {/* Status */}
-                  <div className="w-[59px] flex items-center justify-center">
-                    <StatusIndicator status={cert.status} layout="icon-only" size="sm" />
-                  </div>
-                  {/* Name with ID */}
-                  <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                        {cert.name}
-                      </span>
-                      <IconExternalLink
-                        size={12}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : {cert.id}
-                    </span>
-                  </div>
-                  {/* Listeners */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                      {cert.listeners}
-                    </span>
-                  </div>
-                  {/* Expires At */}
-                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                      {cert.expiresAt}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator - directly under the table */}
+            <Table<CACertificateItem>
+              columns={certificateColumns}
+              data={paginatedCertificates}
+              rowKey="id"
+              onRowClick={(row) => setSelectedCertificateId(row.id)}
+              emptyMessage="No certificates found"
+            />
             <SelectionIndicator
               selectedItems={
                 selectedCertificate

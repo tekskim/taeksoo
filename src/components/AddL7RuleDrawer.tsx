@@ -69,6 +69,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
   const [adminStateUp, setAdminStateUp] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [keyError, setKeyError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -80,13 +81,19 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
       setInvert(false);
       setAdminStateUp(true);
       setHasAttemptedSubmit(false);
+      setKeyError(null);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!compareType || !value.trim()) return;
-    if (ruleTypesWithKey.includes(ruleType) && !key.trim()) return;
+
+    if (ruleTypesWithKey.includes(ruleType) && !key.trim()) {
+      setKeyError('Key is required for this rule type');
+      return;
+    }
+    setKeyError(null);
 
     setIsSubmitting(true);
     try {
@@ -106,6 +113,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
   const handleClose = () => {
     setHasAttemptedSubmit(false);
+    setKeyError(null);
     onClose();
   };
 
@@ -154,17 +162,26 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
               value={ruleType}
               onChange={(value) => {
                 setRuleType(value as RuleType);
-                setKey(''); // Reset key when rule type changes
+                setKey('');
+                setKeyError(null);
               }}
               options={ruleTypeOptions}
               fullWidth
             />
+          </FormField.Control>
+        </FormField>
 
-            {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
-            {requiresKey && (
+        {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
+        {requiresKey && (
+          <FormField required error={hasAttemptedSubmit && !!keyError}>
+            <FormField.Label>Key</FormField.Label>
+            <FormField.Control>
               <Input
                 value={key}
-                onChange={(e) => setKey(e.target.value)}
+                onChange={(e) => {
+                  setKey(e.target.value);
+                  if (keyError) setKeyError(null);
+                }}
                 placeholder={
                   ruleType === 'HEADER'
                     ? 'e.g. User-Agent'
@@ -173,15 +190,17 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
                       : 'e.g. CN'
                 }
                 fullWidth
+                error={hasAttemptedSubmit && !!keyError}
               />
+            </FormField.Control>
+            {hasAttemptedSubmit && keyError && (
+              <FormField.ErrorMessage>{keyError}</FormField.ErrorMessage>
             )}
-          </FormField.Control>
-          {requiresKey && (
             <FormField.HelperText>
               Allowed: 1–255 characters, letters, numbers, "-".
             </FormField.HelperText>
-          )}
-        </FormField>
+          </FormField>
+        )}
 
         {/* Compare Type */}
         <FormField required error={hasAttemptedSubmit && !compareType}>

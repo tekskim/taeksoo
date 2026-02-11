@@ -100,7 +100,7 @@ function PolicyRadioOption({ value, label, tooltip }: PolicyRadioOptionProps) {
       <Radio value={value} label={label} />
       <Tooltip content={tooltip}>
         <button type="button" className="p-0 mt-0.5">
-          <IconHelp size={16} className="text-[var(--color-text-subtle)]" stroke={1} />
+          <IconHelp size={12} className="text-[var(--color-text-subtle)]" stroke={1.5} />
         </button>
       </Tooltip>
     </HStack>
@@ -211,7 +211,7 @@ export function CreateServerGroupDrawer({
           <FormField.Label>Create type</FormField.Label>
           <FormField.Control>
             <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <PolicyRadioOption
                   value="anti-affinity"
                   label="Anti-affinity"

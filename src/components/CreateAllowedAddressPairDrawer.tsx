@@ -120,13 +120,13 @@ export function CreateAllowedAddressPairDrawer({
               value={macAddressType}
               onChange={(value) => setMacAddressType(value as MacAddressType)}
             >
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <HStack gap={2} className="items-center">
                   <Radio value="from_port" label="From Port" />
                   <Tooltip content="Use the MAC address assigned to this port automatically.">
                     <IconHelp
-                      size={16}
-                      stroke={1}
+                      size={12}
+                      stroke={1.5}
                       className="text-[var(--color-text-subtle)] cursor-help"
                     />
                   </Tooltip>

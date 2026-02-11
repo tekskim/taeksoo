@@ -7,9 +7,11 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -123,27 +125,19 @@ export function AssociateFloatingIPToPortDrawer({
   const [selectedFixedIpId, setSelectedFixedIpId] = useState<string | null>(null);
   const [fixedIpSearchQuery, setFixedIpSearchQuery] = useState('');
   const [fixedIpCurrentPage, setFixedIpCurrentPage] = useState(1);
-  const [fixedIpSortField, setFixedIpSortField] = useState<'fixedIp' | null>('fixedIp');
-  const [fixedIpSortDirection, setFixedIpSortDirection] = useState<'asc' | 'desc'>('asc');
 
   // Floating IP state
   const [selectedFloatingIpId, setSelectedFloatingIpId] = useState<string | null>(null);
   const [floatingIpSearchQuery, setFloatingIpSearchQuery] = useState('');
   const [floatingIpCurrentPage, setFloatingIpCurrentPage] = useState(1);
-  const [floatingIpSortField, setFloatingIpSortField] = useState<
-    'floatingIp' | 'networkName' | 'description' | null
-  >('floatingIp');
-  const [floatingIpSortDirection, setFloatingIpSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
-  const [selectionError, setSelectionError] = useState<string | null>(null);
 
   const itemsPerPage = 5;
 
   useEffect(() => {
     if (!isOpen) {
       setHasAttemptedSubmit(false);
-      setSelectionError(null);
     }
   }, [isOpen]);
 
@@ -163,21 +157,13 @@ export function AssociateFloatingIPToPortDrawer({
     onClose();
   };
 
-  // Fixed IP filtering and sorting
-  const filteredFixedIPs = fixedIPs
-    .filter(
-      (item) =>
-        item.fixedIp.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
-        item.macAddress.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
-        item.subnetCidr.toLowerCase().includes(fixedIpSearchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (!fixedIpSortField) return 0;
-      const aVal = a[fixedIpSortField];
-      const bVal = b[fixedIpSortField];
-      const comparison = aVal.localeCompare(bVal);
-      return fixedIpSortDirection === 'asc' ? comparison : -comparison;
-    });
+  // Fixed IP filtering
+  const filteredFixedIPs = fixedIPs.filter(
+    (item) =>
+      item.fixedIp.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
+      item.macAddress.toLowerCase().includes(fixedIpSearchQuery.toLowerCase()) ||
+      item.subnetCidr.toLowerCase().includes(fixedIpSearchQuery.toLowerCase())
+  );
 
   const paginatedFixedIPs = filteredFixedIPs.slice(
     (fixedIpCurrentPage - 1) * itemsPerPage,
@@ -186,21 +172,13 @@ export function AssociateFloatingIPToPortDrawer({
 
   const fixedIpTotalPages = Math.ceil(filteredFixedIPs.length / itemsPerPage);
 
-  // Floating IP filtering and sorting
-  const filteredFloatingIPs = floatingIPs
-    .filter(
-      (item) =>
-        item.floatingIp.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
-        item.networkName.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(floatingIpSearchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (!floatingIpSortField) return 0;
-      const aVal = a[floatingIpSortField];
-      const bVal = b[floatingIpSortField];
-      const comparison = aVal.localeCompare(bVal);
-      return floatingIpSortDirection === 'asc' ? comparison : -comparison;
-    });
+  // Floating IP filtering
+  const filteredFloatingIPs = floatingIPs.filter(
+    (item) =>
+      item.floatingIp.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
+      item.networkName.toLowerCase().includes(floatingIpSearchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(floatingIpSearchQuery.toLowerCase())
+  );
 
   const paginatedFloatingIPs = filteredFloatingIPs.slice(
     (floatingIpCurrentPage - 1) * itemsPerPage,
@@ -213,33 +191,102 @@ export function AssociateFloatingIPToPortDrawer({
   const selectedFixedIp = fixedIPs.find((item) => item.id === selectedFixedIpId);
   const selectedFloatingIp = floatingIPs.find((item) => item.id === selectedFloatingIpId);
 
-  // Handlers
-  const handleFixedIpSort = (field: 'fixedIp') => {
-    if (fixedIpSortField === field) {
-      setFixedIpSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setFixedIpSortField(field);
-      setFixedIpSortDirection('asc');
-    }
-  };
+  // Column definitions
+  const fixedIpColumns: TableColumn<FixedIPItem>[] = [
+    {
+      key: 'id' as keyof FixedIPItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="fixed-ip-select"
+            value={row.id}
+            checked={selectedFixedIpId === row.id}
+            onChange={() => setSelectedFixedIpId(row.id)}
+          />
+        </div>
+      ),
+    },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1, sortable: true },
+    { key: 'macAddress', label: 'MAC Address', flex: 1 },
+    { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
+  ];
 
-  const handleFloatingIpSort = (field: 'floatingIp' | 'networkName' | 'description') => {
-    if (floatingIpSortField === field) {
-      setFloatingIpSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setFloatingIpSortField(field);
-      setFloatingIpSortDirection('asc');
-    }
-  };
+  const floatingIpColumns: TableColumn<FloatingIPItem>[] = [
+    {
+      key: 'id' as keyof FloatingIPItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="floating-ip-select"
+            value={row.id}
+            checked={selectedFloatingIpId === row.id}
+            onChange={() => setSelectedFloatingIpId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)]">
+              {row.floatingIp}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'networkName',
+      label: 'Network',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)]">
+              {row.networkName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.networkId}</span>
+        </div>
+      ),
+    },
+    { key: 'description', label: 'Description', flex: 1, sortable: true },
+  ];
 
   const handleSubmit = () => {
     setHasAttemptedSubmit(true);
 
     if (!selectedFixedIpId || !selectedFloatingIpId) {
-      setSelectionError('Please select both a fixed IP and a floating IP.');
       return;
     }
-    setSelectionError(null);
 
     if (onSubmit) {
       onSubmit({ fixedIpId: selectedFixedIpId, floatingIpId: selectedFloatingIpId });
@@ -299,74 +346,14 @@ export function AssociateFloatingIPToPortDrawer({
           />
 
           <VStack gap={2}>
-            {/* Fixed IP Table */}
-            <div className="w-full flex flex-col gap-1">
-              {/* Header */}
-              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="w-[40px] p-3" />
-                <div
-                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFixedIpSort('fixedIp')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
-                  <IconChevronDown
-                    size={16}
-                    className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                  />
-                </div>
-                <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    MAC Address
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Subnet CIDR
-                  </span>
-                </div>
-              </div>
+            <Table<FixedIPItem>
+              columns={fixedIpColumns}
+              data={paginatedFixedIPs}
+              rowKey="id"
+              onRowClick={(row) => setSelectedFixedIpId(row.id)}
+              emptyMessage="No fixed IPs found"
+            />
 
-              {/* Rows */}
-              {paginatedFixedIPs.map((item) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                    selectedFixedIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
-                  }`}
-                  onClick={() => {
-                    setSelectedFixedIpId(item.id);
-                    setSelectionError(null);
-                  }}
-                >
-                  <div className="w-[40px] p-3 flex items-center justify-center">
-                    <Radio
-                      checked={selectedFixedIpId === item.id}
-                      onChange={() => {
-                        setSelectedFixedIpId(item.id);
-                        setSelectionError(null);
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {item.fixedIp}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {item.macAddress}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {item.subnetCidr}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator for Fixed IP */}
             <SelectionIndicator
               selectedItems={
                 selectedFixedIp ? [{ id: selectedFixedIp.id, label: selectedFixedIp.fixedIp }] : []
@@ -403,106 +390,14 @@ export function AssociateFloatingIPToPortDrawer({
           />
 
           <VStack gap={2}>
-            {/* Floating IP Table */}
-            <div className="w-full flex flex-col gap-1">
-              {/* Header */}
-              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="w-[40px] p-3" />
-                <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFloatingIpSort('floatingIp')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Floating IP
-                  </span>
-                  <IconChevronDown
-                    size={16}
-                    className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                  />
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFloatingIpSort('networkName')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
-                  <IconChevronDown
-                    size={16}
-                    className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                  />
-                </div>
-                <div
-                  className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleFloatingIpSort('description')}
-                >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Description
-                  </span>
-                  <IconChevronDown
-                    size={16}
-                    className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
-                  />
-                </div>
-              </div>
+            <Table<FloatingIPItem>
+              columns={floatingIpColumns}
+              data={paginatedFloatingIPs}
+              rowKey="id"
+              onRowClick={(row) => setSelectedFloatingIpId(row.id)}
+              emptyMessage="No floating IPs found"
+            />
 
-              {/* Rows */}
-              {paginatedFloatingIPs.map((item) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-pointer hover:bg-[var(--color-surface-subtle)] ${
-                    selectedFloatingIpId === item.id ? 'border-[var(--color-action-primary)]' : ''
-                  }`}
-                  onClick={() => {
-                    setSelectedFloatingIpId(item.id);
-                    setSelectionError(null);
-                  }}
-                >
-                  <div className="w-[40px] p-3 flex items-center justify-center">
-                    <Radio
-                      checked={selectedFloatingIpId === item.id}
-                      onChange={() => {
-                        setSelectedFloatingIpId(item.id);
-                        setSelectionError(null);
-                      }}
-                    />
-                  </div>
-                  <div className="w-[59px] p-2 flex items-center justify-center">
-                    <StatusIndicator status={item.status} />
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                        {item.floatingIp}
-                      </span>
-                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                      ID : {item.id}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-md text-[var(--color-action-primary)] leading-4">
-                        {item.networkName}
-                      </span>
-                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                      ID : {item.networkId}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {item.description}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator for Floating IP */}
             <SelectionIndicator
               selectedItems={
                 selectedFloatingIp
@@ -514,10 +409,6 @@ export function AssociateFloatingIPToPortDrawer({
             />
           </VStack>
         </VStack>
-
-        {selectionError && (
-          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
-        )}
       </VStack>
     </Drawer>
   );

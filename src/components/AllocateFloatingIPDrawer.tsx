@@ -11,9 +11,11 @@ import {
   Input,
   Select,
   NumberInput,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 // Types
 interface NetworkItem {
@@ -168,16 +170,63 @@ export function AllocateFloatingIPDrawer({
     currentPage * ITEMS_PER_PAGE
   );
 
-  const handleSort = (column: string) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortColumn(column);
-      setSortDirection('asc');
-    }
-  };
-
   const selectedNetwork = networks.find((n) => n.id === selectedNetworkId);
+
+  const networkColumns: TableColumn<NetworkItem>[] = [
+    {
+      key: 'id' as keyof NetworkItem,
+      label: '',
+      width: 40,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="network-select"
+            value={row.id}
+            checked={selectedNetworkId === row.id}
+            onChange={() => setSelectedNetworkId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: 60,
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span
+              className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline truncate cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'external',
+      label: 'External',
+      render: (value) => (value ? 'Yes' : 'No'),
+    },
+    { key: 'shared', label: 'Shared' },
+    { key: 'subnetCidr', label: 'Subnet CIDR' },
+  ];
 
   const handleSubmit = () => {
     setHasAttemptedSubmit(true);
@@ -286,107 +335,13 @@ export function AllocateFloatingIPDrawer({
           />
 
           <VStack gap={2}>
-            {/* Network Table */}
-            <div
-              className="flex flex-col gap-[var(--table-row-gap)] w-full"
-              style={{ maxWidth: '648px' }}
-            >
-              {/* Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Status
-                  </span>
-                </div>
-                <div
-                  className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                  onClick={() => handleSort('name')}
-                >
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Name
-                  </span>
-                  <IconChevronDown
-                    size={16}
-                    className={`transition-transform ${sortColumn === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
-                  />
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    External
-                  </span>
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Shared
-                  </span>
-                </div>
-                <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                  <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                    Subnet CIDR
-                  </span>
-                </div>
-              </div>
-
-              {/* Rows */}
-              {paginatedNetworks.map((network) => (
-                <div
-                  key={network.id}
-                  className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${
-                    selectedNetworkId === network.id
-                      ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
-                      : ''
-                  }`}
-                  onClick={() => setSelectedNetworkId(network.id)}
-                >
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                    <Radio
-                      checked={selectedNetworkId === network.id}
-                      onChange={() => setSelectedNetworkId(network.id)}
-                    />
-                  </div>
-                  <div className="w-[59px] flex items-center justify-center">
-                    <StatusIndicator status={network.status} layout="icon-only" size="sm" />
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5 min-w-0 overflow-hidden">
-                    <HStack gap={1.5} align="center">
-                      <a
-                        href="#"
-                        className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline truncate"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {network.name}
-                      </a>
-                      <IconExternalLink
-                        size={12}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : {network.id}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center min-w-0 overflow-hidden">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                      {network.external ? 'Yes' : 'No'}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center min-w-0 overflow-hidden">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                      {network.shared}
-                    </span>
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center min-w-0 overflow-hidden">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                      {network.subnetCidr}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator */}
+            <Table<NetworkItem>
+              columns={networkColumns}
+              data={paginatedNetworks}
+              rowKey="id"
+              onRowClick={(row) => setSelectedNetworkId(row.id)}
+              emptyMessage="No networks found"
+            />
             <SelectionIndicator
               selectedItems={
                 selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
@@ -401,15 +356,12 @@ export function AllocateFloatingIPDrawer({
           </VStack>
         </VStack>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
         {/* Allocation Mode Section */}
         <Disclosure open={isAllocationExpanded} onChange={setIsAllocationExpanded}>
           <Disclosure.Trigger>Allocation</Disclosure.Trigger>
           <Disclosure.Panel>
             <VStack gap={3} className="pt-3">
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <Radio
                   checked={allocationMode === 'automatic-single'}
                   onChange={() => setAllocationMode('automatic-single')}
@@ -462,7 +414,7 @@ export function AllocateFloatingIPDrawer({
         {/* DNS Settings Section */}
         <Disclosure open={isDnsExpanded} onChange={setIsDnsExpanded}>
           <Disclosure.Trigger>DNS</Disclosure.Trigger>
-          <Disclosure.Panel>
+          <Disclosure.Panel className="pb-[var(--primitive-spacing-5)]">
             <VStack gap={4} className="pt-3 w-[328px]">
               {/* DNS Domain */}
               <VStack gap={2}>

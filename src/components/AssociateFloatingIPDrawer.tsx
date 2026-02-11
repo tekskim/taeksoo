@@ -7,12 +7,14 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
   Tabs,
   TabList,
   Tab,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconLock, IconAlertCircle } from '@tabler/icons-react';
+import { IconExternalLink, IconLock, IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -178,26 +180,16 @@ export function AssociateFloatingIPDrawer({
   const [virtualAdapterSearch, setVirtualAdapterSearch] = useState('');
   const [fixedIPSearch, setFixedIPSearch] = useState('');
 
-  // Sorting states
-  const [instanceSort, setInstanceSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({
-    column: 'name',
-    direction: 'asc',
-  });
-  const [loadBalancerSort, setLoadBalancerSort] = useState<{
-    column: string;
-    direction: 'asc' | 'desc';
-  }>({ column: 'name', direction: 'asc' });
-  const [virtualAdapterSort, setVirtualAdapterSort] = useState<{
-    column: string;
-    direction: 'asc' | 'desc';
-  }>({ column: 'name', direction: 'asc' });
-  const [fixedIPSort, setFixedIPSort] = useState<{ column: string; direction: 'asc' | 'desc' }>({
-    column: 'fixedIp',
-    direction: 'asc',
-  });
-
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [selectionError, setSelectionError] = useState<string | null>(null);
+
+  const itemsPerPage = 5;
+
+  // Pagination state
+  const [instancePage, setInstancePage] = useState(1);
+  const [loadBalancerPage, setLoadBalancerPage] = useState(1);
+  const [virtualAdapterPage, setVirtualAdapterPage] = useState(1);
+  const [fixedIPPage, setFixedIPPage] = useState(1);
 
   useEffect(() => {
     if (!isOpen) {
@@ -216,6 +208,10 @@ export function AssociateFloatingIPDrawer({
     setLoadBalancerSearch('');
     setVirtualAdapterSearch('');
     setFixedIPSearch('');
+    setInstancePage(1);
+    setLoadBalancerPage(1);
+    setVirtualAdapterPage(1);
+    setFixedIPPage(1);
     setActiveTab('instance');
   };
 
@@ -234,90 +230,69 @@ export function AssociateFloatingIPDrawer({
       ? mockVirtualAdapterFixedIPs.find((f) => f.id === selectedFixedIPId)
       : fixedIPs.find((f) => f.id === selectedFixedIPId);
 
-  // Sort helpers
-  const handleInstanceSort = (column: string) => {
-    setInstanceSort((prev) => ({
-      column,
-      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
+  // Filter instances
+  const filteredInstances = instances.filter(
+    (instance) =>
+      instance.name.toLowerCase().includes(instanceSearch.toLowerCase()) ||
+      instance.id.toLowerCase().includes(instanceSearch.toLowerCase())
+  );
 
-  const handleLoadBalancerSort = (column: string) => {
-    setLoadBalancerSort((prev) => ({
-      column,
-      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
+  // Filter load balancers
+  const filteredLoadBalancers = loadBalancers.filter(
+    (lb) =>
+      lb.name.toLowerCase().includes(loadBalancerSearch.toLowerCase()) ||
+      lb.id.toLowerCase().includes(loadBalancerSearch.toLowerCase())
+  );
 
-  const handleVirtualAdapterSort = (column: string) => {
-    setVirtualAdapterSort((prev) => ({
-      column,
-      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
+  // Filter virtual adapters
+  const filteredVirtualAdapters = virtualAdapters.filter(
+    (va) =>
+      va.name.toLowerCase().includes(virtualAdapterSearch.toLowerCase()) ||
+      va.id.toLowerCase().includes(virtualAdapterSearch.toLowerCase())
+  );
 
-  const handleFixedIPSort = (column: string) => {
-    setFixedIPSort((prev) => ({
-      column,
-      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
+  // Filter fixed IPs
+  const filteredFixedIPs = fixedIPs.filter(
+    (fip) =>
+      fip.fixedIp.toLowerCase().includes(fixedIPSearch.toLowerCase()) ||
+      fip.macAddress.toLowerCase().includes(fixedIPSearch.toLowerCase())
+  );
 
-  // Filter and sort instances
-  const filteredInstances = instances
-    .filter(
-      (instance) =>
-        instance.name.toLowerCase().includes(instanceSearch.toLowerCase()) ||
-        instance.id.toLowerCase().includes(instanceSearch.toLowerCase())
-    )
-    .sort((a, b) => {
-      const aValue = a[instanceSort.column as keyof InstanceItem];
-      const bValue = b[instanceSort.column as keyof InstanceItem];
-      const direction = instanceSort.direction === 'asc' ? 1 : -1;
-      return String(aValue).localeCompare(String(bValue)) * direction;
-    });
+  // Filter virtual adapter fixed IPs
+  const filteredVAFixedIPs = mockVirtualAdapterFixedIPs.filter((fip) =>
+    fip.fixedIp.toLowerCase().includes(fixedIPSearch.toLowerCase())
+  );
 
-  // Filter and sort load balancers
-  const filteredLoadBalancers = loadBalancers
-    .filter(
-      (lb) =>
-        lb.name.toLowerCase().includes(loadBalancerSearch.toLowerCase()) ||
-        lb.id.toLowerCase().includes(loadBalancerSearch.toLowerCase())
-    )
-    .sort((a, b) => {
-      const aValue = a[loadBalancerSort.column as keyof LoadBalancerItem];
-      const bValue = b[loadBalancerSort.column as keyof LoadBalancerItem];
-      const direction = loadBalancerSort.direction === 'asc' ? 1 : -1;
-      return String(aValue).localeCompare(String(bValue)) * direction;
-    });
+  // Paginated data
+  const instanceTotalPages = Math.ceil(filteredInstances.length / itemsPerPage);
+  const paginatedInstances = filteredInstances.slice(
+    (instancePage - 1) * itemsPerPage,
+    instancePage * itemsPerPage
+  );
 
-  // Filter and sort virtual adapters
-  const filteredVirtualAdapters = virtualAdapters
-    .filter(
-      (va) =>
-        va.name.toLowerCase().includes(virtualAdapterSearch.toLowerCase()) ||
-        va.id.toLowerCase().includes(virtualAdapterSearch.toLowerCase())
-    )
-    .sort((a, b) => {
-      const aValue = a[virtualAdapterSort.column as keyof VirtualAdapterItem];
-      const bValue = b[virtualAdapterSort.column as keyof VirtualAdapterItem];
-      const direction = virtualAdapterSort.direction === 'asc' ? 1 : -1;
-      return String(aValue).localeCompare(String(bValue)) * direction;
-    });
+  const loadBalancerTotalPages = Math.ceil(filteredLoadBalancers.length / itemsPerPage);
+  const paginatedLoadBalancers = filteredLoadBalancers.slice(
+    (loadBalancerPage - 1) * itemsPerPage,
+    loadBalancerPage * itemsPerPage
+  );
 
-  // Filter and sort fixed IPs
-  const filteredFixedIPs = fixedIPs
-    .filter(
-      (fip) =>
-        fip.fixedIp.toLowerCase().includes(fixedIPSearch.toLowerCase()) ||
-        fip.macAddress.toLowerCase().includes(fixedIPSearch.toLowerCase())
-    )
-    .sort((a, b) => {
-      const aValue = a[fixedIPSort.column as keyof FixedIPItem];
-      const bValue = b[fixedIPSort.column as keyof FixedIPItem];
-      const direction = fixedIPSort.direction === 'asc' ? 1 : -1;
-      return String(aValue).localeCompare(String(bValue)) * direction;
-    });
+  const virtualAdapterTotalPages = Math.ceil(filteredVirtualAdapters.length / itemsPerPage);
+  const paginatedVirtualAdapters = filteredVirtualAdapters.slice(
+    (virtualAdapterPage - 1) * itemsPerPage,
+    virtualAdapterPage * itemsPerPage
+  );
+
+  const fixedIPTotalPages = Math.ceil(filteredFixedIPs.length / itemsPerPage);
+  const paginatedFixedIPs = filteredFixedIPs.slice(
+    (fixedIPPage - 1) * itemsPerPage,
+    fixedIPPage * itemsPerPage
+  );
+
+  const vaFixedIPTotalPages = Math.ceil(filteredVAFixedIPs.length / itemsPerPage);
+  const paginatedVAFixedIPs = filteredVAFixedIPs.slice(
+    (fixedIPPage - 1) * itemsPerPage,
+    fixedIPPage * itemsPerPage
+  );
 
   // Get selected resource based on active tab
   const getSelectedResourceId = () => {
@@ -346,16 +321,253 @@ export function AssociateFloatingIPDrawer({
     handleClose();
   };
 
-  // Render sort icon
-  const renderSortIcon = (
-    column: string,
-    sortState: { column: string; direction: 'asc' | 'desc' }
-  ) => (
-    <IconChevronDown
-      size={16}
-      className={`transition-transform ${sortState.column === column && sortState.direction === 'desc' ? 'rotate-180' : ''}`}
-    />
-  );
+  const instanceColumns: TableColumn<InstanceItem>[] = [
+    {
+      key: 'id' as keyof InstanceItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="instance-select"
+            value={row.id}
+            checked={selectedInstanceId === row.id}
+            onChange={() => {
+              setSelectedInstanceId(row.id);
+              setSelectionError(null);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <a
+              href="#"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </a>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+            {row.hasAlert && (
+              <IconAlertCircle
+                size={12}
+                stroke={1.5}
+                className="text-[var(--color-state-danger)]"
+              />
+            )}
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'locked' as keyof InstanceItem,
+      label: 'Locked',
+      width: '62px',
+      align: 'center',
+      render: (_value, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
+    },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1 },
+    { key: 'network', label: 'Network', flex: 1 },
+  ];
+
+  const loadBalancerColumns: TableColumn<LoadBalancerItem>[] = [
+    {
+      key: 'id' as keyof LoadBalancerItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="lb-select"
+            value={row.id}
+            checked={selectedLoadBalancerId === row.id}
+            onChange={() => {
+              setSelectedLoadBalancerId(row.id);
+              setSelectionError(null);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <a
+              href="#"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </a>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+            {row.status === 'error' && (
+              <IconAlertCircle
+                size={12}
+                stroke={1.5}
+                className="text-[var(--color-state-danger)]"
+              />
+            )}
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    { key: 'vipAddress', label: 'VIP Address', flex: 1, sortable: true },
+  ];
+
+  const virtualAdapterColumns: TableColumn<VirtualAdapterItem>[] = [
+    {
+      key: 'id' as keyof VirtualAdapterItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="va-select"
+            value={row.id}
+            checked={selectedVirtualAdapterId === row.id}
+            onChange={() => {
+              setSelectedVirtualAdapterId(row.id);
+              setSelectionError(null);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <a
+              href="#"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </a>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        </div>
+      ),
+    },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1 },
+    { key: 'description', label: 'Description', flex: 1, sortable: true },
+  ];
+
+  const fixedIPColumns: TableColumn<FixedIPItem>[] = [
+    {
+      key: 'id' as keyof FixedIPItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="fixedip-select"
+            value={row.id}
+            checked={selectedFixedIPId === row.id}
+            onChange={() => setSelectedFixedIPId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'fixedIp',
+      label: 'Fixed IP',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <HStack gap={1.5} align="center">
+          <span className="text-body-md text-[var(--color-text-default)]">{row.fixedIp}</span>
+          {row.hasAlert && (
+            <IconAlertCircle size={12} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          )}
+        </HStack>
+      ),
+    },
+    { key: 'macAddress', label: 'MAC Address', flex: 1, sortable: true },
+    { key: 'network', label: 'Network', flex: 1, sortable: true },
+  ];
+
+  const vaFixedIPColumns: TableColumn<FixedIPItem>[] = [
+    {
+      key: 'id' as keyof FixedIPItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="vafixedip-select"
+            value={row.id}
+            checked={selectedFixedIPId === row.id}
+            onChange={() => setSelectedFixedIPId(row.id)}
+          />
+        </div>
+      ),
+    },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1, sortable: true },
+    {
+      key: 'ownedSubnet' as keyof FixedIPItem,
+      label: 'Owned Subnet',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => row.ownedSubnet || '-',
+    },
+  ];
 
   return (
     <Drawer
@@ -403,6 +615,10 @@ export function AssociateFloatingIPDrawer({
               setSelectedLoadBalancerId(null);
               setSelectedVirtualAdapterId(null);
               setSelectedFixedIPId(null);
+              setInstancePage(1);
+              setLoadBalancerPage(1);
+              setVirtualAdapterPage(1);
+              setFixedIPPage(1);
               setSelectionError(null);
             }}
           >
@@ -426,117 +642,24 @@ export function AssociateFloatingIPDrawer({
                 />
               </div>
 
-              {/* Pagination */}
-              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
+              <Pagination
+                currentPage={instancePage}
+                totalPages={instanceTotalPages}
+                totalItems={filteredInstances.length}
+                onPageChange={setInstancePage}
+              />
 
               <VStack gap={2}>
-                {/* Table */}
-                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                  {/* Header */}
-                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Status
-                      </span>
-                    </div>
-                    <div
-                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      onClick={() => handleInstanceSort('name')}
-                    >
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Name
-                      </span>
-                      {renderSortIcon('name', instanceSort)}
-                    </div>
-                    <div className="w-[62px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Locked
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Fixed IP
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Network
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Rows */}
-                  {filteredInstances.map((instance) => (
-                    <div
-                      key={instance.id}
-                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedInstanceId === instance.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                      onClick={() => {
-                        setSelectedInstanceId(instance.id);
-                        setSelectionError(null);
-                      }}
-                    >
-                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                        <Radio
-                          checked={selectedInstanceId === instance.id}
-                          onChange={() => {
-                            setSelectedInstanceId(instance.id);
-                            setSelectionError(null);
-                          }}
-                        />
-                      </div>
-                      <div className="w-[59px] flex items-center justify-center">
-                        <StatusIndicator status={instance.status} />
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                        <HStack gap={1.5} align="center">
-                          <a
-                            href="#"
-                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {instance.name}
-                          </a>
-                          <IconExternalLink
-                            size={12}
-                            stroke={1.5}
-                            className="text-[var(--color-action-primary)]"
-                          />
-                          {instance.hasAlert && (
-                            <IconAlertCircle
-                              size={16}
-                              className="text-[var(--color-state-danger)]"
-                            />
-                          )}
-                        </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID : {instance.id}
-                        </span>
-                      </div>
-                      <div className="w-[62px] flex items-center justify-center">
-                        {instance.locked && (
-                          <IconLock
-                            size={16}
-                            stroke={1.5}
-                            className="text-[var(--color-text-default)]"
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {instance.fixedIp}
-                        </span>
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {instance.network}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Selection Indicator */}
+                <Table<InstanceItem>
+                  columns={instanceColumns}
+                  data={paginatedInstances}
+                  rowKey="id"
+                  onRowClick={(row) => {
+                    setSelectedInstanceId(row.id);
+                    setSelectionError(null);
+                  }}
+                  emptyMessage="No instances found"
+                />
                 <SelectionIndicator
                   selectedItems={
                     selectedInstance
@@ -563,97 +686,24 @@ export function AssociateFloatingIPDrawer({
                 />
               </div>
 
-              {/* Pagination */}
-              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
+              <Pagination
+                currentPage={loadBalancerPage}
+                totalPages={loadBalancerTotalPages}
+                totalItems={filteredLoadBalancers.length}
+                onPageChange={setLoadBalancerPage}
+              />
 
               <VStack gap={2}>
-                {/* Table */}
-                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                  {/* Header */}
-                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Status
-                      </span>
-                    </div>
-                    <div
-                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      onClick={() => handleLoadBalancerSort('name')}
-                    >
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Name
-                      </span>
-                      {renderSortIcon('name', loadBalancerSort)}
-                    </div>
-                    <div
-                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      onClick={() => handleLoadBalancerSort('vipAddress')}
-                    >
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        VIP Address
-                      </span>
-                      {renderSortIcon('vipAddress', loadBalancerSort)}
-                    </div>
-                  </div>
-
-                  {/* Rows */}
-                  {filteredLoadBalancers.map((lb) => (
-                    <div
-                      key={lb.id}
-                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedLoadBalancerId === lb.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                      onClick={() => {
-                        setSelectedLoadBalancerId(lb.id);
-                        setSelectionError(null);
-                      }}
-                    >
-                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                        <Radio
-                          checked={selectedLoadBalancerId === lb.id}
-                          onChange={() => {
-                            setSelectedLoadBalancerId(lb.id);
-                            setSelectionError(null);
-                          }}
-                        />
-                      </div>
-                      <div className="w-[59px] flex items-center justify-center">
-                        <StatusIndicator status={lb.status} />
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                        <HStack gap={1.5} align="center">
-                          <a
-                            href="#"
-                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {lb.name}
-                          </a>
-                          <IconExternalLink
-                            size={12}
-                            stroke={1.5}
-                            className="text-[var(--color-action-primary)]"
-                          />
-                          {lb.status === 'error' && (
-                            <IconAlertCircle
-                              size={16}
-                              className="text-[var(--color-state-danger)]"
-                            />
-                          )}
-                        </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID : {lb.id}
-                        </span>
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {lb.vipAddress}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Selection Indicator */}
+                <Table<LoadBalancerItem>
+                  columns={loadBalancerColumns}
+                  data={paginatedLoadBalancers}
+                  rowKey="id"
+                  onRowClick={(row) => {
+                    setSelectedLoadBalancerId(row.id);
+                    setSelectionError(null);
+                  }}
+                  emptyMessage="No load balancers found"
+                />
                 <SelectionIndicator
                   selectedItems={
                     selectedLoadBalancer
@@ -680,101 +730,24 @@ export function AssociateFloatingIPDrawer({
                 />
               </div>
 
-              {/* Pagination */}
-              <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
+              <Pagination
+                currentPage={virtualAdapterPage}
+                totalPages={virtualAdapterTotalPages}
+                totalItems={filteredVirtualAdapters.length}
+                onPageChange={setVirtualAdapterPage}
+              />
 
               <VStack gap={2}>
-                {/* Table */}
-                <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                  {/* Header */}
-                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                    <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Status
-                      </span>
-                    </div>
-                    <div
-                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      onClick={() => handleVirtualAdapterSort('name')}
-                    >
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Name
-                      </span>
-                      {renderSortIcon('name', virtualAdapterSort)}
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Fixed IP
-                      </span>
-                    </div>
-                    <div
-                      className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                      onClick={() => handleVirtualAdapterSort('description')}
-                    >
-                      <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                        Description
-                      </span>
-                      {renderSortIcon('description', virtualAdapterSort)}
-                    </div>
-                  </div>
-
-                  {/* Rows */}
-                  {filteredVirtualAdapters.map((va) => (
-                    <div
-                      key={va.id}
-                      className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedVirtualAdapterId === va.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                      onClick={() => {
-                        setSelectedVirtualAdapterId(va.id);
-                        setSelectionError(null);
-                      }}
-                    >
-                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                        <Radio
-                          checked={selectedVirtualAdapterId === va.id}
-                          onChange={() => {
-                            setSelectedVirtualAdapterId(va.id);
-                            setSelectionError(null);
-                          }}
-                        />
-                      </div>
-                      <div className="w-[59px] flex items-center justify-center">
-                        <StatusIndicator status={va.status} />
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                        <HStack gap={1.5} align="center">
-                          <a
-                            href="#"
-                            className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {va.name}
-                          </a>
-                          <IconExternalLink
-                            size={12}
-                            stroke={1.5}
-                            className="text-[var(--color-action-primary)]"
-                          />
-                        </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID : {va.id}
-                        </span>
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {va.fixedIp}
-                        </span>
-                      </div>
-                      <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {va.description}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Selection Indicator */}
+                <Table<VirtualAdapterItem>
+                  columns={virtualAdapterColumns}
+                  data={paginatedVirtualAdapters}
+                  rowKey="id"
+                  onRowClick={(row) => {
+                    setSelectedVirtualAdapterId(row.id);
+                    setSelectionError(null);
+                  }}
+                  emptyMessage="No virtual adapters found"
+                />
                 <SelectionIndicator
                   selectedItems={
                     selectedVirtualAdapter
@@ -788,11 +761,6 @@ export function AssociateFloatingIPDrawer({
             </VStack>
           )}
         </VStack>
-
-        {/* Divider - show when Instance or Virtual Adapter tab is active */}
-        {(activeTab === 'instance' || activeTab === 'virtualAdapter') && (
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-        )}
 
         {/* Fixed IP Section - only show when Instance tab is active */}
         {activeTab === 'instance' && (
@@ -809,82 +777,21 @@ export function AssociateFloatingIPDrawer({
               />
             </div>
 
-            {/* Pagination */}
-            <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
+            <Pagination
+              currentPage={fixedIPPage}
+              totalPages={fixedIPTotalPages}
+              totalItems={filteredFixedIPs.length}
+              onPageChange={setFixedIPPage}
+            />
 
             <VStack gap={2}>
-              {/* Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                {/* Header */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleFixedIPSort('fixedIp')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Fixed IP
-                    </span>
-                    {renderSortIcon('fixedIp', fixedIPSort)}
-                  </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleFixedIPSort('macAddress')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Mac Address
-                    </span>
-                    {renderSortIcon('macAddress', fixedIPSort)}
-                  </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleFixedIPSort('network')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Network
-                    </span>
-                    {renderSortIcon('network', fixedIPSort)}
-                  </div>
-                </div>
-
-                {/* Rows */}
-                {filteredFixedIPs.map((fip) => (
-                  <div
-                    key={fip.id}
-                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => setSelectedFixedIPId(fip.id)}
-                  >
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                      <Radio
-                        checked={selectedFixedIPId === fip.id}
-                        onChange={() => setSelectedFixedIPId(fip.id)}
-                      />
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <HStack gap={1.5} align="center">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {fip.fixedIp}
-                        </span>
-                        {fip.hasAlert && (
-                          <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
-                        )}
-                      </HStack>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {fip.macAddress}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {fip.network}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Selection Indicator */}
+              <Table<FixedIPItem>
+                columns={fixedIPColumns}
+                data={paginatedFixedIPs}
+                rowKey="id"
+                onRowClick={(row) => setSelectedFixedIPId(row.id)}
+                emptyMessage="No fixed IPs found"
+              />
               <SelectionIndicator
                 selectedItems={
                   selectedFixedIP
@@ -913,63 +820,21 @@ export function AssociateFloatingIPDrawer({
               />
             </div>
 
-            {/* Pagination */}
-            <Pagination currentPage={1} totalPages={5} totalItems={115} onPageChange={() => {}} />
+            <Pagination
+              currentPage={fixedIPPage}
+              totalPages={vaFixedIPTotalPages}
+              totalItems={filteredVAFixedIPs.length}
+              onPageChange={setFixedIPPage}
+            />
 
             <VStack gap={2}>
-              {/* Table */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                {/* Header */}
-                <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                  <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleFixedIPSort('fixedIp')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Fixed IP
-                    </span>
-                    {renderSortIcon('fixedIp', fixedIPSort)}
-                  </div>
-                  <div
-                    className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                    onClick={() => handleFixedIPSort('ownedSubnet')}
-                  >
-                    <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                      Owned Subnet
-                    </span>
-                    {renderSortIcon('ownedSubnet', fixedIPSort)}
-                  </div>
-                </div>
-
-                {/* Rows */}
-                {mockVirtualAdapterFixedIPs.map((fip) => (
-                  <div
-                    key={fip.id}
-                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedFixedIPId === fip.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => setSelectedFixedIPId(fip.id)}
-                  >
-                    <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                      <Radio
-                        checked={selectedFixedIPId === fip.id}
-                        onChange={() => setSelectedFixedIPId(fip.id)}
-                      />
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {fip.fixedIp}
-                      </span>
-                    </div>
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {fip.ownedSubnet || '-'}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Selection Indicator */}
+              <Table<FixedIPItem>
+                columns={vaFixedIPColumns}
+                data={paginatedVAFixedIPs}
+                rowKey="id"
+                onRowClick={(row) => setSelectedFixedIPId(row.id)}
+                emptyMessage="No fixed IPs found"
+              />
               <SelectionIndicator
                 selectedItems={
                   selectedFixedIP
@@ -981,10 +846,6 @@ export function AssociateFloatingIPDrawer({
               />
             </VStack>
           </VStack>
-        )}
-
-        {selectionError && (
-          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
         )}
       </VStack>
     </Drawer>

@@ -172,7 +172,7 @@ export function CreateKeyPairDrawer({
               value={createType}
               onChange={(value) => setCreateType(value as 'create' | 'import')}
             >
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <Radio value="create" label="Create key pair" />
                 <Radio value="import" label="Import Key Pair" />
               </VStack>
@@ -203,30 +203,33 @@ export function CreateKeyPairDrawer({
           <FormField required error={hasAttemptedSubmit && !publicKey.trim()}>
             <FormField.Label>Public key</FormField.Label>
             <FormField.Control>
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pub,.pem,.txt"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              {/* Upload Button */}
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1.5 px-3 py-2 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-              >
-                <IconUpload size={16} stroke={1} />
-                Upload a File
-              </button>
-              {/* Textarea */}
-              <textarea
-                value={publicKey}
-                onChange={(e) => setPublicKey(e.target.value)}
-                placeholder="Upload a file with a public key or enter it in the field."
-                className={`w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
-              />
+              <VStack gap={2} className="w-full">
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pub,.pem,.txt"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                {/* Upload Button */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  leftIcon={<IconUpload size={12} stroke={1.5} />}
+                  className="w-fit"
+                >
+                  Upload a File
+                </Button>
+                {/* Textarea */}
+                <textarea
+                  value={publicKey}
+                  onChange={(e) => setPublicKey(e.target.value)}
+                  placeholder="Upload a file with a public key or enter it in the field."
+                  className={`w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
+                />
+              </VStack>
             </FormField.Control>
             {hasAttemptedSubmit && !publicKey.trim() && (
               <FormField.ErrorMessage>Public key is required</FormField.ErrorMessage>

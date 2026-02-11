@@ -27,18 +27,32 @@ export function EditPortDrawer({ isOpen, onClose, port, onSubmit }: EditPortDraw
   const [portName, setPortName] = useState(port.name);
   const [description, setDescription] = useState(port.description || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or port changes
   useEffect(() => {
     if (isOpen) {
       setPortName(port.name);
       setDescription(port.description || '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, port]);
 
   const handleSubmit = async () => {
-    if (!portName.trim()) return;
+    setHasAttemptedSubmit(true);
 
+    if (!portName.trim()) {
+      setNameError('Port name is required');
+      return;
+    }
+    if (portName.trim().length > 128) {
+      setNameError('Port name must be 128 characters or fewer');
+      return;
+    }
+
+    setNameError(null);
     setIsSubmitting(true);
     try {
       await onSubmit?.(portName, description);
@@ -49,6 +63,8 @@ export function EditPortDrawer({ isOpen, onClose, port, onSubmit }: EditPortDraw
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -82,16 +98,21 @@ export function EditPortDrawer({ isOpen, onClose, port, onSubmit }: EditPortDraw
         </VStack>
 
         {/* Port Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Port name</FormField.Label>
           <FormField.Control>
             <Input
               value={portName}
-              onChange={(e) => setPortName(e.target.value)}
+              onChange={(e) => {
+                setPortName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. my-port"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

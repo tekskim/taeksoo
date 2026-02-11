@@ -34,6 +34,7 @@ export function Tooltip({
   const [isVisible, setIsVisible] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [arrowOffset, setArrowOffset] = useState<number | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<number | undefined>(undefined);
@@ -67,11 +68,31 @@ export function Tooltip({
         break;
     }
 
-    // Keep tooltip within viewport
-    x = Math.max(8, Math.min(x, window.innerWidth - tooltipRect.width - 8));
-    y = Math.max(8, Math.min(y, window.innerHeight - tooltipRect.height - 8));
+    // Keep tooltip within viewport and track arrow offset
+    const clampedX = Math.max(8, Math.min(x, window.innerWidth - tooltipRect.width - 8));
+    const clampedY = Math.max(8, Math.min(y, window.innerHeight - tooltipRect.height - 8));
 
-    setCoords({ x, y });
+    // Calculate arrow offset when tooltip is shifted horizontally (for top/bottom)
+    if (position === 'top' || position === 'bottom') {
+      const shift = clampedX - x;
+      if (Math.abs(shift) > 1) {
+        // Arrow should point at trigger center relative to the tooltip box
+        const triggerCenter = triggerRect.left + triggerRect.width / 2;
+        setArrowOffset(triggerCenter - clampedX);
+      } else {
+        setArrowOffset(null);
+      }
+    } else if (position === 'left' || position === 'right') {
+      const shift = clampedY - y;
+      if (Math.abs(shift) > 1) {
+        const triggerCenter = triggerRect.top + triggerRect.height / 2;
+        setArrowOffset(triggerCenter - clampedY);
+      } else {
+        setArrowOffset(null);
+      }
+    }
+
+    setCoords({ x: clampedX, y: clampedY });
     setIsPositioned(true);
   };
 
@@ -105,14 +126,50 @@ export function Tooltip({
   }, []);
 
   // Arrow position styles based on tooltip position
-  const arrowStyles: Record<TooltipPosition, string> = {
-    top: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-l-transparent border-r-transparent border-b-transparent border-t-[var(--tooltip-bg)]',
-    bottom:
-      'top-0 left-1/2 -translate-x-1/2 -translate-y-full border-l-transparent border-r-transparent border-t-transparent border-b-[var(--tooltip-bg)]',
-    left: 'right-0 top-1/2 translate-x-full -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-[var(--tooltip-bg)]',
-    right:
-      'left-0 top-1/2 -translate-x-full -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-[var(--tooltip-bg)]',
+  const getArrowStyles = (): { className: string; style?: React.CSSProperties } => {
+    const base: Record<TooltipPosition, string> = {
+      top: 'bottom-0 translate-y-full border-l-transparent border-r-transparent border-b-transparent border-t-[var(--tooltip-bg)]',
+      bottom:
+        'top-0 -translate-y-full border-l-transparent border-r-transparent border-t-transparent border-b-[var(--tooltip-bg)]',
+      left: 'right-0 translate-x-full border-t-transparent border-b-transparent border-r-transparent border-l-[var(--tooltip-bg)]',
+      right:
+        'left-0 -translate-x-full border-t-transparent border-b-transparent border-l-transparent border-r-[var(--tooltip-bg)]',
+    };
+
+    if (arrowOffset !== null && (position === 'top' || position === 'bottom')) {
+      return {
+        className: base[position],
+        style: {
+          left: `${arrowOffset}px`,
+          transform:
+            'translateX(-50%)' +
+            (position === 'bottom' ? ' translateY(-100%)' : ' translateY(100%)'),
+        },
+      };
+    }
+    if (arrowOffset !== null && (position === 'left' || position === 'right')) {
+      return {
+        className: base[position],
+        style: {
+          top: `${arrowOffset}px`,
+          transform:
+            'translateY(-50%)' +
+            (position === 'right' ? ' translateX(-100%)' : ' translateX(100%)'),
+        },
+      };
+    }
+
+    // Default: centered
+    const centered: Record<TooltipPosition, string> = {
+      top: `${base.top} left-1/2 -translate-x-1/2`,
+      bottom: `${base.bottom} left-1/2 -translate-x-1/2`,
+      left: `${base.left} top-1/2 -translate-y-1/2`,
+      right: `${base.right} top-1/2 -translate-y-1/2`,
+    };
+    return { className: centered[position] };
   };
+
+  const arrowProps = getArrowStyles();
 
   return (
     <>
@@ -159,7 +216,8 @@ export function Tooltip({
               </div>
               {/* Arrow */}
               <div
-                className={`absolute w-0 h-0 border-[length:var(--tooltip-arrow-size)] border-solid ${arrowStyles[position]}`}
+                className={`absolute w-0 h-0 border-[length:var(--tooltip-arrow-size)] border-solid ${arrowProps.className}`}
+                style={arrowProps.style}
               />
             </div>
           </div>,

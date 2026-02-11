@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -32,17 +32,30 @@ export function EditVolumeSnapshotDrawer({
   const [snapshotName, setSnapshotName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && volumeSnapshot) {
       setSnapshotName(volumeSnapshot.name);
       setDescription(volumeSnapshot.description ?? '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, volumeSnapshot]);
 
   const handleSubmit = async () => {
-    if (!snapshotName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!snapshotName.trim()) {
+      setNameError('Snapshot name is required');
+      return;
+    }
+    if (snapshotName.trim().length > 128) {
+      setNameError('Snapshot name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -54,6 +67,8 @@ export function EditVolumeSnapshotDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -87,20 +102,25 @@ export function EditVolumeSnapshotDrawer({
         </h2>
 
         {/* Volume Snapshot Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume Snapshot Name
-          </label>
-          <Input
-            value={snapshotName}
-            onChange={(e) => setSnapshotName(e.target.value)}
-            placeholder="Enter volume snapshot name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Volume Snapshot Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={snapshotName}
+              onChange={(e) => {
+                setSnapshotName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter volume snapshot name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">

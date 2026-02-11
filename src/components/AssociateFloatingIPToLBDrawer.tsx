@@ -6,9 +6,11 @@ import {
   Pagination,
   Radio,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -117,6 +119,66 @@ export function AssociateFloatingIPToLBDrawer({
 
   const selectedFloatingIP = floatingIPs.find((fip) => fip.id === selectedFloatingIpId);
 
+  const floatingIPColumns: TableColumn<FloatingIPItem>[] = [
+    {
+      key: 'id' as keyof FloatingIPItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="floating-ip-select"
+            value={row.id}
+            checked={selectedFloatingIpId === row.id}
+            onChange={() => setSelectedFloatingIpId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      flex: 1,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
+              {row.floatingIp}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'networkName',
+      label: 'Network',
+      flex: 1,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
+            {row.networkName}
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
+            ID : {row.networkId}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+    },
+  ];
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -192,90 +254,13 @@ export function AssociateFloatingIPToLBDrawer({
           />
 
           <VStack gap={2}>
-            {/* Floating IPs Table */}
-            <div className="flex flex-col gap-1" style={{ width: '648px', maxWidth: '648px' }}>
-              {/* Header */}
-              <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="w-[40px] flex items-center justify-center shrink-0" />
-                <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                    Floating IP
-                  </span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                    Network
-                  </span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-                <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                    Created At
-                  </span>
-                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-                </div>
-              </div>
-
-              {/* Rows */}
-              {paginatedFloatingIPs.map((fip) => (
-                <div
-                  key={fip.id}
-                  className={`flex items-stretch min-h-[40px] border rounded-md cursor-pointer transition-all ${
-                    selectedFloatingIpId === fip.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                  onClick={() => setSelectedFloatingIpId(fip.id)}
-                >
-                  {/* Radio */}
-                  <div
-                    className="w-[40px] flex items-center justify-center shrink-0"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Radio
-                      name="floating-ip-select"
-                      value={fip.id}
-                      checked={selectedFloatingIpId === fip.id}
-                      onChange={() => setSelectedFloatingIpId(fip.id)}
-                    />
-                  </div>
-                  {/* Floating IP */}
-                  <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
-                        {fip.floatingIp}
-                      </span>
-                      <IconExternalLink
-                        size={12}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
-                      ID : {fip.id}
-                    </span>
-                  </div>
-                  {/* Network */}
-                  <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                      {fip.networkName}
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
-                      ID : {fip.networkId}
-                    </span>
-                  </div>
-                  {/* Created At */}
-                  <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
-                      {fip.createdAt}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Selection Indicator - Below table */}
+            <Table<FloatingIPItem>
+              columns={floatingIPColumns}
+              data={paginatedFloatingIPs}
+              rowKey="id"
+              onRowClick={(row) => setSelectedFloatingIpId(row.id)}
+              emptyMessage="No floating IPs found"
+            />
             <SelectionIndicator
               selectedItems={
                 selectedFloatingIP

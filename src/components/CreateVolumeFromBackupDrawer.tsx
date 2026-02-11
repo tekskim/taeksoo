@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -267,28 +267,29 @@ export function CreateVolumeFromBackupDrawer({
 
         {/* Capacity Slider */}
         <FormField>
-          <HStack className="justify-between w-full">
-            <FormField.Label>Capacity (GiB)</FormField.Label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              {minCapacity} - {maxCapacity} GiB
-            </span>
-          </HStack>
+          <FormField.Label>Capacity (GiB)</FormField.Label>
           <FormField.Control>
-            <VStack gap={5} className="w-full">
-              <Slider value={capacity} onChange={setCapacity} min={minCapacity} max={maxCapacity} />
-              <Input
-                type="number"
-                value={capacity.toString()}
-                onChange={(e) => {
-                  const val = parseInt(e.target.value) || minCapacity;
-                  setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity));
-                }}
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                value={capacity}
+                onChange={setCapacity}
                 min={minCapacity}
                 max={maxCapacity}
-                fullWidth
+                className="flex-1"
               />
-            </VStack>
+              <NumberInput
+                value={capacity}
+                onChange={(val) => setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity))}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
           </FormField.Control>
+          <FormField.HelperText>
+            {minCapacity} - {maxCapacity} GiB
+          </FormField.HelperText>
         </FormField>
 
         {/* Volume Type Select */}

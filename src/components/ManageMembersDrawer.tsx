@@ -8,14 +8,11 @@ import {
   StatusIndicator,
   NumberInput,
   Input,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import {
-  IconExternalLink,
-  IconChevronDown,
-  IconCirclePlus,
-  IconCircleMinus,
-} from '@tabler/icons-react';
+import { IconExternalLink, IconCirclePlus, IconCircleMinus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -155,7 +152,6 @@ export function ManageMembersDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIps, setSelectedIps] = useState<Record<string, string>>({});
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const itemsPerPage = 5;
 
@@ -169,17 +165,12 @@ export function ManageMembersDrawer({
     }
   }, [isOpen, initialMembers]);
 
-  // Filtering and sorting
-  const filteredInstances = instances
-    .filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.ipAddresses.some((ip) => ip.includes(searchQuery))
-    )
-    .sort((a, b) => {
-      const comparison = a.name.localeCompare(b.name);
-      return sortDirection === 'asc' ? comparison : -comparison;
-    });
+  // Filtering
+  const filteredInstances = instances.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.ipAddresses.some((ip) => ip.includes(searchQuery))
+  );
 
   const paginatedInstances = filteredInstances.slice(
     (currentPage - 1) * itemsPerPage,
@@ -187,6 +178,67 @@ export function ManageMembersDrawer({
   );
 
   const totalPages = Math.ceil(filteredInstances.length / itemsPerPage);
+
+  const instanceColumns: TableColumn<InstanceItem>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      width: '180px',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'ipAddresses',
+      label: 'IP',
+      width: '180px',
+      render: (_value, row) => {
+        const selectedIp = selectedIps[row.id] || row.ipAddresses[0];
+        return (
+          <Select
+            value={selectedIp}
+            onChange={(value) => setSelectedIps((prev) => ({ ...prev, [row.id]: value }))}
+            options={row.ipAddresses.map((ip) => ({ value: ip, label: ip }))}
+            className="w-full"
+          />
+        );
+      },
+    },
+    {
+      key: 'id' as keyof InstanceItem,
+      label: 'Action',
+      flex: 1,
+      render: (_value, row) => {
+        const selectedIp = selectedIps[row.id] || row.ipAddresses[0];
+        return (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => handleAddMember(row, selectedIp)}
+            className="w-fit"
+          >
+            <IconCirclePlus size={16} />
+            Add Member
+          </Button>
+        );
+      },
+    },
+  ];
 
   const handleAddMember = (instance: InstanceItem, ip: string) => {
     const newMember: MemberItem = {
@@ -282,86 +334,12 @@ export function ManageMembersDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Instances Table */}
-          <div className="w-full flex flex-col gap-[var(--table-row-gap)]">
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                  Status
-                </span>
-              </div>
-              <div
-                className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-              >
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
-                <IconChevronDown
-                  size={16}
-                  className={`transition-transform ${sortDirection === 'desc' ? 'rotate-180' : ''}`}
-                />
-              </div>
-              <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                  IP
-                </span>
-              </div>
-              <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                  Action
-                </span>
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedInstances.map((item) => {
-              const selectedIp = selectedIps[item.id] || item.ipAddresses[0];
-              return (
-                <div
-                  key={item.id}
-                  className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] hover:bg-[var(--table-row-hover-bg)] transition-all"
-                >
-                  <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
-                    <StatusIndicator status={item.status} />
-                  </div>
-                  <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex flex-col justify-center gap-0.5">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)]">
-                        {item.name}
-                      </span>
-                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                      ID : {item.id}
-                    </span>
-                  </div>
-                  <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <Select
-                      value={selectedIp}
-                      onChange={(value) =>
-                        setSelectedIps((prev) => ({ ...prev, [item.id]: value }))
-                      }
-                      options={item.ipAddresses.map((ip) => ({ value: ip, label: ip }))}
-                      className="w-full"
-                    />
-                  </div>
-                  <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleAddMember(item, selectedIp)}
-                      className="w-fit"
-                    >
-                      <IconCirclePlus size={16} />
-                      Add Member
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <Table<InstanceItem>
+            columns={instanceColumns}
+            data={paginatedInstances}
+            rowKey="id"
+            emptyMessage="No instances found"
+          />
         </VStack>
 
         {/* Allocated Members Section */}

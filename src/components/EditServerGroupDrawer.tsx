@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -30,16 +30,29 @@ export function EditServerGroupDrawer({
 }: EditServerGroupDrawerProps) {
   const [groupName, setGroupName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && serverGroup) {
       setGroupName(serverGroup.name);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, serverGroup]);
 
   const handleSubmit = async () => {
-    if (!groupName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!groupName.trim()) {
+      setNameError('Server group name is required');
+      return;
+    }
+    if (groupName.trim().length > 128) {
+      setNameError('Server group name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -51,6 +64,8 @@ export function EditServerGroupDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -84,20 +99,26 @@ export function EditServerGroupDrawer({
         </h2>
 
         {/* Server Group Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Server Group Name
-          </label>
-          <Input
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            placeholder="Enter server group name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Server Group Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={groupName}
+              onChange={(e) => {
+                setGroupName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter server group name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+          </FormField.HelperText>
+        </FormField>
       </VStack>
     </Drawer>
   );

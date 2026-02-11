@@ -230,7 +230,7 @@ export function CreateSecurityGroupRuleDrawer({
               value={direction}
               onChange={(value) => setDirection(value as RuleDirection)}
             >
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <Radio value="ingress" label="Ingress" />
                 <Radio value="egress" label="Egress" />
               </VStack>

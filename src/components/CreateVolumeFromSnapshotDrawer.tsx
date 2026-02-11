@@ -234,32 +234,32 @@ export function CreateVolumeFromSnapshotDrawer({
 
         {/* Capacity Slider */}
         <VStack gap={3} className="w-full">
-          <HStack className="w-full justify-between items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+
+          {/* Slider + NumberInput */}
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                min={minCapacity}
+                max={maxCapacity}
+                value={capacity}
+                onChange={handleCapacityChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-
-          {/* Slider */}
-          <VStack gap={3} className="w-full">
-            <Slider
-              min={minCapacity}
-              max={maxCapacity}
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
-
-            {/* Capacity Input */}
-            <NumberInput
-              value={capacity}
-              onChange={handleCapacityChange}
-              min={minCapacity}
-              max={maxCapacity}
-              className="w-full"
-            />
           </VStack>
         </VStack>
 

@@ -15,9 +15,11 @@ import {
   IconUbuntu,
   IconRocky,
   IconGrid,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconChevronDown, IconExternalLink, IconDots } from '@tabler/icons-react';
+import { IconExternalLink, IconDots } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -108,6 +110,53 @@ export function RescueInstanceDrawer({
     (imageCurrentPage - 1) * ITEMS_PER_PAGE,
     imageCurrentPage * ITEMS_PER_PAGE
   );
+
+  const imageColumns: TableColumn<ImageItem>[] = [
+    {
+      key: 'id' as keyof ImageItem,
+      label: '',
+      width: '40px',
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="image-select"
+            value={row.id}
+            checked={selectedImageId === row.id}
+            onChange={() => setSelectedImageId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'id' as keyof ImageItem,
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: () => <StatusIndicator status="active" layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col justify-center gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            {row.bootable}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'version', label: 'Version' },
+    { key: 'size', label: 'Size' },
+    { key: 'minDisk', label: 'Min Disk' },
+    { key: 'minRam', label: 'Min RAM' },
+    { key: 'visibility', label: 'Visibility' },
+  ];
 
   const handleRescue = async () => {
     setIsSubmitting(true);
@@ -300,171 +349,13 @@ export function RescueInstanceDrawer({
             />
 
             <VStack gap={2}>
-              {/* Image Table */}
-              <div style={{ width: '648px', maxWidth: '648px' }}>
-                {/* Header */}
-                <div
-                  style={{ display: 'flex', width: '648px', height: '40px' }}
-                  className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-                >
-                  <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  />
-                  <div
-                    style={{ width: '59px', flexShrink: 0 }}
-                    className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-                  </div>
-                  <div
-                    style={{ width: '149px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Version</span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Min Disk</span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">Min RAM</span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-                  >
-                    <span className="text-label-sm text-[var(--color-text-default)]">
-                      Visibility
-                    </span>
-                    <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
-                  </div>
-                </div>
-
-                {/* Body */}
-                <div
-                  style={{
-                    width: '648px',
-                    maxWidth: '648px',
-                    marginTop: '4px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px',
-                  }}
-                >
-                  {paginatedImages.map((img) => (
-                    <div
-                      key={img.id}
-                      onClick={() => setSelectedImageId(img.id)}
-                      style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                      className={`border rounded-md cursor-pointer transition-all ${
-                        selectedImageId === img.id
-                          ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                          : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                      }`}
-                    >
-                      <div
-                        style={{ width: '40px', flexShrink: 0 }}
-                        className="flex items-center justify-center"
-                      >
-                        <Radio
-                          name="image-select"
-                          value={img.id}
-                          checked={selectedImageId === img.id}
-                          onChange={() => setSelectedImageId(img.id)}
-                        />
-                      </div>
-                      <div
-                        style={{ width: '59px', flexShrink: 0 }}
-                        className="flex items-center justify-center px-3"
-                      >
-                        <StatusIndicator status="active" layout="icon-only" size="sm" />
-                      </div>
-                      <div
-                        style={{ width: '149px', flexShrink: 0 }}
-                        className="flex flex-col justify-center px-3 py-2 overflow-hidden"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                            {img.name}
-                          </span>
-                          <IconExternalLink
-                            size={12}
-                            className="shrink-0 text-[var(--color-action-primary)]"
-                          />
-                        </div>
-                        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                          {img.bootable}
-                        </span>
-                      </div>
-                      <div
-                        style={{ width: '80px', flexShrink: 0 }}
-                        className="flex items-center px-3 py-2 overflow-hidden"
-                      >
-                        <span className="text-body-md text-[var(--color-text-default)] truncate">
-                          {img.version}
-                        </span>
-                      </div>
-                      <div
-                        style={{ width: '80px', flexShrink: 0 }}
-                        className="flex items-center px-3 py-2 overflow-hidden"
-                      >
-                        <span className="text-body-md text-[var(--color-text-default)] truncate">
-                          {img.size}
-                        </span>
-                      </div>
-                      <div
-                        style={{ width: '80px', flexShrink: 0 }}
-                        className="flex items-center px-3 py-2 overflow-hidden"
-                      >
-                        <span className="text-body-md text-[var(--color-text-default)] truncate">
-                          {img.minDisk}
-                        </span>
-                      </div>
-                      <div
-                        style={{ width: '80px', flexShrink: 0 }}
-                        className="flex items-center px-3 py-2 overflow-hidden"
-                      >
-                        <span className="text-body-md text-[var(--color-text-default)] truncate">
-                          {img.minRam}
-                        </span>
-                      </div>
-                      <div
-                        style={{ width: '80px', flexShrink: 0 }}
-                        className="flex items-center px-3 py-2 overflow-hidden"
-                      >
-                        <span className="text-body-md text-[var(--color-text-default)] truncate">
-                          {img.visibility}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Selection Indicator */}
+              <Table<ImageItem>
+                columns={imageColumns}
+                data={paginatedImages}
+                rowKey="id"
+                onRowClick={(row) => setSelectedImageId(row.id)}
+                emptyMessage="No images found"
+              />
               <SelectionIndicator
                 style={{ width: '648px' }}
                 selectedItems={

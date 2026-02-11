@@ -80,6 +80,8 @@ export function EditListenerDrawer({
   const [adminStateUp, setAdminStateUp] = useState(listener.adminStateUp);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -98,11 +100,22 @@ export function EditListenerDrawer({
       setAllowedCidrs(listener.allowedCidrs ?? []);
       setNewCidr('');
       setAdminStateUp(listener.adminStateUp);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, listener]);
 
   const handleSubmit = async () => {
-    if (!listenerName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!listenerName.trim()) {
+      setNameError('Listener name is required');
+      return;
+    }
+    if (listenerName.trim().length > 128) {
+      setNameError('Listener name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -126,6 +139,8 @@ export function EditListenerDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -172,16 +187,21 @@ export function EditListenerDrawer({
         </VStack>
 
         {/* Listener Name */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Listener Name</FormField.Label>
           <FormField.Control>
             <Input
               value={listenerName}
-              onChange={(e) => setListenerName(e.target.value)}
+              onChange={(e) => {
+                setListenerName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. listener-http-80"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

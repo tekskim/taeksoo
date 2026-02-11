@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle, IconInfinity } from '@tabler/icons-react';
 
@@ -248,33 +248,32 @@ export function CloneVolumeDrawer({
 
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
-          <HStack className="w-full justify-between items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Capacity (GiB)
+          </label>
+
+          {/* Slider + NumberInput */}
+          <VStack gap={2} className="w-full">
+            <HStack gap={3} align="center" className="w-full">
+              <Slider
+                min={minCapacity}
+                max={maxCapacity}
+                value={capacity}
+                onChange={handleCapacityChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={handleCapacityChange}
+                min={minCapacity}
+                max={maxCapacity}
+                width="xs"
+                className="shrink-0"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {minCapacity} - {maxCapacity} GiB
             </span>
-          </HStack>
-
-          {/* Slider */}
-          <VStack gap={2} className="w-full">
-            <Slider
-              min={minCapacity}
-              max={maxCapacity}
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
-
-            {/* Capacity Input */}
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => handleCapacityChange(Number(e.target.value))}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
           </VStack>
         </VStack>
 
