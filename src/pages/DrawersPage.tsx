@@ -171,6 +171,27 @@ import { EditDomainDrawer } from '@/components/EditDomainDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
 import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
+import {
+  MigrateInstanceDrawer,
+  type MigrateInstanceInfo,
+} from '@/components/MigrateInstanceDrawer';
+import {
+  LiveMigrateInstanceDrawer,
+  type LiveMigrateInstanceInfo,
+} from '@/components/LiveMigrateInstanceDrawer';
+import {
+  ManageMetadataDrawer,
+  type ManageMetadataImageInfo,
+} from '@/components/ManageMetadataDrawer';
+import {
+  MigrateVolumeDrawer,
+  type MigrateVolumeInfo as MigrateVolumeVolumeInfo,
+} from '@/components/MigrateVolumeDrawer';
+import { ManageRulesDrawer, type FirewallPolicyInfo } from '@/components/ManageRulesDrawer';
+import {
+  ModifyQuotasDrawer,
+  type TenantInfo as ModifyQuotasTenantInfo,
+} from '@/components/ModifyQuotasDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 import {
   EditBasicInfoDrawer,
@@ -375,6 +396,39 @@ const mockRebuildInstance: RebuildInstanceInfo = {
   currentImage: 'ubuntu-24.04',
 };
 
+const mockMigrateInstance: MigrateInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentHost: 'host-01',
+};
+
+const mockLiveMigrateInstance: LiveMigrateInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentHost: 'host-01',
+};
+
+const mockManageMetadataImage: ManageMetadataImageInfo = {
+  id: 'img-001',
+  name: 'image',
+};
+
+const mockMigrateVolume: MigrateVolumeVolumeInfo = {
+  id: 'vol-001',
+  name: 'name',
+  currentBackend: 'host-01',
+};
+
+const mockFirewallPolicy: FirewallPolicyInfo = {
+  id: 'policy-001',
+  name: 'name',
+};
+
+const mockQuotasTenant: ModifyQuotasTenantInfo = {
+  id: 'tenant-001',
+  name: 'tenant',
+};
+
 const mockResizeInstance: ResizeInstanceInfo = {
   id: 'inst-001',
   name: 'web-server-10',
@@ -461,6 +515,7 @@ export function DrawersPage() {
 
   // App section disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
+  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
@@ -540,6 +595,14 @@ export function DrawersPage() {
   const [isDisconnectSubnetOpen, setIsDisconnectSubnetOpen] = useState(false);
   const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
   const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
+
+  // Compute Admin Drawer states
+  const [isMigrateInstanceOpen, setIsMigrateInstanceOpen] = useState(false);
+  const [isLiveMigrateInstanceOpen, setIsLiveMigrateInstanceOpen] = useState(false);
+  const [isManageMetadataOpen, setIsManageMetadataOpen] = useState(false);
+  const [isMigrateVolumeOpen, setIsMigrateVolumeOpen] = useState(false);
+  const [isManageRulesOpen, setIsManageRulesOpen] = useState(false);
+  const [isModifyQuotasOpen, setIsModifyQuotasOpen] = useState(false);
 
   // Storage Drawer states
   const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
@@ -1223,6 +1286,124 @@ export function DrawersPage() {
                       description="Enable SNI and manage multiple SNI certificates for a listener."
                       category="Certificate"
                       onOpen={() => setIsManageSNICertificateOpen(true)}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+
+          {/* Compute Admin App Drawers */}
+          <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+            <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+              <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                <div className="flex items-center gap-3">
+                  {isComputeAdminOpen ? (
+                    <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                  ) : (
+                    <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                  )}
+                  <Badge variant="warning" size="sm" className="w-[110px] justify-center">
+                    Compute Admin{' '}
+                  </Badge>
+                  <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    Drawers{' '}
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(6 drawers)</span>
+                </div>
+              </div>
+            </Disclosure.Trigger>
+            <Disclosure.Panel>
+              <VStack gap={4} className="pt-4">
+                {/* Instance actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Instance actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Migrate instance"
+                      description="Migrate the instance to a different host. Migration does not change the instance configuration or data."
+                      category="Instance"
+                      onOpen={() => setIsMigrateInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance list"
+                    />
+                    <DrawerCard
+                      title="Live migrate instance"
+                      description="Live migrate the instance to a different host without shutting it down."
+                      category="Instance"
+                      onOpen={() => setIsLiveMigrateInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Image actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Image actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Manage metadata"
+                      description="Select existing metadata or define new metadata to apply to the image."
+                      category="Image"
+                      onOpen={() => setIsManageMetadataOpen(true)}
+                      linked
+                      linkedTo="Image list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Volume actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Volume actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Migrate volume"
+                      description="Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process."
+                      category="Volume"
+                      onOpen={() => setIsMigrateVolumeOpen(true)}
+                      linked
+                      linkedTo="Volume list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Network actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Network actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Manage rules"
+                      description="Select rules from the list to add to the firewall policy."
+                      category="Network"
+                      onOpen={() => setIsManageRulesOpen(true)}
+                      linked
+                      linkedTo="Firewall policies"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Tenant actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Tenant actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Modify quotas"
+                      description="Modifies the resource usage limits allocated to the tenant."
+                      category="Tenant"
+                      onOpen={() => setIsModifyQuotasOpen(true)}
+                      linked
+                      linkedTo="Tenant detail"
                     />
                   </div>
                 </VStack>
@@ -2660,6 +2841,69 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit system admin:', data);
+        }}
+      />
+
+      {/* =============================================
+          COMPUTE ADMIN DRAWERS ============================================= */}
+
+      {/* Migrate Instance Drawer */}
+      <MigrateInstanceDrawer
+        isOpen={isMigrateInstanceOpen}
+        onClose={() => setIsMigrateInstanceOpen(false)}
+        instance={mockMigrateInstance}
+        onMigrate={(hostId) => {
+          console.log('Migrate instance to host:', hostId);
+        }}
+      />
+
+      {/* Live Migrate Instance Drawer */}
+      <LiveMigrateInstanceDrawer
+        isOpen={isLiveMigrateInstanceOpen}
+        onClose={() => setIsLiveMigrateInstanceOpen(false)}
+        instance={mockLiveMigrateInstance}
+        onLiveMigrate={(hostId, blockMigrate) => {
+          console.log('Live migrate instance to host:', hostId, 'block migrate:', blockMigrate);
+        }}
+      />
+
+      {/* Manage Metadata Drawer */}
+      <ManageMetadataDrawer
+        isOpen={isManageMetadataOpen}
+        onClose={() => setIsManageMetadataOpen(false)}
+        image={mockManageMetadataImage}
+        onSave={(metadata) => {
+          console.log('Save metadata:', metadata);
+        }}
+      />
+
+      {/* Migrate Volume Drawer */}
+      <MigrateVolumeDrawer
+        isOpen={isMigrateVolumeOpen}
+        onClose={() => setIsMigrateVolumeOpen(false)}
+        volume={mockMigrateVolume}
+        onMigrate={(backendId) => {
+          console.log('Migrate volume to backend:', backendId);
+        }}
+      />
+
+      {/* Manage Rules Drawer */}
+      <ManageRulesDrawer
+        isOpen={isManageRulesOpen}
+        onClose={() => setIsManageRulesOpen(false)}
+        policy={mockFirewallPolicy}
+        onSave={(ruleIds) => {
+          console.log('Save firewall rules:', ruleIds);
+        }}
+      />
+
+      {/* Modify Quotas Drawer */}
+      <ModifyQuotasDrawer
+        isOpen={isModifyQuotasOpen}
+        onClose={() => setIsModifyQuotasOpen(false)}
+        tenant={mockQuotasTenant}
+        onSave={(quotas) => {
+          console.log('Save quotas:', quotas);
         }}
       />
 
