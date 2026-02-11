@@ -632,6 +632,8 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
           <VStack gap={2} className="py-6">
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -2385,6 +2387,8 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Network Sub-section */}
           <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2891,6 +2895,8 @@ function AuthenticationSection({
       </SectionCard.Header>
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type */}
           <VStack gap={4} className="py-6">
             <span className="text-label-lg">Login type</span>
@@ -3215,6 +3221,8 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Server group Disclosure */}
           <div className="py-6">
             <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
@@ -3493,6 +3501,8 @@ function TemplatesSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Resource type */}
           <VStack gap={2} align="start" className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3588,20 +3598,6 @@ function TemplatesSection({
                         No favorite templates
                       </div>
                     )}
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedId
-                          ? [
-                              {
-                                id: selectedId,
-                                label:
-                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => onSelect('')}
-                    />
                   </VStack>
                 </VStack>
               </TabPanel>
