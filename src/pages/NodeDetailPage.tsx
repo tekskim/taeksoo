@@ -17,6 +17,7 @@ import {
   StatusIndicator,
   SearchInput,
   ProgressBar,
+  STATUS_THRESHOLDS,
   Tooltip,
   DetailHeader,
   Chip,
@@ -362,7 +363,13 @@ function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
           {used} of {total} {unit} / {percentage}% Used
         </span>
       </HStack>
-      <ProgressBar value={percentage} max={100} showValue={false} size="sm" />
+      <ProgressBar
+        value={percentage}
+        max={100}
+        showValue={false}
+        size="sm"
+        thresholds={STATUS_THRESHOLDS.container}
+      />
     </div>
   );
 }

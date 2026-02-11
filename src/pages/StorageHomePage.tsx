@@ -7,6 +7,7 @@ import {
   Breadcrumb,
   MonitoringToolbar,
   PageShell,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -364,10 +365,11 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
     return fallback;
   };
 
-  // Determine status color based on percentage
+  // Determine status color based on storage thresholds (85 warning, 95 danger)
   const getStatusColor = () => {
-    if (percentage >= 90) return getColor('--color-status-error', '#ef4444');
-    if (percentage >= 70) return getColor('--color-status-warning', '#f97316');
+    const { warning, danger } = STATUS_THRESHOLDS.storage;
+    if (percentage >= danger) return getColor('--color-status-error', '#ef4444');
+    if (percentage >= warning) return getColor('--color-status-warning', '#f97316');
     return getColor('--color-status-success', '#22c55e');
   };
 

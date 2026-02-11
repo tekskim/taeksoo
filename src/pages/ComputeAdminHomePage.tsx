@@ -7,6 +7,7 @@ import {
   PageShell,
   Badge,
   ProgressBar,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -55,7 +56,12 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        thresholds={STATUS_THRESHOLDS.computeAdmin}
+      />
     </div>
   );
 }
@@ -109,7 +115,12 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        thresholds={STATUS_THRESHOLDS.computeAdmin}
+      />
     </div>
   );
 }

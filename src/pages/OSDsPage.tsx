@@ -14,6 +14,7 @@ import {
   ProgressBar,
   PageShell,
   PageHeader,
+  STATUS_THRESHOLDS,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -188,10 +189,11 @@ interface UsageCellProps {
 }
 
 function UsageCell({ usage }: UsageCellProps) {
-  // Determine status based on usage percentage
+  // Determine status based on storage thresholds (85 warning, 95 danger)
   const getUsageStatus = (percent: number): 'success' | 'warning' | 'danger' => {
-    if (percent >= 90) return 'danger';
-    if (percent >= 70) return 'warning';
+    const { warning, danger } = STATUS_THRESHOLDS.storage;
+    if (percent >= danger) return 'danger';
+    if (percent >= warning) return 'warning';
     return 'success';
   };
 
