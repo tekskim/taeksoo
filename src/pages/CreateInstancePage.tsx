@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   NumberInput,
   ProgressBar,
+  STATUS_THRESHOLDS,
   HStack,
   VStack,
   TabBar,
@@ -418,6 +419,7 @@ function QuotaSidebar({
                   max={item.max}
                   newValue={item.newValue}
                   showValue
+                  thresholds={STATUS_THRESHOLDS.compute}
                 />
               ))}
             </VStack>

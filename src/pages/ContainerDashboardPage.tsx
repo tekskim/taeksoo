@@ -51,7 +51,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
 
   // Determine status based on percentage thresholds
   const getStatus = (pct: number): CapacityStatus => {
-    if (pct >= 90) return 'danger';
+    if (pct >= 95) return 'danger';
     if (pct >= 70) return 'warning';
     return 'success';
   };

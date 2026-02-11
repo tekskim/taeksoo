@@ -7,6 +7,7 @@ import {
   PageShell,
   Badge,
   ProgressBar,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -35,7 +36,7 @@ interface PercentageBadgeProps {
 }
 
 function PercentageBadge({ percentage }: PercentageBadgeProps) {
-  const theme = percentage >= 100 ? 'red' : percentage >= 70 ? 'yellow' : 'green';
+  const theme = percentage >= 90 ? 'red' : percentage >= 70 ? 'yellow' : 'green';
 
   return (
     <Badge size="sm" type="subtle" theme={theme}>
@@ -68,7 +69,12 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        thresholds={STATUS_THRESHOLDS.compute}
+      />
     </div>
   );
 }
@@ -127,7 +133,12 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        thresholds={STATUS_THRESHOLDS.compute}
+      />
     </div>
   );
 }

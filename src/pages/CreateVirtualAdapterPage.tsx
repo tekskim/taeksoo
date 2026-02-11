@@ -14,6 +14,7 @@ import {
   FormField,
   WizardSummary,
   ProgressBar,
+  STATUS_THRESHOLDS,
   Tabs,
   TabList,
   Tab,
@@ -138,7 +139,14 @@ function SummarySidebar({
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
-              <ProgressBar variant="quota" label="Port" value={5} max={20} showValue />
+              <ProgressBar
+                variant="quota"
+                label="Port"
+                value={5}
+                max={20}
+                showValue
+                thresholds={STATUS_THRESHOLDS.compute}
+              />
             </VStack>
           </VStack>
         </div>

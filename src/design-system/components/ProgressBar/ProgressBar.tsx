@@ -11,6 +11,14 @@ export type ThakiProgressBarVariant = 'success' | 'error' | 'warning';
 
 export type ProgressBarStatus = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
+/** Configurable thresholds for status color transitions */
+export interface StatusThresholds {
+  /** Percentage at which to show warning color (default: 70) */
+  warning: number;
+  /** Percentage at which to show danger color (default: 100) */
+  danger: number;
+}
+
 // Map thaki-ui variant to tds status
 const thakiVariantToStatus: Record<ThakiProgressBarVariant, ProgressBarStatus> = {
   success: 'success',
@@ -43,6 +51,10 @@ export interface ProgressBarProps {
   className?: string;
   /** Size variant */
   size?: 'sm' | 'md';
+  /** Custom thresholds for status color transitions.
+   *  Default: { warning: 70, danger: 100 }
+   *  Compute: { warning: 70, danger: 90 } */
+  thresholds?: StatusThresholds;
   /** @deprecated thaki-ui compatibility - use status instead */
   thakiVariant?: ThakiProgressBarVariant;
   /** @deprecated thaki-ui compatibility - custom bar color */
@@ -55,37 +67,56 @@ export interface ProgressBarProps {
    Helpers
    ---------------------------------------- */
 
+const DEFAULT_THRESHOLDS: StatusThresholds = { warning: 70, danger: 95 };
+
+/** Preset thresholds per app */
+export const STATUS_THRESHOLDS = {
+  /** Compute: 0-69% Normal, 70-89% Warning, 90%+ Danger */
+  compute: { warning: 70, danger: 90 } as StatusThresholds,
+  /** Compute Admin: 0-69% Normal, 70-99% Warning, 100%+ Danger */
+  computeAdmin: { warning: 70, danger: 100 } as StatusThresholds,
+  /** Storage: 0-84% Normal, 85-94% Warning, 95%+ Danger */
+  storage: { warning: 85, danger: 95 } as StatusThresholds,
+  /** Container: 0-69% Normal, 70-94% Warning, 95%+ Danger */
+  container: { warning: 70, danger: 95 } as StatusThresholds,
+  /** Default: 0-69% Normal, 70-94% Warning, 95%+ Danger */
+  default: DEFAULT_THRESHOLDS,
+};
+
 const getStatus = (
   usedPercent: number,
   totalPercent: number,
-  isUnlimited: boolean
+  isUnlimited: boolean,
+  thresholds: StatusThresholds = DEFAULT_THRESHOLDS
 ): { usedStatus: ProgressBarStatus; newStatus: ProgressBarStatus } => {
   if (isUnlimited) {
     return { usedStatus: 'neutral', newStatus: 'neutral' };
   }
 
-  // Already exceeds quota (used only)
-  if (usedPercent >= 100) {
+  const { warning, danger } = thresholds;
+
+  // Already exceeds danger threshold (used only)
+  if (usedPercent >= danger) {
     return { usedStatus: 'danger', newStatus: 'danger' };
   }
 
-  // Total (used + new) exceeds quota
-  if (totalPercent > 100) {
-    if (usedPercent < 70) {
+  // Total (used + new) exceeds danger threshold
+  if (totalPercent >= danger) {
+    if (usedPercent < warning) {
       return { usedStatus: 'success', newStatus: 'danger' };
     }
     return { usedStatus: 'danger', newStatus: 'danger' };
   }
 
-  // Total is at warning level (70-100%)
-  if (totalPercent >= 70) {
-    if (usedPercent < 70) {
+  // Total is at warning level (warning% ~ danger%)
+  if (totalPercent >= warning) {
+    if (usedPercent < warning) {
       return { usedStatus: 'success', newStatus: 'warning' };
     }
     return { usedStatus: 'warning', newStatus: 'warning' };
   }
 
-  // Normal (under 70%)
+  // Normal (under warning%)
   return { usedStatus: 'success', newStatus: 'success' };
 };
 
@@ -133,6 +164,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   status: rawStatus,
   className = '',
   size = 'md',
+  thresholds,
   // thaki-ui compatibility props
   thakiVariant,
   color,
@@ -157,7 +189,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const { usedStatus, newStatus } = error
     ? { usedStatus: 'danger' as ProgressBarStatus, newStatus: 'danger' as ProgressBarStatus }
-    : getStatus((value / total) * 100, ((value + newValue) / total) * 100, isUnlimited);
+    : getStatus((value / total) * 100, ((value + newValue) / total) * 100, isUnlimited, thresholds);
 
   // Quota variant
   if (variant === 'quota') {
