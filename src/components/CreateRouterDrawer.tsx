@@ -254,15 +254,14 @@ export function CreateRouterDrawer({
               fullWidth
               error={hasAttemptedSubmit && !routerName.trim()}
             />
-            {hasAttemptedSubmit && !routerName.trim() ? (
+            {hasAttemptedSubmit && !routerName.trim() && (
               <span className="text-body-sm text-[var(--color-state-danger)]">
                 Router name is required
               </span>
-            ) : (
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-              </span>
             )}
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            </span>
           </VStack>
 
           {/* Description */}
@@ -408,7 +407,7 @@ export function CreateRouterDrawer({
                           {net.name}
                         </span>
                         <IconExternalLink
-                          size={16}
+                          size={12}
                           stroke={1.5}
                           className="shrink-0 text-[var(--color-action-primary)]"
                         />

@@ -190,11 +190,8 @@ export function CreateHealthMonitorDrawer({
               error={hasAttemptedSubmit && !isIntervalValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isIntervalValid ? (
-            <FormField.ErrorMessage>Interval must be between 1-3600</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 3600; Timeout &lt; Delay</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Interval must be between 1-3600</FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 3600; Timeout &lt; Delay</FormField.HelperText>
         </FormField>
 
         {/* Timeout (sec) */}
@@ -212,13 +209,10 @@ export function CreateHealthMonitorDrawer({
               error={hasAttemptedSubmit && !isTimeoutValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isTimeoutValid ? (
-            <FormField.ErrorMessage>
-              Timeout must be between 1-3599 and less than Interval
-            </FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 3599; Timeout &lt; Delay</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>
+            Timeout must be between 1-3599 and less than Interval
+          </FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 3599; Timeout &lt; Delay</FormField.HelperText>
         </FormField>
 
         {/* Max Retries */}
@@ -238,11 +232,8 @@ export function CreateHealthMonitorDrawer({
               error={hasAttemptedSubmit && !isMaxRetriesValid}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !isMaxRetriesValid ? (
-            <FormField.ErrorMessage>Max Retries must be between 1-10</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>1 ~ 10</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Max Retries must be between 1-10</FormField.ErrorMessage>
+          <FormField.HelperText>1 ~ 10</FormField.HelperText>
         </FormField>
 
         {/* Admin State */}

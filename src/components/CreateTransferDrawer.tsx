@@ -126,13 +126,10 @@ export function CreateTransferDrawer({
               error={hasAttemptedSubmit && !transferName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !transferName.trim() ? (
-            <FormField.ErrorMessage>Transfer name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Transfer name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

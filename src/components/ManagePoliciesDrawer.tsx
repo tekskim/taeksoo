@@ -4,11 +4,12 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Checkbox,
+  Table,
   SelectionIndicator,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -47,6 +48,29 @@ const defaultPolicies: PolicyItem[] = Array.from({ length: 25 }, (_, i) => ({
 
 const ITEMS_PER_PAGE = 5;
 
+const policyColumns: TableColumn<PolicyItem>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => (
+      <span className="flex items-center gap-1.5">
+        <span className="font-medium text-[var(--color-action-primary)] truncate">{row.name}</span>
+        <IconExternalLink
+          size={12}
+          stroke={1.5}
+          className="shrink-0 text-[var(--color-action-primary)]"
+        />
+      </span>
+    ),
+  },
+  { key: 'type', label: 'Type', width: 100, align: 'center' as const },
+  { key: 'apps', label: 'Apps', flex: 1 },
+  { key: 'description', label: 'Description', flex: 1, sortable: true },
+  { key: 'editedAt', label: 'Edited at', flex: 1, sortable: true },
+];
+
 /* ----------------------------------------
    ManagePoliciesDrawer Component
    ---------------------------------------- */
@@ -60,9 +84,7 @@ export function ManagePoliciesDrawer({
   onSubmit,
 }: ManagePoliciesDrawerProps) {
   // Policy selection state
-  const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(
-    new Set(initialSelectedIds)
-  );
+  const [selectedPolicyIds, setSelectedPolicyIds] = useState<string[]>([...initialSelectedIds]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,37 +109,25 @@ export function ManagePoliciesDrawer({
   // Reset state when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedPolicyIds(new Set(initialSelectedIds));
+      setSelectedPolicyIds([...initialSelectedIds]);
       setSearchQuery('');
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
-  const handleTogglePolicy = (policyId: string) => {
-    setSelectedPolicyIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(policyId)) {
-        newSet.delete(policyId);
-      } else {
-        newSet.add(policyId);
-      }
-      return newSet;
-    });
-  };
-
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
 
     // Validate required fields
-    if (selectedPolicyIds.size === 0) {
+    if (selectedPolicyIds.length === 0) {
       return; // Don't submit if no policies selected
     }
 
     setIsSubmitting(true);
     try {
       await onSubmit?.({
-        policyIds: Array.from(selectedPolicyIds),
+        policyIds: selectedPolicyIds,
       });
       onClose();
     } finally {
@@ -126,7 +136,7 @@ export function ManagePoliciesDrawer({
   };
 
   const handleClose = () => {
-    setSelectedPolicyIds(new Set(initialSelectedIds));
+    setSelectedPolicyIds([...initialSelectedIds]);
     setSearchQuery('');
     setCurrentPage(1);
     setHasAttemptedSubmit(false);
@@ -134,43 +144,13 @@ export function ManagePoliciesDrawer({
   };
 
   const handleRemoveSelection = (policyId: string) => {
-    setSelectedPolicyIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(policyId);
-      return newSet;
-    });
+    setSelectedPolicyIds((prev) => prev.filter((id) => id !== policyId));
   };
 
   // Get selected items for SelectionIndicator
   const selectedItems = policies
-    .filter((policy) => selectedPolicyIds.has(policy.id))
+    .filter((policy) => selectedPolicyIds.includes(policy.id))
     .map((policy) => ({ id: policy.id, label: policy.name }));
-
-  // Select all logic
-  const allCurrentPageSelected =
-    paginatedPolicies.length > 0 &&
-    paginatedPolicies.every((policy) => selectedPolicyIds.has(policy.id));
-  const someCurrentPageSelected = paginatedPolicies.some((policy) =>
-    selectedPolicyIds.has(policy.id)
-  );
-
-  const handleSelectAll = () => {
-    if (allCurrentPageSelected) {
-      // Deselect all on current page
-      setSelectedPolicyIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedPolicies.forEach((policy) => newSet.delete(policy.id));
-        return newSet;
-      });
-    } else {
-      // Select all on current page
-      setSelectedPolicyIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedPolicies.forEach((policy) => newSet.add(policy.id));
-        return newSet;
-      });
-    }
-  };
 
   return (
     <Drawer
@@ -251,114 +231,31 @@ export function ManagePoliciesDrawer({
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={filteredPolicies.length}
-            selectedCount={selectedPolicyIds.size > 0 ? selectedPolicyIds.size : undefined}
+            selectedCount={selectedPolicyIds.length > 0 ? selectedPolicyIds.length : undefined}
             onPageChange={setCurrentPage}
           />
 
-          {/* Policies Table */}
-          <div className="w-full flex flex-col gap-[var(--table-row-gap)]">
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                <Checkbox
-                  checked={allCurrentPageSelected}
-                  indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-                  onChange={handleSelectAll}
-                />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Name
-                <IconChevronDown size={16} />
-              </div>
-              <div className="w-[100px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Type
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Apps
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Description
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Edited at
-                <IconChevronDown size={16} />
-              </div>
-            </div>
+          {/* Policies Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<PolicyItem>
+              columns={policyColumns}
+              data={paginatedPolicies}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedPolicyIds}
+              onSelectionChange={setSelectedPolicyIds}
+              emptyMessage="No policies found"
+            />
 
-            {/* Rows */}
-            {paginatedPolicies.map((policy) => (
-              <div
-                key={policy.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedPolicyIds.has(policy.id)
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => handleTogglePolicy(policy.id)}
-              >
-                {/* Checkbox */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Checkbox
-                    checked={selectedPolicyIds.has(policy.id)}
-                    onChange={() => handleTogglePolicy(policy.id)}
-                  />
-                </div>
-                {/* Name with chevron and link */}
-                <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <IconChevronRight
-                    size={16}
-                    className="shrink-0 text-[var(--color-text-default)]"
-                  />
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                    {policy.name}
-                  </span>
-                  <IconExternalLink
-                    size={16}
-                    stroke={1.5}
-                    className="shrink-0 text-[var(--color-action-primary)]"
-                  />
-                </div>
-                {/* Type (centered) */}
-                <div className="w-[100px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.type}
-                  </span>
-                </div>
-                {/* Apps */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {policy.apps}
-                  </span>
-                </div>
-                {/* Description */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {policy.description}
-                  </span>
-                </div>
-                {/* Edited at */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {policy.editedAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - directly under the table */}
-          <SelectionIndicator
-            selectedItems={selectedItems}
-            onRemove={handleRemoveSelection}
-            emptyText="No items selected"
-            error={hasAttemptedSubmit && selectedPolicyIds.size === 0}
-            errorMessage="Please select at least one policy."
-            className="shrink-0 w-full"
-          />
+            <SelectionIndicator
+              selectedItems={selectedItems}
+              onRemove={handleRemoveSelection}
+              emptyText="No items selected"
+              error={hasAttemptedSubmit && selectedPolicyIds.length === 0}
+              errorMessage="Please select at least one policy."
+              className="shrink-0 w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

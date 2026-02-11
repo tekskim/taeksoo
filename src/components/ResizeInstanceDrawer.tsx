@@ -11,9 +11,12 @@ import {
   SelectionIndicator,
   Select,
   NumberInput,
+  Table,
+  InlineMessage,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconHelp, IconChevronDown, IconExternalLink } from '@tabler/icons-react';
+import { IconHelp, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -77,6 +80,20 @@ const mockFlavors: FlavorItem[] = Array.from({ length: 115 }, (_, i) => ({
   internalBandwidth: '-',
 }));
 
+interface ComparisonRow {
+  id: string;
+  comparison: string;
+  name: string;
+  nameId: string;
+  vcpu: string;
+  ram: string;
+  disk: string;
+  ephemeralDisk: string;
+  gpu: string;
+  npu: string;
+  isLink: boolean;
+}
+
 type FlavorTab = 'vcpu' | 'gpu' | 'npu' | 'custom';
 
 /* ----------------------------------------
@@ -115,6 +132,129 @@ export function ResizeInstanceDrawer({
   );
 
   const selectedFlavor = flavors.find((f) => f.id === selectedFlavorId);
+
+  // Flavor selection table columns
+  const flavorColumns: TableColumn<FlavorItem>[] = [
+    {
+      key: 'radio',
+      label: '',
+      width: '40px',
+      render: (_, row) => (
+        <Radio
+          name="flavor-select"
+          value={row.id}
+          checked={selectedFlavorId === row.id}
+          onChange={() => setSelectedFlavorId(row.id)}
+        />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <span className="flex flex-col">
+          <span className="flex items-center gap-1.5">
+            <span className="font-medium text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : 17kfj123
+          </span>
+        </span>
+      ),
+    },
+    { key: 'vcpu', label: 'vCPU', width: '80px', sortable: true },
+    { key: 'ram', label: 'RAM', width: '80px', sortable: true },
+    { key: 'disk', label: 'Disk', width: '80px', sortable: true },
+    { key: 'ephemeralDisk', label: 'Ephemeral Disk', width: '100px', sortable: true },
+    {
+      key: 'internalBandwidth',
+      label: 'Internal Network Bandwidth',
+      width: '140px',
+      sortable: true,
+    },
+  ];
+
+  const comparisonData: ComparisonRow[] = [
+    {
+      id: 'current',
+      comparison: 'Current\nflavor',
+      name: instance.currentFlavor.name,
+      nameId: '90jkl567',
+      vcpu: String(instance.currentFlavor.vcpu),
+      ram: instance.currentFlavor.ram,
+      disk: instance.currentFlavor.disk,
+      ephemeralDisk: instance.currentFlavor.ephemeralDisk,
+      gpu: String(instance.currentFlavor.gpu),
+      npu: String(instance.currentFlavor.npu),
+      isLink: true,
+    },
+    {
+      id: 'target',
+      comparison: 'Target\nflavor',
+      name: selectedFlavor?.name ?? '-',
+      nameId: selectedFlavor ? '90jkl567' : '',
+      vcpu: selectedFlavor ? String(selectedFlavor.vcpu) : '-',
+      ram: selectedFlavor?.ram ?? '-',
+      disk: selectedFlavor?.disk ?? '-',
+      ephemeralDisk: selectedFlavor?.ephemeralDisk ?? '-',
+      gpu: '-',
+      npu: '-',
+      isLink: !!selectedFlavor,
+    },
+  ];
+
+  const comparisonColumns: TableColumn<ComparisonRow>[] = [
+    {
+      key: 'comparison',
+      label: 'Comparison',
+      width: '90px',
+      render: (value) => (
+        <span className="text-body-md text-[var(--color-text-default)] whitespace-pre-line">
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      width: '90px',
+      render: (_, row) =>
+        row.isLink ? (
+          <span className="flex flex-col">
+            <span className="flex items-center gap-1.5">
+              <span className="font-medium text-[var(--color-action-primary)] truncate">
+                {row.name}
+              </span>
+              <IconExternalLink
+                size={12}
+                stroke={1.5}
+                className="shrink-0 text-[var(--color-action-primary)]"
+              />
+            </span>
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+              ID : {row.nameId}
+            </span>
+          </span>
+        ) : (
+          <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
+        ),
+    },
+    { key: 'vcpu', label: 'vCPU', width: '65px' },
+    { key: 'ram', label: 'RAM', width: '65px' },
+    { key: 'disk', label: 'Disk', width: '65px' },
+    { key: 'ephemeralDisk', label: 'Ephemeral Disk', width: '95px' },
+    { key: 'gpu', label: 'GPU', width: '65px' },
+    { key: 'npu', label: 'NPU', flex: 1 },
+  ];
 
   const handleResize = async () => {
     setHasAttemptedSubmit(true);
@@ -235,16 +375,10 @@ export function ResizeInstanceDrawer({
           </VStack>
 
           {/* Warning Message */}
-          <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              The instance will be stopped and restarted automatically during resize. All running
-              processes and connections will be interrupted.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            The instance will be stopped and restarted automatically during resize. All running
+            processes and connections will be interrupted.
+          </InlineMessage>
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
@@ -289,177 +423,31 @@ export function ResizeInstanceDrawer({
           />
 
           {/* Flavor Table */}
-          <div style={{ width: '648px', maxWidth: '648px' }}>
-            {/* Header */}
-            <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '40px', flexShrink: 0 }}
-                className="flex items-center justify-center"
-              />
-              <div
-                style={{ width: '120px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '80px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">vCPU</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '80px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">RAM</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '80px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Disk</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '108px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Ephemeral Disk
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '140px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Internal Network Bandwidth
-                </span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-            </div>
-
-            {/* Body */}
-            <div
-              style={{
-                width: '648px',
-                maxWidth: '648px',
-                marginTop: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              {paginatedFlavors.map((flavor) => (
-                <div
-                  key={flavor.id}
-                  onClick={() => setSelectedFlavorId(flavor.id)}
-                  style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                  className={`border rounded-md cursor-pointer transition-all ${
-                    selectedFlavorId === flavor.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                >
-                  <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    <Radio
-                      name="flavor-select"
-                      value={flavor.id}
-                      checked={selectedFlavorId === flavor.id}
-                      onChange={() => setSelectedFlavorId(flavor.id)}
-                    />
-                  </div>
-                  <div
-                    style={{ width: '120px', flexShrink: 0 }}
-                    className="flex flex-col justify-center px-3 py-2 overflow-hidden"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {flavor.name}
-                      </span>
-                      <IconExternalLink
-                        size={16}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 17kfj123
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {flavor.vcpu}
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {flavor.ram}
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {flavor.disk}
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '108px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {flavor.ephemeralDisk}
-                    </span>
-                  </div>
-                  <div
-                    style={{ width: '140px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {flavor.internalBandwidth}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            style={{ width: '648px' }}
-            selectedItems={
-              selectedFlavorId
-                ? [
-                    {
-                      id: selectedFlavorId,
-                      label: flavors.find((f) => f.id === selectedFlavorId)?.name || '',
-                    },
-                  ]
-                : []
-            }
-            onRemove={() => setSelectedFlavorId(null)}
-            emptyText="No item selected"
-            error={!selectedFlavorId && hasAttemptedSubmit}
-            errorMessage="Please select a flavor"
-          />
+          <VStack gap={2}>
+            <Table<FlavorItem>
+              columns={flavorColumns}
+              data={paginatedFlavors}
+              rowKey="id"
+              onRowClick={(row) => setSelectedFlavorId(row.id)}
+              emptyMessage="No flavors found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedFlavorId
+                  ? [
+                      {
+                        id: selectedFlavorId,
+                        label: flavors.find((f) => f.id === selectedFlavorId)?.name || '',
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => setSelectedFlavorId(null)}
+              emptyText="No item selected"
+              error={!selectedFlavorId && hasAttemptedSubmit}
+              errorMessage="Please select a flavor"
+            />
+          </VStack>
         </VStack>
 
         {/* Flavor Comparison Section */}
@@ -467,202 +455,12 @@ export function ResizeInstanceDrawer({
           <span className="text-label-lg text-[var(--color-text-default)]">Flavor Comparison</span>
 
           {/* Comparison Table */}
-          <div style={{ width: '648px', maxWidth: '648px' }}>
-            {/* Header */}
-            <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex items-center justify-start px-3"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)] text-left">
-                  Comparison
-                </span>
-              </div>
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-              </div>
-              <div
-                style={{ width: '65px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">vCPU</span>
-              </div>
-              <div
-                style={{ width: '65px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">RAM</span>
-              </div>
-              <div
-                style={{ width: '65px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Disk</span>
-              </div>
-              <div
-                style={{ width: '95px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Ephemeral Disk
-                </span>
-              </div>
-              <div
-                style={{ width: '65px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">GPU</span>
-              </div>
-              <div
-                style={{ width: '113px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">NPU</span>
-              </div>
-            </div>
-
-            {/* Current Flavor Row */}
-            <div
-              style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }}
-              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex items-center justify-start px-3 py-2"
-              >
-                <span className="text-body-md text-[var(--color-text-default)] text-left">
-                  Current
-                  <br />
-                  flavor
-                </span>
-              </div>
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex flex-col justify-center px-3 py-2 overflow-hidden"
-              >
-                <div className="flex items-center gap-1.5">
-                  <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                    {instance.currentFlavor.name}
-                  </span>
-                  <IconExternalLink
-                    size={16}
-                    className="shrink-0 text-[var(--color-action-primary)]"
-                  />
-                </div>
-                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                  ID : 90jkl567
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.vcpu}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.ram}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.disk}
-                </span>
-              </div>
-              <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.ephemeralDisk}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.gpu}
-                </span>
-              </div>
-              <div
-                style={{ width: '113px', flexShrink: 0 }}
-                className="flex items-center px-3 py-2"
-              >
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {instance.currentFlavor.npu}
-                </span>
-              </div>
-            </div>
-
-            {/* Target Flavor Row */}
-            <div
-              style={{ display: 'flex', width: '648px', minHeight: '40px', marginTop: '4px' }}
-              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex items-center justify-start px-3 py-2"
-              >
-                <span className="text-body-md text-[var(--color-text-default)] text-left">
-                  Target
-                  <br />
-                  flavor
-                </span>
-              </div>
-              <div
-                style={{ width: '90px', flexShrink: 0 }}
-                className="flex flex-col justify-center px-3 py-2 overflow-hidden"
-              >
-                {selectedFlavor ? (
-                  <>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {selectedFlavor.name}
-                      </span>
-                      <IconExternalLink
-                        size={16}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 90jkl567
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
-                )}
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {selectedFlavor?.vcpu ?? '-'}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {selectedFlavor?.ram ?? '-'}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {selectedFlavor?.disk ?? '-'}
-                </span>
-              </div>
-              <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  {selectedFlavor?.ephemeralDisk ?? '-'}
-                </span>
-              </div>
-              <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-body-md text-[var(--color-text-default)]">-</span>
-              </div>
-              <div
-                style={{ width: '113px', flexShrink: 0 }}
-                className="flex items-center px-3 py-2"
-              >
-                <span className="text-body-md text-[var(--color-text-default)]">-</span>
-              </div>
-            </div>
-          </div>
+          <Table<ComparisonRow>
+            columns={comparisonColumns}
+            data={comparisonData}
+            rowKey="id"
+            emptyMessage="No comparison data"
+          />
         </VStack>
 
         {/* Approval Method Section */}
@@ -688,7 +486,7 @@ export function ResizeInstanceDrawer({
                 onChange={() => setApprovalMethod('auto')}
                 label="Auto-confirm"
               />
-              <IconHelp size={16} className="text-[var(--color-text-subtle)] cursor-help" />
+              <IconHelp size={12} className="text-[var(--color-text-subtle)] cursor-help" />
             </HStack>
           </VStack>
 

@@ -94,13 +94,10 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
               error={hasAttemptedSubmit && !imageName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !imageName.trim() ? (
-            <FormField.ErrorMessage>Image name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Image name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

@@ -200,13 +200,10 @@ export function CreateServerGroupDrawer({
               error={hasAttemptedSubmit && !groupName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !groupName.trim() ? (
-            <FormField.ErrorMessage>Server Group name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Server Group name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Policy Radio */}

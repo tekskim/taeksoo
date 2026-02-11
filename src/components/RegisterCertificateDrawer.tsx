@@ -298,13 +298,10 @@ export function RegisterCertificateDrawer({
               error={hasAttemptedSubmit && !certificateName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !certificateName.trim() ? (
-            <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

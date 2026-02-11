@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -226,13 +226,10 @@ export function CreateVolumeFromSnapshotDrawer({
               error={hasAttemptedSubmit && !volumeName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !volumeName.trim() ? (
-            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
@@ -256,13 +253,12 @@ export function CreateVolumeFromSnapshotDrawer({
             />
 
             {/* Capacity Input */}
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => handleCapacityChange(Number(e.target.value))}
+            <NumberInput
+              value={capacity}
+              onChange={handleCapacityChange}
               min={minCapacity}
               max={maxCapacity}
-              fullWidth
+              className="w-full"
             />
           </VStack>
         </VStack>

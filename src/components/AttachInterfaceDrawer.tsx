@@ -72,7 +72,7 @@ export function AttachInterfaceDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const totalItems = 115;
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleAttach = async () => {
@@ -279,7 +279,8 @@ export function AttachInterfaceDrawer({
                         {network.name}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
+                        stroke={1.5}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

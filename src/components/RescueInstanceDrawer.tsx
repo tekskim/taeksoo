@@ -11,12 +11,13 @@ import {
   Pagination,
   StatusIndicator,
   SelectionIndicator,
+  InlineMessage,
   IconUbuntu,
   IconRocky,
   IconGrid,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconChevronDown, IconExternalLink, IconDots } from '@tabler/icons-react';
+import { IconChevronDown, IconExternalLink, IconDots } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -163,17 +164,10 @@ export function RescueInstanceDrawer({
           </VStack>
 
           {/* Warning Message */}
-          <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Rescue mode will stop your instance and attach its root disk to a temporary server.
-              <br />
-              You can log in to that server to recover data or fix configurations.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            Rescue mode will stop your instance and attach its root disk to a temporary server. You
+            can log in to that server to recover data or fix configurations.
+          </InlineMessage>
         </VStack>
 
         {/* Instance Field */}

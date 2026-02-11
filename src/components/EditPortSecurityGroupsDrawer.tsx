@@ -359,7 +359,8 @@ export function EditPortSecurityGroupsDrawer({
                         {sg.name}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
+                        stroke={1.5}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

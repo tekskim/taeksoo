@@ -104,15 +104,14 @@ export function EditSecurityGroupDrawer({
             fullWidth
             error={hasAttemptedSubmit && !name.trim()}
           />
-          {hasAttemptedSubmit && !name.trim() ? (
+          {hasAttemptedSubmit && !name.trim() && (
             <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Security Group name is required
             </p>
-          ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
           )}
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </p>
         </VStack>
 
         {/* Description Input */}

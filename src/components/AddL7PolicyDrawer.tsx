@@ -132,13 +132,10 @@ export function AddL7PolicyDrawer({
               error={hasAttemptedSubmit && !policyName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !policyName.trim() ? (
-            <FormField.ErrorMessage>Policy name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Policy name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}

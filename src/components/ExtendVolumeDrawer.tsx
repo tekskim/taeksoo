@@ -89,6 +89,8 @@ export function ExtendVolumeDrawer({
 }: ExtendVolumeDrawerProps) {
   const [capacity, setCapacity] = useState(minCapacity);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [capacityError, setCapacityError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -96,11 +98,19 @@ export function ExtendVolumeDrawer({
       // Set initial capacity to current volume size + 1 or minCapacity
       const initialCapacity = Math.max(volume.size + 1, minCapacity);
       setCapacity(initialCapacity);
+      setHasAttemptedSubmit(false);
+      setCapacityError(null);
     }
   }, [isOpen, volume, minCapacity]);
 
   const handleSubmit = async () => {
-    if (capacity <= (volume?.size ?? 0)) return;
+    setHasAttemptedSubmit(true);
+
+    if (capacity <= (volume?.size ?? 0)) {
+      setCapacityError('New capacity must be greater than the current volume size.');
+      return;
+    }
+    setCapacityError(null);
 
     setIsSubmitting(true);
     try {
@@ -117,6 +127,7 @@ export function ExtendVolumeDrawer({
   };
 
   const handleCapacityChange = (value: number) => {
+    if (capacityError) setCapacityError(null);
     const clampedValue = Math.min(Math.max(value, minCapacity), maxCapacity);
     setCapacity(clampedValue);
   };
@@ -152,7 +163,7 @@ export function ExtendVolumeDrawer({
             <Button
               variant="primary"
               onClick={handleSubmit}
-              disabled={capacity <= (volume?.size ?? 0) || isSubmitting}
+              disabled={isSubmitting}
               className="flex-1 h-8"
             >
               {isSubmitting ? 'Extending...' : 'Extend'}
@@ -213,6 +224,9 @@ export function ExtendVolumeDrawer({
               max={maxCapacity}
               fullWidth
             />
+            {capacityError && (
+              <span className="text-body-sm text-[var(--color-state-danger)]">{capacityError}</span>
+            )}
           </VStack>
         </VStack>
       </VStack>

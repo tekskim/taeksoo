@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   Button,
@@ -196,6 +196,16 @@ export function AssociateFloatingIPDrawer({
     direction: 'asc',
   });
 
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasAttemptedSubmit(false);
+      setSelectionError(null);
+    }
+  }, [isOpen]);
+
   // Reset state function
   const resetState = () => {
     setSelectedInstanceId(null);
@@ -319,15 +329,21 @@ export function AssociateFloatingIPDrawer({
 
   // Handle submit
   const handleSubmit = () => {
+    setHasAttemptedSubmit(true);
+
     const resourceId = getSelectedResourceId();
-    if (resourceId) {
-      onSubmit?.({
-        resourceType: activeTab,
-        resourceId,
-        fixedIpId: selectedFixedIPId || '',
-      });
-      handleClose();
+    if (!resourceId) {
+      setSelectionError('Please select a resource to associate.');
+      return;
     }
+    setSelectionError(null);
+
+    onSubmit?.({
+      resourceType: activeTab,
+      resourceId,
+      fixedIpId: selectedFixedIPId || '',
+    });
+    handleClose();
   };
 
   // Render sort icon
@@ -352,12 +368,7 @@ export function AssociateFloatingIPDrawer({
           <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={!getSelectedResourceId()}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
             Associate
           </Button>
         </HStack>
@@ -392,6 +403,7 @@ export function AssociateFloatingIPDrawer({
               setSelectedLoadBalancerId(null);
               setSelectedVirtualAdapterId(null);
               setSelectedFixedIPId(null);
+              setSelectionError(null);
             }}
           >
             <TabList>
@@ -458,12 +470,18 @@ export function AssociateFloatingIPDrawer({
                   <div
                     key={instance.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedInstanceId === instance.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => setSelectedInstanceId(instance.id)}
+                    onClick={() => {
+                      setSelectedInstanceId(instance.id);
+                      setSelectionError(null);
+                    }}
                   >
                     <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
                       <Radio
                         checked={selectedInstanceId === instance.id}
-                        onChange={() => setSelectedInstanceId(instance.id)}
+                        onChange={() => {
+                          setSelectedInstanceId(instance.id);
+                          setSelectionError(null);
+                        }}
                       />
                     </div>
                     <div className="w-[59px] flex items-center justify-center">
@@ -479,7 +497,8 @@ export function AssociateFloatingIPDrawer({
                           {instance.name}
                         </a>
                         <IconExternalLink
-                          size={16}
+                          size={12}
+                          stroke={1.5}
                           className="text-[var(--color-action-primary)]"
                         />
                         {instance.hasAlert && (
@@ -577,12 +596,18 @@ export function AssociateFloatingIPDrawer({
                   <div
                     key={lb.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedLoadBalancerId === lb.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => setSelectedLoadBalancerId(lb.id)}
+                    onClick={() => {
+                      setSelectedLoadBalancerId(lb.id);
+                      setSelectionError(null);
+                    }}
                   >
                     <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
                       <Radio
                         checked={selectedLoadBalancerId === lb.id}
-                        onChange={() => setSelectedLoadBalancerId(lb.id)}
+                        onChange={() => {
+                          setSelectedLoadBalancerId(lb.id);
+                          setSelectionError(null);
+                        }}
                       />
                     </div>
                     <div className="w-[59px] flex items-center justify-center">
@@ -598,7 +623,8 @@ export function AssociateFloatingIPDrawer({
                           {lb.name}
                         </a>
                         <IconExternalLink
-                          size={16}
+                          size={12}
+                          stroke={1.5}
                           className="text-[var(--color-action-primary)]"
                         />
                         {lb.status === 'error' && (
@@ -687,12 +713,18 @@ export function AssociateFloatingIPDrawer({
                   <div
                     key={va.id}
                     className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] cursor-pointer hover:bg-[var(--table-row-hover-bg)] transition-all ${selectedVirtualAdapterId === va.id ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' : ''}`}
-                    onClick={() => setSelectedVirtualAdapterId(va.id)}
+                    onClick={() => {
+                      setSelectedVirtualAdapterId(va.id);
+                      setSelectionError(null);
+                    }}
                   >
                     <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
                       <Radio
                         checked={selectedVirtualAdapterId === va.id}
-                        onChange={() => setSelectedVirtualAdapterId(va.id)}
+                        onChange={() => {
+                          setSelectedVirtualAdapterId(va.id);
+                          setSelectionError(null);
+                        }}
                       />
                     </div>
                     <div className="w-[59px] flex items-center justify-center">
@@ -708,7 +740,8 @@ export function AssociateFloatingIPDrawer({
                           {va.name}
                         </a>
                         <IconExternalLink
-                          size={16}
+                          size={12}
+                          stroke={1.5}
                           className="text-[var(--color-action-primary)]"
                         />
                       </HStack>
@@ -928,6 +961,10 @@ export function AssociateFloatingIPDrawer({
               emptyText="No item Selected"
             />
           </VStack>
+        )}
+
+        {selectionError && (
+          <span className="text-body-sm text-[var(--color-state-danger)]">{selectionError}</span>
         )}
       </VStack>
     </Drawer>

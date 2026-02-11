@@ -68,9 +68,13 @@ function FolderTreeItem({
             }}
           >
             {isExpanded ? (
-              <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+              <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
             ) : (
-              <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+              <IconChevronRight
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-subtle)]"
+              />
             )}
           </button>
         ) : (
@@ -81,6 +85,7 @@ function FolderTreeItem({
         {isExpanded && hasChildren ? (
           <IconFolderOpen
             size={16}
+            stroke={1.5}
             className={
               isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
             }
@@ -88,6 +93,7 @@ function FolderTreeItem({
         ) : (
           <IconFolder
             size={16}
+            stroke={1.5}
             className={
               isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
             }
@@ -285,7 +291,7 @@ export function CreateFolderDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !folderName.trim() || !!error}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
@@ -311,13 +317,10 @@ export function CreateFolderDrawer({
               error={!!error}
             />
           </FormField.Control>
-          {error ? (
-            <FormField.ErrorMessage>{error}</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>{error}</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Folder Path (read-only) */}

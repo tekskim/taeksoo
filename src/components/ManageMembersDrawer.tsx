@@ -157,7 +157,7 @@ export function ManageMembersDrawer({
   const [selectedIps, setSelectedIps] = useState<Record<string, string>>({});
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // Reset state when drawer opens
   useEffect(() => {

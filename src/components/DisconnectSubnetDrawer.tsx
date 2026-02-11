@@ -140,7 +140,7 @@ export function DisconnectSubnetDrawer({
   const [sortField, setSortField] = useState<'name' | 'networkName' | null>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // Reset state when drawer opens
   useEffect(() => {
