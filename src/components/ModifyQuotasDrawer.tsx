@@ -102,7 +102,7 @@ function QuotaRow({
   return (
     <HStack className="w-full py-2" align="center" justify="between">
       <span className="text-body-md text-[var(--color-text-default)] flex-1">{label}</span>
-      <NumberInput value={value} onChange={onChange} min={min} step={1} width="sm" />
+      <NumberInput value={value} onChange={onChange} min={min} step={1} width="xs" />
     </HStack>
   );
 }
@@ -174,56 +174,48 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
             Compute <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="vCPUs"
             value={quotas.vcpus}
             onChange={(v) => updateQuota('vcpus', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="RAM (GiB)"
             value={quotas.ram}
             onChange={(v) => updateQuota('ram', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="GPU(T4)"
             value={quotas.gpu}
             onChange={(v) => updateQuota('gpu', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Instances"
             value={quotas.instances}
             onChange={(v) => updateQuota('instances', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Key pairs"
             value={quotas.keyPairs}
             onChange={(v) => updateQuota('keyPairs', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Server groups"
             value={quotas.serverGroups}
             onChange={(v) => updateQuota('serverGroups', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Server group members"
             value={quotas.serverGroupMembers}
             onChange={(v) => updateQuota('serverGroupMembers', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Metadata items"
             value={quotas.metadataItems}
@@ -237,35 +229,30 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
             Volume <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Volumes"
             value={quotas.volumes}
             onChange={(v) => updateQuota('volumes', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Volume capacity (GiB)"
             value={quotas.volumeCapacity}
             onChange={(v) => updateQuota('volumeCapacity', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Volume snapshots"
             value={quotas.volumeSnapshots}
             onChange={(v) => updateQuota('volumeSnapshots', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Volume backups"
             value={quotas.volumeBackups}
             onChange={(v) => updateQuota('volumeBackups', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Volume backup capacity (GiB)"
             value={quotas.volumeBackupCapacity}
@@ -279,19 +266,16 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
               <Disclosure.Trigger>Advanced</Disclosure.Trigger>
               <Disclosure.Panel>
                 <VStack gap={0} className="w-full pt-2">
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   <QuotaRow
                     label="{volume_type_name} type"
                     value={quotas.volumeTypeType}
                     onChange={(v) => updateQuota('volumeTypeType', v)}
                   />
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   <QuotaRow
                     label="{volume_type_name} type capacity (GiB)"
                     value={quotas.volumeTypeCapacity}
                     onChange={(v) => updateQuota('volumeTypeCapacity', v)}
                   />
-                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   <QuotaRow
                     label="{volume_type_name} type snapshots"
                     value={quotas.volumeTypeSnapshots}
@@ -308,70 +292,60 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
             Network <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Routers"
             value={quotas.routers}
             onChange={(v) => updateQuota('routers', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Networks"
             value={quotas.networks}
             onChange={(v) => updateQuota('networks', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Subnets"
             value={quotas.subnets}
             onChange={(v) => updateQuota('subnets', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Floating IPs"
             value={quotas.floatingIps}
             onChange={(v) => updateQuota('floatingIps', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Ports"
             value={quotas.ports}
             onChange={(v) => updateQuota('ports', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Security groups"
             value={quotas.securityGroups}
             onChange={(v) => updateQuota('securityGroups', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Security group rules"
             value={quotas.securityGroupRules}
             onChange={(v) => updateQuota('securityGroupRules', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Firewalls"
             value={quotas.firewalls}
             onChange={(v) => updateQuota('firewalls', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Firewall policies"
             value={quotas.firewallPolicies}
             onChange={(v) => updateQuota('firewallPolicies', v)}
             min={0}
           />
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           <QuotaRow
             label="Firewall rules"
             value={quotas.firewallRules}
