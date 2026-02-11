@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, VStack, HStack, Input } from '@/design-system';
+import { Button, VStack, HStack, Input, NumberInput } from '@/design-system';
 import { IconArrowLeft, IconCopy, IconCheck, IconCode, IconEye } from '@tabler/icons-react';
 import thakiLogoLight from '@/assets/thakiLogo_light.svg';
 
@@ -678,10 +678,10 @@ export function MailTemplatePreviewPage() {
               <label className="text-label-sm text-[var(--color-text-subtle)]">
                 Expiry (hours)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={expiryHours}
-                onChange={(e) => setExpiryHours(Number(e.target.value))}
+                onChange={(value) => setExpiryHours(value ?? 1)}
+                min={1}
                 fullWidth
               />
             </VStack>
@@ -720,10 +720,10 @@ export function MailTemplatePreviewPage() {
               <label className="text-label-sm text-[var(--color-text-subtle)]">
                 Expiry (seconds)
               </label>
-              <Input
-                type="number"
+              <NumberInput
                 value={mfaExpirySeconds}
-                onChange={(e) => setMfaExpirySeconds(Number(e.target.value))}
+                onChange={(value) => setMfaExpirySeconds(value ?? 30)}
+                min={1}
                 fullWidth
               />
             </VStack>
@@ -750,10 +750,10 @@ export function MailTemplatePreviewPage() {
             </VStack>
             <VStack gap={1}>
               <label className="text-label-sm text-[var(--color-text-subtle)]">Expiry (days)</label>
-              <Input
-                type="number"
+              <NumberInput
                 value={expiryDays}
-                onChange={(e) => setExpiryDays(Number(e.target.value))}
+                onChange={(value) => setExpiryDays(value ?? 7)}
+                min={1}
                 fullWidth
               />
             </VStack>

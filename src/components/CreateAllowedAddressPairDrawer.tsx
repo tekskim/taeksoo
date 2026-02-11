@@ -105,11 +105,8 @@ export function CreateAllowedAddressPairDrawer({
               error={hasAttemptedSubmit && !cidr.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !cidr.trim() ? (
-            <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
+          <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
         </FormField>
 
         {/* MAC Address Radio Group */}
@@ -117,19 +114,19 @@ export function CreateAllowedAddressPairDrawer({
           required
           error={macAddressType === 'manual' && hasAttemptedSubmit && !macAddress.trim()}
         >
-          <FormField.Label>MAC Address</FormField.Label>
+          <FormField.Label>MAC address</FormField.Label>
           <FormField.Control>
             <RadioGroup
               value={macAddressType}
               onChange={(value) => setMacAddressType(value as MacAddressType)}
             >
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <HStack gap={2} className="items-center">
-                  <Radio value="from_port" label="From Port" />
+                  <Radio value="from_port" label="From port" />
                   <Tooltip content="Use the MAC address assigned to this port automatically.">
                     <IconHelp
-                      size={16}
-                      stroke={1}
+                      size={12}
+                      stroke={1.5}
                       className="text-[var(--color-text-subtle)] cursor-help"
                     />
                   </Tooltip>

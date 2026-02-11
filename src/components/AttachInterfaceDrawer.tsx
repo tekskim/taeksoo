@@ -8,9 +8,11 @@ import {
   Radio,
   SelectionIndicator,
   Select,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown } from '@tabler/icons-react';
+import { IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -72,7 +74,7 @@ export function AttachInterfaceDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const totalItems = 115;
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleAttach = async () => {
@@ -100,6 +102,71 @@ export function AttachInterfaceDrawer({
   const filteredNetworks = networks.filter((n) =>
     n.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const networkColumns: TableColumn<NetworkItem>[] = [
+    {
+      key: 'id' as keyof NetworkItem,
+      label: '',
+      width: 40,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="network-select"
+            value={row.id}
+            checked={selectedNetworkId === row.id}
+            onChange={() => setSelectedNetworkId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status' as keyof NetworkItem,
+      label: 'Status',
+      width: 60,
+      align: 'center' as const,
+      render: () => <StatusIndicator status="active" layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'subnetCidr',
+      label: 'Subnet CIDR',
+    },
+    {
+      key: 'external' as keyof NetworkItem,
+      label: 'External',
+      render: (_value, row) => <span>{row.external ? 'Yes' : 'No'}</span>,
+    },
+    {
+      key: 'shared' as keyof NetworkItem,
+      label: 'Shared',
+      render: (_value, row) => <span>{row.shared ? 'On' : 'Off'}</span>,
+    },
+    {
+      key: 'inThisProject' as keyof NetworkItem,
+      label: 'In this project',
+      render: (_value, row) => <span>{row.inThisProject ? 'Yes' : 'No'}</span>,
+    },
+  ];
 
   return (
     <Drawer
@@ -139,7 +206,7 @@ export function AttachInterfaceDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance name</div>
             <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
@@ -172,196 +239,53 @@ export function AttachInterfaceDrawer({
             <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
-          {/* Networks Table */}
-          <div
-            className="flex-1 overflow-y-auto sidebar-scroll"
-            style={{ width: '648px', maxWidth: '648px', overflowX: 'hidden', paddingRight: '2px' }}
-          >
-            {/* Header */}
-            <div
-              style={{ display: 'flex', width: '648px', height: '40px' }}
-              className="bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md"
-            >
-              <div
-                style={{ width: '40px', flexShrink: 0 }}
-                className="flex items-center justify-center"
-              />
-              <div
-                style={{ width: '59px', flexShrink: 0 }}
-                className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
-              </div>
-              <div
-                style={{ width: '110px', flexShrink: 0 }}
-                className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
-              </div>
-              <div
-                style={{ width: '110px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
-              </div>
-              <div
-                style={{ width: '80px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">External</span>
-              </div>
-              <div
-                style={{ width: '80px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">Shared</span>
-              </div>
-              <div
-                style={{ width: '109px', flexShrink: 0 }}
-                className="flex items-center px-3 border-l border-[var(--color-border-default)]"
-              >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  In This Project
-                </span>
-              </div>
-            </div>
+          <VStack gap={2}>
+            <Table<NetworkItem>
+              columns={networkColumns}
+              data={filteredNetworks}
+              rowKey="id"
+              onRowClick={(row) => setSelectedNetworkId(row.id)}
+              emptyMessage="No networks found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedNetworkId
+                  ? [
+                      {
+                        id: selectedNetworkId,
+                        label: networks.find((n) => n.id === selectedNetworkId)?.name || '',
+                      },
+                    ]
+                  : []
+              }
+              onRemove={() => setSelectedNetworkId(null)}
+              emptyText="No item selected"
+              error={hasAttemptedSubmit && !selectedNetworkId}
+              errorMessage="Please select a network"
+            />
+          </VStack>
 
-            {/* Rows */}
-            <div
-              style={{
-                width: '648px',
-                maxWidth: '648px',
-                marginTop: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              {filteredNetworks.map((network) => (
-                <div
-                  key={network.id}
-                  style={{ display: 'flex', width: '648px', minHeight: '40px' }}
-                  className={`border rounded-md cursor-pointer transition-all ${
-                    selectedNetworkId === network.id
-                      ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                      : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                  }`}
-                  onClick={() => setSelectedNetworkId(network.id)}
-                >
-                  {/* Radio */}
-                  <div
-                    style={{ width: '40px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Radio
-                      name="network-select"
-                      value={network.id}
-                      checked={selectedNetworkId === network.id}
-                      onChange={() => setSelectedNetworkId(network.id)}
-                    />
-                  </div>
-                  {/* Status */}
-                  <div
-                    style={{ width: '59px', flexShrink: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    <StatusIndicator status="active" layout="icon-only" size="sm" />
-                  </div>
-                  {/* Name */}
-                  <div
-                    style={{ width: '110px', flexShrink: 0 }}
-                    className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
-                        {network.name}
-                      </span>
-                      <IconExternalLink
-                        size={16}
-                        className="shrink-0 text-[var(--color-action-primary)]"
-                      />
-                    </div>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                      ID : 17kfj123
-                    </span>
-                  </div>
-                  {/* Subnet CIDR */}
-                  <div
-                    style={{ width: '110px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {network.subnetCidr}
-                    </span>
-                  </div>
-                  {/* External */}
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {network.external ? 'Yes' : 'No'}
-                    </span>
-                  </div>
-                  {/* Shared */}
-                  <div
-                    style={{ width: '80px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {network.shared ? 'On' : 'Off'}
-                    </span>
-                  </div>
-                  {/* In This Project */}
-                  <div
-                    style={{ width: '109px', flexShrink: 0 }}
-                    className="flex items-center px-3 py-2 overflow-hidden"
-                  >
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      {network.inThisProject ? 'Yes' : 'No'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </VStack>
-
-        {/* Selection Indicator */}
-        <SelectionIndicator
-          selectedItems={
-            selectedNetworkId
-              ? [
-                  {
-                    id: selectedNetworkId,
-                    label: networks.find((n) => n.id === selectedNetworkId)?.name || '',
-                  },
-                ]
-              : []
-          }
-          onRemove={() => setSelectedNetworkId(null)}
-          emptyText="No item selected"
-          className="shrink-0"
-          style={{ width: '648px' }}
-          error={hasAttemptedSubmit && !selectedNetworkId}
-          errorMessage="Please select a network"
-        />
-
-        {/* Fixed IP Section */}
-        <VStack gap={2} className="shrink-0" style={{ width: '648px' }}>
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Fixed IP</h3>
-          <Select options={[]} placeholder="Select subnet" disabled={false} fullWidth />
-          <Select
-            options={[
-              { value: 'auto-assign', label: 'Auto-assign' },
-              { value: 'manual', label: 'Manual' },
-            ]}
-            value={fixedIpMode}
-            onChange={(value) => setFixedIpMode(value)}
-            fullWidth
-          />
+          {/* Fixed IP Section */}
+          <VStack gap={2} className="shrink-0 w-full">
+            <h3 className="text-label-lg text-[var(--color-text-default)]">Fixed IP</h3>
+            <Select
+              options={[
+                { value: 'subnet-1', label: '192.168.20.0/24 (subnet-1)' },
+                { value: 'subnet-2', label: '10.0.0.0/24 (subnet-2)' },
+              ]}
+              placeholder="Select subnet"
+              fullWidth
+            />
+            <Select
+              options={[
+                { value: 'auto-assign', label: 'Auto-assign' },
+                { value: 'manual', label: 'Manual' },
+              ]}
+              value={fixedIpMode}
+              onChange={(value) => setFixedIpMode(value)}
+              fullWidth
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

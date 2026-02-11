@@ -141,12 +141,12 @@ export function ChangeVolumeTypeDrawer({
           <InfoBox label="Volume" value={volume?.name ?? '-'} />
 
           {/* Current Volume Type Info */}
-          <InfoBox label="Current Volume Type" value={volume?.currentType ?? '-'} />
+          <InfoBox label="Current volume type" value={volume?.currentType ?? '-'} />
         </VStack>
 
         {/* New Volume Type Select */}
         <FormField required error={hasAttemptedSubmit && !selectedType}>
-          <FormField.Label>New Volume type</FormField.Label>
+          <FormField.Label>New volume type</FormField.Label>
           <FormField.Control>
             <Select
               value={selectedType}

@@ -166,7 +166,7 @@ export function CreateSubnetDrawer({
           {/* Quota Section */}
           <VStack gap={4} className="w-full">
             <QuotaProgressBar
-              label="Subnet Quota"
+              label="Subnet quota"
               used={subnetQuota.used}
               total={subnetQuota.total}
             />
@@ -220,14 +220,13 @@ export function CreateSubnetDrawer({
             fullWidth
             error={hasAttemptedSubmit && !cidr.trim()}
           />
-          {hasAttemptedSubmit && !cidr.trim() ? (
+          {hasAttemptedSubmit && !cidr.trim() && (
             <span className="text-body-sm text-[var(--color-state-danger)]">CIDR is required</span>
-          ) : (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
-              192.168.0.0/16
-            </span>
           )}
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
+            192.168.0.0/16
+          </span>
         </VStack>
 
         {/* Gateway */}
@@ -253,7 +252,7 @@ export function CreateSubnetDrawer({
 
         {/* Advanced Options Disclosure */}
         <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-          <Disclosure.Trigger>Advanced Options</Disclosure.Trigger>
+          <Disclosure.Trigger>Advanced options</Disclosure.Trigger>
           <Disclosure.Panel>
             <VStack gap={6} className="mt-6">
               {/* DHCP */}
@@ -272,7 +271,7 @@ export function CreateSubnetDrawer({
               <VStack gap={2}>
                 <HStack gap={1.5} align="center">
                   <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Allocation Pools
+                    Allocation pools
                   </span>
                   <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                     (Optional)

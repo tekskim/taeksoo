@@ -7,9 +7,12 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
+  fixedColumns,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconLock } from '@tabler/icons-react';
+import { IconExternalLink, IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -53,6 +56,71 @@ const defaultInstances: InstanceItem[] = Array.from({ length: 115 }, (_, i) => (
 }));
 
 const ITEMS_PER_PAGE = 5;
+
+/* ----------------------------------------
+   Column definitions
+   ---------------------------------------- */
+
+const getInstanceColumns = (
+  selectedInstanceId: string | null,
+  onSelect: (id: string) => void
+): TableColumn<InstanceItem>[] => [
+  {
+    key: 'radio' as keyof InstanceItem,
+    label: '',
+    width: '40px',
+    render: (_, row) => (
+      <Radio
+        name="instance-select"
+        value={row.id}
+        checked={selectedInstanceId === row.id}
+        onChange={() => onSelect(row.id)}
+      />
+    ),
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    width: fixedColumns.status,
+    align: 'center',
+    render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+  },
+  {
+    key: 'name',
+    label: 'Name',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => (
+      <div className="flex flex-col gap-0.5">
+        <span className="flex items-center gap-1.5">
+          <span className="font-medium text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+        </span>
+        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
+      </div>
+    ),
+  },
+  {
+    key: 'isLocked',
+    label: 'Locked',
+    width: '62px',
+    align: 'center',
+    render: (_, row) =>
+      row.isLocked ? (
+        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+      ) : null,
+  },
+  { key: 'fixedIP', label: 'Fixed IP', flex: 1 },
+  { key: 'flavor', label: 'Flavor', flex: 1, sortable: true },
+  {
+    key: 'attachedVolumes',
+    label: 'Attached volumes',
+    flex: 1,
+    render: (_, row) => <>{row.attachedVolumes.join(', ') || '-'}</>,
+  },
+];
 
 /* ----------------------------------------
    AttachVolumeDrawer Component
@@ -120,6 +188,7 @@ export function AttachVolumeDrawer({
   };
 
   const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
+  const instanceColumns = getInstanceColumns(selectedInstanceId, setSelectedInstanceId);
 
   return (
     <Drawer
@@ -192,118 +261,27 @@ export function AttachVolumeDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Instances Table */}
-          <div
-            className="flex flex-col gap-[var(--table-row-gap)]"
-            style={{ width: '648px', maxWidth: '648px' }}
-          >
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Name
-                <IconChevronDown size={16} />
-              </div>
-              <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Locked
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Fixed IP
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Flavor
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Attached volumes
-              </div>
-            </div>
+          {/* Instances Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<InstanceItem>
+              columns={instanceColumns}
+              data={paginatedInstances}
+              rowKey="id"
+              onRowClick={(row) => setSelectedInstanceId(row.id)}
+              emptyMessage="No instances found"
+            />
 
-            {/* Rows */}
-            {paginatedInstances.map((inst) => (
-              <div
-                key={inst.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedInstanceId === inst.id
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => setSelectedInstanceId(inst.id)}
-              >
-                {/* Radio */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Radio
-                    name="instance-select"
-                    value={inst.id}
-                    checked={selectedInstanceId === inst.id}
-                    onChange={() => setSelectedInstanceId(inst.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={inst.status} layout="icon-only" size="sm" />
-                </div>
-                {/* Name with ID */}
-                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                      {inst.name}
-                    </span>
-                    <IconExternalLink
-                      size={16}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                    ID : {inst.id}
-                  </span>
-                </div>
-                {/* Locked */}
-                <div className="w-[62px] flex items-center justify-center">
-                  {inst.isLocked && (
-                    <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-                  )}
-                </div>
-                {/* Fixed IP */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.fixedIP}
-                  </span>
-                </div>
-                {/* Flavor */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.flavor}
-                  </span>
-                </div>
-                {/* Attached volumes */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.attachedVolumes.join(', ') || '-'}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={
-              selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
-            }
-            onRemove={() => setSelectedInstanceId(null)}
-            emptyText="No item Selected"
-            error={hasAttemptedSubmit && !selectedInstanceId}
-            errorMessage="Please select an instance."
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+            <SelectionIndicator
+              selectedItems={
+                selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
+              }
+              onRemove={() => setSelectedInstanceId(null)}
+              emptyText="No item selected"
+              error={hasAttemptedSubmit && !selectedInstanceId}
+              errorMessage="Please select an instance."
+              className="shrink-0 w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   NumberInput,
   ProgressBar,
+  STATUS_THRESHOLDS,
   HStack,
   VStack,
   TabBar,
@@ -418,6 +419,7 @@ function QuotaSidebar({
                   max={item.max}
                   newValue={item.newValue}
                   showValue
+                  thresholds={STATUS_THRESHOLDS.compute}
                 />
               ))}
             </VStack>
@@ -630,6 +632,8 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
           <VStack gap={2} className="py-6">
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -1336,7 +1340,7 @@ function ImageSection({
               onPageChange={setCurrentPage}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               {/* Table - Dynamic based on tab */}
               {sourceTab === 'image' && (
                 <Table
@@ -1378,7 +1382,7 @@ function ImageSection({
                 error={!!sourceError}
                 errorMessage={sourceError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           {/* Divider */}
@@ -1754,31 +1758,33 @@ function FlavorSection({
             />
 
             {/* Flavor Table */}
-            <Table
-              columns={flavorColumns}
-              data={paginatedFlavors}
-              rowKey="id"
-              onRowClick={(row) => handleSelectFlavor(row.id)}
-            />
+            <VStack gap={2}>
+              <Table
+                columns={flavorColumns}
+                data={paginatedFlavors}
+                rowKey="id"
+                onRowClick={(row) => handleSelectFlavor(row.id)}
+              />
 
-            {/* Error Message or Selection Indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedFlavorId
-                  ? [
-                      {
-                        id: selectedFlavorId,
-                        label:
-                          mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                          selectedFlavorId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectFlavor('')}
-              error={!!flavorError}
-              errorMessage={flavorError}
-            />
+              {/* Error Message or Selection Indicator */}
+              <SelectionIndicator
+                selectedItems={
+                  selectedFlavorId
+                    ? [
+                        {
+                          id: selectedFlavorId,
+                          label:
+                            mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                            selectedFlavorId,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => onSelectFlavor('')}
+                error={!!flavorError}
+                errorMessage={flavorError}
+              />
+            </VStack>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2381,6 +2387,8 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Network Sub-section */}
           <VStack gap={2} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2407,7 +2415,7 @@ function NetworkSection({
               selectedCount={selectedNetworkIds.size}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               {/* Network Table */}
               <Table
                 columns={networkColumns}
@@ -2441,7 +2449,7 @@ function NetworkSection({
                 error={!!networkError}
                 errorMessage={networkError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2621,7 +2629,7 @@ function NetworkSection({
               selectedCount={selectedSecurityGroups.size}
             />
 
-            <div className="flex flex-col gap-[8px]">
+            <VStack gap={2}>
               <Table
                 columns={securityGroupColumns}
                 data={filteredSecurityGroups}
@@ -2654,7 +2662,7 @@ function NetworkSection({
                 error={!!securityGroupError}
                 errorMessage={securityGroupError}
               />
-            </div>
+            </VStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2684,7 +2692,7 @@ function NetworkSection({
                     totalItems={filteredPorts.length}
                     onPageChange={setPortPage}
                   />
-                  <div className="flex flex-col gap-[8px]">
+                  <VStack gap={2}>
                     <Table
                       columns={portColumns}
                       data={filteredPorts}
@@ -2708,7 +2716,7 @@ function NetworkSection({
                       }
                       onRemove={() => setSelectedPortId(null)}
                     />
-                  </div>
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -2887,6 +2895,8 @@ function AuthenticationSection({
       </SectionCard.Header>
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type */}
           <VStack gap={4} className="py-6">
             <span className="text-label-lg">Login type</span>
@@ -2920,29 +2930,31 @@ function AuthenticationSection({
                   />
 
                   {/* Key pair Table */}
-                  <Table
-                    columns={keyPairColumns}
-                    data={filteredKeyPairs}
-                    rowKey="id"
-                    onRowClick={(row) => handleSelectKeyPair(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={keyPairColumns}
+                      data={filteredKeyPairs}
+                      rowKey="id"
+                      onRowClick={(row) => handleSelectKeyPair(row.id)}
+                    />
 
-                  {/* Selection Indicator for Key Pair */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedKeyPairId
-                        ? [
-                            {
-                              id: selectedKeyPairId,
-                              label:
-                                mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                selectedKeyPairId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedKeyPairId(null)}
-                  />
+                    {/* Selection Indicator for Key Pair */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedKeyPairId
+                          ? [
+                              {
+                                id: selectedKeyPairId,
+                                label:
+                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                  selectedKeyPairId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedKeyPairId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </TabPanel>
 
@@ -3209,6 +3221,8 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Server group Disclosure */}
           <div className="py-6">
             <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
@@ -3239,29 +3253,31 @@ function AdvancedSection({
                   />
 
                   {/* Server group Table */}
-                  <Table
-                    columns={serverGroupColumns}
-                    data={filteredServerGroups}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedServerGroupId(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={serverGroupColumns}
+                      data={filteredServerGroups}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedServerGroupId(row.id)}
+                    />
 
-                  {/* Selection Indicator for Server Group */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedServerGroupId
-                        ? [
-                            {
-                              id: selectedServerGroupId,
-                              label:
-                                mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                  ?.name || selectedServerGroupId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedServerGroupId(null)}
-                  />
+                    {/* Selection Indicator for Server Group */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedServerGroupId
+                          ? [
+                              {
+                                id: selectedServerGroupId,
+                                label:
+                                  mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
+                                    ?.name || selectedServerGroupId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedServerGroupId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -3485,6 +3501,8 @@ function TemplatesSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Resource type */}
           <VStack gap={2} align="start" className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3567,18 +3585,20 @@ function TemplatesSection({
                   />
 
                   {/* Table with Selection */}
-                  {filteredTemplates.length > 0 ? (
-                    <Table
-                      columns={columns}
-                      data={filteredTemplates}
-                      rowKey="id"
-                      onRowClick={(row) => onSelect(row.id)}
-                    />
-                  ) : (
-                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                      No favorite templates
-                    </div>
-                  )}
+                  <VStack gap={2}>
+                    {filteredTemplates.length > 0 ? (
+                      <Table
+                        columns={columns}
+                        data={filteredTemplates}
+                        rowKey="id"
+                        onRowClick={(row) => onSelect(row.id)}
+                      />
+                    ) : (
+                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                        No favorite templates
+                      </div>
+                    )}
+                  </VStack>
                 </VStack>
               </TabPanel>
 

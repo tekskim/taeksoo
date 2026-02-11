@@ -78,7 +78,7 @@ export function AdminLockSettingDrawer({
         <VStack gap={3}>
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Lock Setting
+              Lock setting
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               When a system administrator is locked, sign-in is disabled and modifications or
@@ -102,7 +102,7 @@ export function AdminLockSettingDrawer({
         {/* Lock Status */}
         <VStack gap={3}>
           <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Lock Status
+            Lock status
           </span>
           <HStack gap={2} align="center">
             <Toggle checked={locked} onChange={setLocked} />

@@ -639,7 +639,7 @@ export default function PortDetailPage() {
                     <SectionCard.Header title="Attachments" />
                     <SectionCard.Content>
                       <SectionCard.DataRow
-                        label="Bind Device Type"
+                        label="Bind device type"
                         value={
                           port.attachedTo
                             ? port.attachedTo.type === 'instance'

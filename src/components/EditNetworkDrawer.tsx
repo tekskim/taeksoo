@@ -40,6 +40,8 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
   );
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or network changes
   useEffect(() => {
@@ -49,12 +51,24 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
       setAdminStateUp(network.adminStateUp ?? true);
       setPortSecurityEnabled(network.portSecurityEnabled ?? true);
       setIsAdvancedExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, network]);
 
   const handleSubmit = async () => {
-    if (!networkName.trim()) return;
+    setHasAttemptedSubmit(true);
 
+    if (!networkName.trim()) {
+      setNameError('Network name is required');
+      return;
+    }
+    if (networkName.trim().length > 128) {
+      setNameError('Network name must be 128 characters or fewer');
+      return;
+    }
+
+    setNameError(null);
     setIsSubmitting(true);
     try {
       await onSubmit?.(networkName, description, adminStateUp, portSecurityEnabled);
@@ -65,6 +79,8 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -95,21 +111,26 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Network
+            Edit network
           </h2>
         </VStack>
 
         {/* Network Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Network name</FormField.Label>
           <FormField.Control>
             <Input
               value={networkName}
-              onChange={(e) => setNetworkName(e.target.value)}
+              onChange={(e) => {
+                setNetworkName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. my-network"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>
@@ -148,9 +169,9 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {/* Advanced Options (Collapsible) */}
         {isAdvancedExpanded && (
           <>
-            {/* Admin State */}
+            {/* Admin state */}
             <FormField>
-              <FormField.Label>Admin State</FormField.Label>
+              <FormField.Label>Admin state</FormField.Label>
               <FormField.Description>
                 Setting it to "Down" disables all related network or control operations, regardless
                 of runtime status.
@@ -168,9 +189,9 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
               </FormField.Control>
             </FormField>
 
-            {/* Port Security */}
+            {/* Port security */}
             <FormField>
-              <FormField.Label>Port Security</FormField.Label>
+              <FormField.Label>Port security</FormField.Label>
               <FormField.Description>
                 Enhances security by allowing only permitted devices to access this network. It is
                 recommended to keep this enabled in most cases.

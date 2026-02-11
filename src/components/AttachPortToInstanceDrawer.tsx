@@ -7,7 +7,9 @@ import {
   Radio,
   StatusIndicator,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconExternalLink, IconLock } from '@tabler/icons-react';
 
@@ -118,11 +120,74 @@ export function AttachPortToInstanceDrawer({
 
   const selectedInstance = instances.find((i) => i.id === selectedInstanceId);
 
+  const instanceColumns: TableColumn<InstanceItem>[] = [
+    {
+      key: 'id' as keyof InstanceItem,
+      label: '',
+      width: 40,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="instance-select"
+            value={row.id}
+            checked={selectedInstanceId === row.id}
+            onChange={() => setSelectedInstanceId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: 60,
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <HStack gap={1.5} align="center">
+            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'locked',
+      label: 'Locked',
+      width: 62,
+      align: 'center',
+      render: (_value, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
+    },
+    { key: 'fixedIp', label: 'Fixed IP' },
+    {
+      key: 'floatingIp',
+      label: 'Floating IP',
+      render: (value) => value ?? '-',
+    },
+    { key: 'az', label: 'AZ' },
+  ];
+
   return (
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Attach to Instance"
+      title="Attach to instance"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -177,117 +242,26 @@ export function AttachPortToInstanceDrawer({
             onPageChange={setCurrentPage}
           />
 
-          {/* Instances Table */}
-          <div
-            className="flex flex-col gap-[var(--table-row-gap)]"
-            style={{ width: '648px', maxWidth: '648px' }}
-          >
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Name
-              </div>
-              <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Locked
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Fixed IP
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Floating IP
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                AZ
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedInstances.map((inst) => (
-              <div
-                key={inst.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedInstanceId === inst.id
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => setSelectedInstanceId(inst.id)}
-              >
-                {/* Radio */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Radio
-                    name="instance-select"
-                    value={inst.id}
-                    checked={selectedInstanceId === inst.id}
-                    onChange={() => setSelectedInstanceId(inst.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={inst.status} layout="icon-only" size="sm" />
-                </div>
-                {/* Name with ID */}
-                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                      {inst.name}
-                    </span>
-                    <IconExternalLink
-                      size={16}
-                      stroke={1.5}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                    ID : {inst.id}
-                  </span>
-                </div>
-                {/* Locked */}
-                <div className="w-[62px] flex items-center justify-center">
-                  {inst.locked && (
-                    <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-                  )}
-                </div>
-                {/* Fixed IP */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.fixedIp}
-                  </span>
-                </div>
-                {/* Floating IP */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.floatingIp ?? '-'}
-                  </span>
-                </div>
-                {/* AZ */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {inst.az}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator */}
-          <SelectionIndicator
-            selectedItems={
-              selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
-            }
-            onRemove={() => setSelectedInstanceId(null)}
-            emptyText="No item Selected"
-            error={hasAttemptedSubmit && !selectedInstanceId}
-            errorMessage="Please select an instance."
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+          <VStack gap={2}>
+            <Table<InstanceItem>
+              columns={instanceColumns}
+              data={paginatedInstances}
+              rowKey="id"
+              onRowClick={(row) => setSelectedInstanceId(row.id)}
+              emptyMessage="No instances found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedInstance ? [{ id: selectedInstance.id, label: selectedInstance.name }] : []
+              }
+              onRemove={() => setSelectedInstanceId(null)}
+              emptyText="No item selected"
+              error={hasAttemptedSubmit && !selectedInstanceId}
+              errorMessage="Please select an instance."
+              className="shrink-0"
+              style={{ width: '648px' }}
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

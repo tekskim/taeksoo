@@ -4,12 +4,14 @@ import {
   Button,
   SearchInput,
   Pagination,
-  Checkbox,
+  Table,
   StatusIndicator,
   SelectionIndicator,
+  fixedColumns,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconAlertCircle } from '@tabler/icons-react';
+import { IconExternalLink, IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -132,6 +134,44 @@ const defaultUsers: UserItem[] = [
 
 const ITEMS_PER_PAGE = 5;
 
+const userColumns: TableColumn<UserItem>[] = [
+  {
+    key: 'status',
+    label: 'Status',
+    width: fixedColumns.status,
+    align: 'center',
+    render: (_, row) => <StatusIndicator status={row.status} />,
+  },
+  {
+    key: 'username',
+    label: 'Username',
+    flex: 1,
+    sortable: true,
+    render: (_, row) => (
+      <span className="flex items-center gap-1.5">
+        <span className="font-medium text-[var(--color-action-primary)] truncate">
+          {row.username}
+        </span>
+        <IconExternalLink
+          size={12}
+          stroke={1.5}
+          className="shrink-0 text-[var(--color-action-primary)]"
+        />
+        {row.hasWarning && (
+          <IconAlertCircle
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-state-danger)]"
+          />
+        )}
+      </span>
+    ),
+  },
+  { key: 'userGroups', label: 'User groups', flex: 1 },
+  { key: 'roles', label: 'Roles', flex: 1 },
+  { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
+];
+
 /* ----------------------------------------
    ManageUsersDrawer Component
    ---------------------------------------- */
@@ -145,7 +185,7 @@ export function ManageUsersDrawer({
   onSubmit,
 }: ManageUsersDrawerProps) {
   // User selection state
-  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set(initialSelectedIds));
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([...initialSelectedIds]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -169,37 +209,25 @@ export function ManageUsersDrawer({
   // Reset state when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedUserIds(new Set(initialSelectedIds));
+      setSelectedUserIds([...initialSelectedIds]);
       setSearchQuery('');
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
   }, [isOpen]);
 
-  const handleToggleUser = (userId: string) => {
-    setSelectedUserIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(userId)) {
-        newSet.delete(userId);
-      } else {
-        newSet.add(userId);
-      }
-      return newSet;
-    });
-  };
-
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
 
     // Validate required fields
-    if (selectedUserIds.size === 0) {
+    if (selectedUserIds.length === 0) {
       return; // Don't submit if no users selected
     }
 
     setIsSubmitting(true);
     try {
       await onSubmit?.({
-        userIds: Array.from(selectedUserIds),
+        userIds: selectedUserIds,
       });
       onClose();
     } finally {
@@ -208,7 +236,7 @@ export function ManageUsersDrawer({
   };
 
   const handleClose = () => {
-    setSelectedUserIds(new Set(initialSelectedIds));
+    setSelectedUserIds([...initialSelectedIds]);
     setSearchQuery('');
     setCurrentPage(1);
     setHasAttemptedSubmit(false);
@@ -216,40 +244,13 @@ export function ManageUsersDrawer({
   };
 
   const handleRemoveSelection = (userId: string) => {
-    setSelectedUserIds((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(userId);
-      return newSet;
-    });
+    setSelectedUserIds((prev) => prev.filter((id) => id !== userId));
   };
 
   // Get selected items for SelectionIndicator
   const selectedItems = users
-    .filter((user) => selectedUserIds.has(user.id))
+    .filter((user) => selectedUserIds.includes(user.id))
     .map((user) => ({ id: user.id, label: user.username }));
-
-  // Select all logic
-  const allCurrentPageSelected =
-    paginatedUsers.length > 0 && paginatedUsers.every((user) => selectedUserIds.has(user.id));
-  const someCurrentPageSelected = paginatedUsers.some((user) => selectedUserIds.has(user.id));
-
-  const handleSelectAll = () => {
-    if (allCurrentPageSelected) {
-      // Deselect all on current page
-      setSelectedUserIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedUsers.forEach((user) => newSet.delete(user.id));
-        return newSet;
-      });
-    } else {
-      // Select all on current page
-      setSelectedUserIds((prev) => {
-        const newSet = new Set(prev);
-        paginatedUsers.forEach((user) => newSet.add(user.id));
-        return newSet;
-      });
-    }
-  };
 
   return (
     <Drawer
@@ -333,114 +334,31 @@ export function ManageUsersDrawer({
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={filteredUsers.length}
-            selectedCount={selectedUserIds.size > 0 ? selectedUserIds.size : undefined}
+            selectedCount={selectedUserIds.length > 0 ? selectedUserIds.length : undefined}
             onPageChange={setCurrentPage}
           />
 
-          {/* Users Table */}
-          <div className="w-full flex flex-col gap-[var(--table-row-gap)]">
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center">
-                <Checkbox
-                  checked={allCurrentPageSelected}
-                  indeterminate={someCurrentPageSelected && !allCurrentPageSelected}
-                  onChange={handleSelectAll}
-                />
-              </div>
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Username
-                <IconChevronDown size={16} />
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                User groups
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Roles
-              </div>
-              <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                Created at
-                <IconChevronDown size={16} />
-              </div>
-            </div>
+          {/* Users Table + Selection Indicator */}
+          <VStack gap={2} className="w-full">
+            <Table<UserItem>
+              columns={userColumns}
+              data={paginatedUsers}
+              rowKey="id"
+              selectable
+              selectedKeys={selectedUserIds}
+              onSelectionChange={setSelectedUserIds}
+              emptyMessage="No users found"
+            />
 
-            {/* Rows */}
-            {paginatedUsers.map((user) => (
-              <div
-                key={user.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedUserIds.has(user.id)
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => handleToggleUser(user.id)}
-              >
-                {/* Checkbox */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Checkbox
-                    checked={selectedUserIds.has(user.id)}
-                    onChange={() => handleToggleUser(user.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <StatusIndicator status={user.status} />
-                </div>
-                {/* Username with link */}
-                <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                    {user.username}
-                  </span>
-                  <IconExternalLink
-                    size={16}
-                    stroke={1.5}
-                    className="shrink-0 text-[var(--color-action-primary)]"
-                  />
-                  {user.hasWarning && (
-                    <IconAlertCircle
-                      size={16}
-                      stroke={1.5}
-                      className="shrink-0 text-[var(--color-state-danger)]"
-                    />
-                  )}
-                </div>
-                {/* User groups */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {user.userGroups}
-                  </span>
-                </div>
-                {/* Roles */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {user.roles}
-                  </span>
-                </div>
-                {/* Created at */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                    {user.createdAt}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - directly under the table */}
-          <SelectionIndicator
-            selectedItems={selectedItems}
-            onRemove={handleRemoveSelection}
-            emptyText="No items selected"
-            error={hasAttemptedSubmit && selectedUserIds.size === 0}
-            errorMessage="Please select at least one user."
-            className="shrink-0 w-full"
-          />
+            <SelectionIndicator
+              selectedItems={selectedItems}
+              onRemove={handleRemoveSelection}
+              emptyText="No items selected"
+              error={hasAttemptedSubmit && selectedUserIds.length === 0}
+              errorMessage="Please select at least one user."
+              className="shrink-0 w-full"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

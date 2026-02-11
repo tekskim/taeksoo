@@ -69,6 +69,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
   const [adminStateUp, setAdminStateUp] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [keyError, setKeyError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -80,13 +81,27 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
       setInvert(false);
       setAdminStateUp(true);
       setHasAttemptedSubmit(false);
+      setKeyError(null);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    if (!compareType || !value.trim()) return;
-    if (ruleTypesWithKey.includes(ruleType) && !key.trim()) return;
+
+    // Validate all fields together
+    let hasError = false;
+
+    if (requiresKey) {
+      const error = validateKey(key);
+      setKeyError(error);
+      if (error) hasError = true;
+    } else {
+      setKeyError(null);
+    }
+
+    if (!compareType || !value.trim()) hasError = true;
+
+    if (hasError) return;
 
     setIsSubmitting(true);
     try {
@@ -106,10 +121,18 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
   const handleClose = () => {
     setHasAttemptedSubmit(false);
+    setKeyError(null);
     onClose();
   };
 
   const requiresKey = ruleTypesWithKey.includes(ruleType);
+
+  const validateKey = (val: string): string | null => {
+    if (!val.trim()) return 'Key is required for this rule type';
+    if (val.length > 255) return 'Key must be 255 characters or fewer';
+    if (!/^[a-zA-Z0-9-]+$/.test(val)) return 'Key can only contain letters, numbers, and "-"';
+    return null;
+  };
 
   return (
     <Drawer
@@ -144,7 +167,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Rule Type */}
         <FormField>
-          <FormField.Label>Rule Type</FormField.Label>
+          <FormField.Label>Rule type</FormField.Label>
           <FormField.Description>
             Select the part of the incoming request to inspect, such as the URL path or a specific
             HTTP header.
@@ -154,17 +177,31 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
               value={ruleType}
               onChange={(value) => {
                 setRuleType(value as RuleType);
-                setKey(''); // Reset key when rule type changes
+                setKey('');
+                setKeyError(null);
               }}
               options={ruleTypeOptions}
               fullWidth
             />
+          </FormField.Control>
+        </FormField>
 
-            {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
-            {requiresKey && (
+        {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
+        {requiresKey && (
+          <FormField required error={!!keyError}>
+            <FormField.Label>Key</FormField.Label>
+            <FormField.Control>
               <Input
                 value={key}
-                onChange={(e) => setKey(e.target.value)}
+                onChange={(e) => {
+                  const newVal = e.target.value;
+                  setKey(newVal);
+                  if (hasAttemptedSubmit) {
+                    setKeyError(validateKey(newVal));
+                  } else if (keyError) {
+                    setKeyError(null);
+                  }
+                }}
                 placeholder={
                   ruleType === 'HEADER'
                     ? 'e.g. User-Agent'
@@ -173,19 +210,19 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
                       : 'e.g. CN'
                 }
                 fullWidth
+                error={!!keyError}
               />
-            )}
-          </FormField.Control>
-          {requiresKey && (
+            </FormField.Control>
+            {keyError && <FormField.ErrorMessage>{keyError}</FormField.ErrorMessage>}
             <FormField.HelperText>
               Allowed: 1–255 characters, letters, numbers, "-".
             </FormField.HelperText>
-          )}
-        </FormField>
+          </FormField>
+        )}
 
         {/* Compare Type */}
         <FormField required error={hasAttemptedSubmit && !compareType}>
-          <FormField.Label>Compare Type</FormField.Label>
+          <FormField.Label>Compare type</FormField.Label>
           <FormField.Description>
             Select how the value is compared. Regex is for advanced matching.
           </FormField.Description>
@@ -216,11 +253,8 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
               error={hasAttemptedSubmit && !value.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !value.trim() ? (
-            <FormField.ErrorMessage>Value is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>Allowed: 1–255 characters.</FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Value is required</FormField.ErrorMessage>
+          <FormField.HelperText>Allowed: 1–255 characters.</FormField.HelperText>
         </FormField>
 
         {/* Invert */}
@@ -237,7 +271,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
         {/* Admin State */}
         <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
+            Admin state
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />

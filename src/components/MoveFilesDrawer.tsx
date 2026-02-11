@@ -67,9 +67,13 @@ function FolderTreeItem({
             }}
           >
             {isExpanded ? (
-              <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+              <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
             ) : (
-              <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+              <IconChevronRight
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-subtle)]"
+              />
             )}
           </button>
         ) : (
@@ -80,6 +84,7 @@ function FolderTreeItem({
         {isExpanded && hasChildren ? (
           <IconFolderOpen
             size={16}
+            stroke={1.5}
             className={
               isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
             }
@@ -87,6 +92,7 @@ function FolderTreeItem({
         ) : (
           <IconFolder
             size={16}
+            stroke={1.5}
             className={
               isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
             }
@@ -198,11 +204,15 @@ export function MoveFilesDrawer({
     new Set(['folder-a', 'folder-c', 'folder-d', 'folder-e', 'folder-f', 'folder-g'])
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [pathError, setPathError] = useState<string | null>(null);
 
   // Reset form when drawer opens/closes
   useEffect(() => {
     if (isOpen) {
       setSelectedPath(null);
+      setHasAttemptedSubmit(false);
+      setPathError(null);
     }
   }, [isOpen]);
 
@@ -219,7 +229,13 @@ export function MoveFilesDrawer({
   };
 
   const handleSubmit = async () => {
-    if (!selectedPath) return;
+    setHasAttemptedSubmit(true);
+
+    if (!selectedPath) {
+      setPathError('Please select a destination folder.');
+      return;
+    }
+    setPathError(null);
 
     setIsSubmitting(true);
     try {
@@ -232,6 +248,8 @@ export function MoveFilesDrawer({
 
   const handleClose = () => {
     setSelectedPath(null);
+    setHasAttemptedSubmit(false);
+    setPathError(null);
     onClose();
   };
 
@@ -250,7 +268,7 @@ export function MoveFilesDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !selectedPath}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Moving...' : 'Move'}
@@ -260,7 +278,7 @@ export function MoveFilesDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move Files</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move files</h2>
 
         {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">
@@ -290,7 +308,10 @@ export function MoveFilesDrawer({
                     level={0}
                     selectedPath={selectedPath}
                     expandedFolders={expandedFolders}
-                    onSelect={setSelectedPath}
+                    onSelect={(path) => {
+                      setSelectedPath(path);
+                      if (pathError) setPathError(null);
+                    }}
                     onToggle={handleToggleFolder}
                   />
                 ))}
@@ -298,6 +319,9 @@ export function MoveFilesDrawer({
             </VStack>
           </div>
 
+          {pathError && (
+            <span className="text-body-sm text-[var(--color-state-danger)]">{pathError}</span>
+          )}
           <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Choose a parent folder to create this folder in.
           </p>

@@ -74,8 +74,10 @@ function FileUploadSection({
       />
       <Button
         variant="secondary"
+        size="sm"
         onClick={handleUploadClick}
-        leftIcon={<IconUpload size={16} stroke={1} />}
+        leftIcon={<IconUpload size={12} stroke={1.5} />}
+        className="w-fit"
       >
         Upload a File
       </Button>
@@ -157,8 +159,10 @@ function CollapsibleSection({
           />
           <Button
             variant="secondary"
+            size="sm"
             onClick={handleUploadClick}
-            leftIcon={<IconUpload size={16} stroke={1} />}
+            leftIcon={<IconUpload size={12} stroke={1.5} />}
+            className="w-fit"
           >
             Upload a File
           </Button>
@@ -194,6 +198,8 @@ export function RegisterCertificateDrawer({
   const [intermediateCert, setIntermediateCert] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [bodyError, setBodyError] = useState<string | null>(null);
+  const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -205,13 +211,25 @@ export function RegisterCertificateDrawer({
       setPrivateKey('');
       setIntermediateCert('');
       setHasAttemptedSubmit(false);
+      setBodyError(null);
+      setPrivateKeyError(null);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    if (!certificateName.trim() || !certificateBody.trim()) return;
-    if (certificateType === 'server' && !privateKey.trim()) return;
+
+    if (!certificateName.trim()) return;
+    if (!certificateBody.trim()) {
+      setBodyError('Certificate body is required');
+      return;
+    }
+    setBodyError(null);
+    if (certificateType === 'server' && !privateKey.trim()) {
+      setPrivateKeyError('Private key is required for server certificates');
+      return;
+    }
+    setPrivateKeyError(null);
 
     setIsSubmitting(true);
     try {
@@ -231,6 +249,8 @@ export function RegisterCertificateDrawer({
 
   const handleClose = () => {
     setHasAttemptedSubmit(false);
+    setBodyError(null);
+    setPrivateKeyError(null);
     onClose();
   };
 
@@ -276,9 +296,9 @@ export function RegisterCertificateDrawer({
               value={certificateType}
               onChange={(value) => setCertificateType(value as CertificateType)}
             >
-              <VStack gap={3}>
-                <Radio value="server" label="Server Certificate" />
-                <Radio value="ca" label="CA Certificate" />
+              <VStack gap={2}>
+                <Radio value="server" label="Server certificate" />
+                <Radio value="ca" label="CA certificate" />
               </VStack>
             </RadioGroup>
           </FormField.Control>
@@ -286,7 +306,7 @@ export function RegisterCertificateDrawer({
 
         {/* Certificate Name Input */}
         <FormField required error={hasAttemptedSubmit && !certificateName.trim()}>
-          <FormField.Label>Certificate Name</FormField.Label>
+          <FormField.Label>Certificate name</FormField.Label>
           <FormField.Control>
             <Input
               value={certificateName}
@@ -298,13 +318,10 @@ export function RegisterCertificateDrawer({
               error={hasAttemptedSubmit && !certificateName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !certificateName.trim() ? (
-            <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
@@ -328,21 +345,39 @@ export function RegisterCertificateDrawer({
         </FormField>
 
         {/* Certificate Body */}
-        <FileUploadSection
-          label="Certificate Body"
-          description="Paste the full contents of your server certificate file (.crt, .pem), including the BEGIN/END lines."
-          value={certificateBody}
-          onChange={setCertificateBody}
-        />
+        <VStack gap={2} className="w-full">
+          <FileUploadSection
+            label="Certificate body"
+            description="Paste the full contents of your server certificate file (.crt, .pem), including the BEGIN/END lines."
+            value={certificateBody}
+            onChange={(v) => {
+              setCertificateBody(v);
+              if (bodyError) setBodyError(null);
+            }}
+          />
+          {hasAttemptedSubmit && bodyError && (
+            <span className="text-body-sm text-[var(--color-state-danger)]">{bodyError}</span>
+          )}
+        </VStack>
 
         {/* Private Key (only for Server Certificate) */}
         {certificateType === 'server' && (
-          <FileUploadSection
-            label="Private Key"
-            description="Paste the contents of the private key file (.key) for your certificate."
-            value={privateKey}
-            onChange={setPrivateKey}
-          />
+          <VStack gap={2} className="w-full">
+            <FileUploadSection
+              label="Private key"
+              description="Paste the contents of the private key file (.key) for your certificate."
+              value={privateKey}
+              onChange={(v) => {
+                setPrivateKey(v);
+                if (privateKeyError) setPrivateKeyError(null);
+              }}
+            />
+            {hasAttemptedSubmit && privateKeyError && (
+              <span className="text-body-sm text-[var(--color-state-danger)]">
+                {privateKeyError}
+              </span>
+            )}
+          </VStack>
         )}
 
         {/* Intermediate Certificate (Collapsible, only for Server Certificate) */}

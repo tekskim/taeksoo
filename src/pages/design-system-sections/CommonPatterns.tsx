@@ -428,45 +428,50 @@ export function SelectionDrawerPatternDemo() {
             fullWidth
           />
 
-          {/* Selection Indicator */}
-          {selectedItem && (
-            <SelectionIndicator
-              selectedItems={[{ id: selectedItem.id, label: selectedItem.name }]}
-              onRemove={() => setSelectedId(null)}
-            />
-          )}
+          <VStack gap={2}>
+            {/* Selection Indicator */}
+            {selectedItem && (
+              <SelectionIndicator
+                selectedItems={[{ id: selectedItem.id, label: selectedItem.name }]}
+                onRemove={() => setSelectedId(null)}
+              />
+            )}
 
-          {/* Selection Table */}
-          <Table
-            columns={[
-              {
-                key: 'select',
-                label: '',
-                width: fixedColumns.select,
-                render: (_, row) => (
-                  <div
-                    className="flex items-center justify-center"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Radio checked={selectedId === row.id} onChange={() => setSelectedId(row.id)} />
-                  </div>
-                ),
-              },
-              {
-                key: 'status',
-                label: 'Status',
-                width: fixedColumns.status,
-                render: (_, row) => (
-                  <StatusIndicator status={row.status as 'active' | 'error'} layout="icon-only" />
-                ),
-              },
-              { key: 'name', label: 'Name', flex: 1 },
-              { key: 'cidr', label: 'CIDR', flex: 1 },
-            ]}
-            data={items}
-            rowKey="id"
-            onRowClick={(row) => setSelectedId(row.id)}
-          />
+            {/* Selection Table */}
+            <Table
+              columns={[
+                {
+                  key: 'select',
+                  label: '',
+                  width: fixedColumns.select,
+                  render: (_, row) => (
+                    <div
+                      className="flex items-center justify-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Radio
+                        checked={selectedId === row.id}
+                        onChange={() => setSelectedId(row.id)}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  key: 'status',
+                  label: 'Status',
+                  width: fixedColumns.status,
+                  render: (_, row) => (
+                    <StatusIndicator status={row.status as 'active' | 'error'} layout="icon-only" />
+                  ),
+                },
+                { key: 'name', label: 'Name', flex: 1 },
+                { key: 'cidr', label: 'CIDR', flex: 1 },
+              ]}
+              data={items}
+              rowKey="id"
+              onRowClick={(row) => setSelectedId(row.id)}
+            />
+          </VStack>
         </VStack>
       </Drawer>
     </>

@@ -846,13 +846,14 @@ export function ComputeAdminCreateFlavorPage() {
                             {availableMetadataOptions
                               .filter(
                                 (item) =>
-                                  !availableMetadataSearch ||
-                                  item.label
-                                    .toLowerCase()
-                                    .includes(availableMetadataSearch.toLowerCase()) ||
-                                  item.key
-                                    .toLowerCase()
-                                    .includes(availableMetadataSearch.toLowerCase())
+                                  !selectedMetadata.some((m) => m.key === item.key) &&
+                                  (!availableMetadataSearch ||
+                                    item.label
+                                      .toLowerCase()
+                                      .includes(availableMetadataSearch.toLowerCase()) ||
+                                    item.key
+                                      .toLowerCase()
+                                      .includes(availableMetadataSearch.toLowerCase()))
                               )
                               .map((item, index, arr) => (
                                 <div key={item.key} className="flex flex-col">

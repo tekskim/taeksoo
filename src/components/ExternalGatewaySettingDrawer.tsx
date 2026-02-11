@@ -8,7 +8,9 @@ import {
   Toggle,
   StatusIndicator,
   SelectionIndicator,
+  Table,
 } from '@/design-system';
+import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconExternalLink } from '@tabler/icons-react';
 
@@ -123,6 +125,53 @@ export function ExternalGatewaySettingDrawer({
 
   const selectedNetwork = networks.find((n) => n.id === selectedNetworkId);
 
+  const networkColumns: TableColumn<NetworkItem>[] = [
+    {
+      key: 'radio',
+      label: '',
+      width: '40px',
+      render: (_, row) => (
+        <Radio
+          name="network-select"
+          value={row.id}
+          checked={selectedNetworkId === row.id}
+          onChange={() => setSelectedNetworkId(row.id)}
+        />
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '60px',
+      align: 'center',
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      render: (_, row) => (
+        <span className="flex flex-col gap-0.5">
+          <span className="flex items-center gap-1.5">
+            <span className="font-medium text-[var(--color-action-primary)] truncate">
+              {row.name}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </span>
+      ),
+    },
+    { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
+    { key: 'size', label: 'Size', flex: 1 },
+  ];
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -151,7 +200,7 @@ export function ExternalGatewaySettingDrawer({
         <VStack gap={3} className="w-[648px]">
           <VStack gap={2}>
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              External Gateway Setting
+              External gateway setting
             </h2>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Configure or update the external gateway for this router. The external gateway
@@ -209,96 +258,22 @@ export function ExternalGatewaySettingDrawer({
           />
 
           {/* Networks Table */}
-          <div
-            className="flex flex-col gap-[var(--table-row-gap)]"
-            style={{ width: '648px', maxWidth: '648px' }}
-          >
-            {/* Header */}
-            <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-              <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
-              <div className="w-[59px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Status
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Name
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Subnet CIDR
-              </div>
-              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                Size
-              </div>
-            </div>
-
-            {/* Rows */}
-            {paginatedNetworks.map((net) => (
-              <div
-                key={net.id}
-                className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedNetworkId === net.id
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
-                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
-                }`}
-                onClick={() => setSelectedNetworkId(net.id)}
-              >
-                {/* Radio */}
-                <div
-                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Radio
-                    name="network-select"
-                    value={net.id}
-                    checked={selectedNetworkId === net.id}
-                    onChange={() => setSelectedNetworkId(net.id)}
-                  />
-                </div>
-                {/* Status */}
-                <div className="w-[59px] flex items-center justify-center">
-                  <StatusIndicator status={net.status} layout="icon-only" size="sm" />
-                </div>
-                {/* Name with ID */}
-                <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
-                      {net.name}
-                    </span>
-                    <IconExternalLink
-                      size={16}
-                      stroke={1.5}
-                      className="shrink-0 text-[var(--color-action-primary)]"
-                    />
-                  </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                    ID : {net.id}
-                  </span>
-                </div>
-                {/* Subnet CIDR */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {net.subnetCidr}
-                  </span>
-                </div>
-                {/* Size */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
-                    {net.size}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Selection Indicator - directly under the table */}
-          <SelectionIndicator
-            selectedItems={
-              selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
-            }
-            onRemove={() => setSelectedNetworkId(null)}
-            emptyText="No item Selected"
-            className="shrink-0"
-            style={{ width: '648px' }}
-          />
+          <VStack gap={2}>
+            <Table<NetworkItem>
+              columns={networkColumns}
+              data={paginatedNetworks}
+              rowKey="id"
+              onRowClick={(row) => setSelectedNetworkId(row.id)}
+              emptyMessage="No networks found"
+            />
+            <SelectionIndicator
+              selectedItems={
+                selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+              }
+              onRemove={() => setSelectedNetworkId(null)}
+              emptyText="No item selected"
+            />
+          </VStack>
         </VStack>
       </VStack>
     </Drawer>

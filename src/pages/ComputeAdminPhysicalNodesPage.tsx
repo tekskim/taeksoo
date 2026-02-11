@@ -13,6 +13,7 @@ import {
   PageShell,
   PageHeader,
   ProgressBar,
+  STATUS_THRESHOLDS,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -148,7 +149,12 @@ function FileSystemCard() {
                 </Badge>
               </div>
             </div>
-            <ProgressBar value={fs.used} max={fs.total} showValue={false} />
+            <ProgressBar
+              value={fs.used}
+              max={fs.total}
+              showValue={false}
+              thresholds={STATUS_THRESHOLDS.computeAdmin}
+            />
           </div>
         ))}
       </div>

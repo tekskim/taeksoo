@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -25,16 +25,31 @@ export interface EditKeyPairDrawerProps {
 export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKeyPairDrawerProps) {
   const [keyPairName, setKeyPairName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && keyPair) {
       setKeyPairName(keyPair.name);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, keyPair]);
 
   const handleSubmit = async () => {
-    if (!keyPairName.trim()) return;
+    setHasAttemptedSubmit(true);
+
+    const trimmed = keyPairName.trim();
+    if (!trimmed) {
+      setNameError('Key pair name is required');
+      return;
+    }
+    if (trimmed.length > 128) {
+      setNameError('Key pair name must be at most 128 characters');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -46,6 +61,8 @@ export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKe
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -75,24 +92,31 @@ export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKe
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Key Pair
+          Edit key pair
         </h2>
 
         {/* Key Pair Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Key pair name
-          </label>
-          <Input
-            value={keyPairName}
-            onChange={(e) => setKeyPairName(e.target.value)}
-            placeholder="Enter key pair name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Key pair name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={keyPairName}
+              onChange={(e) => {
+                setKeyPairName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter key pair name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          {hasAttemptedSubmit && nameError && (
+            <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          )}
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
       </VStack>
     </Drawer>
   );

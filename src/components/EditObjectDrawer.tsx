@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconX } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -25,21 +25,27 @@ export interface EditObjectDrawerProps {
    EditObjectDrawer Component
    ---------------------------------------- */
 
+const DEFAULT_TAGS: TagItem[] = [];
+
 export function EditObjectDrawer({
   isOpen,
   onClose,
   objectName = '',
-  initialTags = [],
+  initialTags = DEFAULT_TAGS,
   onSubmit,
 }: EditObjectDrawerProps) {
   const [name, setName] = useState(objectName);
   const [tags, setTags] = useState<TagItem[]>(initialTags);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setName(objectName);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
       setTags(
         initialTags.length > 0
           ? initialTags
@@ -69,6 +75,14 @@ export function EditObjectDrawer({
   };
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
+
+    if (!name.trim()) {
+      setNameError('Please enter a folder name.');
+      return;
+    }
+    setNameError(null);
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(name, tags);
@@ -81,6 +95,8 @@ export function EditObjectDrawer({
   const handleClose = () => {
     setName(objectName);
     setTags(initialTags);
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -99,7 +115,7 @@ export function EditObjectDrawer({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isSubmitting || !name.trim()}
+            disabled={isSubmitting}
             className="w-[152px] h-8"
           >
             {isSubmitting ? 'Saving...' : 'Create'}
@@ -109,86 +125,83 @@ export function EditObjectDrawer({
     >
       <VStack gap={3}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Object</h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit object</h2>
 
         <VStack gap={4} className="w-full">
-          {/* Folder Name Input */}
-          <FormField required>
-            <FormField.Label>Folder Name</FormField.Label>
+          {/* Folder name Input */}
+          <FormField required error={!!nameError}>
+            <FormField.Label>Folder name</FormField.Label>
             <FormField.Control>
               <Input
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="{Current Folder Name}"
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (nameError) setNameError(null);
+                }}
+                placeholder="{Current Folder name}"
                 fullWidth
+                error={!!nameError}
               />
             </FormField.Control>
+            <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           </FormField>
 
           {/* Tags Section */}
-          <VStack gap={1} className="w-full">
-            <HStack justify="between" className="w-full">
-              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                Tags
-              </label>
-              <Button variant="primary" size="sm" onClick={handleAddTag}>
-                Add
-              </Button>
-            </HStack>
+          <VStack gap={3} className="w-full">
+            <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
-            {/* Tags Table */}
-            <VStack gap={1} className="w-full">
-              {/* Table Header */}
-              <div className="flex items-center w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <div className="flex-1 px-3 py-2.5">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                    Key
-                  </span>
-                </div>
-                <div className="flex-1 px-3 py-2.5">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
-                    Value
-                  </span>
-                </div>
-                <div className="w-10 p-3" />
-              </div>
-
-              {/* Table Rows */}
-              {tags.map((tag) => (
-                <div
-                  key={tag.id}
-                  className="flex items-center w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                >
-                  <div className="flex-1 px-3 py-2">
-                    <input
-                      type="text"
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={2}>
+                {tags.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
+                  </div>
+                )}
+                {tags.map((tag) => (
+                  <div
+                    key={tag.id}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="tag key"
                       value={tag.key}
                       onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
-                      className="w-20 px-2.5 py-1 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
-                      placeholder="Key"
+                      fullWidth
                     />
-                  </div>
-                  <div className="flex-1 px-3 py-2">
-                    <input
-                      type="text"
+                    <Input
+                      placeholder="tag value"
                       value={tag.value}
                       onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
-                      className="w-20 px-2.5 py-1 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
-                      placeholder="Value"
+                      fullWidth
                     />
-                  </div>
-                  <div className="flex items-center justify-center p-3">
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag.id)}
-                      className="p-0 bg-transparent border-none cursor-pointer hover:opacity-70 transition-opacity"
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={16} className="text-[var(--color-text-default)]" />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
+                ))}
+
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={handleAddTag}
+                  >
+                    Add Tag
+                  </Button>
                 </div>
-              ))}
-            </VStack>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </VStack>

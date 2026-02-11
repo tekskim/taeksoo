@@ -229,13 +229,13 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                       metadata.resourceTypes.map((rt, index) => (
                         <SectionCard.DataRow
                           key={index}
-                          label="Resource Type / Prefix"
+                          label="Resource type / prefix"
                           value={`${rt.resourceType} / ${rt.prefix}`}
                         />
                       ))
                     ) : (
                       <SectionCard.DataRow
-                        label="Resource Type / Prefix"
+                        label="Resource type / prefix"
                         value="No resource types associated"
                       />
                     )}

@@ -16,6 +16,7 @@ import {
   SectionCard,
   PageShell,
   ProgressBar,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -146,7 +147,12 @@ function QuotaCard({
       </div>
 
       {/* Progress bar */}
-      <ProgressBar value={used} max={limit} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={limit}
+        showValue={false}
+        thresholds={STATUS_THRESHOLDS.computeAdmin}
+      />
     </div>
   );
 }

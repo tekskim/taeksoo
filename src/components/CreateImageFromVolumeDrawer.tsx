@@ -130,18 +130,15 @@ export function CreateImageFromVolumeDrawer({
               error={hasAttemptedSubmit && !imageName.trim()}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !imageName.trim() ? (
-            <FormField.ErrorMessage>Image name is required</FormField.ErrorMessage>
-          ) : (
-            <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </FormField.HelperText>
-          )}
+          <FormField.ErrorMessage>Image name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+          </FormField.HelperText>
         </FormField>
 
         {/* Disk Format Select */}
         <FormField>
-          <FormField.Label>Disk Format</FormField.Label>
+          <FormField.Label>Disk format</FormField.Label>
           <FormField.Control>
             <Select options={diskFormats} value={diskFormat} onChange={setDiskFormat} fullWidth />
           </FormField.Control>

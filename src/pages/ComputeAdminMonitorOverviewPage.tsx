@@ -12,6 +12,7 @@ import {
   PageShell,
   PageHeader,
   ProgressBar,
+  STATUS_THRESHOLDS,
   type TimeRangeValue,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -420,7 +421,12 @@ function HostUsageCard({
                   </Badge>
                 </div>
               </div>
-              <ProgressBar value={used} max={total} showValue={false} />
+              <ProgressBar
+                value={used}
+                max={total}
+                showValue={false}
+                thresholds={STATUS_THRESHOLDS.computeAdmin}
+              />
             </div>
           );
         })}

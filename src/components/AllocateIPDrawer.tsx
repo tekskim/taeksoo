@@ -148,7 +148,7 @@ export function AllocateIPDrawer({
 
         {/* Owned Network (Read-only) */}
         <FormField>
-          <FormField.Label>Owned Network</FormField.Label>
+          <FormField.Label>Owned network</FormField.Label>
           <FormField.Control>
             <Input value={port.networkName} readOnly disabled fullWidth />
           </FormField.Control>
@@ -190,7 +190,7 @@ export function AllocateIPDrawer({
 
               {/* Assignment Type */}
               <FormField>
-                <FormField.Label>Assignment Type</FormField.Label>
+                <FormField.Label>Assignment type</FormField.Label>
                 <FormField.Control>
                   <Select
                     value={assignmentType}
@@ -204,7 +204,7 @@ export function AllocateIPDrawer({
               {/* Manual IP Input (shown when manual is selected) */}
               {assignmentType === 'manual' && (
                 <FormField required error={hasAttemptedSubmit && !manualIpAddress.trim()}>
-                  <FormField.Label>IP Address</FormField.Label>
+                  <FormField.Label>IP address</FormField.Label>
                   <FormField.Control>
                     <Input
                       value={manualIpAddress}

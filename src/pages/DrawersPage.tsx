@@ -171,6 +171,27 @@ import { EditDomainDrawer } from '@/components/EditDomainDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
 import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
+import {
+  MigrateInstanceDrawer,
+  type MigrateInstanceInfo,
+} from '@/components/MigrateInstanceDrawer';
+import {
+  LiveMigrateInstanceDrawer,
+  type LiveMigrateInstanceInfo,
+} from '@/components/LiveMigrateInstanceDrawer';
+import {
+  ManageMetadataDrawer,
+  type ManageMetadataImageInfo,
+} from '@/components/ManageMetadataDrawer';
+import {
+  MigrateVolumeDrawer,
+  type MigrateVolumeInfo as MigrateVolumeVolumeInfo,
+} from '@/components/MigrateVolumeDrawer';
+import { ManageRulesDrawer, type FirewallPolicyInfo } from '@/components/ManageRulesDrawer';
+import {
+  ModifyQuotasDrawer,
+  type TenantInfo as ModifyQuotasTenantInfo,
+} from '@/components/ModifyQuotasDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 import {
   EditBasicInfoDrawer,
@@ -375,6 +396,39 @@ const mockRebuildInstance: RebuildInstanceInfo = {
   currentImage: 'ubuntu-24.04',
 };
 
+const mockMigrateInstance: MigrateInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentHost: 'host-01',
+};
+
+const mockLiveMigrateInstance: LiveMigrateInstanceInfo = {
+  id: 'inst-001',
+  name: 'web-server-10',
+  currentHost: 'host-01',
+};
+
+const mockManageMetadataImage: ManageMetadataImageInfo = {
+  id: 'img-001',
+  name: 'image',
+};
+
+const mockMigrateVolume: MigrateVolumeVolumeInfo = {
+  id: 'vol-001',
+  name: 'name',
+  currentBackend: 'host-01',
+};
+
+const mockFirewallPolicy: FirewallPolicyInfo = {
+  id: 'policy-001',
+  name: 'name',
+};
+
+const mockQuotasTenant: ModifyQuotasTenantInfo = {
+  id: 'tenant-001',
+  name: 'tenant',
+};
+
 const mockResizeInstance: ResizeInstanceInfo = {
   id: 'inst-001',
   name: 'web-server-10',
@@ -461,6 +515,7 @@ export function DrawersPage() {
 
   // App section disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
+  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
@@ -541,6 +596,14 @@ export function DrawersPage() {
   const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
   const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
 
+  // Compute Admin Drawer states
+  const [isMigrateInstanceOpen, setIsMigrateInstanceOpen] = useState(false);
+  const [isLiveMigrateInstanceOpen, setIsLiveMigrateInstanceOpen] = useState(false);
+  const [isManageMetadataOpen, setIsManageMetadataOpen] = useState(false);
+  const [isMigrateVolumeOpen, setIsMigrateVolumeOpen] = useState(false);
+  const [isManageRulesOpen, setIsManageRulesOpen] = useState(false);
+  const [isModifyQuotasOpen, setIsModifyQuotasOpen] = useState(false);
+
   // Storage Drawer states
   const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
@@ -604,7 +667,7 @@ export function DrawersPage() {
                 Back
               </Button>
               <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                Drawer Components
+                Drawer components
               </h1>
             </HStack>
           }
@@ -645,7 +708,7 @@ export function DrawersPage() {
                 {/* Instance Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Instance Actions{' '}
+                    Instance actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -654,7 +717,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsCreateSnapshotOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Edit instance"
@@ -662,7 +725,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsEditInstanceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Lock setting"
@@ -670,7 +733,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsLockSettingOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Manage tags"
@@ -678,7 +741,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsManageTagsOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Rescue instance"
@@ -686,7 +749,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsRescueInstanceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Rebuild instance"
@@ -694,7 +757,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsRebuildInstanceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Resize instance"
@@ -702,7 +765,7 @@ export function DrawersPage() {
                       category="Instance"
                       onOpen={() => setIsResizeInstanceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                   </div>
                 </VStack>
@@ -710,11 +773,11 @@ export function DrawersPage() {
                 {/* Instance Snapshot Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Instance Snapshot Actions{' '}
+                    Instance snapshot actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Edit instance Snapshot"
+                      title="Edit instance snapshot"
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
                       onOpen={() => setIsEditInstanceSnapshotOpen(true)}
@@ -722,7 +785,7 @@ export function DrawersPage() {
                       linkedTo="Instance snapshots"
                     />
                     <DrawerCard
-                      title="Create volume from Instance Snapshot"
+                      title="Create volume from instance snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
                       onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
@@ -735,7 +798,7 @@ export function DrawersPage() {
                 {/* Volume Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Volume Actions{' '}
+                    Volume actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -774,7 +837,7 @@ export function DrawersPage() {
                       category="Volume"
                       onOpen={() => setIsAttachVolumeOpen(true)}
                       linked
-                      linkedTo="Instance List, Volumes"
+                      linkedTo="Instance list, Volumes"
                     />
                     <DrawerCard
                       title="Create subnet"
@@ -815,7 +878,7 @@ export function DrawersPage() {
                       linkedTo="Volumes"
                     />
                     <DrawerCard
-                      title="Create image from Volume"
+                      title="Create image from volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
                       onOpen={() => setIsCreateImageFromVolumeOpen(true)}
@@ -831,7 +894,7 @@ export function DrawersPage() {
                       linkedTo="Volumes"
                     />
                     <DrawerCard
-                      title="Change volume Type"
+                      title="Change volume type"
                       description="Change the storage type of this volume to another available volume type."
                       category="Volume"
                       onOpen={() => setIsChangeVolumeTypeOpen(true)}
@@ -847,7 +910,7 @@ export function DrawersPage() {
                       linkedTo="Volumes"
                     />
                     <DrawerCard
-                      title="Edit Volume backup"
+                      title="Edit volume backup"
                       description="Edit the name and description of an existing volume backup."
                       category="Volume"
                       onOpen={() => setIsEditVolumeBackupOpen(true)}
@@ -861,7 +924,7 @@ export function DrawersPage() {
                       onOpen={() => setIsAcceptVolumeTransferOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Volume snapshot"
+                      title="Edit volume snapshot"
                       description="Edit the name and description of an existing volume snapshot."
                       category="Volume"
                       onOpen={() => setIsEditVolumeSnapshotOpen(true)}
@@ -869,7 +932,7 @@ export function DrawersPage() {
                       linkedTo="Volume snapshots"
                     />
                     <DrawerCard
-                      title="Create volume from Snapshot"
+                      title="Create volume from snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
@@ -877,7 +940,7 @@ export function DrawersPage() {
                       linkedTo="Volume snapshots"
                     />
                     <DrawerCard
-                      title="Create volume from Backup"
+                      title="Create volume from backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
                       onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
@@ -890,7 +953,7 @@ export function DrawersPage() {
                       category="Volume"
                       onOpen={() => setIsDetachVolumeOpen(true)}
                       linked
-                      linkedTo="Instance List, Volumes"
+                      linkedTo="Instance list, Volumes"
                     />
                   </div>
                 </VStack>
@@ -898,11 +961,11 @@ export function DrawersPage() {
                 {/* Image Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Image Actions{' '}
+                    Image actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create volume from Image"
+                      title="Create volume from image"
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
                       onOpen={() => setIsCreateVolumeFromImageOpen(true)}
@@ -923,7 +986,7 @@ export function DrawersPage() {
                 {/* Key pair Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Key pair Actions{' '}
+                    Key pair actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -933,7 +996,7 @@ export function DrawersPage() {
                       onOpen={() => setIsCreateKeyPairOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Key pair"
+                      title="Edit key pair"
                       description="Edit the name of an existing SSH key pair."
                       category="Key pair"
                       onOpen={() => setIsEditKeyPairOpen(true)}
@@ -944,17 +1007,17 @@ export function DrawersPage() {
                 {/* Server group Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Server group Actions{' '}
+                    Server group actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Server group"
+                      title="Create server group"
                       description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
                       category="Server group"
                       onOpen={() => setIsCreateServerGroupOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Server group"
+                      title="Edit server group"
                       description="Edit the name of an existing server group."
                       category="Server group"
                       onOpen={() => setIsEditServerGroupOpen(true)}
@@ -965,7 +1028,7 @@ export function DrawersPage() {
                 {/* Network Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Network Actions{' '}
+                    Network actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -983,7 +1046,7 @@ export function DrawersPage() {
                       onOpen={() => setIsEditRouterOpen(true)}
                     />
                     <DrawerCard
-                      title="Create static Route"
+                      title="Create static route"
                       description="Add a static route to manually define traffic paths beyond connected subnets."
                       category="Router"
                       onOpen={() => setIsCreateStaticRouteOpen(true)}
@@ -1017,20 +1080,20 @@ export function DrawersPage() {
                       onOpen={() => setIsAllocateIPOpen(true)}
                     />
                     <DrawerCard
-                      title="Attach Interface"
+                      title="Attach interface"
                       description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
                       category="Network"
                       onOpen={() => setIsAttachInterfaceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
-                      title="Detach Interface"
+                      title="Detach interface"
                       description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
                       category="Network"
                       onOpen={() => setIsDetachInterfaceOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
                       title="Associate floating IP"
@@ -1038,7 +1101,7 @@ export function DrawersPage() {
                       category="Floating IP"
                       onOpen={() => setIsAssociateFloatingIPOpen(true)}
                       linked
-                      linkedTo="Instance List, Floating IPs"
+                      linkedTo="Instance list, Floating IPs"
                     />
                     <DrawerCard
                       title="Disassociate floating IP"
@@ -1046,7 +1109,7 @@ export function DrawersPage() {
                       category="Floating IP"
                       onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                       linked
-                      linkedTo="Instance List, Floating IPs, LBs"
+                      linkedTo="Instance list, Floating IPs, LBs"
                     />
                     <DrawerCard
                       title="Allocate floating IP"
@@ -1067,7 +1130,7 @@ export function DrawersPage() {
                       onOpen={() => setIsConnectSubnetOpen(true)}
                     />
                     <DrawerCard
-                      title="Associate Floating IP to Port"
+                      title="Associate floating IP to port"
                       description="Associate a floating IP with a port to enable external network access."
                       category="Port"
                       onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
@@ -1086,11 +1149,11 @@ export function DrawersPage() {
                 {/* Security group Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Security group Actions{' '}
+                    Security group actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Security group Rule"
+                      title="Create security group rule"
                       description="Create a rule to define allowed inbound or outbound network traffic for your security group."
                       category="Security group"
                       onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
@@ -1098,13 +1161,13 @@ export function DrawersPage() {
                       linkedTo="Security groups"
                     />
                     <DrawerCard
-                      title="Create Security group"
+                      title="Create security group"
                       description="Create a security group to define network access rules for your instances."
                       category="Security group"
                       onOpen={() => setIsCreateSecurityGroupOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Security group"
+                      title="Edit security group"
                       description="Edit security group name and description."
                       category="Security group"
                       onOpen={() => setIsEditSecurityGroupOpen(true)}
@@ -1117,10 +1180,10 @@ export function DrawersPage() {
                       category="Security group"
                       onOpen={() => setIsManageSecurityGroupsOpen(true)}
                       linked
-                      linkedTo="Instance List"
+                      linkedTo="Instance list"
                     />
                     <DrawerCard
-                      title="Edit Port Security Groups"
+                      title="Edit port security groups"
                       description="Manage security groups on a port with port security toggle and multi-select table."
                       category="Port"
                       onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
@@ -1133,11 +1196,11 @@ export function DrawersPage() {
                 {/* Load balancer Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Load balancer Actions{' '}
+                    Load balancer actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Add L7 Policy"
+                      title="Add L7 policy"
                       description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
                       category="Load balancer"
                       onOpen={() => setIsAddL7PolicyOpen(true)}
@@ -1155,7 +1218,7 @@ export function DrawersPage() {
                       onOpen={() => setIsEditCertificateOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit Load balancer"
+                      title="Edit load balancer"
                       description="Edit load balancer name, description, and admin state."
                       category="Load balancer"
                       onOpen={() => setIsEditLoadBalancerOpen(true)}
@@ -1169,7 +1232,7 @@ export function DrawersPage() {
                       onOpen={() => setIsEditPoolOpen(true)}
                     />
                     <DrawerCard
-                      title="Add L7 Rule"
+                      title="Add L7 rule"
                       description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
                       category="Load balancer"
                       onOpen={() => setIsAddL7RuleOpen(true)}
@@ -1199,7 +1262,7 @@ export function DrawersPage() {
                       onOpen={() => setIsManageMembersOpen(true)}
                     />
                     <DrawerCard
-                      title="Associate Floating IP to LB"
+                      title="Associate floating IP to LB"
                       description="Associate a floating IP to a load balancer for external access."
                       category="Load balancer"
                       onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
@@ -1213,16 +1276,134 @@ export function DrawersPage() {
                       onOpen={() => setIsChangeServerCertificateOpen(true)}
                     />
                     <DrawerCard
-                      title="Change CA Certificate"
+                      title="Change CA certificate"
                       description="Change the CA certificate for a listener with certificate selection table."
                       category="Certificate"
                       onOpen={() => setIsChangeCACertificateOpen(true)}
                     />
                     <DrawerCard
-                      title="Manage SNI Certificate"
+                      title="Manage SNI certificate"
                       description="Enable SNI and manage multiple SNI certificates for a listener."
                       category="Certificate"
                       onOpen={() => setIsManageSNICertificateOpen(true)}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+
+          {/* Compute Admin App Drawers */}
+          <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+            <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+              <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                <div className="flex items-center gap-3">
+                  {isComputeAdminOpen ? (
+                    <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                  ) : (
+                    <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                  )}
+                  <Badge variant="warning" size="sm" className="w-[110px] justify-center">
+                    Compute Admin{' '}
+                  </Badge>
+                  <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    Drawers{' '}
+                  </span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(6 drawers)</span>
+                </div>
+              </div>
+            </Disclosure.Trigger>
+            <Disclosure.Panel>
+              <VStack gap={4} className="pt-4">
+                {/* Instance actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Instance actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Migrate instance"
+                      description="Migrate the instance to a different host. Migration does not change the instance configuration or data."
+                      category="Instance"
+                      onOpen={() => setIsMigrateInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance list"
+                    />
+                    <DrawerCard
+                      title="Live migrate instance"
+                      description="Live migrate the instance to a different host without shutting it down."
+                      category="Instance"
+                      onOpen={() => setIsLiveMigrateInstanceOpen(true)}
+                      linked
+                      linkedTo="Instance list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Image actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Image actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Manage metadata"
+                      description="Select existing metadata or define new metadata to apply to the image."
+                      category="Image"
+                      onOpen={() => setIsManageMetadataOpen(true)}
+                      linked
+                      linkedTo="Image list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Volume actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Volume actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Migrate volume"
+                      description="Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process."
+                      category="Volume"
+                      onOpen={() => setIsMigrateVolumeOpen(true)}
+                      linked
+                      linkedTo="Volume list"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Network actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Network actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Manage rules"
+                      description="Select rules from the list to add to the firewall policy."
+                      category="Network"
+                      onOpen={() => setIsManageRulesOpen(true)}
+                      linked
+                      linkedTo="Firewall policies"
+                    />
+                  </div>
+                </VStack>
+
+                {/* Tenant actions */}
+                <VStack gap={2}>
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Tenant actions{' '}
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    <DrawerCard
+                      title="Modify quotas"
+                      description="Modifies the resource usage limits allocated to the tenant."
+                      category="Tenant"
+                      onOpen={() => setIsModifyQuotasOpen(true)}
+                      linked
+                      linkedTo="Tenant detail"
                     />
                   </div>
                 </VStack>
@@ -1255,7 +1436,7 @@ export function DrawersPage() {
                 {/* USER MANAGEMENT ACTIONS */}
                 <VStack gap={2}>
                   <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                    User Management Actions{' '}
+                    User management actions{' '}
                   </h3>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -1264,15 +1445,15 @@ export function DrawersPage() {
                       category="User"
                       onOpen={() => setIsManageUserGroupsOpen(true)}
                       linked
-                      linkedTo="IAM Users"
+                      linkedTo="IAM users"
                     />
                     <DrawerCard
-                      title="Manage Roles"
+                      title="Manage roles"
                       description="Add or remove roles directly assigned to a specific user."
                       category="User"
                       onOpen={() => setIsManageRolesOpen(true)}
                       linked
-                      linkedTo="IAM Users, User Groups"
+                      linkedTo="IAM users, User groups"
                     />
                     <DrawerCard
                       title="Reset password"
@@ -1281,12 +1462,12 @@ export function DrawersPage() {
                       onOpen={() => setIsResetPasswordOpen(true)}
                     />
                     <DrawerCard
-                      title="Edit User"
+                      title="Edit user"
                       description="Edit the user's basic information like email and display name."
                       category="User"
                       onOpen={() => setIsEditUserOpen(true)}
                       linked
-                      linkedTo="IAM Users"
+                      linkedTo="IAM users"
                     />
                   </div>
                 </VStack>
@@ -1294,16 +1475,16 @@ export function DrawersPage() {
                 {/* User Group Management */}
                 <VStack gap={2}>
                   <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                    User Group Management Actions{' '}
+                    User group management actions{' '}
                   </h3>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Manage Users"
+                      title="Manage users"
                       description="Add or remove members of a user group."
                       category="User group"
                       onOpen={() => setIsManageUsersOpen(true)}
                       linked
-                      linkedTo="IAM User Groups"
+                      linkedTo="IAM user groups"
                     />
                     <DrawerCard
                       title="Edit user group"
@@ -1311,7 +1492,7 @@ export function DrawersPage() {
                       category="User group"
                       onOpen={() => setIsEditUserGroupOpen(true)}
                       linked
-                      linkedTo="IAM User Groups"
+                      linkedTo="IAM user groups"
                     />
                   </div>
                 </VStack>
@@ -1319,17 +1500,17 @@ export function DrawersPage() {
                 {/* Role Management */}
                 <VStack gap={2}>
                   <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                    Role Management Actions{' '}
+                    Role management actions{' '}
                   </h3>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Manage Policies"
+                      title="Manage policies"
                       description="Add or remove policies of a role."
                       onOpen={() => setIsManagePoliciesOpen(true)}
                       badge="Role"
                     />
                     <DrawerCard
-                      title="Edit Role"
+                      title="Edit role"
                       description="Edit basic information for a role."
                       onOpen={() => setIsEditRoleOpen(true)}
                       badge="Role"
@@ -1340,17 +1521,17 @@ export function DrawersPage() {
                 {/* Domain Management */}
                 <VStack gap={2}>
                   <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                    Domain Management Actions{' '}
+                    Domain management actions{' '}
                   </h3>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create Domain"
+                      title="Create domain"
                       description="Create a new domain to manage resources and policies independently."
                       onOpen={() => setIsCreateDomainOpen(true)}
                       badge="Domain"
                     />
                     <DrawerCard
-                      title="Edit Domain"
+                      title="Edit domain"
                       description="Edit the domain's basic information."
                       onOpen={() => setIsEditDomainOpen(true)}
                       badge="Domain"
@@ -1362,7 +1543,7 @@ export function DrawersPage() {
                       badge="Domain"
                     />
                     <DrawerCard
-                      title="Lock Setting"
+                      title="Lock setting"
                       description="Lock or unlock a system administrator account."
                       onOpen={() => setIsAdminLockSettingOpen(true)}
                       badge="Admin"
@@ -1404,7 +1585,7 @@ export function DrawersPage() {
                 {/* Object Storage Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Object Storage Actions{' '}
+                    Object storage actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -1420,7 +1601,7 @@ export function DrawersPage() {
                       onOpen={() => setIsCreateObjectOpen(true)}
                     />
                     <DrawerCard
-                      title="Move Files"
+                      title="Move files"
                       description="Move files or folders to a different location within the bucket."
                       category="Object storage"
                       onOpen={() => setIsMoveFilesOpen(true)}
@@ -1437,13 +1618,13 @@ export function DrawersPage() {
                 {/* Physical Disk Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Physical Disk Actions{' '}
+                    Physical disk actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Identify Device"
+                      title="Identify device"
                       description="Indicate the LED on a physical disk to identify the device."
-                      category="Physical Disk"
+                      category="Physical disk"
                       onOpen={() => setIsIdentifyDeviceOpen(true)}
                     />
                   </div>
@@ -1477,7 +1658,7 @@ export function DrawersPage() {
                 {/* Resource Search Actions */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Resource Search Actions{' '}
+                    Resource search actions{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -1517,7 +1698,7 @@ export function DrawersPage() {
                 {/* Agent Settings */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent Settings{' '}
+                    Agent settings{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -1543,7 +1724,7 @@ export function DrawersPage() {
                 {/* Agent Connections */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent Connections{' '}
+                    Agent connections{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -1553,7 +1734,7 @@ export function DrawersPage() {
                       onOpen={() => setIsConnectDataSourceOpen(true)}
                     />
                     <DrawerCard
-                      title="Connect MCP Server"
+                      title="Connect MCP server"
                       description="Select and connect MCP servers to the agent."
                       category="Connection"
                       onOpen={() => setIsConnectMCPServerOpen(true)}
@@ -1563,11 +1744,11 @@ export function DrawersPage() {
                 {/* Agent Logs */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent Logs{' '}
+                    Agent logs{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Log Detail"
+                      title="Log detail"
                       description="Shows a history of the agent's operations and results."
                       category="Logs"
                       onOpen={() => setIsAgentLogDetailOpen(true)}
@@ -1581,7 +1762,7 @@ export function DrawersPage() {
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
-                      title="Create MCP Template"
+                      title="Create MCP template"
                       description="Create a new MCP server template with configuration settings."
                       category="Template"
                       onOpen={() => setIsCreateMCPTemplateOpen(true)}
@@ -1593,13 +1774,13 @@ export function DrawersPage() {
                       onOpen={() => setIsTemplateTypeSettingsOpen(true)}
                     />
                     <DrawerCard
-                      title="Container Settings"
+                      title="Container settings"
                       description="Configure Docker container settings for STDIO MCP servers."
                       category="Template"
                       onOpen={() => setIsContainerSettingsOpen(true)}
                     />
                     <DrawerCard
-                      title="HTTP Settings"
+                      title="HTTP settings"
                       description="Configure HTTP endpoint settings for remote MCP servers."
                       category="Template"
                       onOpen={() => setIsHTTPSettingsOpen(true)}
@@ -1611,7 +1792,7 @@ export function DrawersPage() {
                       onOpen={() => setIsToolAccessControlOpen(true)}
                     />
                     <DrawerCard
-                      title="Tool Authentication"
+                      title="Tool authentication"
                       description="Configure authentication settings for MCP tools."
                       category="Settings"
                       onOpen={() => setIsToolAuthenticationOpen(true)}
@@ -1625,7 +1806,7 @@ export function DrawersPage() {
           {/* Table Settings */}
           <VStack gap={2}>
             <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-              Table Settings{' '}
+              Table settings{' '}
             </h2>
             <div className="flex flex-col gap-2">
               <DrawerCard
@@ -2660,6 +2841,69 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit system admin:', data);
+        }}
+      />
+
+      {/* =============================================
+          COMPUTE ADMIN DRAWERS ============================================= */}
+
+      {/* Migrate Instance Drawer */}
+      <MigrateInstanceDrawer
+        isOpen={isMigrateInstanceOpen}
+        onClose={() => setIsMigrateInstanceOpen(false)}
+        instance={mockMigrateInstance}
+        onMigrate={(hostId) => {
+          console.log('Migrate instance to host:', hostId);
+        }}
+      />
+
+      {/* Live Migrate Instance Drawer */}
+      <LiveMigrateInstanceDrawer
+        isOpen={isLiveMigrateInstanceOpen}
+        onClose={() => setIsLiveMigrateInstanceOpen(false)}
+        instance={mockLiveMigrateInstance}
+        onLiveMigrate={(hostId, blockMigrate) => {
+          console.log('Live migrate instance to host:', hostId, 'block migrate:', blockMigrate);
+        }}
+      />
+
+      {/* Manage Metadata Drawer */}
+      <ManageMetadataDrawer
+        isOpen={isManageMetadataOpen}
+        onClose={() => setIsManageMetadataOpen(false)}
+        image={mockManageMetadataImage}
+        onSave={(metadata) => {
+          console.log('Save metadata:', metadata);
+        }}
+      />
+
+      {/* Migrate Volume Drawer */}
+      <MigrateVolumeDrawer
+        isOpen={isMigrateVolumeOpen}
+        onClose={() => setIsMigrateVolumeOpen(false)}
+        volume={mockMigrateVolume}
+        onMigrate={(backendId) => {
+          console.log('Migrate volume to backend:', backendId);
+        }}
+      />
+
+      {/* Manage Rules Drawer */}
+      <ManageRulesDrawer
+        isOpen={isManageRulesOpen}
+        onClose={() => setIsManageRulesOpen(false)}
+        policy={mockFirewallPolicy}
+        onSave={(ruleIds) => {
+          console.log('Save firewall rules:', ruleIds);
+        }}
+      />
+
+      {/* Modify Quotas Drawer */}
+      <ModifyQuotasDrawer
+        isOpen={isModifyQuotasOpen}
+        onClose={() => setIsModifyQuotasOpen(false)}
+        tenant={mockQuotasTenant}
+        onSave={(quotas) => {
+          console.log('Save quotas:', quotas);
         }}
       />
 

@@ -31,6 +31,8 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
   const [adminStateUp, setAdminStateUp] = useState(router.adminStateUp ?? true);
   const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens or router changes
   useEffect(() => {
@@ -39,12 +41,24 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
       setDescription(router.description || '');
       setAdminStateUp(router.adminStateUp ?? true);
       setIsAdvancedExpanded(true);
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, router]);
 
   const handleSubmit = async () => {
-    if (!routerName.trim()) return;
+    setHasAttemptedSubmit(true);
 
+    if (!routerName.trim()) {
+      setNameError('Router name is required');
+      return;
+    }
+    if (routerName.trim().length > 128) {
+      setNameError('Router name must be 128 characters or fewer');
+      return;
+    }
+
+    setNameError(null);
     setIsSubmitting(true);
     try {
       await onSubmit?.(routerName, description, adminStateUp);
@@ -55,6 +69,8 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -85,21 +101,26 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
         {/* Header */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit Router
+            Edit router
           </h2>
         </VStack>
 
         {/* Router Name Input */}
-        <FormField required>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Router name</FormField.Label>
           <FormField.Control>
             <Input
               value={routerName}
-              onChange={(e) => setRouterName(e.target.value)}
+              onChange={(e) => {
+                setRouterName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
               placeholder="e.g. my-router"
               fullWidth
+              error={hasAttemptedSubmit && !!nameError}
             />
           </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </FormField.HelperText>

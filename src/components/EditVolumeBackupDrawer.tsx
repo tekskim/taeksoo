@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -32,17 +32,30 @@ export function EditVolumeBackupDrawer({
   const [backupName, setBackupName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen && volumeBackup) {
       setBackupName(volumeBackup.name);
       setDescription(volumeBackup.description ?? '');
+      setHasAttemptedSubmit(false);
+      setNameError(null);
     }
   }, [isOpen, volumeBackup]);
 
   const handleSubmit = async () => {
-    if (!backupName.trim()) return;
+    setHasAttemptedSubmit(true);
+    if (!backupName.trim()) {
+      setNameError('Backup name is required');
+      return;
+    }
+    if (backupName.trim().length > 128) {
+      setNameError('Backup name must be 128 characters or fewer');
+      return;
+    }
+    setNameError(null);
 
     setIsSubmitting(true);
     try {
@@ -54,6 +67,8 @@ export function EditVolumeBackupDrawer({
   };
 
   const handleClose = () => {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
     onClose();
   };
 
@@ -83,24 +98,30 @@ export function EditVolumeBackupDrawer({
       <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Volume Backup
+          Edit volume backup
         </h2>
 
         {/* Volume Snapshot Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume Snapshot Name
-          </label>
-          <Input
-            value={backupName}
-            onChange={(e) => setBackupName(e.target.value)}
-            placeholder="Enter volume backup name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+        <FormField required error={hasAttemptedSubmit && !!nameError}>
+          <FormField.Label>Volume snapshot name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={backupName}
+              onChange={(e) => {
+                setBackupName(e.target.value);
+                if (nameError) setNameError(null);
+              }}
+              placeholder="Enter volume backup name"
+              fullWidth
+              error={hasAttemptedSubmit && !!nameError}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
