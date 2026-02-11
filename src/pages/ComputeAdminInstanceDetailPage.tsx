@@ -1782,10 +1782,9 @@ export function ComputeAdminInstanceDetailPage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
-                      >
-                        <IconSearch size={16} stroke={2} />
-                      </Button>
+                        icon={<IconSearch size={12} stroke={1.5} />}
+                        aria-label="Search"
+                      />
                     </div>
                   </div>
 
@@ -1802,10 +1801,9 @@ export function ComputeAdminInstanceDetailPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
-                    >
-                      <IconDownload size={18} stroke={2} />
-                    </Button>
+                      icon={<IconDownload size={12} stroke={1.5} />}
+                      aria-label="Download"
+                    />
                   </div>
                 </div>
 
@@ -1847,9 +1845,12 @@ export function ComputeAdminInstanceDetailPage() {
                       setActionLogCurrentPage(1);
                     }}
                   />
-                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                    <IconDownload size={12} stroke={2} className="w-3 h-3" />
-                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} stroke={1.5} />}
+                    aria-label="Download"
+                  />
                 </div>
 
                 {/* Pagination */}
