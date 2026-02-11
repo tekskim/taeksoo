@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Input, Select, SearchInput, Table } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import { Drawer, Button, Input, SearchInput, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import {
   IconCirclePlus,
@@ -13,20 +12,6 @@ import {
    Types
    ---------------------------------------- */
 
-export interface MetadataItem {
-  id: string;
-  key: string;
-  children?: MetadataItem[];
-}
-
-export interface ExistingMetadataItem {
-  id: string;
-  key: string;
-  valueType: 'text' | 'select';
-  value: string;
-  options?: { value: string; label: string }[];
-}
-
 export interface ManageMetadataImageInfo {
   id: string;
   name: string;
@@ -36,306 +21,39 @@ export interface ManageMetadataDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   image: ManageMetadataImageInfo;
-  onSave?: (metadata: ExistingMetadataItem[]) => void;
+  onSave?: (metadata: Array<{ key: string; value: string }>) => void;
 }
 
 /* ----------------------------------------
-   Mock Data
+   Mock Data — same shape as Create Flavor page
    ---------------------------------------- */
 
-const mockAvailableMetadata: MetadataItem[] = [
+interface AvailableMetadataOption {
+  key: string;
+  label: string;
+  children?: string[];
+}
+
+const availableMetadataOptions: AvailableMetadataOption[] = [
   {
-    id: 'meta-1',
-    key: 'hw',
-    children: [
-      { id: 'meta-1-1', key: 'hw_disk_bus' },
-      { id: 'meta-1-2', key: 'hw_vif_model' },
-    ],
+    key: 'cpu_allocation_ratio',
+    label: 'CPU Allocation Ratio',
+    children: ['1.0', '2.0', '4.0', '8.0', '16.0'],
   },
-  { id: 'meta-2', key: 'os_distro' },
-  { id: 'meta-3', key: 'os_version' },
-  { id: 'meta-4', key: 'os_type' },
-  { id: 'meta-5', key: 'architecture' },
-  { id: 'meta-6', key: 'hypervisor_type' },
-  { id: 'meta-7', key: 'instance_uuid' },
-  { id: 'meta-8', key: 'img_config_drive' },
-  { id: 'meta-9', key: 'hw_qemu_guest_agent' },
-  { id: 'meta-10', key: 'hw_machine_type' },
+  { key: 'ram_allocation_ratio', label: 'RAM Allocation Ratio', children: ['1.0', '1.5', '2.0'] },
+  { key: 'disk_allocation_ratio', label: 'Disk Allocation Ratio', children: ['1.0', '2.0'] },
+  { key: 'hw:cpu_policy', label: 'CPU Policy', children: ['shared', 'dedicated'] },
+  {
+    key: 'hw:cpu_thread_policy',
+    label: 'CPU Thread Policy',
+    children: ['prefer', 'isolate', 'require'],
+  },
+  { key: 'hw:numa_nodes', label: 'NUMA Nodes', children: ['1', '2', '4'] },
+  { key: 'hw:mem_page_size', label: 'Memory Page Size', children: ['small', 'large', 'any'] },
+  { key: 'quota:disk_read_bytes_sec', label: 'Disk Read Bytes/sec' },
+  { key: 'quota:disk_write_bytes_sec', label: 'Disk Write Bytes/sec' },
+  { key: 'quota:vif_inbound_average', label: 'VIF Inbound Average' },
 ];
-
-const mockExistingMetadata: ExistingMetadataItem[] = [
-  {
-    id: 'existing-1',
-    key: 'os_distro',
-    valueType: 'text',
-    value: '',
-  },
-  {
-    id: 'existing-2',
-    key: 'os_type',
-    valueType: 'select',
-    value: '',
-    options: [
-      { value: 'linux', label: 'Linux' },
-      { value: 'windows', label: 'Windows' },
-    ],
-  },
-];
-
-/* ----------------------------------------
-   AvailableMetadataPanel Component
-   ---------------------------------------- */
-
-function AvailableMetadataPanel({
-  searchQuery,
-  onSearchChange,
-  customKey,
-  onCustomKeyChange,
-  onAddCustomKey,
-  availableItems,
-  expandedItems,
-  onToggleExpand,
-  onAddItem,
-}: {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  customKey: string;
-  onCustomKeyChange: (value: string) => void;
-  onAddCustomKey: () => void;
-  availableItems: MetadataItem[];
-  expandedItems: Set<string>;
-  onToggleExpand: (id: string) => void;
-  onAddItem: (key: string) => void;
-}) {
-  const filteredItems = availableItems.filter((item) =>
-    item.key.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  /* Flatten tree into table-compatible data */
-  interface FlatMetadataRow {
-    id: string;
-    key: string;
-    depth: number;
-    hasChildren: boolean;
-    isExpanded: boolean;
-    originalItem: MetadataItem;
-  }
-
-  const flattenItems = (items: MetadataItem[], depth = 0): FlatMetadataRow[] => {
-    const rows: FlatMetadataRow[] = [];
-    for (const item of items) {
-      const hasChildren = !!(item.children && item.children.length > 0);
-      const isExpanded = expandedItems.has(item.id);
-      rows.push({ id: item.id, key: item.key, depth, hasChildren, isExpanded, originalItem: item });
-      if (hasChildren && isExpanded) {
-        rows.push(...flattenItems(item.children!, depth + 1));
-      }
-    }
-    return rows;
-  };
-
-  const flatData = flattenItems(filteredItems);
-
-  const availableColumns: TableColumn<FlatMetadataRow>[] = [
-    {
-      key: 'key',
-      label: 'Key',
-      flex: 1,
-      render: (_value, row) => (
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          style={{ paddingLeft: `${row.depth * 16}px` }}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (row.hasChildren) onToggleExpand(row.id);
-          }}
-        >
-          {row.hasChildren ? (
-            row.isExpanded ? (
-              <IconChevronDown
-                size={12}
-                className="shrink-0 text-[var(--color-text-default)]"
-                stroke={1.5}
-              />
-            ) : (
-              <IconChevronRight
-                size={12}
-                className="shrink-0 text-[var(--color-text-default)]"
-                stroke={1.5}
-              />
-            )
-          ) : (
-            <div className="w-3 shrink-0" />
-          )}
-          <span className="text-body-md text-[var(--color-text-default)] truncate">{row.key}</span>
-        </div>
-      ),
-    },
-    {
-      key: 'id' as keyof FlatMetadataRow,
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_value, row) => (
-        <Button
-          variant="ghost"
-          size="xs"
-          icon={<IconCirclePlus size={14} stroke={1.5} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddItem(row.key);
-          }}
-          aria-label={`Add ${row.key}`}
-          className="!min-w-0 !p-0"
-        />
-      ),
-    },
-  ];
-
-  return (
-    <VStack gap={2} className="flex-1 min-w-0 h-[550px] overflow-hidden">
-      <span className="text-label-lg text-[var(--color-text-default)]">Available metadata</span>
-
-      <SearchInput
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Search metadata"
-        size="sm"
-      />
-
-      {/* Custom key input row */}
-      <HStack gap={2} className="w-full" align="center">
-        <Input
-          placeholder="Enter custom metadata key"
-          value={customKey}
-          onChange={(e) => onCustomKeyChange(e.target.value)}
-          fullWidth
-          size="sm"
-        />
-        <Button
-          variant="ghost"
-          size="xs"
-          icon={<IconCirclePlus size={14} stroke={1.5} />}
-          onClick={onAddCustomKey}
-          disabled={!customKey.trim()}
-          aria-label="Add custom metadata"
-          className="!min-w-0 !p-0 shrink-0"
-        />
-      </HStack>
-
-      {/* Available items table */}
-      <div className="flex-1 overflow-y-auto">
-        <Table
-          columns={availableColumns}
-          data={flatData}
-          rowKey="id"
-          emptyMessage="No metadata found"
-        />
-      </div>
-    </VStack>
-  );
-}
-
-/* ----------------------------------------
-   ExistingMetadataPanel Component
-   ---------------------------------------- */
-
-function ExistingMetadataPanel({
-  searchQuery,
-  onSearchChange,
-  existingItems,
-  onValueChange,
-  onRemoveItem,
-}: {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  existingItems: ExistingMetadataItem[];
-  onValueChange: (id: string, value: string) => void;
-  onRemoveItem: (id: string) => void;
-}) {
-  const filteredItems = existingItems.filter((item) =>
-    item.key.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const existingColumns: TableColumn<ExistingMetadataItem>[] = [
-    {
-      key: 'key',
-      label: 'Key',
-      minWidth: '80px',
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-          {row.key}
-        </span>
-      ),
-    },
-    {
-      key: 'value',
-      label: 'Value',
-      flex: 1,
-      minWidth: '120px',
-      render: (_value, row) =>
-        row.valueType === 'select' ? (
-          <Select
-            options={row.options || []}
-            value={row.value}
-            onChange={(val) => onValueChange(row.id, val)}
-            placeholder="Select value"
-            width="sm"
-          />
-        ) : (
-          <Input
-            placeholder="Enter value"
-            value={row.value}
-            onChange={(e) => onValueChange(row.id, e.target.value)}
-            size="sm"
-            fullWidth
-          />
-        ),
-    },
-    {
-      key: 'id' as keyof ExistingMetadataItem,
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_value, row) => (
-        <Button
-          variant="ghost"
-          size="xs"
-          icon={<IconCircleMinus size={14} stroke={1.5} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemoveItem(row.id);
-          }}
-          aria-label={`Remove ${row.key}`}
-          className="!min-w-0 !p-0"
-        />
-      ),
-    },
-  ];
-
-  return (
-    <VStack gap={2} className="flex-1 min-w-0 h-[550px] overflow-hidden">
-      <span className="text-label-lg text-[var(--color-text-default)]">Existing metadata</span>
-
-      <SearchInput
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Search metadata"
-        size="sm"
-      />
-
-      {/* Existing items table */}
-      <div className="flex-1 overflow-y-auto">
-        <Table
-          columns={existingColumns}
-          data={filteredItems}
-          rowKey="id"
-          emptyMessage="No metadata added"
-        />
-      </div>
-    </VStack>
-  );
-}
 
 /* ----------------------------------------
    ManageMetadataDrawer Component
@@ -347,74 +65,83 @@ export function ManageMetadataDrawer({
   image,
   onSave,
 }: ManageMetadataDrawerProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   // Available metadata state
-  const [availableSearchQuery, setAvailableSearchQuery] = useState('');
-  const [customKey, setCustomKey] = useState('');
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set(['meta-1']));
+  const [availableMetadataSearch, setAvailableMetadataSearch] = useState('');
+  const [existingMetadataSearch, setExistingMetadataSearch] = useState('');
+  const [customMetadataKey, setCustomMetadataKey] = useState('');
+  const [expandedMetadata, setExpandedMetadata] = useState<Set<string>>(new Set());
+  const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>(
+    []
+  );
 
-  // Existing metadata state
-  const [existingSearchQuery, setExistingSearchQuery] = useState('');
-  const [existingMetadata, setExistingMetadata] =
-    useState<ExistingMetadataItem[]>(mockExistingMetadata);
+  // Validation state
+  const [showValueErrors, setShowValueErrors] = useState(false);
+  const [customKeyError, setCustomKeyError] = useState('');
 
-  const handleToggleExpand = (id: string) => {
-    setExpandedItems((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+  /** Validate a custom key against selected metadata and pre-defined options. */
+  const validateCustomKey = (key: string): string => {
+    const trimmed = key.trim();
+    if (!trimmed) return '';
+
+    // Check for duplicate against already-selected metadata (case-insensitive)
+    if (selectedMetadata.some((m) => m.key.toLowerCase() === trimmed.toLowerCase())) {
+      return `"${trimmed}" already exists in existing metadata.`;
+    }
+
+    // Check for overlap with pre-defined available metadata options (key or label, case-insensitive)
+    const matchingOption = availableMetadataOptions.find(
+      (opt) =>
+        opt.key.toLowerCase() === trimmed.toLowerCase() ||
+        opt.label.toLowerCase() === trimmed.toLowerCase()
+    );
+    if (matchingOption) {
+      return `"${trimmed}" is a pre-defined metadata key. Use "${matchingOption.label}" from the list instead.`;
+    }
+
+    return '';
   };
 
-  const handleAddItem = (key: string) => {
-    // Check if already exists
-    if (existingMetadata.some((item) => item.key === key)) return;
+  const handleSave = () => {
+    // Check if any existing metadata has empty values
+    const hasEmptyValues = selectedMetadata.some((m) => !m.value.trim());
+    if (hasEmptyValues) {
+      setShowValueErrors(true);
+      return;
+    }
+    onSave?.(selectedMetadata);
+    onClose();
+  };
 
-    const newItem: ExistingMetadataItem = {
-      id: `existing-${Date.now()}`,
-      key,
-      valueType: 'text',
-      value: '',
-    };
-    setExistingMetadata([...existingMetadata, newItem]);
+  const handleCustomKeyChange = (value: string) => {
+    setCustomMetadataKey(value);
+    const error = validateCustomKey(value);
+    setCustomKeyError(error);
   };
 
   const handleAddCustomKey = () => {
-    if (!customKey.trim()) return;
-    handleAddItem(customKey.trim());
-    setCustomKey('');
-  };
+    const trimmedKey = customMetadataKey.trim();
+    if (!trimmedKey) return;
 
-  const handleValueChange = (id: string, value: string) => {
-    setExistingMetadata(
-      existingMetadata.map((item) => (item.id === id ? { ...item, value } : item))
-    );
-  };
-
-  const handleRemoveItem = (id: string) => {
-    setExistingMetadata(existingMetadata.filter((item) => item.id !== id));
-  };
-
-  const handleSave = async () => {
-    setIsSubmitting(true);
-    try {
-      await onSave?.(existingMetadata);
-      onClose();
-    } finally {
-      setIsSubmitting(false);
+    // Re-validate before adding
+    const error = validateCustomKey(trimmedKey);
+    if (error) {
+      setCustomKeyError(error);
+      return;
     }
+
+    setSelectedMetadata((prev) => [...prev, { key: trimmedKey, value: '' }]);
+    setCustomMetadataKey('');
+    setCustomKeyError('');
   };
 
   const handleClose = () => {
-    setAvailableSearchQuery('');
-    setExistingSearchQuery('');
-    setCustomKey('');
-    setExistingMetadata(mockExistingMetadata);
+    setAvailableMetadataSearch('');
+    setExistingMetadataSearch('');
+    setCustomMetadataKey('');
+    setExpandedMetadata(new Set());
+    setSelectedMetadata([]);
+    setShowValueErrors(false);
+    setCustomKeyError('');
     onClose();
   };
 
@@ -449,7 +176,7 @@ export function ManageMetadataDrawer({
         </VStack>
 
         {/* Metadata Section */}
-        <VStack gap={4} className="w-full">
+        <VStack gap={3} className="w-full">
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Metadata</span>
             <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -457,27 +184,255 @@ export function ManageMetadataDrawer({
             </p>
           </VStack>
 
-          {/* Dual Panel Layout */}
-          <HStack gap={4} className="w-full" align="start">
-            <AvailableMetadataPanel
-              searchQuery={availableSearchQuery}
-              onSearchChange={setAvailableSearchQuery}
-              customKey={customKey}
-              onCustomKeyChange={setCustomKey}
-              onAddCustomKey={handleAddCustomKey}
-              availableItems={mockAvailableMetadata}
-              expandedItems={expandedItems}
-              onToggleExpand={handleToggleExpand}
-              onAddItem={handleAddItem}
-            />
-            <ExistingMetadataPanel
-              searchQuery={existingSearchQuery}
-              onSearchChange={setExistingSearchQuery}
-              existingItems={existingMetadata}
-              onValueChange={handleValueChange}
-              onRemoveItem={handleRemoveItem}
-            />
-          </HStack>
+          {/* Two Column Layout */}
+          <div className="flex gap-3 h-[500px]">
+            {/* Left Column - Available Metadata */}
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Available metadata
+              </span>
+
+              {/* Search */}
+              <SearchInput
+                value={availableMetadataSearch}
+                onChange={setAvailableMetadataSearch}
+                placeholder="Search metadata"
+                className="w-full"
+              />
+
+              {/* Custom metadata input row */}
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
+                  <div className="flex-1 px-3 py-2">
+                    <Input
+                      value={customMetadataKey}
+                      onChange={(e) => handleCustomKeyChange(e.target.value)}
+                      placeholder="Enter custom metadata key"
+                      fullWidth
+                      error={!!customKeyError}
+                    />
+                  </div>
+                  <div className="px-3 py-2">
+                    <button
+                      onClick={handleAddCustomKey}
+                      className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
+                    >
+                      <IconCirclePlus
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    </button>
+                  </div>
+                </div>
+                {customKeyError && <InlineMessage variant="error">{customKeyError}</InlineMessage>}
+              </div>
+
+              {/* Metadata List */}
+              <div
+                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
+                style={{ scrollbarGutter: 'stable' }}
+              >
+                {availableMetadataOptions
+                  .filter(
+                    (item) =>
+                      !selectedMetadata.some((m) => m.key === item.key) &&
+                      (!availableMetadataSearch ||
+                        item.label.toLowerCase().includes(availableMetadataSearch.toLowerCase()) ||
+                        item.key.toLowerCase().includes(availableMetadataSearch.toLowerCase()))
+                  )
+                  .map((item) => (
+                    <div key={item.key} className="flex flex-col">
+                      {/* Parent row */}
+                      <div
+                        className={`
+                          flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)]
+                          ${expandedMetadata.has(item.key) && item.children ? 'rounded-t-md border-b-0' : 'rounded-md'}
+                        `}
+                      >
+                        <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                          <button
+                            onClick={() => {
+                              if (item.children) {
+                                setExpandedMetadata((prev) => {
+                                  const newSet = new Set(prev);
+                                  if (newSet.has(item.key)) {
+                                    newSet.delete(item.key);
+                                  } else {
+                                    newSet.add(item.key);
+                                  }
+                                  return newSet;
+                                });
+                              }
+                            }}
+                            className="p-0.5"
+                          >
+                            {expandedMetadata.has(item.key) ? (
+                              <IconChevronDown
+                                size={16}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            ) : (
+                              <IconChevronRight
+                                size={16}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            )}
+                          </button>
+                          <span className="text-label-md text-[var(--color-text-default)]">
+                            {item.label}
+                          </span>
+                        </div>
+                        <div className="px-3 py-2">
+                          <button
+                            onClick={() => {
+                              if (!selectedMetadata.some((m) => m.key === item.key)) {
+                                setSelectedMetadata((prev) => [
+                                  ...prev,
+                                  { key: item.key, value: '' },
+                                ]);
+                              }
+                            }}
+                            className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
+                          >
+                            <IconCirclePlus
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Child rows when expanded */}
+                      {item.children && expandedMetadata.has(item.key) && (
+                        <div className="flex flex-col">
+                          {item.children.map((child, childIndex) => (
+                            <div
+                              key={child}
+                              className={`
+                                flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] border-t-0
+                                ${childIndex === item.children!.length - 1 ? 'rounded-b-md' : ''}
+                              `}
+                            >
+                              <div className="flex-1 flex items-center gap-2 px-3 py-2 pl-10 min-h-[40px]">
+                                <span className="text-label-md text-[var(--color-text-default)]">
+                                  {child}
+                                </span>
+                              </div>
+                              <div className="px-3 py-2">
+                                <button
+                                  onClick={() => {
+                                    setSelectedMetadata((prev) => {
+                                      const existing = prev.find((m) => m.key === item.key);
+                                      if (existing) {
+                                        return prev.map((m) =>
+                                          m.key === item.key ? { ...m, value: child } : m
+                                        );
+                                      }
+                                      return [...prev, { key: item.key, value: child }];
+                                    });
+                                  }}
+                                  className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
+                                >
+                                  <IconCirclePlus
+                                    size={16}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Right Column - Existing Metadata */}
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Existing metadata
+              </span>
+
+              {/* Search */}
+              <SearchInput
+                value={existingMetadataSearch}
+                onChange={setExistingMetadataSearch}
+                placeholder="Search metadata"
+                className="w-full"
+              />
+
+              {/* Selected Metadata List */}
+              <div
+                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
+                style={{ scrollbarGutter: 'stable' }}
+              >
+                {selectedMetadata
+                  .filter(
+                    (item) =>
+                      !existingMetadataSearch ||
+                      item.key.toLowerCase().includes(existingMetadataSearch.toLowerCase())
+                  )
+                  .map((item, index) => (
+                    <div
+                      key={`${item.key}-${index}`}
+                      className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                    >
+                      <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                        <span className="text-label-md text-[var(--color-text-default)] shrink-0">
+                          {item.key}
+                        </span>
+                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                        <Input
+                          value={item.value}
+                          onChange={(e) => {
+                            setSelectedMetadata((prev) =>
+                              prev.map((m, i) =>
+                                i === index ? { ...m, value: e.target.value } : m
+                              )
+                            );
+                            if (showValueErrors && e.target.value.trim()) {
+                              // Clear error once all values are filled
+                              const othersFilled = selectedMetadata.every(
+                                (m, i) => i === index || m.value.trim()
+                              );
+                              if (othersFilled) setShowValueErrors(false);
+                            }
+                          }}
+                          placeholder="Enter value"
+                          fullWidth
+                          error={showValueErrors && !item.value.trim()}
+                        />
+                      </div>
+                      <div className="px-3 py-2">
+                        <button
+                          onClick={() => {
+                            setSelectedMetadata((prev) => prev.filter((_, i) => i !== index));
+                          }}
+                          className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
+                        >
+                          <IconCircleMinus
+                            size={16}
+                            stroke={1.5}
+                            className="text-[var(--color-text-default)]"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                {selectedMetadata.length === 0 && (
+                  <div className="flex items-center justify-center py-8">
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      No metadata selected
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </VStack>
       </VStack>
     </Drawer>

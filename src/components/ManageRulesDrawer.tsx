@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { Drawer, Button, SearchInput, Table } from '@/design-system';
-import type { TableColumn } from '@/design-system';
+import { useState, useRef } from 'react';
+import { Drawer, Button, SearchInput } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconCirclePlus, IconCircleMinus } from '@tabler/icons-react';
+import { IconCirclePlus, IconCircleMinus, IconGripVertical } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -51,8 +50,6 @@ const mockInitialSelectedRules: FirewallRule[] = [
    ---------------------------------------- */
 
 export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRulesDrawerProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   // Available rules state
   const [availableSearchQuery, setAvailableSearchQuery] = useState('');
 
@@ -60,14 +57,65 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
   const [selectedSearchQuery, setSelectedSearchQuery] = useState('');
   const [selectedRules, setSelectedRules] = useState<FirewallRule[]>(mockInitialSelectedRules);
 
-  // Filter available rules
-  const filteredAvailable = mockAvailableRules.filter((rule) =>
-    rule.name.toLowerCase().includes(availableSearchQuery.toLowerCase())
+  // Drag-and-drop state
+  const dragIndexRef = useRef<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  const handleDragStart = (index: number) => {
+    dragIndexRef.current = index;
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (dragIndexRef.current === null || dragIndexRef.current === index) {
+      setDragOverIndex(null);
+      return;
+    }
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const dragIndex = dragIndexRef.current;
+    if (dragIndex === null || dragIndex === dropIndex) {
+      dragIndexRef.current = null;
+      setDragOverIndex(null);
+      return;
+    }
+
+    setSelectedRules((prev) => {
+      const updated = [...prev];
+      const [draggedItem] = updated.splice(dragIndex, 1);
+      updated.splice(dropIndex, 0, draggedItem);
+      return updated;
+    });
+
+    dragIndexRef.current = null;
+    setDragOverIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    dragIndexRef.current = null;
+    setDragOverIndex(null);
+  };
+
+  // Filter available rules (exclude already selected)
+  const filteredAvailable = mockAvailableRules.filter(
+    (rule) =>
+      !selectedRules.some((r) => r.id === rule.id) &&
+      (!availableSearchQuery ||
+        rule.name.toLowerCase().includes(availableSearchQuery.toLowerCase()) ||
+        rule.protocol.toLowerCase().includes(availableSearchQuery.toLowerCase()) ||
+        rule.action.toLowerCase().includes(availableSearchQuery.toLowerCase()))
   );
 
   // Filter selected rules for display
-  const filteredSelected = selectedRules.filter((rule) =>
-    rule.name.toLowerCase().includes(selectedSearchQuery.toLowerCase())
+  const filteredSelected = selectedRules.filter(
+    (rule) =>
+      !selectedSearchQuery ||
+      rule.name.toLowerCase().includes(selectedSearchQuery.toLowerCase()) ||
+      rule.protocol.toLowerCase().includes(selectedSearchQuery.toLowerCase()) ||
+      rule.action.toLowerCase().includes(selectedSearchQuery.toLowerCase())
   );
 
   const handleAddRule = (rule: FirewallRule) => {
@@ -79,14 +127,9 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
     setSelectedRules(selectedRules.filter((r) => r.id !== ruleId));
   };
 
-  const handleSave = async () => {
-    setIsSubmitting(true);
-    try {
-      await onSave?.(selectedRules.map((r) => r.id));
-      onClose();
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSave = () => {
+    onSave?.(selectedRules.map((r) => r.id));
+    onClose();
   };
 
   const handleClose = () => {
@@ -95,109 +138,6 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
     setSelectedRules(mockInitialSelectedRules);
     onClose();
   };
-
-  /* ── Available Rules Table Columns ── */
-  const availableColumns: TableColumn<FirewallRule>[] = [
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.name}</span>
-      ),
-    },
-    {
-      key: 'protocol',
-      label: 'Protocol',
-      minWidth: '60px',
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.protocol}</span>
-      ),
-    },
-    {
-      key: 'action',
-      label: 'Action',
-      minWidth: '50px',
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.action}</span>
-      ),
-    },
-    {
-      key: 'id' as keyof FirewallRule,
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_value, row) => (
-        <Button
-          variant="ghost"
-          size="xs"
-          icon={<IconCirclePlus size={14} stroke={1.5} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddRule(row);
-          }}
-          aria-label={`Add ${row.name}`}
-          className="!min-w-0 !p-0"
-        />
-      ),
-    },
-  ];
-
-  /* ── Selected Rules Table Columns ── */
-  const selectedColumns: TableColumn<FirewallRule>[] = [
-    {
-      key: 'id' as keyof FirewallRule,
-      label: '#',
-      width: '36px',
-      align: 'center',
-      render: (_value, _row, rowIndex) => (
-        <span className="text-label-sm text-[var(--color-action-primary)]">{rowIndex + 1}</span>
-      ),
-    },
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.name}</span>
-      ),
-    },
-    {
-      key: 'protocol',
-      label: 'Protocol',
-      minWidth: '60px',
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.protocol}</span>
-      ),
-    },
-    {
-      key: 'action',
-      label: 'Action',
-      minWidth: '50px',
-      render: (_value, row) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{row.action}</span>
-      ),
-    },
-    {
-      key: 'id' as keyof FirewallRule,
-      label: '',
-      width: '40px',
-      align: 'center',
-      render: (_value, row) => (
-        <Button
-          variant="ghost"
-          size="xs"
-          icon={<IconCircleMinus size={14} stroke={1.5} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemoveRule(row.id);
-          }}
-          aria-label={`Remove ${row.name}`}
-          className="!min-w-0 !p-0"
-        />
-      ),
-    },
-  ];
 
   return (
     <Drawer
@@ -219,18 +159,20 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
     >
       <VStack gap={6}>
         {/* Title */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage rules</h2>
+        <VStack gap={3}>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage rules</h2>
 
-        {/* Policy Info */}
-        <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-          <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-            Firewall policy
+          {/* Policy Info */}
+          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
+              Firewall policy
+            </div>
+            <div className="text-body-md text-[var(--color-text-default)]">{policy.name}</div>
           </div>
-          <div className="text-body-md text-[var(--color-text-default)]">{policy.name}</div>
-        </div>
+        </VStack>
 
         {/* Rules Section */}
-        <VStack gap={4} className="w-full">
+        <VStack gap={3} className="w-full">
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rules</span>
             <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -238,52 +180,157 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
             </p>
           </VStack>
 
-          {/* Dual Panel Layout */}
-          <HStack gap={4} className="w-full" align="start">
-            {/* Available Rules Panel */}
-            <VStack gap={2} className="flex-1 min-w-0">
+          {/* Two Column Layout */}
+          <div className="flex gap-3 h-[500px]">
+            {/* Left Column - Available Rules */}
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Available rules
               </span>
 
               <SearchInput
                 value={availableSearchQuery}
-                onChange={(e) => setAvailableSearchQuery(e.target.value)}
-                placeholder="Search rule name"
-                size="sm"
+                onChange={setAvailableSearchQuery}
+                placeholder="Search rules"
+                className="w-full"
               />
 
-              <div className="max-h-[500px] overflow-y-auto">
-                <Table
-                  columns={availableColumns}
-                  data={filteredAvailable}
-                  rowKey="id"
-                  emptyMessage="No rules found"
-                />
+              <div
+                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
+                style={{ scrollbarGutter: 'stable' }}
+              >
+                {filteredAvailable.map((rule) => (
+                  <div
+                    key={rule.id}
+                    className="flex flex-col bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                  >
+                    {/* Top row: Name + Add button */}
+                    <div className="flex items-center">
+                      <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
+                        <span className="text-label-md text-[var(--color-text-default)]">
+                          {rule.name}
+                        </span>
+                      </div>
+                      <div className="px-3 py-2">
+                        <button
+                          onClick={() => handleAddRule(rule)}
+                          className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
+                        >
+                          <IconCirclePlus
+                            size={16}
+                            stroke={1.5}
+                            className="text-[var(--color-text-default)]"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    {/* Divider */}
+                    <div className="w-full h-px bg-[var(--color-border-default)]" />
+                    {/* Bottom row: Protocol + Action */}
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Protocol: {rule.protocol}
+                      </span>
+                      <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Action: {rule.action}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {filteredAvailable.length === 0 && (
+                  <div className="flex items-center justify-center py-8">
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      No rules available
+                    </span>
+                  </div>
+                )}
               </div>
-            </VStack>
+            </div>
 
-            {/* Selected Rules Panel */}
-            <VStack gap={2} className="flex-1 min-w-0">
+            {/* Right Column - Selected Rules */}
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">Selected rules</span>
 
               <SearchInput
                 value={selectedSearchQuery}
-                onChange={(e) => setSelectedSearchQuery(e.target.value)}
-                placeholder="Search rule name"
-                size="sm"
+                onChange={setSelectedSearchQuery}
+                placeholder="Search rules"
+                className="w-full"
               />
 
-              <div className="max-h-[500px] overflow-y-auto">
-                <Table
-                  columns={selectedColumns}
-                  data={filteredSelected}
-                  rowKey="id"
-                  emptyMessage="No rules selected"
-                />
+              <div
+                className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
+                style={{ scrollbarGutter: 'stable' }}
+              >
+                {filteredSelected.map((rule, index) => {
+                  const actualIndex = selectedRules.findIndex((r) => r.id === rule.id);
+                  return (
+                    <div
+                      key={rule.id}
+                      draggable
+                      onDragStart={() => handleDragStart(actualIndex)}
+                      onDragOver={(e) => handleDragOver(e, actualIndex)}
+                      onDrop={(e) => handleDrop(e, actualIndex)}
+                      onDragEnd={handleDragEnd}
+                      className={`
+                        flex flex-col bg-[var(--color-surface-default)] rounded-md cursor-grab active:cursor-grabbing transition-all
+                        ${dragOverIndex === actualIndex ? 'border-2 border-[var(--color-border-focus)]' : 'border border-[var(--color-border-default)]'}
+                      `}
+                    >
+                      {/* Top row: Grip + Index + Name + Remove button */}
+                      <div className="flex items-center">
+                        <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                          <IconGripVertical
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)] shrink-0"
+                          />
+                          <span className="text-label-sm text-[var(--color-action-primary)] shrink-0 w-4 text-center">
+                            {index + 1}
+                          </span>
+                          <span className="text-label-md text-[var(--color-text-default)]">
+                            {rule.name}
+                          </span>
+                        </div>
+                        <div className="px-3 py-2">
+                          <button
+                            onClick={() => handleRemoveRule(rule.id)}
+                            className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-state-danger-bg)]"
+                          >
+                            <IconCircleMinus
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      {/* Divider */}
+                      <div className="w-full h-px bg-[var(--color-border-default)]" />
+                      {/* Bottom row: Protocol + Action */}
+                      <div className="flex items-center gap-2 px-3 py-2">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          Protocol: {rule.protocol}
+                        </span>
+                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          Action: {rule.action}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {selectedRules.length === 0 && (
+                  <div className="flex items-center justify-center py-8">
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      No rules selected
+                    </span>
+                  </div>
+                )}
               </div>
-            </VStack>
-          </HStack>
+            </div>
+          </div>
         </VStack>
       </VStack>
     </Drawer>
