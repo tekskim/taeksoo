@@ -351,7 +351,7 @@ export default function FloatingIPDetailPage() {
                         floatingIP.resource ? (
                           <Link
                             to={`/compute/instances/${floatingIP.resource.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {floatingIP.resource.name}
                           </Link>
@@ -367,7 +367,7 @@ export default function FloatingIPDetailPage() {
                         floatingIP.router ? (
                           <Link
                             to={`/compute/routers/${floatingIP.router.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {floatingIP.router.name}
                           </Link>

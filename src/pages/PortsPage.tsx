@@ -413,7 +413,7 @@ export function PortsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/ports/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -441,7 +441,7 @@ export function PortsPage() {
                       ? `/routers/${row.attachedToId}`
                       : `/instances/${row.attachedToId}`
                   }
-                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{row.attachedTo}</span>
@@ -476,7 +476,7 @@ export function PortsPage() {
           <Tooltip content={row.ownedNetwork} position="top">
             <Link
               to={`/compute/networks/${row.ownedNetworkId}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               <span className="truncate">{row.ownedNetwork}</span>

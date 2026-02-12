@@ -1,5 +1,5 @@
 import { useState, Children, type ReactNode, type HTMLAttributes } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { IconCopy, IconCheck, IconHelpCircle } from '@tabler/icons-react';
 import { StatusIndicator, type StatusType } from '../StatusIndicator';
 import { Tooltip } from '../Tooltip';

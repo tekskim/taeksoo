@@ -498,7 +498,7 @@ export function CreateVolumePage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ImageRow) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -548,7 +548,7 @@ export function CreateVolumePage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: SnapshotRow) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />

@@ -162,7 +162,7 @@ export default function IAMMFAPoliciesPage() {
               <VStack gap={4} className="pt-4">
                 <SectionCard>
                   <SectionCard.Header title="MFA enforcement" />
-                  <SectionCard.Content gap={6}>
+                  <SectionCard.Content gap={3} showDividers={false}>
                     {/* Description */}
                     <p className="text-body-md text-[var(--color-text-subtle)]">
                       Choose whether to make Multi-Factor Authentication (MFA) mandatory for all

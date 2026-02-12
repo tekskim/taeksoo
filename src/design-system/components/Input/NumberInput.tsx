@@ -1,5 +1,5 @@
 import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------

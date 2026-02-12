@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Button Variants (CVA with Design Tokens)

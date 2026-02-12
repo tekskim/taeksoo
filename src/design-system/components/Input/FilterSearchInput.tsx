@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
   type KeyboardEvent,
 } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { IconSearch } from '@tabler/icons-react';
 import { Chip } from '../Chip';
 

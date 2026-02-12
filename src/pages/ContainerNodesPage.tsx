@@ -16,6 +16,7 @@ import {
   STATUS_THRESHOLDS,
   PageShell,
   PageHeader,
+  CopyButton,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -152,7 +153,7 @@ const nodesData: NodeRow[] = [
 
 function ProgressCell({ value }: { value: number }) {
   return (
-    <div className="flex flex-col gap-0.5 w-24">
+    <div className="flex flex-col gap-0.5 min-w-0 w-24">
       <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">{value}%</span>
       <ProgressBar
         value={value}
@@ -216,12 +217,6 @@ export function ContainerNodesPage() {
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Copy to clipboard handler
-  const handleCopyIp = (ip: string) => {
-    navigator.clipboard.writeText(ip);
-    console.log('Copied to clipboard:', ip);
-  };
-
   // Table columns configuration
   const columns: TableColumn<NodeRow>[] = [
     {
@@ -273,22 +268,25 @@ export function ContainerNodesPage() {
       flex: 1,
       minWidth: columnMinWidths.ipAddress,
       sortable: true,
-      render: (_, row) => (
-        <HStack gap={1.5} align="center">
-          <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">
-            {row.externalIp} / {row.internalIp}
+      render: (_, row) => {
+        const ipText = `${row.externalIp} / ${row.internalIp}`;
+        return (
+          <span className="inline-flex items-center gap-1 min-w-0 w-full">
+            <span className="truncate" title={ipText}>
+              {ipText}
+            </span>
+            <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
+              <CopyButton
+                value={ipText}
+                size="sm"
+                variant="ghost"
+                iconOnly
+                className="!ring-0 !ring-offset-0 !outline-none !border-transparent"
+              />
+            </span>
           </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopyIp(row.internalIp);
-            }}
-            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-          >
-            <IconCopy size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
-          </button>
-        </HStack>
-      ),
+        );
+      },
     },
     {
       key: 'os',

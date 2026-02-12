@@ -1,5 +1,5 @@
 import { forwardRef, useState, type InputHTMLAttributes } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
 
 /* ----------------------------------------

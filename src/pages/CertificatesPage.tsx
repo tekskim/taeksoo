@@ -315,7 +315,7 @@ export function CertificatesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/certificates/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -338,7 +338,7 @@ export function CertificatesPage() {
         row.listener === '-' ? (
           '-'
         ) : (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <div className="flex items-center gap-1">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
               {row.listenerCount > 0 && (

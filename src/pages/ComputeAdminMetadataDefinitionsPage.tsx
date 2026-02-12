@@ -139,7 +139,9 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       flex: 2,
       sortable: true,
       render: (_, row) => (
-        <span className="text-[var(--color-text-default)] truncate">{row.description}</span>
+        <span className="text-[var(--color-text-default)] truncate block" title={row.description}>
+          {row.description}
+        </span>
       ),
     },
     {

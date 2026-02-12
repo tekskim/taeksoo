@@ -1,5 +1,5 @@
 import { type ReactNode, type MouseEvent } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    TableLink Types

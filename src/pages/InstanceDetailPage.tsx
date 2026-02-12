@@ -1224,7 +1224,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/volumes/${row.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {value}
                           </Link>
@@ -1398,7 +1398,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/ports/${iface.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.name}
                           </Link>
@@ -1418,7 +1418,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/networks/${iface.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.network}
                           </Link>
@@ -1544,7 +1544,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/floating-ips/${row.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {row.floatingIp}
                           </Link>
@@ -1665,7 +1665,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/security-groups/${row.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {row.name}
                           </Link>
@@ -1804,7 +1804,7 @@ export function InstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute/instance-snapshots/${row.id}`}
-                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline truncate"
+                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {row.name}
                           </Link>

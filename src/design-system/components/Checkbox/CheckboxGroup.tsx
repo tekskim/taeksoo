@@ -1,5 +1,5 @@
 import { createContext, useContext, useId, type ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    CheckboxGroup Context

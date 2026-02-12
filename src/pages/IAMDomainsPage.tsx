@@ -181,7 +181,7 @@ export default function IAMDomainsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
-        <span className="font-medium text-[var(--color-text-default)]">{value}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {

@@ -394,7 +394,7 @@ export function BucketsPage() {
           bulkActions={
             <ListToolbar.Actions>
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={!hasSelection}

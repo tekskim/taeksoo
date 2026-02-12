@@ -350,7 +350,7 @@ export function ComputeAdminImagesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -369,7 +369,7 @@ export function ComputeAdminImagesPage() {
       minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

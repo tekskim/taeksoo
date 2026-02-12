@@ -544,7 +544,7 @@ export default function IAMEventLogsPage() {
                           />
                         )}
                       </button>
-                      <div className="flex flex-col gap-0.5">
+                      <div className="flex flex-col gap-0.5 min-w-0">
                         <span className="text-body-md text-[var(--color-text-default)]">
                           {log.eventName}
                         </span>

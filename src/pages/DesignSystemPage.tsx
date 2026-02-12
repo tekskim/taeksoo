@@ -2051,7 +2051,7 @@ function TableDemo() {
       flex: 1,
       minWidth: '140px',
       render: (value: string, row: InstanceData) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
@@ -2079,7 +2079,7 @@ function TableDemo() {
       flex: 1,
       minWidth: '120px',
       render: (value: string, row: InstanceData) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
@@ -2096,7 +2096,7 @@ function TableDemo() {
       flex: 1,
       minWidth: '100px',
       render: (value: string, row: InstanceData) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
@@ -2131,7 +2131,7 @@ function TableDemo() {
       label: 'Name',
       width: columnMinWidths.name,
       render: (value: string, row: InstanceData) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
@@ -2152,7 +2152,7 @@ function TableDemo() {
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               >
                 <span className="truncate">{row.attachedTo}</span>
                 <IconExternalLink
