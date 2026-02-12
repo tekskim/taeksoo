@@ -469,7 +469,7 @@ export function ResizeInstanceDrawer({
         <VStack gap={3} className="pb-5">
           <span className="text-label-lg text-[var(--color-text-default)]">Approval method</span>
 
-          <VStack gap={3}>
+          <VStack gap={2}>
             {/* Manual confirm option */}
             <Radio
               name="approval-method"
@@ -515,7 +515,7 @@ export function ResizeInstanceDrawer({
                     { value: 'confirm', label: 'Confirm' },
                     { value: 'revert', label: 'Revert' },
                   ]}
-                  className="w-[120px]"
+                  width="sm"
                 />
               </HStack>
             </div>

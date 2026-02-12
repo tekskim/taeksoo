@@ -249,9 +249,9 @@ export function RescueInstanceDrawer({
         </VStack>
 
         {/* Image Selection */}
-        <VStack gap={3}>
+        <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Image</span>
-          <VStack gap={3}>
+          <VStack gap={2}>
             {/* Current Image Option */}
             <Radio
               name="image-option"
