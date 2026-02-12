@@ -78,7 +78,7 @@ export default function SettingsInformationPage() {
                 href="https://thaki.cloud/terms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
               >
                 Terms of Service <IconExternalLink size={14} stroke={1.5} />
               </a>
@@ -86,7 +86,7 @@ export default function SettingsInformationPage() {
                 href="https://thaki.cloud/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
               >
                 Privacy Policy <IconExternalLink size={14} stroke={1.5} />
               </a>
@@ -103,7 +103,7 @@ export default function SettingsInformationPage() {
                 href="https://thaki.cloud"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
               >
                 Official Website <IconExternalLink size={14} stroke={1.5} />
               </a>
@@ -111,7 +111,7 @@ export default function SettingsInformationPage() {
                 href="https://support.thaki.cloud"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
+                className="inline-flex items-center gap-1.5 min-w-0 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
               >
                 Support Center <IconExternalLink size={14} stroke={1.5} />
               </a>

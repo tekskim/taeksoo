@@ -189,7 +189,7 @@ export function ContainerIngressesPage() {
       minWidth: columnMinWidths.target,
       sortable: false,
       render: (value: string[]) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           {value.map((item, index) => (
             <span key={index} className="text-body-md leading-4 text-[var(--color-text-default)]">
               {item}

@@ -1,5 +1,5 @@
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { useRadioGroup } from './RadioGroup';
 
 /* ----------------------------------------

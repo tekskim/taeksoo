@@ -240,7 +240,7 @@ export function VolumeSnapshotDetailPage() {
                     <SectionCard.DataRow label="Volume">
                       <Link
                         to={`/compute/volumes/${snapshot.sourceVolumeId}`}
-                        className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                        className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline"
                       >
                         {snapshot.sourceVolume}
                         <IconExternalLink size={12} stroke={1.5} />

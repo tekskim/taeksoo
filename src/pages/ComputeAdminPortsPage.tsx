@@ -421,7 +421,7 @@ export function ComputeAdminPortsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/ports/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -440,7 +440,7 @@ export function ComputeAdminPortsPage() {
       minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -497,7 +497,7 @@ export function ComputeAdminPortsPage() {
       minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/networks/${row.ownedNetworkId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -517,7 +517,7 @@ export function ComputeAdminPortsPage() {
       flex: 1,
       minWidth: columnMinWidths.securityGroups,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="text-body-md text-[var(--color-text-default)]">
             {row.securityGroups}
           </span>

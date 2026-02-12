@@ -354,10 +354,10 @@ export function VolumeBackupsPage() {
       minWidth: columnMinWidths.sourceVolume,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}

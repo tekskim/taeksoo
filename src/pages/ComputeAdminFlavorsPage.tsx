@@ -345,7 +345,7 @@ export function ComputeAdminFlavorsPage() {
         minWidth: columnMinWidths.name,
         sortable: true,
         render: (_, row) => (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/flavors/${row.id}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

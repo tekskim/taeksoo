@@ -1165,7 +1165,7 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -1204,7 +1204,11 @@ export function ComputeAdminInstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
-      render: (_, row) => <span className="truncate w-full">{row.image}</span>,
+      render: (_, row) => (
+        <span className="truncate block w-full" title={row.image}>
+          {row.image}
+        </span>
+      ),
     },
     {
       key: 'flavor',
@@ -1213,7 +1217,7 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -1323,7 +1327,7 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/bare-metal/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -1349,7 +1353,7 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -1370,7 +1374,7 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconLoader2 } from '@tabler/icons-react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Types

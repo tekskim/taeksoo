@@ -1,5 +1,5 @@
 import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Toggle Types

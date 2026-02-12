@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { twMerge } from 'tailwind-merge';
+import { customTwMerge as twMerge } from '../../utils/cn';
 import { IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------

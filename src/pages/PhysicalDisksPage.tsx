@@ -24,7 +24,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconBell, IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconRefresh, IconBell, IconDownload } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
 
 /* ----------------------------------------
@@ -598,6 +598,7 @@ export function PhysicalDisksPage() {
 
         {/* Action Bar */}
         <ListToolbar
+          showDivider={false}
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
@@ -621,13 +622,6 @@ export function PhysicalDisksPage() {
                 aria-label="Refresh"
                 onClick={() => console.log('Refresh clicked')}
               />
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            <ListToolbar.Actions>
-              <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
-                Delete
-              </Button>
             </ListToolbar.Actions>
           }
         />

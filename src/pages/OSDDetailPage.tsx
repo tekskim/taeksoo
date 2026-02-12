@@ -995,7 +995,7 @@ export function OSDDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <div className="flex flex-col items-stretch justify-start gap-2 min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* OSD Header Card */}
         <DetailHeader>
           <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>
@@ -1352,7 +1352,7 @@ export function OSDDetailPage() {
             </TabPanel>
           </Tabs>
         </div>
-      </div>
+      </VStack>
     </PageShell>
   );
 }

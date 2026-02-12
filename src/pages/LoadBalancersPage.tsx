@@ -359,7 +359,7 @@ export function LoadBalancersPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/load-balancers/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -384,10 +384,10 @@ export function LoadBalancersPage() {
       minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/networks/${row.ownedNetworkId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork}
@@ -405,7 +405,7 @@ export function LoadBalancersPage() {
       minWidth: columnMinWidths.floatingIp,
       render: (_, row) =>
         row.floatingIpId ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute/floating-ips/${row.floatingIpId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -428,7 +428,7 @@ export function LoadBalancersPage() {
       minWidth: columnMinWidths.listeners,
       render: (_, row) => (
         <div className="flex items-center gap-[5px]">
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">
               {row.listeners} {row.listenerCount > 0 && `(+${row.listenerCount})`}
             </span>

@@ -302,7 +302,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/firewalls/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -320,7 +320,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -339,7 +339,7 @@ export default function ComputeAdminFirewallsPage() {
       sortable: true,
       render: (_, row) =>
         row.ingressPolicy ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/firewall-policies/${row.ingressPolicyId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -362,7 +362,7 @@ export default function ComputeAdminFirewallsPage() {
       sortable: true,
       render: (_, row) =>
         row.egressPolicy ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/firewall-policies/${row.egressPolicyId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -385,7 +385,7 @@ export default function ComputeAdminFirewallsPage() {
       sortable: true,
       render: (_, row) =>
         row.associatedPorts.length > 0 ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">
               {row.associatedPorts[0].name}
               {row.associatedPorts.length > 1 && ` (+${row.associatedPorts.length - 1})`}
@@ -444,7 +444,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/firewall-policies/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -462,7 +462,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -480,7 +480,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="text-[var(--color-text-default)]">
             {row.firstRule} {row.rulesCount > 1 ? `(+${row.rulesCount - 1})` : ''}
           </span>
@@ -494,7 +494,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <span className="text-[var(--color-text-default)]">
             {row.firstFirewall} {row.firewallsCount > 1 ? `(+${row.firewallsCount - 1})` : ''}
           </span>
@@ -545,7 +545,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/firewall-rules/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -563,7 +563,7 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

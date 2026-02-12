@@ -286,7 +286,7 @@ export function ComputeAdminVolumeTypesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/volume-types/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -313,7 +313,7 @@ export function ComputeAdminVolumeTypesPage() {
       sortable: false,
       render: (_, row) =>
         row.qosSpec ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/qos-specs/${row.qosSpecId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -407,7 +407,7 @@ export function ComputeAdminVolumeTypesPage() {
       flex: 1,
       sortable: true,
       render: (value: string, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/qos-specs/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"

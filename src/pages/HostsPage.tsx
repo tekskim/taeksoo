@@ -20,7 +20,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconBell, IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconRefresh, IconBell, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -395,6 +395,7 @@ export function HostsPage() {
 
         {/* Search and Actions */}
         <ListToolbar
+          showDivider={false}
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
@@ -419,18 +420,6 @@ export function HostsPage() {
                 aria-label="Refresh"
                 onClick={() => console.log('Refresh clicked')}
               />
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            <ListToolbar.Actions>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconTrash size={12} stroke={1.5} />}
-                onClick={() => console.log('Delete clicked')}
-              >
-                Delete
-              </Button>
             </ListToolbar.Actions>
           }
         />

@@ -539,7 +539,7 @@ export function ComputeAdminCreateFlavorPage() {
                                       status={tenant.status === 'active' ? 'active' : 'muted'}
                                     />
                                   </div>
-                                  <div className="flex-1 flex flex-col gap-0.5 p-3">
+                                  <div className="flex-1 flex flex-col gap-0.5 min-w-0 p-3">
                                     <Link
                                       to={`/compute-admin/tenants/${tenant.id}`}
                                       className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"

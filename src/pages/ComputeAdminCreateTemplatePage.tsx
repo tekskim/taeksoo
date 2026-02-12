@@ -887,7 +887,7 @@ function TemplateInformationSection({
                         label: 'Name',
                         sortable: true,
                         render: (value: string, row: Tenant) => (
-                          <div className="flex flex-col gap-0.5">
+                          <div className="flex flex-col gap-0.5 min-w-0">
                             <span className="font-medium text-[var(--color-action-primary)]">
                               {value}
                             </span>

@@ -335,7 +335,7 @@ export function FloatingIPsPage() {
       minWidth: columnMinWidths.floatingIp,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/floating-ips/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -359,7 +359,7 @@ export function FloatingIPsPage() {
               <Tooltip content={row.associatedTo} position="top">
                 <Link
                   to={`/compute/instances/${row.associatedToId}`}
-                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="truncate">{row.associatedTo}</span>
@@ -401,7 +401,7 @@ export function FloatingIPsPage() {
           <Tooltip content={row.network} position="top">
             <Link
               to={`/compute/networks/${row.networkId}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               <span className="truncate">{row.network}</span>

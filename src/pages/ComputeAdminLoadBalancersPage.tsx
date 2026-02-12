@@ -379,7 +379,7 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/load-balancers/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -397,7 +397,7 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -420,10 +420,10 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/networks/${row.ownedNetworkId}`}
-            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork}
@@ -440,7 +440,7 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       render: (_, row) =>
         row.floatingIpId ? (
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/floating-ips/${row.floatingIpId}`}
               className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -462,7 +462,7 @@ export function ComputeAdminLoadBalancersPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex items-center gap-[5px]">
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">
               {row.listeners} {row.listenerCount > 0 && `(+${row.listenerCount})`}
             </span>

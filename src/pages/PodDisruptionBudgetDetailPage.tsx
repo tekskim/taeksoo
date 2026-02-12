@@ -234,8 +234,9 @@ export function PodDisruptionBudgetDetailPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           onClick={() => navigate(`/container/pods/${value}`)}
+          title={value}
         >
           {value}
         </span>
@@ -341,8 +342,9 @@ export function PodDisruptionBudgetDetailPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           onClick={() => navigate(`/container/events/${value}`)}
+          title={value}
         >
           {value}
         </span>
