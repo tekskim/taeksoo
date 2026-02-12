@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Select, FormField } from '@/design-system';
+import { Drawer, Button, Select, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -119,23 +118,16 @@ export function ChangeVolumeTypeDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Change Type
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Change the storage type of this volume to another available volume type. The operation
               may take some time.
             </p>
           </VStack>
 
           {/* Warning Box */}
-          <div className="w-full bg-[var(--color-status-error-subtle)] rounded-lg p-3 flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--semantic-color-state-danger)] flex-shrink-0 mt-0.5"
-              stroke={1}
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before retyping.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before retyping.
+          </InlineMessage>
 
           {/* Volume Info */}
           <InfoBox label="Volume" value={volume?.name ?? '-'} />

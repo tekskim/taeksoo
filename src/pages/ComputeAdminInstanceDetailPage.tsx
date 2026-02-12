@@ -1376,7 +1376,7 @@ export function ComputeAdminInstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/ports/${iface.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {iface.name}
                           </Link>
@@ -1394,7 +1394,7 @@ export function ComputeAdminInstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/networks/${iface.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {iface.network}
                           </Link>
@@ -1474,7 +1474,7 @@ export function ComputeAdminInstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/floating-ips/${row.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {row.floatingIp}
                           </Link>
@@ -1551,7 +1551,7 @@ export function ComputeAdminInstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/security-groups/${row.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {row.name}
                           </Link>
@@ -1644,7 +1644,7 @@ export function ComputeAdminInstanceDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/instance-snapshots/${row.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {row.name}
                           </Link>

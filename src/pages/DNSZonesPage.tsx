@@ -206,7 +206,7 @@ export function DNSZonesPage() {
       render: (value: string, row) => (
         <Link
           to={`/compute/dns-zones/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
           onClick={(e) => e.stopPropagation()}
         >
           {value}

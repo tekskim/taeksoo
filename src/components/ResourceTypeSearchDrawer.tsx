@@ -241,7 +241,7 @@ export function ResourceTypeSearchDrawer({
 
           {/* Empty State */}
           {filteredCategories.length === 0 && (
-            <div className="flex items-center justify-center h-[100px] text-body-md text-[var(--color-text-subtle)]">
+            <div className="flex items-center justify-center h-[100px] text-body-sm text-[var(--color-text-subtle)]">
               No resource types found
             </div>
           )}

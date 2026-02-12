@@ -212,7 +212,7 @@ export default function ComputeAdminFirewallDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/ports/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -230,7 +230,7 @@ export default function ComputeAdminFirewallDetailPage() {
           <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/routers/${row.attachedToId}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.attachedToName}
@@ -272,7 +272,7 @@ export default function ComputeAdminFirewallDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/networks/${row.networkId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.network}
@@ -400,7 +400,7 @@ export default function ComputeAdminFirewallDetailPage() {
                       firewall.ingressPolicyId ? (
                         <Link
                           to={`/compute-admin/firewall-policies/${firewall.ingressPolicyId}`}
-                          className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline"
                         >
                           {firewall.ingressPolicy}
                         </Link>
@@ -415,7 +415,7 @@ export default function ComputeAdminFirewallDetailPage() {
                       firewall.egressPolicyId ? (
                         <Link
                           to={`/compute-admin/firewall-policies/${firewall.egressPolicyId}`}
-                          className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline"
                         >
                           {firewall.egressPolicy}
                         </Link>

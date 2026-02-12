@@ -201,7 +201,7 @@ function NameCell({ id, name }: NameCellProps) {
   return (
     <Link
       to={`/storage/images/${id}`}
-      className="font-medium text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
+      className="text-label-md text-[var(--color-action-primary)] hover:underline truncate block max-w-[220px]"
       title={name}
     >
       {name}

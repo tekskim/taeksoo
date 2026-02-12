@@ -440,6 +440,7 @@ export function CreateClusterPage() {
                         totalPages={Math.ceil(filteredExternalNetworks.length / 6) || 1}
                         onPageChange={() => {}}
                         totalItems={filteredExternalNetworks.length}
+                        selectedCount={selectedExternalNetwork ? 1 : 0}
                       />
                       <Table
                         columns={externalNetworkColumns}
@@ -482,6 +483,7 @@ export function CreateClusterPage() {
                         totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
                         onPageChange={() => {}}
                         totalItems={filteredTenantNetworks.length}
+                        selectedCount={selectedTenantNetwork ? 1 : 0}
                       />
                       <Table
                         columns={tenantNetworkColumns}
@@ -593,6 +595,7 @@ export function CreateClusterPage() {
                             totalPages={5}
                             onPageChange={() => {}}
                             totalItems={115}
+                            selectedCount={cpFlavor ? 1 : 0}
                           />
                           <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
                           <SelectionIndicator
@@ -667,7 +670,7 @@ export function CreateClusterPage() {
                             max={100}
                             width="sm"
                           />
-                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
                             GiB
                           </div>
                         </HStack>
@@ -726,6 +729,7 @@ export function CreateClusterPage() {
                             totalPages={5}
                             onPageChange={() => {}}
                             totalItems={115}
+                            selectedCount={nodeFlavor ? 1 : 0}
                           />
                           <VStack gap={2}>
                             <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
@@ -785,7 +789,7 @@ export function CreateClusterPage() {
                 <VStack gap={3}>
                   <VStack gap={1.5}>
                     <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                    <p className="text-body-sm text-[var(--color-text-subtle)]">
                       Specify the labels used to identify and categorize the resource.
                     </p>
                   </VStack>

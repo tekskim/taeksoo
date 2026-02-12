@@ -1,5 +1,5 @@
 import React from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { Chip } from '../Chip';
 import { HStack } from '../../layouts';
 
@@ -97,7 +97,7 @@ export function ListToolbarFilters({
       {onFiltersClear && (
         <button
           onClick={onFiltersClear}
-          className="text-label-sm font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
+          className="text-label-sm text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
         >
           {clearFiltersLabel}
         </button>

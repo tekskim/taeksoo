@@ -93,7 +93,7 @@ const getInstanceColumns = (
     render: (_, row) => (
       <div className="flex flex-col gap-0.5">
         <span className="flex items-center gap-1.5">
-          <span className="font-medium text-[var(--color-action-primary)] truncate">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
             {row.name}
           </span>
           <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
@@ -221,7 +221,7 @@ export function AttachVolumeDrawer({
               Attach Volume
             </h2>
           </VStack>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Attach one or more available volumes to this instance. Once attached, the volumes will
             appear as additional storage devices inside the instance.
           </p>
@@ -259,6 +259,7 @@ export function AttachVolumeDrawer({
             totalPages={totalPages}
             totalItems={filteredInstances.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedInstanceId ? 1 : 0}
           />
 
           {/* Instances Table + Selection Indicator */}

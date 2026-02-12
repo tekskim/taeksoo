@@ -54,7 +54,9 @@ const roleColumns: TableColumn<RoleItem>[] = [
     sortable: true,
     render: (_, row) => (
       <span className="flex items-center gap-1.5">
-        <span className="font-medium text-[var(--color-action-primary)] truncate">{row.name}</span>
+        <span className="text-label-md text-[var(--color-action-primary)] truncate">
+          {row.name}
+        </span>
         <IconExternalLink
           size={12}
           stroke={1.5}
@@ -178,7 +180,7 @@ export function ManageRolesDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage roles
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Manages roles directly assigned to the user. The user receives permissions from both
               direct assignments and roles inherited from groups.
             </p>
@@ -205,7 +207,7 @@ export function ManageRolesDrawer({
               </span>
               <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select roles to assign to this user. If a role's permissions change, the user's
               permissions are updated automatically.
             </p>

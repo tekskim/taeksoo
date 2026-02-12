@@ -113,7 +113,7 @@ export function ChangeCACertificateDrawer({
       render: (_value, row) => (
         <div className="flex flex-col justify-center gap-0.5">
           <HStack gap={1.5} align="center">
-            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -233,6 +233,7 @@ export function ChangeCACertificateDrawer({
             totalPages={totalPages}
             totalItems={filteredCertificates.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedCertificateId ? 1 : 0}
           />
 
           <VStack gap={2}>

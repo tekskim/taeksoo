@@ -158,7 +158,7 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
         {/* Title */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Modify quotas</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Modifies the resource usage limits allocated to the tenant.
           </p>
         </VStack>

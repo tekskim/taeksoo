@@ -625,7 +625,7 @@ export function ComputeAdminBareMetalDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/ports/${iface.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {iface.name}
                           </Link>
@@ -643,7 +643,7 @@ export function ComputeAdminBareMetalDetailPage() {
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/networks/${iface.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {iface.network}
                           </Link>

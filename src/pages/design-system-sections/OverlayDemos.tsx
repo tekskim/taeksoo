@@ -25,7 +25,6 @@ import {
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { IconAlertCircle } from '@tabler/icons-react';
 import { Label } from './HelperComponents';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 
@@ -235,18 +234,7 @@ export function ModalUseCaseDemo({
           )}
 
           {/* Warning Alert */}
-          {c.hasWarning && (
-            <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-              <IconAlertCircle
-                size={16}
-                className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-                stroke={1.5}
-              />
-              <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-                {c.warningText}
-              </p>
-            </div>
-          )}
+          {c.hasWarning && <InlineMessage variant="error">{c.warningText}</InlineMessage>}
         </div>
 
         {/* Button Group */}
@@ -1494,16 +1482,9 @@ export function DeleteAgentSourceModal({
       </div>
 
       {/* Danger Warning */}
-      <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start w-full">
-        <IconAlertCircle
-          size={16}
-          className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-          stroke={1.5}
-        />
-        <p className="text-body-sm text-[var(--color-text-default)]">
-          Deleting a agent source is a permanent action and cannot be undone.
-        </p>
-      </div>
+      <InlineMessage variant="error">
+        Deleting a agent source is a permanent action and cannot be undone.
+      </InlineMessage>
 
       {/* Button Group */}
       <div className="flex gap-2 w-full">

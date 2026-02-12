@@ -198,7 +198,7 @@ export function AttachInterfaceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Attach Interface
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Attach a new network interface to this instance. You can connect it to another network
               or subnet for additional access.
             </p>
@@ -234,9 +234,9 @@ export function AttachInterfaceDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              totalItems={totalItems}
+              selectedCount={selectedNetworkId ? 1 : 0}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           <VStack gap={2}>

@@ -28,6 +28,7 @@ import {
   type TableColumn,
   fixedColumns,
   columnMinWidths,
+  InlineMessage,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -1668,137 +1669,24 @@ export default function HostDetailPage() {
                         <>
                           {/* Info/Status Message based on SMART status */}
                           {selectedDeviceData?.smartStatus === 'passed' && (
-                            <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="shrink-0 mt-0.5"
-                              >
-                                <path
-                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                  stroke="var(--color-state-success)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M5.5 8L7.16667 9.66667L10.5 6.33333"
-                                  stroke="var(--color-state-success)"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                SMART overall-health self-assessment test result:{' '}
-                                <strong>passed</strong>
-                              </span>
-                            </div>
+                            <InlineMessage variant="success">
+                              SMART overall-health self-assessment test result:{' '}
+                              <strong>passed</strong>
+                            </InlineMessage>
                           )}
                           {selectedDeviceData?.smartStatus === 'unavailable' && (
-                            <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="shrink-0 mt-0.5"
-                              >
-                                <path
-                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M8 10.6667V8"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M8 5.33333H8.00667"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                No SMART data available for this device.
-                              </span>
-                            </div>
+                            <InlineMessage variant="info">
+                              No SMART data available for this device.
+                            </InlineMessage>
                           )}
                           {selectedDeviceData?.smartStatus === 'loading' && (
-                            <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="shrink-0 mt-0.5"
-                              >
-                                <path
-                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M8 10.6667V8"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M8 5.33333H8.00667"
-                                  stroke="var(--color-state-info)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                SMART data is loading.
-                              </span>
-                            </div>
+                            <InlineMessage variant="info">SMART data is loading.</InlineMessage>
                           )}
                           {selectedDeviceData?.smartStatus === 'failed' && (
-                            <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="shrink-0 mt-0.5"
-                              >
-                                <path
-                                  d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                                  stroke="var(--color-state-danger)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M10 6L6 10"
-                                  stroke="var(--color-state-danger)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M6 6L10 10"
-                                  stroke="var(--color-state-danger)"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                SMART overall-health self-assessment test result:{' '}
-                                <strong>failed</strong>
-                              </span>
-                            </div>
+                            <InlineMessage variant="error">
+                              SMART overall-health self-assessment test result:{' '}
+                              <strong>failed</strong>
+                            </InlineMessage>
                           )}
 
                           {/* SMART Card */}

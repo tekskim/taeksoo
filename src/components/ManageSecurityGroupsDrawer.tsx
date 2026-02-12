@@ -255,7 +255,7 @@ export function ManageSecurityGroupsDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage security groups
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               You can attach or detach security groups for the selected interface. These rules
               control inbound and outbound traffic for the instance.
             </p>
@@ -290,6 +290,7 @@ export function ManageSecurityGroupsDrawer({
             totalPages={interfaceTotalPages}
             totalItems={filteredInterfaces.length}
             onPageChange={setInterfacePage}
+            selectedCount={selectedInterfaceId ? 1 : 0}
           />
 
           <VStack gap={2}>
@@ -341,6 +342,7 @@ export function ManageSecurityGroupsDrawer({
             totalPages={sgTotalPages}
             totalItems={filteredSecurityGroups.length}
             onPageChange={setSgPage}
+            selectedCount={selectedSecurityGroupIds.length}
           />
 
           {/* Search */}

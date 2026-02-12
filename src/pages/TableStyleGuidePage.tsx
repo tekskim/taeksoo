@@ -581,7 +581,7 @@ export function TableStyleGuidePage() {
   minWidth: columnMinWidths.name,
   render: (_, row) => (
     <div className="flex flex-col min-w-0">
-      <span className="font-medium text-[var(--color-action-primary)] hover:underline truncate"
+      <span className="text-label-md text-[var(--color-action-primary)] hover:underline truncate"
         title={row.name}
       >
         {row.name}

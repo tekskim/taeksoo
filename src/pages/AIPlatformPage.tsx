@@ -1254,7 +1254,7 @@ function WorkloadsContent() {
         <div className="flex flex-col">
           <Link
             to={`/ai-platform/workloads/${row.id}`}
-            className="text-[13px] font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-[13px] text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}

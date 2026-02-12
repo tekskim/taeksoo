@@ -149,7 +149,7 @@ const userColumns: TableColumn<UserItem>[] = [
     sortable: true,
     render: (_, row) => (
       <span className="flex items-center gap-1.5">
-        <span className="font-medium text-[var(--color-action-primary)] truncate">
+        <span className="text-label-md text-[var(--color-action-primary)] truncate">
           {row.username}
         </span>
         <IconExternalLink
@@ -282,7 +282,7 @@ export function ManageUsersDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage users
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Add or remove members of this user group. Users included in the group automatically
               receive the permissions assigned to the group.
             </p>
@@ -311,7 +311,7 @@ export function ManageUsersDrawer({
               </span>
               <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select users to include in this group. All selected users will receive the group's
               assigned roles and policies.
             </p>

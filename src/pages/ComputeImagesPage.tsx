@@ -369,7 +369,7 @@ export function ComputeImagesPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/images/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}

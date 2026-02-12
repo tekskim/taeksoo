@@ -535,7 +535,9 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                   key: 'name',
                   label: 'Name',
                   render: (value) => (
-                    <span className="font-medium text-[var(--color-action-primary)]">{value}</span>
+                    <span className="text-label-md text-[var(--color-action-primary)]">
+                      {value}
+                    </span>
                   ),
                 },
                 {

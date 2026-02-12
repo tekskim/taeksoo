@@ -136,7 +136,7 @@ export function DetachVolumeDrawer({
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -201,7 +201,7 @@ export function DetachVolumeDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Detach Volume
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Detach the selected volume from this instance. Once detached, it will no longer be
               accessible.
             </p>
@@ -253,9 +253,9 @@ export function DetachVolumeDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              totalItems={totalItems}
+              selectedCount={selectedVolumeId ? 1 : 0}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           {/* Volume Table */}

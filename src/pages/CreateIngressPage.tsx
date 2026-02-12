@@ -794,7 +794,7 @@ export default function CreateIngressPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Labels
                       </label>
-                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </span>
                     </VStack>
@@ -861,7 +861,7 @@ export default function CreateIngressPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </label>
-                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </span>

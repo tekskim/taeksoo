@@ -193,7 +193,7 @@ export function BackupPoliciesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)] hover:underline cursor-pointer">
+        <span className="text-label-md text-[var(--color-action-primary)] hover:underline cursor-pointer">
           {value}
         </span>
       ),

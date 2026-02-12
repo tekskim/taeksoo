@@ -147,7 +147,7 @@ export function CreateHealthMonitorDrawer({
         <FormField>
           <FormField.Label>
             Health Monitor Name{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
           </FormField.Label>
           <FormField.Control>
             <Input

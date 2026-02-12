@@ -8,7 +8,7 @@ import {
   type ReactNode,
   type HTMLAttributes,
 } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------

@@ -153,7 +153,7 @@ export function ExternalGatewaySettingDrawer({
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -202,7 +202,7 @@ export function ExternalGatewaySettingDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               External gateway setting
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Configure or update the external gateway for this router. The external gateway
               connects your router to a public network, allowing instances in attached subnets to
               access external networks through floating IPs.
@@ -255,6 +255,7 @@ export function ExternalGatewaySettingDrawer({
             totalPages={totalPages}
             totalItems={filteredNetworks.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedNetworkId ? 1 : 0}
           />
 
           {/* Networks Table */}

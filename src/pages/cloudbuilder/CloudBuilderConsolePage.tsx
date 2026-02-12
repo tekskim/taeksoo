@@ -150,7 +150,7 @@ function buildTableColumns(
       column.render = (value, row) => (
         <button
           type="button"
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-left"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-left"
           onClick={(e) => {
             e.stopPropagation();
             onRowAction('open-detail', row);

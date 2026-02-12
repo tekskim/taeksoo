@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
   type KeyboardEvent,
 } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconSearch } from '@tabler/icons-react';
 import { Chip } from '../Chip';
 
@@ -446,7 +446,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
             <button
               type="button"
               onClick={handleClearFilters}
-              className="text-label-sm font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
+              className="text-label-sm text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
             >
               {clearFiltersLabel}
             </button>
