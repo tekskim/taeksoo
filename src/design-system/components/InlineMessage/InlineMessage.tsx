@@ -1,9 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import {
   IconCircleCheck,
   IconAlertTriangle,
-  IconCircleX,
+  IconAlertCircle,
   IconInfoCircle,
 } from '@tabler/icons-react';
 
@@ -64,7 +64,7 @@ const variantStyles: Record<InlineMessageVariant, { bg: string; icon: ReactNode 
   error: {
     bg: 'bg-[var(--inline-message-error-bg)]',
     icon: (
-      <IconCircleX
+      <IconAlertCircle
         size={12}
         className="text-[var(--inline-message-error-icon)]"
         strokeWidth={1.5}

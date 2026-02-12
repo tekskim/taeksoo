@@ -243,7 +243,7 @@ export function SetDefaultDomainDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Set default domain
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Defines which domain is opened first when the system administrator signs in. The
               selected domain is used as the initial workspace.
             </p>
@@ -272,7 +272,7 @@ export function SetDefaultDomainDrawer({
               </span>
               <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select one of the available domains to set as the default.
             </p>
           </VStack>
@@ -297,6 +297,7 @@ export function SetDefaultDomainDrawer({
             onPageChange={setCurrentPage}
             totalItems={filteredDomains.length}
             itemsPerPage={itemsPerPage}
+            selectedCount={selectedDomainId ? 1 : 0}
           />
 
           {/* Table + Selection Indicator */}

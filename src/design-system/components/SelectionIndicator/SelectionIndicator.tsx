@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconCircleX } from '@tabler/icons-react';
 import { Chip } from '../Chip';
 

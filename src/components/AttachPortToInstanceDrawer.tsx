@@ -149,7 +149,7 @@ export function AttachPortToInstanceDrawer({
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <HStack gap={1.5} align="center">
-            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -240,6 +240,7 @@ export function AttachPortToInstanceDrawer({
             totalPages={totalPages}
             totalItems={filteredInstances.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedInstanceId ? 1 : 0}
           />
 
           <VStack gap={2}>

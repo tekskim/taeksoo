@@ -19,18 +19,12 @@ import {
   Pagination,
   Modal,
   fixedColumns,
+  InlineMessage,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconAlertCircle,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconBell, IconExternalLink, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -364,7 +358,7 @@ export default function PortDetailPage() {
         row.floatingIp ? (
           <Link
             to={`/compute-admin/floating-ips/${row.floatingIp.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.floatingIp.address}
@@ -382,7 +376,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/subnets/${row.ownedSubnet.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedSubnet.name}
@@ -456,7 +450,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/security-groups/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -624,7 +618,7 @@ export default function PortDetailPage() {
                         value={
                           <Link
                             to={`/compute-admin/networks/${port.ownedNetwork.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {port.ownedNetwork.name}
                           </Link>
@@ -658,7 +652,7 @@ export default function PortDetailPage() {
                                   ? `/instances/${port.attachedTo.id}`
                                   : `/routers/${port.attachedTo.id}`
                               }
-                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                             >
                               {port.attachedTo.name}
                             </Link>
@@ -850,15 +844,9 @@ export default function PortDetailPage() {
           </div>
 
           {/* Warning Box */}
-          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--semantic-color-state-danger)] flex-shrink-0 mt-0.5"
-            />
-            <span className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Detaching this security group may affect network access for the port.
-            </span>
-          </div>
+          <InlineMessage variant="error">
+            Detaching this security group may affect network access for the port.
+          </InlineMessage>
         </div>
 
         {/* Button Group */}

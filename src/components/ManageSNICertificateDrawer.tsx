@@ -64,7 +64,7 @@ const certificateColumns: TableColumn<SNICertificateItem>[] = [
     render: (_value, row) => (
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <HStack gap={1.5} align="center">
-          <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
             {row.name}
           </span>
           <IconExternalLink
@@ -209,7 +209,7 @@ export function ManageSNICertificateDrawer({
         <VStack gap={3}>
           <VStack gap={2}>
             <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">SNI</h3>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Add more certificates here to host multiple, different HTTPS websites on this single
               listener.
             </p>

@@ -439,7 +439,7 @@ export default function RouterDetailPage() {
           <div className="flex items-center gap-1">
             <Link
               to={`/compute/ports/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
               onClick={(e) => e.stopPropagation()}
             >
               {row.name}
@@ -688,7 +688,7 @@ export default function RouterDetailPage() {
                         router.network ? (
                           <Link
                             to={`/compute/networks/${router.network.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {router.network.name}
                             <IconExternalLink
@@ -708,7 +708,7 @@ export default function RouterDetailPage() {
                         router.subnet ? (
                           <Link
                             to={`/compute/subnets/${router.subnet.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {router.subnet.name}
                             <IconExternalLink

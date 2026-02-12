@@ -6,7 +6,7 @@ import {
   type ReactNode,
   type ChangeEvent,
 } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { Radio } from './Radio';
 
 /* ----------------------------------------

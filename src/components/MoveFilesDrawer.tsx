@@ -287,9 +287,7 @@ export function MoveFilesDrawer({
             <FormField.Label>Folder path</FormField.Label>
             <FormField.Control>
               <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                  {currentPath}
-                </span>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">{currentPath}</span>
               </div>
             </FormField.Control>
           </FormField>

@@ -137,7 +137,7 @@ function IDCell({ id }: IDCellProps) {
   return (
     <Link
       to={`/storage/osds/${id}`}
-      className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+      className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
     >
       osd.{id}
     </Link>

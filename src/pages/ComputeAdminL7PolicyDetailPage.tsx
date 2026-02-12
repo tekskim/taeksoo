@@ -366,7 +366,7 @@ export default function L7PolicyDetailPage() {
                         l7Policy.behaviorDetail ? (
                           <Link
                             to={`/compute-admin/pools/${l7Policy.behaviorDetail.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {l7Policy.behaviorDetail.name}
                           </Link>

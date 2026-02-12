@@ -195,7 +195,7 @@ export function DetachInterfaceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Detach Interface
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Detach a network interface from this instance. This may interrupt connectivity if the
               selected port is primary.
             </p>
@@ -237,9 +237,9 @@ export function DetachInterfaceDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              totalItems={totalItems}
+              selectedCount={selectedInterfaceId ? 1 : 0}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           <VStack gap={2}>

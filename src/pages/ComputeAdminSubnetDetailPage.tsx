@@ -223,7 +223,7 @@ export default function SubnetDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/ports/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -246,7 +246,7 @@ export default function SubnetDetailPage() {
                     ? `/compute-admin/routers/${row.attachedTo.id}`
                     : `/compute-admin/instances/${row.attachedTo.id}`
                 }
-                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo.name}
@@ -441,7 +441,7 @@ export default function SubnetDetailPage() {
                       value={
                         <Link
                           to={`/compute-admin/networks/${subnet.network.id}`}
-                          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                         >
                           {subnet.network.name}
                         </Link>

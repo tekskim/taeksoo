@@ -1,5 +1,5 @@
 import { memo, type HTMLAttributes, type ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Badge Types
@@ -68,13 +68,13 @@ const themeStyles = {
     yellow: 'bg-[var(--color-state-warning)] text-white',
     gray: 'bg-[var(--color-text-subtle)] text-white',
   },
-  // Subtle variants (light bg + colored text) - uses semantic tokens for dark mode support
+  // Subtle variants (light bg + colored text) - uses badge-specific tokens for dark mode support
   subtle: {
-    blue: 'bg-[var(--color-blue-100)] text-[var(--color-state-info-text)]',
-    red: 'bg-[var(--color-red-100)] text-[var(--color-state-danger-text)]',
-    green: 'bg-[var(--color-green-100)] text-[var(--color-state-success-text)]',
-    yellow: 'bg-[var(--color-orange-100)] text-[var(--color-state-warning-text)]',
-    gray: 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]',
+    blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
+    red: 'bg-[var(--badge-subtle-red-bg)] text-[var(--badge-subtle-red-text)]',
+    green: 'bg-[var(--badge-subtle-green-bg)] text-[var(--badge-subtle-green-text)]',
+    yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
+    gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
   },
 } as const;
 
@@ -130,9 +130,10 @@ export const Badge = memo(function Badge({
   const resolvedType = variant && !theme ? 'subtle' : type;
 
   const baseStyles = [
-    'inline-flex items-center',
+    'inline-flex items-center justify-center',
     'gap-[var(--badge-gap)]',
     'font-medium',
+    'min-w-[28px] text-center',
     'rounded-[var(--badge-radius)]',
   ].join(' ');
 

@@ -115,7 +115,7 @@ export function ManageTagsDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage Tags
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Tags are used to categorize and manage resources.
             </p>
           </VStack>
@@ -133,9 +133,9 @@ export function ManageTagsDrawer({
           <VStack gap={2}>
             <HStack gap={1.5} align="center">
               <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
             </HStack>
-            <div className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <div className="text-body-sm text-[var(--color-text-subtle)]">
               <p className="mb-0">
                 A tag consists of a Key that defines the resource category and a Value that
                 describes it.

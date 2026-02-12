@@ -145,7 +145,7 @@ export function ResetPasswordDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Reset password
           </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Resets the user's login password. The new password takes effect immediately.
           </p>
 

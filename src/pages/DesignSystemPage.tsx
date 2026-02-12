@@ -2052,7 +2052,7 @@ function TableDemo() {
       minWidth: '140px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+          <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
@@ -2080,7 +2080,7 @@ function TableDemo() {
       minWidth: '120px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+          <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
@@ -2097,7 +2097,7 @@ function TableDemo() {
       minWidth: '100px',
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+          <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
@@ -2132,7 +2132,7 @@ function TableDemo() {
       width: columnMinWidths.name,
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+          <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
@@ -2152,7 +2152,7 @@ function TableDemo() {
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               >
                 <span className="truncate">{row.attachedTo}</span>
                 <IconExternalLink
@@ -2191,7 +2191,7 @@ function TableDemo() {
       label: 'Name',
       width: columnMinWidths.name,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+        <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
         </span>
       ),
@@ -2232,7 +2232,7 @@ function TableDemo() {
       label: 'Name',
       width: columnMinWidths.name,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+        <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
         </span>
       ),
@@ -2269,7 +2269,7 @@ function TableDemo() {
       label: 'Name',
       width: columnMinWidths.name,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
+        <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
         </span>
       ),
@@ -2711,7 +2711,7 @@ function TableDemo() {
                       </td>
                     </tr>
                     <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-action-primary)]">
+                      <td className="py-2 pr-4 text-label-md text-[var(--color-action-primary)]">
                         가변 (Flex)
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
@@ -6209,7 +6209,7 @@ outline: 2px solid var(--color-border-focus);`}
                             </div>
                             <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
                               <Chip label="Name" value="instance-01" onRemove={() => {}} />
-                              <button className="text-label-sm font-medium text-[var(--color-action-primary)]">
+                              <button className="text-label-sm text-label-md text-[var(--color-action-primary)]">
                                 Clear Filters
                               </button>
                             </div>
@@ -6237,7 +6237,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 <Chip label="Name" value="instance-01" onRemove={() => {}} />
                                 <Chip label="Status" value="Running" onRemove={() => {}} />
                               </div>
-                              <button className="text-label-sm font-medium text-[var(--color-action-primary)] whitespace-nowrap">
+                              <button className="text-label-sm text-label-md text-[var(--color-action-primary)] whitespace-nowrap">
                                 Clear Filters
                               </button>
                             </div>

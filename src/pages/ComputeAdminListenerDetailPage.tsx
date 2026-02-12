@@ -391,7 +391,7 @@ export default function ListenerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/pools/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -479,7 +479,7 @@ export default function ListenerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/l7-policies/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -563,7 +563,7 @@ export default function ListenerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/certificates/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -816,7 +816,7 @@ export default function ListenerDetailPage() {
                         mockPools[0] ? (
                           <Link
                             to={`/compute-admin/pools/${mockPools[0].id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {mockPools[0].name}
                           </Link>

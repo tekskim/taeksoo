@@ -284,7 +284,7 @@ export function LoadBalancerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/listeners/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -380,7 +380,7 @@ export function LoadBalancerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/pools/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -413,7 +413,7 @@ export function LoadBalancerDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/listeners/${row.listener.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.listener.name}
@@ -614,7 +614,7 @@ export function LoadBalancerDetailPage() {
                         {loadBalancer.ownedNetwork ? (
                           <Link
                             to={`/compute/networks/${loadBalancer.ownedNetwork.id}`}
-                            className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {loadBalancer.ownedNetwork.name}
                           </Link>
@@ -626,7 +626,7 @@ export function LoadBalancerDetailPage() {
                         {loadBalancer.subnet ? (
                           <Link
                             to={`/compute/subnets/${loadBalancer.subnet.id}`}
-                            className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {loadBalancer.subnet.name}
                           </Link>
@@ -638,7 +638,7 @@ export function LoadBalancerDetailPage() {
                         {loadBalancer.floatingIp ? (
                           <Link
                             to={`/compute/floating-ips/${loadBalancer.floatingIp.id}`}
-                            className="flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {loadBalancer.floatingIp.name}
                           </Link>

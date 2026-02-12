@@ -223,7 +223,7 @@ export function CreateRouterDrawer({
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -261,6 +261,7 @@ export function CreateRouterDrawer({
           </VStack>
 
           {/* Buttons */}
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} justify="center" className="w-full">
             <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
@@ -283,7 +284,7 @@ export function CreateRouterDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Router
           </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Create a virtual router to route traffic between different networks or subnets. You can
             optionally connect the router to an external network to enable internet access or
             floating IP usage.
@@ -319,9 +320,7 @@ export function CreateRouterDrawer({
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Description
               </span>
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                (Optional)
-              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
             </HStack>
             <Input
               value={description}
@@ -342,7 +341,7 @@ export function CreateRouterDrawer({
                     <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       Admin state
                     </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Setting it to "Down" disables all related network or control operations,
                       regardless of runtime status.
                     </span>
@@ -360,7 +359,7 @@ export function CreateRouterDrawer({
                     <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       External Gateway
                     </span>
-                    <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       The external gateway connects your router to an external (public) network.
                       <br />
                       When enabled, instances in the connected subnets can access the internet using
@@ -398,6 +397,7 @@ export function CreateRouterDrawer({
                 totalPages={totalPages}
                 totalItems={filteredNetworks.length}
                 onPageChange={setCurrentPage}
+                selectedCount={selectedNetworkId ? 1 : 0}
               />
 
               {/* Networks Table */}

@@ -156,7 +156,7 @@ export function ResizeInstanceDrawer({
       render: (_, row) => (
         <span className="flex flex-col">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -231,7 +231,7 @@ export function ResizeInstanceDrawer({
         row.isLink ? (
           <span className="flex flex-col">
             <span className="flex items-center gap-1.5">
-              <span className="font-medium text-[var(--color-action-primary)] truncate">
+              <span className="text-label-md text-[var(--color-action-primary)] truncate">
                 {row.name}
               </span>
               <IconExternalLink
@@ -346,6 +346,7 @@ export function ResizeInstanceDrawer({
           </VStack>
 
           {/* Buttons */}
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} justify="center" className="w-full">
             <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
@@ -369,7 +370,7 @@ export function ResizeInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Resize Instance
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Change the flavor of this instance to adjust its vCPU, memory, or disk capacity.
             </p>
           </VStack>
@@ -420,6 +421,7 @@ export function ResizeInstanceDrawer({
             totalPages={totalPages}
             totalItems={filteredFlavors.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedFlavorId ? 1 : 0}
           />
 
           {/* Flavor Table */}
@@ -467,7 +469,7 @@ export function ResizeInstanceDrawer({
         <VStack gap={3} className="pb-5">
           <span className="text-label-lg text-[var(--color-text-default)]">Approval method</span>
 
-          <VStack gap={3}>
+          <VStack gap={2}>
             {/* Manual confirm option */}
             <Radio
               name="approval-method"
@@ -513,7 +515,7 @@ export function ResizeInstanceDrawer({
                     { value: 'confirm', label: 'Confirm' },
                     { value: 'revert', label: 'Revert' },
                   ]}
-                  className="w-[120px]"
+                  width="sm"
                 />
               </HStack>
             </div>

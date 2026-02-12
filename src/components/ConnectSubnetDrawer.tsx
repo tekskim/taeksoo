@@ -323,7 +323,7 @@ export function ConnectSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Description */}
-        <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
           Connect an existing subnet to this router to enable routing between networks. Once
           connected, instances within the subnet can communicate with other subnets or access
           external networks (if an external gateway is configured).
@@ -360,6 +360,7 @@ export function ConnectSubnetDrawer({
             onPageChange={setNetworkPage}
             totalItems={filteredNetworks.length}
             showItemCount
+            selectedCount={selectedNetworkId ? 1 : 0}
           />
 
           <VStack gap={2}>
@@ -408,6 +409,7 @@ export function ConnectSubnetDrawer({
             onPageChange={setSubnetPage}
             totalItems={filteredSubnets.length}
             showItemCount
+            selectedCount={selectedSubnetId ? 1 : 0}
           />
 
           <VStack gap={2}>

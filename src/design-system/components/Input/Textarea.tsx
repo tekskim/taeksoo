@@ -1,5 +1,5 @@
 import { forwardRef, useRef, useEffect, type TextareaHTMLAttributes } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Textarea Types

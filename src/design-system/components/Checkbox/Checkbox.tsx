@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
 /* ----------------------------------------

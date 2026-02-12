@@ -385,7 +385,7 @@ export function ClusterManagementPage() {
               </HStack>
               <button
                 onClick={handleClearFilters}
-                className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                className="text-[11px] text-label-md text-[var(--color-action-primary)] hover:underline"
               >
                 Clear Filters
               </button>

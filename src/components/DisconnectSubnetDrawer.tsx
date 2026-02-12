@@ -327,6 +327,7 @@ export function DisconnectSubnetDrawer({
             totalPages={totalPages}
             totalItems={filteredSubnets.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedSubnetId ? 1 : 0}
           />
 
           <VStack gap={2}>

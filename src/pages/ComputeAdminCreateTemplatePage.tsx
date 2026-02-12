@@ -779,7 +779,7 @@ function TemplateInformationSection({
                 </span>
               )}
             </VStack>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               You can use letters, numbers, and special characters (+=,.@-_), and the length must be
               between 2-128 characters.
             </span>
@@ -796,7 +796,7 @@ function TemplateInformationSection({
               onChange={(e) => onDescriptionChange(e.target.value)}
               fullWidth
             />
-            <span className="text-body-md text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
               characters.
             </span>
@@ -851,6 +851,7 @@ function TemplateInformationSection({
                   totalPages={totalTenantPages}
                   totalItems={filteredTenants.length}
                   onPageChange={setTenantCurrentPage}
+                  selectedCount={selectedTenant ? 1 : 0}
                 />
 
                 {/* Tenant Table + Selection indicator */}
@@ -888,7 +889,7 @@ function TemplateInformationSection({
                         sortable: true,
                         render: (value: string, row: Tenant) => (
                           <div className="flex flex-col gap-0.5 min-w-0">
-                            <span className="font-medium text-[var(--color-action-primary)]">
+                            <span className="text-label-md text-[var(--color-action-primary)]">
                               {value}
                             </span>
                             <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -1283,15 +1284,7 @@ function ImageSection({
     { key: 'createdAt', label: 'Created at', sortable: true, flex: 1 },
   ];
 
-  // OS filter chip style - matches Figma design with container
-  const osChipStyle = (active: boolean) => `
-    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
-    ${
-      active
-        ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'
-        : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
-    }
-  `;
+  // osChipStyle removed — using DS Tabs variant="boxed" instead
 
   return (
     <SectionCard isActive={isActive}>
@@ -1334,48 +1327,42 @@ function ImageSection({
 
               {/* OS Filter Chips Container - Only for Image tab */}
               {sourceTab === 'image' && (
-                <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                  <button
-                    className={osChipStyle(osFilter === 'other')}
-                    onClick={() => {
-                      setOsFilter('other');
-                      setCurrentPage(1);
-                    }}
-                  >
-                    <IconDots size={14} />
-                    <span>Others</span>
-                  </button>
-                  <button
-                    className={osChipStyle(osFilter === 'ubuntu')}
-                    onClick={() => {
-                      setOsFilter('ubuntu');
-                      setCurrentPage(1);
-                    }}
-                  >
-                    <IconUbuntu size={14} />
-                    <span>Ubuntu</span>
-                  </button>
-                  <button
-                    className={osChipStyle(osFilter === 'windows')}
-                    onClick={() => {
-                      setOsFilter('windows');
-                      setCurrentPage(1);
-                    }}
-                  >
-                    <IconGrid size={14} />
-                    <span>Windows</span>
-                  </button>
-                  <button
-                    className={osChipStyle(osFilter === 'rocky')}
-                    onClick={() => {
-                      setOsFilter('rocky');
-                      setCurrentPage(1);
-                    }}
-                  >
-                    <IconRocky size={14} />
-                    <span>Rocky</span>
-                  </button>
-                </div>
+                <Tabs
+                  variant="boxed"
+                  size="sm"
+                  value={osFilter}
+                  onChange={(value) => {
+                    setOsFilter(value as typeof osFilter);
+                    setCurrentPage(1);
+                  }}
+                >
+                  <TabList>
+                    <Tab value="other">
+                      <HStack gap={1} align="center">
+                        <IconDots size={14} />
+                        <span>Others</span>
+                      </HStack>
+                    </Tab>
+                    <Tab value="ubuntu">
+                      <HStack gap={1} align="center">
+                        <IconUbuntu size={14} />
+                        <span>Ubuntu</span>
+                      </HStack>
+                    </Tab>
+                    <Tab value="windows">
+                      <HStack gap={1} align="center">
+                        <IconGrid size={14} />
+                        <span>Windows</span>
+                      </HStack>
+                    </Tab>
+                    <Tab value="rocky">
+                      <HStack gap={1} align="center">
+                        <IconRocky size={14} />
+                        <span>Rocky</span>
+                      </HStack>
+                    </Tab>
+                  </TabList>
+                </Tabs>
               )}
 
               {/* Search */}
@@ -1401,6 +1388,7 @@ function ImageSection({
                 onPageChange={setCurrentPage}
                 totalItems={filteredImages.length}
                 itemsPerPage={itemsPerPage}
+                selectedCount={selectedImageId ? 1 : 0}
               />
 
               {/* Image Table + Selection Indicator */}
@@ -1707,6 +1695,7 @@ function FlavorSection({
                 totalPages={totalPages}
                 totalItems={filteredFlavors.length}
                 onPageChange={setCurrentPage}
+                selectedCount={selectedFlavorId ? 1 : 0}
               />
 
               {/* Flavor Table */}
@@ -2809,7 +2798,7 @@ function AdvancedSection({
                 >
                   Add tag
                 </Button>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   {tags.length} / {MAX_TAGS} tags
                 </span>
               </HStack>
@@ -2847,7 +2836,7 @@ function AdvancedSection({
                     fullWidth
                     rows={4}
                   />
-                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
                     {userDataSizeDisplay} / {MAX_USER_DATA_KB} KB
                   </span>
                 </VStack>

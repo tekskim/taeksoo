@@ -532,6 +532,18 @@ html.theme-transition *::after {
   --badge-gap: var(--spacing-1);
   --badge-dot-size: 6px;
 
+  /* Subtle variant colors (light mode) */
+  --badge-subtle-blue-bg: var(--color-blue-100);
+  --badge-subtle-blue-text: var(--color-state-info-text);
+  --badge-subtle-red-bg: var(--color-red-100);
+  --badge-subtle-red-text: var(--color-state-danger-text);
+  --badge-subtle-green-bg: var(--color-green-100);
+  --badge-subtle-green-text: var(--color-state-success-text);
+  --badge-subtle-yellow-bg: var(--color-orange-100);
+  --badge-subtle-yellow-text: var(--color-state-warning-text);
+  --badge-subtle-gray-bg: var(--color-surface-muted);
+  --badge-subtle-gray-text: var(--color-text-muted);
+
   /* ----------------------------------------
      Component - Menu
      ---------------------------------------- */
@@ -1083,6 +1095,18 @@ html.theme-transition *::after {
   --color-status-success-subtle: rgba(34, 197, 94, 0.15);
   --color-status-warning-subtle: rgba(249, 115, 22, 0.15);
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
+
+  /* Badge Subtle (Dark Mode) - dark bg with readable text */
+  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.15);
+  --badge-subtle-blue-text: #93c5fd; /* blue-300 */
+  --badge-subtle-red-bg: rgba(239, 68, 68, 0.15);
+  --badge-subtle-red-text: #fca5a5; /* red-300 */
+  --badge-subtle-green-bg: rgba(34, 197, 94, 0.15);
+  --badge-subtle-green-text: #86efac; /* green-300 */
+  --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.15);
+  --badge-subtle-yellow-text: #fdba74; /* orange-300 */
+  --badge-subtle-gray-bg: var(--color-surface-muted);
+  --badge-subtle-gray-text: var(--color-text-muted);
 
   /* Input - Disabled (Dark Mode) */
   --input-bg-disabled: #252525; /* surface-muted */

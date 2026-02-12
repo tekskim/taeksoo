@@ -238,6 +238,7 @@ export function ChangeServerCertificateDrawer({
             totalPages={totalPages}
             totalItems={filteredCertificates.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedCertificateId ? 1 : 0}
           />
 
           <VStack gap={2}>

@@ -460,7 +460,7 @@ export function EditNodeConfigPage() {
                   <VStack gap={3}>
                     <VStack gap={1.5}>
                       <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                         Specify the labels used to identify and categorize the node.
                       </p>
                     </VStack>
@@ -527,7 +527,7 @@ export function EditNodeConfigPage() {
                       <span className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </span>
-                      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                         Add annotations to store non-identifying metadata.
                       </p>
                     </VStack>

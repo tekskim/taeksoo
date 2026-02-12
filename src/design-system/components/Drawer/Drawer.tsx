@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -161,7 +161,9 @@ export function Drawer({
 
         {/* Footer */}
         {footer && (
-          <div className="border-t border-[var(--color-border-default)] px-6 py-4">{footer}</div>
+          <div className="border-t border-[var(--color-border-default)] px-6 py-4 overflow-visible">
+            {footer}
+          </div>
         )}
       </aside>
     </>,

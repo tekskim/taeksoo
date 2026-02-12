@@ -424,7 +424,7 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/ports/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -443,7 +443,7 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.tenant}
@@ -467,7 +467,7 @@ export function ComputeAdminPortsPage() {
                     ? `/compute-admin/routers/${row.attachedToId}`
                     : `/compute-admin/instances/${row.attachedToId}`
                 }
-                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo}
@@ -500,7 +500,7 @@ export function ComputeAdminPortsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/networks/${row.ownedNetworkId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork}

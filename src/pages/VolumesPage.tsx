@@ -401,7 +401,7 @@ export function VolumesPage() {
       render: (_, row) => (
         <Link
           to={`/compute/volumes/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}
@@ -442,7 +442,7 @@ export function VolumesPage() {
                 e.stopPropagation();
                 handleOpenInNewTab(row.attachedToId!, row.attachedTo!);
               }}
-              className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             >
               {row.attachedTo}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />

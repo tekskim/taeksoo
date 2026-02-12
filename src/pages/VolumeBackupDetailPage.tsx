@@ -354,7 +354,7 @@ export function VolumeBackupDetailPage() {
                     <SectionCard.DataRow label="Volume">
                       <Link
                         to={`/compute/volumes/${backup.sourceVolumeId}`}
-                        className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline"
+                        className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline"
                       >
                         {backup.sourceVolume}
                         <IconExternalLink size={12} stroke={1.5} />
