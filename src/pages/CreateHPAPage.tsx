@@ -464,30 +464,30 @@ export default function CreateHPAPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Namespace */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
-                    <Select
-                      options={NAMESPACE_OPTIONS}
-                      value={namespace}
-                      onChange={setNamespace}
-                      fullWidth
-                    />
-                  </VStack>
+                  <FormField required>
+                    <FormField.Label>Namespace</FormField.Label>
+                    <FormField.Control>
+                      <Select
+                        options={NAMESPACE_OPTIONS}
+                        value={namespace}
+                        onChange={setNamespace}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
 
                   {/* Name */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Name <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
-                    <Input
-                      placeholder="Enter a unique name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      fullWidth
-                    />
-                  </VStack>
+                  <FormField required>
+                    <FormField.Label>Name</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        placeholder="Enter a unique name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
 
                   {/* Description with Disclosure */}
                   <VStack gap={2}>
@@ -833,147 +833,142 @@ export default function CreateHPAPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Labels */}
-                  <VStack gap={3}>
-                    <VStack gap={1}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Labels
-                      </label>
-                      <p className="text-body-sm text-[var(--color-text-subtle)]">
-                        Specify the labels used to identify and categorize the resource.
-                      </p>
-                    </VStack>
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                      <VStack gap={3}>
-                        {labels.length > 0 && (
-                          <VStack gap={2} className="w-full">
-                            {/* Header row */}
-                            <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Key
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Value
-                              </span>
-                              <div />
-                            </div>
-                            {labels.map((label) => (
-                              <div
-                                key={label.id}
-                                className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
-                              >
-                                <Input
-                                  placeholder="e.g. key"
-                                  value={label.key}
-                                  onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. value"
-                                  value={label.value}
-                                  onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeLabel(label.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
+                  <FormField>
+                    <FormField.Label>Labels</FormField.Label>
+                    <FormField.Description>
+                      Specify the labels used to identify and categorize the resource.
+                    </FormField.Description>
+                    <FormField.Control>
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <VStack gap={3}>
+                          {labels.length > 0 && (
+                            <VStack gap={2} className="w-full">
+                              {/* Header row */}
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Key
+                                </span>
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Value
+                                </span>
+                                <div />
                               </div>
-                            ))}
-                          </VStack>
-                        )}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addLabel}
-                          >
-                            Add Label
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
-                  </VStack>
+                              {labels.map((label) => (
+                                <div
+                                  key={label.id}
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                >
+                                  <Input
+                                    placeholder="e.g. key"
+                                    value={label.key}
+                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="e.g. value"
+                                    value={label.value}
+                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeLabel(label.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              ))}
+                            </VStack>
+                          )}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addLabel}
+                            >
+                              Add Label
+                            </Button>
+                          </div>
+                        </VStack>
+                      </div>
+                    </FormField.Control>
+                  </FormField>
 
                   {/* Annotations */}
-                  <VStack gap={3}>
-                    <VStack gap={1}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Annotations
-                      </label>
-                      <p className="text-body-sm text-[var(--color-text-subtle)]">
-                        Specify the annotations used to provide additional metadata for the
-                        resource.
-                      </p>
-                    </VStack>
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                      <VStack gap={3}>
-                        {annotations.length > 0 && (
-                          <VStack gap={2} className="w-full">
-                            {/* Header row */}
-                            <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Key
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Value
-                              </span>
-                              <div />
-                            </div>
-                            {annotations.map((annotation) => (
-                              <div
-                                key={annotation.id}
-                                className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
-                              >
-                                <Input
-                                  placeholder="e.g. key"
-                                  value={annotation.key}
-                                  onChange={(e) =>
-                                    updateAnnotation(annotation.id, 'key', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. value"
-                                  value={annotation.value}
-                                  onChange={(e) =>
-                                    updateAnnotation(annotation.id, 'value', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeAnnotation(annotation.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
+                  <FormField>
+                    <FormField.Label>Annotations</FormField.Label>
+                    <FormField.Description>
+                      Specify the annotations used to provide additional metadata for the resource.
+                    </FormField.Description>
+                    <FormField.Control>
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <VStack gap={3}>
+                          {annotations.length > 0 && (
+                            <VStack gap={2} className="w-full">
+                              {/* Header row */}
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Key
+                                </span>
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Value
+                                </span>
+                                <div />
                               </div>
-                            ))}
-                          </VStack>
-                        )}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addAnnotation}
-                          >
-                            Add Annotation
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
-                  </VStack>
+                              {annotations.map((annotation) => (
+                                <div
+                                  key={annotation.id}
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                >
+                                  <Input
+                                    placeholder="e.g. key"
+                                    value={annotation.key}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'key', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="e.g. value"
+                                    value={annotation.value}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'value', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeAnnotation(annotation.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              ))}
+                            </VStack>
+                          )}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addAnnotation}
+                            >
+                              Add Annotation
+                            </Button>
+                          </div>
+                        </VStack>
+                      </div>
+                    </FormField.Control>
+                  </FormField>
                 </VStack>
               </SectionCard.Content>
             </SectionCard>

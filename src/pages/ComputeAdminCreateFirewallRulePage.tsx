@@ -20,6 +20,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  FormField,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -384,146 +385,137 @@ export default function ComputeAdminCreateFirewallRulePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Rule name */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <div className="flex gap-[3px]">
-                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                          Rule name
-                        </span>
-                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                          *
-                        </span>
-                      </div>
-                      <Input
-                        placeholder="Enter rule name"
-                        value={ruleName}
-                        onChange={(e) => {
-                          setRuleName(e.target.value);
-                          setRuleNameError(null);
-                        }}
-                        fullWidth
-                        error={!!ruleNameError}
-                      />
-                      {ruleNameError && (
-                        <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                          {ruleNameError}
-                        </span>
-                      )}
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        You can use letters, numbers, and special characters (+=,.@-_), and the
-                        length must be between 2-128 characters.
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField required error={!!ruleNameError}>
+                        <FormField.Label>Rule name</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter rule name"
+                            value={ruleName}
+                            onChange={(e) => {
+                              setRuleName(e.target.value);
+                              setRuleNameError(null);
+                            }}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-128 characters.
+                        </FormField.HelperText>
+                        <FormField.ErrorMessage>{ruleNameError}</FormField.ErrorMessage>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Description */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Description
-                      </span>
-                      <Input
-                        placeholder="Enter description "
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        fullWidth
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                        maximum 255 characters.
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter description "
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Owned tenant */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <VStack gap={2} align="start">
-                        <div className="flex gap-[3px]">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Owned tenant
-                          </span>
-                          <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                            *
-                          </span>
-                        </div>
-                        <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Owned tenant</FormField.Label>
+                        <FormField.Description>
                           Select the tenant that will own the rule.
-                        </span>
-                      </VStack>
-
-                      {/* Tenant Search */}
-                      <SearchInput
-                        placeholder="Search tenants by attributes"
-                        value={tenantSearch}
-                        onChange={(e) => {
-                          setTenantSearch(e.target.value);
-                          setTenantPage(1);
-                        }}
-                        className="w-[280px]"
-                      />
-
-                      {/* Tenant Pagination */}
-                      <div className="flex items-center gap-2">
-                        <button
-                          className="size-6 flex items-center justify-center disabled:opacity-40"
-                          disabled={tenantPage === 1}
-                          onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
-                        >
-                          <IconChevronLeft size={16} stroke={1.5} />
-                        </button>
-                        {Array.from({ length: Math.min(5, totalTenantPages) }, (_, i) => i + 1).map(
-                          (page) => (
-                            <button
-                              key={page}
-                              className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
-                                page === tenantPage
-                                  ? 'bg-[var(--color-action-primary)] text-white'
-                                  : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
-                              }`}
-                              onClick={() => setTenantPage(page)}
-                            >
-                              {page}
-                            </button>
-                          )
-                        )}
-                        <button
-                          className="size-6 flex items-center justify-center disabled:opacity-40"
-                          disabled={tenantPage === totalTenantPages}
-                          onClick={() => setTenantPage((p) => Math.min(totalTenantPages, p + 1))}
-                        >
-                          <IconChevronRight size={16} stroke={1.5} />
-                        </button>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          {filteredTenants.length} items
-                        </span>
-                      </div>
-
-                      {/* Tenant Table with Radio Selection */}
-                      <VStack gap={2}>
-                        <div className="w-full">
-                          <Table
-                            columns={tenantColumns}
-                            data={paginatedTenants}
-                            rowKey="id"
-                            emptyMessage="No tenants found"
-                            onRowClick={(row) => {
-                              if (row.status !== 'deactivated') {
-                                setSelectedTenant(row.id);
-                                setTenantError(false);
-                              }
+                        </FormField.Description>
+                        <FormField.Control>
+                          {/* Tenant Search */}
+                          <SearchInput
+                            placeholder="Search tenants by attributes"
+                            value={tenantSearch}
+                            onChange={(e) => {
+                              setTenantSearch(e.target.value);
+                              setTenantPage(1);
                             }}
+                            className="w-[280px]"
                           />
-                        </div>
-                        <SelectionIndicator
-                          selectedItems={selectedTenantItems}
-                          onRemove={() => setSelectedTenant(null)}
-                          emptyText="No item selected"
-                          error={tenantError}
-                          errorMessage="Please select a tenant"
-                        />
-                      </VStack>
-                    </VStack>
+
+                          {/* Tenant Pagination */}
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="size-6 flex items-center justify-center disabled:opacity-40"
+                              disabled={tenantPage === 1}
+                              onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
+                            >
+                              <IconChevronLeft size={16} stroke={1.5} />
+                            </button>
+                            {Array.from(
+                              { length: Math.min(5, totalTenantPages) },
+                              (_, i) => i + 1
+                            ).map((page) => (
+                              <button
+                                key={page}
+                                className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
+                                  page === tenantPage
+                                    ? 'bg-[var(--color-action-primary)] text-white'
+                                    : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
+                                }`}
+                                onClick={() => setTenantPage(page)}
+                              >
+                                {page}
+                              </button>
+                            ))}
+                            <button
+                              className="size-6 flex items-center justify-center disabled:opacity-40"
+                              disabled={tenantPage === totalTenantPages}
+                              onClick={() =>
+                                setTenantPage((p) => Math.min(totalTenantPages, p + 1))
+                              }
+                            >
+                              <IconChevronRight size={16} stroke={1.5} />
+                            </button>
+                            <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              {filteredTenants.length} items
+                            </span>
+                          </div>
+
+                          {/* Tenant Table with Radio Selection */}
+                          <VStack gap={2}>
+                            <div className="w-full">
+                              <Table
+                                columns={tenantColumns}
+                                data={paginatedTenants}
+                                rowKey="id"
+                                emptyMessage="No tenants found"
+                                onRowClick={(row) => {
+                                  if (row.status !== 'deactivated') {
+                                    setSelectedTenant(row.id);
+                                    setTenantError(false);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <SelectionIndicator
+                              selectedItems={selectedTenantItems}
+                              onRemove={() => setSelectedTenant(null)}
+                              emptyText="No item selected"
+                              error={tenantError}
+                              errorMessage="Please select a tenant"
+                            />
+                          </VStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -691,7 +683,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                         Source CIDR
                       </span>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Specifies the source network or IP address in CIDR format.
                       </span>
                       <Input
@@ -712,7 +704,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                         Source Port
                       </span>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Specifies the port range to which the rule applies.
                       </span>
                       <Input
@@ -733,7 +725,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                         Destination CIDR
                       </span>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Specifies the destination network or IP address in CIDR format.
                       </span>
                       <Input
@@ -754,7 +746,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                         Destination Port
                       </span>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Defines the network address (CIDR) for the subnet.
                       </span>
                       <Input

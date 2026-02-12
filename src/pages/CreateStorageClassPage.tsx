@@ -4,6 +4,7 @@ import {
   Button,
   Breadcrumb,
   Disclosure,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -195,26 +196,21 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Input
-              placeholder="Enter a unique name"
-              value={storageClassName}
-              onChange={(e) => {
-                onStorageClassNameChange(e.target.value);
-                if (storageClassNameError) onStorageClassNameErrorChange(null);
-              }}
-              error={!!storageClassNameError}
-              fullWidth
-            />
-            {storageClassNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {storageClassNameError}
-              </span>
-            )}
-          </VStack>
+          <FormField required error={!!storageClassNameError}>
+            <FormField.Label>Name</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a unique name"
+                value={storageClassName}
+                onChange={(e) => {
+                  onStorageClassNameChange(e.target.value);
+                  if (storageClassNameError) onStorageClassNameErrorChange(null);
+                }}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{storageClassNameError}</FormField.ErrorMessage>
+          </FormField>
 
           {/* Description */}
           <Disclosure>
@@ -369,105 +365,112 @@ function CustomizeSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Reclaim Policy */}
-          <VStack gap={6}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</label>
-            <RadioGroup
-              value={reclaimPolicy}
-              onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
-            >
-              <VStack gap={1}>
-                <Radio
-                  value="delete"
-                  label="Delete volumes and underlying device when volume claim is deleted"
-                />
-                <Radio value="retain" label="Retain the volume for manual cleanup" />
-              </VStack>
-            </RadioGroup>
-          </VStack>
+          <FormField>
+            <FormField.Label>Reclaim Policy</FormField.Label>
+            <FormField.Control>
+              <RadioGroup
+                value={reclaimPolicy}
+                onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
+              >
+                <VStack gap={1}>
+                  <Radio
+                    value="delete"
+                    label="Delete volumes and underlying device when volume claim is deleted"
+                  />
+                  <Radio value="retain" label="Retain the volume for manual cleanup" />
+                </VStack>
+              </RadioGroup>
+            </FormField.Control>
+          </FormField>
 
           {/* Allow Volume Expansion */}
-          <VStack gap={3}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Allow Volume Expansion
-            </label>
-            <RadioGroup
-              value={volumeExpansion}
-              onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
-            >
-              <VStack gap={1}>
-                <Radio value="enabled" label="Enabled" />
-                <Radio value="disabled" label="Disabled" />
-              </VStack>
-            </RadioGroup>
-          </VStack>
+          <FormField>
+            <FormField.Label>Allow Volume Expansion</FormField.Label>
+            <FormField.Control>
+              <RadioGroup
+                value={volumeExpansion}
+                onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
+              >
+                <VStack gap={1}>
+                  <Radio value="enabled" label="Enabled" />
+                  <Radio value="disabled" label="Disabled" />
+                </VStack>
+              </RadioGroup>
+            </FormField.Control>
+          </FormField>
 
           {/* Volume Binding Mode */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Volume Binding Mode
-            </label>
-            <RadioGroup
-              value={volumeBindingMode}
-              onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}
-            >
-              <VStack gap={1}>
-                <Radio
-                  value="immediate"
-                  label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
-                />
-                <Radio
-                  value="waitForFirstConsumer"
-                  label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
-                />
-              </VStack>
-            </RadioGroup>
-          </VStack>
+          <FormField>
+            <FormField.Label>Volume Binding Mode</FormField.Label>
+            <FormField.Control>
+              <RadioGroup
+                value={volumeBindingMode}
+                onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}
+              >
+                <VStack gap={1}>
+                  <Radio
+                    value="immediate"
+                    label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
+                  />
+                  <Radio
+                    value="waitForFirstConsumer"
+                    label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
+                  />
+                </VStack>
+              </RadioGroup>
+            </FormField.Control>
+          </FormField>
 
           {/* Mount Options */}
-          <VStack gap={3}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
-                {/* Header row */}
-                {mountOptions.length > 0 && (
-                  <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div></div>
-                  </div>
-                )}
+          <FormField>
+            <FormField.Label>Mount Options</FormField.Label>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={3}>
+                  {/* Header row */}
+                  {mountOptions.length > 0 && (
+                    <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div></div>
+                    </div>
+                  )}
 
-                {/* Mount option rows */}
-                {mountOptions.map((option, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_auto] gap-2 w-full items-center">
-                    <Input
-                      placeholder="e.g. bar"
-                      value={option.value}
-                      onChange={(e) => updateMountOption(index, e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeMountOption(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                  {/* Mount option rows */}
+                  {mountOptions.map((option, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+                      <Input
+                        placeholder="e.g. bar"
+                        value={option.value}
+                        onChange={(e) => updateMountOption(index, e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeMountOption(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addMountOption}
+                    >
+                      Add Option
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={addMountOption}
-                  >
-                    Add Option
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

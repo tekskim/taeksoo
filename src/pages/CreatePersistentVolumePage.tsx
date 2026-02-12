@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -200,41 +201,38 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Input
-              placeholder="Enter a unique name"
-              value={pvName}
-              onChange={(e) => {
-                onNamespaceNameChange(e.target.value);
-                if (pvNameError) onNamespaceNameErrorChange(null);
-              }}
-              error={!!pvNameError}
-              fullWidth
-            />
-            {pvNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">{pvNameError}</span>
-            )}
-          </VStack>
+          <FormField required error={!!pvNameError}>
+            <FormField.Label>Name</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a unique name"
+                value={pvName}
+                onChange={(e) => {
+                  onNamespaceNameChange(e.target.value);
+                  if (pvNameError) onNamespaceNameErrorChange(null);
+                }}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{pvNameError}</FormField.ErrorMessage>
+          </FormField>
 
           {/* Capacity */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Capacity<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={capacity}
-                onChange={onCapacityChange}
-                min={1}
-                step={1}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-            </HStack>
-          </VStack>
+          <FormField required>
+            <FormField.Label>Capacity</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={capacity}
+                  onChange={onCapacityChange}
+                  min={1}
+                  step={1}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Description */}
           <Disclosure>
@@ -384,207 +382,220 @@ function StorageConfigSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Access Modes */}
-          <VStack gap={1.5}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Access Modes</label>
-            <VStack gap={1.5}>
-              <Checkbox
-                checked={accessModes.singleNodeReadWrite}
-                onChange={(e) =>
-                  onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })
-                }
-                label="Single node read-write"
-              />
-              <Checkbox
-                checked={accessModes.manyNodesReadOnly}
-                onChange={(e) =>
-                  onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })
-                }
-                label="Many nodes read-only"
-              />
-              <Checkbox
-                checked={accessModes.manyNodesReadWrite}
-                onChange={(e) =>
-                  onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })
-                }
-                label="Many nodes read-write"
-              />
-            </VStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Access Modes</FormField.Label>
+            <FormField.Control>
+              <VStack gap={1.5}>
+                <Checkbox
+                  checked={accessModes.singleNodeReadWrite}
+                  onChange={(e) =>
+                    onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })
+                  }
+                  label="Single node read-write"
+                />
+                <Checkbox
+                  checked={accessModes.manyNodesReadOnly}
+                  onChange={(e) =>
+                    onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })
+                  }
+                  label="Many nodes read-only"
+                />
+                <Checkbox
+                  checked={accessModes.manyNodesReadWrite}
+                  onChange={(e) =>
+                    onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })
+                  }
+                  label="Many nodes read-write"
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Assign to Storage Class */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Assign to Storage Class
-            </label>
-            <Select
-              options={STORAGE_CLASS_OPTIONS}
-              value={storageClassName}
-              onChange={(value) => onStorageClassNameChange(value)}
-              fullWidth
-            />
-          </VStack>
+          <FormField>
+            <FormField.Label>Assign to Storage Class</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={STORAGE_CLASS_OPTIONS}
+                value={storageClassName}
+                onChange={(value) => onStorageClassNameChange(value)}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
 
           {/* Mount Options */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
-                {mountOptions.length > 0 && (
-                  <div className="grid grid-cols-[1fr_23px] gap-2 w-full">
-                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Option
-                    </label>
-                    <div />
-                  </div>
-                )}
-                {mountOptions.map((option, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_23px] gap-2 w-full items-center">
-                    <Input
-                      placeholder="input key"
-                      value={option.key}
-                      onChange={(e) => updateMountOption(index, e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeMountOption(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+          <FormField>
+            <FormField.Label>Mount Options</FormField.Label>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={3}>
+                  {mountOptions.length > 0 && (
+                    <div className="grid grid-cols-[1fr_23px] gap-2 w-full">
+                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                        Option
+                      </label>
+                      <div />
+                    </div>
+                  )}
+                  {mountOptions.map((option, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_23px] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={addMountOption}
-                  >
-                    Add Option
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
-
-          {/* Node Selectors */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Node Selectors</label>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
-                {nodeSelectors.map((selector, selectorIndex) => (
-                  <div
-                    key={selectorIndex}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                  >
-                    <HStack gap={2} align="start" className="w-full">
-                      <div className="flex-1">
-                        <VStack gap={2}>
-                          {/* Header row */}
-                          <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
-                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                              Key
-                            </span>
-                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                              Operator
-                            </span>
-                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                              Value
-                            </span>
-                            <div />
-                          </div>
-                          {/* Rule rows */}
-                          {selector.rules.map((rule, ruleIndex) => (
-                            <div
-                              key={ruleIndex}
-                              className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
-                            >
-                              <Input
-                                placeholder="input key"
-                                value={rule.key}
-                                onChange={(e) =>
-                                  updateNodeSelectorRule(
-                                    selectorIndex,
-                                    ruleIndex,
-                                    'key',
-                                    e.target.value
-                                  )
-                                }
-                                fullWidth
-                              />
-                              <Select
-                                options={OPERATOR_OPTIONS}
-                                value={rule.operator}
-                                onChange={(value) =>
-                                  updateNodeSelectorRule(
-                                    selectorIndex,
-                                    ruleIndex,
-                                    'operator',
-                                    value
-                                  )
-                                }
-                                fullWidth
-                              />
-                              <Input
-                                placeholder="input value"
-                                value={rule.value}
-                                onChange={(e) =>
-                                  updateNodeSelectorRule(
-                                    selectorIndex,
-                                    ruleIndex,
-                                    'value',
-                                    e.target.value
-                                  )
-                                }
-                                fullWidth
-                              />
-                              <button
-                                onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
-                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconX
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          ))}
-                          {/* Add Rule button */}
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={() => addNodeSelectorRule(selectorIndex)}
-                            >
-                              Add Rule
-                            </Button>
-                          </div>
-                        </VStack>
-                      </div>
+                      <Input
+                        placeholder="input key"
+                        value={option.key}
+                        onChange={(e) => updateMountOption(index, e.target.value)}
+                        fullWidth
+                      />
                       <button
-                        onClick={() => removeNodeSelector(selectorIndex)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 self-start"
+                        onClick={() => removeMountOption(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                       >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
-                    </HStack>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addMountOption}
+                    >
+                      Add Option
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={addNodeSelector}
-                  >
-                    Add Node Selector
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
+
+          {/* Node Selectors */}
+          <FormField>
+            <FormField.Label>Node Selectors</FormField.Label>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={3}>
+                  {nodeSelectors.map((selector, selectorIndex) => (
+                    <div
+                      key={selectorIndex}
+                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    >
+                      <HStack gap={2} align="start" className="w-full">
+                        <div className="flex-1">
+                          <VStack gap={2}>
+                            {/* Header row */}
+                            <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Key
+                              </span>
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Operator
+                              </span>
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Value
+                              </span>
+                              <div />
+                            </div>
+                            {/* Rule rows */}
+                            {selector.rules.map((rule, ruleIndex) => (
+                              <div
+                                key={ruleIndex}
+                                className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
+                              >
+                                <Input
+                                  placeholder="input key"
+                                  value={rule.key}
+                                  onChange={(e) =>
+                                    updateNodeSelectorRule(
+                                      selectorIndex,
+                                      ruleIndex,
+                                      'key',
+                                      e.target.value
+                                    )
+                                  }
+                                  fullWidth
+                                />
+                                <Select
+                                  options={OPERATOR_OPTIONS}
+                                  value={rule.operator}
+                                  onChange={(value) =>
+                                    updateNodeSelectorRule(
+                                      selectorIndex,
+                                      ruleIndex,
+                                      'operator',
+                                      value
+                                    )
+                                  }
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="input value"
+                                  value={rule.value}
+                                  onChange={(e) =>
+                                    updateNodeSelectorRule(
+                                      selectorIndex,
+                                      ruleIndex,
+                                      'value',
+                                      e.target.value
+                                    )
+                                  }
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
+                              </div>
+                            ))}
+                            {/* Add Rule button */}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() => addNodeSelectorRule(selectorIndex)}
+                              >
+                                Add Rule
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
+                        <button
+                          onClick={() => removeNodeSelector(selectorIndex)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 self-start"
+                        >
+                          <IconX
+                            size={16}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </HStack>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addNodeSelector}
+                    >
+                      Add Node Selector
+                    </Button>
+                  </div>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -622,126 +633,124 @@ function LabelsAnnotationsSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={6}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the labels used to identify and categorize the resource.
-              </p>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={2}>
-                {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div />
-                  </div>
-                )}
-                {labels.map((label, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="Key"
-                      value={label.key}
-                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Value"
-                      value={label.value}
-                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveLabel(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+          <FormField>
+            <FormField.Label>Labels</FormField.Label>
+            <FormField.Description>
+              Specify the labels used to identify and categorize the resource.
+            </FormField.Description>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {labels.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {labels.map((label, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+                      <Input
+                        placeholder="Key"
+                        value={label.key}
+                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={label.value}
+                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveLabel(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddLabel}
+                    >
+                      Add Label
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddLabel}
-                  >
-                    Add Label
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
 
           {/* Annotations */}
-          <VStack gap={6}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the annotations used to provide additional metadata for the resource.
-              </p>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
-                {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full">
-                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Key
-                    </label>
-                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
-                      Value
-                    </label>
-                    <div />
-                  </div>
-                )}
-                {annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="Key"
-                      value={annotation.key}
-                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Value"
-                      value={annotation.value}
-                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveAnnotation(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+          <FormField>
+            <FormField.Label>Annotations</FormField.Label>
+            <FormField.Description>
+              Specify the annotations used to provide additional metadata for the resource.
+            </FormField.Description>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={3}>
+                  {annotations.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full">
+                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                        Key
+                      </label>
+                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                        Value
+                      </label>
+                      <div />
+                    </div>
+                  )}
+                  {annotations.map((annotation, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+                      <Input
+                        placeholder="Key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddAnnotation}
+                    >
+                      Add Annotation
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddAnnotation}
-                  >
-                    Add Annotation
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

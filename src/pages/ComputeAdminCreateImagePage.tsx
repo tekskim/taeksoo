@@ -538,7 +538,7 @@ export function ComputeAdminCreateImagePage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Select the tenant that will own the image.
                         </span>
                       </VStack>
@@ -603,7 +603,7 @@ export function ComputeAdminCreateImagePage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Specifies the availability scope of the image based on its visibility
                           setting.
                         </span>
@@ -624,7 +624,7 @@ export function ComputeAdminCreateImagePage() {
                             <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                               Tenants
                             </span>
-                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Select the tenants to share the image with.
                             </span>
                           </VStack>
@@ -683,7 +683,7 @@ export function ComputeAdminCreateImagePage() {
                         <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Protected
                         </span>
-                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Protected images cannot be deleted, preventing accidental removal.
                         </span>
                       </VStack>
@@ -984,10 +984,10 @@ export function ComputeAdminCreateImagePage() {
                     <div className="py-6">
                       <FormField required error={showOsAdminError}>
                         <FormField.Label>OS admin</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Enter the default administrator account used when launching instances from
                           this image.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Input
                             value={osAdmin}
@@ -1153,9 +1153,9 @@ export function ComputeAdminCreateImagePage() {
                     <div className="py-6">
                       <FormField>
                         <FormField.Label>CPU policy</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Policy that defines how vCPUs are allocated.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Select
                             value={cpuPolicy}
@@ -1177,9 +1177,9 @@ export function ComputeAdminCreateImagePage() {
                     <div className="py-6">
                       <FormField>
                         <FormField.Label>CPU thread policy</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Policy defining how hyperthreads are used for vCPU placement.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Select
                             value={cpuThreadPolicy}

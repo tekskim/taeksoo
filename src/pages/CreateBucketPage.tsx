@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -315,76 +316,70 @@ function BasicInformationSection({
         <VStack gap={0}>
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Bucket Name */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Bucket Name <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <Input
-              placeholder="Enter bucket name"
-              value={bucketName}
-              onChange={(e) => {
-                onBucketNameChange(e.target.value);
-                onBucketNameErrorChange(null);
-              }}
-              error={!!bucketNameError}
-              fullWidth
-            />
-            <div className="flex flex-col gap-1 mt-1">
-              {bucketNameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {bucketNameError}
-                </span>
-              )}
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
+          <div className="py-6">
+            <FormField required error={!!bucketNameError}>
+              <FormField.Label>Bucket Name</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter bucket name"
+                  value={bucketName}
+                  onChange={(e) => {
+                    onBucketNameChange(e.target.value);
+                    onBucketNameErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.ErrorMessage>{bucketNameError}</FormField.ErrorMessage>
+              <FormField.HelperText>
                 The name should start with upper letter, lower letter or chinese, and be a string of
                 1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
-              </span>
-            </div>
+              </FormField.HelperText>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Region */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Region <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <Select
-              options={[{ value: 'default', label: 'Default' }]}
-              value={region}
-              onChange={onRegionChange}
-              fullWidth
-            />
+          <div className="py-6">
+            <FormField required>
+              <FormField.Label>Region</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={[{ value: 'default', label: 'Default' }]}
+                  value={region}
+                  onChange={onRegionChange}
+                  fullWidth
+                />
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Owner */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Owner <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <Select
-              options={[
-                { value: '', label: 'Select Owner' },
-                { value: 'user-1', label: 'admin@thaki.cloud' },
-                { value: 'user-2', label: 'user@thaki.cloud' },
-              ]}
-              value={owner}
-              onChange={(value) => {
-                onOwnerChange(value);
-                onOwnerErrorChange(null);
-              }}
-              error={!!ownerError}
-              fullWidth
-            />
-            {ownerError && (
-              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
-                {ownerError}
-              </span>
-            )}
+          <div className="py-6">
+            <FormField required error={!!ownerError}>
+              <FormField.Label>Owner</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={[
+                    { value: '', label: 'Select Owner' },
+                    { value: 'user-1', label: 'admin@thaki.cloud' },
+                    { value: 'user-2', label: 'user@thaki.cloud' },
+                  ]}
+                  value={owner}
+                  onChange={(value) => {
+                    onOwnerChange(value);
+                    onOwnerErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.ErrorMessage>{ownerError}</FormField.ErrorMessage>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}
@@ -468,80 +463,77 @@ function SettingsSection({
         <VStack gap={0}>
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Object Locking */}
-          <div className="flex flex-col py-6">
-            <span className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Object Locking
-            </span>
-            <HStack gap={6}>
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <Radio
-                  value="disabled"
-                  checked={objectLocking === 'disabled'}
-                  onChange={() => onObjectLockingChange('disabled')}
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">Disabled</span>
-              </label>
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <Radio
-                  value="enabled"
-                  checked={objectLocking === 'enabled'}
-                  onChange={() => onObjectLockingChange('enabled')}
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">Enabled</span>
-              </label>
-            </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
-              Store objects using a write-once-read-many (WORM) model to prevent objects from being
-              deleted or overwritten for a fixed amount of time or indefinitely. Object Locking
-              works only in versioned buckets.
-            </span>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Object Locking</FormField.Label>
+              <FormField.Control>
+                <HStack gap={6}>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Radio
+                      value="disabled"
+                      checked={objectLocking === 'disabled'}
+                      onChange={() => onObjectLockingChange('disabled')}
+                    />
+                    <span className="text-body-md text-[var(--color-text-default)]">Disabled</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Radio
+                      value="enabled"
+                      checked={objectLocking === 'enabled'}
+                      onChange={() => onObjectLockingChange('enabled')}
+                    />
+                    <span className="text-body-md text-[var(--color-text-default)]">Enabled</span>
+                  </label>
+                </HStack>
+              </FormField.Control>
+              <FormField.HelperText>
+                Store objects using a write-once-read-many (WORM) model to prevent objects from
+                being deleted or overwritten for a fixed amount of time or indefinitely. Object
+                Locking works only in versioned buckets.
+              </FormField.HelperText>
+            </FormField>
 
             {/* Object Locking Options - shown when enabled */}
             {objectLocking === 'enabled' && (
               <div className="flex flex-col gap-3 mt-3">
                 {/* Mode */}
-                <div className="flex flex-col">
-                  <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-                    Mode
-                  </label>
-                  <Select
-                    options={[
-                      { value: 'compliance', label: 'COMPLIANCE / GOVERNANCE' },
-                      { value: 'compliance-only', label: 'COMPLIANCE' },
-                      { value: 'governance', label: 'GOVERNANCE' },
-                    ]}
-                    value={lockingMode}
-                    onChange={onLockingModeChange}
-                    fullWidth
-                  />
-                  <div className="flex flex-col gap-1 mt-1">
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      In COMPLIANCE an object version cannot be overwritten or deleted for the
-                      duration of the period.
-                    </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      In GOVERNANCE mode, users cannot overwrite or delete an object version or
-                      alter its lock settings unless they have special permissions.
-                    </span>
-                  </div>
-                </div>
+                <FormField>
+                  <FormField.Label>Mode</FormField.Label>
+                  <FormField.Control>
+                    <Select
+                      options={[
+                        { value: 'compliance', label: 'COMPLIANCE / GOVERNANCE' },
+                        { value: 'compliance-only', label: 'COMPLIANCE' },
+                        { value: 'governance', label: 'GOVERNANCE' },
+                      ]}
+                      value={lockingMode}
+                      onChange={onLockingModeChange}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                  <FormField.HelperText>
+                    In COMPLIANCE an object version cannot be overwritten or deleted for the
+                    duration of the period. In GOVERNANCE mode, users cannot overwrite or delete an
+                    object version or alter its lock settings unless they have special permissions.
+                  </FormField.HelperText>
+                </FormField>
 
                 {/* Days */}
-                <div className="flex flex-col">
-                  <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-                    Days
-                  </label>
-                  <Input
-                    placeholder="-"
-                    value={retentionDays}
-                    onChange={(e) => onRetentionDaysChange(e.target.value)}
-                    fullWidth
-                  />
-                  <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
+                <FormField>
+                  <FormField.Label>Days</FormField.Label>
+                  <FormField.Control>
+                    <Input
+                      placeholder="-"
+                      value={retentionDays}
+                      onChange={(e) => onRetentionDaysChange(e.target.value)}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                  <FormField.HelperText>
                     The number of days that you want to specify for the default retention period
                     that will be applied to new objects placed in this bucket.
-                  </span>
-                </div>
+                  </FormField.HelperText>
+                </FormField>
               </div>
             )}
           </div>
@@ -550,80 +542,88 @@ function SettingsSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Tags */}
-          <VStack gap={2} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-            <VStack gap={2} align="stretch">
-              {tags.map((tag) => (
-                <div
-                  key={tag.id}
-                  className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]"
-                >
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Key <span className="text-[var(--color-state-danger)]">*</span>
-                    </span>
-                    <Input
-                      value={tag.key}
-                      onChange={(e) => onUpdateTag(tag.id, 'key', e.target.value)}
-                      style={{ width: '240px' }}
-                    />
-                  </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Value <span className="text-[var(--color-state-danger)]">*</span>
-                    </span>
-                    <Input
-                      value={tag.value}
-                      onChange={(e) => onUpdateTag(tag.id, 'value', e.target.value)}
-                      style={{ width: '240px' }}
-                    />
-                  </HStack>
-                  <div className="flex-1" />
-                  <button
-                    type="button"
-                    onClick={() => onRemoveTag(tag.id)}
-                    className="w-[25px] h-[25px] flex items-center justify-center rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                  >
-                    <IconX size={14} stroke={1.5} />
-                  </button>
-                </div>
-              ))}
-            </VStack>
-            <div>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={onAddTag}
-              >
-                Add Tags
-              </Button>
-            </div>
-          </VStack>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Tags</FormField.Label>
+              <FormField.Control>
+                <VStack gap={2}>
+                  <VStack gap={2} align="stretch">
+                    {tags.map((tag) => (
+                      <div
+                        key={tag.id}
+                        className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]"
+                      >
+                        <HStack gap={1.5} align="center">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Key <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Input
+                            value={tag.key}
+                            onChange={(e) => onUpdateTag(tag.id, 'key', e.target.value)}
+                            style={{ width: '240px' }}
+                          />
+                        </HStack>
+                        <HStack gap={1.5} align="center">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Value <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <Input
+                            value={tag.value}
+                            onChange={(e) => onUpdateTag(tag.id, 'value', e.target.value)}
+                            style={{ width: '240px' }}
+                          />
+                        </HStack>
+                        <div className="flex-1" />
+                        <button
+                          type="button"
+                          onClick={() => onRemoveTag(tag.id)}
+                          className="w-[25px] h-[25px] flex items-center justify-center rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+                        >
+                          <IconX size={14} stroke={1.5} />
+                        </button>
+                      </div>
+                    ))}
+                  </VStack>
+                  <div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={onAddTag}
+                    >
+                      Add Tags
+                    </Button>
+                  </div>
+                </VStack>
+              </FormField.Control>
+            </FormField>
+          </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Placement target */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Placement target
-            </label>
-            <Select
-              options={[
-                { value: '', label: '-- Select a placement target --' },
-                { value: 'default', label: 'default-placement' },
-                { value: 'archive', label: 'archive-placement' },
-              ]}
-              value={placementTarget}
-              onChange={onPlacementTargetChange}
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
-              When creating a bucket, a placement target can be provided as part of the
-              LocationConstraint to override the default placement targets from the user and
-              zonegroup.
-            </span>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Placement target</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={[
+                    { value: '', label: '-- Select a placement target --' },
+                    { value: 'default', label: 'default-placement' },
+                    { value: 'archive', label: 'archive-placement' },
+                  ]}
+                  value={placementTarget}
+                  onChange={onPlacementTargetChange}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                When creating a bucket, a placement target can be provided as part of the
+                LocationConstraint to override the default placement targets from the user and
+                zonegroup.
+              </FormField.HelperText>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}
@@ -701,80 +701,88 @@ function PolicySection({
         <VStack gap={0}>
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Bucket policy */}
-          <div className="flex flex-col py-6">
-            <HStack justify="between" align="center" className="mb-2">
-              <label className="text-label-lg text-[var(--color-text-default)]">
-                Bucket policy
-              </label>
-              <Button variant="secondary" size="sm" onClick={onClearPolicy}>
-                Clear
-              </Button>
-            </HStack>
-            <Textarea
-              value={bucketPolicy}
-              onChange={(e) => onBucketPolicyChange(e.target.value)}
-              rows={3}
-              fullWidth
-              style={{
-                borderColor: policyValid
-                  ? 'var(--color-state-success)'
-                  : 'var(--color-state-danger)',
-              }}
-            />
-            {policyValid ? (
-              <span className="text-body-sm text-[var(--color-state-success)] mt-1">
-                valid json text.
-              </span>
-            ) : (
-              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
-                {policyError}
-              </span>
-            )}
+          <div className="py-6">
+            <FormField error={!policyValid}>
+              <FormField.Label>
+                <HStack justify="between" align="center" className="w-full">
+                  <span>Bucket policy</span>
+                  <Button variant="secondary" size="sm" onClick={onClearPolicy}>
+                    Clear
+                  </Button>
+                </HStack>
+              </FormField.Label>
+              <FormField.Control>
+                <Textarea
+                  value={bucketPolicy}
+                  onChange={(e) => onBucketPolicyChange(e.target.value)}
+                  rows={3}
+                  fullWidth
+                  style={{
+                    borderColor: policyValid
+                      ? 'var(--color-state-success)'
+                      : 'var(--color-state-danger)',
+                  }}
+                />
+              </FormField.Control>
+              {policyValid ? (
+                <FormField.HelperText>
+                  <span className="text-[var(--color-state-success)]">valid json text.</span>
+                </FormField.HelperText>
+              ) : (
+                <FormField.ErrorMessage>{policyError}</FormField.ErrorMessage>
+              )}
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* ACL */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">ACL</label>
-            <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
-              <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">Grantee</span>
-                <Select
-                  options={[
-                    { value: 'owner', label: 'Owner' },
-                    { value: 'everyone', label: 'Everyone' },
-                    { value: 'authenticated', label: 'Authenticated User' },
-                  ]}
-                  value={grantee}
-                  onChange={onGranteeChange}
-                  style={{ width: '276px' }}
-                />
-              </HStack>
-              <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
-                <Select
-                  options={
-                    grantee === 'owner'
-                      ? [{ value: 'full-control', label: 'Full control' }]
-                      : grantee === 'everyone'
-                        ? [
-                            { value: 'read', label: 'Read' },
-                            { value: 'read-write', label: 'Read and write' },
-                          ]
-                        : [{ value: 'read', label: 'Read' }]
-                  }
-                  value={permissions}
-                  onChange={onPermissionsChange}
-                  style={{ width: '140px' }}
-                />
-              </HStack>
-            </div>
-            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
-              Any changes to the ACL will overwrite previous one. You can choose any of the
-              available options to modify the specified user group.
-            </span>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>ACL</FormField.Label>
+              <FormField.Control>
+                <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
+                  <HStack gap={1.5} align="center">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Grantee</span>
+                    <Select
+                      options={[
+                        { value: 'owner', label: 'Owner' },
+                        { value: 'everyone', label: 'Everyone' },
+                        { value: 'authenticated', label: 'Authenticated User' },
+                      ]}
+                      value={grantee}
+                      onChange={onGranteeChange}
+                      style={{ width: '276px' }}
+                    />
+                  </HStack>
+                  <HStack gap={1.5} align="center">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Permissions
+                    </span>
+                    <Select
+                      options={
+                        grantee === 'owner'
+                          ? [{ value: 'full-control', label: 'Full control' }]
+                          : grantee === 'everyone'
+                            ? [
+                                { value: 'read', label: 'Read' },
+                                { value: 'read-write', label: 'Read and write' },
+                              ]
+                            : [{ value: 'read', label: 'Read' }]
+                      }
+                      value={permissions}
+                      onChange={onPermissionsChange}
+                      style={{ width: '140px' }}
+                    />
+                  </HStack>
+                </div>
+              </FormField.Control>
+              <FormField.HelperText>
+                Any changes to the ACL will overwrite previous one. You can choose any of the
+                available options to modify the specified user group.
+              </FormField.HelperText>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}

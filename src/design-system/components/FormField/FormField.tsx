@@ -20,6 +20,7 @@ interface FormFieldContextValue {
   error?: boolean;
   disabled?: boolean;
   required?: boolean;
+  spacing?: 'default' | 'loose';
 }
 
 const FormFieldContext = createContext<FormFieldContextValue>({});
@@ -56,6 +57,8 @@ export interface FormFieldProps extends HTMLAttributes<HTMLDivElement> {
   errorMessage?: ReactNode;
   /** Label size */
   labelSize?: 'sm' | 'md';
+  /** Spacing between sub-components. 'loose' uses 12px gap (matches VStack gap={3}) for complex sections */
+  spacing?: 'default' | 'loose';
 }
 
 export interface FormFieldLabelProps extends HTMLAttributes<HTMLLabelElement> {
@@ -123,6 +126,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
       helperText,
       errorMessage,
       labelSize = 'md',
+      spacing = 'default',
       ...props
     },
     ref
@@ -135,6 +139,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
       error,
       disabled,
       required,
+      spacing,
     };
 
     // Simple API mode: when label prop is provided
@@ -226,10 +231,18 @@ FormFieldLabel.displayName = 'FormField.Label';
 
 const FormFieldControl = forwardRef<HTMLDivElement, FormFieldControlProps>(
   ({ children, className, ...props }, ref) => {
+    const { spacing } = useFormField();
+
     return (
       <div
         ref={ref}
-        className={twMerge('w-full mt-[var(--primitive-spacing-2)]', className)}
+        className={twMerge(
+          'w-full',
+          spacing === 'loose'
+            ? 'mt-[var(--primitive-spacing-3)]'
+            : 'mt-[var(--primitive-spacing-2)]',
+          className
+        )}
         {...props}
       >
         {children}
@@ -247,16 +260,19 @@ FormFieldControl.displayName = 'FormField.Control';
 
 const FormFieldDescription = forwardRef<HTMLParagraphElement, FormFieldDescriptionProps>(
   ({ children, className, ...props }, ref) => {
-    const { id } = useFormField();
+    const { id, spacing } = useFormField();
 
-    // Label ↔ Description: 4px
+    // Label ↔ Description: default 4px, loose 12px
     // Description uses text-body-md (12px/18px), HelperText uses text-body-sm (11px/16px)
     return (
       <p
         ref={ref}
         id={id ? `${id}-description` : undefined}
         className={twMerge(
-          'text-body-md text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-1)]',
+          'text-body-md text-[var(--color-text-subtle)]',
+          spacing === 'loose'
+            ? 'mt-[var(--primitive-spacing-3)]'
+            : 'mt-[var(--primitive-spacing-1)]',
           className
         )}
         {...props}

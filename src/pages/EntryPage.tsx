@@ -317,6 +317,9 @@ export function EntryPage() {
                 <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
                   Iconography{' '}
                 </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
+                  Create Pages{' '}
+                </Button>
               </div>
             </div>
           </div>

@@ -423,78 +423,65 @@ function PasswordSection({
         <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
           <HStack gap={6} align="center">
             {/* Password */}
-            <HStack gap={1.5} align="center">
-              <span className="text-label-lg text-[var(--color-text-default)] whitespace-nowrap">
-                Password
-              </span>
-              <Tooltip content={passwordRequirementsTooltip} position="bottom">
-                <div className="relative w-[252px]">
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => {
-                      onPasswordChange(e.target.value);
-                      onPasswordErrorChange(null);
-                    }}
-                    error={!!passwordError}
-                    fullWidth
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
-                  </button>
-                </div>
-              </Tooltip>
-            </HStack>
+            <FormField required error={!!passwordError}>
+              <FormField.Label>Password</FormField.Label>
+              <FormField.Control>
+                <Tooltip content={passwordRequirementsTooltip} position="bottom">
+                  <div className="relative w-[252px]">
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => {
+                        onPasswordChange(e.target.value);
+                        onPasswordErrorChange(null);
+                      }}
+                      fullWidth
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                    </button>
+                  </div>
+                </Tooltip>
+              </FormField.Control>
+              {passwordError && <FormField.ErrorMessage>{passwordError}</FormField.ErrorMessage>}
+            </FormField>
 
             {/* Confirm Password */}
-            <HStack gap={1.5} align="center">
-              <span className="text-label-lg text-[var(--color-text-default)] whitespace-nowrap">
-                Confirm password
-              </span>
-              <Tooltip content={confirmPasswordTooltip} position="bottom">
-                <div className="relative w-[252px]">
-                  <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Enter password again"
-                    value={confirmPassword}
-                    onChange={(e) => {
-                      onConfirmPasswordChange(e.target.value);
-                      onConfirmPasswordErrorChange(null);
-                    }}
-                    error={!!confirmPasswordError}
-                    fullWidth
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
-                  </button>
-                </div>
-              </Tooltip>
-            </HStack>
-          </HStack>
-          {/* Error messages */}
-          {(passwordError || confirmPasswordError) && (
-            <div className="mt-1">
-              {passwordError && (
-                <span className="text-body-sm text-[var(--color-state-danger)] mr-4">
-                  {passwordError}
-                </span>
-              )}
+            <FormField required error={!!confirmPasswordError}>
+              <FormField.Label>Confirm password</FormField.Label>
+              <FormField.Control>
+                <Tooltip content={confirmPasswordTooltip} position="bottom">
+                  <div className="relative w-[252px]">
+                    <Input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="Enter password again"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        onConfirmPasswordChange(e.target.value);
+                        onConfirmPasswordErrorChange(null);
+                      }}
+                      fullWidth
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                    </button>
+                  </div>
+                </Tooltip>
+              </FormField.Control>
               {confirmPasswordError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {confirmPasswordError}
-                </span>
+                <FormField.ErrorMessage>{confirmPasswordError}</FormField.ErrorMessage>
               )}
-            </div>
-          )}
+            </FormField>
+          </HStack>
         </div>
       )}
     </div>
@@ -664,35 +651,30 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Username */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Username <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              This is the account's unique identifier for signing in. It cannot be changed once
-              created.
-            </span>
-            <Input
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => {
-                onUsernameChange(e.target.value);
-                onUsernameErrorChange(null);
-              }}
-              error={!!usernameError}
-              fullWidth
-            />
-            <div className="flex flex-col gap-1 mt-1">
-              {usernameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {usernameError}
-                </span>
-              )}
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
+          <div className="py-6">
+            <FormField required error={!!usernameError}>
+              <FormField.Label>Username</FormField.Label>
+              <FormField.Description>
+                This is the account's unique identifier for signing in. It cannot be changed once
+                created.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => {
+                    onUsernameChange(e.target.value);
+                    onUsernameErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
                 You can use letters, numbers, and special characters (-_.), and the length must be
                 between 3-64 characters.
-              </span>
-            </div>
+              </FormField.HelperText>
+              {usernameError && <FormField.ErrorMessage>{usernameError}</FormField.ErrorMessage>}
+            </FormField>
           </div>
 
           {/* Divider */}

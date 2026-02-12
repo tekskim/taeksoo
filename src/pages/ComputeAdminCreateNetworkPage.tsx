@@ -578,7 +578,7 @@ export default function CreateNetworkPage() {
                               *
                             </span>
                           </div>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Select the provider network type to use for the network.
                           </span>
                           <RadioGroup

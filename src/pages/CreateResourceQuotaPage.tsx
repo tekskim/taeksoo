@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  Disclosure,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -11,7 +13,6 @@ import {
   Input,
   Select,
   SectionCard,
-  Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -177,39 +178,34 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Select
-              options={NAMESPACE_OPTIONS}
-              value={namespace}
-              onChange={onNamespaceChange}
-              fullWidth
-            />
-          </VStack>
+          <FormField required>
+            <FormField.Label>Namespace</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={NAMESPACE_OPTIONS}
+                value={namespace}
+                onChange={onNamespaceChange}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
 
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Resource Quota Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Input
-              placeholder="Enter a unique name"
-              value={resourceQuotaName}
-              onChange={(e) => {
-                onResourceQuotaNameChange(e.target.value);
-                if (resourceQuotaNameError) onResourceQuotaNameErrorChange(null);
-              }}
-              error={!!resourceQuotaNameError}
-              fullWidth
-            />
-            {resourceQuotaNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {resourceQuotaNameError}
-              </span>
-            )}
-          </VStack>
+          <FormField required error={!!resourceQuotaNameError}>
+            <FormField.Label>Resource Quota Name</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a unique name"
+                value={resourceQuotaName}
+                onChange={(e) => {
+                  onResourceQuotaNameChange(e.target.value);
+                  if (resourceQuotaNameError) onResourceQuotaNameErrorChange(null);
+                }}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{resourceQuotaNameError}</FormField.ErrorMessage>
+          </FormField>
 
           {/* Description */}
           <Disclosure>
@@ -433,128 +429,126 @@ function LabelsAnnotationsSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the labels used to identify and categorize the resource.
-              </p>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={2}>
-                {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div />
-                  </div>
-                )}
-                {labels.map((label, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="Key"
-                      value={label.key}
-                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Value"
-                      value={label.value}
-                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveLabel(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          <FormField>
+            <FormField.Label>Labels</FormField.Label>
+            <FormField.Description>
+              Specify the labels used to identify and categorize the resource.
+            </FormField.Description>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {labels.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {labels.map((label, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+                      <Input
+                        placeholder="Key"
+                        value={label.key}
+                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={label.value}
+                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveLabel(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddLabel}
+                      className="bg-[var(--color-surface-default)]"
+                    >
+                      Add Label
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddLabel}
-                    className="bg-[var(--color-surface-default)]"
-                  >
-                    Add Label
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
 
           {/* Annotations */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the annotations used to provide additional metadata for the resource.
-              </p>
-            </VStack>
-
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={2}>
-                {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div />
-                  </div>
-                )}
-                {annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="Key"
-                      value={annotation.key}
-                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Value"
-                      value={annotation.value}
-                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveAnnotation(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          <FormField>
+            <FormField.Label>Annotations</FormField.Label>
+            <FormField.Description>
+              Specify the annotations used to provide additional metadata for the resource.
+            </FormField.Description>
+            <FormField.Control>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {annotations.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {annotations.map((annotation, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+                      <Input
+                        placeholder="Key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddAnnotation}
+                      className="bg-[var(--color-surface-default)]"
+                    >
+                      Add Annotation
+                    </Button>
                   </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddAnnotation}
-                    className="bg-[var(--color-surface-default)]"
-                  >
-                    Add Annotation
-                  </Button>
-                </div>
-              </VStack>
-            </div>
-          </VStack>
+                </VStack>
+              </div>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
