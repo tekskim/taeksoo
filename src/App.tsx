@@ -314,6 +314,7 @@ import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
 import { TableStyleGuidePage } from '@/pages/TableStyleGuidePage';
 import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
 import { IconographyPage } from '@/pages/IconographyPage';
+import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
@@ -801,6 +802,7 @@ function AppRoutes() {
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
       <Route path="/topology-popovers" element={<TopologyPopoversPage />} />
       <Route path="/iconography" element={<IconographyPage />} />
+      <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />

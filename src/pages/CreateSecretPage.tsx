@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -232,79 +233,67 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Secret Type */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Secret Type<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Select
-              options={SECRET_TYPE_OPTIONS}
-              value={secretType}
-              onChange={onSecretTypeChange}
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              Create a Secret with a custom type
-            </span>
-          </VStack>
+          <FormField required>
+            <FormField.Label>Secret Type</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={SECRET_TYPE_OPTIONS}
+                value={secretType}
+                onChange={onSecretTypeChange}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>Create a Secret with a custom type</FormField.HelperText>
+          </FormField>
 
           {/* Custom Type (shown when Secret Type is "custom") */}
           {secretType === 'custom' && (
-            <VStack gap={2}>
-              <label className="text-label-lg text-[var(--color-text-default)]">
-                Custom Type<span className="text-[var(--color-state-danger)]"> *</span>
-              </label>
-              <Input
-                placeholder="Custom Type"
-                value={customType}
-                onChange={(e) => {
-                  onCustomTypeChange(e.target.value);
-                  if (customTypeError) onCustomTypeErrorChange(null);
-                }}
-                error={!!customTypeError}
-                fullWidth
-              />
-              {customTypeError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {customTypeError}
-                </span>
-              )}
-            </VStack>
+            <FormField required error={!!customTypeError}>
+              <FormField.Label>Custom Type</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Custom Type"
+                  value={customType}
+                  onChange={(e) => {
+                    onCustomTypeChange(e.target.value);
+                    if (customTypeError) onCustomTypeErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.ErrorMessage>{customTypeError}</FormField.ErrorMessage>
+            </FormField>
           )}
 
           {/* Namespace */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Select
-              options={NAMESPACE_OPTIONS}
-              value={namespace}
-              onChange={onNamespaceChange}
-              fullWidth
-            />
-          </VStack>
+          <FormField required>
+            <FormField.Label>Namespace</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={NAMESPACE_OPTIONS}
+                value={namespace}
+                onChange={onNamespaceChange}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
 
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <Input
-              placeholder="Enter a unique name"
-              value={secretName}
-              onChange={(e) => {
-                onSecretNameChange(e.target.value);
-                if (secretNameError) onSecretNameErrorChange(null);
-              }}
-              error={!!secretNameError}
-              fullWidth
-            />
-            {secretNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {secretNameError}
-              </span>
-            )}
-          </VStack>
+          <FormField required error={!!secretNameError}>
+            <FormField.Label>Name</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a unique name"
+                value={secretName}
+                onChange={(e) => {
+                  onSecretNameChange(e.target.value);
+                  if (secretNameError) onSecretNameErrorChange(null);
+                }}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.ErrorMessage>{secretNameError}</FormField.ErrorMessage>
+          </FormField>
 
           {/* Description - Collapsible */}
           <VStack gap={3}>

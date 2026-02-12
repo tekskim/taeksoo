@@ -2052,9 +2052,9 @@ export default function CreateLoadBalancerPage() {
                     <div className="py-6">
                       <FormField required error={!!protocolPortError}>
                         <FormField.Label>Protocol port</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                        <FormField.Description>
                           The port on which the listener receives client requests.
-                        </p>
+                        </FormField.Description>
                         <FormField.Control>
                           <NumberInput
                             value={protocolPort}
@@ -2076,10 +2076,10 @@ export default function CreateLoadBalancerPage() {
                     <div className="py-6">
                       <FormField required>
                         <FormField.Label>Connection limit</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                        <FormField.Description>
                           Defines the maximum number of concurrent connections the listener can
                           handle.
-                        </p>
+                        </FormField.Description>
                         <FormField.Control>
                           <VStack gap={3} align="start">
                             <Radio
@@ -2110,10 +2110,10 @@ export default function CreateLoadBalancerPage() {
                     <div className="py-6">
                       <FormField>
                         <FormField.Label>Listener admin state</FormField.Label>
-                        <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                        <FormField.Description>
                           Set the administrative state of the listener. 'UP' enables traffic
                           handling, while 'DOWN' disables it.
-                        </p>
+                        </FormField.Description>
                         <FormField.Control>
                           <HStack gap={2} align="center">
                             <Toggle
@@ -2137,9 +2137,9 @@ export default function CreateLoadBalancerPage() {
                             {/* Custom headers */}
                             <FormField>
                               <FormField.Label>Custom headers</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
+                              <FormField.Description>
                                 Defines custom header values to be forwarded to backend servers.
-                              </p>
+                              </FormField.Description>
                               <VStack gap={3} align="start">
                                 <HStack gap={2} align="center">
                                   <Checkbox
@@ -2173,9 +2173,9 @@ export default function CreateLoadBalancerPage() {
                             {/* Client data timeout */}
                             <FormField>
                               <FormField.Label>Client data timeout (ms)</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Maximum time to wait for client request data.
-                              </p>
+                              </FormField.Description>
                               <FormField.Control>
                                 <NumberInput
                                   value={clientDataTimeout}
@@ -2189,10 +2189,10 @@ export default function CreateLoadBalancerPage() {
                             {/* Member connect timeout */}
                             <FormField>
                               <FormField.Label>Member connect timeout (ms)</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Maximum time to wait when establishing a connection to a backend
                                 member.
-                              </p>
+                              </FormField.Description>
                               <FormField.Control>
                                 <NumberInput
                                   value={memberConnectTimeout}
@@ -2206,9 +2206,9 @@ export default function CreateLoadBalancerPage() {
                             {/* Member data timeout */}
                             <FormField>
                               <FormField.Label>Member data timeout (ms)</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Maximum time to wait for response data from a backend member.
-                              </p>
+                              </FormField.Description>
                               <FormField.Control>
                                 <NumberInput
                                   value={memberDataTimeout}
@@ -2222,10 +2222,10 @@ export default function CreateLoadBalancerPage() {
                             {/* TCP Inspect Timeout */}
                             <FormField>
                               <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Timeout for TCP packet inspection or handshake. 0 disables this
                                 feature.
-                              </p>
+                              </FormField.Description>
                               <FormField.Control>
                                 <NumberInput
                                   value={tcpInspectTimeout}
@@ -2239,9 +2239,9 @@ export default function CreateLoadBalancerPage() {
                             {/* Allowed CIDRs */}
                             <FormField>
                               <FormField.Label>Allowed CIDRs</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Defines the client IP ranges allowed to access the listener.
-                              </p>
+                              </FormField.Description>
                               <VStack gap={2} align="start">
                                 {allowedCidrs.map((cidr, index) => (
                                   <HStack key={index} gap={2} align="center">
@@ -2392,10 +2392,10 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Pool algorithm</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Select how incoming requests are distributed across backend members.
                               The chosen algorithm determines how traffic is routed to each server.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={[
@@ -2427,10 +2427,10 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Pool protocol</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Select the protocol used to communicate with backend members. It must
                               match or be compatible with the listener's protocol.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={poolProtocolOptions}
@@ -2843,9 +2843,9 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Health monitor type</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Select the health check method used to monitor backend members.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={healthMonitorTypeOptions}
@@ -2862,9 +2862,9 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Interval (sec)</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Specifies the interval in seconds between health checks.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <NumberInput
                                 value={healthMonitorInterval}
@@ -2886,9 +2886,9 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Timeout (sec)</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Specifies the timeout in seconds for health check responses.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <NumberInput
                                 value={healthMonitorTimeout}
@@ -2910,10 +2910,10 @@ export default function CreateLoadBalancerPage() {
                         <div className="py-6">
                           <FormField required>
                             <FormField.Label>Max retries</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Specifies the number of retries before marking the health check as
                               failed.
-                            </p>
+                            </FormField.Description>
                             <FormField.Control>
                               <NumberInput
                                 value={healthMonitorMaxRetries}

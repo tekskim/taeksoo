@@ -420,7 +420,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Choose the resource category to apply to the flavor.
                         </span>
                       </VStack>
@@ -446,7 +446,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Indicates whether the flavor is available to other tenants.
                         </span>
                       </VStack>
@@ -470,7 +470,7 @@ export function ComputeAdminCreateFlavorPage() {
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Select the tenant that can use the flavor.
                             </span>
                           </VStack>
@@ -636,7 +636,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Number of virtual CPUs for instances using this flavor.
                       </span>
                       <HStack gap={2} align="center">
@@ -655,7 +655,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Amount of memory for instances using this flavor.
                       </span>
                       <HStack gap={2} align="center">
@@ -674,7 +674,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Size of the root disk. Use 0 for no local disk (boot from volume).
                       </span>
                       <HStack gap={2} align="center">
@@ -696,7 +696,7 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                         Ephemeral disk
                       </span>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Size of temporary disk. This disk is deleted when the instance is
                         terminated.
                       </span>
@@ -719,7 +719,7 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                         Swap disk
                       </span>
-                      <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Size of swap space. Use 0 for no swap.
                       </span>
                       <HStack gap={2} align="center">
@@ -787,7 +787,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                           Select existing metadata or define new metadata to apply to the host
                           aggregate.
                         </span>

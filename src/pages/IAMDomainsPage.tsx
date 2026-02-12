@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -118,6 +119,7 @@ export default function IAMDomainsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -230,75 +232,85 @@ export default function IAMDomainsPage() {
   ];
 
   return (
-    <PageShell
-      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
-      sidebarWidth={sidebarWidth}
-      tabBar={
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          onTabReorder={moveTab}
-        />
-      }
-      topBar={
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Domains' }]} />}
-        />
-      }
-      contentClassName="pt-4 px-8 pb-6"
-    >
-      <VStack gap={3}>
-        {/* Header */}
-        <HStack justify="between" align="center" className="w-full">
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Domains</h1>
-          <Button variant="primary" size="md">
-            Create domain
-          </Button>
-        </HStack>
-
-        {/* Table Content */}
-        <VStack gap={3} className="w-full">
-          {/* Action Bar */}
-          <HStack gap={2} align="center">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search domains by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[var(--search-input-width)]"
-              />
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-              />
-            </HStack>
+    <>
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
+          <TabBar
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
+            onTabReorder={moveTab}
+          />
+        }
+        topBar={
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+            showNavigation
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Domains' }]} />
+            }
+          />
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <VStack gap={3}>
+          {/* Header */}
+          <HStack justify="between" align="center" className="w-full">
+            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Domains</h1>
+            <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
+              Create domain
+            </Button>
           </HStack>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            totalItems={filteredDomains.length}
-            selectedCount={selectedRows.length}
-          />
+          {/* Table Content */}
+          <VStack gap={3} className="w-full">
+            {/* Action Bar */}
+            <HStack gap={2} align="center">
+              {/* Search */}
+              <HStack gap={1} align="center">
+                <SearchInput
+                  placeholder="Search domains by attributes"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                />
+              </HStack>
+            </HStack>
 
-          {/* Table */}
-          <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              showSettings
+              totalItems={filteredDomains.length}
+              selectedCount={selectedRows.length}
+            />
+
+            {/* Table */}
+            <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
+          </VStack>
         </VStack>
-      </VStack>
-    </PageShell>
+      </PageShell>
+
+      {/* Create Domain Drawer */}
+      <CreateDomainDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+      />
+    </>
   );
 }

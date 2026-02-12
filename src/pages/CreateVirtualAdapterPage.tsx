@@ -557,7 +557,7 @@ export default function CreateVirtualAdapterPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Virtual adapter Name */}
                     <div className="py-6">
-                      <FormField required>
+                      <FormField required error={!!adapterNameError}>
                         <FormField.Label>Virtual adapter Name</FormField.Label>
                         <FormField.Control>
                           <VStack gap={1}>
@@ -569,19 +569,16 @@ export default function CreateVirtualAdapterPage() {
                                 setAdapterNameError(null);
                               }}
                               fullWidth
-                              error={!!adapterNameError}
                             />
-                            {adapterNameError && (
-                              <span className="text-body-sm text-[var(--color-state-danger)]">
-                                {adapterNameError}
-                              </span>
-                            )}
                           </VStack>
                         </FormField.Control>
                         <FormField.HelperText>
                           You can use letters, numbers, and special characters (+=,.@-_), and the
                           length must be between 2-128 characters.
                         </FormField.HelperText>
+                        {adapterNameError && (
+                          <FormField.ErrorMessage>{adapterNameError}</FormField.ErrorMessage>
+                        )}
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -751,20 +748,20 @@ export default function CreateVirtualAdapterPage() {
                               >
                                 <div className="flex items-center gap-2">
                                   {/* Subnet Label + Dropdown */}
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Subnet
-                                    </span>
-                                    <Select
-                                      value={entry.subnet}
-                                      onChange={(value) =>
-                                        updateFixedIP(entry.id, { subnet: value })
-                                      }
-                                      options={[{ value: entry.subnet, label: entry.subnet }]}
-                                      placeholder="Select"
-                                      style={{ width: '120px' }}
-                                    />
-                                  </div>
+                                  <FormField>
+                                    <FormField.Label>Subnet</FormField.Label>
+                                    <FormField.Control>
+                                      <Select
+                                        value={entry.subnet}
+                                        onChange={(value) =>
+                                          updateFixedIP(entry.id, { subnet: value })
+                                        }
+                                        options={[{ value: entry.subnet, label: entry.subnet }]}
+                                        placeholder="Select"
+                                        style={{ width: '120px' }}
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
 
                                   {/* IP Allocation Dropdown */}
                                   <Select
@@ -942,61 +939,63 @@ export default function CreateVirtualAdapterPage() {
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="py-6">
                           <VStack gap={2} align="stretch">
-                            <VStack gap={1.5} align="stretch">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Security groups
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                            <FormField>
+                              <FormField.Label>Security groups</FormField.Label>
+                              <FormField.Description>
                                 Select the security groups to apply to the port.
-                              </span>
-                            </VStack>
+                              </FormField.Description>
+                              <FormField.Control>
+                                <VStack gap={2} align="stretch">
+                                  {/* Search + Create Button Row */}
+                                  <HStack justify="between" align="center">
+                                    <div className="w-[var(--search-input-width)]">
+                                      <SearchInput
+                                        placeholder="Search fixed IPs by attributes"
+                                        value={securityGroupSearch}
+                                        onChange={(e) => setSecurityGroupSearch(e.target.value)}
+                                      />
+                                    </div>
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconEdit size={12} />}
+                                    >
+                                      Create a new security group
+                                    </Button>
+                                  </HStack>
 
-                            {/* Search + Create Button Row */}
-                            <HStack justify="between" align="center">
-                              <div className="w-[var(--search-input-width)]">
-                                <SearchInput
-                                  placeholder="Search fixed IPs by attributes"
-                                  value={securityGroupSearch}
-                                  onChange={(e) => setSecurityGroupSearch(e.target.value)}
-                                />
-                              </div>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconEdit size={12} />}
-                              >
-                                Create a new security group
-                              </Button>
-                            </HStack>
+                                  {/* Pagination */}
+                                  <Pagination
+                                    currentPage={securityGroupPage}
+                                    totalPages={5}
+                                    totalItems={115}
+                                    onPageChange={setSecurityGroupPage}
+                                    selectedCount={selectedSecurityGroups.length}
+                                  />
 
-                            {/* Pagination */}
-                            <Pagination
-                              currentPage={securityGroupPage}
-                              totalPages={5}
-                              totalItems={115}
-                              onPageChange={setSecurityGroupPage}
-                              selectedCount={selectedSecurityGroups.length}
-                            />
+                                  {/* Security Groups Table */}
+                                  <Table
+                                    columns={securityGroupColumns}
+                                    data={mockSecurityGroups}
+                                    getRowId={(row) => row.id}
+                                  />
 
-                            {/* Security Groups Table */}
-                            <Table
-                              columns={securityGroupColumns}
-                              data={mockSecurityGroups}
-                              getRowId={(row) => row.id}
-                            />
-
-                            {/* Selection Indicator for Security Groups */}
-                            <SelectionIndicator
-                              selectedItems={selectedSecurityGroups.map((id) => ({
-                                id,
-                                label: mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
-                              }))}
-                              onRemove={(id) =>
-                                setSelectedSecurityGroups((prev) =>
-                                  prev.filter((sgId) => sgId !== id)
-                                )
-                              }
-                            />
+                                  {/* Selection Indicator for Security Groups */}
+                                  <SelectionIndicator
+                                    selectedItems={selectedSecurityGroups.map((id) => ({
+                                      id,
+                                      label:
+                                        mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
+                                    }))}
+                                    onRemove={(id) =>
+                                      setSelectedSecurityGroups((prev) =>
+                                        prev.filter((sgId) => sgId !== id)
+                                      )
+                                    }
+                                  />
+                                </VStack>
+                              </FormField.Control>
+                            </FormField>
                           </VStack>
                         </div>
                       </>

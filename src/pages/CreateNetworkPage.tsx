@@ -483,7 +483,7 @@ export default function CreateNetworkPage() {
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Gateway */}
-                        <VStack gap={2} align="start" className="py-6">
+                        <VStack gap={3} align="start" className="py-6">
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Gateway
                           </span>
@@ -492,29 +492,23 @@ export default function CreateNetworkPage() {
                             onChange={(e) => setGateway(e.target.checked)}
                             label={gateway ? 'On' : 'Off'}
                           />
+                          {gateway && (
+                            <FormField>
+                              <FormField.Control>
+                                <Input
+                                  placeholder="e.g. 192.168.0.1"
+                                  value={gatewayIp}
+                                  onChange={(e) => setGatewayIp(e.target.value)}
+                                  fullWidth
+                                />
+                              </FormField.Control>
+                              <FormField.HelperText>
+                                Gateway must be an IP address within the subnet range, excluding the
+                                network and broadcast addresses.
+                              </FormField.HelperText>
+                            </FormField>
+                          )}
                         </VStack>
-
-                        {gateway && (
-                          <>
-                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                            <div className="py-6">
-                              <FormField>
-                                <FormField.Control>
-                                  <Input
-                                    placeholder="e.g. 192.168.0.1"
-                                    value={gatewayIp}
-                                    onChange={(e) => setGatewayIp(e.target.value)}
-                                    fullWidth
-                                  />
-                                </FormField.Control>
-                                <FormField.HelperText>
-                                  Gateway must be an IP address within the subnet range, excluding
-                                  the network and broadcast addresses.
-                                </FormField.HelperText>
-                              </FormField>
-                            </div>
-                          </>
-                        )}
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Advanced (optional) */}

@@ -65,7 +65,7 @@ function SectionCardHeader({
       className={twMerge('flex flex-col w-full', showDivider ? '' : 'gap-3')}
       style={
         showDivider
-          ? { paddingBottom: '12px', borderBottom: '1px solid var(--color-border-default)' }
+          ? { paddingBottom: '12px', borderBottom: '1px solid var(--color-border-subtle)' }
           : undefined
       }
     >

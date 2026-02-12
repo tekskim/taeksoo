@@ -450,7 +450,7 @@ export function CreateImagePage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Registers an image by uploading a file or entering a file URL.
                         </span>
                       </VStack>
