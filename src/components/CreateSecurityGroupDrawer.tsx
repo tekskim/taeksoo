@@ -102,12 +102,13 @@ export function CreateSecurityGroupDrawer({
       footer={
         <VStack gap={4} className="w-full">
           {/* Quota Section */}
-          <div className="w-full border-t border-[var(--color-border-subtle)] pt-4">
+          <div className="w-full">
             <QuotaProgressBar label="Security group quota" used={quota.used} limit={quota.limit} />
           </div>
 
           {/* Buttons */}
-          <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
+          <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
@@ -153,7 +154,7 @@ export function CreateSecurityGroupDrawer({
         <FormField>
           <FormField.Label>
             Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
           </FormField.Label>
           <FormField.Control>
             <Input

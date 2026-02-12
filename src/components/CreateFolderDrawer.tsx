@@ -328,9 +328,7 @@ export function CreateFolderDrawer({
           <FormField.Label>Folder path</FormField.Label>
           <FormField.Control>
             <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                {displayPath}
-              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">{displayPath}</span>
             </div>
           </FormField.Control>
         </FormField>

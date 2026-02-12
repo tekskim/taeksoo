@@ -14,10 +14,11 @@ import {
   IconRocky,
   IconGrid,
   Table,
+  InlineMessage,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconExternalLink, IconDots } from '@tabler/icons-react';
+import { IconExternalLink, IconDots } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -64,15 +65,6 @@ const mockImages: ImageItem[] = Array.from({ length: 115 }, (_, i) => ({
 
 type ImageTab = 'image' | 'snapshot' | 'bootable';
 type OSFilter = 'ubuntu' | 'windows' | 'rocky' | 'other';
-
-const osChipStyle = (active: boolean) => `
-  inline-flex items-center gap-1 px-2 py-1.5 rounded-[4px] cursor-pointer text-label-md  transition-colors
-  ${
-    active
-      ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
-      : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
-  }
-`;
 
 /* ----------------------------------------
    RebuildInstanceDrawer Component
@@ -202,22 +194,16 @@ export function RebuildInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Rebuild Instance
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Rebuilding reinstalls the operating system using a new image.
             </p>
           </VStack>
 
           {/* Warning Message */}
-          <div className="w-full p-3 bg-[var(--color-state-danger-bg)] rounded-lg flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Rebuilding will permanently delete all data on the system disk. Make sure to back up
-              important data before proceeding.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            Rebuilding will permanently delete all data on the system disk. Make sure to back up
+            important data before proceeding.
+          </InlineMessage>
         </VStack>
 
         {/* Instance Field */}
@@ -280,50 +266,42 @@ export function RebuildInstanceDrawer({
             </Tabs>
 
             {/* OS Filter Capsule Tabs */}
-            <div>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-                <button
-                  className={osChipStyle(osFilter === 'ubuntu')}
-                  onClick={() => {
-                    setOsFilter('ubuntu');
-                    setImageCurrentPage(1);
-                  }}
-                >
-                  <IconUbuntu size={14} />
-                  <span>Ubuntu</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'windows')}
-                  onClick={() => {
-                    setOsFilter('windows');
-                    setImageCurrentPage(1);
-                  }}
-                >
-                  <IconGrid size={14} />
-                  <span>Windows</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'rocky')}
-                  onClick={() => {
-                    setOsFilter('rocky');
-                    setImageCurrentPage(1);
-                  }}
-                >
-                  <IconRocky size={14} />
-                  <span>Rocky</span>
-                </button>
-                <button
-                  className={osChipStyle(osFilter === 'other')}
-                  onClick={() => {
-                    setOsFilter('other');
-                    setImageCurrentPage(1);
-                  }}
-                >
-                  <IconDots size={14} />
-                  <span>Other</span>
-                </button>
-              </div>
-            </div>
+            <Tabs
+              variant="boxed"
+              size="sm"
+              value={osFilter}
+              onChange={(value) => {
+                setOsFilter(value as OSFilter);
+                setImageCurrentPage(1);
+              }}
+            >
+              <TabList>
+                <Tab value="ubuntu">
+                  <HStack gap={1} align="center">
+                    <IconUbuntu size={14} />
+                    <span>Ubuntu</span>
+                  </HStack>
+                </Tab>
+                <Tab value="windows">
+                  <HStack gap={1} align="center">
+                    <IconGrid size={14} />
+                    <span>Windows</span>
+                  </HStack>
+                </Tab>
+                <Tab value="rocky">
+                  <HStack gap={1} align="center">
+                    <IconRocky size={14} />
+                    <span>Rocky</span>
+                  </HStack>
+                </Tab>
+                <Tab value="other">
+                  <HStack gap={1} align="center">
+                    <IconDots size={14} />
+                    <span>Other</span>
+                  </HStack>
+                </Tab>
+              </TabList>
+            </Tabs>
 
             {/* Search */}
             <SearchInput

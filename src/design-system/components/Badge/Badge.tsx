@@ -1,5 +1,5 @@
 import { memo, type HTMLAttributes, type ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Badge Types
@@ -130,9 +130,10 @@ export const Badge = memo(function Badge({
   const resolvedType = variant && !theme ? 'subtle' : type;
 
   const baseStyles = [
-    'inline-flex items-center',
+    'inline-flex items-center justify-center',
     'gap-[var(--badge-gap)]',
     'font-medium',
+    'min-w-[28px] text-center',
     'rounded-[var(--badge-radius)]',
   ].join(' ');
 

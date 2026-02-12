@@ -2,13 +2,11 @@ import { clsx, type ClassValue } from 'clsx';
 import { extendTailwindMerge } from 'tailwind-merge';
 
 /**
- * Custom tailwind-merge that understands our design system's
- * typography utility classes (text-heading-*, text-body-*, text-label-*).
- *
- * Without this, twMerge treats e.g. `text-body-sm` as a text-color class
- * and incorrectly removes it when paired with `text-[var(--color-*)]`.
+ * Custom tailwind-merge that understands our design-system typography utilities.
+ * Without this, twMerge treats `text-body-sm` as a text-color class and strips it
+ * when combined with `text-[color:var(--color-...)]`.
  */
-export const customTwMerge = extendTailwindMerge({
+export const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
       'font-size': [
@@ -42,5 +40,5 @@ export const customTwMerge = extendTailwindMerge({
  * ```
  */
 export function cn(...inputs: ClassValue[]) {
-  return customTwMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }

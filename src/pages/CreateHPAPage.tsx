@@ -690,7 +690,7 @@ export default function CreateHPAPage() {
                                 fullWidth
                               />
                               {metric.type === 'AverageUtilization' && (
-                                <span className="text-[12px] text-[var(--color-text-default)]">
+                                <span className="text-body-md text-[var(--color-text-default)]">
                                   %
                                 </span>
                               )}

@@ -190,7 +190,7 @@ export function CreateObjectDrawer({
         </HStack>
       }
     >
-      <VStack gap={3}>
+      <VStack gap={6}>
         {/* Header */}
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Create Object
@@ -201,9 +201,7 @@ export function CreateObjectDrawer({
           <FormField.Label>Folder path</FormField.Label>
           <FormField.Control>
             <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                {currentPath}
-              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">{currentPath}</span>
             </div>
           </FormField.Control>
         </FormField>
@@ -241,7 +239,7 @@ export function CreateObjectDrawer({
         </VStack>
 
         {/* ACL Section */}
-        <VStack gap={6} className="w-full">
+        <VStack gap={3} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">ACL</label>
 
           {/* ACL Type Radio */}
@@ -270,10 +268,10 @@ export function CreateObjectDrawer({
                     value={grantee}
                     onChange={(v) => setGrantee(v as Grantee)}
                     options={GRANTEE_OPTIONS}
-                    className="w-[276px]"
+                    width="half"
                   />
                 </VStack>
-                <HStack gap={1.5} align="center">
+                <VStack gap={2}>
                   <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                     Permissions
                   </label>
@@ -281,9 +279,9 @@ export function CreateObjectDrawer({
                     value={permission}
                     onChange={(v) => setPermission(v as Permission)}
                     options={PERMISSION_OPTIONS}
-                    className="w-[111px]"
+                    width="half"
                   />
-                </HStack>
+                </VStack>
               </VStack>
             </div>
           )}

@@ -1,5 +1,5 @@
 import { type ReactNode, type HTMLAttributes, Children, isValidElement, Fragment } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------

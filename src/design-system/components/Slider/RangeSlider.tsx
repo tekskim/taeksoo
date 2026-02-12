@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect, type HTMLAttributes } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    Types

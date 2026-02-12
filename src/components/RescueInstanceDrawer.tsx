@@ -68,15 +68,6 @@ const mockImages: ImageItem[] = Array.from({ length: 115 }, (_, i) => ({
 type ImageTab = 'image' | 'snapshot' | 'bootable';
 type OSFilter = 'ubuntu' | 'windows' | 'rocky' | 'other';
 
-const osChipStyle = (active: boolean) => `
-  inline-flex items-center gap-1 px-2 py-1.5 rounded-[4px] cursor-pointer text-label-md  transition-colors
-  ${
-    active
-      ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
-      : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
-  }
-`;
-
 /* ----------------------------------------
    RescueInstanceDrawer Component
    ---------------------------------------- */
@@ -207,7 +198,7 @@ export function RescueInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Rescue Instance
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Create a temporary recovery server using your instance's root disk.
             </p>
           </VStack>
@@ -289,48 +280,42 @@ export function RescueInstanceDrawer({
             </Tabs>
 
             {/* OS Filter Capsule Tabs */}
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
-              <button
-                className={osChipStyle(osFilter === 'ubuntu')}
-                onClick={() => {
-                  setOsFilter('ubuntu');
-                  setImageCurrentPage(1);
-                }}
-              >
-                <IconUbuntu size={14} />
-                <span>Ubuntu</span>
-              </button>
-              <button
-                className={osChipStyle(osFilter === 'windows')}
-                onClick={() => {
-                  setOsFilter('windows');
-                  setImageCurrentPage(1);
-                }}
-              >
-                <IconGrid size={14} />
-                <span>Windows</span>
-              </button>
-              <button
-                className={osChipStyle(osFilter === 'rocky')}
-                onClick={() => {
-                  setOsFilter('rocky');
-                  setImageCurrentPage(1);
-                }}
-              >
-                <IconRocky size={14} />
-                <span>Rocky</span>
-              </button>
-              <button
-                className={osChipStyle(osFilter === 'other')}
-                onClick={() => {
-                  setOsFilter('other');
-                  setImageCurrentPage(1);
-                }}
-              >
-                <IconDots size={14} />
-                <span>Other</span>
-              </button>
-            </div>
+            <Tabs
+              variant="boxed"
+              size="sm"
+              value={osFilter}
+              onChange={(value) => {
+                setOsFilter(value as OSFilter);
+                setImageCurrentPage(1);
+              }}
+            >
+              <TabList>
+                <Tab value="ubuntu">
+                  <HStack gap={1} align="center">
+                    <IconUbuntu size={14} />
+                    <span>Ubuntu</span>
+                  </HStack>
+                </Tab>
+                <Tab value="windows">
+                  <HStack gap={1} align="center">
+                    <IconGrid size={14} />
+                    <span>Windows</span>
+                  </HStack>
+                </Tab>
+                <Tab value="rocky">
+                  <HStack gap={1} align="center">
+                    <IconRocky size={14} />
+                    <span>Rocky</span>
+                  </HStack>
+                </Tab>
+                <Tab value="other">
+                  <HStack gap={1} align="center">
+                    <IconDots size={14} />
+                    <span>Other</span>
+                  </HStack>
+                </Tab>
+              </TabList>
+            </Tabs>
 
             {/* Search */}
             <SearchInput

@@ -220,7 +220,7 @@ export function MigrateVolumeDrawer({
         {/* Title */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Migrate volume</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Migrates the volume to a different storage backend. The volume may be limited in
             availability during the migration process.
           </p>
@@ -237,7 +237,7 @@ export function MigrateVolumeDrawer({
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Target storage backend <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Select the destination storage backend or volume type for the migration.
           </p>
 

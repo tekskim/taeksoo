@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Radio, FormField } from '@/design-system';
+import { Drawer, Button, Input, Radio, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconHelp } from '@tabler/icons-react';
+import { IconHelp } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 
 /* ----------------------------------------
@@ -127,7 +127,7 @@ export function CreateVolumeBackupDrawer({
       footer={
         <VStack gap={6} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
+          <VStack gap={6} className="w-full">
             <QuotaProgressBar
               label="Volume backup quota"
               used={volumeBackupQuota.used}
@@ -141,7 +141,8 @@ export function CreateVolumeBackupDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
+          <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
@@ -165,7 +166,7 @@ export function CreateVolumeBackupDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create volume backup
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Create a full backup of this volume and store it in the backup service. The backup can
               be used to restore the volume or create new volumes in the future.
             </p>
@@ -180,17 +181,10 @@ export function CreateVolumeBackupDrawer({
           </div>
 
           {/* Warning Message */}
-          <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-              stroke={1.5}
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before creating a
-              backup.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            backup.
+          </InlineMessage>
         </VStack>
 
         {/* Backup Name Input */}

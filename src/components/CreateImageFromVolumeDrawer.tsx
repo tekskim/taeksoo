@@ -103,7 +103,7 @@ export function CreateImageFromVolumeDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Image from Volume
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Create a new image using this volume as the source. The image will contain all data
               currently stored on the volume and can be used to launch new instances.
             </p>

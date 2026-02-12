@@ -175,7 +175,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
         <VStack gap={3} className="w-full">
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rules</span>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select rules from the list to add to the policy.
             </p>
           </VStack>
@@ -228,11 +228,11 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                     <div className="w-full h-px bg-[var(--color-border-default)]" />
                     {/* Bottom row: Protocol + Action */}
                     <div className="flex items-center gap-2 px-3 py-2">
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Protocol: {rule.protocol}
                       </span>
                       <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Action: {rule.action}
                       </span>
                     </div>
@@ -310,11 +310,11 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
                       <div className="w-full h-px bg-[var(--color-border-default)]" />
                       {/* Bottom row: Protocol + Action */}
                       <div className="flex items-center gap-2 px-3 py-2">
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
                           Protocol: {rule.protocol}
                         </span>
                         <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
                           Action: {rule.action}
                         </span>
                       </div>

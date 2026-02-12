@@ -182,7 +182,7 @@ export function ManagePoliciesDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage policies
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Add or remove policies of this role.
             </p>
           </VStack>
@@ -208,7 +208,7 @@ export function ManagePoliciesDrawer({
               </span>
               <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select policies to apply to this role. If policies include conditions, all conditions
               must be satisfied for the permission to be granted.
             </p>

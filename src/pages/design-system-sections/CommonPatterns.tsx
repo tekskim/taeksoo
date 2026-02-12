@@ -26,6 +26,7 @@ import {
   Drawer,
   ListToolbar,
   ContextMenu,
+  InlineMessage,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -35,7 +36,6 @@ import {
   IconPlus,
   IconEdit,
   IconTrash,
-  IconAlertCircle,
   IconDownload,
   IconPlayerPlay,
   IconPlayerStop,
@@ -556,16 +556,9 @@ export function WarningModalPatternDemo() {
           </div>
 
           {/* Warning Alert */}
-          <div className="bg-[var(--color-state-warning-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-warning)] shrink-0 mt-0.5"
-              stroke={1.5}
-            />
-            <p className="text-body-sm text-[var(--color-text-default)]">
-              Rebooting will cause temporary downtime. All unsaved data may be lost.
-            </p>
-          </div>
+          <InlineMessage variant="warning">
+            Rebooting will cause temporary downtime. All unsaved data may be lost.
+          </InlineMessage>
         </VStack>
 
         {/* Button Group */}

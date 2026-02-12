@@ -1053,9 +1053,7 @@ export function SidebarIconsPage() {
         {/* Quick Reference */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-            <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
-              Tabler Icons
-            </h3>
+            <h3 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Tabler Icons</h3>
             <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
               import {'{ IconName }'} from '@tabler/icons-react';
             </code>
@@ -1064,9 +1062,7 @@ export function SidebarIconsPage() {
             </code>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-            <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
-              Lucide Icons
-            </h3>
+            <h3 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Lucide Icons</h3>
             <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
               import {'{ IconName }'} from 'lucide-react';
             </code>
@@ -1077,7 +1073,7 @@ export function SidebarIconsPage() {
         </div>
 
         {/* Stats */}
-        <div className="mt-4 text-[12px] text-[var(--color-text-subtle)]">
+        <div className="mt-4 text-body-sm text-[var(--color-text-subtle)]">
           {searchQuery ? (
             <span>
               Found <strong className="text-[var(--color-text-default)]">{filteredCount}</strong> of{' '}
@@ -1097,7 +1093,7 @@ export function SidebarIconsPage() {
             <a
               key={index}
               href={`#${toKebabCase(app.name)}`}
-              className="px-3 py-1.5 text-[12px] font-medium rounded-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] hover:border-[var(--color-action-primary)] transition-colors"
+              className="px-3 py-1.5 text-label-md rounded-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] hover:border-[var(--color-action-primary)] transition-colors"
             >
               {app.name}
             </a>
@@ -1129,7 +1125,7 @@ export function SidebarIconsPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)] mt-12">
         <div className="max-w-7xl mx-auto px-8 py-6">
-          <p className="text-[12px] text-[var(--color-text-subtle)] text-center">
+          <p className="text-body-sm text-[var(--color-text-subtle)] text-center">
             © 2025 THAKI Cloud. All rights reserved.
           </p>
         </div>

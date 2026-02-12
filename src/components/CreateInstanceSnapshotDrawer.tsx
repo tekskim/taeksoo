@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -100,7 +99,7 @@ export function CreateInstanceSnapshotDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create instance snapshot
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Create a snapshot of this instance to capture its current system state as an image.
             </p>
           </VStack>
@@ -112,17 +111,10 @@ export function CreateInstanceSnapshotDrawer({
           </div>
 
           {/* Warning Message */}
-          <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-              stroke={1}
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before creating a
-              snapshot.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            snapshot.
+          </InlineMessage>
         </VStack>
 
         {/* Snapshot Name Input */}
@@ -147,7 +139,7 @@ export function CreateInstanceSnapshotDrawer({
         <FormField>
           <FormField.Label>
             Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
           </FormField.Label>
           <FormField.Control>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} fullWidth />
