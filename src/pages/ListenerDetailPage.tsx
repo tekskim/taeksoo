@@ -221,7 +221,7 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
     type,
     domain: type === 'CA' ? 'N/A' : `*.domain${i}.com`,
     issuer: ['DigiCert', "Let's Encrypt", 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
-    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
+    expiresAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
   };
 });
 
