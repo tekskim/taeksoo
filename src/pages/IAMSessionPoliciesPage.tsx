@@ -15,6 +15,7 @@ import {
   NumberInput,
   PageShell,
   PageHeader,
+  FormField,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -123,19 +124,12 @@ export default function IAMSessionPoliciesPage() {
                   <SectionCard.Header title="General policy" />
                   <SectionCard.Content gap={6}>
                     {/* Session Idle Timeout */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Session idle timeout
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines how long a user session can remain idle before expiring.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Session idle timeout</FormField.Label>
+                      <FormField.Description>
+                        Defines how long a user session can remain idle before expiring.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={sessionIdleTimeout}
@@ -145,31 +139,22 @@ export default function IAMSessionPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          15 - 60 Minutes
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>15 - 60 Minutes</FormField.HelperText>
+                    </FormField>
 
                     {/* Session Max Lifespan */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Session max lifespan
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines the absolute maximum duration a session can remain active,
-                          regardless of user activity.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Session max lifespan</FormField.Label>
+                      <FormField.Description>
+                        Defines the absolute maximum duration a session can remain active,
+                        regardless of user activity.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={sessionMaxLifespan}
@@ -179,30 +164,21 @@ export default function IAMSessionPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Hours
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1-24 Hours
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 24 Hours</FormField.HelperText>
+                    </FormField>
 
                     {/* Login Timeout */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Login timeout
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines the maximum time allowed for a login request to complete.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Login timeout</FormField.Label>
+                      <FormField.Description>
+                        Defines the maximum time allowed for a login request to complete.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={loginTimeout}
@@ -212,31 +188,21 @@ export default function IAMSessionPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1 - 60 Minutes
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 60 Minutes</FormField.HelperText>
+                    </FormField>
 
                     {/* Login Action Timeout */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Login action timeout
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines how long additional authentication steps during login remain
-                          valid.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Login action timeout</FormField.Label>
+                      <FormField.Description>
+                        Defines how long additional authentication steps during login remain valid.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={loginActionTimeout}
@@ -246,15 +212,13 @@ export default function IAMSessionPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1 - 10 Minutes
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 10 Minutes</FormField.HelperText>
+                    </FormField>
 
                     {/* Action Buttons */}
                     <HStack gap={2} justify="end" className="w-full">

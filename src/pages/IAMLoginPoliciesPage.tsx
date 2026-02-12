@@ -21,6 +21,7 @@ import {
   Radio,
   PageShell,
   PageHeader,
+  FormField,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -191,27 +192,17 @@ export default function IAMLoginPoliciesPage() {
                   <SectionCard.Header title="Password policy" />
                   <SectionCard.Content gap={6}>
                     {/* Length */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Length
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines the minimum length required for passwords.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
-                        <div className="flex items-center gap-2 w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
+                    <FormField required>
+                      <FormField.Label>Length</FormField.Label>
+                      <FormField.Description>
+                        Defines the minimum length required for passwords.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <div className="flex items-center gap-[var(--primitive-spacing-2)] w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
                           <NumberInput
                             value={minLength}
                             onChange={(val) => {
-                              // Min value must be less than max value
-                              if (val < maxLength) {
-                                setMinLength(val);
-                              }
+                              if (val < maxLength) setMinLength(val);
                             }}
                             min={6}
                             max={maxLength - 1}
@@ -233,10 +224,7 @@ export default function IAMLoginPoliciesPage() {
                           <NumberInput
                             value={maxLength}
                             onChange={(val) => {
-                              // Max value must be greater than min value
-                              if (val > minLength) {
-                                setMaxLength(val);
-                              }
+                              if (val > minLength) setMaxLength(val);
                             }}
                             min={minLength + 1}
                             max={128}
@@ -244,188 +232,164 @@ export default function IAMLoginPoliciesPage() {
                             className="w-[80px]"
                           />
                         </div>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          6 - 128 / Maximum length must be greater than or equal to the minimum
-                          length.
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>
+                        6 - 128 / Maximum length must be greater than or equal to the minimum
+                        length.
+                      </FormField.HelperText>
+                    </FormField>
 
                     {/* Requirements */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Requirements
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Specifies the character types that must be included in the password.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
-                        <Checkbox
-                          checked={requireUppercase}
-                          onChange={(e) => setRequireUppercase(e.target.checked)}
-                          label="Require at least one uppercase letter from the Latin alphabet (A-Z)"
-                        />
-                        <Checkbox
-                          checked={requireLowercase}
-                          onChange={(e) => setRequireLowercase(e.target.checked)}
-                          label="Require at least one lowercase letter from the Latin alphabet (a-z)"
-                        />
-                        <Checkbox
-                          checked={requireNumber}
-                          onChange={(e) => setRequireNumber(e.target.checked)}
-                          label="Require at least one number"
-                        />
-                        <Checkbox
-                          checked={requireSpecial}
-                          onChange={(e) => setRequireSpecial(e.target.checked)}
-                          label={`Require at least one special character ( ! @ # $ % ^ & * ( ) _ + - = [ ] { } | ' )`}
-                        />
-                      </VStack>
-                    </VStack>
+                    <FormField required>
+                      <FormField.Label>Requirements</FormField.Label>
+                      <FormField.Description>
+                        Specifies the character types that must be included in the password.
+                      </FormField.Description>
+                      <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                        <VStack gap={2}>
+                          <Checkbox
+                            checked={requireUppercase}
+                            onChange={(e) => setRequireUppercase(e.target.checked)}
+                            label="Require at least one uppercase letter from the Latin alphabet (A-Z)"
+                          />
+                          <Checkbox
+                            checked={requireLowercase}
+                            onChange={(e) => setRequireLowercase(e.target.checked)}
+                            label="Require at least one lowercase letter from the Latin alphabet (a-z)"
+                          />
+                          <Checkbox
+                            checked={requireNumber}
+                            onChange={(e) => setRequireNumber(e.target.checked)}
+                            label="Require at least one number"
+                          />
+                          <Checkbox
+                            checked={requireSpecial}
+                            onChange={(e) => setRequireSpecial(e.target.checked)}
+                            label={`Require at least one special character ( ! @ # $ % ^ & * ( ) _ + - = [ ] { } | ' )`}
+                          />
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
 
                     {/* Exclusion rules */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Exclusion rules
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines words or patterns that cannot be used in passwords.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
-                        <Checkbox
-                          checked={excludeUsername}
-                          onChange={(e) => setExcludeUsername(e.target.checked)}
-                          label="Exclude passwords containing the username"
-                        />
-                        <Checkbox
-                          checked={excludeEmail}
-                          onChange={(e) => setExcludeEmail(e.target.checked)}
-                          label="Exclude passwords containing the email address"
-                        />
-                      </VStack>
-                    </VStack>
+                    <FormField required>
+                      <FormField.Label>Exclusion rules</FormField.Label>
+                      <FormField.Description>
+                        Defines words or patterns that cannot be used in passwords.
+                      </FormField.Description>
+                      <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                        <VStack gap={2}>
+                          <Checkbox
+                            checked={excludeUsername}
+                            onChange={(e) => setExcludeUsername(e.target.checked)}
+                            label="Exclude passwords containing the username"
+                          />
+                          <Checkbox
+                            checked={excludeEmail}
+                            onChange={(e) => setExcludeEmail(e.target.checked)}
+                            label="Exclude passwords containing the email address"
+                          />
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
 
                     {/* Password expiration */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Password expiration
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Sets the validity period for passwords. After the specified duration,
-                          users are required to create a new password.
-                        </p>
-                      </VStack>
-                      <Toggle
-                        checked={passwordExpirationEnabled}
-                        onChange={setPasswordExpirationEnabled}
-                        label={passwordExpirationEnabled ? 'On' : 'Off'}
-                      />
-                      <VStack gap={2}>
-                        <HStack gap={2} align="center">
-                          <NumberInput
-                            value={passwordExpirationDays}
-                            onChange={setPasswordExpirationDays}
-                            min={1}
-                            max={1095}
-                            step={1}
-                            width="sm"
-                            disabled={!passwordExpirationEnabled}
+                    <FormField required>
+                      <FormField.Label>Password expiration</FormField.Label>
+                      <FormField.Description>
+                        Sets the validity period for passwords. After the specified duration, users
+                        are required to create a new password.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={2}>
+                          <Toggle
+                            checked={passwordExpirationEnabled}
+                            onChange={setPasswordExpirationEnabled}
+                            label={passwordExpirationEnabled ? 'On' : 'Off'}
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                            Days
-                          </span>
-                        </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1 - 1095 Days
-                        </p>
-                      </VStack>
-                    </VStack>
-
-                    {/* Prevent password reuse */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Prevent password reuse
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Prevents users from reusing previously used passwords.
-                        </p>
-                      </VStack>
-                      <Toggle
-                        checked={preventReuseEnabled}
-                        onChange={setPreventReuseEnabled}
-                        label={preventReuseEnabled ? 'On' : 'Off'}
-                      />
-                      <VStack gap={2}>
-                        <div className="flex items-center gap-6 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                          <HStack className="gap-[6px]" align="center">
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              By resent history
-                            </span>
-                            <Tooltip content="Prevents reusing the last 'N' passwords.">
-                              <IconInfoCircle
-                                size={16}
-                                stroke={1.5}
-                                className="text-[var(--color-text-subtle)]"
-                              />
-                            </Tooltip>
+                          <HStack gap={2} align="center">
                             <NumberInput
-                              value={reuseHistoryCount}
-                              onChange={setReuseHistoryCount}
+                              value={passwordExpirationDays}
+                              onChange={setPasswordExpirationDays}
                               min={1}
-                              max={24}
+                              max={1095}
                               step={1}
-                              className="w-[80px]"
-                              disabled={!preventReuseEnabled}
+                              width="sm"
+                              disabled={!passwordExpirationEnabled}
                             />
-                          </HStack>
-                          <HStack className="gap-[6px]" align="center">
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              By recent period
-                            </span>
-                            <Tooltip content="Prevents reusing any password used within the last 'N' days.">
-                              <IconInfoCircle
-                                size={16}
-                                stroke={1.5}
-                                className="text-[var(--color-text-subtle)]"
-                              />
-                            </Tooltip>
-                            <NumberInput
-                              value={reusePeriodDays}
-                              onChange={setReusePeriodDays}
-                              min={1}
-                              max={365}
-                              step={1}
-                              className="w-[80px]"
-                              disabled={!preventReuseEnabled}
-                            />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               Days
                             </span>
                           </HStack>
-                        </div>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1 - 24 / 1 - 365 Days
-                        </p>
-                      </VStack>
-                    </VStack>
+                        </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 1095 Days</FormField.HelperText>
+                    </FormField>
+
+                    {/* Prevent password reuse */}
+                    <FormField required>
+                      <FormField.Label>Prevent password reuse</FormField.Label>
+                      <FormField.Description>
+                        Prevents users from reusing previously used passwords.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={2}>
+                          <Toggle
+                            checked={preventReuseEnabled}
+                            onChange={setPreventReuseEnabled}
+                            label={preventReuseEnabled ? 'On' : 'Off'}
+                          />
+                          <div className="flex items-center gap-[var(--primitive-spacing-6)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+                            <HStack className="gap-[var(--primitive-spacing-1-5)]" align="center">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                By resent history
+                              </span>
+                              <Tooltip content="Prevents reusing the last 'N' passwords.">
+                                <IconInfoCircle
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
+                              </Tooltip>
+                              <NumberInput
+                                value={reuseHistoryCount}
+                                onChange={setReuseHistoryCount}
+                                min={1}
+                                max={24}
+                                step={1}
+                                className="w-[80px]"
+                                disabled={!preventReuseEnabled}
+                              />
+                            </HStack>
+                            <HStack className="gap-[var(--primitive-spacing-1-5)]" align="center">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                By recent period
+                              </span>
+                              <Tooltip content="Prevents reusing any password used within the last 'N' days.">
+                                <IconInfoCircle
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--color-text-subtle)]"
+                                />
+                              </Tooltip>
+                              <NumberInput
+                                value={reusePeriodDays}
+                                onChange={setReusePeriodDays}
+                                min={1}
+                                max={365}
+                                step={1}
+                                className="w-[80px]"
+                                disabled={!preventReuseEnabled}
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Days
+                              </span>
+                            </HStack>
+                          </div>
+                        </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 24 / 1 - 365 Days</FormField.HelperText>
+                    </FormField>
 
                     {/* Action Buttons */}
                     <HStack gap={2} justify="end" className="w-full">
@@ -463,42 +427,30 @@ export default function IAMLoginPoliciesPage() {
                     />
 
                     {/* Lockout Type */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Lockout Type
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          Choose how the account is locked after login failures.
-                        </p>
-                      </VStack>
-                      <Select
-                        value={lockoutType}
-                        onChange={setLockoutType}
-                        options={lockoutTypeOptions}
-                        className="w-[400px]"
-                        disabled={!lockoutEnabled}
-                      />
-                    </VStack>
+                    <FormField required>
+                      <FormField.Label>Lockout Type</FormField.Label>
+                      <FormField.Description>
+                        Choose how the account is locked after login failures.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          value={lockoutType}
+                          onChange={setLockoutType}
+                          options={lockoutTypeOptions}
+                          className="w-[400px]"
+                          disabled={!lockoutEnabled}
+                        />
+                      </FormField.Control>
+                    </FormField>
 
                     {/* Max login failures */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Max Login Failures
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          The maximum number of failed login attempts allowed before the account is
-                          locked.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Max Login Failures</FormField.Label>
+                      <FormField.Description>
+                        The maximum number of failed login attempts allowed before the account is
+                        locked.
+                      </FormField.Description>
+                      <FormField.Control>
                         <NumberInput
                           value={maxLoginFailures}
                           onChange={setMaxLoginFailures}
@@ -508,28 +460,19 @@ export default function IAMLoginPoliciesPage() {
                           width="sm"
                           disabled={!lockoutEnabled}
                         />
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1 - 100
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1 - 100</FormField.HelperText>
+                    </FormField>
 
                     {/* Maximum Temporary Lockouts - only for permanent_after_temporary */}
                     {lockoutType === 'permanent_after_temporary' && (
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <HStack className="gap-[3px]">
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              Maximum Temporary Lockouts
-                            </span>
-                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            The total number of temporary lockouts allowed before the account is
-                            permanently locked.
-                          </p>
-                        </VStack>
-                        <VStack gap={2}>
+                      <FormField required>
+                        <FormField.Label>Maximum Temporary Lockouts</FormField.Label>
+                        <FormField.Description>
+                          The total number of temporary lockouts allowed before the account is
+                          permanently locked.
+                        </FormField.Description>
+                        <FormField.Control>
                           <NumberInput
                             value={maxTemporaryLockouts}
                             onChange={setMaxTemporaryLockouts}
@@ -539,11 +482,9 @@ export default function IAMLoginPoliciesPage() {
                             width="sm"
                             disabled={!lockoutEnabled}
                           />
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            1 - 100
-                          </p>
-                        </VStack>
-                      </VStack>
+                        </FormField.Control>
+                        <FormField.HelperText>1 - 100</FormField.HelperText>
+                      </FormField>
                     )}
 
                     {/* Only show these sections when lockout type has temporary behavior */}
@@ -551,145 +492,125 @@ export default function IAMLoginPoliciesPage() {
                       lockoutType === 'permanent_after_temporary') && (
                       <>
                         {/* Strategy to increase wait time */}
-                        <VStack gap={4}>
-                          <VStack gap={2}>
-                            <HStack className="gap-[3px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                Strategy to increase wait time
-                              </span>
-                              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                            </HStack>
-                            <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                              Defines how the wait time increases after repeated failed login
-                              attempts.
-                            </p>
-                          </VStack>
-                          <VStack gap={3}>
-                            <HStack className="gap-[6px]" align="center">
-                              <Radio
-                                checked={waitTimeStrategy === 'linear'}
-                                onChange={() => setWaitTimeStrategy('linear')}
-                                disabled={!lockoutEnabled}
-                              />
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                Linear
-                              </span>
-                              <Tooltip content="Wait time increases only when failures are multiples of factor">
-                                <IconInfoCircle
-                                  size={16}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-subtle)]"
+                        <FormField required>
+                          <FormField.Label>Strategy to increase wait time</FormField.Label>
+                          <FormField.Description>
+                            Defines how the wait time increases after repeated failed login
+                            attempts.
+                          </FormField.Description>
+                          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                            <VStack gap={3}>
+                              <HStack className="gap-[var(--primitive-spacing-1-5)]" align="center">
+                                <Radio
+                                  checked={waitTimeStrategy === 'linear'}
+                                  onChange={() => setWaitTimeStrategy('linear')}
+                                  disabled={!lockoutEnabled}
                                 />
-                              </Tooltip>
-                            </HStack>
-                            <HStack className="gap-[6px]" align="center">
-                              <Radio
-                                checked={waitTimeStrategy === 'multiple'}
-                                onChange={() => setWaitTimeStrategy('multiple')}
-                                disabled={!lockoutEnabled}
-                              />
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                Multiple
-                              </span>
-                              <Tooltip content="Wait time increases after every failure starting from factor">
-                                <IconInfoCircle
-                                  size={16}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-subtle)]"
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  Linear
+                                </span>
+                                <Tooltip content="Wait time increases only when failures are multiples of factor">
+                                  <IconInfoCircle
+                                    size={16}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
+                              </HStack>
+                              <HStack className="gap-[var(--primitive-spacing-1-5)]" align="center">
+                                <Radio
+                                  checked={waitTimeStrategy === 'multiple'}
+                                  onChange={() => setWaitTimeStrategy('multiple')}
+                                  disabled={!lockoutEnabled}
                                 />
-                              </Tooltip>
-                            </HStack>
-                          </VStack>
-                        </VStack>
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  Multiple
+                                </span>
+                                <Tooltip content="Wait time increases after every failure starting from factor">
+                                  <IconInfoCircle
+                                    size={16}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
+                              </HStack>
+                            </VStack>
+                          </FormField.Control>
+                        </FormField>
 
                         {/* Wait increment */}
-                        <VStack gap={4}>
-                          <VStack gap={2}>
-                            <HStack className="gap-[3px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                Wait increment
+                        <FormField required>
+                          <FormField.Label>Wait increment</FormField.Label>
+                          <FormField.Description>
+                            Amount of time added to the wait time for each additional failed login
+                            attempt.
+                          </FormField.Description>
+                          <FormField.Control>
+                            <HStack gap={2} align="center">
+                              <NumberInput
+                                value={waitIncrement}
+                                onChange={setWaitIncrement}
+                                min={1}
+                                max={60}
+                                step={1}
+                                width="sm"
+                                disabled={!lockoutEnabled}
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Minutes
                               </span>
-                              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                             </HStack>
-                            <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                              Amount of time added to the wait time for each additional failed login
-                              attempt.
-                            </p>
-                          </VStack>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={waitIncrement}
-                              onChange={setWaitIncrement}
-                              min={1}
-                              max={60}
-                              step={1}
-                              width="sm"
-                              disabled={!lockoutEnabled}
-                            />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                              Minutes
-                            </span>
-                          </HStack>
-                        </VStack>
+                          </FormField.Control>
+                        </FormField>
 
                         {/* Max wait time */}
-                        <VStack gap={4}>
-                          <VStack gap={2}>
-                            <HStack className="gap-[3px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                Max wait time
+                        <FormField required>
+                          <FormField.Label>Max wait time</FormField.Label>
+                          <FormField.Description>
+                            The maximum time a user must wait before retrying, regardless of failure
+                            count.
+                          </FormField.Description>
+                          <FormField.Control>
+                            <HStack gap={2} align="center">
+                              <NumberInput
+                                value={maxWaitTime}
+                                onChange={setMaxWaitTime}
+                                min={1}
+                                max={1440}
+                                step={1}
+                                width="sm"
+                                disabled={!lockoutEnabled}
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Minutes
                               </span>
-                              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                             </HStack>
-                            <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                              The maximum time a user must wait before retrying, regardless of
-                              failure count.
-                            </p>
-                          </VStack>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={maxWaitTime}
-                              onChange={setMaxWaitTime}
-                              min={1}
-                              max={1440}
-                              step={1}
-                              width="sm"
-                              disabled={!lockoutEnabled}
-                            />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                              Minutes
-                            </span>
-                          </HStack>
-                        </VStack>
+                          </FormField.Control>
+                        </FormField>
 
                         {/* Failure reset time */}
-                        <VStack gap={4}>
-                          <VStack gap={2}>
-                            <HStack className="gap-[3px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                                Failure reset time
+                        <FormField required>
+                          <FormField.Label>Failure reset time</FormField.Label>
+                          <FormField.Description>
+                            Set the time limit within which the user must enter the email code.
+                          </FormField.Description>
+                          <FormField.Control>
+                            <HStack gap={2} align="center">
+                              <NumberInput
+                                value={failureResetTime}
+                                onChange={setFailureResetTime}
+                                min={1}
+                                max={72}
+                                step={1}
+                                width="sm"
+                                disabled={!lockoutEnabled}
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Hours
                               </span>
-                              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                             </HStack>
-                            <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                              Set the time limit within which the user must enter the email code.
-                            </p>
-                          </VStack>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={failureResetTime}
-                              onChange={setFailureResetTime}
-                              min={1}
-                              max={72}
-                              step={1}
-                              width="sm"
-                              disabled={!lockoutEnabled}
-                            />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                              Hours
-                            </span>
-                          </HStack>
-                        </VStack>
+                          </FormField.Control>
+                        </FormField>
                       </>
                     )}
 

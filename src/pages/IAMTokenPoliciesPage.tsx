@@ -15,6 +15,7 @@ import {
   NumberInput,
   PageShell,
   PageHeader,
+  FormField,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -117,20 +118,13 @@ export default function IAMTokenPoliciesPage() {
                   <SectionCard.Header title="General policy" />
                   <SectionCard.Content gap={6}>
                     {/* Access Token Lifespan */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Access token lifespan
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines how long an access token remains valid before it needs to be
-                          renewed.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Access token lifespan</FormField.Label>
+                      <FormField.Description>
+                        Defines how long an access token remains valid before it needs to be
+                        renewed.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={accessTokenLifespan}
@@ -140,30 +134,21 @@ export default function IAMTokenPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          5 - 15 Minutes
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>5 - 15 Minutes</FormField.HelperText>
+                    </FormField>
 
                     {/* Refresh Token Lifespan */}
-                    <VStack gap={4}>
-                      <VStack gap={2}>
-                        <HStack className="gap-[3px]">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Refresh token lifespan
-                          </span>
-                          <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                        </HStack>
-                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                          Defines how long a user can stay signed in using a refresh token.
-                        </p>
-                      </VStack>
-                      <VStack gap={2}>
+                    <FormField required>
+                      <FormField.Label>Refresh token lifespan</FormField.Label>
+                      <FormField.Description>
+                        Defines how long a user can stay signed in using a refresh token.
+                      </FormField.Description>
+                      <FormField.Control>
                         <HStack gap={2} align="center">
                           <NumberInput
                             value={refreshTokenLifespan}
@@ -173,15 +158,13 @@ export default function IAMTokenPoliciesPage() {
                             step={1}
                             width="sm"
                           />
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          <span className="text-body-md text-[var(--color-text-default)]">
                             Days
                           </span>
                         </HStack>
-                        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                          1-30 Days
-                        </p>
-                      </VStack>
-                    </VStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1-30 Days</FormField.HelperText>
+                    </FormField>
 
                     {/* Action Buttons */}
                     <HStack gap={2} justify="end" className="w-full">

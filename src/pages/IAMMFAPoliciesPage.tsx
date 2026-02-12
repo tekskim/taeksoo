@@ -19,6 +19,7 @@ import {
   Chip,
   PageShell,
   PageHeader,
+  FormField,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -163,14 +164,14 @@ export default function IAMMFAPoliciesPage() {
                   <SectionCard.Header title="MFA enforcement" />
                   <SectionCard.Content gap={6}>
                     {/* Description */}
-                    <p className="text-body-md leading-[16px] text-[var(--color-text-subtle)]">
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
                       Choose whether to make Multi-Factor Authentication (MFA) mandatory for all
                       users, or let them enable it voluntarily.
                     </p>
 
                     {/* Radio Options */}
                     <VStack gap={3}>
-                      <HStack align="center" className="gap-[6px]">
+                      <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
                         <Radio
                           checked={mfaEnforcement === 'voluntary'}
                           onChange={() => setMfaEnforcement('voluntary')}
@@ -246,7 +247,7 @@ export default function IAMMFAPoliciesPage() {
                 {activeMethodTab === 'otp' && (
                   <SectionCard>
                     <SectionCard.Header title="OTP policy" />
-                    <SectionCard.Content gap={6}>
+                    <SectionCard.Content>
                       {/* OTP Enable Toggle */}
                       <Toggle
                         checked={otpEnabled}
@@ -254,24 +255,14 @@ export default function IAMMFAPoliciesPage() {
                         label={otpEnabled ? 'On' : 'Off'}
                       />
 
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)] -my-1" />
-
                       {/* Look Around Window */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <HStack gap={0.5}>
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              Look around window
-                            </span>
-                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            Allows for slight time differences between the server and the user's
-                            device to prevent login failures. 1 is recommended.
-                          </p>
-                        </VStack>
-                        <VStack gap={2}>
+                      <FormField required>
+                        <FormField.Label>Look around window</FormField.Label>
+                        <FormField.Description>
+                          Allows for slight time differences between the server and the user's
+                          device to prevent login failures. 1 is recommended.
+                        </FormField.Description>
+                        <FormField.Control>
                           <NumberInput
                             value={lookAroundWindow}
                             onChange={setLookAroundWindow}
@@ -281,61 +272,46 @@ export default function IAMMFAPoliciesPage() {
                             width="sm"
                             disabled={!otpEnabled}
                           />
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            0 - 2
-                          </p>
-                        </VStack>
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        </FormField.Control>
+                        <FormField.HelperText>0 - 2</FormField.HelperText>
+                      </FormField>
 
                       {/* Reusable Token */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Reusable token
-                          </span>
-                          <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                            For security, always keep this disabled. Enabling it may expose the
-                            system to replay attacks.
-                          </p>
-                        </VStack>
-                        <Toggle
-                          checked={reusableToken}
-                          onChange={(e) => setReusableToken(e.target.checked)}
-                          label={reusableToken ? 'On' : 'Off'}
-                          disabled={!otpEnabled}
-                        />
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <FormField>
+                        <FormField.Label>Reusable token</FormField.Label>
+                        <FormField.Description>
+                          For security, always keep this disabled. Enabling it may expose the system
+                          to replay attacks.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Toggle
+                            checked={reusableToken}
+                            onChange={(e) => setReusableToken(e.target.checked)}
+                            label={reusableToken ? 'On' : 'Off'}
+                            disabled={!otpEnabled}
+                          />
+                        </FormField.Control>
+                      </FormField>
 
                       {/* Supported Applications */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Supported applications
-                          </span>
-                          <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-                            Recommended authenticator apps that support this policy.
-                          </p>
-                        </VStack>
-                        <HStack className="gap-[6px]">
-                          <Chip
-                            value="Google auth"
-                            leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                          />
-                          <Chip
-                            value="MS Auth"
-                            leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                          />
-                        </HStack>
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <FormField>
+                        <FormField.Label>Supported applications</FormField.Label>
+                        <FormField.Description>
+                          Recommended authenticator apps that support this policy.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <HStack className="gap-[var(--primitive-spacing-1-5)]">
+                            <Chip
+                              value="Google auth"
+                              leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
+                            />
+                            <Chip
+                              value="MS Auth"
+                              leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
+                            />
+                          </HStack>
+                        </FormField.Control>
+                      </FormField>
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full">
@@ -362,7 +338,7 @@ export default function IAMMFAPoliciesPage() {
                 {activeMethodTab === 'email' && (
                   <SectionCard>
                     <SectionCard.Header title="Email policy" />
-                    <SectionCard.Content gap={6}>
+                    <SectionCard.Content>
                       {/* Email Enable Toggle */}
                       <Toggle
                         checked={emailEnabled}
@@ -370,23 +346,13 @@ export default function IAMMFAPoliciesPage() {
                         label={emailEnabled ? 'On' : 'Off'}
                       />
 
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                       {/* Code Validity Period */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <HStack gap={0.5}>
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              Code validity period
-                            </span>
-                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            Set the time limit within which the user must enter the email code.
-                          </p>
-                        </VStack>
-                        <VStack gap={2}>
+                      <FormField required>
+                        <FormField.Label>Code validity period</FormField.Label>
+                        <FormField.Description>
+                          Set the time limit within which the user must enter the email code.
+                        </FormField.Description>
+                        <FormField.Control>
                           <HStack gap={2} align="center">
                             <NumberInput
                               value={codeValidityPeriod}
@@ -397,34 +363,22 @@ export default function IAMMFAPoliciesPage() {
                               width="sm"
                               disabled={!emailEnabled}
                             />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               Seconds
                             </span>
                           </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            1-600 Seconds
-                          </p>
-                        </VStack>
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        </FormField.Control>
+                        <FormField.HelperText>1-600 Seconds</FormField.HelperText>
+                      </FormField>
 
                       {/* Resend Cooldown */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <HStack gap={0.5}>
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              Resend cooldown
-                            </span>
-                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            The minimum time a user must wait before requesting a new authentication
-                            code.
-                          </p>
-                        </VStack>
-                        <VStack gap={2}>
+                      <FormField required>
+                        <FormField.Label>Resend cooldown</FormField.Label>
+                        <FormField.Description>
+                          The minimum time a user must wait before requesting a new authentication
+                          code.
+                        </FormField.Description>
+                        <FormField.Control>
                           <HStack gap={2} align="center">
                             <NumberInput
                               value={resendCooldown}
@@ -435,37 +389,25 @@ export default function IAMMFAPoliciesPage() {
                               width="sm"
                               disabled={!emailEnabled}
                             />
-                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               Seconds
                             </span>
                           </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            1-120 Seconds
-                          </p>
-                        </VStack>
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        </FormField.Control>
+                        <FormField.HelperText>1-120 Seconds</FormField.HelperText>
+                      </FormField>
 
                       {/* Verification Attempts */}
-                      <VStack gap={4}>
-                        <VStack gap={2}>
-                          <HStack gap={0.5}>
-                            <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                              Verification attempts
-                            </span>
-                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            Protect user accounts from unusual activities by limiting the number of
-                            verification attempts allowed within a time frame.
-                          </p>
-                        </VStack>
-                        <VStack gap={2}>
-                          <div className="flex items-center gap-6 px-4 py-2 border border-[var(--color-border-default)] rounded-md w-full bg-[var(--color-surface-default)]">
-                            <HStack align="center" className="gap-[6px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                      <FormField required>
+                        <FormField.Label>Verification attempts</FormField.Label>
+                        <FormField.Description>
+                          Protect user accounts from unusual activities by limiting the number of
+                          verification attempts allowed within a time frame.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <div className="flex items-center gap-[var(--primitive-spacing-6)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full bg-[var(--color-surface-default)]">
+                            <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Time window
                               </span>
                               <NumberInput
@@ -477,12 +419,12 @@ export default function IAMMFAPoliciesPage() {
                                 className="w-[80px]"
                                 disabled={!emailEnabled}
                               />
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 Minutes
                               </span>
                             </HStack>
-                            <HStack align="center" className="gap-[6px]">
-                              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                            <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Max attempts
                               </span>
                               <NumberInput
@@ -494,19 +436,14 @@ export default function IAMMFAPoliciesPage() {
                                 className="w-[80px]"
                                 disabled={!emailEnabled}
                               />
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 Times
                               </span>
                             </HStack>
                           </div>
-                          <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
-                            1-60 Minutes / 1-10 Times
-                          </p>
-                        </VStack>
-                      </VStack>
-
-                      {/* Divider */}
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        </FormField.Control>
+                        <FormField.HelperText>1-60 Minutes / 1-10 Times</FormField.HelperText>
+                      </FormField>
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full">
