@@ -77,7 +77,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
         <HStack gap={0} align="center">
           <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
@@ -261,9 +261,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
       showCloseButton={false}
       width={696}
       footer={
-        <VStack gap={4} className="w-full">
+        <VStack gap={0} className="w-full">
           {/* Quota Section */}
-          <VStack gap={4} className="w-full">
+          <VStack gap={4} className="w-full pb-[24px]">
             <QuotaProgressBar
               label="Volume backup quota"
               used={volumeBackupQuota.used}
@@ -276,8 +276,11 @@ export function CreateVolumeBackupWithSelectionDrawer({
             />
           </VStack>
 
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
           {/* Buttons */}
-          <HStack gap={2} justify="center" className="w-full">
+          <HStack gap={2} justify="center" className="w-full pt-[24px]">
             <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
@@ -346,7 +349,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
         </VStack>
 
         {/* Form Fields Section */}
-        <VStack gap={6}>
+        <VStack gap={2}>
           {/* Backup Mode */}
           <FormField className="gap-2">
             <FormField.Label>Backup mode</FormField.Label>
@@ -388,7 +391,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
           </FormField>
 
           {/* Description */}
-          <FormField>
+          <FormField className="pb-[24px] gap-0">
             <FormField.Label>
               Description{' '}
               <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
