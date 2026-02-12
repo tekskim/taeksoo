@@ -440,6 +440,7 @@ export function CreateClusterPage() {
                         totalPages={Math.ceil(filteredExternalNetworks.length / 6) || 1}
                         onPageChange={() => {}}
                         totalItems={filteredExternalNetworks.length}
+                        selectedCount={selectedExternalNetwork ? 1 : 0}
                       />
                       <Table
                         columns={externalNetworkColumns}
@@ -482,6 +483,7 @@ export function CreateClusterPage() {
                         totalPages={Math.ceil(filteredTenantNetworks.length / 5) || 1}
                         onPageChange={() => {}}
                         totalItems={filteredTenantNetworks.length}
+                        selectedCount={selectedTenantNetwork ? 1 : 0}
                       />
                       <Table
                         columns={tenantNetworkColumns}
@@ -593,6 +595,7 @@ export function CreateClusterPage() {
                             totalPages={5}
                             onPageChange={() => {}}
                             totalItems={115}
+                            selectedCount={cpFlavor ? 1 : 0}
                           />
                           <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
                           <SelectionIndicator
@@ -726,6 +729,7 @@ export function CreateClusterPage() {
                             totalPages={5}
                             onPageChange={() => {}}
                             totalItems={115}
+                            selectedCount={nodeFlavor ? 1 : 0}
                           />
                           <VStack gap={2}>
                             <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />

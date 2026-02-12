@@ -287,7 +287,7 @@ export function MigrateInstanceDrawer({
               selectedItems={
                 selectedHost ? [{ id: selectedHost.id, label: selectedHost.name }] : []
               }
-              removable={false}
+              onRemove={() => setSelectedHostId(null)}
               emptyText="No item selected"
               error={hostError}
               errorMessage="Please select a host to migrate."

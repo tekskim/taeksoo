@@ -373,7 +373,7 @@ export default function PortDetailPage() {
           <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute/floating-ips/${row.floatingIp.id}`}
-              className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.floatingIp.address}
@@ -396,7 +396,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/subnets/${row.ownedSubnet.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedSubnet.name}
@@ -501,7 +501,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/security-groups/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -711,7 +711,7 @@ export default function PortDetailPage() {
                       value={
                         <Link
                           to={`/compute/networks/${port.ownedNetwork.id}`}
-                          className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                         >
                           {port.ownedNetwork.name}
                           <IconExternalLink
@@ -726,7 +726,7 @@ export default function PortDetailPage() {
                       value={
                         <Link
                           to={`/compute/networks/${port.subnet.id}`}
-                          className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                         >
                           {port.subnet.name}
                           <IconExternalLink
@@ -772,7 +772,7 @@ export default function PortDetailPage() {
                                 ? `/instances/${port.attachedTo.id}`
                                 : `/routers/${port.attachedTo.id}`
                             }
-                            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {port.attachedTo.name}
                             <IconExternalLink

@@ -206,7 +206,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
       flex: 1,
       render: (_, row) => (
         <span className="flex items-center gap-1.5">
-          <span className="font-medium text-[var(--color-action-primary)] truncate">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
             {row.name}
           </span>
           <IconExternalLink
@@ -231,7 +231,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
       render: (_, row) =>
         row.attachedTo ? (
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.attachedTo}
             </span>
             <IconExternalLink
@@ -321,6 +321,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
             totalPages={totalPages}
             totalItems={filteredVolumes.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedVolumeId ? 1 : 0}
           />
 
           {/* Volumes Table */}

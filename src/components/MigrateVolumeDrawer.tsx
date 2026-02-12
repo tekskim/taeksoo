@@ -276,7 +276,7 @@ export function MigrateVolumeDrawer({
               selectedItems={
                 selectedBackend ? [{ id: selectedBackend.id, label: selectedBackend.name }] : []
               }
-              removable={false}
+              onRemove={() => setSelectedBackendId(null)}
               emptyText="No item selected"
               error={backendError}
               errorMessage="Please select a target storage backend."

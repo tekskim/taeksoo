@@ -136,7 +136,7 @@ export function DetachVolumeDrawer({
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -253,9 +253,9 @@ export function DetachVolumeDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              totalItems={totalItems}
+              selectedCount={selectedVolumeId ? 1 : 0}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           {/* Volume Table */}

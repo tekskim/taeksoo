@@ -563,7 +563,7 @@ export function PersistentVolumeClaimDetailPage() {
               label="Namespace"
               value={
                 <span
-                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/namespaces/${pvcData.namespace}`)}
                 >
                   {pvcData.namespace}

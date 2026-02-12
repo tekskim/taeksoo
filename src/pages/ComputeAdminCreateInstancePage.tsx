@@ -1319,6 +1319,7 @@ function ImageSection({
               }
               totalItems={sourceTab === 'image' ? filteredImages.length : filteredSnapshots.length}
               onPageChange={setCurrentPage}
+              selectedCount={selectedImageId ? 1 : 0}
             />
 
             {/* Table - Dynamic based on tab */}
@@ -1735,6 +1736,7 @@ function FlavorSection({
               totalPages={totalPages}
               totalItems={filteredFlavors.length}
               onPageChange={setCurrentPage}
+              selectedCount={selectedFlavorId ? 1 : 0}
             />
 
             <Table
@@ -2212,7 +2214,7 @@ function NetworkSection({
         <a
           href={`/security-groups/${row.id}`}
           onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-1 text-[var(--color-action-primary)] hover:underline font-medium"
+          className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
         >
           <span>{row.name}</span>
           <svg
@@ -2475,6 +2477,7 @@ function NetworkSection({
                     totalPages={Math.ceil(filteredFloatingPools.length / 5) || 1}
                     totalItems={filteredFloatingPools.length}
                     onPageChange={setFipPage}
+                    selectedCount={selectedFloatingPool ? 1 : 0}
                   />
                   <Table
                     columns={floatingPoolColumns}
@@ -2648,6 +2651,7 @@ function NetworkSection({
                     totalPages={Math.ceil(filteredPorts.length / 5) || 1}
                     totalItems={filteredPorts.length}
                     onPageChange={setPortPage}
+                    selectedCount={selectedPortId ? 1 : 0}
                   />
                   <Table
                     columns={portColumns}
@@ -2880,6 +2884,7 @@ function AuthenticationSection({
                       totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
                       totalItems={filteredKeyPairs.length}
                       onPageChange={setKeyPairPage}
+                      selectedCount={selectedKeyPairId ? 1 : 0}
                     />
 
                     {/* Key pair Table */}
@@ -3201,6 +3206,7 @@ function AdvancedSection({
                     totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
                     totalItems={filteredServerGroups.length}
                     onPageChange={setServerGroupPage}
+                    selectedCount={selectedServerGroupId ? 1 : 0}
                   />
 
                   {/* Server group Table */}
@@ -3531,6 +3537,7 @@ function TemplatesSection({
                       totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                       totalItems={filteredTemplates.length}
                       onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
                     />
 
                     {/* Table with Selection */}
@@ -3573,6 +3580,7 @@ function TemplatesSection({
                       totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                       totalItems={filteredTemplates.length}
                       onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
                     />
 
                     {/* Table with Selection */}
@@ -3615,6 +3623,7 @@ function TemplatesSection({
                       totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
                       totalItems={filteredTemplates.length}
                       onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
                     />
 
                     {/* Table with Selection */}

@@ -237,9 +237,9 @@ export function DetachInterfaceDrawer({
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              totalItems={totalItems}
+              selectedCount={selectedInterfaceId ? 1 : 0}
             />
-            <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           <VStack gap={2}>

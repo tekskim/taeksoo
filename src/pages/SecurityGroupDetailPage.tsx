@@ -311,7 +311,7 @@ export default function SecurityGroupDetailPage() {
       render: (_, row) => (
         <Link
           to={`/compute/networks/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}

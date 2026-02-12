@@ -156,7 +156,7 @@ export function ResizeInstanceDrawer({
       render: (_, row) => (
         <span className="flex flex-col">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -231,7 +231,7 @@ export function ResizeInstanceDrawer({
         row.isLink ? (
           <span className="flex flex-col">
             <span className="flex items-center gap-1.5">
-              <span className="font-medium text-[var(--color-action-primary)] truncate">
+              <span className="text-label-md text-[var(--color-action-primary)] truncate">
                 {row.name}
               </span>
               <IconExternalLink
@@ -421,6 +421,7 @@ export function ResizeInstanceDrawer({
             totalPages={totalPages}
             totalItems={filteredFlavors.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedFlavorId ? 1 : 0}
           />
 
           {/* Flavor Table */}

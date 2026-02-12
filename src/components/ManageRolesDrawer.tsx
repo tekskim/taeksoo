@@ -54,7 +54,9 @@ const roleColumns: TableColumn<RoleItem>[] = [
     sortable: true,
     render: (_, row) => (
       <span className="flex items-center gap-1.5">
-        <span className="font-medium text-[var(--color-action-primary)] truncate">{row.name}</span>
+        <span className="text-label-md text-[var(--color-action-primary)] truncate">
+          {row.name}
+        </span>
         <IconExternalLink
           size={12}
           stroke={1.5}

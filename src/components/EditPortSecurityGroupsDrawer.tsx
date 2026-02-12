@@ -299,6 +299,7 @@ export function EditPortSecurityGroupsDrawer({
               totalPages={totalPages}
               totalItems={filteredSecurityGroups.length}
               onPageChange={setCurrentPage}
+              selectedCount={selectedSecurityGroupIds.length}
             />
 
             <VStack gap={2}>

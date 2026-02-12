@@ -290,6 +290,7 @@ export function ManageSecurityGroupsDrawer({
             totalPages={interfaceTotalPages}
             totalItems={filteredInterfaces.length}
             onPageChange={setInterfacePage}
+            selectedCount={selectedInterfaceId ? 1 : 0}
           />
 
           <VStack gap={2}>
@@ -341,6 +342,7 @@ export function ManageSecurityGroupsDrawer({
             totalPages={sgTotalPages}
             totalItems={filteredSecurityGroups.length}
             onPageChange={setSgPage}
+            selectedCount={selectedSecurityGroupIds.length}
           />
 
           {/* Search */}

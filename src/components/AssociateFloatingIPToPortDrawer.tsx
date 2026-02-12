@@ -343,6 +343,7 @@ export function AssociateFloatingIPToPortDrawer({
             totalPages={fixedIpTotalPages}
             totalItems={filteredFixedIPs.length}
             onPageChange={setFixedIpCurrentPage}
+            selectedCount={selectedFixedIpId ? 1 : 0}
           />
 
           <VStack gap={2}>
@@ -387,6 +388,7 @@ export function AssociateFloatingIPToPortDrawer({
             totalPages={floatingIpTotalPages}
             totalItems={filteredFloatingIPs.length}
             onPageChange={setFloatingIpCurrentPage}
+            selectedCount={selectedFloatingIpId ? 1 : 0}
           />
 
           <VStack gap={2}>
