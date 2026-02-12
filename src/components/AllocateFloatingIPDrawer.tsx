@@ -203,7 +203,7 @@ export function AllocateFloatingIPDrawer({
         <div className="flex flex-col gap-0.5">
           <HStack gap={1.5} align="center">
             <span
-              className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] hover:underline truncate cursor-pointer"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline truncate cursor-pointer"
               onClick={(e) => e.stopPropagation()}
             >
               {row.name}
@@ -335,6 +335,7 @@ export function AllocateFloatingIPDrawer({
             totalPages={totalPages}
             totalItems={filteredNetworks.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedNetworkId ? 1 : 0}
           />
 
           <VStack gap={2}>

@@ -647,6 +647,7 @@ export function AssociateFloatingIPDrawer({
                 totalPages={instanceTotalPages}
                 totalItems={filteredInstances.length}
                 onPageChange={setInstancePage}
+                selectedCount={selectedInstanceId ? 1 : 0}
               />
 
               <VStack gap={2}>
@@ -691,6 +692,7 @@ export function AssociateFloatingIPDrawer({
                 totalPages={loadBalancerTotalPages}
                 totalItems={filteredLoadBalancers.length}
                 onPageChange={setLoadBalancerPage}
+                selectedCount={selectedLoadBalancerId ? 1 : 0}
               />
 
               <VStack gap={2}>
@@ -735,6 +737,7 @@ export function AssociateFloatingIPDrawer({
                 totalPages={virtualAdapterTotalPages}
                 totalItems={filteredVirtualAdapters.length}
                 onPageChange={setVirtualAdapterPage}
+                selectedCount={selectedVirtualAdapterId ? 1 : 0}
               />
 
               <VStack gap={2}>
@@ -782,6 +785,7 @@ export function AssociateFloatingIPDrawer({
               totalPages={fixedIPTotalPages}
               totalItems={filteredFixedIPs.length}
               onPageChange={setFixedIPPage}
+              selectedCount={selectedFixedIPId ? 1 : 0}
             />
 
             <VStack gap={2}>
@@ -825,6 +829,7 @@ export function AssociateFloatingIPDrawer({
               totalPages={vaFixedIPTotalPages}
               totalItems={filteredVAFixedIPs.length}
               onPageChange={setFixedIPPage}
+              selectedCount={selectedFixedIPId ? 1 : 0}
             />
 
             <VStack gap={2}>

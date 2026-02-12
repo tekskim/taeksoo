@@ -351,7 +351,7 @@ export function ComputeAdminFloatingIPsPage() {
       render: (_, row) => (
         <Link
           to={`/compute-admin/floating-ips/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.floatingIp}
@@ -368,7 +368,7 @@ export function ComputeAdminFloatingIPsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/tenants/${row.tenantId}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.tenant}
@@ -396,7 +396,7 @@ export function ComputeAdminFloatingIPsPage() {
               <Tooltip content={row.associatedTo} position="top">
                 <Link
                   to={`/compute-admin/instances/${row.associatedToId}`}
-                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                  className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {row.associatedTo}
@@ -434,7 +434,7 @@ export function ComputeAdminFloatingIPsPage() {
           <Tooltip content={row.network} position="top">
             <Link
               to={`/compute-admin/networks/${row.networkId}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
               onClick={(e) => e.stopPropagation()}
             >
               {row.network}

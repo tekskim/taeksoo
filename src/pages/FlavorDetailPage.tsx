@@ -491,7 +491,7 @@ export function FlavorDetailPage() {
           <div className="flex items-center gap-1">
             <Link
               to={`/compute/instances/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
               onClick={(e) => e.stopPropagation()}
             >
               {row.name}

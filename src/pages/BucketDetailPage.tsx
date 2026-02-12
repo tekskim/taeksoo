@@ -312,7 +312,7 @@ function ObjectRow({
           )}
           <Link
             to={isFolder ? `/storage/buckets/${object.id}` : '#'}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)] truncate"
           >
             {object.name}
           </Link>

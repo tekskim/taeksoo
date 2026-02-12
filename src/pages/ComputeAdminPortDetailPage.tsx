@@ -358,7 +358,7 @@ export default function PortDetailPage() {
         row.floatingIp ? (
           <Link
             to={`/compute-admin/floating-ips/${row.floatingIp.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.floatingIp.address}
@@ -376,7 +376,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/subnets/${row.ownedSubnet.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedSubnet.name}
@@ -450,7 +450,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute-admin/security-groups/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -618,7 +618,7 @@ export default function PortDetailPage() {
                         value={
                           <Link
                             to={`/compute-admin/networks/${port.ownedNetwork.id}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {port.ownedNetwork.name}
                           </Link>
@@ -652,7 +652,7 @@ export default function PortDetailPage() {
                                   ? `/instances/${port.attachedTo.id}`
                                   : `/routers/${port.attachedTo.id}`
                               }
-                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                             >
                               {port.attachedTo.name}
                             </Link>

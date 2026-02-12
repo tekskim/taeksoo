@@ -297,6 +297,7 @@ export function SetDefaultDomainDrawer({
             onPageChange={setCurrentPage}
             totalItems={filteredDomains.length}
             itemsPerPage={itemsPerPage}
+            selectedCount={selectedDomainId ? 1 : 0}
           />
 
           {/* Table + Selection Indicator */}

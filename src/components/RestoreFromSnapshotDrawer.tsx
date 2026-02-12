@@ -91,7 +91,7 @@ const getSnapshotColumns = (
     render: (_, row) => (
       <div className="flex flex-col gap-0.5">
         <span className="flex items-center gap-1.5">
-          <span className="font-medium text-[var(--color-action-primary)] truncate">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
             {row.name}
           </span>
           <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
@@ -249,6 +249,7 @@ export function RestoreFromSnapshotDrawer({
             totalPages={totalPages}
             totalItems={filteredSnapshots.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedSnapshotId ? 1 : 0}
           />
 
           {/* Snapshots Table + Selection Indicator */}

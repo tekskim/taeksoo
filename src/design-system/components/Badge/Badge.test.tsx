@@ -63,7 +63,7 @@ describe('Badge', () => {
         </Badge>
       );
       const badge = screen.getByText('Subtle');
-      expect(badge).toHaveClass('bg-[var(--color-blue-100)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-blue-bg)]');
     });
   });
 
@@ -131,7 +131,7 @@ describe('Badge', () => {
       render(<Badge variant="success">Success</Badge>);
       const badge = screen.getByText('Success');
       // Legacy variants use subtle type
-      expect(badge).toHaveClass('bg-[var(--color-green-100)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-green-bg)]');
     });
 
     it('theme prop takes precedence over variant', () => {

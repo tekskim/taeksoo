@@ -196,6 +196,7 @@ export function DisassociateFloatingIPDrawer({
             totalPages={totalPages}
             totalItems={filteredFloatingIps.length}
             onPageChange={setCurrentPage}
+            selectedCount={selectedFloatingIpId ? 1 : 0}
           />
 
           <VStack gap={2}>

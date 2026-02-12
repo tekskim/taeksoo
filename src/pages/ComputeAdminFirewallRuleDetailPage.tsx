@@ -253,7 +253,7 @@ export default function ComputeAdminFirewallRuleDetailPage() {
                         rule.firewallPolicyId ? (
                           <Link
                             to={`/compute-admin/firewall-policies/${rule.firewallPolicyId}`}
-                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
                           >
                             {rule.firewallPolicy}
                           </Link>

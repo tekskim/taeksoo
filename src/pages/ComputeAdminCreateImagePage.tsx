@@ -255,7 +255,7 @@ export function ComputeAdminCreateImagePage() {
           <div className="flex items-center gap-1">
             <Link
               to={`/compute-admin/tenants/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
               onClick={(e) => e.stopPropagation()}
             >
               {row.name}

@@ -15,6 +15,8 @@ import {
   IconGrid,
   Table,
   InlineMessage,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -103,7 +105,7 @@ export function RebuildInstanceDrawer({
     {
       key: 'id' as keyof ImageItem,
       label: '',
-      width: '40px',
+      width: fixedColumns.radio,
       render: (_value, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -118,13 +120,15 @@ export function RebuildInstanceDrawer({
     {
       key: 'id' as keyof ImageItem,
       label: 'Status',
-      width: '59px',
+      width: fixedColumns.status,
       align: 'center',
       render: () => <StatusIndicator status="active" layout="icon-only" size="sm" />,
     },
     {
       key: 'name',
       label: 'Name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_value, row) => (
         <div className="flex flex-col justify-center gap-0.5">
           <div className="flex items-center gap-1.5">
@@ -139,11 +143,17 @@ export function RebuildInstanceDrawer({
         </div>
       ),
     },
-    { key: 'version', label: 'Version' },
-    { key: 'size', label: 'Size' },
-    { key: 'minDisk', label: 'Min disk' },
-    { key: 'minRam', label: 'Min RAM' },
-    { key: 'visibility', label: 'Visibility' },
+    { key: 'version', label: 'Version', flex: 1, minWidth: columnMinWidths.version },
+    { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size, align: 'right' },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+      align: 'right',
+    },
+    { key: 'minRam', label: 'Min RAM', flex: 1, minWidth: columnMinWidths.minRam, align: 'right' },
+    { key: 'visibility', label: 'Visibility', flex: 1, minWidth: columnMinWidths.visibility },
   ];
 
   const handleRebuild = async () => {
@@ -317,6 +327,7 @@ export function RebuildInstanceDrawer({
               totalPages={totalPages}
               totalItems={filteredImages.length}
               onPageChange={setImageCurrentPage}
+              selectedCount={selectedImageId ? 1 : 0}
             />
 
             <VStack gap={2}>

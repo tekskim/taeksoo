@@ -26,7 +26,7 @@ export interface TableLinkProps {
  * TableLink - 테이블 셀 내 링크 스타일 컴포넌트
  *
  * 디자인 시스템 표준 스타일:
- * - font-medium
+ * - text-label-md (12px/18px, font-weight 500)
  * - color-action-primary (파란색)
  * - hover:underline with offset
  *
@@ -52,7 +52,7 @@ export function TableLink({
   return (
     <span
       className={twMerge(
-        'font-medium text-[var(--color-action-primary)] cursor-pointer',
+        'text-label-md text-[var(--color-action-primary)] cursor-pointer',
         'hover:underline hover:underline-offset-2',
         'transition-colors',
         truncate && 'truncate block',

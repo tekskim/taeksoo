@@ -1100,6 +1100,7 @@ function ImageSection({
                 onPageChange={setCurrentPage}
                 totalItems={filteredImages.length}
                 itemsPerPage={itemsPerPage}
+                selectedCount={selectedImageId ? 1 : 0}
               />
 
               {/* Image Table */}
@@ -1398,6 +1399,7 @@ function FlavorSection({
                 totalPages={totalPages}
                 totalItems={filteredFlavors.length}
                 onPageChange={setCurrentPage}
+                selectedCount={selectedFlavorId ? 1 : 0}
               />
 
               {/* Flavor Table */}

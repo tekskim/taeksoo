@@ -149,7 +149,7 @@ const userColumns: TableColumn<UserItem>[] = [
     sortable: true,
     render: (_, row) => (
       <span className="flex items-center gap-1.5">
-        <span className="font-medium text-[var(--color-action-primary)] truncate">
+        <span className="text-label-md text-[var(--color-action-primary)] truncate">
           {row.username}
         </span>
         <IconExternalLink

@@ -855,7 +855,7 @@ export function CreateNetworkPolicyPage() {
                           key: 'name',
                           label: 'Name',
                           render: (value) => (
-                            <span className="font-medium text-[var(--color-action-primary)]">
+                            <span className="text-label-md text-[var(--color-action-primary)]">
                               {value}
                             </span>
                           ),

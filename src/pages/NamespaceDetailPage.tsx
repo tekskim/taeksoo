@@ -349,7 +349,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline">
           {value}
         </span>
       ),

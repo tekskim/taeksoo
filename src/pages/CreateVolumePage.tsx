@@ -500,7 +500,7 @@ export function CreateVolumePage() {
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
+            <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -550,7 +550,7 @@ export function CreateVolumePage() {
       render: (value: string, row: SnapshotRow) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
+            <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />

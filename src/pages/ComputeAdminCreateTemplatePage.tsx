@@ -851,6 +851,7 @@ function TemplateInformationSection({
                   totalPages={totalTenantPages}
                   totalItems={filteredTenants.length}
                   onPageChange={setTenantCurrentPage}
+                  selectedCount={selectedTenant ? 1 : 0}
                 />
 
                 {/* Tenant Table + Selection indicator */}
@@ -888,7 +889,7 @@ function TemplateInformationSection({
                         sortable: true,
                         render: (value: string, row: Tenant) => (
                           <div className="flex flex-col gap-0.5 min-w-0">
-                            <span className="font-medium text-[var(--color-action-primary)]">
+                            <span className="text-label-md text-[var(--color-action-primary)]">
                               {value}
                             </span>
                             <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -1387,6 +1388,7 @@ function ImageSection({
                 onPageChange={setCurrentPage}
                 totalItems={filteredImages.length}
                 itemsPerPage={itemsPerPage}
+                selectedCount={selectedImageId ? 1 : 0}
               />
 
               {/* Image Table + Selection Indicator */}
@@ -1693,6 +1695,7 @@ function FlavorSection({
                 totalPages={totalPages}
                 totalItems={filteredFlavors.length}
                 onPageChange={setCurrentPage}
+                selectedCount={selectedFlavorId ? 1 : 0}
               />
 
               {/* Flavor Table */}

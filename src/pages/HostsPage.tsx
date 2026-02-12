@@ -280,7 +280,7 @@ export function HostsPage() {
       render: (_, row) => (
         <Link
           to={`/storage/hosts/${row.id}`}
-          className="block truncate font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="block truncate text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           title={row.hostname}
           onClick={(e) => e.stopPropagation()}
         >

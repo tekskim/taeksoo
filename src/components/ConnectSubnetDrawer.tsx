@@ -360,6 +360,7 @@ export function ConnectSubnetDrawer({
             onPageChange={setNetworkPage}
             totalItems={filteredNetworks.length}
             showItemCount
+            selectedCount={selectedNetworkId ? 1 : 0}
           />
 
           <VStack gap={2}>
@@ -408,6 +409,7 @@ export function ConnectSubnetDrawer({
             onPageChange={setSubnetPage}
             totalItems={filteredSubnets.length}
             showItemCount
+            selectedCount={selectedSubnetId ? 1 : 0}
           />
 
           <VStack gap={2}>

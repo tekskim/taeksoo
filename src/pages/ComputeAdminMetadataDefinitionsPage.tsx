@@ -126,7 +126,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       render: (_, row) => (
         <Link
           to={`/compute-admin/metadata-definition/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >
           {row.name}

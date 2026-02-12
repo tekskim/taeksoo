@@ -223,7 +223,7 @@ export function CreateRouterDrawer({
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
-            <span className="font-medium text-[var(--color-action-primary)] truncate">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.name}
             </span>
             <IconExternalLink
@@ -397,6 +397,7 @@ export function CreateRouterDrawer({
                 totalPages={totalPages}
                 totalItems={filteredNetworks.length}
                 onPageChange={setCurrentPage}
+                selectedCount={selectedNetworkId ? 1 : 0}
               />
 
               {/* Networks Table */}
