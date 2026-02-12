@@ -240,12 +240,12 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'volume',
       label: 'Volume',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.volume,
       sortable: true,
       render: (value: string) =>
         value ? (
-          <span className="truncate" title={value}>
+          <span className="truncate block w-full" title={value}>
             {value}
           </span>
         ) : (

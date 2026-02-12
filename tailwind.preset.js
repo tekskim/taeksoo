@@ -1,5 +1,5 @@
 // Auto-generated from tokens/light.json - DO NOT EDIT
-// Generated at: 2026-02-12T02:01:24.522Z
+// Generated at: 2026-02-12T03:54:32.677Z
 
 /** @type {import('tailwindcss').Config} */
 export default {

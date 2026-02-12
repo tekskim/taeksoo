@@ -324,19 +324,19 @@ export function CreateFolderDrawer({
         </FormField>
 
         {/* Folder Path (read-only) */}
-        <VStack gap={3} className="w-full">
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Folder path
-            </label>
+        <FormField>
+          <FormField.Label>Folder path</FormField.Label>
+          <FormField.Control>
             <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
               <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                 {displayPath}
               </span>
             </div>
-          </VStack>
+          </FormField.Control>
+        </FormField>
 
-          {/* Folder Location Tree */}
+        {/* Folder Location Tree */}
+        <VStack gap={3} className="w-full">
           <div className="w-full p-[13px] bg-white border border-[var(--color-border-default)] rounded-[10px]">
             <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">

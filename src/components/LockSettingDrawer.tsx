@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Toggle } from '@/design-system';
+import { Drawer, Button, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 export interface InstanceInfo {
@@ -81,20 +81,20 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
         )}
 
         {/* Lock Status */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Lock status
-          </span>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <FormField>
+          <FormField.Label>Lock status</FormField.Label>
+          <FormField.Description>
             When locked, the instance cannot be modified or deleted.
-          </p>
-          <HStack gap={2} align="center">
-            <Toggle checked={isLocked} onChange={setIsLocked} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {isLocked ? 'Locked' : 'Unlocked'}
-            </span>
-          </HStack>
-        </VStack>
+          </FormField.Description>
+          <FormField.Control>
+            <HStack gap={2} align="center">
+              <Toggle checked={isLocked} onChange={setIsLocked} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {isLocked ? 'Locked' : 'Unlocked'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

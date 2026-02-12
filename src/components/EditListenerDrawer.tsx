@@ -241,28 +241,30 @@ export function EditListenerDrawer({
         </FormField>
 
         {/* Connection limit */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Connection limit
-          </label>
-          <RadioGroup
-            value={connectionLimitType}
-            onChange={(value) => setConnectionLimitType(value as ConnectionLimitType)}
-          >
-            <Radio value="unlimited">Unlimited</Radio>
-            <Radio value="limited">Limited</Radio>
-          </RadioGroup>
+        <FormField>
+          <FormField.Label>Connection limit</FormField.Label>
+          <FormField.Control>
+            <VStack gap={3} className="w-full">
+              <RadioGroup
+                value={connectionLimitType}
+                onChange={(value) => setConnectionLimitType(value as ConnectionLimitType)}
+              >
+                <Radio value="unlimited">Unlimited</Radio>
+                <Radio value="limited">Limited</Radio>
+              </RadioGroup>
 
-          {connectionLimitType === 'limited' && (
-            <NumberInput
-              value={connectionLimitValue}
-              onChange={(value) => setConnectionLimitValue(value ?? 0)}
-              min={0}
-              placeholder="Enter connection limit"
-              fullWidth
-            />
-          )}
-        </VStack>
+              {connectionLimitType === 'limited' && (
+                <NumberInput
+                  value={connectionLimitValue}
+                  onChange={(value) => setConnectionLimitValue(value ?? 0)}
+                  min={0}
+                  placeholder="Enter connection limit"
+                  fullWidth
+                />
+              )}
+            </VStack>
+          </FormField.Control>
+        </FormField>
 
         {/* Advanced Section (Collapsible) */}
         <VStack gap={2} className="w-full">
@@ -285,23 +287,23 @@ export function EditListenerDrawer({
           {isAdvancedExpanded && (
             <VStack gap={6} className="w-full pt-4">
               {/* Custom Headers */}
-              <VStack gap={3} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Custom Headers
-                </label>
-                <VStack gap={3}>
-                  <Checkbox
-                    checked={xForwardedFor}
-                    onChange={(e) => setXForwardedFor(e.target.checked)}
-                    label="X-Forwarded-For"
-                  />
-                  <Checkbox
-                    checked={xForwardedPort}
-                    onChange={(e) => setXForwardedPort(e.target.checked)}
-                    label="X-Forwarded-Port"
-                  />
-                </VStack>
-              </VStack>
+              <FormField>
+                <FormField.Label>Custom Headers</FormField.Label>
+                <FormField.Control>
+                  <VStack gap={3}>
+                    <Checkbox
+                      checked={xForwardedFor}
+                      onChange={(e) => setXForwardedFor(e.target.checked)}
+                      label="X-Forwarded-For"
+                    />
+                    <Checkbox
+                      checked={xForwardedPort}
+                      onChange={(e) => setXForwardedPort(e.target.checked)}
+                      label="X-Forwarded-Port"
+                    />
+                  </VStack>
+                </FormField.Control>
+              </FormField>
 
               {/* Client Data Timeout */}
               <FormField>
@@ -368,55 +370,54 @@ export function EditListenerDrawer({
               </FormField>
 
               {/* Allowed CIDRs */}
-              <VStack gap={2} className="w-full">
-                <VStack gap={2} className="w-full">
-                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Allowed CIDRs
-                  </label>
-                  <p className="text-body-md text-[var(--color-text-subtle)]">
-                    Defines the client IP ranges allowed to access the listener.
-                  </p>
-                </VStack>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleAddCidr}
-                  leftIcon={<IconCirclePlus size={12} />}
-                  className="self-start"
-                >
-                  Add CIDR
-                </Button>
-
-                {/* CIDR List */}
-                {allowedCidrs.map((cidr, index) => (
-                  <HStack
-                    key={index}
-                    gap={6}
-                    align="center"
-                    className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
-                  >
-                    <HStack gap={3} align="center" className="flex-1 min-w-0">
-                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                        Key
-                      </span>
-                      <Input
-                        value={cidr}
-                        onChange={(e) => handleUpdateCidr(index, e.target.value)}
-                        placeholder="e.g. 10.62.0.32/24"
-                        fullWidth
-                      />
-                    </HStack>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveCidr(index)}
-                      className="p-0.5 shrink-0 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              <FormField>
+                <FormField.Label>Allowed CIDRs</FormField.Label>
+                <FormField.Description>
+                  Defines the client IP ranges allowed to access the listener.
+                </FormField.Description>
+                <FormField.Control>
+                  <VStack gap={2} className="w-full">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAddCidr}
+                      leftIcon={<IconCirclePlus size={12} />}
+                      className="self-start"
                     >
-                      <IconX size={12} className="text-[var(--color-text-default)]" />
-                    </button>
-                  </HStack>
-                ))}
-              </VStack>
+                      Add CIDR
+                    </Button>
+
+                    {/* CIDR List */}
+                    {allowedCidrs.map((cidr, index) => (
+                      <HStack
+                        key={index}
+                        gap={6}
+                        align="center"
+                        className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
+                      >
+                        <HStack gap={3} align="center" className="flex-1 min-w-0">
+                          <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+                            Key
+                          </span>
+                          <Input
+                            value={cidr}
+                            onChange={(e) => handleUpdateCidr(index, e.target.value)}
+                            placeholder="e.g. 10.62.0.32/24"
+                            fullWidth
+                          />
+                        </HStack>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCidr(index)}
+                          className="p-0.5 shrink-0 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        >
+                          <IconX size={12} className="text-[var(--color-text-default)]" />
+                        </button>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </FormField.Control>
+              </FormField>
 
               {/* Listener Admin State */}
               <FormField>

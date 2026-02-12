@@ -9,6 +9,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -347,52 +348,60 @@ export function CreateVolumeBackupWithSelectionDrawer({
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
         {/* Backup Mode */}
-        <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Backup mode</span>
-          <VStack gap={2}>
-            <Radio
-              name="backup-mode"
-              value="full"
-              checked={backupMode === 'full'}
-              onChange={() => setBackupMode('full')}
-              label="Full backup"
-            />
-            <Radio
-              name="backup-mode"
-              value="incremental"
-              checked={backupMode === 'incremental'}
-              onChange={() => setBackupMode('incremental')}
-              label="Increment backup"
-            />
-          </VStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Backup mode</FormField.Label>
+          <FormField.Control>
+            <VStack gap={2}>
+              <Radio
+                name="backup-mode"
+                value="full"
+                checked={backupMode === 'full'}
+                onChange={() => setBackupMode('full')}
+                label="Full backup"
+              />
+              <Radio
+                name="backup-mode"
+                value="incremental"
+                checked={backupMode === 'incremental'}
+                onChange={() => setBackupMode('incremental')}
+                label="Increment backup"
+              />
+            </VStack>
+          </FormField.Control>
+        </FormField>
 
         {/* Volume Backup Name */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Volume backup name</span>
-          <Input
-            value={backupName}
-            onChange={(e) => setBackupName(e.target.value)}
-            placeholder="e.g. data-backup"
-            fullWidth
-          />
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </span>
-        </VStack>
+        <FormField>
+          <FormField.Label>Volume backup name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={backupName}
+              onChange={(e) => setBackupName(e.target.value)}
+              placeholder="e.g. data-backup"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description */}
-        <VStack gap={2} className="pb-5">
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Description (optional)
-          </span>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. data-snap"
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. data-snap"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

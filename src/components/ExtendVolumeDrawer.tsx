@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Slider, NumberInput } from '@/design-system';
+import { Drawer, Button, Slider, NumberInput, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -196,13 +196,9 @@ export function ExtendVolumeDrawer({
         </VStack>
 
         {/* Capacity Slider */}
-        <VStack gap={5} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Capacity (GiB)
-          </label>
-
-          {/* Slider + NumberInput */}
-          <VStack gap={2} className="w-full">
+        <FormField error={!!capacityError}>
+          <FormField.Label>Capacity (GiB)</FormField.Label>
+          <FormField.Control>
             <HStack gap={3} align="center" className="w-full">
               <Slider
                 min={minCapacity}
@@ -220,14 +216,12 @@ export function ExtendVolumeDrawer({
                 className="shrink-0"
               />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {minCapacity} - {maxCapacity} GiB
-            </span>
-          </VStack>
-          {capacityError && (
-            <span className="text-body-sm text-[var(--color-state-danger)]">{capacityError}</span>
-          )}
-        </VStack>
+          </FormField.Control>
+          {capacityError && <FormField.ErrorMessage>{capacityError}</FormField.ErrorMessage>}
+          <FormField.HelperText>
+            {minCapacity} - {maxCapacity} GiB
+          </FormField.HelperText>
+        </FormField>
       </VStack>
     </Drawer>
   );

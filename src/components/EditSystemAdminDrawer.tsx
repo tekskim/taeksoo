@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -125,57 +125,57 @@ export function EditSystemAdminDrawer({
         </VStack>
 
         {/* Email Address */}
-        <VStack gap={2}>
-          <div className="flex items-start gap-[3px]">
-            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Email address
-            </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
-          </div>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <FormField required error={hasAttemptedSubmit && !isEmailValid}>
+          <FormField.Label>Email address</FormField.Label>
+          <FormField.Description>
             The email address used for password recovery.
-          </p>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email address"
-            fullWidth
-            size="md"
-            error={hasAttemptedSubmit && !isEmailValid}
-          />
-        </VStack>
+          </FormField.Description>
+          <FormField.Control>
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter email address"
+              fullWidth
+              size="md"
+              error={hasAttemptedSubmit && !isEmailValid}
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Display Name */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Display name
-          </span>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            The account's name displayed in the UI. If not entered, the username will be displayed.
-          </p>
-          <Input
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Enter display name"
-            fullWidth
-            size="md"
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>Display name</FormField.Label>
+          <FormField.Description>
+            The account&apos;s name displayed in the UI. If not entered, the username will be
+            displayed.
+          </FormField.Description>
+          <FormField.Control>
+            <Input
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="Enter display name"
+              fullWidth
+              size="md"
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Status */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            Select the account's status. If 'disabled', the system administrator will be prevented
-            from signing in.
-          </p>
-          <HStack gap={2} align="center">
-            <Toggle checked={enabled} onChange={setEnabled} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {enabled ? 'Enabled' : 'Disabled'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Status</FormField.Label>
+          <FormField.Description>
+            Select the account&apos;s status. If &apos;disabled&apos;, the system administrator will
+            be prevented from signing in.
+          </FormField.Description>
+          <FormField.Control>
+            <HStack gap={2} align="center">
+              <Toggle checked={enabled} onChange={setEnabled} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {enabled ? 'Enabled' : 'Disabled'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

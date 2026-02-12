@@ -193,7 +193,7 @@ export function ConfigMapsPage() {
       minWidth: columnMinWidths.namespace,
       sortable: true,
       render: (value: string) => (
-        <span className="font-medium text-[var(--color-text-default)]">{value}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
