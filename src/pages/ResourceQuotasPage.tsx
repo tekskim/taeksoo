@@ -188,7 +188,7 @@ export function ResourceQuotasPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-text-default)] font-medium truncate" title={value}>
+        <span className="text-body-md text-[var(--color-text-default)] truncate" title={value}>
           {value}
         </span>
       ),

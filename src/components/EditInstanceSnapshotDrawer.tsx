@@ -125,20 +125,20 @@ export function EditInstanceSnapshotDrawer({
         </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. before major update or backup"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. before major update or backup"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -12,6 +12,7 @@ import {
   Select,
   NumberInput,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -295,18 +296,20 @@ export function AllocateFloatingIPDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Description Field */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1.5} align="center">
-            <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. my-prod-web-server-ip"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. my-prod-web-server-ip"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* External Network Section */}
         <VStack gap={3} className="w-full">
@@ -381,31 +384,37 @@ export function AllocateFloatingIPDrawer({
 
               {/* Manual IP Address Input */}
               {allocationMode === 'manual-single' && (
-                <VStack gap={2} className="w-[328px]">
-                  <span className="text-label-lg text-[var(--color-text-default)]">
-                    Manual floating IP address
-                  </span>
-                  <Input
-                    value={manualIPAddress}
-                    onChange={(e) => setManualIPAddress(e.target.value)}
-                    placeholder="Input floating IP address"
-                    fullWidth
-                  />
-                </VStack>
+                <div className="w-[328px]">
+                  <FormField>
+                    <FormField.Label>Manual floating IP address</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={manualIPAddress}
+                        onChange={(e) => setManualIPAddress(e.target.value)}
+                        placeholder="Input floating IP address"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </div>
               )}
 
               {/* Count Input for Batch */}
               {allocationMode === 'automatic-batch' && (
-                <VStack gap={2} className="w-[328px]">
-                  <span className="text-label-lg text-[var(--color-text-default)]">Count</span>
-                  <NumberInput
-                    value={count}
-                    onChange={(value) => setCount(value ?? 1)}
-                    min={1}
-                    max={floatingIPQuota.total - floatingIPQuota.used}
-                    fullWidth
-                  />
-                </VStack>
+                <div className="w-[328px]">
+                  <FormField>
+                    <FormField.Label>Count</FormField.Label>
+                    <FormField.Control>
+                      <NumberInput
+                        value={count}
+                        onChange={(value) => setCount(value ?? 1)}
+                        min={1}
+                        max={floatingIPQuota.total - floatingIPQuota.used}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </div>
               )}
             </VStack>
           </Disclosure.Panel>
@@ -417,37 +426,37 @@ export function AllocateFloatingIPDrawer({
           <Disclosure.Panel className="pb-[var(--primitive-spacing-5)]">
             <VStack gap={4} className="pt-3 w-[328px]">
               {/* DNS Domain */}
-              <VStack gap={2}>
-                <span className="text-label-lg text-[var(--color-text-default)]">DNS Domain</span>
-                <Select
-                  value={dnsDomain}
-                  onChange={setDnsDomain}
-                  options={dnsOptions}
-                  placeholder="No domain selected"
-                  fullWidth
-                />
-              </VStack>
+              <FormField>
+                <FormField.Label>DNS Domain</FormField.Label>
+                <FormField.Control>
+                  <Select
+                    value={dnsDomain}
+                    onChange={setDnsDomain}
+                    options={dnsOptions}
+                    placeholder="No domain selected"
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* DNS Name */}
-              <VStack gap={2}>
-                <span className="text-label-lg text-[var(--color-text-default)]">DNS Name</span>
-                <Input
-                  value={dnsName}
-                  onChange={(e) => setDnsName(e.target.value)}
-                  placeholder="e.g. my-web"
-                  disabled={!dnsDomain}
-                  fullWidth
-                />
-                {fqdn && (
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    FQDN : {fqdn}
-                  </span>
-                )}
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  Allowed: 1–63 characters; lowercase letters, numbers, "-"; no leading/trailing
-                  hyphens.
-                </span>
-              </VStack>
+              <FormField>
+                <FormField.Label>DNS Name</FormField.Label>
+                <FormField.Control>
+                  <Input
+                    value={dnsName}
+                    onChange={(e) => setDnsName(e.target.value)}
+                    placeholder="e.g. my-web"
+                    disabled={!dnsDomain}
+                    fullWidth
+                  />
+                </FormField.Control>
+                {fqdn && <FormField.HelperText>FQDN : {fqdn}</FormField.HelperText>}
+                <FormField.HelperText>
+                  Allowed: 1–63 characters; lowercase letters, numbers, &quot;-&quot;; no
+                  leading/trailing hyphens.
+                </FormField.HelperText>
+              </FormField>
             </VStack>
           </Disclosure.Panel>
         </Disclosure>

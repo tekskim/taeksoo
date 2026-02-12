@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Radio, Input } from '@/design-system';
+import { Drawer, Button, Radio, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconEye, IconEyeOff, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -163,98 +163,94 @@ export function ResetPasswordDrawer({
         {/* Password Section */}
         <VStack gap={2}>
           {/* Section Header */}
-          <VStack gap={2}>
-            <div className="flex items-start gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                Password
-              </span>
-              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
-            </div>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <FormField required>
+            <FormField.Label>Password</FormField.Label>
+            <FormField.Description>
               Choose how to set a password for the user account.
-            </p>
-          </VStack>
-
-          {/* Radio Options */}
-          <VStack gap={3}>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                checked={resetOption === 'temporary'}
-                onChange={() => setResetOption('temporary')}
-              />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                Issue a temporary password (email sent automatically)
-              </span>
-            </label>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio checked={resetOption === 'manual'} onChange={() => setResetOption('manual')} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                Set password manually (no email sent)
-              </span>
-            </label>
-          </VStack>
+            </FormField.Description>
+            <FormField.Control>
+              <VStack gap={3}>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <Radio
+                    checked={resetOption === 'temporary'}
+                    onChange={() => setResetOption('temporary')}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    Issue a temporary password (email sent automatically)
+                  </span>
+                </label>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <Radio
+                    checked={resetOption === 'manual'}
+                    onChange={() => setResetOption('manual')}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    Set password manually (no email sent)
+                  </span>
+                </label>
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Manual Password Fields - only shown when manual option is selected */}
           {resetOption === 'manual' && (
             <VStack gap={4} className="mt-2">
               {/* New Password Field */}
-              <VStack gap={2}>
-                <span className="text-label-md text-[var(--color-text-default)] leading-4">
-                  New Password
-                </span>
-                <div className="relative w-full">
-                  <Input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
-                    fullWidth
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
-                  >
-                    {showNewPassword ? (
-                      <IconEyeOff size={16} stroke={1.5} />
-                    ) : (
-                      <IconEye size={16} stroke={1.5} />
-                    )}
-                  </button>
-                </div>
-              </VStack>
+              <FormField>
+                <FormField.Label>New Password</FormField.Label>
+                <FormField.Control>
+                  <div className="relative w-full">
+                    <Input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Enter new password"
+                      fullWidth
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                    >
+                      {showNewPassword ? (
+                        <IconEyeOff size={16} stroke={1.5} />
+                      ) : (
+                        <IconEye size={16} stroke={1.5} />
+                      )}
+                    </button>
+                  </div>
+                </FormField.Control>
+              </FormField>
 
               {/* Confirm New Password Field */}
-              <VStack gap={2}>
-                <span className="text-label-md text-[var(--color-text-default)] leading-4">
-                  Confirm New Password
-                </span>
-                <div className="relative w-full">
-                  <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Enter new password again"
-                    fullWidth
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
-                  >
-                    {showConfirmPassword ? (
-                      <IconEyeOff size={16} stroke={1.5} />
-                    ) : (
-                      <IconEye size={16} stroke={1.5} />
-                    )}
-                  </button>
-                </div>
+              <FormField error={!!confirmPassword && !doPasswordsMatch}>
+                <FormField.Label>Confirm New Password</FormField.Label>
+                <FormField.Control>
+                  <div className="relative w-full">
+                    <Input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Enter new password again"
+                      fullWidth
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                    >
+                      {showConfirmPassword ? (
+                        <IconEyeOff size={16} stroke={1.5} />
+                      ) : (
+                        <IconEye size={16} stroke={1.5} />
+                      )}
+                    </button>
+                  </div>
+                </FormField.Control>
                 {confirmPassword && !doPasswordsMatch && (
-                  <span className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                    Passwords do not match
-                  </span>
+                  <FormField.ErrorMessage>Passwords do not match</FormField.ErrorMessage>
                 )}
-              </VStack>
+              </FormField>
 
               {/* Password Requirements */}
               <VStack gap={1.5} className="mt-1 p-3 bg-[var(--color-surface-subtle)] rounded-lg">

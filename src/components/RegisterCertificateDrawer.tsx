@@ -62,35 +62,39 @@ function FileUploadSection({
   };
 
   return (
-    <VStack gap={2} className="w-full">
-      <label className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</label>
-      <p className="text-body-md text-[var(--color-text-subtle)] leading-4">{description}</p>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept=".crt,.pem,.key,.cer,.txt"
-      />
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={handleUploadClick}
-        leftIcon={<IconUpload size={12} stroke={1.5} />}
-        className="w-fit"
-      >
-        Upload a File
-      </Button>
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
-      />
-      <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+    <FormField>
+      <FormField.Label>{label}</FormField.Label>
+      <FormField.Description>{description}</FormField.Description>
+      <FormField.Control>
+        <VStack gap={2} className="w-full">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            accept=".crt,.pem,.key,.cer,.txt"
+          />
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleUploadClick}
+            leftIcon={<IconUpload size={12} stroke={1.5} />}
+            className="w-fit"
+          >
+            Upload a File
+          </Button>
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+          />
+        </VStack>
+      </FormField.Control>
+      <FormField.HelperText>
         ({sizeKB.toFixed(1)}/{maxSizeKB} KB)
-      </p>
-    </VStack>
+      </FormField.HelperText>
+    </FormField>
   );
 }
 

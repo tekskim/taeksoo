@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Textarea, Toggle, Disclosure } from '@/design-system';
+import { Drawer, Button, Input, Textarea, Toggle, Disclosure, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -196,59 +196,60 @@ export function CreateSubnetDrawer({
         </h2>
 
         {/* Subnet Name */}
-        <VStack gap={2}>
-          <HStack gap={1.5} align="center">
-            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Subnet Name
-            </span>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              (Optional)
-            </span>
-          </HStack>
-          <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </span>
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Subnet Name{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
+          </FormField.Control>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+          </FormField.HelperText>
+        </FormField>
 
         {/* CIDR */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</span>
-          <Input
-            value={cidr}
-            onChange={(e) => setCidr(e.target.value)}
-            fullWidth
-            error={hasAttemptedSubmit && !cidr.trim()}
-          />
-          {hasAttemptedSubmit && !cidr.trim() && (
-            <span className="text-body-sm text-[var(--color-state-danger)]">CIDR is required</span>
-          )}
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
+        <FormField required error={hasAttemptedSubmit && !cidr.trim()}>
+          <FormField.Label>CIDR</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={cidr}
+              onChange={(e) => setCidr(e.target.value)}
+              fullWidth
+              error={hasAttemptedSubmit && !cidr.trim()}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
+          <FormField.HelperText>
             It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
             192.168.0.0/16
-          </span>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Gateway */}
-        <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Gateway</span>
-          <VStack gap={2}>
-            <Toggle
-              checked={gatewayEnabled}
-              onChange={(e) => setGatewayEnabled(e.target.checked)}
-              label={gatewayEnabled ? 'On' : 'Off'}
-            />
-            {gatewayEnabled && (
-              <>
+        <FormField>
+          <FormField.Label>Gateway</FormField.Label>
+          <FormField.Control>
+            <VStack gap={2}>
+              <Toggle
+                checked={gatewayEnabled}
+                onChange={(e) => setGatewayEnabled(e.target.checked)}
+                label={gatewayEnabled ? 'On' : 'Off'}
+              />
+              {gatewayEnabled && (
                 <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  Gateway must be an IP address within the subnet range, excluding the network and
-                  broadcast addresses.
-                </span>
-              </>
-            )}
-          </VStack>
-        </VStack>
+              )}
+            </VStack>
+          </FormField.Control>
+          {gatewayEnabled && (
+            <FormField.HelperText>
+              Gateway must be an IP address within the subnet range, excluding the network and
+              broadcast addresses.
+            </FormField.HelperText>
+          )}
+        </FormField>
 
         {/* Advanced Options Disclosure */}
         <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
@@ -256,95 +257,87 @@ export function CreateSubnetDrawer({
           <Disclosure.Panel>
             <VStack gap={6} className="mt-6">
               {/* DHCP */}
-              <VStack gap={3}>
-                <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  DHCP
-                </span>
-                <Toggle
-                  checked={dhcpEnabled}
-                  onChange={(e) => setDhcpEnabled(e.target.checked)}
-                  label={dhcpEnabled ? 'Up' : 'Down'}
-                />
-              </VStack>
+              <FormField>
+                <FormField.Label>DHCP</FormField.Label>
+                <FormField.Control>
+                  <Toggle
+                    checked={dhcpEnabled}
+                    onChange={(e) => setDhcpEnabled(e.target.checked)}
+                    label={dhcpEnabled ? 'Up' : 'Down'}
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* Allocation Pools */}
-              <VStack gap={2}>
-                <HStack gap={1.5} align="center">
-                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Allocation pools
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                    (Optional)
-                  </span>
-                </HStack>
-                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>
+                  Allocation pools{' '}
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </FormField.Label>
+                <FormField.Description>
                   Manually define the range of IP addresses to be automatically allocated by DHCP.
                   IPs outside this range will not be allocated, which is useful for reserving static
                   IPs.
-                </span>
-                <Textarea
-                  value={allocationPools}
-                  onChange={(e) => setAllocationPools(e.target.value)}
-                  placeholder="e.g. 192.168.0.100,192.168.0.200"
-                  fullWidth
-                  rows={3}
-                />
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                </FormField.Description>
+                <FormField.Control>
+                  <Textarea
+                    value={allocationPools}
+                    onChange={(e) => setAllocationPools(e.target.value)}
+                    placeholder="e.g. 192.168.0.100,192.168.0.200"
+                    fullWidth
+                    rows={3}
+                  />
+                </FormField.Control>
+                <FormField.HelperText>
                   Enter one IP address allocation range per line.
-                </span>
-              </VStack>
+                </FormField.HelperText>
+              </FormField>
 
               {/* DNS */}
-              <VStack gap={2}>
-                <HStack gap={1.5} align="center">
-                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    DNS
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                    (Optional)
-                  </span>
-                </HStack>
-                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>
+                  DNS{' '}
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </FormField.Label>
+                <FormField.Description>
                   The address of the server that acts like a phonebook for the internet, translating
                   domain names into IP addresses for your instances.
-                </span>
-                <Textarea
-                  value={dns}
-                  onChange={(e) => setDns(e.target.value)}
-                  placeholder="e.g. 8.8.8.8"
-                  fullWidth
-                  rows={3}
-                />
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  Enter one DNS server address per line.
-                </span>
-              </VStack>
+                </FormField.Description>
+                <FormField.Control>
+                  <Textarea
+                    value={dns}
+                    onChange={(e) => setDns(e.target.value)}
+                    placeholder="e.g. 8.8.8.8"
+                    fullWidth
+                    rows={3}
+                  />
+                </FormField.Control>
+                <FormField.HelperText>Enter one DNS server address per line.</FormField.HelperText>
+              </FormField>
 
               {/* Host Routes */}
-              <VStack gap={2} className="pb-5">
-                <HStack gap={1.5} align="center">
-                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Host Routes
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                    (Optional)
-                  </span>
-                </HStack>
-                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>
+                  Host Routes{' '}
+                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                </FormField.Label>
+                <FormField.Description>
                   An advanced feature for manually specifying a route to a specific network
                   destination.
-                </span>
-                <Textarea
-                  value={hostRoutes}
-                  onChange={(e) => setHostRoutes(e.target.value)}
-                  placeholder="e.g. 10.10.0.0/24,192.168.0.254"
-                  fullWidth
-                  rows={3}
-                />
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                </FormField.Description>
+                <FormField.Control>
+                  <Textarea
+                    value={hostRoutes}
+                    onChange={(e) => setHostRoutes(e.target.value)}
+                    placeholder="e.g. 10.10.0.0/24,192.168.0.254"
+                    fullWidth
+                    rows={3}
+                  />
+                </FormField.Control>
+                <FormField.HelperText>
                   Enter the destination CIDR and the next hop IP address.
-                </span>
-              </VStack>
+                </FormField.HelperText>
+              </FormField>
             </VStack>
           </Disclosure.Panel>
         </Disclosure>

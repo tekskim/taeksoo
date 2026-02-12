@@ -188,15 +188,14 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.target,
       sortable: false,
-      render: (value: string[]) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          {value.map((item, index) => (
-            <span key={index} className="text-body-md leading-4 text-[var(--color-text-default)]">
-              {item}
-            </span>
-          ))}
-        </div>
-      ),
+      render: (value: string[]) => {
+        const text = value.join(', ');
+        return (
+          <span className="truncate block w-full" title={text}>
+            {text}
+          </span>
+        );
+      },
     },
     {
       key: 'default',

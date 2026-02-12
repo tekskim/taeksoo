@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -93,44 +93,39 @@ export function EditSecurityGroupDrawer({
         </VStack>
 
         {/* Security Group Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Security group name
-          </label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. web-server-sg"
-            fullWidth
-            error={hasAttemptedSubmit && !name.trim()}
-          />
-          {hasAttemptedSubmit && !name.trim() && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Security group name is required
-            </p>
-          )}
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+        <FormField required error={hasAttemptedSubmit && !name.trim()}>
+          <FormField.Label>Security group name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. web-server-sg"
+              fullWidth
+              error={hasAttemptedSubmit && !name.trim()}
+            />
+          </FormField.Control>
+          <FormField.ErrorMessage>Security group name is required</FormField.ErrorMessage>
+          <FormField.HelperText>
+            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
+            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              (optional)
-            </span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. Web server access group"
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Web server access group"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

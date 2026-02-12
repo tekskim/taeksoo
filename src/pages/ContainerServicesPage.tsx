@@ -216,7 +216,7 @@ export function ContainerServicesPage() {
       render: (value: string[]) => {
         const text = value.join(', ');
         return (
-          <span className="truncate block w-full text-[var(--color-text-muted)]" title={text}>
+          <span className="truncate block w-full" title={text}>
             {text}
           </span>
         );

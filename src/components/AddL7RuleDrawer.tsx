@@ -258,28 +258,30 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
         </FormField>
 
         {/* Invert */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Invert</label>
-          <HStack gap={2} className="items-center">
-            <Toggle checked={invert} onChange={(e) => setInvert(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {invert ? 'On' : 'Off'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Invert</FormField.Label>
+          <FormField.Control>
+            <HStack gap={2} className="items-center">
+              <Toggle checked={invert} onChange={(e) => setInvert(e.target.checked)} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {invert ? 'On' : 'Off'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
 
         {/* Admin State */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin state
-          </label>
-          <HStack gap={2} className="items-center">
-            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {adminStateUp ? 'Up' : 'Down'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Admin state</FormField.Label>
+          <FormField.Control>
+            <HStack gap={2} className="items-center">
+              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {adminStateUp ? 'Up' : 'Down'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );
