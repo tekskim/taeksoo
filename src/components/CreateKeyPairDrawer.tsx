@@ -128,7 +128,7 @@ export function CreateKeyPairDrawer({
       footer={
         <VStack gap={6} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
+          <VStack gap={6} className="w-full">
             <QuotaProgressBar
               label="Key pair quota"
               used={keyPairQuota.used}
@@ -137,7 +137,8 @@ export function CreateKeyPairDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
+          <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
@@ -159,7 +160,7 @@ export function CreateKeyPairDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Key pair
           </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Create a new SSH key pair to securely access your instances.
           </p>
         </VStack>

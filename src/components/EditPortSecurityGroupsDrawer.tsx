@@ -226,7 +226,7 @@ export function EditPortSecurityGroupsDrawer({
       <VStack gap={6} className="h-full">
         {/* Header Section */}
         <VStack gap={3}>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             When disabled, no security groups will be applied, and anti-spoofing checks are turned
             off.
           </p>

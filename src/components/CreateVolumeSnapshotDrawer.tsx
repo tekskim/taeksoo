@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconAlertCircle, IconInfinity } from '@tabler/icons-react';
+import { IconInfinity } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -127,7 +127,7 @@ export function CreateVolumeSnapshotDrawer({
       footer={
         <VStack gap={6} className="w-full">
           {/* Quota Section */}
-          <VStack gap={6} className="w-full border-t border-[var(--color-border-subtle)] pt-4">
+          <VStack gap={6} className="w-full">
             <QuotaProgressBar
               label="Volume snapshot quota"
               used={volumeSnapshotQuota.used}
@@ -141,7 +141,8 @@ export function CreateVolumeSnapshotDrawer({
           </VStack>
 
           {/* Buttons */}
-          <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
+          <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
@@ -165,7 +166,7 @@ export function CreateVolumeSnapshotDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create volume snapshot
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Create a snapshot of this volume to back up its current data state. You can use the
               snapshot to create new volumes or restore data later.
             </p>
@@ -180,17 +181,10 @@ export function CreateVolumeSnapshotDrawer({
           </div>
 
           {/* Warning Message */}
-          <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
-              stroke={1}
-            />
-            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before creating a
-              snapshot.
-            </p>
-          </div>
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            snapshot.
+          </InlineMessage>
         </VStack>
 
         {/* Snapshot Name Input */}

@@ -142,7 +142,7 @@ export function AddL7PolicyDrawer({
         <FormField>
           <FormField.Label>
             Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
           </FormField.Label>
           <FormField.Control>
             <Input
@@ -188,7 +188,7 @@ export function AddL7PolicyDrawer({
         <FormField>
           <FormField.Label>
             Position{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
           </FormField.Label>
           <FormField.Control>
             <NumberInput

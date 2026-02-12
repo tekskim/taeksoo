@@ -9,7 +9,7 @@ import {
   Children,
   useId,
 } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    FormField Context

@@ -1,5 +1,5 @@
 import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconSearch, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------

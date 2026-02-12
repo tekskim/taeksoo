@@ -298,10 +298,8 @@ export function ClusterDetailPage() {
               {/* Status */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative">
                 <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                    Status
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.status.charAt(0).toUpperCase() + clusterData.status.slice(1)}
                   </span>
                 </VStack>
@@ -317,10 +315,10 @@ export function ClusterDetailPage() {
               {/* Kubernetes Version */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                 <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
                     Kubernetes Version
                   </span>
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.kubernetesVersion}
                   </span>
                 </VStack>
@@ -329,10 +327,10 @@ export function ClusterDetailPage() {
               {/* Container Network */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                 <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
                     Container Network
                   </span>
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.containerNetwork}
                   </span>
                 </VStack>
@@ -341,10 +339,8 @@ export function ClusterDetailPage() {
               {/* Created At */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                 <VStack gap={1}>
-                  <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-                    Created at
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.createdAt}
                   </span>
                 </VStack>

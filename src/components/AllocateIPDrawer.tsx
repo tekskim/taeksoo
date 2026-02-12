@@ -132,7 +132,7 @@ export function AllocateIPDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Allocate IP
           </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Assign an additional fixed IP address to this port. Select a subnet from the list below
             and choose whether to assign an IP automatically or manually.
           </p>

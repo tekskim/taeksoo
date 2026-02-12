@@ -221,7 +221,7 @@ export function AttachVolumeDrawer({
               Attach Volume
             </h2>
           </VStack>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
             Attach one or more available volumes to this instance. Once attached, the volumes will
             appear as additional storage devices inside the instance.
           </p>

@@ -1,5 +1,5 @@
 import { cloneElement, isValidElement, memo, type HTMLAttributes, type ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import {
   IconAlertTriangle,
   IconPlugConnectedX,

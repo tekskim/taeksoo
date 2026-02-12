@@ -19,18 +19,12 @@ import {
   Pagination,
   Modal,
   fixedColumns,
+  InlineMessage,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconAlertCircle,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconBell, IconExternalLink, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -850,15 +844,9 @@ export default function PortDetailPage() {
           </div>
 
           {/* Warning Box */}
-          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle
-              size={16}
-              className="text-[var(--semantic-color-state-danger)] flex-shrink-0 mt-0.5"
-            />
-            <span className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Detaching this security group may affect network access for the port.
-            </span>
-          </div>
+          <InlineMessage variant="error">
+            Detaching this security group may affect network access for the port.
+          </InlineMessage>
         </div>
 
         {/* Button Group */}

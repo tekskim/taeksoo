@@ -1,5 +1,5 @@
 import { type ReactNode, type MouseEvent } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
    TableLink Types

@@ -355,7 +355,7 @@ function TrafficRulesSection({
                             : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)]'
                         }`}
                       >
-                        <span className="text-[12px] font-medium">{rule.name}</span>
+                        <span className="text-label-md">{rule.name}</span>
                         {rules.length > 1 && (
                           <button
                             onClick={(e) => {
@@ -375,7 +375,7 @@ function TrafficRulesSection({
                     ))}
                     <button
                       onClick={addRule}
-                      className="flex items-center gap-1 px-3 py-2 text-[12px] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]"
+                      className="flex items-center gap-1 px-3 py-2 text-body-sm text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]"
                     >
                       <IconCirclePlus size={16} stroke={1.5} />
                       Add Rule
@@ -884,7 +884,7 @@ export function CreateNetworkPolicyPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Labels
                       </label>
-                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </span>
                     </VStack>
@@ -951,7 +951,7 @@ export function CreateNetworkPolicyPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </label>
-                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </span>

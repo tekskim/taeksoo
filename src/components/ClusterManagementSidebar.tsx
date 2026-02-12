@@ -171,7 +171,7 @@ export function ClusterManagementSidebar({
                 <button
                   type="button"
                   onClick={() => setBookmarksExpanded(!bookmarksExpanded)}
-                  className="flex items-center gap-2 px-0 py-1.5 text-[12px] leading-[16px] font-medium text-[var(--color-text-default)]"
+                  className="flex items-center gap-2 px-0 py-1.5 text-label-md text-[var(--color-text-default)]"
                 >
                   <IconChevronDown
                     size={12}
@@ -182,7 +182,7 @@ export function ClusterManagementSidebar({
                 </button>
                 {bookmarksExpanded && (
                   <div className="mt-2 pl-4">
-                    <p className="text-[11px] text-[var(--color-text-muted)]">No bookmarks yet</p>
+                    <p className="text-body-sm text-[var(--color-text-muted)]">No bookmarks yet</p>
                   </div>
                 )}
               </div>

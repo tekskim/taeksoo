@@ -1,5 +1,5 @@
 import React from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { Chip } from '../Chip';
 import { HStack } from '../../layouts';
 

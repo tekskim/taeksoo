@@ -1,5 +1,5 @@
 import { memo, type HTMLAttributes, type ReactNode } from 'react';
-import { customTwMerge as twMerge } from '../../utils/cn';
+import { twMerge } from '../../utils/cn';
 import { IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------

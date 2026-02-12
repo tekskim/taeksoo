@@ -199,7 +199,7 @@ export function CreateSubnetDrawer({
         <FormField>
           <FormField.Label>
             Subnet Name{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
           </FormField.Label>
           <FormField.Control>
             <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
@@ -272,7 +272,7 @@ export function CreateSubnetDrawer({
               <FormField>
                 <FormField.Label>
                   Allocation pools{' '}
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
                 </FormField.Label>
                 <FormField.Description>
                   Manually define the range of IP addresses to be automatically allocated by DHCP.
@@ -297,7 +297,7 @@ export function CreateSubnetDrawer({
               <FormField>
                 <FormField.Label>
                   DNS{' '}
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
                 </FormField.Label>
                 <FormField.Description>
                   The address of the server that acts like a phonebook for the internet, translating
@@ -319,7 +319,7 @@ export function CreateSubnetDrawer({
               <FormField>
                 <FormField.Label>
                   Host Routes{' '}
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
                 </FormField.Label>
                 <FormField.Description>
                   An advanced feature for manually specifying a route to a specific network

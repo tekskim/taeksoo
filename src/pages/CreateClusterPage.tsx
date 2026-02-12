@@ -667,7 +667,7 @@ export function CreateClusterPage() {
                             max={100}
                             width="sm"
                           />
-                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
+                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
                             GiB
                           </div>
                         </HStack>
@@ -785,7 +785,7 @@ export function CreateClusterPage() {
                 <VStack gap={3}>
                   <VStack gap={1.5}>
                     <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                    <p className="text-body-sm text-[var(--color-text-subtle)]">
                       Specify the labels used to identify and categorize the resource.
                     </p>
                   </VStack>

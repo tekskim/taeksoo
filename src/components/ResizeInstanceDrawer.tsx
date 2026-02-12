@@ -346,6 +346,7 @@ export function ResizeInstanceDrawer({
           </VStack>
 
           {/* Buttons */}
+          <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} justify="center" className="w-full">
             <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
@@ -369,7 +370,7 @@ export function ResizeInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Resize Instance
             </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Change the flavor of this instance to adjust its vCPU, memory, or disk capacity.
             </p>
           </VStack>
