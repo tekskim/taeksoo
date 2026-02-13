@@ -208,8 +208,9 @@ export function Tooltip({
                   text-[length:var(--tooltip-font-size)]
                   leading-[var(--tooltip-line-height)]
                   text-center
-                  whitespace-nowrap
-                  w-fit
+                  min-w-[var(--tooltip-min-width)]
+                  max-w-[var(--tooltip-max-width)]
+                  w-max
                 "
               >
                 {content}
