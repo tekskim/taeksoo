@@ -1823,7 +1823,6 @@ export function CreatePodPage() {
                         </span>
                         <HStack gap={2} align="center">
                           <NumberInput
-                            placeholder={30}
                             value={
                               terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
                             }
@@ -1848,8 +1847,8 @@ export function CreatePodPage() {
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Network Settings
                         </span>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 w-full items-end">
-                          <VStack gap={1}>
+                        <VStack gap={6} className="w-full">
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
                             </span>
@@ -1866,7 +1865,7 @@ export function CreatePodPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               DNS Policy
                             </span>
@@ -1884,7 +1883,7 @@ export function CreatePodPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Hostname
                             </span>
@@ -1898,7 +1897,7 @@ export function CreatePodPage() {
                               onChange={(e) => setHostname(e.target.value)}
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Subdomain
                             </span>
@@ -1912,7 +1911,7 @@ export function CreatePodPage() {
                               onChange={(e) => setSubdomain(e.target.value)}
                             />
                           </VStack>
-                        </div>
+                        </VStack>
                       </VStack>
 
                       {/* Nameservers */}
@@ -2939,7 +2938,7 @@ export function CreatePodPage() {
                       </VStack>
 
                       {/* Priority */}
-                      <div className="grid grid-cols-2 gap-4 w-full">
+                      <div className="grid grid-cols-2 gap-6 w-full">
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority
@@ -3032,8 +3031,8 @@ export function CreatePodPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3047,7 +3046,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       ConfigMap{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3065,7 +3064,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as ConfigMapVolume).optional}
@@ -3101,8 +3100,8 @@ export function CreatePodPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3116,7 +3115,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Secret{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3132,7 +3131,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as SecretVolume).optional}
@@ -3168,8 +3167,8 @@ export function CreatePodPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3183,7 +3182,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Persistent Volume Claim{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3199,7 +3198,7 @@ export function CreatePodPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as PVCVolume).readOnly}
@@ -3257,8 +3256,8 @@ export function CreatePodPage() {
                                     </RadioGroup>
 
                                     {!(volume as CreatePVCVolume).useExistingPV && (
-                                      <div className="grid grid-cols-2 gap-4">
-                                        <VStack gap={3}>
+                                      <VStack gap={6}>
+                                        <VStack gap={3} className="w-[calc(50%+1px)]">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3278,7 +3277,7 @@ export function CreatePodPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={3}>
+                                        <VStack gap={3} className="w-[calc(50%+1px)]">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Capacity{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3298,10 +3297,10 @@ export function CreatePodPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            fullWidth
+                                            width="sm"
                                           />
                                         </VStack>
-                                      </div>
+                                      </VStack>
                                     )}
 
                                     {(volume as CreatePVCVolume).useExistingPV && (
@@ -3412,7 +3411,7 @@ export function CreatePodPage() {
                         </div>
                       ))}
 
-                      <div className="w-1/2">
+                      <div className="w-[calc(50%-12px)]">
                         <Select
                           options={[
                             { value: 'configmap', label: 'ConfigMap' },
@@ -3515,7 +3514,7 @@ export function CreatePodPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <div className="grid grid-cols-2 gap-4 w-full">
+                          <div className="grid grid-cols-2 gap-6 w-full">
                             <VStack gap={3}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3565,7 +3564,7 @@ export function CreatePodPage() {
                             </VStack>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 w-full">
+                          <div className="grid grid-cols-2 gap-6 w-full">
                             <VStack gap={3}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3602,7 +3601,7 @@ export function CreatePodPage() {
                       <SectionCard.Content>
                         <VStack gap={4}>
                           {/* Row 1: Command and Arguments */}
-                          <div className="grid grid-cols-2 gap-4 w-full">
+                          <div className="grid grid-cols-2 gap-6 w-full">
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
@@ -3636,7 +3635,7 @@ export function CreatePodPage() {
                           </div>
 
                           {/* Row 2: WorkingDir and Stdin */}
-                          <div className="grid grid-cols-2 gap-4 w-full">
+                          <div className="grid grid-cols-2 gap-6 w-full">
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
@@ -3823,7 +3822,7 @@ export function CreatePodPage() {
                     <SectionCard>
                       <SectionCard.Header title="Lifecycle hooks" />
                       <SectionCard.Content>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
                           <VStack gap={6}>
                             <VStack gap={2}>
@@ -5268,7 +5267,7 @@ export function CreatePodPage() {
                       <SectionCard.Content>
                         <VStack gap={6}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5319,7 +5318,7 @@ export function CreatePodPage() {
                             </VStack>
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5379,7 +5378,7 @@ export function CreatePodPage() {
                       <SectionCard.Content>
                         <VStack gap={6}>
                           {/* Row 1: Privileged + Privilege Escalation */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
@@ -5448,7 +5447,7 @@ export function CreatePodPage() {
                             </VStack>
                           </div>
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
@@ -5517,7 +5516,7 @@ export function CreatePodPage() {
                             </VStack>
                           </div>
                           {/* Row 3: Run as User ID (half width) */}
-                          <VStack gap={2} className="w-1/2">
+                          <VStack gap={2} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Run as User ID
                             </span>
@@ -5533,7 +5532,7 @@ export function CreatePodPage() {
                             />
                           </VStack>
                           {/* Row 4: Add Capabilities + Drop Capabilities */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Add Capabilities
@@ -5759,7 +5758,7 @@ export function CreatePodPage() {
                             </VStack>
                           )}
                           {/* Select Volume dropdown */}
-                          <div className="w-1/2">
+                          <div className="w-[calc(50%-12px)]">
                             <Select
                               options={[
                                 { value: '', label: 'Select volume' },

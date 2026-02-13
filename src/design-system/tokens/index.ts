@@ -272,18 +272,18 @@ export const component = {
   button: {
     height: {
       sm: 'var(--button-height-sm)', // 28px
-      md: 'var(--button-height-md)', // 28px
-      lg: 'var(--button-height-lg)', // 40px
+      md: 'var(--button-height-md)', // 32px
+      lg: 'var(--button-height-lg)', // 36px
     },
     minWidth: {
-      sm: 'var(--button-min-width-sm)', // 68px
+      sm: 'var(--button-min-width-sm)', // 60px
       md: 'var(--button-min-width-md)', // 80px
       lg: 'var(--button-min-width-lg)', // 80px
     },
     paddingX: {
       sm: 'var(--button-padding-x-sm)', // 10px
       md: 'var(--button-padding-x-md)', // 12px
-      lg: 'var(--button-padding-x-lg)', // 12px
+      lg: 'var(--button-padding-x-lg)', // 16px
     },
     paddingY: {
       sm: 'var(--button-padding-y-sm)', // 6px
@@ -297,7 +297,7 @@ export const component = {
     },
     radius: 'var(--button-radius)', // 6px
     fontSize: {
-      sm: 'var(--button-font-size-sm)', // 12px
+      sm: 'var(--button-font-size-sm)', // 11px
       md: 'var(--button-font-size-md)', // 11px
       lg: 'var(--button-font-size-lg)', // 12px
     },
@@ -377,7 +377,7 @@ export const component = {
       md: 'var(--badge-line-height-md)', // 16px
       lg: 'var(--badge-line-height-lg)', // 20px
     },
-    radius: 'var(--badge-radius)', // 6px (md)
+    radius: 'var(--badge-radius)', // 4px (sm)
     gap: 'var(--badge-gap)', // 4px
     dotSize: 'var(--badge-dot-size)', // 6px
   },
@@ -637,7 +637,7 @@ export const component = {
     text: 'var(--status-text)', // white
     activeBg: 'var(--status-active-bg)', // green-400
     errorBg: 'var(--status-error-bg)', // red-400
-    mutedBg: 'var(--status-muted-bg)', // slate-600
+    mutedBg: 'var(--status-muted-bg)', // slate-500
     buildingBg: 'var(--status-building-bg)', // blue-400
   },
   tooltip: {
@@ -647,7 +647,7 @@ export const component = {
     fontSize: 'var(--tooltip-font-size)', // 11px
     lineHeight: 'var(--tooltip-line-height)', // 16px
     minWidth: 'var(--tooltip-min-width)', // 60px
-    maxWidth: 'var(--tooltip-max-width)', // 230px
+    maxWidth: 'var(--tooltip-max-width)', // 240px
     bg: 'var(--tooltip-bg)', // slate-900
     text: 'var(--tooltip-text)', // white
     arrowSize: 'var(--tooltip-arrow-size)', // 4px
