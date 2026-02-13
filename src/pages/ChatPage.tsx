@@ -375,7 +375,7 @@ function NewChatDrawer({
             rows={3}
             fullWidth
           />
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             These instructions will be applied in addition to the agent's default system prompt.
           </p>
         </div>

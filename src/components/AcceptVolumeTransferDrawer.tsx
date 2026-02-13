@@ -82,7 +82,7 @@ export function AcceptVolumeTransferDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Accept Volume Transfer
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Accept a volume transfer using the provided transfer ID and authorization key. Once
             accepted, the volume will be moved to your project and ownership cannot be reverted.
           </p>

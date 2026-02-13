@@ -328,7 +328,7 @@ export function CreateMCPTemplatePage() {
                             <label className="text-label-lg text-[var(--color-text-default)]">
                               Tag
                             </label>
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Tags help categorize and identify your resources.
                             </p>
                             <Input
@@ -424,7 +424,7 @@ export function CreateMCPTemplatePage() {
                                   <span className="text-label-md text-[var(--color-text-default)]">
                                     STDIO (Container)
                                   </span>
-                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     A containerized MCP server deployed on Kubernetes
                                   </span>
                                 </VStack>
@@ -456,7 +456,7 @@ export function CreateMCPTemplatePage() {
                                   <span className="text-label-md text-[var(--color-text-default)]">
                                     HTTP (Remote)
                                   </span>
-                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     External HTTP MCP server endpoint
                                   </span>
                                 </VStack>
@@ -494,7 +494,7 @@ export function CreateMCPTemplatePage() {
                                 max={65535}
                                 width="sm"
                               />
-                              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 The port on which the container listens for incoming requests.
                               </p>
                             </VStack>
@@ -649,7 +649,7 @@ export function CreateMCPTemplatePage() {
                         </Disclosure.Button>
                         <Disclosure.Panel>
                           <VStack gap={4} className="pl-6 mt-4">
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Configure environment variables for the server runtime.
                             </p>
 
@@ -769,7 +769,7 @@ export function CreateMCPTemplatePage() {
                         </Disclosure.Button>
                         <Disclosure.Panel>
                           <VStack gap={4} className="pl-6 mt-4">
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Configure the tools provided by this MCP server, along with their
                               metadata and input schemas.
                             </p>
@@ -840,7 +840,7 @@ export function CreateMCPTemplatePage() {
                                     <label className="text-label-lg text-[var(--color-text-default)]">
                                       Tag
                                     </label>
-                                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                                    <p className="text-body-md text-[var(--color-text-subtle)]">
                                       Tags help categorize and identify your resources.
                                     </p>
                                     <Input
@@ -860,7 +860,7 @@ export function CreateMCPTemplatePage() {
                                     <label className="text-label-lg text-[var(--color-text-default)]">
                                       Parameters (input schema)
                                     </label>
-                                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                                    <p className="text-body-md text-[var(--color-text-subtle)]">
                                       Define the input parameters for this tool.
                                     </p>
 
@@ -924,7 +924,7 @@ export function CreateMCPTemplatePage() {
                                     <label className="text-label-lg text-[var(--color-text-default)]">
                                       Preview (JSON Schema)
                                     </label>
-                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-3 font-mono text-body-sm text-[var(--color-text-subtle)]">
+                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-3 font-mono text-body-md text-[var(--color-text-subtle)]">
                                       <pre className="whitespace-pre-wrap">
                                         {`{
   "tool": 10,
@@ -953,7 +953,7 @@ export function CreateMCPTemplatePage() {
                               Visibility
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Control whether this template appears in the templates catalog and is
                               available to all users.
                             </p>
@@ -972,7 +972,7 @@ export function CreateMCPTemplatePage() {
                               Add official badge
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Add a official badge to indicate that this MCP server is an official
                               template provided by your organization.
                             </p>

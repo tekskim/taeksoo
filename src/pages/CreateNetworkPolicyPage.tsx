@@ -690,7 +690,7 @@ export function CreateNetworkPolicyPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h4">Create network policy</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Network policies are used to control the traffic flow between pods within the cluster
             based on defined rules for ingress and egress.
           </p>
@@ -884,7 +884,7 @@ export function CreateNetworkPolicyPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Labels
                       </label>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </span>
                     </VStack>
@@ -951,7 +951,7 @@ export function CreateNetworkPolicyPage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </label>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </span>

@@ -266,12 +266,18 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 ### Tooltip
 
 ```css
---tooltip-padding-x: 0.5rem;  /* 8px */
---tooltip-padding-y: 0.25rem; /* 4px */
---tooltip-radius: 0.25rem;    /* 4px */
+--tooltip-padding-x: 0.5rem;    /* 8px */
+--tooltip-padding-y: 0.25rem;   /* 4px */
+--tooltip-radius: 0.25rem;      /* 4px */
 --tooltip-font-size: 0.6875rem; /* 11px */
---tooltip-max-width: 14.375rem; /* 230px */
+--tooltip-min-width: 60px;
+--tooltip-max-width: 230px;     /* ~35-39 chars per line (11px Mona Sans) */
 ```
+
+**Width rules:**
+- Tooltip uses `w-max` with `min-w-[var(--tooltip-min-width)]` and `max-w-[var(--tooltip-max-width)]`
+- Short text stays compact; long text wraps at 230px (~35-39 characters per line)
+- Do NOT use `whitespace-nowrap` — long tooltips must wrap to avoid overflowing into sidebars or off-screen
 
 ### Popover
 

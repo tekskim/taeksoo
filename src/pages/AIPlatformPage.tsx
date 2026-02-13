@@ -680,7 +680,7 @@ function QuickActionCard({ icon, title, description, onClick }: QuickActionCardP
         {icon}
       </div>
       <h4 className="text-label-lg text-[var(--color-text-default)] mb-1">{title}</h4>
-      <p className="text-body-sm text-[var(--color-text-subtle)]">{description}</p>
+      <p className="text-body-md text-[var(--color-text-subtle)]">{description}</p>
     </button>
   );
 }
@@ -752,7 +752,7 @@ function DashboardContent() {
             <DataRow label="My pending Jobs:" value={0} />
             <DataRow label="My running Jobs:" value={0} />
             <p className="text-label-md text-[var(--color-text-default)] mt-2">No active jobs</p>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               You can start a new job now
             </p>
           </div>

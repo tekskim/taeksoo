@@ -115,7 +115,7 @@ export function ManageTagsDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage Tags
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Tags are used to categorize and manage resources.
             </p>
           </VStack>

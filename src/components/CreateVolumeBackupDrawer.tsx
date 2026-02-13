@@ -47,7 +47,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {used}/{total}
         </span>
@@ -166,7 +166,7 @@ export function CreateVolumeBackupDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create volume backup
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Create a full backup of this volume and store it in the backup service. The backup can
               be used to restore the volume or create new volumes in the future.
             </p>

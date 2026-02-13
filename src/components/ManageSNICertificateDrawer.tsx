@@ -209,7 +209,7 @@ export function ManageSNICertificateDrawer({
         <VStack gap={3}>
           <VStack gap={2}>
             <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">SNI</h3>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Add more certificates here to host multiple, different HTTPS websites on this single
               listener.
             </p>
