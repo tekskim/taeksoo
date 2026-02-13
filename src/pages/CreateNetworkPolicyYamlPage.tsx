@@ -219,7 +219,7 @@ export function CreateNetworkPolicyYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create NetworkPolicy</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Network Policy defines how groups of pods are allowed to communicate with each other and
             with external endpoints, providing fine-grained control over network traffic within the
             cluster.

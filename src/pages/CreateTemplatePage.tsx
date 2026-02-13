@@ -30,6 +30,7 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -40,7 +41,6 @@ import {
   IconBell,
   IconCaretDownFilled,
   IconCaretRightFilled,
-  IconCheck,
   IconDots,
   IconDownload,
   IconEdit,
@@ -416,53 +416,6 @@ const availabilityZoneOptions = [
 ];
 
 /* ----------------------------------------
-   SectionStatusIcon Component
-   ---------------------------------------- */
-
-function SectionStatusIcon({ status }: { status: SectionState }) {
-  if (status === 'done') {
-    return (
-      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-white" />
-      </div>
-    );
-  }
-
-  if (status === 'active') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  if (status === 'pre') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-        style={{ borderStyle: 'dashed' }}
-      />
-    );
-  }
-
-  return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
-      <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
-    </div>
-  );
-}
-
-/* ----------------------------------------
    TemplateSidebar Component
    ---------------------------------------- */
 
@@ -497,7 +450,7 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
                         Writing...
                       </span>
                     ) : (
-                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
                   </div>
                 );
@@ -689,7 +642,7 @@ function TemplateInformationSection({
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Template name <span className="text-[var(--color-state-danger)]">*</span>
               </span>
-              <VStack gap={1}>
+              <VStack gap={2}>
                 <Input
                   placeholder="Enter instance template name"
                   value={templateName}
@@ -1160,8 +1113,8 @@ function ImageSection({
                       min={10}
                       max={1000}
                       width="sm"
+                      suffix="GiB"
                     />
-                    <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
                   </HStack>
                   <Checkbox
                     label="Deleted with the instance"
@@ -1363,7 +1316,7 @@ function FlavorSection({
             </VStack>
 
             {/* Flavor Type Tabs */}
-            <VStack gap={2} align="stretch" className="mt-4">
+            <VStack gap={3} align="stretch" className="mt-4">
               <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="cpu">CPU</Tab>
@@ -1920,7 +1873,7 @@ function NetworkSection({
                     setNetworkPage(1);
                   }}
                   size="sm"
-                  className="w-[var(--wizard-summary-width)]"
+                  className="w-[var(--search-input-width)]"
                 />
                 <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
                   Create a new network
@@ -2051,7 +2004,7 @@ function NetworkSection({
                     setSgPage(1);
                   }}
                   size="sm"
-                  className="w-[var(--wizard-summary-width)]"
+                  className="w-[var(--search-input-width)]"
                 />
                 <Button variant="secondary" size="sm" leftIcon={<IconExternalLink size={12} />}>
                   Create a new security group
@@ -2105,7 +2058,7 @@ function NetworkSection({
               </button>
 
               {portExpanded && (
-                <VStack gap={2} align="stretch">
+                <VStack gap={3} align="stretch">
                   {/* Port Search */}
                   <SearchInput
                     placeholder="Search ports by attributes"

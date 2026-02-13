@@ -219,7 +219,7 @@ export function CreateCronJobYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create CronJob</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a CronJob to run Jobs on a scheduled basis, automating recurring tasks with
             flexible timing and reliable execution.
           </p>

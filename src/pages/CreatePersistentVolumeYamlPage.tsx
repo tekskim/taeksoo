@@ -221,7 +221,7 @@ export function CreatePersistentVolumeYamlPage() {
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
             Create PersistentVolume
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Persistent Volume is a pre-provisioned and cluster-wide storage resource that provides
             reliable and reusable data space for applications or Persistent Volume Claims.
           </p>

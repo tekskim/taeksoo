@@ -219,7 +219,7 @@ export function CreateDeploymentYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Deployment</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Deployment manage the lifecycle of your application Pods, enabling rolling updates and
             automated recovery.
           </p>

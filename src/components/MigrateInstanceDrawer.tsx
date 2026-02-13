@@ -231,7 +231,7 @@ export function MigrateInstanceDrawer({
         {/* Title */}
         <VStack gap={2}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Migrate instance</h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Migrate the instance to a different host. Migration does not change the instance
             configuration or data.
           </p>
@@ -248,7 +248,7 @@ export function MigrateInstanceDrawer({
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Hosts <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Select a host to migrate the instance to. Only available hosts are shown.
           </p>
 

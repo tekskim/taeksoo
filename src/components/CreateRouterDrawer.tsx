@@ -284,7 +284,7 @@ export function CreateRouterDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Router
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a virtual router to route traffic between different networks or subnets. You can
             optionally connect the router to an external network to enable internet access or
             floating IP usage.
@@ -341,7 +341,7 @@ export function CreateRouterDrawer({
                     <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       Admin state
                     </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
                       Setting it to "Down" disables all related network or control operations,
                       regardless of runtime status.
                     </span>
@@ -359,7 +359,7 @@ export function CreateRouterDrawer({
                     <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       External Gateway
                     </span>
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
                       The external gateway connects your router to an external (public) network.
                       <br />
                       When enabled, instances in the connected subnets can access the internet using

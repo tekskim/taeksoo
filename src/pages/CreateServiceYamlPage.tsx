@@ -253,7 +253,7 @@ export function CreateServiceYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create service</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Services allow you to define a logical set of Pods that can be accessed with a single IP
             address and port.
           </p>

@@ -448,7 +448,7 @@ export default function CreateHPAPage() {
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
             Create Horizontal Pod Autoscaler
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
             real-time resource usage to maintain stable application performance.
           </p>

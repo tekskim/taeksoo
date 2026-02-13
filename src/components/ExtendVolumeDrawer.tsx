@@ -181,7 +181,7 @@ export function ExtendVolumeDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Extend Volume
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Increase the size of this volume to expand its storage capacity. The volume size can
               only be increased and cannot be reduced once extended.
             </p>

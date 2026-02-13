@@ -277,7 +277,7 @@ export function CreateNamespacePage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h4">Create namespace</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Namespace is a logical partition within a cluster that isolates and organizes resources
             for easier management and access control.
           </p>
@@ -335,7 +335,7 @@ export function CreateNamespacePage() {
                       onChange={(e) => setEnforceEnabled(e.target.checked)}
                       label="Enforce"
                     />
-                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
                       Block the creation of pods that violate the policy.
                     </p>
                     <div className="grid grid-cols-2 gap-3">
@@ -363,7 +363,7 @@ export function CreateNamespacePage() {
                       onChange={(e) => setAuditEnabled(e.target.checked)}
                       label="Audit"
                     />
-                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
                       Allow policy violations and records them in audit logs.
                     </p>
                     <div className="grid grid-cols-2 gap-3">
@@ -391,7 +391,7 @@ export function CreateNamespacePage() {
                       onChange={(e) => setWarnEnabled(e.target.checked)}
                       label="Warn"
                     />
-                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
                       Allow the creation of violating pods but displays a warning message.
                     </p>
                     <div className="grid grid-cols-2 gap-3">
@@ -426,7 +426,7 @@ export function CreateNamespacePage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Labels
                       </label>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </span>
                     </VStack>
@@ -493,7 +493,7 @@ export function CreateNamespacePage() {
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </label>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </span>

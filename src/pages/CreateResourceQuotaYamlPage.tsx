@@ -219,7 +219,7 @@ export function CreateResourceQuotaYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create ResourceQuota</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Resource Quotas cap the overall resource usage of a Namespace to maintain fair and
             controlled consumption across the cluster.
           </p>

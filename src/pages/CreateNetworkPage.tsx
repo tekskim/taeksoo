@@ -252,7 +252,7 @@ export default function CreateNetworkPage() {
                       <FormField required error={!!networkNameError}>
                         <FormField.Label>Network name</FormField.Label>
                         <FormField.Control>
-                          <VStack gap={1}>
+                          <VStack gap={2}>
                             <Input
                               placeholder="e.g. private-net"
                               value={networkName}

@@ -187,7 +187,7 @@ export function ManageUserGroupsDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage user groups
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Add or remove the user groups this user belongs to.
             </p>
           </VStack>
@@ -213,7 +213,7 @@ export function ManageUserGroupsDrawer({
               </span>
               <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Select the user groups this user will belong to. The user will automatically inherit
               the permissions assigned to those groups.
             </p>

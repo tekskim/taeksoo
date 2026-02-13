@@ -88,7 +88,7 @@ export function CreateAllowedAddressPairDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Allowed Address Pair
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Specify additional IP or MAC addresses that are allowed to pass through this port.
           </p>
         </VStack>
