@@ -1972,9 +1972,9 @@ export function CreateDeploymentPage() {
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content>
                     <VStack gap={6}>
-                      <span className="text-label-lg text-[var(--color-text-default)]">
+                      <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
-                      </span>
+                      </h6>
                       <VStack gap={1} className="w-full">
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Termination Grace Period
@@ -2008,10 +2008,10 @@ export function CreateDeploymentPage() {
                     <VStack gap={6}>
                       {/* Network Settings */}
                       <VStack gap={6}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
-                        </span>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 w-full items-end">
+                        </h6>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-4 w-full items-end">
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
@@ -3611,7 +3611,7 @@ export function CreateDeploymentPage() {
                               />
                             </button>
                             <VStack gap={3}>
-                              <VStack gap={1}>
+                              <VStack gap={3}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
@@ -3663,7 +3663,7 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={1}>
+                                  <VStack gap={2}>
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Capacity{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3678,8 +3678,8 @@ export function CreateDeploymentPage() {
                                           capacity: val?.toString() || '',
                                         })
                                       }
-                                      suffix="Gi"
-                                      fullWidth
+                                      suffix="GiB"
+                                      width="sm"
                                     />
                                   </VStack>
                                 </div>
@@ -3708,12 +3708,12 @@ export function CreateDeploymentPage() {
                                 </VStack>
                               )}
 
-                              <VStack gap={1.5}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Access Modes{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
-                                <VStack gap={1.5}>
+                                <VStack gap={2}>
                                   <Checkbox
                                     label="Single node read-write"
                                     checked={template.accessModes.readWriteOnce}
@@ -4694,25 +4694,20 @@ export function CreateDeploymentPage() {
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
-                                        <NumberInput
-                                          value={
-                                            parseInt(
-                                              config.readinessProbe?.periodSeconds || '10'
-                                            ) || 10
-                                          }
-                                          onChange={(val) =>
-                                            updateProbe('readinessProbe', {
-                                              periodSeconds: String(val),
-                                            })
-                                          }
-                                          min={1}
-                                          width="sm"
-                                        />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                          Seconds
-                                        </div>
-                                      </HStack>
+                                      <NumberInput
+                                        value={
+                                          parseInt(config.readinessProbe?.periodSeconds || '10') ||
+                                          10
+                                        }
+                                        onChange={(val) =>
+                                          updateProbe('readinessProbe', {
+                                            periodSeconds: String(val),
+                                          })
+                                        }
+                                        min={1}
+                                        width="sm"
+                                        suffix="Seconds"
+                                      />
                                     </VStack>
                                   </div>
                                   {/* Row 2: Request Path (httpGet only) + Initial Delay */}
@@ -4752,25 +4747,21 @@ export function CreateDeploymentPage() {
                                           check.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
-                                        <NumberInput
-                                          value={
-                                            parseInt(
-                                              config.readinessProbe?.initialDelaySeconds || '0'
-                                            ) || 0
-                                          }
-                                          onChange={(val) =>
-                                            updateProbe('readinessProbe', {
-                                              initialDelaySeconds: String(val),
-                                            })
-                                          }
-                                          min={0}
-                                          fullWidth
-                                        />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                          Seconds
-                                        </div>
-                                      </HStack>
+                                      <NumberInput
+                                        value={
+                                          parseInt(
+                                            config.readinessProbe?.initialDelaySeconds || '0'
+                                          ) || 0
+                                        }
+                                        onChange={(val) =>
+                                          updateProbe('readinessProbe', {
+                                            initialDelaySeconds: String(val),
+                                          })
+                                        }
+                                        min={0}
+                                        width="sm"
+                                        suffix="Seconds"
+                                      />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
                                       <VStack gap={3} className="flex-1">
@@ -4783,25 +4774,21 @@ export function CreateDeploymentPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
-                                          <NumberInput
-                                            value={
-                                              parseInt(
-                                                config.readinessProbe?.timeoutSeconds || '1'
-                                              ) || 1
-                                            }
-                                            onChange={(val) =>
-                                              updateProbe('readinessProbe', {
-                                                timeoutSeconds: String(val),
-                                              })
-                                            }
-                                            min={1}
-                                            fullWidth
-                                          />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                            Seconds
-                                          </div>
-                                        </HStack>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.readinessProbe?.timeoutSeconds || '1'
+                                            ) || 1
+                                          }
+                                          onChange={(val) =>
+                                            updateProbe('readinessProbe', {
+                                              timeoutSeconds: String(val),
+                                            })
+                                          }
+                                          min={1}
+                                          width="sm"
+                                          suffix="Seconds"
+                                        />
                                       </VStack>
                                     )}
                                   </div>
@@ -4818,25 +4805,21 @@ export function CreateDeploymentPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
-                                          <NumberInput
-                                            value={
-                                              parseInt(
-                                                config.readinessProbe?.timeoutSeconds || '1'
-                                              ) || 1
-                                            }
-                                            onChange={(val) =>
-                                              updateProbe('readinessProbe', {
-                                                timeoutSeconds: String(val),
-                                              })
-                                            }
-                                            min={1}
-                                            fullWidth
-                                          />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                            Seconds
-                                          </div>
-                                        </HStack>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.readinessProbe?.timeoutSeconds || '1'
+                                            ) || 1
+                                          }
+                                          onChange={(val) =>
+                                            updateProbe('readinessProbe', {
+                                              timeoutSeconds: String(val),
+                                            })
+                                          }
+                                          min={1}
+                                          width="sm"
+                                          suffix="Seconds"
+                                        />
                                       </VStack>
                                     )}
                                     <VStack gap={3} className="flex-1">

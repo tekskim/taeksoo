@@ -276,8 +276,16 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     if (suffix) {
       return (
-        <div className={twMerge('flex items-center gap-[var(--primitive-spacing-2)]', className)}>
-          <div className={wrapperClasses}>{coreElement}</div>
+        <div
+          className={twMerge(
+            'flex items-center gap-[var(--primitive-spacing-2)]',
+            getWidthClass(),
+            className
+          )}
+        >
+          <div className="flex flex-col gap-[var(--input-label-gap)] flex-1 min-w-0">
+            {coreElement}
+          </div>
           <span className="text-body-md text-[var(--color-text-default)] shrink-0">{suffix}</span>
         </div>
       );
