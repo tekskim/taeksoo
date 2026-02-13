@@ -184,7 +184,7 @@ export function CreateServerGroupDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create server group
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a server group to control how instances are placed across compute hosts.
           </p>
         </VStack>

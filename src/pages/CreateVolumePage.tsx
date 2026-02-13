@@ -787,7 +787,7 @@ export function CreateVolumePage() {
 
                       {/* Image Selection */}
                       {sourceType === 'image' && (
-                        <VStack gap={2} align="stretch">
+                        <VStack gap={3} align="stretch">
                           {/* OS Filter Tabs */}
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
                             {[

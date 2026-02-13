@@ -493,7 +493,7 @@ export function ComputeAdminCreateFlavorPage() {
                           />
 
                           {/* Tenant Table */}
-                          <VStack gap={2}>
+                          <VStack gap={3}>
                             <div className="flex flex-col gap-1 w-full">
                               {/* Table Header */}
                               <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
@@ -639,10 +639,14 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Number of virtual CPUs for instances using this flavor.
                       </span>
-                      <HStack gap={2} align="center">
-                        <NumberInput value={vcpu} onChange={setVcpu} min={1} max={128} width="sm" />
-                        <span className="text-body-md text-[var(--color-text-default)]">cores</span>
-                      </HStack>
+                      <NumberInput
+                        value={vcpu}
+                        onChange={setVcpu}
+                        min={1}
+                        max={128}
+                        width="sm"
+                        suffix="cores"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -658,10 +662,14 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Amount of memory for instances using this flavor.
                       </span>
-                      <HStack gap={2} align="center">
-                        <NumberInput value={ram} onChange={setRam} min={1} max={1024} width="sm" />
-                        <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-                      </HStack>
+                      <NumberInput
+                        value={ram}
+                        onChange={setRam}
+                        min={1}
+                        max={1024}
+                        width="sm"
+                        suffix="GiB"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -677,16 +685,14 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Size of the root disk. Use 0 for no local disk (boot from volume).
                       </span>
-                      <HStack gap={2} align="center">
-                        <NumberInput
-                          value={rootDisk}
-                          onChange={setRootDisk}
-                          min={0}
-                          max={10000}
-                          width="sm"
-                        />
-                        <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-                      </HStack>
+                      <NumberInput
+                        value={rootDisk}
+                        onChange={setRootDisk}
+                        min={0}
+                        max={10000}
+                        width="sm"
+                        suffix="GiB"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -700,16 +706,14 @@ export function ComputeAdminCreateFlavorPage() {
                         Size of temporary disk. This disk is deleted when the instance is
                         terminated.
                       </span>
-                      <HStack gap={2} align="center">
-                        <NumberInput
-                          value={ephemeralDisk}
-                          onChange={setEphemeralDisk}
-                          min={0}
-                          max={10000}
-                          width="sm"
-                        />
-                        <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-                      </HStack>
+                      <NumberInput
+                        value={ephemeralDisk}
+                        onChange={setEphemeralDisk}
+                        min={0}
+                        max={10000}
+                        width="sm"
+                        suffix="GiB"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -722,16 +726,14 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                         Size of swap space. Use 0 for no swap.
                       </span>
-                      <HStack gap={2} align="center">
-                        <NumberInput
-                          value={swapDisk}
-                          onChange={setSwapDisk}
-                          min={0}
-                          max={10000}
-                          width="sm"
-                        />
-                        <span className="text-body-md text-[var(--color-text-default)]">MiB</span>
-                      </HStack>
+                      <NumberInput
+                        value={swapDisk}
+                        onChange={setSwapDisk}
+                        min={0}
+                        max={10000}
+                        width="sm"
+                        suffix="MiB"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

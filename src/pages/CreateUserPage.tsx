@@ -18,13 +18,13 @@ import {
   FormField,
   SearchInput,
   PageShell,
+  WizardSectionStatusIcon,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
-  IconCheck,
   IconEye,
   IconEyeOff,
   IconCircle,
@@ -189,45 +189,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
 }
 
 /* ----------------------------------------
-   SectionStatusIcon Component
-   ---------------------------------------- */
-
-function SectionStatusIcon({ status }: { status: SectionState }) {
-  if (status === 'done') {
-    return (
-      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-white" />
-      </div>
-    );
-  }
-
-  if (status === 'active') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  return (
-    <div
-      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    SummarySidebar Component
    ---------------------------------------- */
 
@@ -268,7 +229,7 @@ function SummarySidebar({
                         Writing...
                       </span>
                     ) : (
-                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
                   </div>
                 );
@@ -518,7 +479,7 @@ function PasswordSection({
           </HStack>
           {/* Error messages */}
           {(passwordError || confirmPasswordError) && (
-            <div className="mt-1">
+            <div className="mt-2">
               {passwordError && (
                 <span className="text-body-sm text-[var(--color-state-danger)] mr-4">
                   {passwordError}

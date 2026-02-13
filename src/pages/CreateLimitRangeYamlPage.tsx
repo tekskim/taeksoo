@@ -219,7 +219,7 @@ export function CreateLimitRangeYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create LimitRange</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             LimitRanges define default resource requests and limits for Pods and containers within a
             Namespace, helping enforce fair resource usage and prevent workloads from consuming
             excessive CPU or memory.

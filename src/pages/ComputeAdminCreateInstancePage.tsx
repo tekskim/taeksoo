@@ -34,6 +34,7 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -41,7 +42,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconBell,
-  IconCheck,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -311,56 +311,6 @@ interface QuotaSidebarProps {
   editingSection: SectionStep | null;
 }
 
-// Status icon component for summary sections
-// Maps SectionState to visual icon
-function SectionStatusIcon({ status }: { status: SectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-white" />
-      </div>
-    );
-  }
-
-  // active → spinning dashed circle (currently working)
-  if (status === 'active') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // writing → spinning dashed circle
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // pre → empty dashed circle (waiting)
-  if (status === 'pre') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-        style={{ borderStyle: 'dashed' }}
-      />
-    );
-  }
-
-  // skipped → dash icon
-  return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
-      <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
-    </div>
-  );
-}
-
 function QuotaSidebar({
   numberOfInstances,
   onNumberOfInstancesChange,
@@ -396,7 +346,7 @@ function QuotaSidebar({
                         Writing...
                       </span>
                     ) : (
-                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
                   </div>
                 );
@@ -636,7 +586,7 @@ function BasicInformationSection({
             <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Input
                 placeholder="Instance name"
                 value={instanceName}
@@ -1399,19 +1349,17 @@ function ImageSection({
                     onChange={setStorageType}
                   />
                 </VStack>
-                <HStack gap={2} align="end">
-                  <VStack gap={2}>
-                    <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                    <NumberInput
-                      value={storageSize}
-                      onChange={setStorageSize}
-                      min={1}
-                      max={1000}
-                      width="sm"
-                    />
-                  </VStack>
-                  <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
-                </HStack>
+                <VStack gap={2}>
+                  <label className="text-label-md text-[var(--color-text-default)]">Size</label>
+                  <NumberInput
+                    value={storageSize}
+                    onChange={setStorageSize}
+                    min={1}
+                    max={1000}
+                    width="sm"
+                    suffix="GiB"
+                  />
+                </VStack>
                 <div className="self-end pb-2">
                   <Checkbox
                     label="Deleted with the instance"
@@ -1718,7 +1666,7 @@ function FlavorSection({
           </VStack>
 
           {/* Search, Pagination, Table, and Selection Indicator */}
-          <VStack gap={2}>
+          <VStack gap={3}>
             <SearchInput
               placeholder="Search flavors by attributes"
               value={searchQuery}
@@ -1739,30 +1687,32 @@ function FlavorSection({
               selectedCount={selectedFlavorId ? 1 : 0}
             />
 
-            <Table
-              columns={flavorColumns}
-              data={paginatedFlavors}
-              rowKey="id"
-              onRowClick={(row) => handleSelectFlavor(row.id)}
-            />
+            <VStack gap={2}>
+              <Table
+                columns={flavorColumns}
+                data={paginatedFlavors}
+                rowKey="id"
+                onRowClick={(row) => handleSelectFlavor(row.id)}
+              />
 
-            <SelectionIndicator
-              selectedItems={
-                selectedFlavorId
-                  ? [
-                      {
-                        id: selectedFlavorId,
-                        label:
-                          mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                          selectedFlavorId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectFlavor('')}
-              error={!!flavorError}
-              errorMessage={flavorError}
-            />
+              <SelectionIndicator
+                selectedItems={
+                  selectedFlavorId
+                    ? [
+                        {
+                          id: selectedFlavorId,
+                          label:
+                            mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                            selectedFlavorId,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => onSelectFlavor('')}
+                error={!!flavorError}
+                errorMessage={flavorError}
+              />
+            </VStack>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2637,7 +2587,7 @@ function NetworkSection({
                 </HStack>
               </Disclosure.Trigger>
               <Disclosure.Panel>
-                <VStack gap={2} className="pt-3">
+                <VStack gap={3} className="pt-3">
                   <SearchInput
                     placeholder="Search floating IP by attributes"
                     value={portSearch}
@@ -2653,29 +2603,31 @@ function NetworkSection({
                     onPageChange={setPortPage}
                     selectedCount={selectedPortId ? 1 : 0}
                   />
-                  <Table
-                    columns={portColumns}
-                    data={filteredPorts}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedPortId(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={portColumns}
+                      data={filteredPorts}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedPortId(row.id)}
+                    />
 
-                  {/* Selection Indicator for Port */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedPortId
-                        ? [
-                            {
-                              id: selectedPortId,
-                              label:
-                                mockPorts.find((p) => p.id === selectedPortId)?.name ||
-                                selectedPortId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedPortId(null)}
-                  />
+                    {/* Selection Indicator for Port */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedPortId
+                          ? [
+                              {
+                                id: selectedPortId,
+                                label:
+                                  mockPorts.find((p) => p.id === selectedPortId)?.name ||
+                                  selectedPortId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedPortId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -2975,7 +2927,7 @@ function AuthenticationSection({
                     </div>
                     <div>
                       <label className="block text-label-lg mb-2">Confirm Password</label>
-                      <VStack gap={1}>
+                      <VStack gap={2}>
                         <div className="relative">
                           <Input
                             type={showConfirmPassword ? 'text' : 'password'}
@@ -3189,7 +3141,7 @@ function AdvancedSection({
                 </HStack>
               </Disclosure.Trigger>
               <Disclosure.Panel>
-                <VStack gap={2} className="pt-3">
+                <VStack gap={3} className="pt-3">
                   {/* Search */}
                   <SearchInput
                     placeholder="Search server group by attributes"
@@ -3210,29 +3162,31 @@ function AdvancedSection({
                   />
 
                   {/* Server group Table */}
-                  <Table
-                    columns={serverGroupColumns}
-                    data={filteredServerGroups}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedServerGroupId(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={serverGroupColumns}
+                      data={filteredServerGroups}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedServerGroupId(row.id)}
+                    />
 
-                  {/* Selection Indicator for Server Group */}
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedServerGroupId
-                        ? [
-                            {
-                              id: selectedServerGroupId,
-                              label:
-                                mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                  ?.name || selectedServerGroupId,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedServerGroupId(null)}
-                  />
+                    {/* Selection Indicator for Server Group */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedServerGroupId
+                          ? [
+                              {
+                                id: selectedServerGroupId,
+                                label:
+                                  mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
+                                    ?.name || selectedServerGroupId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedServerGroupId(null)}
+                    />
+                  </VStack>
                 </VStack>
               </Disclosure.Panel>
             </Disclosure>
@@ -3281,7 +3235,7 @@ function AdvancedSection({
                       className="font-mono text-body-md"
                       error={!!userDataError}
                     />
-                    <div className="flex justify-between items-start mt-1.5">
+                    <div className="flex justify-between items-start mt-2">
                       <span className="text-body-sm text-[var(--color-state-danger)]">
                         {userDataError || ''}
                       </span>
@@ -3514,7 +3468,7 @@ function TemplatesSection({
                 </TabList>
 
                 <TabPanel value="favorites" className="pt-3">
-                  <VStack gap={2} className="w-full">
+                  <VStack gap={3} className="w-full">
                     {/* Action Bar - Search + Create Button */}
                     <HStack justify="between" align="center" className="w-full">
                       <SearchInput
@@ -3557,7 +3511,7 @@ function TemplatesSection({
                 </TabPanel>
 
                 <TabPanel value="current-tenant" className="pt-3">
-                  <VStack gap={2} className="w-full">
+                  <VStack gap={3} className="w-full">
                     {/* Action Bar - Search + Create Button */}
                     <HStack justify="between" align="center" className="w-full">
                       <SearchInput
@@ -3600,7 +3554,7 @@ function TemplatesSection({
                 </TabPanel>
 
                 <TabPanel value="public" className="pt-3">
-                  <VStack gap={2} className="w-full">
+                  <VStack gap={3} className="w-full">
                     {/* Action Bar - Search + Create Button */}
                     <HStack justify="between" align="center" className="w-full">
                       <SearchInput

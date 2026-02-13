@@ -219,7 +219,7 @@ export function CreateStatefulSetYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create StatefulSet</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a StatefulSet to deploy and manage stateful applications with stable network
             identities and persistent storage.
           </p>

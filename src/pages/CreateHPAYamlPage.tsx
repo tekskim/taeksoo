@@ -255,7 +255,7 @@ export function CreateHPAYamlPage() {
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
             Create Horizontal Pod Autoscaler
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscalers automatically scale the number of pods in a deployment,
             replica set, or stateful set based on observed CPU utilization or other
             application-provided metrics.

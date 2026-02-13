@@ -24,6 +24,7 @@ import {
   Chip,
   StatusIndicator,
   PageShell,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -253,27 +254,9 @@ interface PodAffinityTerm {
    Summary Sidebar Component
    ---------------------------------------- */
 
-// Status icon component for summary items
+// Status icon component for summary items — delegates to DS WizardSectionStatusIcon
 function StatusIcon({ status }: { status: 'complete' | 'in-progress' }) {
-  if (status === 'complete') {
-    return (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <circle cx="8" cy="8" r="7" fill="var(--color-state-success)" />
-        <path
-          d="M5 8L7 10L11 6"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="6.5" stroke="var(--color-border-default)" strokeDasharray="3 3" />
-    </svg>
-  );
+  return <WizardSectionStatusIcon status={status === 'complete' ? 'done' : 'active'} />;
 }
 
 // Summary section header with collapse/expand
@@ -558,7 +541,7 @@ function BasicInfoSection({
             <label className="text-label-lg text-[var(--color-text-default)]">
               Replicas<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Select the number of pod replicas to create.
             </p>
             <NumberInput
@@ -638,7 +621,7 @@ function LabelsAnnotationsSection({
           <VStack gap={3}>
             <VStack gap={1.5}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
+              <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
@@ -701,7 +684,7 @@ function LabelsAnnotationsSection({
           <VStack gap={3}>
             <VStack gap={1.5}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
+              <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
@@ -830,7 +813,7 @@ function ScalingPolicySection({
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Revision History Limit
               </span>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
+              <p className="text-body-md text-[var(--color-text-subtle)]">
                 The maximum number of revision histories to retain for the StatefulSet.
               </p>
             </VStack>
@@ -1655,7 +1638,7 @@ export function CreateStatefulSetPage() {
           <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
             Create StatefulSet
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a StatefulSet to deploy and manage stateful applications with stable network
             identities and persistent storage.
           </p>
@@ -1757,7 +1740,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
                           </span>
-                          <p className="text-body-sm text-[var(--color-text-subtle)]">
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the labels used to identify and categorize the resource.
                           </p>
                         </VStack>
@@ -1826,7 +1809,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
                           </span>
-                          <p className="text-body-sm text-[var(--color-text-subtle)]">
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the annotations used to provide additional metadata for the
                             resource.
                           </p>
@@ -1909,7 +1892,7 @@ export function CreateStatefulSetPage() {
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Termination Grace Period
                         </span>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           The period allowed after receiving a termination request before the pod is
                           forcibly terminated.
                         </span>
@@ -1945,7 +1928,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               Select the networking mode for the pod.
                             </span>
                             <Select
@@ -1962,7 +1945,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               DNS Policy
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               Select the DNS policy to apply to the pod.
                             </span>
                             <Select
@@ -1980,7 +1963,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Hostname
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               Specify the hostname assigned to the pod.
                             </span>
                             <Input
@@ -1994,7 +1977,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Subdomain
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               Specify the subdomain assigned to the pod.
                             </span>
                             <Input
@@ -2013,7 +1996,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Nameservers
                           </span>
-                          <p className="text-body-sm text-[var(--color-text-subtle)]">
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the DNS nameserver addresses used by the pod.
                           </p>
                         </VStack>
@@ -2072,7 +2055,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Search Domains
                           </span>
-                          <p className="text-body-sm text-[var(--color-text-subtle)]">
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the search domains used for DNS resolution.
                           </p>
                         </VStack>
@@ -2297,7 +2280,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Node Affinity Rules
                             </span>
-                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Define rules for scheduling pods on specific nodes based on node
                               labels.
                             </p>
@@ -2543,7 +2526,7 @@ export function CreateStatefulSetPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Type
                                   </span>
-                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Select the scheduling type to apply to the pod.
                                   </span>
                                 </VStack>
@@ -2583,7 +2566,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Priority
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the priority value applied to pod scheduling.
                                 </span>
                               </VStack>
@@ -2625,7 +2608,10 @@ export function CreateStatefulSetPage() {
                             {term.namespaces === 'selected' && (
                               <VStack gap={3}>
                                 {/* Search Input */}
-                                <SearchInput placeholder="Search namespaces by attributes" />
+                                <SearchInput
+                                  placeholder="Search namespaces by attributes"
+                                  className="w-[var(--search-input-width)]"
+                                />
 
                                 {/* Pagination */}
                                 <Pagination
@@ -2710,7 +2696,7 @@ export function CreateStatefulSetPage() {
                                       ) : null;
                                     })
                                   ) : (
-                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       No item selected
                                     </span>
                                   )}
@@ -2850,7 +2836,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Topology Key
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Select the scheduling type to apply to the pod.
                                 </span>
                               </VStack>
@@ -3030,7 +3016,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority
                           </span>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the priority value for the pod.
                           </span>
                           <Input
@@ -3044,7 +3030,7 @@ export function CreateStatefulSetPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority Class Name
                           </span>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
                             Specify the priority class name for the pod.
                           </span>
                           <Input
@@ -3068,7 +3054,7 @@ export function CreateStatefulSetPage() {
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Pod Filesystem Group
                         </span>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Specify the filesystem group used by the pod.
                         </span>
                         <div className="max-w-[160px]">
@@ -3790,7 +3776,7 @@ export function CreateStatefulSetPage() {
                                   Container Image{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   The period allowed after receiving a termination request before
                                   the pod is forcibly terminated.
                                 </span>
@@ -3811,7 +3797,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Policy
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   The period allowed after receiving a termination request before
                                   the pod is forcibly terminated.
                                 </span>
@@ -3839,7 +3825,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Secrets
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   The period allowed after receiving a termination request before
                                   the pod is forcibly terminated.
                                 </span>
@@ -3988,7 +3974,7 @@ export function CreateStatefulSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               The period allowed after receiving a termination request before the
                               pod is forcibly terminated.
                             </span>
@@ -4515,7 +4501,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Select the probe type used for the health check.
                                 </span>
                               </VStack>
@@ -4556,7 +4542,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the port used to send health check requests.
                                           </span>
                                         </VStack>
@@ -4592,7 +4578,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the command to execute when the container
                                             starts.
                                           </span>
@@ -4617,7 +4603,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
@@ -4650,7 +4636,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Request Path
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the request path used for HTTP health checks.
                                           </span>
                                         </VStack>
@@ -4674,7 +4660,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the delay before initiating the first health
                                           check.
                                         </span>
@@ -4705,7 +4691,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the maximum time to wait for a health check
                                             response.
                                           </span>
@@ -4740,7 +4726,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the maximum time to wait for a health check
                                             response.
                                           </span>
@@ -4771,7 +4757,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the minimum number of consecutive successful
                                           checks to consider the status healthy.
                                         </span>
@@ -4793,7 +4779,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the minimum number of consecutive failed checks
                                             to consider the status unhealthy.
                                           </span>
@@ -4818,7 +4804,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the minimum number of consecutive failed checks to
                                           consider the status unhealthy.
                                         </span>
@@ -4967,7 +4953,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Select the probe type used for the health check.
                                 </span>
                               </VStack>
@@ -5009,7 +4995,7 @@ export function CreateStatefulSetPage() {
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
                                             </span>
-                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                            <span className="text-body-md text-[var(--color-text-subtle)]">
                                               Specify the port used to send health check requests.
                                             </span>
                                           </VStack>
@@ -5045,7 +5031,7 @@ export function CreateStatefulSetPage() {
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
                                             </span>
-                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                            <span className="text-body-md text-[var(--color-text-subtle)]">
                                               Specify the command to execute when the container
                                               starts.
                                             </span>
@@ -5070,7 +5056,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the interval between health check requests.
                                           </span>
                                         </VStack>
@@ -5102,7 +5088,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the delay before initiating the first health
                                             check.
                                           </span>
@@ -5132,7 +5118,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the maximum time to wait for a health check
                                             response.
                                           </span>
@@ -5165,7 +5151,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the minimum number of consecutive successful
                                             checks to consider the status healthy.
                                           </span>
@@ -5186,7 +5172,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the minimum number of consecutive failed checks
                                             to consider the status unhealthy.
                                           </span>
@@ -5218,7 +5204,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Select the probe type used for the health check.
                                 </span>
                               </VStack>
@@ -5259,7 +5245,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the port used to send health check requests.
                                           </span>
                                         </VStack>
@@ -5295,7 +5281,7 @@ export function CreateStatefulSetPage() {
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
                                           </span>
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
                                             Specify the command to execute when the container
                                             starts.
                                           </span>
@@ -5320,7 +5306,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
@@ -5351,7 +5337,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the delay before initiating the first health
                                           check.
                                         </span>
@@ -5381,7 +5367,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Timeout
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the maximum time to wait for a health check
                                           response.
                                         </span>
@@ -5413,7 +5399,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the minimum number of consecutive successful
                                           checks to consider the status healthy.
                                         </span>
@@ -5434,7 +5420,7 @@ export function CreateStatefulSetPage() {
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
                                         </span>
-                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                        <span className="text-body-md text-[var(--color-text-subtle)]">
                                           Specify the minimum number of consecutive failed checks to
                                           consider the status unhealthy.
                                         </span>
@@ -5471,7 +5457,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Reservation
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the minimum CPU amount reserved for the container.
                                 </span>
                               </VStack>
@@ -5495,7 +5481,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Limit
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the maximum CPU amount allowed for the container.
                                 </span>
                               </VStack>
@@ -5522,7 +5508,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Reservation
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the minimum memory amount reserved for the container.
                                 </span>
                               </VStack>
@@ -5546,7 +5532,7 @@ export function CreateStatefulSetPage() {
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Limit
                                 </span>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the maximum memory amount allowed for the container.
                                 </span>
                               </VStack>

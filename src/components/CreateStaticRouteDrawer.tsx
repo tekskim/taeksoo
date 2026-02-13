@@ -106,7 +106,7 @@ export function CreateStaticRouteDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Static Route
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Add a static route to manually define traffic paths beyond connected subnets.
           </p>
         </VStack>

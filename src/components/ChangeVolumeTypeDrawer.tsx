@@ -118,7 +118,7 @@ export function ChangeVolumeTypeDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Change Type
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Change the storage type of this volume to another available volume type. The operation
               may take some time.
             </p>

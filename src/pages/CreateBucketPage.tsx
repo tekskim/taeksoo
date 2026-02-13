@@ -15,10 +15,11 @@ import {
   Radio,
   Textarea,
   PageShell,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconCheck, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconBell, IconEdit, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -113,49 +114,6 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
 }
 
 /* ----------------------------------------
-   SectionStatusIcon Component
-   ---------------------------------------- */
-
-function SectionStatusIcon({ status }: { status: SectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-white" />
-      </div>
-    );
-  }
-
-  // active → spinning dashed circle (currently working)
-  if (status === 'active') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // writing → spinning dashed circle
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // pre → empty dashed circle (waiting)
-  return (
-    <div
-      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    SummarySidebar Component
    ---------------------------------------- */
 
@@ -193,7 +151,7 @@ function SummarySidebar({
                         Writing...
                       </span>
                     ) : (
-                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
                   </div>
                 );

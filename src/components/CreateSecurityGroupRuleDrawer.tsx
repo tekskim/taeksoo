@@ -227,7 +227,7 @@ export function CreateSecurityGroupRuleDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create rule
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             A security group rule defines allowed inbound or outbound network traffic.
           </p>
         </VStack>
@@ -356,7 +356,7 @@ export function CreateSecurityGroupRuleDrawer({
             <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Remote
             </label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Define the source or destination of traffic.
             </p>
             <Select

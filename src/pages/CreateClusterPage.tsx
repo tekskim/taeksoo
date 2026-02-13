@@ -24,6 +24,7 @@ import {
   TabList,
   Tab,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
@@ -338,7 +339,7 @@ export function CreateClusterPage() {
         <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
           Create Cluster
         </h1>
-        <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
           Cluster is a group of machines that work together to run containerized applications with
           automated scaling, scheduling, and management.
         </p>
@@ -379,7 +380,6 @@ export function CreateClusterPage() {
                       options={kubernetesVersionOptions}
                       value={kubernetesVersion}
                       onChange={setKubernetesVersion}
-                      fullWidth
                     />
                   </FormField.Control>
                 </FormField>
@@ -395,7 +395,6 @@ export function CreateClusterPage() {
                       options={containerNetworkOptions}
                       value={containerNetwork}
                       onChange={setContainerNetwork}
-                      fullWidth
                     />
                   </FormField.Control>
                 </FormField>
@@ -429,11 +428,12 @@ export function CreateClusterPage() {
                     Select the external network for outbound access.
                   </FormField.Description>
                   <FormField.Control>
-                    <VStack gap={2}>
+                    <VStack gap={3}>
                       <SearchInput
                         placeholder="Search network by attributes"
                         value={externalNetworkSearch}
                         onChange={(e) => setExternalNetworkSearch(e.target.value)}
+                        className="w-[var(--search-input-width)]"
                       />
                       <Pagination
                         currentPage={1}
@@ -442,25 +442,27 @@ export function CreateClusterPage() {
                         totalItems={filteredExternalNetworks.length}
                         selectedCount={selectedExternalNetwork ? 1 : 0}
                       />
-                      <Table
-                        columns={externalNetworkColumns}
-                        data={filteredExternalNetworks}
-                        rowKey="id"
-                      />
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedExternalNetwork
-                            ? [
-                                {
-                                  id: selectedExternalNetwork,
-                                  label: selectedExternalNetwork,
-                                },
-                              ]
-                            : []
-                        }
-                        emptyText="No network selected"
-                        onRemove={() => setSelectedExternalNetwork('')}
-                      />
+                      <VStack gap={2}>
+                        <Table
+                          columns={externalNetworkColumns}
+                          data={filteredExternalNetworks}
+                          rowKey="id"
+                        />
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedExternalNetwork
+                              ? [
+                                  {
+                                    id: selectedExternalNetwork,
+                                    label: selectedExternalNetwork,
+                                  },
+                                ]
+                              : []
+                          }
+                          emptyText="No network selected"
+                          onRemove={() => setSelectedExternalNetwork('')}
+                        />
+                      </VStack>
                     </VStack>
                   </FormField.Control>
                 </FormField>
@@ -472,11 +474,12 @@ export function CreateClusterPage() {
                     Select a tenant network for your cluster resources.
                   </FormField.Description>
                   <FormField.Control>
-                    <VStack gap={2}>
+                    <VStack gap={3}>
                       <SearchInput
                         placeholder="Search network by attributes"
                         value={tenantNetworkSearch}
                         onChange={(e) => setTenantNetworkSearch(e.target.value)}
+                        className="w-[var(--search-input-width)]"
                       />
                       <Pagination
                         currentPage={1}
@@ -485,20 +488,22 @@ export function CreateClusterPage() {
                         totalItems={filteredTenantNetworks.length}
                         selectedCount={selectedTenantNetwork ? 1 : 0}
                       />
-                      <Table
-                        columns={tenantNetworkColumns}
-                        data={filteredTenantNetworks}
-                        rowKey="id"
-                      />
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedTenantNetwork
-                            ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
-                            : []
-                        }
-                        emptyText="No network selected"
-                        onRemove={() => setSelectedTenantNetwork('')}
-                      />
+                      <VStack gap={2}>
+                        <Table
+                          columns={tenantNetworkColumns}
+                          data={filteredTenantNetworks}
+                          rowKey="id"
+                        />
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedTenantNetwork
+                              ? [{ id: selectedTenantNetwork, label: selectedTenantNetwork }]
+                              : []
+                          }
+                          emptyText="No network selected"
+                          onRemove={() => setSelectedTenantNetwork('')}
+                        />
+                      </VStack>
                     </VStack>
                   </FormField.Control>
                 </FormField>
@@ -514,7 +519,6 @@ export function CreateClusterPage() {
                       options={subnetOptions}
                       value={selectedSubnet}
                       onChange={setSelectedSubnet}
-                      fullWidth
                     />
                   </FormField.Control>
                 </FormField>
@@ -547,7 +551,7 @@ export function CreateClusterPage() {
 
                 {/* Control Planes */}
                 <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                  <h6 className="text-body-lg leading-5 font-medium text-[var(--color-text-default)] mb-4">
+                  <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                     Control Planes
                   </h6>
                   <VStack gap={6}>
@@ -558,12 +562,7 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the control plane nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select
-                          options={imageOptions}
-                          value={cpImage}
-                          onChange={setCpImage}
-                          fullWidth
-                        />
+                        <Select options={imageOptions} value={cpImage} onChange={setCpImage} />
                       </FormField.Control>
                     </FormField>
 
@@ -574,8 +573,8 @@ export function CreateClusterPage() {
                         Select the Flavor that defines the vCPU, memory, and disk capacity for the
                         control plane nodes.
                       </FormField.Description>
-                      <FormField.Control>
-                        <VStack gap={2}>
+                      <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                        <VStack gap={3}>
                           <Tabs
                             value={cpFlavorFilter}
                             onChange={setCpFlavorFilter}
@@ -589,7 +588,10 @@ export function CreateClusterPage() {
                               <Tab value="custom">Custom</Tab>
                             </TabList>
                           </Tabs>
-                          <SearchInput placeholder="Find Flavor with filters" />
+                          <SearchInput
+                            placeholder="Find Flavor with filters"
+                            className="w-[var(--search-input-width)]"
+                          />
                           <Pagination
                             currentPage={1}
                             totalPages={5}
@@ -597,23 +599,25 @@ export function CreateClusterPage() {
                             totalItems={115}
                             selectedCount={cpFlavor ? 1 : 0}
                           />
-                          <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
-                          <SelectionIndicator
-                            selectedItems={
-                              cpFlavor
-                                ? [
-                                    {
-                                      id: cpFlavor,
-                                      label:
-                                        mockFlavors.find((f) => f.id === cpFlavor)?.name ||
-                                        cpFlavor,
-                                    },
-                                  ]
-                                : []
-                            }
-                            emptyText="No flavor selected"
-                            onRemove={() => setCpFlavor('')}
-                          />
+                          <VStack gap={2}>
+                            <Table columns={cpFlavorColumns} data={mockFlavors} rowKey="id" />
+                            <SelectionIndicator
+                              selectedItems={
+                                cpFlavor
+                                  ? [
+                                      {
+                                        id: cpFlavor,
+                                        label:
+                                          mockFlavors.find((f) => f.id === cpFlavor)?.name ||
+                                          cpFlavor,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No flavor selected"
+                              onRemove={() => setCpFlavor('')}
+                            />
+                          </VStack>
                         </VStack>
                       </FormField.Control>
                     </FormField>
@@ -662,18 +666,14 @@ export function CreateClusterPage() {
                         Specify the volume size for the etcd data disk.
                       </FormField.Description>
                       <FormField.Control>
-                        <HStack gap={2}>
-                          <NumberInput
-                            value={etcdVolumeSize}
-                            onChange={setEtcdVolumeSize}
-                            min={10}
-                            max={100}
-                            width="sm"
-                          />
-                          <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
-                            GiB
-                          </div>
-                        </HStack>
+                        <NumberInput
+                          value={etcdVolumeSize}
+                          onChange={setEtcdVolumeSize}
+                          min={10}
+                          max={100}
+                          width="sm"
+                          suffix="GiB"
+                        />
                       </FormField.Control>
                     </FormField>
                   </VStack>
@@ -681,7 +681,7 @@ export function CreateClusterPage() {
 
                 {/* Worker Nodes */}
                 <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                  <h6 className="text-label-lg text-[var(--color-text-default)] mb-4">
+                  <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                     Worker Nodes
                   </h6>
                   <VStack gap={6}>
@@ -692,12 +692,7 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the worker nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select
-                          options={imageOptions}
-                          value={nodeImage}
-                          onChange={setNodeImage}
-                          fullWidth
-                        />
+                        <Select options={imageOptions} value={nodeImage} onChange={setNodeImage} />
                       </FormField.Control>
                     </FormField>
 
@@ -708,7 +703,7 @@ export function CreateClusterPage() {
                         Select the Flavor that defines the vCPU, memory, and disk capacity for the
                         worker nodes.
                       </FormField.Description>
-                      <FormField.Control>
+                      <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                         <VStack gap={3}>
                           <Tabs
                             value={nodeFlavorFilter}
@@ -723,7 +718,10 @@ export function CreateClusterPage() {
                               <Tab value="custom">Custom</Tab>
                             </TabList>
                           </Tabs>
-                          <SearchInput placeholder="Find Flavor with filters" />
+                          <SearchInput
+                            placeholder="Find Flavor with filters"
+                            className="w-[var(--search-input-width)]"
+                          />
                           <Pagination
                             currentPage={1}
                             totalPages={5}
@@ -789,7 +787,7 @@ export function CreateClusterPage() {
                 <VStack gap={3}>
                   <VStack gap={1.5}>
                     <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
                       Specify the labels used to identify and categorize the resource.
                     </p>
                   </VStack>
@@ -931,22 +929,14 @@ export function CreateClusterPage() {
         <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
           <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
             {/* Summary Content Area */}
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-              <VStack gap={4}>
-                {/* Summary Title */}
-                <h5 className="text-heading-h5 leading-6 font-semibold text-[var(--color-text-default)]">
-                  Summary
-                </h5>
-
-                {/* Summary Items */}
-                <VStack gap={0}>
-                  <SummaryItem label="Basic information" status="in-progress" />
-                  <SummaryItem label="Networking" status="in-progress" />
-                  <SummaryItem label="Node configuration" status="complete" />
-                  <SummaryItem label="Labels & Annotations" status="complete" />
-                </VStack>
-              </VStack>
-            </div>
+            <WizardSummary
+              items={[
+                { key: 'basic-info', label: 'Basic information', status: 'active' },
+                { key: 'networking', label: 'Networking', status: 'active' },
+                { key: 'node-config', label: 'Node configuration', status: 'done' },
+                { key: 'labels', label: 'Labels & Annotations', status: 'done' },
+              ]}
+            />
 
             {/* Button Container */}
             <HStack gap={2} className="w-full justify-end">
@@ -966,57 +956,6 @@ export function CreateClusterPage() {
         </div>
       </div>
     </PageShell>
-  );
-}
-
-// Summary Item Component
-function SummaryItem({
-  label,
-  status,
-}: {
-  label: string;
-  status: 'complete' | 'incomplete' | 'in-progress';
-}) {
-  return (
-    <div className="flex items-center justify-between px-2 py-1 w-full">
-      <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
-      <div className="w-4 h-4 flex items-center justify-center">
-        {status === 'complete' ? (
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="6" fill="var(--color-state-success)" />
-            <path
-              d="M5.5 8L7.5 10L10.5 6"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ) : (
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx="8"
-              cy="8"
-              r="5.5"
-              stroke="var(--color-border-strong)"
-              strokeDasharray="3 2"
-            />
-          </svg>
-        )}
-      </div>
-    </div>
   );
 }
 

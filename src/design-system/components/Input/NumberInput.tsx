@@ -36,6 +36,8 @@ export interface NumberInputProps extends Omit<
   onChange?: (value: number) => void;
   /** Hide stepper buttons */
   hideSteppers?: boolean;
+  /** Suffix text displayed inside the input (e.g. "GiB", "GB", "%") */
+  suffix?: string;
 }
 
 /* ----------------------------------------
@@ -60,6 +62,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       id,
       disabled,
       hideSteppers = false,
+      suffix,
       ...props
     },
     ref
@@ -196,8 +199,8 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
     ].join(' ');
 
-    return (
-      <div className={wrapperClasses}>
+    const coreElement = (
+      <>
         {label && (
           <label htmlFor={inputId} className="text-label-lg text-[var(--color-text-default)]">
             {label}
@@ -268,8 +271,19 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             {helperText}
           </p>
         )}
-      </div>
+      </>
     );
+
+    if (suffix) {
+      return (
+        <div className={twMerge('flex items-center gap-[var(--primitive-spacing-2)]', className)}>
+          <div className={wrapperClasses}>{coreElement}</div>
+          <span className="text-body-md text-[var(--color-text-default)] shrink-0">{suffix}</span>
+        </div>
+      );
+    }
+
+    return <div className={wrapperClasses}>{coreElement}</div>;
   }
 );
 

@@ -493,7 +493,7 @@ function OpenSectionDemo() {
             <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Input
                 placeholder="Enter instance name"
                 fullWidth

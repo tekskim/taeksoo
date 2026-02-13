@@ -104,7 +104,7 @@ export function EditUserDrawer({
         {/* Header */}
         <VStack gap={3}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit user</h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Edit the user's basic information.
           </p>
 
@@ -145,7 +145,7 @@ export function EditUserDrawer({
             <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Display name
             </span>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               The user's name displayed in the UI. If not entered, the user name will be displayed.
             </p>
           </VStack>
@@ -160,7 +160,7 @@ export function EditUserDrawer({
         {/* Status Section */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Select the user's status. If 'Disabled', the user will be prevented from signing in.
           </p>
           <HStack gap={2} align="center">

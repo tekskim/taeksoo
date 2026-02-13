@@ -221,7 +221,7 @@ export function CreatePodDisruptionBudgetYamlPage() {
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
             Create PodDisruptionBudget
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available
             during voluntary disruptions to ensure application stability.
           </p>

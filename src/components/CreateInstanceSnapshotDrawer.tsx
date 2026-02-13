@@ -99,7 +99,7 @@ export function CreateInstanceSnapshotDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create instance snapshot
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Create a snapshot of this instance to capture its current system state as an image.
             </p>
           </VStack>

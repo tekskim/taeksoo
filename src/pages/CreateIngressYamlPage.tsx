@@ -258,7 +258,7 @@ export function CreateIngressYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create ingress</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Ingresses route incoming traffic from the internet to Services within the cluster based
             on the hostname and path specified in the request. You can expose multiple Services on
             the same external IP address and port.
