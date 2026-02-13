@@ -34,6 +34,7 @@ import {
   PageShell,
   fixedColumns,
   columnMinWidths,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -41,7 +42,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconBell,
-  IconCheck,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -311,56 +311,6 @@ interface QuotaSidebarProps {
   editingSection: SectionStep | null;
 }
 
-// Status icon component for summary sections
-// Maps SectionState to visual icon
-function SectionStatusIcon({ status }: { status: SectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} stroke={2.5} className="text-white" />
-      </div>
-    );
-  }
-
-  // active → spinning dashed circle (currently working)
-  if (status === 'active') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // writing → spinning dashed circle
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // pre → empty dashed circle (waiting)
-  if (status === 'pre') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-        style={{ borderStyle: 'dashed' }}
-      />
-    );
-  }
-
-  // skipped → dash icon
-  return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
-      <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
-    </div>
-  );
-}
-
 function QuotaSidebar({
   numberOfInstances,
   onNumberOfInstancesChange,
@@ -396,7 +346,7 @@ function QuotaSidebar({
                         Writing...
                       </span>
                     ) : (
-                      <SectionStatusIcon status={sectionStatus[sectionKey]} />
+                      <WizardSectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
                   </div>
                 );
@@ -639,7 +589,7 @@ function BasicInformationSection({
             <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Input
                 placeholder="Instance name"
                 value={instanceName}
@@ -1405,19 +1355,17 @@ function ImageSection({
                     onChange={setStorageType}
                   />
                 </VStack>
-                <HStack gap={2} align="end">
-                  <VStack gap={2}>
-                    <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                    <NumberInput
-                      value={storageSize}
-                      onChange={setStorageSize}
-                      min={1}
-                      max={1000}
-                      width="sm"
-                    />
-                  </VStack>
-                  <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
-                </HStack>
+                <VStack gap={2}>
+                  <label className="text-label-md text-[var(--color-text-default)]">Size</label>
+                  <NumberInput
+                    value={storageSize}
+                    onChange={setStorageSize}
+                    min={1}
+                    max={1000}
+                    width="sm"
+                    suffix="GiB"
+                  />
+                </VStack>
                 <div className="self-end pb-2">
                   <Checkbox
                     label="Deleted with the instance"
@@ -1726,7 +1674,7 @@ function FlavorSection({
             </Tabs>
           </VStack>
 
-          <VStack gap={2}>
+          <VStack gap={3}>
             {/* Search */}
             <SearchInput
               placeholder="Search flavors by attributes"
@@ -3012,7 +2960,7 @@ function AuthenticationSection({
                   </div>
                   <div>
                     <label className="block text-label-lg mb-2">Confirm Password</label>
-                    <VStack gap={1}>
+                    <VStack gap={2}>
                       <div className="relative">
                         <Input
                           type={showConfirmPassword ? 'text' : 'password'}
@@ -3322,7 +3270,7 @@ function AdvancedSection({
                       className="font-mono text-body-md"
                       error={!!userDataError}
                     />
-                    <div className="flex justify-between items-start mt-1.5">
+                    <div className="flex justify-between items-start mt-2">
                       <span className="text-body-sm text-[var(--color-state-danger)]">
                         {userDataError || ''}
                       </span>

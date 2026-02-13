@@ -468,7 +468,7 @@ function SettingsTabContent() {
           <div className="flex items-center justify-between py-2">
             <div>
               <p className="text-label-md text-[var(--color-text-default)]">Delete this tool</p>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
+              <p className="text-body-md text-[var(--color-text-subtle)]">
                 Once deleted, this tool cannot be recovered. All execution logs will also be
                 deleted.
               </p>

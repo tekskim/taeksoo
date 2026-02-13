@@ -76,7 +76,7 @@ export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDevi
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Identify device
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Please enter the duration how long to indicate the LED.
           </p>
         </VStack>

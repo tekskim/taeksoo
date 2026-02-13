@@ -30,7 +30,7 @@ import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingI
 import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
-  IconTrash,
+  IconUnlink,
   IconDownload,
   IconBell,
   IconCube,
@@ -574,7 +574,7 @@ export function ComputeAdminFloatingIPsPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconTrash size={12} />}
+                leftIcon={<IconUnlink size={12} />}
                 disabled={selectedFloatingIPs.length === 0}
               >
                 Release

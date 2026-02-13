@@ -238,7 +238,7 @@ export function LiveMigrateInstanceDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">
             Live migrate instance
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Live migrate the instance to a different host without shutting it down.
           </p>
         </VStack>
@@ -254,7 +254,7 @@ export function LiveMigrateInstanceDrawer({
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Hosts <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Select a host to migrate the instance to. Only available hosts are shown.
           </p>
 
@@ -304,7 +304,7 @@ export function LiveMigrateInstanceDrawer({
         {/* Option Section */}
         <VStack gap={3} className="w-full">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Option</h3>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Transfer the full disk image of the instance during live migration.
           </p>
           <Checkbox

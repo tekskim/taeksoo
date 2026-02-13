@@ -219,7 +219,7 @@ export function CreateStorageClassYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create StorageClass</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Storage Class defines how dynamic storage volumes are provisioned in the cluster,
             specifying which storage backend and parameters are used when PersistentVolumeClaims
             request a volume.

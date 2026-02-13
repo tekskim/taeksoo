@@ -153,7 +153,7 @@ function CollapsibleSection({
 
       {isExpanded && (
         <>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">{description}</p>
+          <p className="text-body-md text-[var(--color-text-subtle)]">{description}</p>
           <input
             type="file"
             ref={fileInputRef}
@@ -287,7 +287,7 @@ export function RegisterCertificateDrawer({
           <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Register Certificate
           </h2>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Register a certificate issued by an external CA for use within Compute resources.
           </p>
         </VStack>

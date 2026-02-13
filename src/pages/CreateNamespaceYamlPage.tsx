@@ -219,7 +219,7 @@ export function CreateNamespaceYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Namespace</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Namespace is a logical partition within a cluster that isolates and organizes resources
             for easier management and access control.
           </p>

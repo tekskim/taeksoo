@@ -208,7 +208,7 @@ export function RescueInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Rescue Instance
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Create a temporary recovery server using your instance's root disk.
             </p>
           </VStack>

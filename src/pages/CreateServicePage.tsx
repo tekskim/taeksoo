@@ -534,7 +534,7 @@ export function CreateServicePage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create service</h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Services allow you to define a logical set of Pods that can be accessed with a single IP
             address and port.
           </p>
@@ -561,7 +561,7 @@ export function CreateServicePage() {
                       onChange={(value) => setServiceType(value)}
                       fullWidth
                     />
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
                       {SERVICE_TYPE_DESCRIPTIONS[serviceType]}
                     </span>
                   </VStack>
@@ -981,7 +981,7 @@ export function CreateServicePage() {
                   <VStack gap={3}>
                     <VStack gap={1.5}>
                       <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                      <p className="text-body-sm text-[var(--color-text-subtle)]">
+                      <p className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the labels used to identify and categorize the resource.
                       </p>
                     </VStack>
@@ -1050,7 +1050,7 @@ export function CreateServicePage() {
                       <span className="text-label-lg text-[var(--color-text-default)]">
                         Annotations
                       </span>
-                      <p className="text-body-sm text-[var(--color-text-subtle)]">
+                      <p className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the annotations used to provide additional metadata for the
                         resource.
                       </p>

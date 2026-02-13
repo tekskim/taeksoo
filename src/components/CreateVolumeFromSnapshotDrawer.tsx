@@ -198,7 +198,7 @@ export function CreateVolumeFromSnapshotDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create volume from instance snapshot
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               The new volume will contain the same data as the snapshot's system disk and can be
               attached to another instance.
             </p>

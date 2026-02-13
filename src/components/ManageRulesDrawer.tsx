@@ -175,7 +175,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
         <VStack gap={3} className="w-full">
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rules</span>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Select rules from the list to add to the policy.
             </p>
           </VStack>

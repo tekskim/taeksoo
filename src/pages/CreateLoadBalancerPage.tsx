@@ -1440,7 +1440,7 @@ export default function CreateLoadBalancerPage() {
                       <FormField required error={!!lbNameError}>
                         <FormField.Label>Load balancer name</FormField.Label>
                         <FormField.Control>
-                          <VStack gap={1}>
+                          <VStack gap={2}>
                             <Input
                               placeholder="Enter Load balancer name"
                               value={loadBalancerName}
@@ -1492,7 +1492,7 @@ export default function CreateLoadBalancerPage() {
                           Choose the provider to use for the load balancer.
                         </FormField.Description>
                         <FormField.Control>
-                          <VStack gap={1}>
+                          <VStack gap={2}>
                             <VStack gap={3}>
                               <HStack gap={1.5} align="center">
                                 <Radio

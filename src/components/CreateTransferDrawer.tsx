@@ -104,7 +104,7 @@ export function CreateTransferDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Transfer
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Create a transfer request to share this volume with another project. The recipient
               will need the generated Transfer ID and auth key to accept it.
             </p>

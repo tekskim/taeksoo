@@ -221,7 +221,7 @@ export function CreatePersistentVolumeClaimYamlPage() {
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
             Create PersistentVolumeClaim
           </h1>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Persistent Volume Claim is a user request for persistent storage that defines the
             required capacity and access properties, allowing Kubernetes to bind or dynamically
             provision a suitable PersistentVolume.

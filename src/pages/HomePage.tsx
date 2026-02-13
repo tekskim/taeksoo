@@ -151,7 +151,7 @@ interface SubLabelProps {
 }
 
 function SubLabel({ children }: SubLabelProps) {
-  return <p className="text-body-sm text-[var(--color-text-subtle)]">{children}</p>;
+  return <p className="text-body-md text-[var(--color-text-subtle)]">{children}</p>;
 }
 
 /* ----------------------------------------

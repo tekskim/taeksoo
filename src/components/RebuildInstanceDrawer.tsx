@@ -204,7 +204,7 @@ export function RebuildInstanceDrawer({
             <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Rebuild Instance
             </h2>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
+            <p className="text-body-md text-[var(--color-text-subtle)]">
               Rebuilding reinstalls the operating system using a new image.
             </p>
           </VStack>
