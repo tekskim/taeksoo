@@ -299,7 +299,7 @@
       "fontSize": "0.6875rem",
       "lineHeight": "1rem",
       "minWidth": "3.75rem",
-      "maxWidth": "14.375rem",
+      "maxWidth": "15rem",
       "arrowSize": "0.25rem"
     },
     "statusIndicator": {

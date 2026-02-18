@@ -6105,11 +6105,11 @@ outline: 2px solid var(--color-border-focus);`}
                             {[
                               { name: 'height', sm: '28px', md: '32px', lg: '36px' },
                               { name: 'min-width', sm: '60px', md: '80px', lg: '80px' },
-                              { name: 'padding-x', sm: '10px', md: '12px', lg: '12px' },
+                              { name: 'padding-x', sm: '10px', md: '12px', lg: '16px' },
                               { name: 'padding-y', sm: '6px', md: '8px', lg: '10px' },
                               { name: 'gap', sm: '6px', md: '6px', lg: '8px' },
-                              { name: 'font-size', sm: '12px', md: '12px', lg: '14px' },
-                              { name: 'icon-size', sm: '12px', md: '12px', lg: '14px' },
+                              { name: 'font-size', sm: '11px', md: '11px', lg: '12px' },
+                              { name: 'icon-size', sm: '12px', md: '12px', lg: '12px' },
                             ].map(({ name, sm, md, lg }) => (
                               <tr
                                 key={name}
@@ -8938,8 +8938,8 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>item-size: 24px</code> · <code>gap: 4px</code> ·{' '}
-                        <code>radius: 4px</code> · <code>font: 11px</code>
+                        <code>item-size: 24px</code> · <code>gap: 8px</code> ·{' '}
+                        <code>radius: 4px</code> · <code>font: 12px</code>
                       </div>
                     </VStack>
 
@@ -9283,7 +9283,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>track: 48×24px</code> · <code>thumb: 16×16px</code> ·{' '}
+                        <code>track: 36×20px</code> · <code>thumb: 16×16px</code> ·{' '}
                         <code>padding: 4px</code> · <code>radius: pill</code> ·{' '}
                         <code>gap: 8px</code>
                       </div>
@@ -9747,7 +9747,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>height: 40px</code> · <code>padding-x: 12px</code> ·{' '}
+                        <code>height: 36px</code> · <code>padding-x: 12px</code> ·{' '}
                         <code>button-size: 28px</code> · <code>radius: 4px</code>
                       </div>
                     </VStack>
@@ -9930,7 +9930,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>gap: 24px</code> · <code>min-width: 80px</code> ·{' '}
+                        <code>gap: 8px</code> · <code>min-width: 80px</code> ·{' '}
                         <code>padding-x: 12px</code> · <code>indicator: 2px</code> ·{' '}
                         <code>boxed-padding: 24×8px</code>
                       </div>
@@ -10618,7 +10618,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </table>
                       </div>
                       <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
-                        <code>radius: 6px</code> · <code>gap: 4px</code> ·{' '}
+                        <code>radius: 4px</code> · <code>gap: 4px</code> ·{' '}
                         <code>dot-size: 6px</code>
                       </div>
                     </VStack>
@@ -11331,9 +11331,9 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>padding: 8×4px</code> · <code>radius: 4px</code> ·{' '}
+                        <code>padding: 6×4px</code> · <code>radius: 4px</code> ·{' '}
                         <code>font-size: 11px</code> · <code>min-width: 60px</code> ·{' '}
-                        <code>max-width: 230px</code> · <code>arrow: 4px</code>
+                        <code>max-width: 240px</code> · <code>arrow: 4px</code>
                       </div>
                     </VStack>
 
@@ -13102,7 +13102,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>padding: 16px</code> · <code>gap: 24px</code> ·{' '}
+                        <code>padding: 24px</code> · <code>gap: 16px</code> ·{' '}
                         <code>radius: 16px</code> · <code>backdrop: black/60</code>
                       </div>
                     </VStack>
@@ -13111,7 +13111,7 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Size</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>sm: 344px</code> / <code>md: 344px</code> / <code>lg: 640px</code>
+                        <code>sm: 400px</code> · <code>md: 480px</code> · <code>lg: 640px</code>
                       </div>
                     </VStack>
 

@@ -1996,7 +1996,6 @@ export function CreateCronJobPage() {
                         <HStack gap={2} align="center">
                           <div className="w-[160px]">
                             <NumberInput
-                              placeholder={30}
                               value={
                                 terminationGracePeriod
                                   ? parseInt(terminationGracePeriod)
@@ -2025,8 +2024,8 @@ export function CreateCronJobPage() {
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Network Settings
                         </span>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 w-full items-end">
-                          <VStack gap={1}>
+                        <VStack gap={6} className="w-full">
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
                             </span>
@@ -2043,7 +2042,7 @@ export function CreateCronJobPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               DNS Policy
                             </span>
@@ -2061,7 +2060,7 @@ export function CreateCronJobPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Hostname
                             </span>
@@ -2075,7 +2074,7 @@ export function CreateCronJobPage() {
                               onChange={(e) => setHostname(e.target.value)}
                             />
                           </VStack>
-                          <VStack gap={1}>
+                          <VStack gap={1} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Subdomain
                             </span>
@@ -2089,7 +2088,7 @@ export function CreateCronJobPage() {
                               onChange={(e) => setSubdomain(e.target.value)}
                             />
                           </VStack>
-                        </div>
+                        </VStack>
                       </VStack>
 
                       {/* Nameservers */}
@@ -2389,7 +2388,7 @@ export function CreateCronJobPage() {
                           </VStack>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               {nodeAffinityTerms.map((term, termIndex) => (
                                 <div
                                   key={termIndex}
@@ -2622,7 +2621,7 @@ export function CreateCronJobPage() {
                         >
                           <VStack gap={6}>
                             {/* Type Section */}
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <div className="flex items-start justify-between w-full">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2663,7 +2662,7 @@ export function CreateCronJobPage() {
                             </VStack>
 
                             {/* Priority Section */}
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Priority
@@ -2708,7 +2707,7 @@ export function CreateCronJobPage() {
 
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
-                              <VStack gap={3}>
+                              <VStack gap={6}>
                                 {/* Search Input */}
                                 <SearchInput
                                   placeholder="Search namespaces by attributes"
@@ -2936,7 +2935,7 @@ export function CreateCronJobPage() {
                             </div>
 
                             {/* Topology Key Section */}
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Topology Key
@@ -3116,7 +3115,7 @@ export function CreateCronJobPage() {
                       </VStack>
 
                       {/* Priority */}
-                      <div className="grid grid-cols-2 gap-4 w-full">
+                      <div className="grid grid-cols-2 gap-6 w-full">
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority
@@ -3209,8 +3208,8 @@ export function CreateCronJobPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3224,7 +3223,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       ConfigMap{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3242,7 +3241,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as ConfigMapVolume).optional}
@@ -3278,8 +3277,8 @@ export function CreateCronJobPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3293,7 +3292,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Secret{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3309,7 +3308,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as SecretVolume).optional}
@@ -3345,8 +3344,8 @@ export function CreateCronJobPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2} className="flex-1">
+                                <VStack gap={6} className="py-3 w-full">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3360,7 +3359,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="flex-1">
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Persistent Volume Claim{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3376,7 +3375,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as PVCVolume).readOnly}
@@ -3396,7 +3395,7 @@ export function CreateCronJobPage() {
                               <>
                                 <div className="w-full">
                                   <VStack gap={6}>
-                                    <VStack gap={3}>
+                                    <VStack gap={6}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Persistent Volume Claim Name{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -3434,8 +3433,8 @@ export function CreateCronJobPage() {
                                     </RadioGroup>
 
                                     {!(volume as CreatePVCVolume).useExistingPV && (
-                                      <div className="grid grid-cols-2 gap-4">
-                                        <VStack gap={3}>
+                                      <VStack gap={6}>
+                                        <VStack gap={3} className="w-[calc(50%+1px)]">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3475,10 +3474,10 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            fullWidth
+                                            width="sm"
                                           />
                                         </VStack>
-                                      </div>
+                                      </VStack>
                                     )}
 
                                     {(volume as CreatePVCVolume).useExistingPV && (
@@ -3589,7 +3588,7 @@ export function CreateCronJobPage() {
                         </div>
                       ))}
 
-                      <div className="w-1/2">
+                      <div className="w-[calc(50%-12px)]">
                         <Select
                           options={[
                             { value: 'configmap', label: 'ConfigMap' },
@@ -3628,7 +3627,7 @@ export function CreateCronJobPage() {
                                 stroke={1.5}
                               />
                             </button>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
@@ -3660,8 +3659,8 @@ export function CreateCronJobPage() {
                               </RadioGroup>
 
                               {!template.useExistingPV && (
-                                <div className="grid grid-cols-2 gap-3">
-                                  <VStack gap={1}>
+                                <VStack gap={6}>
+                                  <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3681,13 +3680,12 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={1}>
+                                  <VStack gap={1} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Capacity{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
                                     </span>
                                     <NumberInput
-                                      placeholder="10"
                                       value={
                                         template.capacity ? parseInt(template.capacity) : undefined
                                       }
@@ -3700,7 +3698,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                </div>
+                                </VStack>
                               )}
 
                               {template.useExistingPV && (
@@ -3726,7 +3724,7 @@ export function CreateCronJobPage() {
                                 </VStack>
                               )}
 
-                              <VStack gap={1.5}>
+                              <VStack gap={3}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Access Modes{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
@@ -3874,8 +3872,8 @@ export function CreateCronJobPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <div className="grid grid-cols-2 gap-4 w-full">
-                            <VStack gap={3}>
+                          <div className="grid grid-cols-2 gap-6 w-full">
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Container Image{' '}
@@ -3897,7 +3895,7 @@ export function CreateCronJobPage() {
                                 }
                               />
                             </VStack>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Policy
@@ -3924,8 +3922,8 @@ export function CreateCronJobPage() {
                             </VStack>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 w-full">
-                            <VStack gap={3}>
+                          <div className="grid grid-cols-2 gap-6 w-full">
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Pull Secrets
@@ -4102,7 +4100,7 @@ export function CreateCronJobPage() {
                     <SectionCard>
                       <SectionCard.Header title="Lifecycle hooks" />
                       <SectionCard.Content>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
                           <VStack gap={6}>
                             <VStack gap={2}>
@@ -4142,7 +4140,7 @@ export function CreateCronJobPage() {
                             )}
 
                             {config.lifecycleHooks?.postStart?.type === 'httpGet' && (
-                              <VStack gap={3}>
+                              <VStack gap={6}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
@@ -4223,7 +4221,7 @@ export function CreateCronJobPage() {
                                     fullWidth
                                   />
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={6}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
@@ -4348,7 +4346,7 @@ export function CreateCronJobPage() {
 
                           {/* Pre Stop */}
                           <VStack gap={6}>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
                               </span>
@@ -4385,7 +4383,7 @@ export function CreateCronJobPage() {
                             )}
 
                             {config.lifecycleHooks?.preStop?.type === 'httpGet' && (
-                              <VStack gap={3}>
+                              <VStack gap={6}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
@@ -4466,7 +4464,7 @@ export function CreateCronJobPage() {
                                     fullWidth
                                   />
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={6}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
@@ -4601,7 +4599,7 @@ export function CreateCronJobPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -4904,7 +4902,7 @@ export function CreateCronJobPage() {
                                   </div>
                                   {/* Row 4: Failure Threshold (httpGet only) */}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={3}>
+                                    <VStack gap={6}>
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
@@ -4927,7 +4925,7 @@ export function CreateCronJobPage() {
                                     </VStack>
                                   )}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={3}>
+                                    <VStack gap={6}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
@@ -5053,7 +5051,7 @@ export function CreateCronJobPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5304,7 +5302,7 @@ export function CreateCronJobPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Startup Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5556,7 +5554,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Content>
                         <VStack gap={6}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5607,7 +5605,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5667,7 +5665,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Content>
                         <VStack gap={6}>
                           {/* Row 1: Privileged + Privilege Escalation */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
@@ -5736,7 +5734,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           </div>
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
@@ -5805,7 +5803,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           </div>
                           {/* Row 3: Run as User ID (half width) */}
-                          <VStack gap={2} className="w-1/2">
+                          <VStack gap={2} className="w-[calc(50%-12px)]">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Run as User ID
                             </span>
@@ -5821,7 +5819,7 @@ export function CreateCronJobPage() {
                             />
                           </VStack>
                           {/* Row 4: Add Capabilities + Drop Capabilities */}
-                          <div className="flex gap-4 w-full">
+                          <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Add Capabilities
@@ -5878,7 +5876,7 @@ export function CreateCronJobPage() {
                         <VStack gap={6}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
-                            <VStack gap={3}>
+                            <VStack gap={6}>
                               {config.selectedVolumes.map(
                                 (
                                   selectedVol: {
@@ -6044,7 +6042,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           )}
                           {/* Select Volume dropdown */}
-                          <div className="w-1/2">
+                          <div className="w-[calc(50%-12px)]">
                             <Select
                               options={[
                                 { value: '', label: 'Select volume' },
