@@ -970,7 +970,7 @@ html.theme-transition *::after {
   --tooltip-font-size: var(--font-size-11);
   --tooltip-line-height: var(--line-height-16);
   --tooltip-min-width: 60px;
-  --tooltip-max-width: 230px;
+  --tooltip-max-width: 240px;
   --tooltip-bg: var(--color-slate-900);
   --tooltip-text: var(--color-white);
   --tooltip-arrow-size: 4px;
