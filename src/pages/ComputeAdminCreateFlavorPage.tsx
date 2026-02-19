@@ -844,7 +844,7 @@ export function ComputeAdminCreateFlavorPage() {
                       {/* Two Column Layout */}
                       <div className="flex gap-6">
                         {/* Left Column - Available Metadata */}
-                        <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
+                        <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3">
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Available metadata
                           </span>
@@ -1018,7 +1018,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </div>
 
                         {/* Right Column - Existing Metadata */}
-                        <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
+                        <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3">
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Existing metadata
                           </span>
@@ -1047,10 +1047,13 @@ export function ComputeAdminCreateFlavorPage() {
                                   className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                                 >
                                   <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
-                                    <span className="text-label-md text-[var(--color-text-default)] shrink-0">
+                                    <span
+                                      className="text-label-md text-[var(--color-text-default)] shrink-0 w-[160px] truncate"
+                                      title={item.key}
+                                    >
                                       {item.key}
                                     </span>
-                                    <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                                    <div className="w-px h-4 bg-[var(--color-border-default)] shrink-0" />
                                     <Input
                                       value={item.value}
                                       onChange={(e) => {
