@@ -28,6 +28,7 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   IconBell,
   IconTerminal2,
@@ -550,7 +551,7 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description (Collapsible) */}
-          <Disclosure defaultOpen={false}>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel>
               <div className="pt-2">
@@ -834,6 +835,7 @@ function ScalingPolicySection({
 
 export function CreateDaemonSetPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Container tabs (for managing multiple containers)
@@ -848,8 +850,10 @@ export function CreateDaemonSetPage() {
   const [description, setDescription] = useState('');
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Scaling & Upgrade Policy state
   const [strategy, setStrategy] = useState<'rolling-update' | 'on-delete'>('rolling-update');
@@ -1055,8 +1059,10 @@ export function CreateDaemonSetPage() {
   });
 
   // Pod Labels & Annotations state
-  const [podLabels, setPodLabels] = useState<Label[]>([]);
-  const [podAnnotations, setPodAnnotations] = useState<Annotation[]>([]);
+  const [podLabels, setPodLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [podAnnotations, setPodAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Scaling and Upgrade Policy state
   const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('');
@@ -1076,36 +1082,84 @@ export function CreateDaemonSetPage() {
   const [selectedNode, setSelectedNode] = useState<string>('');
 
   // Tolerations state
-  const [tolerations, setTolerations] = useState<Toleration[]>([]);
+  const [tolerations, setTolerations] = useState<Toleration[]>(
+    isV2
+      ? [
+          {
+            key: '',
+            operator: 'Equal',
+            value: '',
+            effect: 'NoSchedule',
+            tolerationSeconds: '',
+            tolerationSecondsUnit: 'sec',
+          },
+        ]
+      : []
+  );
   const [priority, setPriority] = useState<string>('');
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>([]);
+  const [volumes, setVolumes] = useState<Volume[]>(
+    isV2 ? [{ type: 'configmap' as const, volumeName: '', configMapName: '', optional: false }] : []
+  );
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state
-  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>([]);
+  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>(
+    isV2
+      ? [
+          {
+            name: '',
+            useExistingPV: false,
+            storageClass: '',
+            capacity: '',
+            persistentVolume: '',
+            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+          },
+        ]
+      : []
+  );
 
   // Node Affinity state
-  const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>([]);
+  const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>(
+    isV2 ? [{ priority: '', weight: '', matchExpressions: [] }] : []
+  );
 
   // Pod Affinity state
-  const [podAffinityTerms, setPodAffinityTerms] = useState<PodAffinityTerm[]>([]);
+  const [podAffinityTerms, setPodAffinityTerms] = useState<PodAffinityTerm[]>(
+    isV2
+      ? [
+          {
+            type: '',
+            priority: '',
+            namespaces: 'all' as const,
+            selectedNamespaces: [],
+            topologyKey: '',
+            weight: '',
+            matchExpressions: [],
+          },
+        ]
+      : []
+  );
 
   // Hostname and Subdomain state
   const [hostname, setHostname] = useState<string>('');
   const [subdomain, setSubdomain] = useState<string>('');
 
   // Nameservers and Search Domains state
-  const [nameservers, setNameservers] = useState<string[]>([]);
-  const [searchDomains, setSearchDomains] = useState<string[]>([]);
+  const [nameservers, setNameservers] = useState<string[]>(isV2 ? [''] : []);
+  const [searchDomains, setSearchDomains] = useState<string[]>(isV2 ? [''] : []);
 
   // Resolver Options state
-  const [resolverOptions, setResolverOptions] = useState<{ name: string; value: string }[]>([]);
+  const [resolverOptions, setResolverOptions] = useState<{ name: string; value: string }[]>(
+    isV2 ? [{ name: '', value: '' }] : []
+  );
 
   // Host Aliases state
-  const [hostAliases, setHostAliases] = useState<{ ip: string; hostname: string }[]>([]);
+  const [hostAliases, setHostAliases] = useState<{ ip: string; hostname: string }[]>(
+    isV2 ? [{ ip: '', hostname: '' }] : []
+  );
 
   // Update container config helper
   const updateContainerConfig = useCallback(
@@ -3139,7 +3193,7 @@ export function CreateDaemonSetPage() {
                                     Optional
                                   </span>
                                 </HStack>
-                                <Disclosure defaultOpen={false}>
+                                <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
                                     <VStack gap={2} className="pt-2">
@@ -3206,7 +3260,7 @@ export function CreateDaemonSetPage() {
                                     Optional
                                   </span>
                                 </HStack>
-                                <Disclosure defaultOpen={false}>
+                                <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
                                     <VStack gap={2} className="pt-2">

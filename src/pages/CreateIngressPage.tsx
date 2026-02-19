@@ -3,140 +3,71 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  Disclosure,
   HStack,
   VStack,
   TabBar,
   TopBar,
   Input,
-  Select,
-  Disclosure,
   SectionCard,
-  InlineMessage,
   PageShell,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   IconBell,
   IconTerminal2,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
   IconFile,
   IconCopy,
+  IconSearch,
+  IconCirclePlus,
+  IconX,
+  IconCheck,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
 
-type IngressSectionStep =
-  | 'basic-info'
-  | 'rules'
-  | 'default-backend'
-  | 'certificates'
-  | 'ingress-class'
-  | 'labels-annotations';
+type SectionStep = 'basic-info' | 'data' | 'binary-data' | 'labels-annotations';
 
 // Section labels for display
-const INGRESS_SECTION_LABELS: Record<IngressSectionStep, string> = {
+const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  rules: 'Rules',
-  'default-backend': 'Default Backend',
-  certificates: 'Certificates',
-  'ingress-class': 'Ingress Class',
+  data: 'Data',
+  'binary-data': 'Binary Data',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const INGRESS_SECTION_ORDER: IngressSectionStep[] = [
-  'basic-info',
-  'rules',
-  'default-backend',
-  'certificates',
-  'ingress-class',
-  'labels-annotations',
-];
-
-// Namespace options
-const NAMESPACE_OPTIONS = [
-  { value: 'default', label: 'default' },
-  { value: 'kube-system', label: 'kube-system' },
-  { value: 'kube-public', label: 'kube-public' },
-  { value: 'monitoring', label: 'monitoring' },
-  { value: 'production', label: 'production' },
-];
-
-// Path Type options
-const PATH_TYPE_OPTIONS = [
-  { value: 'Prefix', label: 'Prefix' },
-  { value: 'Exact', label: 'Exact' },
-  { value: 'ImplementationSpecific', label: 'ImplementationSpecific' },
-];
-
-// Target Service options
-const TARGET_SERVICE_OPTIONS = [
-  { value: '', label: '' },
-  { value: 'nginx-service', label: 'nginx-service' },
-  { value: 'frontend-service', label: 'frontend-service' },
-  { value: 'backend-service', label: 'backend-service' },
-  { value: 'api-service', label: 'api-service' },
-];
-
-// Ingress Class options
-const INGRESS_CLASS_OPTIONS = [
-  { value: '', label: 'None' },
-  { value: 'nginx', label: 'nginx' },
-  { value: 'traefik', label: 'traefik' },
-  { value: 'haproxy', label: 'haproxy' },
-];
-
-// Certificate options
-const CERTIFICATE_OPTIONS = [
-  { value: '', label: 'Select a certificate' },
-  { value: 'tls-secret-1', label: 'tls-secret-1' },
-  { value: 'tls-secret-2', label: 'tls-secret-2' },
-  { value: 'wildcard-cert', label: 'wildcard-cert' },
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'binary-data', 'labels-annotations'];
 
 interface Label {
-  id: string;
   key: string;
   value: string;
 }
 
 interface Annotation {
-  id: string;
   key: string;
   value: string;
 }
 
-interface IngressPath {
-  id: string;
-  pathType: string;
-  path: string;
-  targetService: string;
-  port: string;
+interface DataEntry {
+  key: string;
+  value: string;
 }
 
-interface IngressRule {
-  id: string;
-  host: string;
-  paths: IngressPath[];
-}
-
-interface Certificate {
-  id: string;
-  secretName: string;
-  hosts: string[];
+interface BinaryDataEntry {
+  key: string;
+  value: string;
 }
 
 /* ----------------------------------------
    Summary Status Icon Component
    ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
+
+function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
   // done → success (green check)
   if (status === 'done') {
     return (
@@ -166,12 +97,47 @@ function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
 /* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
+
+interface SummarySidebarProps {
+  configMapName: string;
+  dataEntries: DataEntry[];
+  binaryDataEntries: BinaryDataEntry[];
+  hasLabelsOrAnnotations: boolean;
+  onCancel: () => void;
+  onCreate: () => void;
+  isCreateDisabled: boolean;
+}
+
 function SummarySidebar({
-  sectionStates,
-}: {
-  sectionStates: Record<IngressSectionStep, WizardSectionState>;
-}) {
-  const navigate = useNavigate();
+  configMapName,
+  dataEntries,
+  binaryDataEntries,
+  hasLabelsOrAnnotations,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
+  // Determine section status based on form data
+  const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
+    if (section === 'basic-info') {
+      return configMapName.trim() ? 'done' : 'active';
+    }
+    if (section === 'data') {
+      return dataEntries.length > 0 && dataEntries.some((e) => e.key.trim() || e.value.trim())
+        ? 'done'
+        : 'pending';
+    }
+    if (section === 'binary-data') {
+      return binaryDataEntries.length > 0 &&
+        binaryDataEntries.some((e) => e.key.trim() || e.value.trim())
+        ? 'done'
+        : 'pending';
+    }
+    if (section === 'labels-annotations') {
+      return hasLabelsOrAnnotations ? 'done' : 'pending';
+    }
+    return 'pending';
+  };
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -181,12 +147,12 @@ function SummarySidebar({
           <VStack gap={4}>
             <span className="text-heading-h5">Summary</span>
             <VStack gap={0}>
-              {INGRESS_SECTION_ORDER.map((step) => (
+              {SECTION_ORDER.map((step) => (
                 <HStack key={step} justify="between" className="py-1">
                   <span className="text-body-md text-[var(--color-text-default)]">
-                    {INGRESS_SECTION_LABELS[step]}
+                    {SECTION_LABELS[step]}
                   </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
+                  <SummaryStatusIcon status={getSectionStatus(step)} />
                 </HStack>
               ))}
             </VStack>
@@ -195,10 +161,15 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" size="md" onClick={() => navigate('/container/ingresses')}>
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
-          <Button variant="primary" size="md" className="flex-1">
+          <Button
+            variant="primary"
+            onClick={onCreate}
+            disabled={isCreateDisabled}
+            className="flex-1"
+          >
             Create
           </Button>
         </HStack>
@@ -208,16 +179,485 @@ function SummarySidebar({
 }
 
 /* ----------------------------------------
+   BasicInfoSection Component
+   ---------------------------------------- */
+
+interface BasicInfoSectionProps {
+  configMapName: string;
+  onConfigMapNameChange: (value: string) => void;
+  configMapNameError: string | null;
+  onConfigMapNameErrorChange: (error: string | null) => void;
+  namespace: string;
+  onNamespaceChange: (value: string) => void;
+  description: string;
+  onDescriptionChange: (value: string) => void;
+  isV2: boolean;
+}
+
+function BasicInfoSection({
+  configMapName,
+  onConfigMapNameChange,
+  configMapNameError,
+  onConfigMapNameErrorChange,
+  namespace,
+  onNamespaceChange,
+  description,
+  onDescriptionChange,
+  isV2,
+}: BasicInfoSectionProps) {
+  return (
+    <SectionCard>
+      <SectionCard.Header title="Basic information" showDivider />
+      <SectionCard.Content>
+        <VStack gap={6}>
+          {/* Namespace */}
+          <VStack gap={2}>
+            <label className="text-label-lg text-[var(--color-text-default)]">
+              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
+            </label>
+            <Input
+              placeholder="Enter namespace"
+              value={namespace}
+              onChange={(e) => onNamespaceChange(e.target.value)}
+              fullWidth
+            />
+          </VStack>
+
+          {/* Name */}
+          <VStack gap={2}>
+            <label className="text-label-lg text-[var(--color-text-default)]">
+              Name<span className="text-[var(--color-state-danger)]"> *</span>
+            </label>
+            <Input
+              placeholder="Enter a unique name"
+              value={configMapName}
+              onChange={(e) => {
+                onConfigMapNameChange(e.target.value);
+                if (configMapNameError) onConfigMapNameErrorChange(null);
+              }}
+              error={!!configMapNameError}
+              fullWidth
+            />
+            {configMapNameError && (
+              <span className="text-body-sm text-[var(--color-state-danger)]">
+                {configMapNameError}
+              </span>
+            )}
+          </VStack>
+
+          {/* Description */}
+          <Disclosure defaultOpen={isV2}>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                fullWidth
+              />
+            </Disclosure.Panel>
+          </Disclosure>
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   DataSection Component
+   ---------------------------------------- */
+
+interface DataSectionProps {
+  dataEntries: DataEntry[];
+  onDataEntriesChange: (entries: DataEntry[]) => void;
+}
+
+function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
+  const addDataEntry = () => {
+    onDataEntriesChange([...dataEntries, { key: '', value: '' }]);
+  };
+
+  const removeDataEntry = (index: number) => {
+    onDataEntriesChange(dataEntries.filter((_, i) => i !== index));
+  };
+
+  const updateDataEntry = (index: number, field: 'key' | 'value', value: string) => {
+    const newEntries = [...dataEntries];
+    newEntries[index] = { ...newEntries[index], [field]: value };
+    onDataEntriesChange(newEntries);
+  };
+
+  return (
+    <SectionCard>
+      <SectionCard.Header title="Data" showDivider />
+      <SectionCard.Content>
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+          <VStack gap={3}>
+            {/* Data Entries */}
+            {dataEntries.length > 0 && (
+              <VStack gap={2} className="w-full">
+                {/* Header row */}
+                <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                    Key
+                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                    Value
+                  </span>
+                  <div />
+                </div>
+                {dataEntries.map((entry, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeDataEntry(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+              </VStack>
+            )}
+
+            <HStack gap={2}>
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                onClick={addDataEntry}
+                className="bg-[var(--color-surface-default)]"
+              >
+                Add Data Entry
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconFile size={12} stroke={1.5} />}
+                onClick={() => {
+                  // TODO: Implement file reading functionality
+                  console.log('Read from file clicked');
+                }}
+                className="bg-[var(--color-surface-default)]"
+              >
+                Read from File
+              </Button>
+            </HStack>
+          </VStack>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   BinaryDataSection Component
+   ---------------------------------------- */
+
+interface BinaryDataSectionProps {
+  binaryDataEntries: BinaryDataEntry[];
+  onBinaryDataEntriesChange: (entries: BinaryDataEntry[]) => void;
+}
+
+function BinaryDataSection({
+  binaryDataEntries,
+  onBinaryDataEntriesChange,
+}: BinaryDataSectionProps) {
+  const addBinaryDataEntry = () => {
+    onBinaryDataEntriesChange([...binaryDataEntries, { key: '', value: '' }]);
+  };
+
+  const removeBinaryDataEntry = (index: number) => {
+    onBinaryDataEntriesChange(binaryDataEntries.filter((_, i) => i !== index));
+  };
+
+  const updateBinaryDataEntry = (index: number, field: 'key' | 'value', value: string) => {
+    const newEntries = [...binaryDataEntries];
+    newEntries[index] = { ...newEntries[index], [field]: value };
+    onBinaryDataEntriesChange(newEntries);
+  };
+
+  return (
+    <SectionCard>
+      <SectionCard.Header title="Binary data" showDivider />
+      <SectionCard.Content>
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+          <VStack gap={3}>
+            {/* Binary Data Entries */}
+            {binaryDataEntries.length > 0 && (
+              <VStack gap={2} className="w-full">
+                {/* Header row */}
+                <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                    Key
+                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                    Value
+                  </span>
+                  <div />
+                </div>
+                {binaryDataEntries.map((entry, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateBinaryDataEntry(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateBinaryDataEntry(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeBinaryDataEntry(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+              </VStack>
+            )}
+
+            <HStack gap={2}>
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                onClick={addBinaryDataEntry}
+                className="bg-[var(--color-surface-default)]"
+              >
+                Add Data Entry
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconFile size={12} stroke={1.5} />}
+                onClick={() => {
+                  // TODO: Implement file reading functionality
+                  console.log('Read from file clicked');
+                }}
+                className="bg-[var(--color-surface-default)]"
+              >
+                Read from File
+              </Button>
+            </HStack>
+          </VStack>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   LabelsAnnotationsSection Component
+   ---------------------------------------- */
+
+interface LabelsAnnotationsSectionProps {
+  labels: Label[];
+  onAddLabel: () => void;
+  onRemoveLabel: (index: number) => void;
+  onUpdateLabel: (index: number, field: 'key' | 'value', value: string) => void;
+  annotations: Annotation[];
+  onAddAnnotation: () => void;
+  onRemoveAnnotation: (index: number) => void;
+  onUpdateAnnotation: (index: number, field: 'key' | 'value', value: string) => void;
+}
+
+function LabelsAnnotationsSection({
+  labels,
+  onAddLabel,
+  onRemoveLabel,
+  onUpdateLabel,
+  annotations,
+  onAddAnnotation,
+  onRemoveAnnotation,
+  onUpdateAnnotation,
+}: LabelsAnnotationsSectionProps) {
+  return (
+    <SectionCard>
+      <SectionCard.Header title="Labels & Annotations" showDivider />
+      <SectionCard.Content>
+        <VStack gap={6}>
+          {/* Labels */}
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the labels used to identify and categorize the resource.
+              </p>
+            </VStack>
+
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={2}>
+                {labels.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
+                  </div>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddLabel}
+                  >
+                    Add Label
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
+
+          {/* Annotations */}
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the annotations used to provide additional metadata for the resource.
+              </p>
+            </VStack>
+
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={2}>
+                {annotations.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
+                  </div>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
    Main Page Component
    ---------------------------------------- */
-export default function CreateIngressPage() {
+
+export function CreateConfigMapPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Basic information state
+  const [configMapName, setConfigMapName] = useState('');
+  const [namespace, setNamespace] = useState('default');
+  const [description, setDescription] = useState('');
+
+  // Data state
+  const [dataEntries, setDataEntries] = useState<DataEntry[]>(isV2 ? [{ key: '', value: '' }] : []);
+
+  // Binary Data state
+  const [binaryDataEntries, setBinaryDataEntries] = useState<BinaryDataEntry[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
+
+  // Labels & Annotations state
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
+
+  // Validation errors
+  const [configMapNameError, setConfigMapNameError] = useState<string | null>(null);
+
+  // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
     useTabs();
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Ingress');
+    updateActiveTabLabel('Create ConfigMap');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -226,171 +666,102 @@ export default function CreateIngressPage() {
     closable: tab.closable,
   }));
 
-  // Sidebar state
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Basic Information state
-  const [namespace, setNamespace] = useState('default');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const handleCancel = useCallback(() => {
+    navigate('/container/configmaps');
+  }, [navigate]);
 
-  // Rules state
-  const [rules, setRules] = useState<IngressRule[]>([]);
+  const handleCreate = useCallback(() => {
+    // Validate basic info first
+    if (!configMapName.trim()) {
+      setConfigMapNameError('ConfigMap name is required.');
+      return;
+    }
 
-  // Default Backend state
-  const [defaultBackendService, setDefaultBackendService] = useState('');
-  const [defaultBackendPort, setDefaultBackendPort] = useState('');
+    console.log('Creating configmap:', {
+      configMapName,
+      namespace,
+      description,
+      data: dataEntries.reduce(
+        (acc, entry) => {
+          if (entry.key) acc[entry.key] = entry.value;
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
+      binaryData: binaryDataEntries.reduce(
+        (acc, entry) => {
+          if (entry.key) acc[entry.key] = entry.value;
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
+      labels,
+      annotations,
+    });
+    navigate('/container/configmaps');
+  }, [
+    configMapName,
+    namespace,
+    description,
+    dataEntries,
+    binaryDataEntries,
+    labels,
+    annotations,
+    navigate,
+  ]);
 
-  // Certificates state
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-
-  // Ingress Class state
-  const [ingressClass, setIngressClass] = useState('');
-
-  // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
-
-  // Section states for summary
-  const getSectionStates = (): Record<IngressSectionStep, WizardSectionState> => {
-    return {
-      'basic-info': namespace && name ? 'done' : 'active',
-      rules: rules.length > 0 ? 'done' : 'pending',
-      'default-backend': defaultBackendService ? 'done' : 'pending',
-      certificates: certificates.length > 0 ? 'done' : 'pending',
-      'ingress-class': ingressClass ? 'done' : 'pending',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
-    };
-  };
-
-  // Rule handlers
-  const addRule = useCallback(() => {
-    setRules((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        host: '',
-        paths: [
-          {
-            id: Date.now().toString() + '-path',
-            pathType: 'Prefix',
-            path: '',
-            targetService: '',
-            port: '',
-          },
-        ],
-      },
-    ]);
-  }, []);
-
-  const removeRule = useCallback((id: string) => {
-    setRules((prev) => prev.filter((r) => r.id !== id));
-  }, []);
-
-  const updateRule = useCallback((id: string, field: keyof IngressRule, value: string) => {
-    setRules((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-  }, []);
-
-  const addPath = useCallback((ruleId: string) => {
-    setRules((prev) =>
-      prev.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              paths: [
-                ...r.paths,
-                {
-                  id: Date.now().toString(),
-                  pathType: 'Prefix',
-                  path: '',
-                  targetService: '',
-                  port: '',
-                },
-              ],
-            }
-          : r
-      )
-    );
-  }, []);
-
-  const removePath = useCallback((ruleId: string, pathId: string) => {
-    setRules((prev) =>
-      prev.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              paths: r.paths.filter((p) => p.id !== pathId),
-            }
-          : r
-      )
-    );
-  }, []);
-
-  const updatePath = useCallback(
-    (ruleId: string, pathId: string, field: keyof IngressPath, value: string) => {
-      setRules((prev) =>
-        prev.map((r) =>
-          r.id === ruleId
-            ? {
-                ...r,
-                paths: r.paths.map((p) => (p.id === pathId ? { ...p, [field]: value } : p)),
-              }
-            : r
-        )
-      );
-    },
-    []
-  );
-
-  // Certificate handlers
-  const addCertificate = useCallback(() => {
-    setCertificates((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        secretName: '',
-        hosts: [],
-      },
-    ]);
-  }, []);
-
-  const removeCertificate = useCallback((id: string) => {
-    setCertificates((prev) => prev.filter((c) => c.id !== id));
-  }, []);
-
-  const updateCertificate = useCallback(
-    (id: string, field: keyof Certificate, value: string | string[]) => {
-      setCertificates((prev) => prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
-    },
-    []
-  );
-
-  // Label handlers
+  // Label management
   const addLabel = useCallback(() => {
-    setLabels((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
-  }, []);
+    setLabels([...labels, { key: '', value: '' }]);
+  }, [labels]);
 
-  const removeLabel = useCallback((id: string) => {
-    setLabels((prev) => prev.filter((l) => l.id !== id));
-  }, []);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((id: string, field: 'key' | 'value', value: string) => {
-    setLabels((prev) => prev.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
-  }, []);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
-  // Annotation handlers
+  // Annotation management
   const addAnnotation = useCallback(() => {
-    setAnnotations((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
-  }, []);
+    setAnnotations([...annotations, { key: '', value: '' }]);
+  }, [annotations]);
 
-  const removeAnnotation = useCallback((id: string) => {
-    setAnnotations((prev) => prev.filter((a) => a.id !== id));
-  }, []);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((id: string, field: 'key' | 'value', value: string) => {
-    setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
-  }, []);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
+
+  // Check if create button should be disabled
+  const isCreateDisabled = !configMapName.trim();
+
+  // Check if labels or annotations have data
+  const hasLabelsOrAnnotations =
+    labels.some((l) => l.key.trim() || l.value.trim()) ||
+    annotations.some((a) => a.key.trim() || a.value.trim());
 
   return (
     <PageShell
@@ -418,9 +789,9 @@ export default function CreateIngressPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Service Discovery', href: '/container/services' },
-                { label: 'Ingresses', href: '/container/ingresses' },
-                { label: 'Create Ingress' },
+                { label: 'clusterName', href: '/container' },
+                { label: 'ConfigMaps', href: '/container/configmaps' },
+                { label: 'Create ConfigMap' },
               ]}
             />
           }
@@ -450,493 +821,68 @@ export default function CreateIngressPage() {
       <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
-          <h1 className="text-heading-h4">Create ingress</h1>
+          <div className="flex items-center justify-between h-8">
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create ConfigMap</h1>
+          </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
-            Ingresses route incoming traffic from the internet to Services within the cluster based
-            on the hostname and path specified in the request. You can expose multiple Services on
-            the same external IP address and port.
+            ConfigMap provide configuration data as key–value pairs so applications can load
+            settings without changing container images.
           </p>
         </VStack>
 
-        {/* Main Content with Summary Sidebar */}
-        <HStack gap={6} className="w-full items-start">
-          {/* Form Sections */}
+        {/* Main Content with Sidebar */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Form Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
-              <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  {/* Namespace */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
-                    <Select
-                      options={NAMESPACE_OPTIONS}
-                      value={namespace}
-                      onChange={setNamespace}
-                      fullWidth
-                    />
-                  </VStack>
+            <BasicInfoSection
+              configMapName={configMapName}
+              onConfigMapNameChange={setConfigMapName}
+              configMapNameError={configMapNameError}
+              onConfigMapNameErrorChange={setConfigMapNameError}
+              namespace={namespace}
+              onNamespaceChange={setNamespace}
+              description={description}
+              onDescriptionChange={setDescription}
+              isV2={isV2}
+            />
 
-                  {/* Name */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Name <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
-                    <Input
-                      placeholder="Enter a unique name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      fullWidth
-                    />
-                  </VStack>
+            {/* Data Section */}
+            <DataSection dataEntries={dataEntries} onDataEntriesChange={setDataEntries} />
 
-                  {/* Description (collapsible) */}
-                  <Disclosure>
-                    <Disclosure.Trigger>Description</Disclosure.Trigger>
-                    <Disclosure.Panel>
-                      <div className="pt-2">
-                        <Input
-                          placeholder="Description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          fullWidth
-                        />
-                      </div>
-                    </Disclosure.Panel>
-                  </Disclosure>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Rules Section */}
-            <SectionCard>
-              <SectionCard.Header title="Rules" />
-              <SectionCard.Content>
-                <VStack gap={2}>
-                  {/* Rule rows */}
-                  {rules.map((rule) => (
-                    <div
-                      key={rule.id}
-                      className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                    >
-                      <VStack gap={6}>
-                        {/* Request Host with close button */}
-                        <HStack gap={6} className="w-full" align="start">
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Request Host
-                            </label>
-                            <Input
-                              placeholder="e.g. example.com"
-                              value={rule.host}
-                              onChange={(e) => updateRule(rule.id, 'host', e.target.value)}
-                              fullWidth
-                            />
-                          </VStack>
-                          <button
-                            onClick={() => removeRule(rule.id)}
-                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                          >
-                            <IconX
-                              size={16}
-                              className="text-[var(--color-text-muted)]"
-                              stroke={1.5}
-                            />
-                          </button>
-                        </HStack>
-
-                        {/* Paths container */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {rule.paths.length > 0 && (
-                              <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Path
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Target Service
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Port
-                                </span>
-                                <div />
-                              </div>
-                            )}
-                            {rule.paths.map((path) => (
-                              <div
-                                key={path.id}
-                                className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-center"
-                              >
-                                {/* Path */}
-                                <HStack gap={2}>
-                                  <Select
-                                    options={PATH_TYPE_OPTIONS}
-                                    value={path.pathType}
-                                    onChange={(value) =>
-                                      updatePath(rule.id, path.id, 'pathType', value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="e.g. /foo"
-                                    value={path.path}
-                                    onChange={(e) =>
-                                      updatePath(rule.id, path.id, 'path', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                </HStack>
-
-                                {/* Target Service */}
-                                <Select
-                                  options={TARGET_SERVICE_OPTIONS}
-                                  value={path.targetService}
-                                  onChange={(value) =>
-                                    updatePath(rule.id, path.id, 'targetService', value)
-                                  }
-                                  fullWidth
-                                />
-
-                                {/* Port */}
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={path.port}
-                                  onChange={(e) =>
-                                    updatePath(rule.id, path.id, 'port', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-
-                                {/* Remove path button */}
-                                <button
-                                  onClick={() => removePath(rule.id, path.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add Path button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={() => addPath(rule.id)}
-                              >
-                                Add Path
-                              </Button>
-                            </div>
-                          </VStack>
-                        </div>
-                      </VStack>
-                    </div>
-                  ))}
-
-                  {/* Add Rule button */}
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                      onClick={addRule}
-                    >
-                      Add Rule
-                    </Button>
-                  </div>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Default Backend Section */}
-            <SectionCard>
-              <SectionCard.Header title="Default backend" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  {/* Warning message */}
-                  <InlineMessage variant="error">
-                    Warning: Default backend is used globally for the entire cluster.
-                  </InlineMessage>
-
-                  {/* Target Service and Port */}
-                  <HStack gap={6} className="w-full">
-                    <VStack gap={2} className="flex-1">
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Target Service
-                      </label>
-                      <Select
-                        options={[{ value: '', label: 'None' }, ...TARGET_SERVICE_OPTIONS.slice(1)]}
-                        value={defaultBackendService}
-                        onChange={setDefaultBackendService}
-                        fullWidth
-                      />
-                    </VStack>
-                    <VStack gap={2} className="flex-1">
-                      <label className="text-label-lg text-[var(--color-text-default)]">Port</label>
-                      <Input
-                        placeholder="e.g. 80 or http"
-                        value={defaultBackendPort}
-                        onChange={(e) => setDefaultBackendPort(e.target.value)}
-                        fullWidth
-                      />
-                    </VStack>
-                  </HStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Certificates Section */}
-            <SectionCard>
-              <SectionCard.Header title="Certificates" />
-              <SectionCard.Content>
-                <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                  <VStack gap={2}>
-                    {/* Header row */}
-                    {certificates.length > 0 && (
-                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                        <span className="block text-label-lg text-[var(--color-text-default)]">
-                          Secret Name
-                        </span>
-                        <span className="block text-label-lg text-[var(--color-text-default)]">
-                          Hosts (comma separated)
-                        </span>
-                        <div />
-                      </div>
-                    )}
-
-                    {/* Certificate rows */}
-                    {certificates.map((cert) => (
-                      <div
-                        key={cert.id}
-                        className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                      >
-                        <Select
-                          options={CERTIFICATE_OPTIONS}
-                          value={cert.secretName}
-                          onChange={(value) => updateCertificate(cert.id, 'secretName', value)}
-                          fullWidth
-                        />
-                        <Input
-                          placeholder="e.g. example.com, api.example.com"
-                          value={cert.hosts.join(', ')}
-                          onChange={(e) =>
-                            updateCertificate(
-                              cert.id,
-                              'hosts',
-                              e.target.value.split(',').map((h) => h.trim())
-                            )
-                          }
-                          fullWidth
-                        />
-                        <button
-                          onClick={() => removeCertificate(cert.id)}
-                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                        >
-                          <IconX
-                            size={16}
-                            className="text-[var(--color-text-muted)]"
-                            stroke={1.5}
-                          />
-                        </button>
-                      </div>
-                    ))}
-
-                    {/* Add Certificate button */}
-                    <div className="w-fit">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                        onClick={addCertificate}
-                      >
-                        Add Certificate
-                      </Button>
-                    </div>
-                  </VStack>
-                </div>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Ingress Class Section */}
-            <SectionCard>
-              <SectionCard.Header title="Ingress class" />
-              <SectionCard.Content>
-                <VStack gap={2}>
-                  <label className="text-label-lg text-[var(--color-text-default)]">
-                    Ingress Class
-                  </label>
-                  <div className="w-[calc(50%-12px)]">
-                    <Select
-                      options={INGRESS_CLASS_OPTIONS}
-                      value={ingressClass}
-                      onChange={setIngressClass}
-                      fullWidth
-                    />
-                  </div>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+            {/* Binary Data Section */}
+            <BinaryDataSection
+              binaryDataEntries={binaryDataEntries}
+              onBinaryDataEntriesChange={setBinaryDataEntries}
+            />
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
-              <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  {/* Labels */}
-                  <VStack gap={3}>
-                    <VStack gap={1}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Labels
-                      </label>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the labels used to identify and categorize the resource.
-                      </span>
-                    </VStack>
-
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                      <VStack gap={2}>
-                        {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div />
-                          </div>
-                        )}
-                        {labels.map((label) => (
-                          <div
-                            key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                          >
-                            <Input
-                              placeholder="Input key"
-                              value={label.key}
-                              onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="Input value"
-                              value={label.value}
-                              onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                              fullWidth
-                            />
-                            <button
-                              onClick={() => removeLabel(label.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addLabel}
-                          >
-                            Add Label
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
-                  </VStack>
-
-                  {/* Annotations */}
-                  <VStack gap={3}>
-                    <VStack gap={1}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Annotations
-                      </label>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the annotations used to provide additional metadata for the
-                        resource.
-                      </span>
-                    </VStack>
-
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                      <VStack gap={2}>
-                        {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div />
-                          </div>
-                        )}
-                        {annotations.map((annotation) => (
-                          <div
-                            key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                          >
-                            <Input
-                              placeholder="Input key"
-                              value={annotation.key}
-                              onChange={(e) =>
-                                updateAnnotation(annotation.id, 'key', e.target.value)
-                              }
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="Input value"
-                              value={annotation.value}
-                              onChange={(e) =>
-                                updateAnnotation(annotation.id, 'value', e.target.value)
-                              }
-                              fullWidth
-                            />
-                            <button
-                              onClick={() => removeAnnotation(annotation.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addAnnotation}
-                          >
-                            Add Annotation
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
-                  </VStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+            <LabelsAnnotationsSection
+              labels={labels}
+              onAddLabel={addLabel}
+              onRemoveLabel={removeLabel}
+              onUpdateLabel={updateLabel}
+              annotations={annotations}
+              onAddAnnotation={addAnnotation}
+              onRemoveAnnotation={removeAnnotation}
+              onUpdateAnnotation={updateAnnotation}
+            />
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+          <SummarySidebar
+            configMapName={configMapName}
+            dataEntries={dataEntries}
+            binaryDataEntries={binaryDataEntries}
+            hasLabelsOrAnnotations={hasLabelsOrAnnotations}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
         </HStack>
       </VStack>
     </PageShell>
   );
 }
+
+export default CreateConfigMapPage;

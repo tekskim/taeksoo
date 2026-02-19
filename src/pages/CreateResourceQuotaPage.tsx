@@ -161,6 +161,7 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
@@ -172,6 +173,7 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
@@ -209,7 +211,7 @@ function BasicInfoSection({
           </FormField>
 
           {/* Description */}
-          <Disclosure>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel className="pt-2">
               <Input
@@ -571,11 +573,15 @@ export function CreateResourceQuotaPage() {
   const [description, setDescription] = useState('');
 
   // Resource Quotas state
-  const [quotaItems, setQuotaItems] = useState<ResourceQuotaItem[]>([]);
+  const [quotaItems, setQuotaItems] = useState<ResourceQuotaItem[]>(
+    isV2 ? [{ id: 'default-1', resourceType: '', limit: '' }] : []
+  );
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Validation errors
   const [resourceQuotaNameError, setResourceQuotaNameError] = useState<string | null>(null);
@@ -772,6 +778,7 @@ export function CreateResourceQuotaPage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Resource Quotas Section */}

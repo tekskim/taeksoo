@@ -277,18 +277,22 @@ export function CreateServicePage() {
   // IP Addresses state
   const [clusterIP, setClusterIP] = useState('');
   const [loadBalancerIP, setLoadBalancerIP] = useState('');
-  const [externalIPs, setExternalIPs] = useState<ExternalIP[]>([]);
+  const [externalIPs, setExternalIPs] = useState<ExternalIP[]>(
+    isV2 ? [{ id: 'default-1', value: '' }] : []
+  );
 
   // Selectors state
-  const [selectors, setSelectors] = useState<Selector[]>([]);
+  const [selectors, setSelectors] = useState<Selector[]>(isV2 ? [{ key: '', value: '' }] : []);
 
   // Session Affinity state
   const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>('None');
   const [sessionAffinityTimeout, setSessionAffinityTimeout] = useState(10800);
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<ServiceSectionStep, SectionState>>({
@@ -605,7 +609,7 @@ export function CreateServicePage() {
                   </VStack>
 
                   {/* Description (Collapsible) */}
-                  <Disclosure>
+                  <Disclosure defaultOpen={isV2}>
                     <Disclosure.Trigger>Description</Disclosure.Trigger>
                     <Disclosure.Panel>
                       <div className="pt-2">

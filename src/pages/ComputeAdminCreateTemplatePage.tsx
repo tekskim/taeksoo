@@ -2869,7 +2869,7 @@ export function ComputeAdminCreateTemplatePage() {
   const [selectedKeyPairId, setSelectedKeyPairId] = useState<string | null>(null);
 
   // Advanced state
-  const [tags, setTags] = useState<TagItem[]>([]);
+  const [tags, setTags] = useState<TagItem[]>(isV2 ? [{ key: '', value: '' }] : []);
   const [userData, setUserData] = useState('');
 
   // Convert tabs for TabBar

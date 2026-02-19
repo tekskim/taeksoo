@@ -615,8 +615,10 @@ export function CreatePersistentVolumeClaimPage() {
   });
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Validation errors
   const [pvcNameError, setNamespaceNameError] = useState<string | null>(null);

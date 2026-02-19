@@ -593,7 +593,9 @@ export default function CreateLoadBalancerPage() {
     port: number | undefined;
     weight: number;
   }
-  const [externalMembers, setExternalMembers] = useState<ExternalMemberRow[]>([]);
+  const [externalMembers, setExternalMembers] = useState<ExternalMemberRow[]>(
+    isV2 ? [{ id: 'default-1', ipAddress: '', port: undefined, weight: 1 }] : []
+  );
 
   // Health Monitor form state
   const [createHealthMonitor, setCreateHealthMonitor] = useState(true);
@@ -2160,7 +2162,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Advanced Section */}
                     <div className="py-6">
-                      <Disclosure defaultOpen={false}>
+                      <Disclosure defaultOpen={isV2}>
                         <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                         <Disclosure.Panel>
                           <VStack gap={6} className="mt-4">

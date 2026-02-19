@@ -17,6 +17,7 @@ import {
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   IconBell,
   IconTerminal2,
@@ -146,6 +147,7 @@ function SummarySidebar({
    ---------------------------------------- */
 export function CreateNamespacePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
     useTabs();
 
@@ -180,8 +182,12 @@ export function CreateNamespacePage() {
   const [warnVersion, setWarnVersion] = useState('');
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(
+    isV2 ? [{ id: Date.now().toString(), key: '', value: '' }] : []
+  );
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ id: Date.now().toString(), key: '', value: '' }] : []
+  );
 
   // Section states for summary
   const getSectionStates = (): Record<NamespaceSectionStep, WizardSectionState> => {
@@ -306,7 +312,7 @@ export function CreateNamespacePage() {
                   </VStack>
 
                   {/* Description (collapsible) */}
-                  <Disclosure>
+                  <Disclosure defaultOpen={isV2}>
                     <Disclosure.Trigger>Description</Disclosure.Trigger>
                     <Disclosure.Panel>
                       <div className="pt-2">
