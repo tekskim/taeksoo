@@ -30,19 +30,35 @@ export interface ManageRulesDrawerProps {
    Mock Data
    ---------------------------------------- */
 
-const mockAvailableRules: FirewallRule[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `rule-${i + 1}`,
-  name: 'Name',
-  protocol: 'TCP',
-  action: 'Allow',
-}));
+const mockAvailableRules: FirewallRule[] = [
+  { id: 'rule-1', name: 'allow-ssh-inbound', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-2', name: 'allow-http', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-3', name: 'allow-https', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-4', name: 'block-telnet', protocol: 'TCP', action: 'Deny' },
+  { id: 'rule-5', name: 'allow-dns-udp', protocol: 'UDP', action: 'Allow' },
+  { id: 'rule-6', name: 'allow-ntp', protocol: 'UDP', action: 'Allow' },
+  { id: 'rule-7', name: 'allow-ping', protocol: 'ICMP', action: 'Allow' },
+  { id: 'rule-8', name: 'block-icmp-redirect', protocol: 'ICMP', action: 'Deny' },
+  { id: 'rule-9', name: 'allow-mysql', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-10', name: 'allow-postgres', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-11', name: 'allow-redis', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-12', name: 'block-smtp-outbound', protocol: 'TCP', action: 'Block' },
+  { id: 'rule-13', name: 'allow-kubernetes-api', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-14', name: 'allow-etcd', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-15', name: 'allow-dhcp', protocol: 'UDP', action: 'Allow' },
+  { id: 'rule-16', name: 'block-netbios', protocol: 'UDP', action: 'Block' },
+  { id: 'rule-17', name: 'allow-all-internal', protocol: 'Any', action: 'Allow' },
+  { id: 'rule-18', name: 'deny-all-external', protocol: 'Any', action: 'Deny' },
+  { id: 'rule-19', name: 'allow-rdp', protocol: 'TCP', action: 'Allow' },
+  { id: 'rule-20', name: 'reject-ftp', protocol: 'TCP', action: 'Reject' },
+];
 
 const mockInitialSelectedRules: FirewallRule[] = [
-  { id: 'selected-1', name: 'Name', protocol: 'TCP', action: 'Allow' },
-  { id: 'selected-2', name: 'Name', protocol: 'UDP', action: 'Block' },
-  { id: 'selected-3', name: 'Name', protocol: 'ICMP', action: 'Deny' },
-  { id: 'selected-4', name: 'Name', protocol: 'Any', action: 'Allow' },
-  { id: 'selected-5', name: 'Name', protocol: 'Any', action: 'Reject' },
+  { id: 'selected-1', name: 'allow-ssh-inbound', protocol: 'TCP', action: 'Allow' },
+  { id: 'selected-2', name: 'block-udp-flood', protocol: 'UDP', action: 'Block' },
+  { id: 'selected-3', name: 'deny-icmp-fragmentation', protocol: 'ICMP', action: 'Deny' },
+  { id: 'selected-4', name: 'allow-all-loopback', protocol: 'Any', action: 'Allow' },
+  { id: 'selected-5', name: 'reject-unknown-traffic', protocol: 'Any', action: 'Reject' },
 ];
 
 /* ----------------------------------------
@@ -59,44 +75,83 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
 
   // Drag-and-drop state
   const dragIndexRef = useRef<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [dropIndicator, setDropIndicator] = useState<{
+    index: number;
+    position: 'before' | 'after';
+  } | null>(null);
 
-  const handleDragStart = (index: number) => {
+  const handleDragStart = (e: React.DragEvent, index: number) => {
     dragIndexRef.current = index;
+    e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
-    if (dragIndexRef.current === null || dragIndexRef.current === index) {
-      setDragOverIndex(null);
+    e.dataTransfer.dropEffect = 'move';
+    if (dragIndexRef.current === null) return;
+
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+    const isAboveMid = e.clientY < midY;
+    const dragIdx = dragIndexRef.current;
+    const lastIndex = selectedRules.length - 1;
+
+    // Normalize: use "before" for the next item instead of "after" on current,
+    // except for the last item where "after" is needed
+    let targetIndex: number;
+    let position: 'before' | 'after';
+
+    if (isAboveMid) {
+      targetIndex = index;
+      position = 'before';
+    } else if (index === lastIndex) {
+      targetIndex = index;
+      position = 'after';
+    } else {
+      targetIndex = index + 1;
+      position = 'before';
+    }
+
+    // Suppress indicator at positions adjacent to the dragged item (no-op moves)
+    if (
+      targetIndex === dragIdx ||
+      (position === 'before' && targetIndex === dragIdx + 1) ||
+      (position === 'after' && targetIndex === dragIdx)
+    ) {
+      setDropIndicator(null);
       return;
     }
-    setDragOverIndex(index);
+
+    setDropIndicator({ index: targetIndex, position });
   };
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const dragIndex = dragIndexRef.current;
-    if (dragIndex === null || dragIndex === dropIndex) {
+    if (dragIndex === null || !dropIndicator) {
       dragIndexRef.current = null;
-      setDragOverIndex(null);
+      setDropIndicator(null);
       return;
     }
+
+    const { index: targetIndex, position } = dropIndicator;
 
     setSelectedRules((prev) => {
       const updated = [...prev];
       const [draggedItem] = updated.splice(dragIndex, 1);
-      updated.splice(dropIndex, 0, draggedItem);
+      let insertAt = position === 'before' ? targetIndex : targetIndex + 1;
+      if (dragIndex < targetIndex) insertAt--;
+      updated.splice(insertAt, 0, draggedItem);
       return updated;
     });
 
     dragIndexRef.current = null;
-    setDragOverIndex(null);
+    setDropIndicator(null);
   };
 
   const handleDragEnd = () => {
     dragIndexRef.current = null;
-    setDragOverIndex(null);
+    setDropIndicator(null);
   };
 
   // Filter available rules (exclude already selected)
@@ -145,7 +200,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
       onClose={handleClose}
       title=""
       showCloseButton={false}
-      width={696}
+      width={1032}
       footer={
         <HStack gap={2} justify="center" className="w-full">
           <Button variant="secondary" onClick={handleClose} className="w-[152px]">
@@ -183,7 +238,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
           {/* Two Column Layout */}
           <div className="flex gap-3 h-[500px]">
             {/* Left Column - Available Rules */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Available rules
               </span>
@@ -249,7 +304,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
             </div>
 
             {/* Right Column - Selected Rules */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">Selected rules</span>
 
               <SearchInput
@@ -262,62 +317,76 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
               <div
                 className="flex flex-col gap-1 flex-1 overflow-y-auto min-h-0 p-px"
                 style={{ scrollbarGutter: 'stable' }}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleDrop}
               >
                 {filteredSelected.map((rule, index) => {
                   const actualIndex = selectedRules.findIndex((r) => r.id === rule.id);
+                  const isDragging = dragIndexRef.current === actualIndex;
+                  const showBefore =
+                    dropIndicator?.index === actualIndex && dropIndicator.position === 'before';
+                  const showAfter =
+                    dropIndicator?.index === actualIndex && dropIndicator.position === 'after';
+
                   return (
-                    <div
-                      key={rule.id}
-                      draggable
-                      onDragStart={() => handleDragStart(actualIndex)}
-                      onDragOver={(e) => handleDragOver(e, actualIndex)}
-                      onDrop={(e) => handleDrop(e, actualIndex)}
-                      onDragEnd={handleDragEnd}
-                      className={`
-                        flex flex-col bg-[var(--color-surface-default)] rounded-md cursor-grab active:cursor-grabbing transition-all
-                        ${dragOverIndex === actualIndex ? 'border-2 border-[var(--color-border-focus)]' : 'border border-[var(--color-border-default)]'}
-                      `}
-                    >
-                      {/* Top row: Grip + Index + Name + Remove button */}
-                      <div className="flex items-center">
-                        <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
-                          <IconGripVertical
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)] shrink-0"
-                          />
-                          <span className="text-label-sm text-[var(--color-action-primary)] shrink-0 w-4 text-center">
-                            {index + 1}
-                          </span>
-                          <span className="text-label-md text-[var(--color-text-default)]">
-                            {rule.name}
-                          </span>
-                        </div>
-                        <div className="px-3 py-2">
-                          <button
-                            onClick={() => handleRemoveRule(rule.id)}
-                            className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-state-danger-bg)]"
-                          >
-                            <IconCircleMinus
-                              size={16}
+                    <div key={rule.id} className="flex flex-col gap-1">
+                      {showBefore && (
+                        <div className="h-1 bg-[var(--color-border-focus)] rounded-full" />
+                      )}
+                      <div
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, actualIndex)}
+                        onDragOver={(e) => handleDragOver(e, actualIndex)}
+                        onDragEnd={handleDragEnd}
+                        className={`
+                          flex flex-col bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md cursor-grab active:cursor-grabbing transition-opacity
+                          ${isDragging ? 'opacity-40' : ''}
+                        `}
+                      >
+                        {/* Top row: Grip + Index + Name + Remove button */}
+                        <div className="flex items-center">
+                          <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
+                            <IconGripVertical
+                              size={14}
                               stroke={1.5}
-                              className="text-[var(--color-text-default)]"
+                              className="text-[var(--color-text-disabled)] shrink-0"
                             />
-                          </button>
+                            <span className="text-label-sm text-[var(--color-action-primary)] shrink-0 w-4 text-center">
+                              {index + 1}
+                            </span>
+                            <span className="text-label-md text-[var(--color-text-default)]">
+                              {rule.name}
+                            </span>
+                          </div>
+                          <div className="px-3 py-2">
+                            <button
+                              onClick={() => handleRemoveRule(rule.id)}
+                              className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-state-danger-bg)]"
+                            >
+                              <IconCircleMinus
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            </button>
+                          </div>
+                        </div>
+                        {/* Divider */}
+                        <div className="w-full h-px bg-[var(--color-border-default)]" />
+                        {/* Bottom row: Protocol + Action */}
+                        <div className="flex items-center gap-2 px-3 py-2">
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            Protocol: {rule.protocol}
+                          </span>
+                          <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            Action: {rule.action}
+                          </span>
                         </div>
                       </div>
-                      {/* Divider */}
-                      <div className="w-full h-px bg-[var(--color-border-default)]" />
-                      {/* Bottom row: Protocol + Action */}
-                      <div className="flex items-center gap-2 px-3 py-2">
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          Protocol: {rule.protocol}
-                        </span>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          Action: {rule.action}
-                        </span>
-                      </div>
+                      {showAfter && (
+                        <div className="h-1 bg-[var(--color-border-focus)] rounded-full" />
+                      )}
                     </div>
                   );
                 })}
