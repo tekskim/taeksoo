@@ -34,6 +34,7 @@ import {
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
@@ -447,14 +448,15 @@ export default function CreateLoadBalancerPage() {
   const { tabs, activeTabId, addTab, closeTab, selectTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
+  const isV2 = useIsV2();
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    listener: 'pre',
-    pool: 'pre',
-    member: 'pre',
-    'health-monitor': 'pre',
+    listener: isV2 ? 'active' : 'pre',
+    pool: isV2 ? 'active' : 'pre',
+    member: isV2 ? 'active' : 'pre',
+    'health-monitor': isV2 ? 'active' : 'pre',
   });
 
   // Compute which section is currently active (only one should be active at a time)
@@ -572,7 +574,7 @@ export default function CreateLoadBalancerPage() {
   const [poolAlgorithm, setPoolAlgorithm] = useState('ROUND_ROBIN');
   const [poolProtocol, setPoolProtocol] = useState('HTTP');
   const [poolAdminState, setPoolAdminState] = useState(false);
-  const [poolAdvancedOpen, setPoolAdvancedOpen] = useState(false);
+  const [poolAdvancedOpen, setPoolAdvancedOpen] = useState(isV2);
   const [sessionPersistence, setSessionPersistence] = useState<
     'none' | 'source_ip' | 'http_cookie' | 'app_cookie'
   >('none');
@@ -1246,6 +1248,7 @@ export default function CreateLoadBalancerPage() {
 
   // Section navigation - ensures only one section is active at a time
   const goToNextSection = (currentSection: SectionStep) => {
+    if (isV2) return;
     const currentIndex = SECTION_ORDER.indexOf(currentSection);
     setSectionStatus((prev) => {
       const newStatus = { ...prev };
@@ -1329,6 +1332,7 @@ export default function CreateLoadBalancerPage() {
 
   // Edit section - resets subsequent sections to 'pre' state
   const editSection = (section: SectionStep) => {
+    if (isV2) return;
     setSectionStatus((prev) => {
       const newStatus = { ...prev };
       // Set clicked section to active
@@ -1341,6 +1345,9 @@ export default function CreateLoadBalancerPage() {
       return newStatus;
     });
   };
+
+  // Cancel handler
+  const handleCancel = () => navigate('/compute/load-balancers');
 
   // Create handler
   const handleCreate = () => {
@@ -1414,11 +1421,12 @@ export default function CreateLoadBalancerPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard isActive={activeSection === 'basic-info'}>
+            <SectionCard isActive={!isV2 && activeSection === 'basic-info'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -1431,7 +1439,7 @@ export default function CreateLoadBalancerPage() {
                   )
                 }
               />
-              {activeSection === 'basic-info' && (
+              {(isV2 || activeSection === 'basic-info') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1702,7 +1710,7 @@ export default function CreateLoadBalancerPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Load balancer name" value={loadBalancerName} />
                   {description && <SectionCard.DataRow label="Description" value={description} />}
@@ -1724,7 +1732,7 @@ export default function CreateLoadBalancerPage() {
             </SectionCard>
 
             {/* Listener Section */}
-            <SectionCard isActive={activeSection === 'listener'}>
+            <SectionCard isActive={!isV2 && activeSection === 'listener'}>
               <SectionCard.Header
                 title={SECTION_LABELS['listener']}
                 showDivider={sectionStatus['listener'] === 'done'}
@@ -1741,7 +1749,7 @@ export default function CreateLoadBalancerPage() {
                   )
                 }
               />
-              {activeSection === 'listener' && (
+              {(isV2 || activeSection === 'listener') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2290,7 +2298,7 @@ export default function CreateLoadBalancerPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['listener'] === 'done' && (
+              {!isV2 && sectionStatus['listener'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Listener name" value={listenerName} />
                   <SectionCard.DataRow
@@ -2319,6 +2327,7 @@ export default function CreateLoadBalancerPage() {
                 title={SECTION_LABELS['pool']}
                 showDivider={sectionStatus['pool'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['pool'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -2331,7 +2340,7 @@ export default function CreateLoadBalancerPage() {
                   )
                 }
               />
-              {activeSection === 'pool' && (
+              {(isV2 || activeSection === 'pool') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2529,7 +2538,7 @@ export default function CreateLoadBalancerPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['pool'] === 'done' && (
+              {!isV2 && sectionStatus['pool'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
                   {createPool && <SectionCard.DataRow label="Pool name" value={poolName} />}
@@ -2559,11 +2568,12 @@ export default function CreateLoadBalancerPage() {
             </SectionCard>
 
             {/* Member Section */}
-            <SectionCard isActive={activeSection === 'member'}>
+            <SectionCard isActive={!isV2 && activeSection === 'member'}>
               <SectionCard.Header
                 title={SECTION_LABELS['member']}
                 showDivider={sectionStatus['member'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['member'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -2769,7 +2779,7 @@ export default function CreateLoadBalancerPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['member'] === 'done' && (
+              {!isV2 && sectionStatus['member'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Allocated members"
@@ -2782,13 +2792,29 @@ export default function CreateLoadBalancerPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['member']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Allocated members"
+                    value={
+                      allocatedMembers.length > 0
+                        ? `${allocatedMembers.length} member(s)`
+                        : 'Skipped'
+                    }
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Health Monitor Section */}
-            <SectionCard isActive={activeSection === 'health-monitor'}>
+            <SectionCard isActive={!isV2 && activeSection === 'health-monitor'}>
               <SectionCard.Header
                 title={SECTION_LABELS['health-monitor']}
                 showDivider={sectionStatus['health-monitor'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['health-monitor'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -2801,7 +2827,7 @@ export default function CreateLoadBalancerPage() {
                   )
                 }
               />
-              {activeSection === 'health-monitor' && (
+              {(isV2 || activeSection === 'health-monitor') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2961,7 +2987,7 @@ export default function CreateLoadBalancerPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['health-monitor'] === 'done' && (
+              {!isV2 && sectionStatus['health-monitor'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Create health monitor"
@@ -2994,6 +3020,41 @@ export default function CreateLoadBalancerPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['health-monitor']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Create health monitor"
+                    value={createHealthMonitor ? 'Yes' : 'No'}
+                  />
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Health monitor name" value={healthMonitorName} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Health monitor type" value={healthMonitorType} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Interval" value={`${healthMonitorInterval} sec`} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow label="Timeout" value={`${healthMonitorTimeout} sec`} />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow
+                      label="Max retries"
+                      value={healthMonitorMaxRetries.toString()}
+                    />
+                  )}
+                  {createHealthMonitor && (
+                    <SectionCard.DataRow
+                      label="Admin state"
+                      value={healthMonitorAdminState ? 'Up' : 'Down'}
+                    />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Right Column - Summary Sidebar */}

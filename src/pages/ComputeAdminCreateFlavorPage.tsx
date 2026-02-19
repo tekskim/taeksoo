@@ -25,6 +25,7 @@ import {
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   IconBell,
   IconEdit,
@@ -126,6 +127,7 @@ function SummarySidebar({
 
 export function ComputeAdminCreateFlavorPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic info form state
@@ -180,8 +182,8 @@ export function ComputeAdminCreateFlavorPage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    resources: 'pre',
-    metadata: 'pre',
+    resources: isV2 ? 'active' : 'pre',
+    metadata: isV2 ? 'active' : 'pre',
   });
 
   // Validation error state
@@ -270,6 +272,7 @@ export function ComputeAdminCreateFlavorPage() {
   // Section navigation
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
+      if (isV2) return;
       // Validate basic-info section
       if (currentSection === 'basic-info') {
         if (!flavorName.trim()) {
@@ -290,26 +293,31 @@ export function ComputeAdminCreateFlavorPage() {
         }));
       }
     },
-    [flavorName]
+    [flavorName, isV2]
   );
 
-  const editSection = useCallback((section: SectionStep) => {
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((s) => {
-        if (s === section) {
-          newStatus[s] = 'active';
-        } else if (newStatus[s] === 'active') {
-          newStatus[s] = 'done';
-        }
+  const editSection = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((s) => {
+          if (s === section) {
+            newStatus[s] = 'active';
+          } else if (newStatus[s] === 'active') {
+            newStatus[s] = 'done';
+          }
+        });
+        return newStatus;
       });
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   // Check if create button should be enabled
-  const isCreateDisabled = !flavorName.trim() || sectionStatus['basic-info'] === 'active';
+  const isCreateDisabled =
+    !flavorName.trim() || (!isV2 && sectionStatus['basic-info'] === 'active');
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -374,7 +382,7 @@ export function ComputeAdminCreateFlavorPage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -583,7 +591,7 @@ export function ComputeAdminCreateFlavorPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Flavor name" value={flavorName || '-'} />
                   <SectionCard.DataRow
@@ -604,6 +612,30 @@ export function ComputeAdminCreateFlavorPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Flavor name" value={flavorName || '-'} />
+                  <SectionCard.DataRow
+                    label="Category"
+                    value={category === 'bare-metal' ? 'Bare Metal' : category.toUpperCase()}
+                  />
+                  <SectionCard.DataRow label="Public" value={isPublic ? 'On' : 'Off'} />
+                  {!isPublic && (
+                    <SectionCard.DataRow
+                      label="Tenants"
+                      value={
+                        selectedTenants.length === 0
+                          ? 'None selected'
+                          : `${selectedTenants.length} tenant${selectedTenants.length > 1 ? 's' : ''} selected`
+                      }
+                    />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Resources Section */}
             <SectionCard isActive={sectionStatus['resources'] === 'active'}>
@@ -757,12 +789,26 @@ export function ComputeAdminCreateFlavorPage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['resources']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="vCPU" value={`${vcpu ?? 0} cores`} />
+                  <SectionCard.DataRow label="RAM" value={`${ram ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Root disk" value={`${rootDisk ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Ephemeral disk" value={`${ephemeralDisk ?? 0} GiB`} />
+                  <SectionCard.DataRow label="Swap disk" value={`${swapDisk ?? 0} MiB`} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Metadata Section */}
-            <SectionCard isActive={sectionStatus['metadata'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['metadata'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['metadata']}
                 showDivider={sectionStatus['metadata'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['metadata'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -775,7 +821,7 @@ export function ComputeAdminCreateFlavorPage() {
                   )
                 }
               />
-              {sectionStatus['metadata'] === 'active' && (
+              {(isV2 || sectionStatus['metadata'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1050,7 +1096,6 @@ export function ComputeAdminCreateFlavorPage() {
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Action Buttons */}
                     <HStack justify="end" gap={2} className="pt-3">
                       <Button variant="secondary" onClick={() => goToNextSection('metadata')}>
                         Skip
@@ -1062,7 +1107,7 @@ export function ComputeAdminCreateFlavorPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['metadata'] === 'done' && (
+              {!isV2 && sectionStatus['metadata'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Metadata count"
@@ -1079,6 +1124,26 @@ export function ComputeAdminCreateFlavorPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['metadata']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Metadata count"
+                    value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`}
+                  />
+                  {selectedMetadata.slice(0, 3).map((item, index) => (
+                    <SectionCard.DataRow key={index} label={item.key} value={item.value || '-'} />
+                  ))}
+                  {selectedMetadata.length > 3 && (
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      +{selectedMetadata.length - 3} more items
+                    </span>
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Right Column - Summary Sidebar */}

@@ -1829,6 +1829,8 @@ export function CreatePodPage() {
                               terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
                             }
                             onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
+                            size="sm"
+                            width="sm"
                           />
                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                             Seconds
@@ -4429,7 +4431,7 @@ export function CreatePodPage() {
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -4442,11 +4444,12 @@ export function CreatePodPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -4487,7 +4490,7 @@ export function CreatePodPage() {
                                           check.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -4500,11 +4503,12 @@ export function CreatePodPage() {
                                             })
                                           }
                                           min={0}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
@@ -4518,7 +4522,7 @@ export function CreatePodPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4531,11 +4535,12 @@ export function CreatePodPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     )}
@@ -4553,7 +4558,7 @@ export function CreatePodPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4566,11 +4571,12 @@ export function CreatePodPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     )}
@@ -4584,15 +4590,20 @@ export function CreatePodPage() {
                                           checks to consider the status healthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="1"
-                                        fullWidth
-                                        value={config.readinessProbe?.successThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(
+                                            config.readinessProbe?.successThreshold || '1'
+                                          ) || 1
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('readinessProbe', {
-                                            successThreshold: e.target.value,
+                                            successThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
@@ -4606,15 +4617,20 @@ export function CreatePodPage() {
                                             to consider the status unhealthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="3"
-                                          fullWidth
-                                          value={config.readinessProbe?.failureThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.readinessProbe?.failureThreshold || '3'
+                                            ) || 3
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('readinessProbe', {
-                                              failureThreshold: e.target.value,
+                                              failureThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                     )}
@@ -4631,15 +4647,20 @@ export function CreatePodPage() {
                                           consider the status unhealthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="3"
-                                        fullWidth
-                                        value={config.readinessProbe?.failureThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(
+                                            config.readinessProbe?.failureThreshold || '3'
+                                          ) || 3
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('readinessProbe', {
-                                            failureThreshold: e.target.value,
+                                            failureThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                   )}
@@ -4879,7 +4900,7 @@ export function CreatePodPage() {
                                             Specify the interval between health check requests.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4892,11 +4913,12 @@ export function CreatePodPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     </div>
@@ -4912,7 +4934,7 @@ export function CreatePodPage() {
                                             check.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4925,11 +4947,12 @@ export function CreatePodPage() {
                                               })
                                             }
                                             min={0}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -4942,7 +4965,7 @@ export function CreatePodPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4955,11 +4978,12 @@ export function CreatePodPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     </div>
@@ -4975,15 +4999,20 @@ export function CreatePodPage() {
                                             checks to consider the status healthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="1"
-                                          fullWidth
-                                          value={config.livenessProbe?.successThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.livenessProbe?.successThreshold || '1'
+                                            ) || 1
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('livenessProbe', {
-                                              successThreshold: e.target.value,
+                                              successThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -4996,15 +5025,20 @@ export function CreatePodPage() {
                                             to consider the status unhealthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="3"
-                                          fullWidth
-                                          value={config.livenessProbe?.failureThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.livenessProbe?.failureThreshold || '3'
+                                            ) || 3
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('livenessProbe', {
-                                              failureThreshold: e.target.value,
+                                              failureThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                     </div>
@@ -5129,7 +5163,7 @@ export function CreatePodPage() {
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(config.startupProbe?.periodSeconds || '10') ||
@@ -5141,11 +5175,12 @@ export function CreatePodPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -5161,7 +5196,7 @@ export function CreatePodPage() {
                                           check.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -5174,11 +5209,12 @@ export function CreatePodPage() {
                                             })
                                           }
                                           min={0}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
@@ -5191,7 +5227,7 @@ export function CreatePodPage() {
                                           response.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(config.startupProbe?.timeoutSeconds || '1') ||
@@ -5203,11 +5239,12 @@ export function CreatePodPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -5223,15 +5260,19 @@ export function CreatePodPage() {
                                           checks to consider the status healthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="1"
-                                        fullWidth
-                                        value={config.startupProbe?.successThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(config.startupProbe?.successThreshold || '1') ||
+                                          1
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('startupProbe', {
-                                            successThreshold: e.target.value,
+                                            successThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
@@ -5244,15 +5285,19 @@ export function CreatePodPage() {
                                           consider the status unhealthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="3"
-                                        fullWidth
-                                        value={config.startupProbe?.failureThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(config.startupProbe?.failureThreshold || '3') ||
+                                          3
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('startupProbe', {
-                                            failureThreshold: e.target.value,
+                                            failureThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                   </div>
