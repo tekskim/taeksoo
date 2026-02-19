@@ -142,7 +142,7 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
       onClose={handleClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
           <Button variant="secondary" onClick={handleClose} className="w-[152px]">
