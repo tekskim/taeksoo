@@ -17,6 +17,7 @@ import {
   Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -765,6 +766,7 @@ function LabelsAnnotationsSection({
 
 export function CreatePersistentVolumePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state

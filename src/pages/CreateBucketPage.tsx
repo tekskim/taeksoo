@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,
@@ -340,7 +341,7 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing or v2) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -584,7 +585,7 @@ function SettingsSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing or v2) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -743,7 +744,7 @@ function PolicySection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing or v2) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -766,6 +767,7 @@ function PolicySection({
 
 export default function CreateBucketPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -781,8 +783,8 @@ export default function CreateBucketPage() {
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    settings: 'pre',
-    policy: 'pre',
+    settings: isV2 ? 'active' : 'pre',
+    policy: isV2 ? 'active' : 'pre',
   });
 
   // Editing state
@@ -810,36 +812,41 @@ export default function CreateBucketPage() {
   const [permissions, setPermissions] = useState('full-control');
 
   // Helper functions for editing
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
+  const handleEdit = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setEditingSection(section);
+      const sectionIndex = SECTION_ORDER.indexOf(section);
 
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
 
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((s, idx) => {
-        if (s === section) {
-          // The section being edited becomes active
-          newStatus[s] = 'active';
-        } else if (idx < sectionIndex) {
-          // Sections before the edited one stay 'done'
-          // (they were already completed)
-        } else if (idx > sectionIndex) {
-          // Sections after the edited one:
-          // - If they were 'active' or 'done', they become 'writing' (in progress but waiting)
-          // - If they were 'pre', they stay 'pre'
-          if (prev[s] === 'active' || prev[s] === 'done') {
-            newStatus[s] = 'writing';
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((s, idx) => {
+          if (s === section) {
+            // The section being edited becomes active
+            newStatus[s] = 'active';
+          } else if (idx < sectionIndex) {
+            // Sections before the edited one stay 'done'
+            // (they were already completed)
+          } else if (idx > sectionIndex) {
+            // Sections after the edited one:
+            // - If they were 'active' or 'done', they become 'writing' (in progress but waiting)
+            // - If they were 'pre', they stay 'pre'
+            if (prev[s] === 'active' || prev[s] === 'done') {
+              newStatus[s] = 'writing';
+            }
           }
-        }
-      });
+        });
 
-      return newStatus;
-    });
-  }, []);
+        return newStatus;
+      });
+    },
+    [isV2]
+  );
 
   const handleEditCancel = useCallback(() => {
+    if (isV2) return;
     if (editingSection) {
       setSectionStatus((prev) => {
         const newStatus = { ...prev, [editingSection]: 'done' };
@@ -862,9 +869,10 @@ export default function CreateBucketPage() {
       });
       setEditingSection(null);
     }
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   const handleEditDone = useCallback(() => {
+    if (isV2) return;
     if (editingSection) {
       setSectionStatus((prev) => {
         const newStatus = { ...prev, [editingSection]: 'done' };
@@ -887,26 +895,30 @@ export default function CreateBucketPage() {
       });
       setEditingSection(null);
     }
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   // Navigation helpers
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    if (currentIndex < SECTION_ORDER.length - 1) {
-      const nextSection = SECTION_ORDER[currentIndex + 1];
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-        [nextSection]: 'active',
-      }));
-    } else {
-      // Last section
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-      }));
-    }
-  }, []);
+  const handleNext = useCallback(
+    (currentSection: SectionStep) => {
+      if (isV2) return;
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      if (currentIndex < SECTION_ORDER.length - 1) {
+        const nextSection = SECTION_ORDER[currentIndex + 1];
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+          [nextSection]: 'active',
+        }));
+      } else {
+        // Last section
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+        }));
+      }
+    },
+    [isV2]
+  );
 
   // Tag management
   const addTag = useCallback(() => {
@@ -1069,13 +1081,13 @@ export default function CreateBucketPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            {sectionStatus['basic-info'] === 'pre' && (
+            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
               <PreSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'writing' && (
+            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
                 bucketName={bucketName}
                 onBucketNameChange={setBucketName}
@@ -1088,13 +1100,13 @@ export default function CreateBucketPage() {
                 ownerError={ownerError}
                 onOwnerErrorChange={setOwnerError}
                 onNext={() => handleNext('basic-info')}
-                isActive
+                isActive={!isV2}
                 isEditing={editingSection === 'basic-info'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -1110,13 +1122,13 @@ export default function CreateBucketPage() {
             )}
 
             {/* Settings Section */}
-            {sectionStatus['settings'] === 'pre' && (
+            {!isV2 && sectionStatus['settings'] === 'pre' && (
               <PreSection title={SECTION_LABELS['settings']} />
             )}
-            {sectionStatus['settings'] === 'writing' && (
+            {!isV2 && sectionStatus['settings'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['settings']} />
             )}
-            {sectionStatus['settings'] === 'active' && (
+            {(isV2 || sectionStatus['settings'] === 'active') && (
               <SettingsSection
                 objectLocking={objectLocking}
                 onObjectLockingChange={setObjectLocking}
@@ -1131,13 +1143,13 @@ export default function CreateBucketPage() {
                 placementTarget={placementTarget}
                 onPlacementTargetChange={setPlacementTarget}
                 onNext={() => handleNext('settings')}
-                isActive
+                isActive={!isV2}
                 isEditing={editingSection === 'settings'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['settings'] === 'done' && (
+            {(isV2 || sectionStatus['settings'] === 'done') && (
               <DoneSection title={SECTION_LABELS['settings']} onEdit={() => handleEdit('settings')}>
                 <SectionCard.DataRow
                   label="Object locking"
@@ -1168,11 +1180,13 @@ export default function CreateBucketPage() {
             )}
 
             {/* Policy Section */}
-            {sectionStatus['policy'] === 'pre' && <PreSection title={SECTION_LABELS['policy']} />}
-            {sectionStatus['policy'] === 'writing' && (
+            {!isV2 && sectionStatus['policy'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['policy']} />
+            )}
+            {!isV2 && sectionStatus['policy'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['policy']} />
             )}
-            {sectionStatus['policy'] === 'active' && (
+            {(isV2 || sectionStatus['policy'] === 'active') && (
               <PolicySection
                 bucketPolicy={bucketPolicy}
                 onBucketPolicyChange={handlePolicyChange}
@@ -1198,7 +1212,7 @@ export default function CreateBucketPage() {
                     handleNext('policy');
                   }
                 }}
-                isActive
+                isActive={!isV2}
                 isEditing={editingSection === 'policy'}
                 onEditCancel={handleEditCancel}
                 onEditDone={() => {
@@ -1208,7 +1222,7 @@ export default function CreateBucketPage() {
                 }}
               />
             )}
-            {sectionStatus['policy'] === 'done' && (
+            {(isV2 || sectionStatus['policy'] === 'done') && (
               <DoneSection title={SECTION_LABELS['policy']} onEdit={() => handleEdit('policy')}>
                 <SectionCard.DataRow
                   label="Bucket policy"

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,
@@ -134,11 +135,13 @@ export function CreateImagePage() {
   const [osVersionError, setOsVersionError] = useState<string | null>(null);
   const [osAdminError, setOsAdminError] = useState<string | null>(null);
 
+  const isV2 = useIsV2();
+
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    source: 'pre',
-    specification: 'pre',
+    source: isV2 ? 'active' : 'pre',
+    specification: isV2 ? 'active' : 'pre',
     advanced: 'done',
   });
 
@@ -223,6 +226,7 @@ export function CreateImagePage() {
   // Section navigation with validation
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
+      if (isV2) return;
       // Validate current section before proceeding
       let isValid = true;
       if (currentSection === 'basic-info') {
@@ -250,6 +254,7 @@ export function CreateImagePage() {
   );
 
   const editSection = useCallback((section: SectionStep) => {
+    if (isV2) return;
     setSectionStatus((prev) => {
       const newStatus = { ...prev };
       // Set all sections to their appropriate state
@@ -265,7 +270,7 @@ export function CreateImagePage() {
   }, []);
 
   // Check if create button should be enabled
-  const isCreateDisabled = !imageName.trim() || sectionStatus['basic-info'] === 'active';
+  const isCreateDisabled = !imageName.trim() || (!isV2 && sectionStatus['basic-info'] === 'active');
 
   return (
     <PageShell
@@ -313,11 +318,12 @@ export function CreateImagePage() {
           {/* Left Column - Main Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -330,7 +336,7 @@ export function CreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -409,7 +415,7 @@ export function CreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Image name" value={imageName || '-'} />
                   <SectionCard.DataRow label="Description" value={description || '-'} />
@@ -418,12 +424,24 @@ export function CreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Image name" value={imageName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
+                  <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Source Section */}
-            <SectionCard isActive={sectionStatus['source'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['source'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['source']}
                 showDivider={sectionStatus['source'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['source'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -436,7 +454,7 @@ export function CreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['source'] === 'active' && (
+              {(isV2 || sectionStatus['source'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -512,7 +530,7 @@ export function CreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['source'] === 'done' && (
+              {!isV2 && sectionStatus['source'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Upload type"
@@ -525,12 +543,28 @@ export function CreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['source']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Upload type"
+                    value={sourceType === 'file' ? 'Upload File' : 'File URL'}
+                  />
+                  {sourceType === 'url' && (
+                    <SectionCard.DataRow label="URL" value={sourceUrl || '-'} />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Specification Section */}
-            <SectionCard isActive={sectionStatus['specification'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['specification'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['specification']}
                 showDivider={sectionStatus['specification'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['specification'] === 'done' && (
                     <HStack gap={3} align="center">
                       <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -548,7 +582,7 @@ export function CreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['specification'] === 'active' && (
+              {(isV2 || sectionStatus['specification'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -738,7 +772,7 @@ export function CreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['specification'] === 'done' && (
+              {!isV2 && sectionStatus['specification'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
                   <SectionCard.DataRow label="OS" value={os || '-'} />
@@ -756,12 +790,33 @@ export function CreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['specification']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow label="OS" value={os || '-'} />
+                  <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
+                  <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
+                  <SectionCard.DataRow
+                    label="Min system Disk"
+                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Min RAM"
+                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Advanced Section */}
-            <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['advanced'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['advanced']}
                 showDivider={sectionStatus['advanced'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['advanced'] === 'done' && (
                     <HStack gap={3} align="center">
                       <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -779,7 +834,7 @@ export function CreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['advanced'] === 'active' && (
+              {(isV2 || sectionStatus['advanced'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -854,7 +909,6 @@ export function CreateImagePage() {
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Action Buttons */}
                     <HStack justify="end" gap={2} className="pt-3">
                       <Button
                         variant="secondary"
@@ -881,7 +935,7 @@ export function CreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['advanced'] === 'done' && (
+              {!isV2 && sectionStatus['advanced'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="QEMU Guest Agent"
@@ -906,6 +960,34 @@ export function CreateImagePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['advanced']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="QEMU Guest Agent"
+                    value={qemuGuestAgent ? 'On' : 'Off'}
+                  />
+                  <SectionCard.DataRow
+                    label="CPU Policy"
+                    value={
+                      cpuPolicy === 'none'
+                        ? 'None'
+                        : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="CPU Thread Policy"
+                    value={
+                      cpuThreadPolicy === 'none'
+                        ? 'None'
+                        : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)
+                    }
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Right Column - Summary Sidebar */}

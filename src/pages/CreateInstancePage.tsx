@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,
@@ -648,7 +649,7 @@ function BasicInformationSection({
             </span>
           </VStack>
 
-          {/* Divider + Next Button - hidden in edit mode */}
+          {/* Divider + Next Button - hidden in edit mode or v2 */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1727,7 +1728,7 @@ function FlavorSection({
             </VStack>
           </VStack>
 
-          {/* Divider + Next Button - hidden in edit mode */}
+          {/* Divider + Next Button - hidden in edit mode or v2 */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)] mt-4" />
@@ -1930,6 +1931,7 @@ function NetworkSection({
   onEditCancel,
   onEditDone,
 }: NetworkSectionProps) {
+  const isV2 = useIsV2();
   // Network selection
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
   const [networkSearch, setNetworkSearch] = useState('');
@@ -1939,7 +1941,7 @@ function NetworkSection({
   const [networkError, setNetworkError] = useState<string | null>(null);
 
   // Virtual LAN (Disclosure)
-  const [vlanOpen, setVlanOpen] = useState(false);
+  const [vlanOpen, setVlanOpen] = useState(isV2);
 
   // Floating IP
   const [floatingIpOption, setFloatingIpOption] = useState<'none' | 'auto' | 'existing'>('none');
@@ -1955,7 +1957,7 @@ function NetworkSection({
   const [securityGroupError, setSecurityGroupError] = useState<string | null>(null);
 
   // Port (Disclosure)
-  const [portOpen, setPortOpen] = useState(false);
+  const [portOpen, setPortOpen] = useState(isV2);
   const [selectedPortId, setSelectedPortId] = useState<string | null>(null);
   const [portSearch, setPortSearch] = useState('');
   const [portPage, setPortPage] = useState(1);
@@ -3063,14 +3065,15 @@ function AdvancedSection({
   onEditCancel,
   onEditDone,
 }: AdvancedSectionProps) {
+  const isV2 = useIsV2();
   // Server group
-  const [serverGroupOpen, setServerGroupOpen] = useState(false);
+  const [serverGroupOpen, setServerGroupOpen] = useState(isV2);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
   const [serverGroupSearch, setServerGroupSearch] = useState('');
   const [serverGroupPage, setServerGroupPage] = useState(1);
 
   // User data
-  const [userDataOpen, setUserDataOpen] = useState(false);
+  const [userDataOpen, setUserDataOpen] = useState(isV2);
   const [userData, setUserData] = useState('');
   const [userDataError, setUserDataError] = useState<string | null>(null);
   const MAX_USER_DATA_SIZE = 16 * 1024; // 16KB
@@ -3288,7 +3291,7 @@ function AdvancedSection({
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Next Button - hidden in edit mode */}
+          {/* Next Button - hidden in edit mode or v2 */}
           {!isEditing && (
             <HStack justify="end" className="pt-3">
               <Button variant="primary" onClick={onNext}>
@@ -3652,7 +3655,7 @@ function TemplatesSection({
             />
           </VStack>
 
-          {/* Action Buttons - only show when not editing */}
+          {/* Action Buttons - only show when not editing or v2 */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3678,6 +3681,7 @@ function TemplatesSection({
 
 export function CreateInstancePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab } = useTabs();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -3685,12 +3689,12 @@ export function CreateInstancePage() {
   // Section status management
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     templates: 'active',
-    'basic-info': 'pre',
-    image: 'pre',
-    flavor: 'pre',
-    network: 'pre',
-    authentication: 'pre',
-    advanced: 'pre',
+    'basic-info': isV2 ? 'active' : 'pre',
+    image: isV2 ? 'active' : 'pre',
+    flavor: isV2 ? 'active' : 'pre',
+    network: isV2 ? 'active' : 'pre',
+    authentication: isV2 ? 'active' : 'pre',
+    advanced: isV2 ? 'active' : 'pre',
   });
 
   // Editing mode - tracks which section is being edited (null = not editing, creating new)
@@ -3744,6 +3748,11 @@ export function CreateInstancePage() {
     navigate('/compute/instances');
   };
 
+  // Handle create
+  const handleCreate = () => {
+    navigate('/compute/instances');
+  };
+
   // Get current active section
   const getActiveSection = (): SectionStep | null => {
     return SECTION_ORDER.find((section) => sectionStatus[section] === 'active') || null;
@@ -3751,6 +3760,7 @@ export function CreateInstancePage() {
 
   // Handle Skip (for Templates section only)
   const handleSkip = (section: SectionStep) => {
+    if (isV2) return;
     const currentIndex = SECTION_ORDER.indexOf(section);
     if (currentIndex === -1 || currentIndex >= SECTION_ORDER.length - 1) return;
 
@@ -3817,6 +3827,7 @@ export function CreateInstancePage() {
   };
 
   const handleNext = (section: SectionStep) => {
+    if (isV2) return;
     const currentIndex = SECTION_ORDER.indexOf(section);
     if (currentIndex === -1) return;
 
@@ -3855,6 +3866,7 @@ export function CreateInstancePage() {
 
   // Handle Edit (reactivate a completed section - only one active section at a time)
   const handleEdit = (section: SectionStep) => {
+    if (isV2) return;
     // If already in edit mode, set current editing section to 'writing'
     if (editingSection) {
       // Track that this section was in editing mode before becoming 'writing'
@@ -3893,6 +3905,7 @@ export function CreateInstancePage() {
 
   // Handle Edit Cancel (restore section to done state and reactivate previous section)
   const handleEditCancel = () => {
+    if (isV2) return;
     if (editingSection) {
       // Find the topmost 'writing' section
       const topmostWriting = SECTION_ORDER.find((key) => sectionStatus[key] === 'writing');
@@ -3926,6 +3939,7 @@ export function CreateInstancePage() {
 
   // Handle Edit Done (complete editing, mark section as done and activate topmost writing section)
   const handleEditDone = () => {
+    if (isV2) return;
     if (editingSection) {
       // Find the topmost 'writing' section
       const topmostWriting = SECTION_ORDER.find((key) => sectionStatus[key] === 'writing');
@@ -4069,7 +4083,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.templates === 'done' && (
+            {(isV2 || sectionStatus.templates === 'done') && (
               <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
                 <SectionCard.DataRow
                   label="Resource type"
@@ -4090,13 +4104,13 @@ export function CreateInstancePage() {
             )}
 
             {/* Basic information Section */}
-            {sectionStatus['basic-info'] === 'pre' && (
+            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
               <PreSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'writing' && (
+            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
                 instanceName={instanceName}
                 onInstanceNameChange={setInstanceName}
@@ -4113,7 +4127,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -4142,7 +4156,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.image === 'done' && (
+            {(isV2 || sectionStatus.image === 'done') && (
               <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
                 <SectionCard.DataRow
                   label="Image"
@@ -4167,7 +4181,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.flavor === 'done' && (
+            {(isV2 || sectionStatus.flavor === 'done') && (
               <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
                 <SectionCard.DataRow
                   label="Flavor"
@@ -4191,7 +4205,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.network === 'done' && (
+            {(isV2 || sectionStatus.network === 'done') && (
               <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
                 <SectionCard.DataRow
                   label="Network"
@@ -4218,7 +4232,7 @@ export function CreateInstancePage() {
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.authentication === 'done' && (
+            {(isV2 || sectionStatus.authentication === 'done') && (
               <DoneSection
                 title={SECTION_LABELS.authentication}
                 onEdit={() => handleEdit('authentication')}
@@ -4239,13 +4253,13 @@ export function CreateInstancePage() {
             {sectionStatus.advanced === 'active' && (
               <AdvancedSection
                 onNext={() => handleNext('advanced')}
-                isActive
+                isActive={!isV2}
                 isEditing={editingSection === 'advanced'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus.advanced === 'done' && (
+            {(isV2 || sectionStatus.advanced === 'done') && (
               <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
                 <SectionCard.DataRow
                   label="Server group"

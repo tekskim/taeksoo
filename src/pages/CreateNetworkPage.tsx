@@ -20,6 +20,7 @@ import {
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { IconBell, IconEdit } from '@tabler/icons-react';
@@ -92,14 +93,15 @@ function SummarySidebar({
 
 export default function CreateNetworkPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, addTab, closeTab, selectTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    'basic-info': 'active',
-    subnet: 'pending',
+    'basic-info': isV2 ? 'done' : 'active',
+    subnet: isV2 ? 'active' : 'pending',
   });
 
   // Form state - Basic Info
@@ -124,12 +126,12 @@ export default function CreateNetworkPage() {
   const [hostRoutes, setHostRoutes] = useState('');
 
   // Disclosure state
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [descriptionOpen, setDescriptionOpen] = useState(false);
-  const [subnetAdvancedOpen, setSubnetAdvancedOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(isV2);
+  const [descriptionOpen, setDescriptionOpen] = useState(isV2);
+  const [subnetAdvancedOpen, setSubnetAdvancedOpen] = useState(isV2);
 
   // Check if create button should be disabled
-  const isCreateDisabled = sectionStatus['subnet'] !== 'done';
+  const isCreateDisabled = !isV2 && sectionStatus['subnet'] !== 'done';
 
   // TabBar tabs
   const tabBarTabs = tabs.map((tab) => ({
@@ -140,6 +142,7 @@ export default function CreateNetworkPage() {
 
   // Edit section handler
   const editSection = (section: SectionStep) => {
+    if (isV2) return;
     setSectionStatus((prev) => ({
       ...prev,
       [section]: 'active',
@@ -226,11 +229,12 @@ export default function CreateNetworkPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -243,7 +247,7 @@ export default function CreateNetworkPage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -394,7 +398,7 @@ export default function CreateNetworkPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Network name" value={networkName} />
                   <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
@@ -404,13 +408,26 @@ export default function CreateNetworkPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Network name" value={networkName} />
+                  <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
+                  <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
+                  {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Subnet Section */}
-            <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['subnet'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['subnet']}
                 showDivider={sectionStatus['subnet'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['subnet'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -423,7 +440,7 @@ export default function CreateNetworkPage() {
                   )
                 }
               />
-              {sectionStatus['subnet'] === 'active' && (
+              {(isV2 || sectionStatus['subnet'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -601,7 +618,7 @@ export default function CreateNetworkPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['subnet'] === 'done' && (
+              {!isV2 && sectionStatus['subnet'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
                   {createSubnet && subnetName && (
@@ -618,6 +635,25 @@ export default function CreateNetworkPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['subnet']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
+                  {createSubnet && subnetName && (
+                    <SectionCard.DataRow label="Subnet name" value={subnetName} />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow
+                      label="Gateway"
+                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                    />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Summary Sidebar */}
