@@ -100,7 +100,7 @@ export default function CreateNetworkPage() {
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    'basic-info': isV2 ? 'done' : 'active',
+    'basic-info': 'active',
     subnet: isV2 ? 'active' : 'pending',
   });
 

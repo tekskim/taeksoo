@@ -747,6 +747,16 @@ export function CreateVolumePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Volume name" value={volumeName || '-'} />
+                  <SectionCard.DataRow label="AZ" value={availabilityZone || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Source Section */}
             <SectionCard isActive={!isV2 && sectionStatus['source'] === 'active'}>
@@ -981,6 +991,41 @@ export function CreateVolumePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['source']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Source type"
+                    value={
+                      sourceType === 'blank'
+                        ? 'Blank volume'
+                        : sourceType === 'image'
+                          ? 'Image'
+                          : 'Volume snapshot'
+                    }
+                  />
+                  {sourceType === 'image' && selectedImage.length > 0 && (
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={
+                        mockImages.find((img) => img.id === selectedImage[0])?.name ||
+                        selectedImage[0]
+                      }
+                    />
+                  )}
+                  {sourceType === 'snapshot' && selectedSnapshot.length > 0 && (
+                    <SectionCard.DataRow
+                      label="Snapshot"
+                      value={
+                        mockSnapshots.find((s) => s.id === selectedSnapshot[0])?.name ||
+                        selectedSnapshot[0]
+                      }
+                    />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Configuration Section */}
             <SectionCard isActive={!isV2 && sectionStatus['configuration'] === 'active'}>
@@ -1057,7 +1102,7 @@ export function CreateVolumePage() {
                                       onChange={(val) => setVolumeCapacity(val ?? 64)}
                                       min={1}
                                       max={1460}
-                                      width="sm"
+                                      width="xs"
                                     />
                                   </div>
                                   <span className="text-body-md text-[var(--color-text-default)]">
@@ -1161,7 +1206,7 @@ export function CreateVolumePage() {
                                       onChange={(val) => setVolumeCapacity(val ?? 10)}
                                       min={1}
                                       max={1000}
-                                      width="sm"
+                                      width="xs"
                                     />
                                   </div>
                                   <span className="text-body-lg text-[var(--color-text-default)]">
