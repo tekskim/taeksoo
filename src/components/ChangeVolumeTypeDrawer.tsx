@@ -94,7 +94,7 @@ export function ChangeVolumeTypeDrawer({
       onClose={handleClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
