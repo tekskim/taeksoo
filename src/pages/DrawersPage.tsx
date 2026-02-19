@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, VStack, HStack, Badge, Disclosure, PageShell, TopBar } from '@/design-system';
 import { IconChevronRight, IconChevronDown, IconArrowLeft } from '@tabler/icons-react';
 
@@ -513,6 +513,21 @@ const DrawerCard = DrawerListItem;
 export function DrawersPage() {
   const navigate = useNavigate();
 
+  // Drawer URL state
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openDrawer = searchParams.get('drawer');
+  const openDrawerFn = useCallback(
+    (id: string) => {
+      setSearchParams({ drawer: id }, { replace: true });
+    },
+    [setSearchParams]
+  );
+  const closeDrawer = useCallback(() => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('drawer');
+    setSearchParams(params, { replace: true });
+  }, [searchParams, setSearchParams]);
+
   // App section disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
@@ -522,128 +537,18 @@ export function DrawersPage() {
   const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
 
   // Drawer states
-  const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
-  const [isEditInstanceOpen, setIsEditInstanceOpen] = useState(false);
-  const [isLockSettingOpen, setIsLockSettingOpen] = useState(false);
-  const [isViewPreferencesOpen, setIsViewPreferencesOpen] = useState(false);
-  const [isCreateVolumeSnapshotOpen, setIsCreateVolumeSnapshotOpen] = useState(false);
-  const [isCreateVolumeBackupOpen, setIsCreateVolumeBackupOpen] = useState(false);
-  const [isCloneVolumeOpen, setIsCloneVolumeOpen] = useState(false);
-  const [isExtendVolumeOpen, setIsExtendVolumeOpen] = useState(false);
-  const [isEditInstanceSnapshotOpen, setIsEditInstanceSnapshotOpen] = useState(false);
-  const [isCreateVolumeFromSnapshotOpen, setIsCreateVolumeFromSnapshotOpen] = useState(false);
-  const [isCreateVolumeFromImageOpen, setIsCreateVolumeFromImageOpen] = useState(false);
-  const [isEditImageOpen, setIsEditImageOpen] = useState(false);
-  const [isCreateKeyPairOpen, setIsCreateKeyPairOpen] = useState(false);
-  const [isEditKeyPairOpen, setIsEditKeyPairOpen] = useState(false);
-  const [isCreateServerGroupOpen, setIsCreateServerGroupOpen] = useState(false);
-  const [isEditServerGroupOpen, setIsEditServerGroupOpen] = useState(false);
-  const [isCreateImageFromVolumeOpen, setIsCreateImageFromVolumeOpen] = useState(false);
-  const [isEditVolumeOpen, setIsEditVolumeOpen] = useState(false);
-  const [isChangeVolumeTypeOpen, setIsChangeVolumeTypeOpen] = useState(false);
-  const [isCreateTransferOpen, setIsCreateTransferOpen] = useState(false);
-  const [isEditVolumeBackupOpen, setIsEditVolumeBackupOpen] = useState(false);
-  const [isAcceptVolumeTransferOpen, setIsAcceptVolumeTransferOpen] = useState(false);
-  const [isEditVolumeSnapshotOpen, setIsEditVolumeSnapshotOpen] = useState(false);
-  const [isCreateVolumeFromVolumeSnapshotOpen, setIsCreateVolumeFromVolumeSnapshotOpen] =
-    useState(false);
-  const [isCreateVolumeFromBackupOpen, setIsCreateVolumeFromBackupOpen] = useState(false);
-  const [isAddL7PolicyOpen, setIsAddL7PolicyOpen] = useState(false);
-  const [isRegisterCertificateOpen, setIsRegisterCertificateOpen] = useState(false);
-  const [isCreateSecurityGroupRuleOpen, setIsCreateSecurityGroupRuleOpen] = useState(false);
-  const [isEditNetworkOpen, setIsEditNetworkOpen] = useState(false);
-  const [isEditRouterOpen, setIsEditRouterOpen] = useState(false);
-  const [isCreateStaticRouteOpen, setIsCreateStaticRouteOpen] = useState(false);
-  const [isEditPortOpen, setIsEditPortOpen] = useState(false);
-  const [isCreateAllowedAddressPairOpen, setIsCreateAllowedAddressPairOpen] = useState(false);
-  const [isEditFloatingIPOpen, setIsEditFloatingIPOpen] = useState(false);
-  const [isCreateSecurityGroupOpen, setIsCreateSecurityGroupOpen] = useState(false);
-  const [isEditSecurityGroupOpen, setIsEditSecurityGroupOpen] = useState(false);
-  const [isEditCertificateOpen, setIsEditCertificateOpen] = useState(false);
-  const [isEditLoadBalancerOpen, setIsEditLoadBalancerOpen] = useState(false);
-  const [isEditPoolOpen, setIsEditPoolOpen] = useState(false);
-  const [isAddL7RuleOpen, setIsAddL7RuleOpen] = useState(false);
-  const [isEditListenerOpen, setIsEditListenerOpen] = useState(false);
-  const [isAllocateIPOpen, setIsAllocateIPOpen] = useState(false);
-  const [isCreateHealthMonitorOpen, setIsCreateHealthMonitorOpen] = useState(false);
-  const [isEditMemberOpen, setIsEditMemberOpen] = useState(false);
-  const [isDetachVolumeOpen, setIsDetachVolumeOpen] = useState(false);
-  const [isAttachInterfaceOpen, setIsAttachInterfaceOpen] = useState(false);
-  const [isDetachInterfaceOpen, setIsDetachInterfaceOpen] = useState(false);
-  const [isAssociateFloatingIPOpen, setIsAssociateFloatingIPOpen] = useState(false);
-  const [isDisassociateFloatingIPOpen, setIsDisassociateFloatingIPOpen] = useState(false);
-  const [isManageSecurityGroupsOpen, setIsManageSecurityGroupsOpen] = useState(false);
-  const [isManageTagsOpen, setIsManageTagsOpen] = useState(false);
-  const [isRescueInstanceOpen, setIsRescueInstanceOpen] = useState(false);
-  const [isRebuildInstanceOpen, setIsRebuildInstanceOpen] = useState(false);
-  const [isResizeInstanceOpen, setIsResizeInstanceOpen] = useState(false);
-  const [isCreateVolumeBackupWithSelectionOpen, setIsCreateVolumeBackupWithSelectionOpen] =
-    useState(false);
-  const [isRestoreFromSnapshotOpen, setIsRestoreFromSnapshotOpen] = useState(false);
-  const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
-  const [isCreateSubnetOpen, setIsCreateSubnetOpen] = useState(false);
-  const [isCreateRouterOpen, setIsCreateRouterOpen] = useState(false);
-  const [isAttachPortToInstanceOpen, setIsAttachPortToInstanceOpen] = useState(false);
-  const [isEditPortSecurityGroupsOpen, setIsEditPortSecurityGroupsOpen] = useState(false);
-  const [isAssociateFloatingIPToLBOpen, setIsAssociateFloatingIPToLBOpen] = useState(false);
-  const [isChangeServerCertificateOpen, setIsChangeServerCertificateOpen] = useState(false);
-  const [isChangeCACertificateOpen, setIsChangeCACertificateOpen] = useState(false);
-  const [isManageSNICertificateOpen, setIsManageSNICertificateOpen] = useState(false);
-  const [isExternalGatewaySettingOpen, setIsExternalGatewaySettingOpen] = useState(false);
-  const [isConnectSubnetOpen, setIsConnectSubnetOpen] = useState(false);
-  const [isAssociateFloatingIPToPortOpen, setIsAssociateFloatingIPToPortOpen] = useState(false);
-  const [isDisconnectSubnetOpen, setIsDisconnectSubnetOpen] = useState(false);
-  const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
-  const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
 
   // Compute Admin Drawer states
-  const [isMigrateInstanceOpen, setIsMigrateInstanceOpen] = useState(false);
-  const [isLiveMigrateInstanceOpen, setIsLiveMigrateInstanceOpen] = useState(false);
-  const [isManageMetadataOpen, setIsManageMetadataOpen] = useState(false);
-  const [isMigrateVolumeOpen, setIsMigrateVolumeOpen] = useState(false);
-  const [isManageRulesOpen, setIsManageRulesOpen] = useState(false);
-  const [isModifyQuotasOpen, setIsModifyQuotasOpen] = useState(false);
 
   // Storage Drawer states
-  const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
-  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
-  const [isCreateObjectOpen, setIsCreateObjectOpen] = useState(false);
-  const [isMoveFilesOpen, setIsMoveFilesOpen] = useState(false);
-  const [isEditObjectOpen, setIsEditObjectOpen] = useState(false);
 
   // IAM drawer states
-  const [isManageUserGroupsOpen, setIsManageUserGroupsOpen] = useState(false);
-  const [isManageUsersOpen, setIsManageUsersOpen] = useState(false);
-  const [isManageRolesOpen, setIsManageRolesOpen] = useState(false);
-  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
-  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
-  const [isEditUserGroupOpen, setIsEditUserGroupOpen] = useState(false);
-  const [isManagePoliciesOpen, setIsManagePoliciesOpen] = useState(false);
-  const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
-  const [isCreateDomainOpen, setIsCreateDomainOpen] = useState(false);
-  const [isEditDomainOpen, setIsEditDomainOpen] = useState(false);
-  const [isSetDefaultDomainOpen, setIsSetDefaultDomainOpen] = useState(false);
-  const [isAdminLockSettingOpen, setIsAdminLockSettingOpen] = useState(false);
-  const [isEditSystemAdminOpen, setIsEditSystemAdminOpen] = useState(false);
 
   // Container drawer states
-  const [isResourceTypeSearchOpen, setIsResourceTypeSearchOpen] = useState(false);
 
   // AI Agent drawer states
-  const [isEditBasicInfoOpen, setIsEditBasicInfoOpen] = useState(false);
-  const [isEditModelSettingsOpen, setIsEditModelSettingsOpen] = useState(false);
-  const [isEditPromptSettingsOpen, setIsEditPromptSettingsOpen] = useState(false);
-  const [isConnectDataSourceOpen, setIsConnectDataSourceOpen] = useState(false);
-  const [isConnectMCPServerOpen, setIsConnectMCPServerOpen] = useState(false);
-  const [isAgentLogDetailOpen, setIsAgentLogDetailOpen] = useState(false);
 
   // MCP Tools Drawer states
-  const [isCreateMCPTemplateOpen, setIsCreateMCPTemplateOpen] = useState(false);
-  const [isTemplateTypeSettingsOpen, setIsTemplateTypeSettingsOpen] = useState(false);
-  const [isContainerSettingsOpen, setIsContainerSettingsOpen] = useState(false);
-  const [isHTTPSettingsOpen, setIsHTTPSettingsOpen] = useState(false);
-  const [isToolAccessControlOpen, setIsToolAccessControlOpen] = useState(false);
-  const [isToolAuthenticationOpen, setIsToolAuthenticationOpen] = useState(false);
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -715,7 +620,7 @@ export function DrawersPage() {
                       title="Create instance snapshot"
                       description="Create a snapshot of an instance to capture its current system state as an image."
                       category="Instance"
-                      onOpen={() => setIsCreateSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('create-snapshot')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -723,7 +628,7 @@ export function DrawersPage() {
                       title="Edit instance"
                       description="Edit instance name and description. Allows modification of basic instance metadata."
                       category="Instance"
-                      onOpen={() => setIsEditInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('edit-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -731,7 +636,7 @@ export function DrawersPage() {
                       title="Lock setting"
                       description="Lock or unlock an instance to prevent accidental deletion or modification."
                       category="Instance"
-                      onOpen={() => setIsLockSettingOpen(true)}
+                      onOpen={() => openDrawerFn('lock-setting')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -739,7 +644,7 @@ export function DrawersPage() {
                       title="Manage tags"
                       description="Add, edit, or remove tags to categorize and manage resources."
                       category="Instance"
-                      onOpen={() => setIsManageTagsOpen(true)}
+                      onOpen={() => openDrawerFn('manage-tags')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -747,7 +652,7 @@ export function DrawersPage() {
                       title="Rescue instance"
                       description="Create a temporary recovery server using your instance's root disk."
                       category="Instance"
-                      onOpen={() => setIsRescueInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('rescue-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -755,7 +660,7 @@ export function DrawersPage() {
                       title="Rebuild instance"
                       description="Rebuild the instance by reinstalling the operating system using a new image."
                       category="Instance"
-                      onOpen={() => setIsRebuildInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('rebuild-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -763,7 +668,7 @@ export function DrawersPage() {
                       title="Resize instance"
                       description="Change the flavor to adjust vCPU, memory, or disk capacity."
                       category="Instance"
-                      onOpen={() => setIsResizeInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('resize-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -780,7 +685,7 @@ export function DrawersPage() {
                       title="Edit instance snapshot"
                       description="Edit the name and description of an instance snapshot."
                       category="Snapshot"
-                      onOpen={() => setIsEditInstanceSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('edit-instance-snapshot')}
                       linked
                       linkedTo="Instance snapshots"
                     />
@@ -788,7 +693,7 @@ export function DrawersPage() {
                       title="Create volume from instance snapshot"
                       description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
                       category="Snapshot"
-                      onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-from-snapshot')}
                       linked
                       linkedTo="Instance snapshots"
                     />
@@ -805,7 +710,7 @@ export function DrawersPage() {
                       title="Create volume snapshot"
                       description="Create a snapshot of a volume to back up its current data state for later restoration."
                       category="Volume"
-                      onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-snapshot')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -813,7 +718,7 @@ export function DrawersPage() {
                       title="Create volume backup"
                       description="Create a full backup of a volume and store it in the backup service for disaster recovery."
                       category="Volume"
-                      onOpen={() => setIsCreateVolumeBackupOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-backup')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -821,13 +726,13 @@ export function DrawersPage() {
                       title="Create volume backup (with selection)"
                       description="Create a volume backup with volume selection table, search, and pagination."
                       category="Volume"
-                      onOpen={() => setIsCreateVolumeBackupWithSelectionOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-backup-with-selection')}
                     />
                     <DrawerCard
                       title="Restore from snapshot"
                       description="Restore a volume from a snapshot by selecting from available snapshots."
                       category="Volume"
-                      onOpen={() => setIsRestoreFromSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('restore-from-snapshot')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -835,7 +740,7 @@ export function DrawersPage() {
                       title="Attach volume"
                       description="Attach a volume to an instance by selecting from available instances."
                       category="Volume"
-                      onOpen={() => setIsAttachVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('attach-volume')}
                       linked
                       linkedTo="Instance list, Volumes"
                     />
@@ -843,7 +748,7 @@ export function DrawersPage() {
                       title="Create subnet"
                       description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
                       category="Network"
-                      onOpen={() => setIsCreateSubnetOpen(true)}
+                      onOpen={() => openDrawerFn('create-subnet')}
                       linked
                       linkedTo="Networks"
                     />
@@ -851,13 +756,13 @@ export function DrawersPage() {
                       title="Create router"
                       description="Create a virtual router to route traffic between networks with external gateway options."
                       category="Network"
-                      onOpen={() => setIsCreateRouterOpen(true)}
+                      onOpen={() => openDrawerFn('create-router')}
                     />
                     <DrawerCard
                       title="Attach port to instance"
                       description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
                       category="Network"
-                      onOpen={() => setIsAttachPortToInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('attach-port-to-instance')}
                       linked
                       linkedTo="Ports"
                     />
@@ -865,7 +770,7 @@ export function DrawersPage() {
                       title="Clone volume"
                       description="Create an exact copy of a volume for testing, backup, or new instance creation."
                       category="Volume"
-                      onOpen={() => setIsCloneVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('clone-volume')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -873,7 +778,7 @@ export function DrawersPage() {
                       title="Extend volume"
                       description="Increase the size of a volume to expand its storage capacity."
                       category="Volume"
-                      onOpen={() => setIsExtendVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('extend-volume')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -881,7 +786,7 @@ export function DrawersPage() {
                       title="Create image from volume"
                       description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
                       category="Volume"
-                      onOpen={() => setIsCreateImageFromVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('create-image-from-volume')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -889,7 +794,7 @@ export function DrawersPage() {
                       title="Edit volume"
                       description="Edit the name and description of an existing volume."
                       category="Volume"
-                      onOpen={() => setIsEditVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('edit-volume')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -897,7 +802,7 @@ export function DrawersPage() {
                       title="Change volume type"
                       description="Change the storage type of this volume to another available volume type."
                       category="Volume"
-                      onOpen={() => setIsChangeVolumeTypeOpen(true)}
+                      onOpen={() => openDrawerFn('change-volume-type')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -905,7 +810,7 @@ export function DrawersPage() {
                       title="Create transfer"
                       description="Create a transfer request to share this volume with another project."
                       category="Volume"
-                      onOpen={() => setIsCreateTransferOpen(true)}
+                      onOpen={() => openDrawerFn('create-transfer')}
                       linked
                       linkedTo="Volumes"
                     />
@@ -913,7 +818,7 @@ export function DrawersPage() {
                       title="Edit volume backup"
                       description="Edit the name and description of an existing volume backup."
                       category="Volume"
-                      onOpen={() => setIsEditVolumeBackupOpen(true)}
+                      onOpen={() => openDrawerFn('edit-volume-backup')}
                       linked
                       linkedTo="Volume backups"
                     />
@@ -921,13 +826,13 @@ export function DrawersPage() {
                       title="Accept volume transfer"
                       description="Accept a volume transfer using the provided transfer ID and authorization key."
                       category="Volume"
-                      onOpen={() => setIsAcceptVolumeTransferOpen(true)}
+                      onOpen={() => openDrawerFn('accept-volume-transfer')}
                     />
                     <DrawerCard
                       title="Edit volume snapshot"
                       description="Edit the name and description of an existing volume snapshot."
                       category="Volume"
-                      onOpen={() => setIsEditVolumeSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('edit-volume-snapshot')}
                       linked
                       linkedTo="Volume snapshots"
                     />
@@ -935,7 +840,7 @@ export function DrawersPage() {
                       title="Create volume from snapshot"
                       description="Create a new volume from an existing volume snapshot with customizable capacity and type."
                       category="Volume"
-                      onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-from-volume-snapshot')}
                       linked
                       linkedTo="Volume snapshots"
                     />
@@ -943,7 +848,7 @@ export function DrawersPage() {
                       title="Create volume from backup"
                       description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
                       category="Volume"
-                      onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-from-backup')}
                       linked
                       linkedTo="Volume backups"
                     />
@@ -951,7 +856,7 @@ export function DrawersPage() {
                       title="Detach volume"
                       description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
                       category="Volume"
-                      onOpen={() => setIsDetachVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('detach-volume')}
                       linked
                       linkedTo="Instance list, Volumes"
                     />
@@ -968,7 +873,7 @@ export function DrawersPage() {
                       title="Create volume from image"
                       description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
                       category="Image"
-                      onOpen={() => setIsCreateVolumeFromImageOpen(true)}
+                      onOpen={() => openDrawerFn('create-volume-from-image')}
                       linked
                       linkedTo="Images"
                     />
@@ -976,7 +881,7 @@ export function DrawersPage() {
                       title="Edit image"
                       description="Edit image name and description. Allows modification of basic image metadata."
                       category="Image"
-                      onOpen={() => setIsEditImageOpen(true)}
+                      onOpen={() => openDrawerFn('edit-image')}
                       linked
                       linkedTo="Images"
                     />
@@ -993,13 +898,13 @@ export function DrawersPage() {
                       title="Create key pair"
                       description="Create a new SSH key pair or import an existing public key to securely access your instances."
                       category="Key pair"
-                      onOpen={() => setIsCreateKeyPairOpen(true)}
+                      onOpen={() => openDrawerFn('create-key-pair')}
                     />
                     <DrawerCard
                       title="Edit key pair"
                       description="Edit the name of an existing SSH key pair."
                       category="Key pair"
-                      onOpen={() => setIsEditKeyPairOpen(true)}
+                      onOpen={() => openDrawerFn('edit-key-pair')}
                     />
                   </div>
                 </VStack>
@@ -1014,13 +919,13 @@ export function DrawersPage() {
                       title="Create server group"
                       description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
                       category="Server group"
-                      onOpen={() => setIsCreateServerGroupOpen(true)}
+                      onOpen={() => openDrawerFn('create-server-group')}
                     />
                     <DrawerCard
                       title="Edit server group"
                       description="Edit the name of an existing server group."
                       category="Server group"
-                      onOpen={() => setIsEditServerGroupOpen(true)}
+                      onOpen={() => openDrawerFn('edit-server-group')}
                     />
                   </div>
                 </VStack>
@@ -1035,7 +940,7 @@ export function DrawersPage() {
                       title="Edit network"
                       description="Edit network settings including name, description, admin state, and port security."
                       category="Network"
-                      onOpen={() => setIsEditNetworkOpen(true)}
+                      onOpen={() => openDrawerFn('edit-network')}
                       linked
                       linkedTo="Networks"
                     />
@@ -1043,19 +948,19 @@ export function DrawersPage() {
                       title="Edit router"
                       description="Edit router settings including name, description, and admin state."
                       category="Router"
-                      onOpen={() => setIsEditRouterOpen(true)}
+                      onOpen={() => openDrawerFn('edit-router')}
                     />
                     <DrawerCard
                       title="Create static route"
                       description="Add a static route to manually define traffic paths beyond connected subnets."
                       category="Router"
-                      onOpen={() => setIsCreateStaticRouteOpen(true)}
+                      onOpen={() => openDrawerFn('create-static-route')}
                     />
                     <DrawerCard
                       title="Edit port"
                       description="Edit port settings including name and description."
                       category="Port"
-                      onOpen={() => setIsEditPortOpen(true)}
+                      onOpen={() => openDrawerFn('edit-port')}
                       linked
                       linkedTo="Ports"
                     />
@@ -1063,13 +968,13 @@ export function DrawersPage() {
                       title="Create allowed address pair"
                       description="Specify additional IP or MAC addresses that are allowed to pass through this port."
                       category="Port"
-                      onOpen={() => setIsCreateAllowedAddressPairOpen(true)}
+                      onOpen={() => openDrawerFn('create-allowed-address-pair')}
                     />
                     <DrawerCard
                       title="Edit floating IP"
                       description="Edit floating IP description."
                       category="Floating IP"
-                      onOpen={() => setIsEditFloatingIPOpen(true)}
+                      onOpen={() => openDrawerFn('edit-floating-i-p')}
                       linked
                       linkedTo="Floating IPs"
                     />
@@ -1077,13 +982,13 @@ export function DrawersPage() {
                       title="Allocate IP"
                       description="Assign an additional fixed IP address to a port from a subnet."
                       category="Port"
-                      onOpen={() => setIsAllocateIPOpen(true)}
+                      onOpen={() => openDrawerFn('allocate-i-p')}
                     />
                     <DrawerCard
                       title="Attach interface"
                       description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
                       category="Network"
-                      onOpen={() => setIsAttachInterfaceOpen(true)}
+                      onOpen={() => openDrawerFn('attach-interface')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -1091,7 +996,7 @@ export function DrawersPage() {
                       title="Detach interface"
                       description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
                       category="Network"
-                      onOpen={() => setIsDetachInterfaceOpen(true)}
+                      onOpen={() => openDrawerFn('detach-interface')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -1099,7 +1004,7 @@ export function DrawersPage() {
                       title="Associate floating IP"
                       description="Assign a floating IP to this instance for external network access."
                       category="Floating IP"
-                      onOpen={() => setIsAssociateFloatingIPOpen(true)}
+                      onOpen={() => openDrawerFn('associate-floating-i-p')}
                       linked
                       linkedTo="Instance list, Floating IPs"
                     />
@@ -1107,7 +1012,7 @@ export function DrawersPage() {
                       title="Disassociate floating IP"
                       description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
                       category="Floating IP"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                      onOpen={() => openDrawerFn('disassociate-floating-i-p')}
                       linked
                       linkedTo="Instance list, Floating IPs, LBs"
                     />
@@ -1115,25 +1020,25 @@ export function DrawersPage() {
                       title="Allocate floating IP"
                       description="Allocate a new floating IP from an external network pool with optional DNS settings."
                       category="Floating IP"
-                      onOpen={() => setIsAllocateFloatingIPOpen(true)}
+                      onOpen={() => openDrawerFn('allocate-floating-i-p')}
                     />
                     <DrawerCard
                       title="External gateway setting"
                       description="Configure external gateway for a router to enable access to external networks."
                       category="Router"
-                      onOpen={() => setIsExternalGatewaySettingOpen(true)}
+                      onOpen={() => openDrawerFn('external-gateway-setting')}
                     />
                     <DrawerCard
                       title="Connect subnet"
                       description="Connect an existing subnet to a router to enable routing between networks."
                       category="Router"
-                      onOpen={() => setIsConnectSubnetOpen(true)}
+                      onOpen={() => openDrawerFn('connect-subnet')}
                     />
                     <DrawerCard
                       title="Associate floating IP to port"
                       description="Associate a floating IP with a port to enable external network access."
                       category="Port"
-                      onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
+                      onOpen={() => openDrawerFn('associate-floating-i-p-to-port')}
                       linked
                       linkedTo="Ports"
                     />
@@ -1141,7 +1046,7 @@ export function DrawersPage() {
                       title="Disconnect subnet"
                       description="Disconnect a subnet from a router to remove its routing path."
                       category="Router"
-                      onOpen={() => setIsDisconnectSubnetOpen(true)}
+                      onOpen={() => openDrawerFn('disconnect-subnet')}
                     />
                   </div>
                 </VStack>
@@ -1156,7 +1061,7 @@ export function DrawersPage() {
                       title="Create security group rule"
                       description="Create a rule to define allowed inbound or outbound network traffic for your security group."
                       category="Security group"
-                      onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
+                      onOpen={() => openDrawerFn('create-security-group-rule')}
                       linked
                       linkedTo="Security groups"
                     />
@@ -1164,13 +1069,13 @@ export function DrawersPage() {
                       title="Create security group"
                       description="Create a security group to define network access rules for your instances."
                       category="Security group"
-                      onOpen={() => setIsCreateSecurityGroupOpen(true)}
+                      onOpen={() => openDrawerFn('create-security-group')}
                     />
                     <DrawerCard
                       title="Edit security group"
                       description="Edit security group name and description."
                       category="Security group"
-                      onOpen={() => setIsEditSecurityGroupOpen(true)}
+                      onOpen={() => openDrawerFn('edit-security-group')}
                       linked
                       linkedTo="Security groups"
                     />
@@ -1178,7 +1083,7 @@ export function DrawersPage() {
                       title="Manage security groups"
                       description="Attach or detach security groups for an interface to control inbound and outbound traffic."
                       category="Security group"
-                      onOpen={() => setIsManageSecurityGroupsOpen(true)}
+                      onOpen={() => openDrawerFn('manage-security-groups')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -1186,7 +1091,7 @@ export function DrawersPage() {
                       title="Edit port security groups"
                       description="Manage security groups on a port with port security toggle and multi-select table."
                       category="Port"
-                      onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
+                      onOpen={() => openDrawerFn('edit-port-security-groups')}
                       linked
                       linkedTo="Ports"
                     />
@@ -1203,25 +1108,25 @@ export function DrawersPage() {
                       title="Add L7 policy"
                       description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
                       category="Load balancer"
-                      onOpen={() => setIsAddL7PolicyOpen(true)}
+                      onOpen={() => openDrawerFn('add-l7-policy')}
                     />
                     <DrawerCard
                       title="Register certificate"
                       description="Register a certificate issued by an external CA for use within Compute resources."
                       category="Certificate"
-                      onOpen={() => setIsRegisterCertificateOpen(true)}
+                      onOpen={() => openDrawerFn('register-certificate')}
                     />
                     <DrawerCard
                       title="Edit certificate"
                       description="Edit certificate name and description."
                       category="Certificate"
-                      onOpen={() => setIsEditCertificateOpen(true)}
+                      onOpen={() => openDrawerFn('edit-certificate')}
                     />
                     <DrawerCard
                       title="Edit load balancer"
                       description="Edit load balancer name, description, and admin state."
                       category="Load balancer"
-                      onOpen={() => setIsEditLoadBalancerOpen(true)}
+                      onOpen={() => openDrawerFn('edit-load-balancer')}
                       linked
                       linkedTo="Load balancers"
                     />
@@ -1229,43 +1134,43 @@ export function DrawersPage() {
                       title="Edit pool"
                       description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
                       category="Load balancer"
-                      onOpen={() => setIsEditPoolOpen(true)}
+                      onOpen={() => openDrawerFn('edit-pool')}
                     />
                     <DrawerCard
                       title="Add L7 rule"
                       description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
                       category="Load balancer"
-                      onOpen={() => setIsAddL7RuleOpen(true)}
+                      onOpen={() => openDrawerFn('add-l7-rule')}
                     />
                     <DrawerCard
                       title="Edit listener"
                       description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
                       category="Load balancer"
-                      onOpen={() => setIsEditListenerOpen(true)}
+                      onOpen={() => openDrawerFn('edit-listener')}
                     />
                     <DrawerCard
                       title="Create health monitor"
                       description="Create a health monitor for a pool to check backend member availability."
                       category="Load balancer"
-                      onOpen={() => setIsCreateHealthMonitorOpen(true)}
+                      onOpen={() => openDrawerFn('create-health-monitor')}
                     />
                     <DrawerCard
                       title="Edit member"
                       description="Edit pool member settings including weight, monitor address, backup, and admin state."
                       category="Load balancer"
-                      onOpen={() => setIsEditMemberOpen(true)}
+                      onOpen={() => openDrawerFn('edit-member')}
                     />
                     <DrawerCard
                       title="Manage members"
                       description="Manage pool members by adding instances or external members with configurable port and weight."
                       category="Load balancer"
-                      onOpen={() => setIsManageMembersOpen(true)}
+                      onOpen={() => openDrawerFn('manage-members')}
                     />
                     <DrawerCard
                       title="Associate floating IP to LB"
                       description="Associate a floating IP to a load balancer for external access."
                       category="Load balancer"
-                      onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
+                      onOpen={() => openDrawerFn('associate-floating-i-p-to-l-b')}
                       linked
                       linkedTo="Load balancers"
                     />
@@ -1273,19 +1178,19 @@ export function DrawersPage() {
                       title="Change server certificate"
                       description="Change the server certificate for a listener with certificate selection table."
                       category="Certificate"
-                      onOpen={() => setIsChangeServerCertificateOpen(true)}
+                      onOpen={() => openDrawerFn('change-server-certificate')}
                     />
                     <DrawerCard
                       title="Change CA certificate"
                       description="Change the CA certificate for a listener with certificate selection table."
                       category="Certificate"
-                      onOpen={() => setIsChangeCACertificateOpen(true)}
+                      onOpen={() => openDrawerFn('change-c-a-certificate')}
                     />
                     <DrawerCard
                       title="Manage SNI certificate"
                       description="Enable SNI and manage multiple SNI certificates for a listener."
                       category="Certificate"
-                      onOpen={() => setIsManageSNICertificateOpen(true)}
+                      onOpen={() => openDrawerFn('manage-s-n-i-certificate')}
                     />
                   </div>
                 </VStack>
@@ -1325,7 +1230,7 @@ export function DrawersPage() {
                       title="Migrate instance"
                       description="Migrate the instance to a different host. Migration does not change the instance configuration or data."
                       category="Instance"
-                      onOpen={() => setIsMigrateInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('migrate-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -1333,7 +1238,7 @@ export function DrawersPage() {
                       title="Live migrate instance"
                       description="Live migrate the instance to a different host without shutting it down."
                       category="Instance"
-                      onOpen={() => setIsLiveMigrateInstanceOpen(true)}
+                      onOpen={() => openDrawerFn('live-migrate-instance')}
                       linked
                       linkedTo="Instance list"
                     />
@@ -1350,7 +1255,7 @@ export function DrawersPage() {
                       title="Manage metadata"
                       description="Select existing metadata or define new metadata to apply to the image."
                       category="Image"
-                      onOpen={() => setIsManageMetadataOpen(true)}
+                      onOpen={() => openDrawerFn('manage-metadata')}
                       linked
                       linkedTo="Image list"
                     />
@@ -1367,7 +1272,7 @@ export function DrawersPage() {
                       title="Migrate volume"
                       description="Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process."
                       category="Volume"
-                      onOpen={() => setIsMigrateVolumeOpen(true)}
+                      onOpen={() => openDrawerFn('migrate-volume')}
                       linked
                       linkedTo="Volume list"
                     />
@@ -1384,7 +1289,7 @@ export function DrawersPage() {
                       title="Manage rules"
                       description="Select rules from the list to add to the firewall policy."
                       category="Network"
-                      onOpen={() => setIsManageRulesOpen(true)}
+                      onOpen={() => openDrawerFn('manage-rules')}
                       linked
                       linkedTo="Firewall policies"
                     />
@@ -1401,7 +1306,7 @@ export function DrawersPage() {
                       title="Modify quotas"
                       description="Modifies the resource usage limits allocated to the tenant."
                       category="Tenant"
-                      onOpen={() => setIsModifyQuotasOpen(true)}
+                      onOpen={() => openDrawerFn('modify-quotas')}
                       linked
                       linkedTo="Tenant detail"
                     />
@@ -1443,7 +1348,7 @@ export function DrawersPage() {
                       title="Manage user groups"
                       description="Add or remove user groups for a specific user."
                       category="User"
-                      onOpen={() => setIsManageUserGroupsOpen(true)}
+                      onOpen={() => openDrawerFn('manage-user-groups')}
                       linked
                       linkedTo="IAM users"
                     />
@@ -1451,7 +1356,7 @@ export function DrawersPage() {
                       title="Manage roles"
                       description="Add or remove roles directly assigned to a specific user."
                       category="User"
-                      onOpen={() => setIsManageRolesOpen(true)}
+                      onOpen={() => openDrawerFn('manage-roles')}
                       linked
                       linkedTo="IAM users, User groups"
                     />
@@ -1459,13 +1364,13 @@ export function DrawersPage() {
                       title="Reset password"
                       description="Reset the login password for a specific user."
                       category="User"
-                      onOpen={() => setIsResetPasswordOpen(true)}
+                      onOpen={() => openDrawerFn('reset-password')}
                     />
                     <DrawerCard
                       title="Edit user"
                       description="Edit the user's basic information like email and display name."
                       category="User"
-                      onOpen={() => setIsEditUserOpen(true)}
+                      onOpen={() => openDrawerFn('edit-user')}
                       linked
                       linkedTo="IAM users"
                     />
@@ -1482,7 +1387,7 @@ export function DrawersPage() {
                       title="Manage users"
                       description="Add or remove members of a user group."
                       category="User group"
-                      onOpen={() => setIsManageUsersOpen(true)}
+                      onOpen={() => openDrawerFn('manage-users')}
                       linked
                       linkedTo="IAM user groups"
                     />
@@ -1490,7 +1395,7 @@ export function DrawersPage() {
                       title="Edit user group"
                       description="Edit the user group's basic information."
                       category="User group"
-                      onOpen={() => setIsEditUserGroupOpen(true)}
+                      onOpen={() => openDrawerFn('edit-user-group')}
                       linked
                       linkedTo="IAM user groups"
                     />
@@ -1506,13 +1411,13 @@ export function DrawersPage() {
                     <DrawerCard
                       title="Manage policies"
                       description="Add or remove policies of a role."
-                      onOpen={() => setIsManagePoliciesOpen(true)}
+                      onOpen={() => openDrawerFn('manage-policies')}
                       badge="Role"
                     />
                     <DrawerCard
                       title="Edit role"
                       description="Edit basic information for a role."
-                      onOpen={() => setIsEditRoleOpen(true)}
+                      onOpen={() => openDrawerFn('edit-role')}
                       badge="Role"
                     />
                   </div>
@@ -1527,31 +1432,31 @@ export function DrawersPage() {
                     <DrawerCard
                       title="Create domain"
                       description="Create a new domain to manage resources and policies independently."
-                      onOpen={() => setIsCreateDomainOpen(true)}
+                      onOpen={() => openDrawerFn('create-domain')}
                       badge="Domain"
                     />
                     <DrawerCard
                       title="Edit domain"
                       description="Edit the domain's basic information."
-                      onOpen={() => setIsEditDomainOpen(true)}
+                      onOpen={() => openDrawerFn('edit-domain')}
                       badge="Domain"
                     />
                     <DrawerCard
                       title="Set default domain"
                       description="Set the default domain for the system administrator."
-                      onOpen={() => setIsSetDefaultDomainOpen(true)}
+                      onOpen={() => openDrawerFn('set-default-domain')}
                       badge="Domain"
                     />
                     <DrawerCard
                       title="Lock setting"
                       description="Lock or unlock a system administrator account."
-                      onOpen={() => setIsAdminLockSettingOpen(true)}
+                      onOpen={() => openDrawerFn('admin-lock-setting')}
                       badge="Admin"
                     />
                     <DrawerCard
                       title="Edit system administrator"
                       description="Edit the system administrator's basic information."
-                      onOpen={() => setIsEditSystemAdminOpen(true)}
+                      onOpen={() => openDrawerFn('edit-system-admin')}
                       badge="Admin"
                     />
                   </div>
@@ -1592,25 +1497,25 @@ export function DrawersPage() {
                       title="Create folder"
                       description="Create a new folder in a bucket with a specified parent location."
                       category="Object storage"
-                      onOpen={() => setIsCreateFolderOpen(true)}
+                      onOpen={() => openDrawerFn('create-folder')}
                     />
                     <DrawerCard
                       title="Create object"
                       description="Upload files to a bucket with ACL settings and tags."
                       category="Object storage"
-                      onOpen={() => setIsCreateObjectOpen(true)}
+                      onOpen={() => openDrawerFn('create-object')}
                     />
                     <DrawerCard
                       title="Move files"
                       description="Move files or folders to a different location within the bucket."
                       category="Object storage"
-                      onOpen={() => setIsMoveFilesOpen(true)}
+                      onOpen={() => openDrawerFn('move-files')}
                     />
                     <DrawerCard
                       title="Edit object"
                       description="Edit object name and manage tags."
                       category="Object storage"
-                      onOpen={() => setIsEditObjectOpen(true)}
+                      onOpen={() => openDrawerFn('edit-object')}
                     />
                   </div>
                 </VStack>
@@ -1625,7 +1530,7 @@ export function DrawersPage() {
                       title="Identify device"
                       description="Indicate the LED on a physical disk to identify the device."
                       category="Physical disk"
-                      onOpen={() => setIsIdentifyDeviceOpen(true)}
+                      onOpen={() => openDrawerFn('identify-device')}
                     />
                   </div>
                 </VStack>
@@ -1665,7 +1570,7 @@ export function DrawersPage() {
                       title="Resource type search"
                       description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                       category="Search"
-                      onOpen={() => setIsResourceTypeSearchOpen(true)}
+                      onOpen={() => openDrawerFn('resource-type-search')}
                     />
                   </div>
                 </VStack>
@@ -1705,19 +1610,19 @@ export function DrawersPage() {
                       title="Edit basic information"
                       description="Edit agent name, description, status, and tags."
                       category="Settings"
-                      onOpen={() => setIsEditBasicInfoOpen(true)}
+                      onOpen={() => openDrawerFn('edit-basic-info')}
                     />
                     <DrawerCard
                       title="Edit model settings"
                       description="Configure model provider, model, temperature, and max tokens."
                       category="Settings"
-                      onOpen={() => setIsEditModelSettingsOpen(true)}
+                      onOpen={() => openDrawerFn('edit-model-settings')}
                     />
                     <DrawerCard
                       title="Edit prompt settings"
                       description="Set system prompt, tone, and max iteration count."
                       category="Settings"
-                      onOpen={() => setIsEditPromptSettingsOpen(true)}
+                      onOpen={() => openDrawerFn('edit-prompt-settings')}
                     />
                   </div>
                 </VStack>
@@ -1731,13 +1636,13 @@ export function DrawersPage() {
                       title="Connect data source"
                       description="Select and connect data sources to the agent."
                       category="Connection"
-                      onOpen={() => setIsConnectDataSourceOpen(true)}
+                      onOpen={() => openDrawerFn('connect-data-source')}
                     />
                     <DrawerCard
                       title="Connect MCP server"
                       description="Select and connect MCP servers to the agent."
                       category="Connection"
-                      onOpen={() => setIsConnectMCPServerOpen(true)}
+                      onOpen={() => openDrawerFn('connect-m-c-p-server')}
                     />
                   </div>
                 </VStack>
@@ -1751,7 +1656,7 @@ export function DrawersPage() {
                       title="Log detail"
                       description="Shows a history of the agent's operations and results."
                       category="Logs"
-                      onOpen={() => setIsAgentLogDetailOpen(true)}
+                      onOpen={() => openDrawerFn('agent-log-detail')}
                     />
                   </div>
                 </VStack>
@@ -1765,37 +1670,37 @@ export function DrawersPage() {
                       title="Create MCP template"
                       description="Create a new MCP server template with configuration settings."
                       category="Template"
-                      onOpen={() => setIsCreateMCPTemplateOpen(true)}
+                      onOpen={() => openDrawerFn('create-m-c-p-template')}
                     />
                     <DrawerCard
                       title="Template type settings"
                       description="Configure template type between STDIO (Container) and HTTP (Remote)."
                       category="Template"
-                      onOpen={() => setIsTemplateTypeSettingsOpen(true)}
+                      onOpen={() => openDrawerFn('template-type-settings')}
                     />
                     <DrawerCard
                       title="Container settings"
                       description="Configure Docker container settings for STDIO MCP servers."
                       category="Template"
-                      onOpen={() => setIsContainerSettingsOpen(true)}
+                      onOpen={() => openDrawerFn('container-settings')}
                     />
                     <DrawerCard
                       title="HTTP settings"
                       description="Configure HTTP endpoint settings for remote MCP servers."
                       category="Template"
-                      onOpen={() => setIsHTTPSettingsOpen(true)}
+                      onOpen={() => openDrawerFn('h-t-t-p-settings')}
                     />
                     <DrawerCard
                       title="Tool access control"
                       description="Configure tool visibility and rate limiting for agents."
                       category="Settings"
-                      onOpen={() => setIsToolAccessControlOpen(true)}
+                      onOpen={() => openDrawerFn('tool-access-control')}
                     />
                     <DrawerCard
                       title="Tool authentication"
                       description="Configure authentication settings for MCP tools."
                       category="Settings"
-                      onOpen={() => setIsToolAuthenticationOpen(true)}
+                      onOpen={() => openDrawerFn('tool-authentication')}
                     />
                   </div>
                 </VStack>
@@ -1813,7 +1718,7 @@ export function DrawersPage() {
                 title="View preferences"
                 description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
                 category="Table"
-                onOpen={() => setIsViewPreferencesOpen(true)}
+                onOpen={() => openDrawerFn('view-preferences')}
               />
             </div>
           </VStack>
@@ -1822,8 +1727,8 @@ export function DrawersPage() {
 
       {/* Drawer components */}
       <CreateInstanceSnapshotDrawer
-        isOpen={isCreateSnapshotOpen}
-        onClose={() => setIsCreateSnapshotOpen(false)}
+        isOpen={openDrawer === 'create-snapshot'}
+        onClose={closeDrawer}
         instance={mockSnapshotInstance}
         onSubmit={(name, description) => {
           console.log('Create snapshot:', { name, description });
@@ -1831,8 +1736,8 @@ export function DrawersPage() {
       />
 
       <EditInstanceDrawer
-        isOpen={isEditInstanceOpen}
-        onClose={() => setIsEditInstanceOpen(false)}
+        isOpen={openDrawer === 'edit-instance'}
+        onClose={closeDrawer}
         instance={mockEditInstance}
         onSubmit={(name, description) => {
           console.log('Edit instance:', { name, description });
@@ -1840,8 +1745,8 @@ export function DrawersPage() {
       />
 
       <LockSettingDrawer
-        isOpen={isLockSettingOpen}
-        onClose={() => setIsLockSettingOpen(false)}
+        isOpen={openDrawer === 'lock-setting'}
+        onClose={closeDrawer}
         instance={mockLockInstance}
         onSubmit={(isLocked) => {
           console.log('Lock setting:', { isLocked });
@@ -1849,8 +1754,8 @@ export function DrawersPage() {
       />
 
       <ViewPreferencesDrawer
-        isOpen={isViewPreferencesOpen}
-        onClose={() => setIsViewPreferencesOpen(false)}
+        isOpen={openDrawer === 'view-preferences'}
+        onClose={closeDrawer}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={setRowsPerPage}
         columns={columns}
@@ -1859,8 +1764,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeSnapshotDrawer
-        isOpen={isCreateVolumeSnapshotOpen}
-        onClose={() => setIsCreateVolumeSnapshotOpen(false)}
+        isOpen={openDrawer === 'create-volume-snapshot'}
+        onClose={closeDrawer}
         volume={mockVolume}
         volumeSnapshotQuota={{ used: 2, total: 10 }}
         typeSnapshotQuota={{ used: 2, total: null }}
@@ -1870,8 +1775,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeBackupDrawer
-        isOpen={isCreateVolumeBackupOpen}
-        onClose={() => setIsCreateVolumeBackupOpen(false)}
+        isOpen={openDrawer === 'create-volume-backup'}
+        onClose={closeDrawer}
         volume={mockBackupVolume}
         volumeBackupQuota={{ used: 1, total: 10 }}
         volumeBackupCapacityQuota={{ used: 20, total: 1000 }}
@@ -1881,8 +1786,8 @@ export function DrawersPage() {
       />
 
       <CloneVolumeDrawer
-        isOpen={isCloneVolumeOpen}
-        onClose={() => setIsCloneVolumeOpen(false)}
+        isOpen={openDrawer === 'clone-volume'}
+        onClose={closeDrawer}
         volume={mockCloneVolume}
         minCapacity={201}
         maxCapacity={2000}
@@ -1896,8 +1801,8 @@ export function DrawersPage() {
       />
 
       <ExtendVolumeDrawer
-        isOpen={isExtendVolumeOpen}
-        onClose={() => setIsExtendVolumeOpen(false)}
+        isOpen={openDrawer === 'extend-volume'}
+        onClose={closeDrawer}
         volume={mockExtendVolume}
         minCapacity={201}
         maxCapacity={2000}
@@ -1909,8 +1814,8 @@ export function DrawersPage() {
       />
 
       <EditInstanceSnapshotDrawer
-        isOpen={isEditInstanceSnapshotOpen}
-        onClose={() => setIsEditInstanceSnapshotOpen(false)}
+        isOpen={openDrawer === 'edit-instance-snapshot'}
+        onClose={closeDrawer}
         snapshot={mockInstanceSnapshot}
         onSubmit={(name, description) => {
           console.log('Edit instance snapshot:', { name, description });
@@ -1918,8 +1823,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeFromSnapshotDrawer
-        isOpen={isCreateVolumeFromSnapshotOpen}
-        onClose={() => setIsCreateVolumeFromSnapshotOpen(false)}
+        isOpen={openDrawer === 'create-volume-from-snapshot'}
+        onClose={closeDrawer}
         snapshot={mockVolumeSnapshot}
         minCapacity={201}
         maxCapacity={2000}
@@ -1933,8 +1838,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeFromImageDrawer
-        isOpen={isCreateVolumeFromImageOpen}
-        onClose={() => setIsCreateVolumeFromImageOpen(false)}
+        isOpen={openDrawer === 'create-volume-from-image'}
+        onClose={closeDrawer}
         image={mockImage}
         minCapacity={201}
         maxCapacity={2000}
@@ -1948,8 +1853,8 @@ export function DrawersPage() {
       />
 
       <EditImageDrawer
-        isOpen={isEditImageOpen}
-        onClose={() => setIsEditImageOpen(false)}
+        isOpen={openDrawer === 'edit-image'}
+        onClose={closeDrawer}
         image={mockEditImage}
         onSubmit={(name, description) => {
           console.log('Edit image:', { name, description });
@@ -1957,8 +1862,8 @@ export function DrawersPage() {
       />
 
       <CreateKeyPairDrawer
-        isOpen={isCreateKeyPairOpen}
-        onClose={() => setIsCreateKeyPairOpen(false)}
+        isOpen={openDrawer === 'create-key-pair'}
+        onClose={closeDrawer}
         keyPairQuota={{ used: 2, total: 10 }}
         onSubmit={(name, type, publicKey) => {
           console.log('Create key pair:', { name, type, publicKey });
@@ -1966,8 +1871,8 @@ export function DrawersPage() {
       />
 
       <EditKeyPairDrawer
-        isOpen={isEditKeyPairOpen}
-        onClose={() => setIsEditKeyPairOpen(false)}
+        isOpen={openDrawer === 'edit-key-pair'}
+        onClose={closeDrawer}
         keyPair={mockKeyPair}
         onSubmit={(name) => {
           console.log('Edit key pair:', { name });
@@ -1975,8 +1880,8 @@ export function DrawersPage() {
       />
 
       <CreateServerGroupDrawer
-        isOpen={isCreateServerGroupOpen}
-        onClose={() => setIsCreateServerGroupOpen(false)}
+        isOpen={openDrawer === 'create-server-group'}
+        onClose={closeDrawer}
         serverGroupQuota={{ used: 2, total: 10 }}
         onSubmit={(name, policy) => {
           console.log('Create server group:', { name, policy });
@@ -1984,8 +1889,8 @@ export function DrawersPage() {
       />
 
       <EditServerGroupDrawer
-        isOpen={isEditServerGroupOpen}
-        onClose={() => setIsEditServerGroupOpen(false)}
+        isOpen={openDrawer === 'edit-server-group'}
+        onClose={closeDrawer}
         serverGroup={mockServerGroup}
         onSubmit={(name) => {
           console.log('Edit server group:', { name });
@@ -1993,8 +1898,8 @@ export function DrawersPage() {
       />
 
       <CreateImageFromVolumeDrawer
-        isOpen={isCreateImageFromVolumeOpen}
-        onClose={() => setIsCreateImageFromVolumeOpen(false)}
+        isOpen={openDrawer === 'create-image-from-volume'}
+        onClose={closeDrawer}
         volume={mockImageVolume}
         onSubmit={(imageName, diskFormat) => {
           console.log('Create image from volume:', { imageName, diskFormat });
@@ -2002,8 +1907,8 @@ export function DrawersPage() {
       />
 
       <EditVolumeDrawer
-        isOpen={isEditVolumeOpen}
-        onClose={() => setIsEditVolumeOpen(false)}
+        isOpen={openDrawer === 'edit-volume'}
+        onClose={closeDrawer}
         volume={mockEditVolume}
         onSubmit={(name, description) => {
           console.log('Edit volume:', { name, description });
@@ -2011,8 +1916,8 @@ export function DrawersPage() {
       />
 
       <ChangeVolumeTypeDrawer
-        isOpen={isChangeVolumeTypeOpen}
-        onClose={() => setIsChangeVolumeTypeOpen(false)}
+        isOpen={openDrawer === 'change-volume-type'}
+        onClose={closeDrawer}
         volume={mockChangeTypeVolume}
         onSubmit={(newVolumeType) => {
           console.log('Change volume type:', { newVolumeType });
@@ -2020,8 +1925,8 @@ export function DrawersPage() {
       />
 
       <CreateTransferDrawer
-        isOpen={isCreateTransferOpen}
-        onClose={() => setIsCreateTransferOpen(false)}
+        isOpen={openDrawer === 'create-transfer'}
+        onClose={closeDrawer}
         volume={mockTransferVolume}
         onSubmit={(transferName) => {
           console.log('Create transfer:', { transferName });
@@ -2029,8 +1934,8 @@ export function DrawersPage() {
       />
 
       <EditVolumeBackupDrawer
-        isOpen={isEditVolumeBackupOpen}
-        onClose={() => setIsEditVolumeBackupOpen(false)}
+        isOpen={openDrawer === 'edit-volume-backup'}
+        onClose={closeDrawer}
         volumeBackup={mockVolumeBackup}
         onSubmit={(name, description) => {
           console.log('Edit volume backup:', { name, description });
@@ -2038,16 +1943,16 @@ export function DrawersPage() {
       />
 
       <AcceptVolumeTransferDrawer
-        isOpen={isAcceptVolumeTransferOpen}
-        onClose={() => setIsAcceptVolumeTransferOpen(false)}
+        isOpen={openDrawer === 'accept-volume-transfer'}
+        onClose={closeDrawer}
         onSubmit={(transferId, authKey) => {
           console.log('Accept volume transfer:', { transferId, authKey });
         }}
       />
 
       <EditVolumeSnapshotDrawer
-        isOpen={isEditVolumeSnapshotOpen}
-        onClose={() => setIsEditVolumeSnapshotOpen(false)}
+        isOpen={openDrawer === 'edit-volume-snapshot'}
+        onClose={closeDrawer}
         volumeSnapshot={mockEditVolumeSnapshot}
         onSubmit={(name, description) => {
           console.log('Edit volume snapshot:', { name, description });
@@ -2055,8 +1960,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeFromVolumeSnapshotDrawer
-        isOpen={isCreateVolumeFromVolumeSnapshotOpen}
-        onClose={() => setIsCreateVolumeFromVolumeSnapshotOpen(false)}
+        isOpen={openDrawer === 'create-volume-from-volume-snapshot'}
+        onClose={closeDrawer}
         volumeSnapshot={mockVolumeSnapshotForCreate}
         onSubmit={(volumeName, description, capacity, volumeType) => {
           console.log('Create volume from snapshot:', {
@@ -2069,8 +1974,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeFromBackupDrawer
-        isOpen={isCreateVolumeFromBackupOpen}
-        onClose={() => setIsCreateVolumeFromBackupOpen(false)}
+        isOpen={openDrawer === 'create-volume-from-backup'}
+        onClose={closeDrawer}
         volumeBackup={mockVolumeBackupForCreate}
         onSubmit={(volumeName, description, capacity, volumeType, az) => {
           console.log('Create volume from backup:', {
@@ -2084,8 +1989,8 @@ export function DrawersPage() {
       />
 
       <AddL7PolicyDrawer
-        isOpen={isAddL7PolicyOpen}
-        onClose={() => setIsAddL7PolicyOpen(false)}
+        isOpen={openDrawer === 'add-l7-policy'}
+        onClose={closeDrawer}
         onSubmit={(policyName, description, action, targetPool, position, adminStateUp) => {
           console.log('Add L7 policy:', {
             policyName,
@@ -2099,8 +2004,8 @@ export function DrawersPage() {
       />
 
       <RegisterCertificateDrawer
-        isOpen={isRegisterCertificateOpen}
-        onClose={() => setIsRegisterCertificateOpen(false)}
+        isOpen={openDrawer === 'register-certificate'}
+        onClose={closeDrawer}
         onSubmit={(type, name, description, certificateBody, privateKey, intermediateCert) => {
           console.log('Register certificate:', {
             type,
@@ -2114,8 +2019,8 @@ export function DrawersPage() {
       />
 
       <CreateSecurityGroupRuleDrawer
-        isOpen={isCreateSecurityGroupRuleOpen}
-        onClose={() => setIsCreateSecurityGroupRuleOpen(false)}
+        isOpen={openDrawer === 'create-security-group-rule'}
+        onClose={closeDrawer}
         ruleQuota={{ used: 2, total: 10 }}
         securityGroups={[
           { value: 'sg-1', label: 'default' },
@@ -2135,8 +2040,8 @@ export function DrawersPage() {
       />
 
       <EditNetworkDrawer
-        isOpen={isEditNetworkOpen}
-        onClose={() => setIsEditNetworkOpen(false)}
+        isOpen={openDrawer === 'edit-network'}
+        onClose={closeDrawer}
         network={{
           id: 'net-123',
           name: 'net-1',
@@ -2150,8 +2055,8 @@ export function DrawersPage() {
       />
 
       <EditRouterDrawer
-        isOpen={isEditRouterOpen}
-        onClose={() => setIsEditRouterOpen(false)}
+        isOpen={openDrawer === 'edit-router'}
+        onClose={closeDrawer}
         router={{
           id: 'router-123',
           name: 'net-1',
@@ -2164,8 +2069,8 @@ export function DrawersPage() {
       />
 
       <CreateStaticRouteDrawer
-        isOpen={isCreateStaticRouteOpen}
-        onClose={() => setIsCreateStaticRouteOpen(false)}
+        isOpen={openDrawer === 'create-static-route'}
+        onClose={closeDrawer}
         router={{
           id: 'router-123',
           name: 'router-01',
@@ -2176,8 +2081,8 @@ export function DrawersPage() {
       />
 
       <EditPortDrawer
-        isOpen={isEditPortOpen}
-        onClose={() => setIsEditPortOpen(false)}
+        isOpen={openDrawer === 'edit-port'}
+        onClose={closeDrawer}
         port={{
           id: 'port-123',
           name: 'port-01',
@@ -2189,16 +2094,16 @@ export function DrawersPage() {
       />
 
       <CreateAllowedAddressPairDrawer
-        isOpen={isCreateAllowedAddressPairOpen}
-        onClose={() => setIsCreateAllowedAddressPairOpen(false)}
+        isOpen={openDrawer === 'create-allowed-address-pair'}
+        onClose={closeDrawer}
         onSubmit={(cidr, macAddressType, macAddress) => {
           console.log('Create allowed address pair:', { cidr, macAddressType, macAddress });
         }}
       />
 
       <EditFloatingIPDrawer
-        isOpen={isEditFloatingIPOpen}
-        onClose={() => setIsEditFloatingIPOpen(false)}
+        isOpen={openDrawer === 'edit-floating-i-p'}
+        onClose={closeDrawer}
         floatingIP={{
           id: 'fip-123',
           ipAddress: '172.24.4.228',
@@ -2210,8 +2115,8 @@ export function DrawersPage() {
       />
 
       <CreateSecurityGroupDrawer
-        isOpen={isCreateSecurityGroupOpen}
-        onClose={() => setIsCreateSecurityGroupOpen(false)}
+        isOpen={openDrawer === 'create-security-group'}
+        onClose={closeDrawer}
         quota={{
           used: 2,
           limit: 10,
@@ -2222,8 +2127,8 @@ export function DrawersPage() {
       />
 
       <EditSecurityGroupDrawer
-        isOpen={isEditSecurityGroupOpen}
-        onClose={() => setIsEditSecurityGroupOpen(false)}
+        isOpen={openDrawer === 'edit-security-group'}
+        onClose={closeDrawer}
         securityGroup={{
           id: 'sg-123',
           name: 'web-server-sg',
@@ -2235,8 +2140,8 @@ export function DrawersPage() {
       />
 
       <EditCertificateDrawer
-        isOpen={isEditCertificateOpen}
-        onClose={() => setIsEditCertificateOpen(false)}
+        isOpen={openDrawer === 'edit-certificate'}
+        onClose={closeDrawer}
         certificate={{
           id: 'cert-123',
           name: 'my-ssl-cert',
@@ -2248,8 +2153,8 @@ export function DrawersPage() {
       />
 
       <EditLoadBalancerDrawer
-        isOpen={isEditLoadBalancerOpen}
-        onClose={() => setIsEditLoadBalancerOpen(false)}
+        isOpen={openDrawer === 'edit-load-balancer'}
+        onClose={closeDrawer}
         loadBalancer={{
           id: 'lb-123',
           name: 'web-lb-01',
@@ -2262,8 +2167,8 @@ export function DrawersPage() {
       />
 
       <EditPoolDrawer
-        isOpen={isEditPoolOpen}
-        onClose={() => setIsEditPoolOpen(false)}
+        isOpen={openDrawer === 'edit-pool'}
+        onClose={closeDrawer}
         pool={{
           id: 'pool-123',
           name: 'pool-http',
@@ -2282,16 +2187,16 @@ export function DrawersPage() {
       />
 
       <AddL7RuleDrawer
-        isOpen={isAddL7RuleOpen}
-        onClose={() => setIsAddL7RuleOpen(false)}
+        isOpen={openDrawer === 'add-l7-rule'}
+        onClose={closeDrawer}
         onSubmit={(data) => {
           console.log('Add L7 rule:', data);
         }}
       />
 
       <EditListenerDrawer
-        isOpen={isEditListenerOpen}
-        onClose={() => setIsEditListenerOpen(false)}
+        isOpen={openDrawer === 'edit-listener'}
+        onClose={closeDrawer}
         listener={{
           id: 'listener-123',
           name: 'listener-http-80',
@@ -2314,8 +2219,8 @@ export function DrawersPage() {
       />
 
       <AllocateIPDrawer
-        isOpen={isAllocateIPOpen}
-        onClose={() => setIsAllocateIPOpen(false)}
+        isOpen={openDrawer === 'allocate-i-p'}
+        onClose={closeDrawer}
         port={{
           id: 'port-001',
           name: 'port-10',
@@ -2343,8 +2248,8 @@ export function DrawersPage() {
       />
 
       <CreateHealthMonitorDrawer
-        isOpen={isCreateHealthMonitorOpen}
-        onClose={() => setIsCreateHealthMonitorOpen(false)}
+        isOpen={openDrawer === 'create-health-monitor'}
+        onClose={closeDrawer}
         pool={{
           id: 'pool-001',
           name: 'pool-http',
@@ -2355,8 +2260,8 @@ export function DrawersPage() {
       />
 
       <EditMemberDrawer
-        isOpen={isEditMemberOpen}
-        onClose={() => setIsEditMemberOpen(false)}
+        isOpen={openDrawer === 'edit-member'}
+        onClose={closeDrawer}
         member={{
           id: 'member-001',
           source: 'instance-usw-1a',
@@ -2374,8 +2279,8 @@ export function DrawersPage() {
       />
 
       <DetachVolumeDrawer
-        isOpen={isDetachVolumeOpen}
-        onClose={() => setIsDetachVolumeOpen(false)}
+        isOpen={openDrawer === 'detach-volume'}
+        onClose={closeDrawer}
         instance={mockDetachInstance}
         onDetach={(volumeId) => {
           console.log('Detach volume:', { volumeId });
@@ -2383,8 +2288,8 @@ export function DrawersPage() {
       />
 
       <AttachInterfaceDrawer
-        isOpen={isAttachInterfaceOpen}
-        onClose={() => setIsAttachInterfaceOpen(false)}
+        isOpen={openDrawer === 'attach-interface'}
+        onClose={closeDrawer}
         instance={mockAttachInterfaceInstance}
         onAttach={(networkId, fixedIp) => {
           console.log('Attach interface:', { networkId, fixedIp });
@@ -2392,8 +2297,8 @@ export function DrawersPage() {
       />
 
       <DetachInterfaceDrawer
-        isOpen={isDetachInterfaceOpen}
-        onClose={() => setIsDetachInterfaceOpen(false)}
+        isOpen={openDrawer === 'detach-interface'}
+        onClose={closeDrawer}
         instance={mockDetachInterfaceInstance}
         onDetach={(interfaceId) => {
           console.log('Detach interface:', { interfaceId });
@@ -2401,8 +2306,8 @@ export function DrawersPage() {
       />
 
       <AssociateFloatingIPDrawer
-        isOpen={isAssociateFloatingIPOpen}
-        onClose={() => setIsAssociateFloatingIPOpen(false)}
+        isOpen={openDrawer === 'associate-floating-i-p'}
+        onClose={closeDrawer}
         floatingIP={mockAssociateFloatingIP}
         onSubmit={(data) => {
           console.log('Associate floating IP:', data);
@@ -2410,8 +2315,8 @@ export function DrawersPage() {
       />
 
       <DisassociateFloatingIPDrawer
-        isOpen={isDisassociateFloatingIPOpen}
-        onClose={() => setIsDisassociateFloatingIPOpen(false)}
+        isOpen={openDrawer === 'disassociate-floating-i-p'}
+        onClose={closeDrawer}
         instance={mockDisassociateFloatingIPInstance}
         onDisassociate={(floatingIpId) => {
           console.log('Disassociate floating IP:', { floatingIpId });
@@ -2419,8 +2324,8 @@ export function DrawersPage() {
       />
 
       <ManageSecurityGroupsDrawer
-        isOpen={isManageSecurityGroupsOpen}
-        onClose={() => setIsManageSecurityGroupsOpen(false)}
+        isOpen={openDrawer === 'manage-security-groups'}
+        onClose={closeDrawer}
         instance={mockManageSecurityGroupsInstance}
         onSave={(interfaceId, securityGroupIds) => {
           console.log('Manage security groups:', { interfaceId, securityGroupIds });
@@ -2428,8 +2333,8 @@ export function DrawersPage() {
       />
 
       <ManageTagsDrawer
-        isOpen={isManageTagsOpen}
-        onClose={() => setIsManageTagsOpen(false)}
+        isOpen={openDrawer === 'manage-tags'}
+        onClose={closeDrawer}
         instance={mockManageTagsInstance}
         onSave={(tags) => {
           console.log('Manage tags:', tags);
@@ -2437,8 +2342,8 @@ export function DrawersPage() {
       />
 
       <RescueInstanceDrawer
-        isOpen={isRescueInstanceOpen}
-        onClose={() => setIsRescueInstanceOpen(false)}
+        isOpen={openDrawer === 'rescue-instance'}
+        onClose={closeDrawer}
         instance={mockRescueInstance}
         onRescue={(imageOption) => {
           console.log('Rescue instance with image option:', imageOption);
@@ -2446,8 +2351,8 @@ export function DrawersPage() {
       />
 
       <RebuildInstanceDrawer
-        isOpen={isRebuildInstanceOpen}
-        onClose={() => setIsRebuildInstanceOpen(false)}
+        isOpen={openDrawer === 'rebuild-instance'}
+        onClose={closeDrawer}
         instance={mockRebuildInstance}
         onRebuild={(imageOption) => {
           console.log('Rebuild instance with image option:', imageOption);
@@ -2455,8 +2360,8 @@ export function DrawersPage() {
       />
 
       <ResizeInstanceDrawer
-        isOpen={isResizeInstanceOpen}
-        onClose={() => setIsResizeInstanceOpen(false)}
+        isOpen={openDrawer === 'resize-instance'}
+        onClose={closeDrawer}
         instance={mockResizeInstance}
         onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
           console.log('Resize instance:', {
@@ -2469,8 +2374,8 @@ export function DrawersPage() {
       />
 
       <CreateVolumeBackupWithSelectionDrawer
-        isOpen={isCreateVolumeBackupWithSelectionOpen}
-        onClose={() => setIsCreateVolumeBackupWithSelectionOpen(false)}
+        isOpen={openDrawer === 'create-volume-backup-with-selection'}
+        onClose={closeDrawer}
         onSubmit={(volumeId, backupName, description, mode) => {
           console.log('Create volume backup with selection:', {
             volumeId,
@@ -2482,8 +2387,8 @@ export function DrawersPage() {
       />
 
       <RestoreFromSnapshotDrawer
-        isOpen={isRestoreFromSnapshotOpen}
-        onClose={() => setIsRestoreFromSnapshotOpen(false)}
+        isOpen={openDrawer === 'restore-from-snapshot'}
+        onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
         onRestore={(snapshotId) => {
           console.log('Restore from snapshot:', { snapshotId });
@@ -2491,8 +2396,8 @@ export function DrawersPage() {
       />
 
       <AttachVolumeDrawer
-        isOpen={isAttachVolumeOpen}
-        onClose={() => setIsAttachVolumeOpen(false)}
+        isOpen={openDrawer === 'attach-volume'}
+        onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
         onAttach={(instanceId) => {
           console.log('Attach volume to instance:', { instanceId });
@@ -2500,8 +2405,8 @@ export function DrawersPage() {
       />
 
       <CreateSubnetDrawer
-        isOpen={isCreateSubnetOpen}
-        onClose={() => setIsCreateSubnetOpen(false)}
+        isOpen={openDrawer === 'create-subnet'}
+        onClose={closeDrawer}
         networkId="network-01"
         networkName="private-network"
         onSubmit={(data) => {
@@ -2510,16 +2415,16 @@ export function DrawersPage() {
       />
 
       <CreateRouterDrawer
-        isOpen={isCreateRouterOpen}
-        onClose={() => setIsCreateRouterOpen(false)}
+        isOpen={openDrawer === 'create-router'}
+        onClose={closeDrawer}
         onSubmit={(data) => {
           console.log('Create router:', data);
         }}
       />
 
       <AttachPortToInstanceDrawer
-        isOpen={isAttachPortToInstanceOpen}
-        onClose={() => setIsAttachPortToInstanceOpen(false)}
+        isOpen={openDrawer === 'attach-port-to-instance'}
+        onClose={closeDrawer}
         portId="port-01"
         portName="port-01"
         onSubmit={(data) => {
@@ -2528,8 +2433,8 @@ export function DrawersPage() {
       />
 
       <EditPortSecurityGroupsDrawer
-        isOpen={isEditPortSecurityGroupsOpen}
-        onClose={() => setIsEditPortSecurityGroupsOpen(false)}
+        isOpen={openDrawer === 'edit-port-security-groups'}
+        onClose={closeDrawer}
         port={{
           id: 'port-001',
           name: 'port-10',
@@ -2540,8 +2445,8 @@ export function DrawersPage() {
       />
 
       <AssociateFloatingIPToLBDrawer
-        isOpen={isAssociateFloatingIPToLBOpen}
-        onClose={() => setIsAssociateFloatingIPToLBOpen(false)}
+        isOpen={openDrawer === 'associate-floating-i-p-to-l-b'}
+        onClose={closeDrawer}
         loadBalancer={{
           id: 'lb-001',
           name: 'web-lb-01',
@@ -2554,8 +2459,8 @@ export function DrawersPage() {
       />
 
       <ChangeServerCertificateDrawer
-        isOpen={isChangeServerCertificateOpen}
-        onClose={() => setIsChangeServerCertificateOpen(false)}
+        isOpen={openDrawer === 'change-server-certificate'}
+        onClose={closeDrawer}
         currentCertificate={{
           name: 'server-cert-1',
           expiresAt: 'Oct 10, 2025',
@@ -2566,8 +2471,8 @@ export function DrawersPage() {
       />
 
       <ChangeCACertificateDrawer
-        isOpen={isChangeCACertificateOpen}
-        onClose={() => setIsChangeCACertificateOpen(false)}
+        isOpen={openDrawer === 'change-c-a-certificate'}
+        onClose={closeDrawer}
         currentCertificate={{
           name: 'ca-cert-1',
           expiredOn: 'Oct 10, 2025',
@@ -2578,8 +2483,8 @@ export function DrawersPage() {
       />
 
       <ManageSNICertificateDrawer
-        isOpen={isManageSNICertificateOpen}
-        onClose={() => setIsManageSNICertificateOpen(false)}
+        isOpen={openDrawer === 'manage-s-n-i-certificate'}
+        onClose={closeDrawer}
         initialSniEnabled={true}
         onSubmit={(data) => {
           console.log('Manage SNI certificate:', data);
@@ -2587,8 +2492,8 @@ export function DrawersPage() {
       />
 
       <ExternalGatewaySettingDrawer
-        isOpen={isExternalGatewaySettingOpen}
-        onClose={() => setIsExternalGatewaySettingOpen(false)}
+        isOpen={openDrawer === 'external-gateway-setting'}
+        onClose={closeDrawer}
         router={{ name: 'router-01' }}
         initialGatewayEnabled={true}
         onSubmit={(data) => {
@@ -2597,8 +2502,8 @@ export function DrawersPage() {
       />
 
       <ConnectSubnetDrawer
-        isOpen={isConnectSubnetOpen}
-        onClose={() => setIsConnectSubnetOpen(false)}
+        isOpen={openDrawer === 'connect-subnet'}
+        onClose={closeDrawer}
         router={{ name: 'router-01' }}
         onSubmit={(data) => {
           console.log('Connect subnet:', data);
@@ -2606,8 +2511,8 @@ export function DrawersPage() {
       />
 
       <AssociateFloatingIPToPortDrawer
-        isOpen={isAssociateFloatingIPToPortOpen}
-        onClose={() => setIsAssociateFloatingIPToPortOpen(false)}
+        isOpen={openDrawer === 'associate-floating-i-p-to-port'}
+        onClose={closeDrawer}
         port={{ name: 'port-10' }}
         onSubmit={(data) => {
           console.log('Associate floating IP to port:', data);
@@ -2615,8 +2520,8 @@ export function DrawersPage() {
       />
 
       <DisconnectSubnetDrawer
-        isOpen={isDisconnectSubnetOpen}
-        onClose={() => setIsDisconnectSubnetOpen(false)}
+        isOpen={openDrawer === 'disconnect-subnet'}
+        onClose={closeDrawer}
         router={{ name: 'router-01' }}
         onSubmit={(subnetId) => {
           console.log('Disconnect subnet:', subnetId);
@@ -2624,8 +2529,8 @@ export function DrawersPage() {
       />
 
       <ManageMembersDrawer
-        isOpen={isManageMembersOpen}
-        onClose={() => setIsManageMembersOpen(false)}
+        isOpen={openDrawer === 'manage-members'}
+        onClose={closeDrawer}
         pool={{ name: 'pool-http' }}
         onSubmit={(members) => {
           console.log('Manage members:', members);
@@ -2633,8 +2538,8 @@ export function DrawersPage() {
       />
 
       <AllocateFloatingIPDrawer
-        isOpen={isAllocateFloatingIPOpen}
-        onClose={() => setIsAllocateFloatingIPOpen(false)}
+        isOpen={openDrawer === 'allocate-floating-i-p'}
+        onClose={closeDrawer}
         floatingIPQuota={{ used: 2, total: 10 }}
         onSubmit={(data) => {
           console.log('Allocate floating IP:', data);
@@ -2646,8 +2551,8 @@ export function DrawersPage() {
 
       {/* Create Folder Drawer */}
       <CreateFolderDrawer
-        isOpen={isCreateFolderOpen}
-        onClose={() => setIsCreateFolderOpen(false)}
+        isOpen={openDrawer === 'create-folder'}
+        onClose={closeDrawer}
         bucketName="my-bucket"
         currentPath="/folder A"
         onSubmit={(folderName, parentPath) => {
@@ -2657,8 +2562,8 @@ export function DrawersPage() {
 
       {/* Create Object Drawer */}
       <CreateObjectDrawer
-        isOpen={isCreateObjectOpen}
-        onClose={() => setIsCreateObjectOpen(false)}
+        isOpen={openDrawer === 'create-object'}
+        onClose={closeDrawer}
         currentPath="/bucket/folder"
         onSubmit={(data) => {
           console.log('Create object:', data);
@@ -2667,8 +2572,8 @@ export function DrawersPage() {
 
       {/* Move Files Drawer */}
       <MoveFilesDrawer
-        isOpen={isMoveFilesOpen}
-        onClose={() => setIsMoveFilesOpen(false)}
+        isOpen={openDrawer === 'move-files'}
+        onClose={closeDrawer}
         currentPath="folder/~"
         onSubmit={(targetPath) => {
           console.log('Move files to:', targetPath);
@@ -2677,8 +2582,8 @@ export function DrawersPage() {
 
       {/* Edit Object Drawer */}
       <EditObjectDrawer
-        isOpen={isEditObjectOpen}
-        onClose={() => setIsEditObjectOpen(false)}
+        isOpen={openDrawer === 'edit-object'}
+        onClose={closeDrawer}
         objectName="{Current Folder Name}"
         onSubmit={(name, tags) => {
           console.log('Edit object:', name, tags);
@@ -2687,8 +2592,8 @@ export function DrawersPage() {
 
       {/* Identify Device Drawer */}
       <IdentifyDeviceDrawer
-        isOpen={isIdentifyDeviceOpen}
-        onClose={() => setIsIdentifyDeviceOpen(false)}
+        isOpen={openDrawer === 'identify-device'}
+        onClose={closeDrawer}
         onSubmit={(duration) => {
           console.log('Identify device with duration:', duration);
         }}
@@ -2696,8 +2601,8 @@ export function DrawersPage() {
 
       {/* Manage User Groups Drawer */}
       <ManageUserGroupsDrawer
-        isOpen={isManageUserGroupsOpen}
-        onClose={() => setIsManageUserGroupsOpen(false)}
+        isOpen={openDrawer === 'manage-user-groups'}
+        onClose={closeDrawer}
         userName="thaki.kim"
         onSubmit={(data) => {
           console.log('Manage user groups:', data);
@@ -2706,8 +2611,8 @@ export function DrawersPage() {
 
       {/* Manage Users Drawer */}
       <ManageUsersDrawer
-        isOpen={isManageUsersOpen}
-        onClose={() => setIsManageUsersOpen(false)}
+        isOpen={openDrawer === 'manage-users'}
+        onClose={closeDrawer}
         userGroupName="MemberGroup"
         onSubmit={(data) => {
           console.log('Manage users:', data);
@@ -2716,8 +2621,8 @@ export function DrawersPage() {
 
       {/* Manage Roles Drawer */}
       <ManageRolesDrawer
-        isOpen={isManageRolesOpen}
-        onClose={() => setIsManageRolesOpen(false)}
+        isOpen={openDrawer === 'manage-roles'}
+        onClose={closeDrawer}
         userName="thaki.kim"
         onSubmit={(data) => {
           console.log('Manage roles:', data);
@@ -2726,8 +2631,8 @@ export function DrawersPage() {
 
       {/* Reset Password Drawer */}
       <ResetPasswordDrawer
-        isOpen={isResetPasswordOpen}
-        onClose={() => setIsResetPasswordOpen(false)}
+        isOpen={openDrawer === 'reset-password'}
+        onClose={closeDrawer}
         userName="thaki.kim"
         onSubmit={(data) => {
           console.log('Reset password:', data);
@@ -2736,8 +2641,8 @@ export function DrawersPage() {
 
       {/* Edit User Drawer */}
       <EditUserDrawer
-        isOpen={isEditUserOpen}
-        onClose={() => setIsEditUserOpen(false)}
+        isOpen={openDrawer === 'edit-user'}
+        onClose={closeDrawer}
         userName="thaki-kim"
         initialData={{
           email: 'user@example.com',
@@ -2751,8 +2656,8 @@ export function DrawersPage() {
 
       {/* Edit User Group Drawer */}
       <EditUserGroupDrawer
-        isOpen={isEditUserGroupOpen}
-        onClose={() => setIsEditUserGroupOpen(false)}
+        isOpen={openDrawer === 'edit-user-group'}
+        onClose={closeDrawer}
         initialData={{
           name: 'MemberGroup',
           description: '',
@@ -2764,8 +2669,8 @@ export function DrawersPage() {
 
       {/* Manage Policies Drawer */}
       <ManagePoliciesDrawer
-        isOpen={isManagePoliciesOpen}
-        onClose={() => setIsManagePoliciesOpen(false)}
+        isOpen={openDrawer === 'manage-policies'}
+        onClose={closeDrawer}
         roleName="member"
         onSubmit={(data) => {
           console.log('Manage policies:', data);
@@ -2774,8 +2679,8 @@ export function DrawersPage() {
 
       {/* Edit Role Drawer */}
       <EditRoleDrawer
-        isOpen={isEditRoleOpen}
-        onClose={() => setIsEditRoleOpen(false)}
+        isOpen={openDrawer === 'edit-role'}
+        onClose={closeDrawer}
         initialData={{
           name: 'Member',
           description: '',
@@ -2787,8 +2692,8 @@ export function DrawersPage() {
 
       {/* Create Domain Drawer */}
       <CreateDomainDrawer
-        isOpen={isCreateDomainOpen}
-        onClose={() => setIsCreateDomainOpen(false)}
+        isOpen={openDrawer === 'create-domain'}
+        onClose={closeDrawer}
         onSubmit={(data) => {
           console.log('Create domain:', data);
         }}
@@ -2796,8 +2701,8 @@ export function DrawersPage() {
 
       {/* Edit Domain Drawer */}
       <EditDomainDrawer
-        isOpen={isEditDomainOpen}
-        onClose={() => setIsEditDomainOpen(false)}
+        isOpen={openDrawer === 'edit-domain'}
+        onClose={closeDrawer}
         initialData={{
           name: 'domain',
           description: '',
@@ -2810,8 +2715,8 @@ export function DrawersPage() {
 
       {/* Set Default Domain Drawer */}
       <SetDefaultDomainDrawer
-        isOpen={isSetDefaultDomainOpen}
-        onClose={() => setIsSetDefaultDomainOpen(false)}
+        isOpen={openDrawer === 'set-default-domain'}
+        onClose={closeDrawer}
         adminUsername="thaki.kim"
         onSubmit={(domainId) => {
           console.log('Set default domain:', domainId);
@@ -2820,8 +2725,8 @@ export function DrawersPage() {
 
       {/* Admin Lock Setting Drawer */}
       <AdminLockSettingDrawer
-        isOpen={isAdminLockSettingOpen}
-        onClose={() => setIsAdminLockSettingOpen(false)}
+        isOpen={openDrawer === 'admin-lock-setting'}
+        onClose={closeDrawer}
         adminUsername="thaki.kim"
         initialLocked={true}
         onSubmit={(locked) => {
@@ -2831,8 +2736,8 @@ export function DrawersPage() {
 
       {/* Edit System Admin Drawer */}
       <EditSystemAdminDrawer
-        isOpen={isEditSystemAdminOpen}
-        onClose={() => setIsEditSystemAdminOpen(false)}
+        isOpen={openDrawer === 'edit-system-admin'}
+        onClose={closeDrawer}
         initialData={{
           username: 'thaki-kim',
           email: 'user@example.com',
@@ -2849,8 +2754,8 @@ export function DrawersPage() {
 
       {/* Migrate Instance Drawer */}
       <MigrateInstanceDrawer
-        isOpen={isMigrateInstanceOpen}
-        onClose={() => setIsMigrateInstanceOpen(false)}
+        isOpen={openDrawer === 'migrate-instance'}
+        onClose={closeDrawer}
         instance={mockMigrateInstance}
         onMigrate={(hostId) => {
           console.log('Migrate instance to host:', hostId);
@@ -2859,8 +2764,8 @@ export function DrawersPage() {
 
       {/* Live Migrate Instance Drawer */}
       <LiveMigrateInstanceDrawer
-        isOpen={isLiveMigrateInstanceOpen}
-        onClose={() => setIsLiveMigrateInstanceOpen(false)}
+        isOpen={openDrawer === 'live-migrate-instance'}
+        onClose={closeDrawer}
         instance={mockLiveMigrateInstance}
         onLiveMigrate={(hostId, blockMigrate) => {
           console.log('Live migrate instance to host:', hostId, 'block migrate:', blockMigrate);
@@ -2869,8 +2774,8 @@ export function DrawersPage() {
 
       {/* Manage Metadata Drawer */}
       <ManageMetadataDrawer
-        isOpen={isManageMetadataOpen}
-        onClose={() => setIsManageMetadataOpen(false)}
+        isOpen={openDrawer === 'manage-metadata'}
+        onClose={closeDrawer}
         image={mockManageMetadataImage}
         onSave={(metadata) => {
           console.log('Save metadata:', metadata);
@@ -2879,8 +2784,8 @@ export function DrawersPage() {
 
       {/* Migrate Volume Drawer */}
       <MigrateVolumeDrawer
-        isOpen={isMigrateVolumeOpen}
-        onClose={() => setIsMigrateVolumeOpen(false)}
+        isOpen={openDrawer === 'migrate-volume'}
+        onClose={closeDrawer}
         volume={mockMigrateVolume}
         onMigrate={(backendId) => {
           console.log('Migrate volume to backend:', backendId);
@@ -2889,8 +2794,8 @@ export function DrawersPage() {
 
       {/* Manage Rules Drawer */}
       <ManageRulesDrawer
-        isOpen={isManageRulesOpen}
-        onClose={() => setIsManageRulesOpen(false)}
+        isOpen={openDrawer === 'manage-rules'}
+        onClose={closeDrawer}
         policy={mockFirewallPolicy}
         onSave={(ruleIds) => {
           console.log('Save firewall rules:', ruleIds);
@@ -2899,8 +2804,8 @@ export function DrawersPage() {
 
       {/* Modify Quotas Drawer */}
       <ModifyQuotasDrawer
-        isOpen={isModifyQuotasOpen}
-        onClose={() => setIsModifyQuotasOpen(false)}
+        isOpen={openDrawer === 'modify-quotas'}
+        onClose={closeDrawer}
         tenant={mockQuotasTenant}
         onSave={(quotas) => {
           console.log('Save quotas:', quotas);
@@ -2912,8 +2817,8 @@ export function DrawersPage() {
 
       {/* Resource Type Search Drawer */}
       <ResourceTypeSearchDrawer
-        isOpen={isResourceTypeSearchOpen}
-        onClose={() => setIsResourceTypeSearchOpen(false)}
+        isOpen={openDrawer === 'resource-type-search'}
+        onClose={closeDrawer}
         onSelect={(categoryId, resourceId, resourceName) => {
           console.log('Resource selected:', { categoryId, resourceId, resourceName });
         }}
@@ -2923,63 +2828,51 @@ export function DrawersPage() {
           AI AGENT DRAWERS ============================================= */}
 
       {/* Edit Basic Information Drawer */}
-      <EditBasicInfoDrawer
-        isOpen={isEditBasicInfoOpen}
-        onClose={() => setIsEditBasicInfoOpen(false)}
-      />
+      <EditBasicInfoDrawer isOpen={openDrawer === 'edit-basic-info'} onClose={closeDrawer} />
 
       {/* Edit Model Settings Drawer */}
       <EditModelSettingsDrawer
-        isOpen={isEditModelSettingsOpen}
-        onClose={() => setIsEditModelSettingsOpen(false)}
+        isOpen={openDrawer === 'edit-model-settings'}
+        onClose={closeDrawer}
       />
 
       {/* Edit Prompt Settings Drawer */}
       <EditPromptSettingsDrawer
-        isOpen={isEditPromptSettingsOpen}
-        onClose={() => setIsEditPromptSettingsOpen(false)}
+        isOpen={openDrawer === 'edit-prompt-settings'}
+        onClose={closeDrawer}
       />
 
       {/* Connect Data Source Drawer */}
       <ConnectDataSourceDrawer
-        isOpen={isConnectDataSourceOpen}
-        onClose={() => setIsConnectDataSourceOpen(false)}
+        isOpen={openDrawer === 'connect-data-source'}
+        onClose={closeDrawer}
       />
 
       {/* Connect MCP Server Drawer */}
       <ConnectMCPServerDrawer
-        isOpen={isConnectMCPServerOpen}
-        onClose={() => setIsConnectMCPServerOpen(false)}
+        isOpen={openDrawer === 'connect-m-c-p-server'}
+        onClose={closeDrawer}
       />
-      <AgentLogDetailDrawer
-        isOpen={isAgentLogDetailOpen}
-        onClose={() => setIsAgentLogDetailOpen(false)}
-      />
+      <AgentLogDetailDrawer isOpen={openDrawer === 'agent-log-detail'} onClose={closeDrawer} />
 
       {/* MCP Tools Drawers */}
       <CreateMCPTemplateDrawer
-        isOpen={isCreateMCPTemplateOpen}
-        onClose={() => setIsCreateMCPTemplateOpen(false)}
+        isOpen={openDrawer === 'create-m-c-p-template'}
+        onClose={closeDrawer}
       />
       <TemplateTypeSettingsDrawer
-        isOpen={isTemplateTypeSettingsOpen}
-        onClose={() => setIsTemplateTypeSettingsOpen(false)}
+        isOpen={openDrawer === 'template-type-settings'}
+        onClose={closeDrawer}
       />
-      <ContainerSettingsDrawer
-        isOpen={isContainerSettingsOpen}
-        onClose={() => setIsContainerSettingsOpen(false)}
-      />
-      <HTTPSettingsDrawer
-        isOpen={isHTTPSettingsOpen}
-        onClose={() => setIsHTTPSettingsOpen(false)}
-      />
+      <ContainerSettingsDrawer isOpen={openDrawer === 'container-settings'} onClose={closeDrawer} />
+      <HTTPSettingsDrawer isOpen={openDrawer === 'h-t-t-p-settings'} onClose={closeDrawer} />
       <ToolAccessControlDrawer
-        isOpen={isToolAccessControlOpen}
-        onClose={() => setIsToolAccessControlOpen(false)}
+        isOpen={openDrawer === 'tool-access-control'}
+        onClose={closeDrawer}
       />
       <ToolAuthenticationDrawer
-        isOpen={isToolAuthenticationOpen}
-        onClose={() => setIsToolAuthenticationOpen(false)}
+        isOpen={openDrawer === 'tool-authentication'}
+        onClose={closeDrawer}
       />
     </PageShell>
   );
