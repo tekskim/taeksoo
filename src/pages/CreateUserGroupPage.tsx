@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,

@@ -1101,7 +1101,29 @@ export default function CreatePolicyPage() {
   const [description, setDescription] = useState('');
 
   // Form state - Permissions
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>(
+    isV2
+      ? [
+          {
+            id: 'default-1',
+            application: '',
+            partition: '',
+            resource: '',
+            resourceId: '',
+            actions: {
+              read: false,
+              list: false,
+              write: false,
+              delete: false,
+              admin: false,
+            },
+            detailedActions: {},
+            allActions: false,
+            mfaRequired: false,
+          },
+        ]
+      : []
+  );
   const [permissionsError, setPermissionsError] = useState<string | null>(null);
 
   // Check if all sections are done

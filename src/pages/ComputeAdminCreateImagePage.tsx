@@ -1360,14 +1360,12 @@ export function ComputeAdminCreateImagePage() {
           </VStack>
 
           {/* Right Column - Summary Sidebar */}
-          {!isV2 && (
-            <SummarySidebar
-              sectionStatus={sectionStatus}
-              onCancel={handleCancel}
-              onCreate={handleCreate}
-              isCreateDisabled={isCreateDisabled}
-            />
-          )}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
         </HStack>
 
         {isV2 && (

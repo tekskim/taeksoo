@@ -16,6 +16,7 @@ import {
   SectionCard,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -180,6 +181,7 @@ interface BasicInfoSectionProps {
   onStorageClassNameErrorChange: (error: string | null) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
@@ -189,6 +191,7 @@ function BasicInfoSection({
   onStorageClassNameErrorChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
@@ -213,7 +216,7 @@ function BasicInfoSection({
           </FormField>
 
           {/* Description */}
-          <Disclosure>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel className="pt-2">
               <Input
@@ -483,6 +486,7 @@ function CustomizeSection({
 
 export function CreateStorageClassPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
@@ -490,13 +494,13 @@ export function CreateStorageClassPage() {
   const [description, setDescription] = useState('');
 
   // Parameters state
-  const [parameters, setParameters] = useState<Parameter[]>([]);
+  const [parameters, setParameters] = useState<Parameter[]>(isV2 ? [{ key: '', value: '' }] : []);
 
   // Customize state
   const [reclaimPolicy, setReclaimPolicy] = useState<ReclaimPolicy>('delete');
   const [volumeExpansion, setVolumeExpansion] = useState<VolumeExpansion>('enabled');
   const [volumeBindingMode, setVolumeBindingMode] = useState<VolumeBindingMode>('immediate');
-  const [mountOptions, setMountOptions] = useState<MountOption[]>([]);
+  const [mountOptions, setMountOptions] = useState<MountOption[]>(isV2 ? [{ value: '' }] : []);
 
   // Validation errors
   const [storageClassNameError, setStorageClassNameError] = useState<string | null>(null);
@@ -645,6 +649,7 @@ export function CreateStorageClassPage() {
               onStorageClassNameErrorChange={setStorageClassNameError}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Parameters Section */}

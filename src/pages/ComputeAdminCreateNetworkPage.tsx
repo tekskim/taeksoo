@@ -174,7 +174,7 @@ export default function CreateNetworkPage() {
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
-    'basic-info': isV2 ? 'done' : 'active',
+    'basic-info': 'active',
     subnet: isV2 ? 'active' : 'pending',
   });
 
@@ -420,6 +420,7 @@ export default function CreateNetworkPage() {
               {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Network name */}
                     <div className="py-6">
                       <FormField required error={!!networkNameError}>
@@ -783,6 +784,40 @@ export default function CreateNetworkPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Network name" value={networkName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
+                  <SectionCard.DataRow
+                    label="Owned tenant"
+                    value={
+                      selectedTenantItems.length > 0
+                        ? selectedTenantItems.map((t) => t.label).join(', ')
+                        : '-'
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="External network"
+                    value={externalNetwork ? 'Yes' : 'No'}
+                  />
+                  {externalNetwork && (
+                    <SectionCard.DataRow
+                      label="Provider network type"
+                      value={providerNetworkType.toUpperCase()}
+                    />
+                  )}
+                  {externalNetwork && (
+                    <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
+                  )}
+                  <SectionCard.DataRow label="MTU" value={mtu ? `${mtu} bytes` : '-'} />
+                  <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
+                  <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
+                  <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Subnet Section */}
             <SectionCard isActive={!isV2 && sectionStatus['subnet'] === 'active'}>
@@ -806,6 +841,7 @@ export default function CreateNetworkPage() {
               {(isV2 || sectionStatus['subnet'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Create subnet Toggle */}
                     <VStack gap={2} className="py-6">
                       <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
@@ -1011,6 +1047,25 @@ export default function CreateNetworkPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['subnet']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
+                  {createSubnet && (
+                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow
+                      label="Gateway"
+                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                    />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Summary Sidebar */}

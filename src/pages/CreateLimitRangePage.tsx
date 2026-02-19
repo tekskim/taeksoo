@@ -161,6 +161,7 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
@@ -172,6 +173,7 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
@@ -209,7 +211,7 @@ function BasicInfoSection({
           </FormField>
 
           {/* Description */}
-          <Disclosure>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel className="pt-2">
               <Input
@@ -527,8 +529,10 @@ export function CreateLimitRangePage() {
   });
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Section status for summary sidebar (simplified: done/active/pending)
   const [sectionStatus, setSectionStatus] = useState<
@@ -734,6 +738,7 @@ export function CreateLimitRangePage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Container Resource Limit Section */}
