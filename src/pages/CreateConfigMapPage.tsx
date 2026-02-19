@@ -13,6 +13,7 @@ import {
   PageShell,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -190,6 +191,7 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
@@ -201,6 +203,7 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
@@ -243,7 +246,7 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description */}
-          <Disclosure>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel className="pt-2">
               <Input
@@ -623,6 +626,7 @@ function LabelsAnnotationsSection({
 
 export function CreateConfigMapPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
@@ -631,14 +635,18 @@ export function CreateConfigMapPage() {
   const [description, setDescription] = useState('');
 
   // Data state
-  const [dataEntries, setDataEntries] = useState<DataEntry[]>([]);
+  const [dataEntries, setDataEntries] = useState<DataEntry[]>(isV2 ? [{ key: '', value: '' }] : []);
 
   // Binary Data state
-  const [binaryDataEntries, setBinaryDataEntries] = useState<BinaryDataEntry[]>([]);
+  const [binaryDataEntries, setBinaryDataEntries] = useState<BinaryDataEntry[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Validation errors
   const [configMapNameError, setConfigMapNameError] = useState<string | null>(null);
@@ -836,6 +844,7 @@ export function CreateConfigMapPage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Data Section */}

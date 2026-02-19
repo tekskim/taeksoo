@@ -593,7 +593,9 @@ export default function CreateLoadBalancerPage() {
     port: number | undefined;
     weight: number;
   }
-  const [externalMembers, setExternalMembers] = useState<ExternalMemberRow[]>([]);
+  const [externalMembers, setExternalMembers] = useState<ExternalMemberRow[]>(
+    isV2 ? [{ id: 'default-1', ipAddress: '', port: undefined, weight: 1 }] : []
+  );
 
   // Health Monitor form state
   const [createHealthMonitor, setCreateHealthMonitor] = useState(true);
@@ -1730,6 +1732,28 @@ export default function CreateLoadBalancerPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Load balancer name" value={loadBalancerName || '-'} />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow
+                    label="Provider"
+                    value={provider === 'ovn' ? 'OVN' : 'Amphora'}
+                  />
+                  <SectionCard.DataRow
+                    label="Owned network"
+                    value={selectedNetworkDetails?.name || '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="VIP address"
+                    value={`${subnet || 'Not selected'} / ${vipMode === 'auto' ? 'Auto-assign' : manualVip}`}
+                  />
+                  <SectionCard.DataRow label="Admin state" value={adminStateUp ? 'Up' : 'Down'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Listener Section */}
             <SectionCard isActive={!isV2 && activeSection === 'listener'}>
@@ -2138,7 +2162,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Advanced Section */}
                     <div className="py-6">
-                      <Disclosure defaultOpen={false}>
+                      <Disclosure defaultOpen={isV2}>
                         <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                         <Disclosure.Panel>
                           <VStack gap={6} className="mt-4">
@@ -2320,6 +2344,30 @@ export default function CreateLoadBalancerPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['listener']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Listener name" value={listenerName || '-'} />
+                  <SectionCard.DataRow
+                    label="Protocol / Port"
+                    value={`${listenerProtocol} / ${protocolPort}`}
+                  />
+                  <SectionCard.DataRow
+                    label="Connection limit"
+                    value={
+                      connectionLimitType === 'unlimited'
+                        ? 'Unlimited'
+                        : String(connectionLimitValue)
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="Admin state"
+                    value={listenerAdminState ? 'Up' : 'Down'}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Pool Section */}
             <SectionCard isActive={activeSection === 'pool'}>
@@ -2566,6 +2614,36 @@ export default function CreateLoadBalancerPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['pool']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
+                  {createPool && <SectionCard.DataRow label="Pool name" value={poolName || '-'} />}
+                  {createPool && (
+                    <SectionCard.DataRow
+                      label="Pool algorithm"
+                      value={
+                        poolAlgorithm === 'ROUND_ROBIN'
+                          ? 'Round Robin'
+                          : poolAlgorithm === 'LEAST_CONNECTIONS'
+                            ? 'Least Connections'
+                            : poolAlgorithm === 'SOURCE_IP'
+                              ? 'Source IP'
+                              : 'Source IP Port'
+                      }
+                    />
+                  )}
+                  {createPool && <SectionCard.DataRow label="Pool protocol" value={poolProtocol} />}
+                  {createPool && (
+                    <SectionCard.DataRow
+                      label="Pool admin state"
+                      value={poolAdminState ? 'Up' : 'Down'}
+                    />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Member Section */}
             <SectionCard isActive={!isV2 && activeSection === 'member'}>
@@ -2586,7 +2664,7 @@ export default function CreateLoadBalancerPage() {
                   )
                 }
               />
-              {activeSection === 'member' && (
+              {(isV2 || activeSection === 'member') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

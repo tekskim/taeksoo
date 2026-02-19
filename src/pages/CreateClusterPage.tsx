@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { IconX, IconCirclePlus } from '@tabler/icons-react';
 import {
   Button,
@@ -118,6 +119,7 @@ const imageOptions = [
 
 export function CreateClusterPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
@@ -152,8 +154,10 @@ export function CreateClusterPage() {
   const [nodeFlavorFilter, setNodeFlavorFilter] = useState('vcpu');
 
   // Labels & Annotations
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ id: '0', key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ id: '0', key: '', value: '' }] : []
+  );
 
   // Label management
   const addLabel = useCallback(() => {
@@ -376,11 +380,14 @@ export function CreateClusterPage() {
                     application requires a specific older version.
                   </FormField.Description>
                   <FormField.Control>
-                    <Select
-                      options={kubernetesVersionOptions}
-                      value={kubernetesVersion}
-                      onChange={setKubernetesVersion}
-                    />
+                    <div className="w-1/2">
+                      <Select
+                        options={kubernetesVersionOptions}
+                        value={kubernetesVersion}
+                        onChange={setKubernetesVersion}
+                        fullWidth
+                      />
+                    </div>
                   </FormField.Control>
                 </FormField>
 
@@ -391,16 +398,19 @@ export function CreateClusterPage() {
                     Select the container network (CNI) plugin that manages internal cluster traffic.
                   </FormField.Description>
                   <FormField.Control>
-                    <Select
-                      options={containerNetworkOptions}
-                      value={containerNetwork}
-                      onChange={setContainerNetwork}
-                    />
+                    <div className="w-1/2">
+                      <Select
+                        options={containerNetworkOptions}
+                        value={containerNetwork}
+                        onChange={setContainerNetwork}
+                        fullWidth
+                      />
+                    </div>
                   </FormField.Control>
                 </FormField>
 
                 {/* Description */}
-                <Disclosure defaultOpen={false}>
+                <Disclosure defaultOpen={isV2} className={isV2 ? 'gap-3' : ''}>
                   <Disclosure.Trigger>Description</Disclosure.Trigger>
                   <Disclosure.Panel>
                     <Input
@@ -515,11 +525,14 @@ export function CreateClusterPage() {
                     You can also enter the private IP address for the kubernetes api server.
                   </FormField.Description>
                   <FormField.Control>
-                    <Select
-                      options={subnetOptions}
-                      value={selectedSubnet}
-                      onChange={setSelectedSubnet}
-                    />
+                    <div className="w-1/2">
+                      <Select
+                        options={subnetOptions}
+                        value={selectedSubnet}
+                        onChange={setSelectedSubnet}
+                        fullWidth
+                      />
+                    </div>
                   </FormField.Control>
                 </FormField>
               </VStack>
@@ -562,7 +575,14 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the control plane nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select options={imageOptions} value={cpImage} onChange={setCpImage} />
+                        <div className="w-1/2">
+                          <Select
+                            options={imageOptions}
+                            value={cpImage}
+                            onChange={setCpImage}
+                            fullWidth
+                          />
+                        </div>
                       </FormField.Control>
                     </FormField>
 
@@ -629,16 +649,19 @@ export function CreateClusterPage() {
                         Select the number of nodes to create.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select
-                          options={[
-                            { value: '1', label: '1' },
-                            { value: '3', label: '3' },
-                            { value: '5', label: '5' },
-                            { value: '7', label: '7' },
-                          ]}
-                          value={cpNodeCount}
-                          onChange={setCpNodeCount}
-                        />
+                        <div className="w-1/2">
+                          <Select
+                            options={[
+                              { value: '1', label: '1' },
+                              { value: '3', label: '3' },
+                              { value: '5', label: '5' },
+                              { value: '7', label: '7' },
+                            ]}
+                            value={cpNodeCount}
+                            onChange={setCpNodeCount}
+                            fullWidth
+                          />
+                        </div>
                       </FormField.Control>
                     </FormField>
 
@@ -692,7 +715,14 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the worker nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select options={imageOptions} value={nodeImage} onChange={setNodeImage} />
+                        <div className="w-1/2">
+                          <Select
+                            options={imageOptions}
+                            value={nodeImage}
+                            onChange={setNodeImage}
+                            fullWidth
+                          />
+                        </div>
                       </FormField.Control>
                     </FormField>
 
@@ -759,17 +789,20 @@ export function CreateClusterPage() {
                         Select the number of worker nodes to create.
                       </FormField.Description>
                       <FormField.Control>
-                        <Select
-                          options={[
-                            { value: '1', label: '1' },
-                            { value: '2', label: '2' },
-                            { value: '3', label: '3' },
-                            { value: '5', label: '5' },
-                            { value: '10', label: '10' },
-                          ]}
-                          value={nodeCount}
-                          onChange={setNodeCount}
-                        />
+                        <div className="w-1/2">
+                          <Select
+                            options={[
+                              { value: '1', label: '1' },
+                              { value: '2', label: '2' },
+                              { value: '3', label: '3' },
+                              { value: '5', label: '5' },
+                              { value: '10', label: '10' },
+                            ]}
+                            value={nodeCount}
+                            onChange={setNodeCount}
+                            fullWidth
+                          />
+                        </div>
                       </FormField.Control>
                     </FormField>
                   </VStack>

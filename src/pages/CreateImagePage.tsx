@@ -101,6 +101,7 @@ function SummarySidebar({
 
 export function CreateImagePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -120,7 +121,7 @@ export function CreateImagePage() {
   const [osAdmin, setOsAdmin] = useState('');
   const [minDisk, setMinDisk] = useState<number | undefined>(undefined);
   const [minRam, setMinRam] = useState<number | undefined>(undefined);
-  const [specAdvancedOpen, setSpecAdvancedOpen] = useState(true);
+  const [specAdvancedOpen, setSpecAdvancedOpen] = useState(isV2);
 
   // Advanced section state
   const [qemuGuestAgent, setQemuGuestAgent] = useState(true);
@@ -134,8 +135,6 @@ export function CreateImagePage() {
   const [osError, setOsError] = useState<string | null>(null);
   const [osVersionError, setOsVersionError] = useState<string | null>(null);
   const [osAdminError, setOsAdminError] = useState<string | null>(null);
-
-  const isV2 = useIsV2();
 
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({

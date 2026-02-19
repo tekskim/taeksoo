@@ -212,7 +212,9 @@ export default function CreateVirtualAdapterPage() {
     ipMode: 'auto' | 'manual';
     ipAddress: string;
   }
-  const [fixedIPs, setFixedIPs] = useState<FixedIPEntry[]>([]);
+  const [fixedIPs, setFixedIPs] = useState<FixedIPEntry[]>(
+    isV2 ? [{ id: 'default-1', subnet: '', ipMode: 'auto', ipAddress: '' }] : []
+  );
 
   const addFixedIP = () => {
     if (!selectedNetwork) return;
@@ -638,8 +640,8 @@ export default function CreateVirtualAdapterPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['basic-info']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName} />
-                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
                 </SectionCard.Content>
               </SectionCard>
             )}

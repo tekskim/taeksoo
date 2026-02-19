@@ -17,6 +17,7 @@ import {
   Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -685,6 +686,7 @@ function LabelsAnnotationsSection({
 
 export function CreatePodDisruptionBudgetPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
@@ -697,7 +699,9 @@ export function CreatePodDisruptionBudgetPage() {
   const [maxUnavailablePods, setMaxUnavailablePods] = useState(0);
 
   // Selector state
-  const [selectorRules, setSelectorRules] = useState<SelectorRule[]>([]);
+  const [selectorRules, setSelectorRules] = useState<SelectorRule[]>(
+    isV2 ? [{ id: Date.now().toString(), key: '', operator: '', value: '' }] : []
+  );
 
   // Labels & Annotations state
   const [labels, setLabels] = useState<Label[]>([]);

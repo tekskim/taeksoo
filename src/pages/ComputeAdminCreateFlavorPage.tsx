@@ -154,7 +154,7 @@ export function ComputeAdminCreateFlavorPage() {
   const [customMetadataKey, setCustomMetadataKey] = useState('');
   const [expandedMetadata, setExpandedMetadata] = useState<Set<string>>(new Set());
   const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>(
-    []
+    isV2 ? [{ key: '', value: '' }] : []
   );
 
   // Available metadata options (mock data)

@@ -801,7 +801,9 @@ export default function CreateBucketPage() {
   const [objectLocking, setObjectLocking] = useState<'disabled' | 'enabled'>('disabled');
   const [lockingMode, setLockingMode] = useState('compliance');
   const [retentionDays, setRetentionDays] = useState('');
-  const [tags, setTags] = useState<TagItem[]>([]);
+  const [tags, setTags] = useState<TagItem[]>(
+    isV2 ? [{ id: 'default-1', key: '', value: '' }] : []
+  );
   const [placementTarget, setPlacementTarget] = useState('');
 
   // Policy form state
