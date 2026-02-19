@@ -24,7 +24,7 @@ import {
 } from '@tabler/icons-react';
 import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
-import RouterIcon from '@/assets/Router.svg';
+import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
@@ -191,15 +191,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               active={isActive('/compute-admin/networks')}
             />
             <MenuItem
-              icon={
-                <img
-                  src={RouterIcon}
-                  width={16}
-                  height={16}
-                  alt=""
-                  className="opacity-80 icon-theme-adaptive"
-                />
-              }
+              icon={<IconRouterArrows size={16} />}
               label="Routers"
               href="/compute-admin/routers"
               active={isActive('/compute-admin/routers')}

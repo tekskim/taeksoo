@@ -76,7 +76,7 @@ export function SelectionIndicator({
         ) : showError ? (
           <>
             <IconCircleX
-              size={12}
+              size={16}
               className="text-[var(--inline-message-error-icon)] shrink-0"
               strokeWidth={1.5}
             />
