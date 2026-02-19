@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -475,7 +475,9 @@ export function IAMUserDetailPage() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeDetailTab, setActiveDetailTab] = useState('user-groups');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'user-groups';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [rolesSearchQuery, setRolesSearchQuery] = useState('');

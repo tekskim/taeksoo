@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -1149,7 +1149,9 @@ export function CreatePodPage() {
   }));
 
   // Active form tab (Pod, Container-X)
-  const [activeTab, setActiveTab] = useState('pod');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'pod';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Build inner tabs for the form
   const formTabs = [

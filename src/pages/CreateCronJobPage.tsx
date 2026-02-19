@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -1234,7 +1234,9 @@ export function CreateCronJobPage() {
   }));
 
   // Active form tab (CronJob, Pod, Container-X)
-  const [activeTab, setActiveTab] = useState('cronjob');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'cronjob';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Build inner tabs for the form
   const formTabs = [

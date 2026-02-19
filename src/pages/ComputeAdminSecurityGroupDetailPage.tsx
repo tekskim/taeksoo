@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -174,7 +174,9 @@ export default function SecurityGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeTab, setActiveTab] = useState('rules');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'rules';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Rules state
   const [selectedRules, setSelectedRules] = useState<string[]>([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -499,7 +499,9 @@ function ObjectRow({
 export function BucketDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('details'); // Details tab active
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'details';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedTreeItem, setSelectedTreeItem] = useState<string | null>('folder-yeonii');
   const [objectTree, setObjectTree] = useState<ObjectItem[]>(mockObjectTree);
   const [searchQuery, setSearchQuery] = useState('');

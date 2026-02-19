@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -812,7 +812,9 @@ export function NodeDetailPage() {
   const { nodeName } = useParams<{ nodeName: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('pods');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'pods';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get node data
   const node = mockNodeData[nodeName || ''] || mockNodeData['node-control-plane-01'];
