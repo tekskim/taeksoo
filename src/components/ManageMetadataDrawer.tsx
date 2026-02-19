@@ -151,7 +151,7 @@ export function ManageMetadataDrawer({
       onClose={handleClose}
       title=""
       showCloseButton={false}
-      width={696}
+      width={1032}
       footer={
         <HStack gap={2} justify="center" className="w-full">
           <Button variant="secondary" onClick={handleClose} className="w-[152px]">
@@ -187,7 +187,7 @@ export function ManageMetadataDrawer({
           {/* Two Column Layout */}
           <div className="flex gap-3 h-[500px]">
             {/* Left Column - Available Metadata */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Available metadata
               </span>
@@ -352,7 +352,7 @@ export function ManageMetadataDrawer({
             </div>
 
             {/* Right Column - Existing Metadata */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2 min-h-0">
+            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Existing metadata
               </span>
@@ -382,10 +382,13 @@ export function ManageMetadataDrawer({
                       className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                     >
                       <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
-                        <span className="text-label-md text-[var(--color-text-default)] shrink-0">
+                        <span
+                          className="text-label-md text-[var(--color-text-default)] shrink-0 w-[200px] truncate"
+                          title={item.key}
+                        >
                           {item.key}
                         </span>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                        <div className="w-px h-4 bg-[var(--color-border-default)] shrink-0" />
                         <Input
                           value={item.value}
                           onChange={(e) => {
