@@ -121,7 +121,7 @@ export function ResetPasswordDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title=""
-      width={376}
+      width={360}
       showCloseButton={false}
       footer={
         <HStack gap={2} className="w-full">

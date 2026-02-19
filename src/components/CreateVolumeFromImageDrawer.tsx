@@ -145,7 +145,7 @@ export function CreateVolumeFromImageDrawer({
       onClose={handleClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <VStack gap={6} className="w-full">
           {/* Quota Section */}
