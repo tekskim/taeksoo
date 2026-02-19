@@ -667,7 +667,7 @@ export default function CreateIngressPage() {
                   </InlineMessage>
 
                   {/* Target Service and Port */}
-                  <HStack gap={3} className="w-full">
+                  <HStack gap={6} className="w-full">
                     <VStack gap={2} className="flex-1">
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Target Service
@@ -773,12 +773,14 @@ export default function CreateIngressPage() {
                   <label className="text-label-lg text-[var(--color-text-default)]">
                     Ingress Class
                   </label>
-                  <Select
-                    options={INGRESS_CLASS_OPTIONS}
-                    value={ingressClass}
-                    onChange={setIngressClass}
-                    width="half"
-                  />
+                  <div className="w-[calc(50%-12px)]">
+                    <Select
+                      options={INGRESS_CLASS_OPTIONS}
+                      value={ingressClass}
+                      onChange={setIngressClass}
+                      fullWidth
+                    />
+                  </div>
                 </VStack>
               </SectionCard.Content>
             </SectionCard>

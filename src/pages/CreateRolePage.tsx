@@ -19,6 +19,7 @@ import {
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconExternalLink, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -419,6 +420,7 @@ interface BasicInformationSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   onNext: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -432,6 +434,7 @@ function BasicInformationSection({
   description,
   onDescriptionChange,
   onNext,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -520,7 +523,7 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing and active) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -607,6 +610,7 @@ interface AddPoliciesSectionProps {
   onSelectionChange: (ids: string[]) => void;
   onNext: () => void;
   onSkip: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -619,6 +623,7 @@ function AddPoliciesSection({
   onSelectionChange,
   onNext,
   onSkip,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -868,7 +873,7 @@ function AddPoliciesSection({
             />
           </VStack>
         </VStack>
-        {/* Skip and Next Buttons (only when not editing) */}
+        {/* Skip and Next Buttons (only when not editing and active) */}
         {!isEditing && (
           <>
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -902,6 +907,7 @@ function AddPoliciesSection({
 
 export default function CreateRolePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -917,7 +923,7 @@ export default function CreateRolePage() {
   // Section status
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    'add-policies': 'pre',
+    'add-policies': isV2 ? 'active' : 'pre',
   });
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
@@ -934,29 +940,34 @@ export default function CreateRolePage() {
   const allSectionsDone = Object.values(sectionStatus).every((s) => s === 'done');
 
   // Helper functions for editing
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
+  const handleEdit = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setEditingSection(section);
+      const sectionIndex = SECTION_ORDER.indexOf(section);
 
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
 
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((key, index) => {
-        if (index < sectionIndex) {
-          newStatus[key] = 'done';
-        } else if (index === sectionIndex) {
-          newStatus[key] = 'active';
-        } else if (prev[key] === 'done' || prev[key] === 'active') {
-          newStatus[key] = 'writing';
-        }
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((key, index) => {
+          if (index < sectionIndex) {
+            newStatus[key] = 'done';
+          } else if (index === sectionIndex) {
+            newStatus[key] = 'active';
+          } else if (prev[key] === 'done' || prev[key] === 'active') {
+            newStatus[key] = 'writing';
+          }
+        });
+
+        return newStatus;
       });
-
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   const handleEditCancel = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -988,9 +999,10 @@ export default function CreateRolePage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   const handleEditDone = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -1022,19 +1034,23 @@ export default function CreateRolePage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
+  const handleNext = useCallback(
+    (currentSection: SectionStep) => {
+      if (isV2) return;
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
 
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
+      setSectionStatus((prev) => ({
+        ...prev,
+        [currentSection]: 'done',
+        ...(nextSection && { [nextSection]: 'active' }),
+      }));
+    },
+    [isV2]
+  );
 
   // Handle cancel
   const handleCancel = useCallback(() => {
@@ -1110,13 +1126,13 @@ export default function CreateRolePage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            {sectionStatus['basic-info'] === 'pre' && (
+            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
               <PreSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'writing' && (
+            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
                 roleName={roleName}
                 onRoleNameChange={setRoleName}
@@ -1125,12 +1141,13 @@ export default function CreateRolePage() {
                 description={description}
                 onDescriptionChange={setDescription}
                 onNext={() => handleNext('basic-info')}
+                isActive={!isV2}
                 isEditing={editingSection === 'basic-info'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -1141,13 +1158,13 @@ export default function CreateRolePage() {
             )}
 
             {/* Add Policies Section */}
-            {sectionStatus['add-policies'] === 'pre' && (
+            {!isV2 && sectionStatus['add-policies'] === 'pre' && (
               <PreSection title={SECTION_LABELS['add-policies']} />
             )}
-            {sectionStatus['add-policies'] === 'writing' && (
+            {!isV2 && sectionStatus['add-policies'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['add-policies']} />
             )}
-            {sectionStatus['add-policies'] === 'active' && (
+            {(isV2 || sectionStatus['add-policies'] === 'active') && (
               <AddPoliciesSection
                 selectedPolicies={selectedPolicies}
                 onSelectionChange={(ids) => {
@@ -1158,6 +1175,7 @@ export default function CreateRolePage() {
                 }}
                 onNext={() => handleNext('add-policies')}
                 onSkip={() => handleNext('add-policies')}
+                isActive={!isV2}
                 isEditing={editingSection === 'add-policies'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
@@ -1165,7 +1183,7 @@ export default function CreateRolePage() {
                 onPoliciesErrorChange={setPoliciesError}
               />
             )}
-            {sectionStatus['add-policies'] === 'done' && (
+            {(isV2 || sectionStatus['add-policies'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['add-policies']}
                 onEdit={() => handleEdit('add-policies')}

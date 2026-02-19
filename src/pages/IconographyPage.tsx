@@ -25,6 +25,7 @@ import {
   IconRotate,
   IconRotateClockwise,
   IconPower,
+  IconCircleX,
   // Actions - CRUD
   IconPlus,
   IconCirclePlus,
@@ -273,6 +274,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconRotate, name: 'IconRotate', label: 'Rotate' },
       { icon: IconRotateClockwise, name: 'IconRotateClockwise', label: 'Retry' },
       { icon: IconPower, name: 'IconPower', label: 'Power' },
+      { icon: IconCircleX, name: 'IconCircleX', label: 'Terminate' },
     ],
   },
   {

@@ -17,6 +17,7 @@ import {
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -210,6 +211,7 @@ interface BasicInformationSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   onNext: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -223,6 +225,7 @@ function BasicInformationSection({
   description,
   onDescriptionChange,
   onNext,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -311,7 +314,7 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing and active) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -427,6 +430,7 @@ interface PolicyEditorSectionProps {
   permissionsError: string | null;
   onPermissionsErrorChange: (error: string | null) => void;
   onNext: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -456,6 +460,7 @@ function PolicyEditorSection({
   permissionsError,
   onPermissionsErrorChange,
   onNext,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -1048,7 +1053,7 @@ function PolicyEditorSection({
           )}
         </VStack>
 
-        {/* Done Button (only when not editing) */}
+        {/* Done Button (only when not editing and active) */}
         {!isEditing && (
           <>
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1070,6 +1075,7 @@ function PolicyEditorSection({
 
 export default function CreatePolicyPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -1085,7 +1091,7 @@ export default function CreatePolicyPage() {
   // Section status
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    'policy-document': 'pre',
+    'policy-document': isV2 ? 'active' : 'pre',
   });
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
@@ -1102,29 +1108,34 @@ export default function CreatePolicyPage() {
   const allSectionsDone = Object.values(sectionStatus).every((s) => s === 'done');
 
   // Helper functions for editing
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
+  const handleEdit = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setEditingSection(section);
+      const sectionIndex = SECTION_ORDER.indexOf(section);
 
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
 
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((key, index) => {
-        if (index < sectionIndex) {
-          newStatus[key] = 'done';
-        } else if (index === sectionIndex) {
-          newStatus[key] = 'active';
-        } else if (prev[key] === 'done' || prev[key] === 'active') {
-          newStatus[key] = 'writing';
-        }
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((key, index) => {
+          if (index < sectionIndex) {
+            newStatus[key] = 'done';
+          } else if (index === sectionIndex) {
+            newStatus[key] = 'active';
+          } else if (prev[key] === 'done' || prev[key] === 'active') {
+            newStatus[key] = 'writing';
+          }
+        });
+
+        return newStatus;
       });
-
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   const handleEditCancel = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -1156,9 +1167,10 @@ export default function CreatePolicyPage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   const handleEditDone = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -1190,19 +1202,23 @@ export default function CreatePolicyPage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
+  const handleNext = useCallback(
+    (currentSection: SectionStep) => {
+      if (isV2) return;
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
 
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
+      setSectionStatus((prev) => ({
+        ...prev,
+        [currentSection]: 'done',
+        ...(nextSection && { [nextSection]: 'active' }),
+      }));
+    },
+    [isV2]
+  );
 
   // Handle cancel
   const handleCancel = useCallback(() => {
@@ -1275,13 +1291,13 @@ export default function CreatePolicyPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1 min-w-0 max-w-[1034px]">
             {/* Basic Information Section */}
-            {sectionStatus['basic-info'] === 'pre' && (
+            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
               <PreSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'writing' && (
+            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
                 policyName={policyName}
                 onPolicyNameChange={setPolicyName}
@@ -1290,12 +1306,13 @@ export default function CreatePolicyPage() {
                 description={description}
                 onDescriptionChange={setDescription}
                 onNext={() => handleNext('basic-info')}
+                isActive={!isV2}
                 isEditing={editingSection === 'basic-info'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -1306,25 +1323,26 @@ export default function CreatePolicyPage() {
             )}
 
             {/* Policy Document Section */}
-            {sectionStatus['policy-document'] === 'pre' && (
+            {!isV2 && sectionStatus['policy-document'] === 'pre' && (
               <PreSection title={SECTION_LABELS['policy-document']} />
             )}
-            {sectionStatus['policy-document'] === 'writing' && (
+            {!isV2 && sectionStatus['policy-document'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['policy-document']} />
             )}
-            {sectionStatus['policy-document'] === 'active' && (
+            {(isV2 || sectionStatus['policy-document'] === 'active') && (
               <PolicyEditorSection
                 permissions={permissions}
                 onPermissionsChange={setPermissions}
                 permissionsError={permissionsError}
                 onPermissionsErrorChange={setPermissionsError}
                 onNext={() => handleNext('policy-document')}
+                isActive={!isV2}
                 isEditing={editingSection === 'policy-document'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['policy-document'] === 'done' && (
+            {(isV2 || sectionStatus['policy-document'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['policy-document']}
                 onEdit={() => handleEdit('policy-document')}

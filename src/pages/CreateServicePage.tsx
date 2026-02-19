@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -259,6 +260,7 @@ function SummarySidebar({
 
 export function CreateServicePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
@@ -744,7 +746,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Cluster IP
                     </label>
-                    <div className="w-[320px]">
+                    <div className="w-[calc(50%-12px)]">
                       <Input
                         placeholder="e.g. 1.1.1.1"
                         value={clusterIP}
@@ -759,7 +761,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Load Balancer IP
                     </label>
-                    <div className="w-[320px]">
+                    <div className="w-[calc(50%-12px)]">
                       <Input
                         placeholder="e.g. 1.1.1.1"
                         value={loadBalancerIP}

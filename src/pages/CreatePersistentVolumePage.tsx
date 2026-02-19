@@ -17,6 +17,7 @@ import {
   Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -415,12 +416,14 @@ function StorageConfigSection({
           <FormField>
             <FormField.Label>Assign to Storage Class</FormField.Label>
             <FormField.Control>
-              <Select
-                options={STORAGE_CLASS_OPTIONS}
-                value={storageClassName}
-                onChange={(value) => onStorageClassNameChange(value)}
-                fullWidth
-              />
+              <div className="w-[calc(50%-12px)]">
+                <Select
+                  options={STORAGE_CLASS_OPTIONS}
+                  value={storageClassName}
+                  onChange={(value) => onStorageClassNameChange(value)}
+                  fullWidth
+                />
+              </div>
             </FormField.Control>
           </FormField>
 
@@ -763,6 +766,7 @@ function LabelsAnnotationsSection({
 
 export function CreatePersistentVolumePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state

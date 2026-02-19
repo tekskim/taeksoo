@@ -31,6 +31,7 @@ import {
 } from '@/design-system';
 import type { TableColumn, WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -282,6 +283,7 @@ function SummarySidebar({
 
 export function CreateVolumePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -315,8 +317,8 @@ export function CreateVolumePage() {
   // Wizard section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    source: 'pre',
-    configuration: 'pre',
+    source: isV2 ? 'active' : 'pre',
+    configuration: isV2 ? 'active' : 'pre',
   });
 
   // Tab management
@@ -433,6 +435,7 @@ export function CreateVolumePage() {
   // Section navigation with validation
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
+      if (isV2) return;
       // Validate current section before proceeding
       let isValid = true;
       if (currentSection === 'basic-info') {
@@ -462,25 +465,30 @@ export function CreateVolumePage() {
         }));
       }
     },
-    [validateBasicInfo, validateSource, validateConfiguration]
+    [validateBasicInfo, validateSource, validateConfiguration, isV2]
   );
 
-  const editSection = useCallback((section: SectionStep) => {
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      SECTION_ORDER.forEach((s) => {
-        if (s === section) {
-          newStatus[s] = 'active';
-        } else if (newStatus[s] === 'active') {
-          newStatus[s] = 'done';
-        }
+  const editSection = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
+        SECTION_ORDER.forEach((s) => {
+          if (s === section) {
+            newStatus[s] = 'active';
+          } else if (newStatus[s] === 'active') {
+            newStatus[s] = 'done';
+          }
+        });
+        return newStatus;
       });
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   // Check if create button should be enabled
-  const isCreateDisabled = !volumeName.trim() || sectionStatus['basic-info'] === 'active';
+  const isCreateDisabled =
+    !volumeName.trim() || (!isV2 && sectionStatus['basic-info'] === 'active');
 
   // Image table columns
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -639,11 +647,12 @@ export function CreateVolumePage() {
           {/* Left Column - Main Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -656,7 +665,7 @@ export function CreateVolumePage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -730,7 +739,7 @@ export function CreateVolumePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Volume name" value={volumeName || '-'} />
                   <SectionCard.DataRow label="AZ" value={availabilityZone || '-'} />
@@ -740,11 +749,12 @@ export function CreateVolumePage() {
             </SectionCard>
 
             {/* Source Section */}
-            <SectionCard isActive={sectionStatus['source'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['source'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['source']}
                 showDivider={sectionStatus['source'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['source'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -757,7 +767,7 @@ export function CreateVolumePage() {
                   )
                 }
               />
-              {sectionStatus['source'] === 'active' && (
+              {(isV2 || sectionStatus['source'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -938,7 +948,7 @@ export function CreateVolumePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['source'] === 'done' && (
+              {!isV2 && sectionStatus['source'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Source type"
@@ -973,11 +983,12 @@ export function CreateVolumePage() {
             </SectionCard>
 
             {/* Configuration Section */}
-            <SectionCard isActive={sectionStatus['configuration'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['configuration'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['configuration']}
                 showDivider={sectionStatus['configuration'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['configuration'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -990,7 +1001,7 @@ export function CreateVolumePage() {
                   )
                 }
               />
-              {sectionStatus['configuration'] === 'active' && (
+              {(isV2 || sectionStatus['configuration'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1166,7 +1177,6 @@ export function CreateVolumePage() {
                     )}
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
                     <HStack justify="end" className="pt-3">
                       <Button variant="primary" onClick={() => goToNextSection('configuration')}>
                         Done
@@ -1175,7 +1185,7 @@ export function CreateVolumePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['configuration'] === 'done' && (
+              {!isV2 && sectionStatus['configuration'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Volume type"
@@ -1194,6 +1204,27 @@ export function CreateVolumePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['configuration']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Volume type"
+                    value={
+                      sourceType === 'snapshot'
+                        ? (selectedSnapshot.length > 0
+                            ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])?.volumeType
+                            : '_DEFAULT_') || '_DEFAULT_'
+                        : selectedVolumeType.length > 0
+                          ? mockVolumeTypes.find((v) => v.id === selectedVolumeType[0])?.name ||
+                            selectedVolumeType[0]
+                          : '-'
+                    }
+                  />
+                  <SectionCard.DataRow label="Capacity" value={`${volumeCapacity} GiB`} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Right Column - Summary Sidebar */}

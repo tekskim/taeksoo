@@ -878,11 +878,11 @@ export function PersistentVolumeClaimDetailPage() {
                   className="w-[var(--search-input-width)]"
                 />
                 <HStack gap={1}>
-                  <Button variant="secondary" size="sm" disabled={selectedEventKeys.length === 0}>
+                  <Button variant="muted" size="sm" disabled={selectedEventKeys.length === 0}>
                     <IconDownload size={14} stroke={1.5} />
                     Download YAML
                   </Button>
-                  <Button variant="secondary" size="sm" disabled={selectedEventKeys.length === 0}>
+                  <Button variant="muted" size="sm" disabled={selectedEventKeys.length === 0}>
                     <IconTrash size={14} stroke={1.5} />
                     Delete
                   </Button>

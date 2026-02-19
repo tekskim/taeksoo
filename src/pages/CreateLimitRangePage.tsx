@@ -16,6 +16,7 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   IconBell,
   IconTerminal2,
@@ -509,6 +510,7 @@ function LabelsAnnotationsSection({
 
 export function CreateLimitRangePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
@@ -533,8 +535,8 @@ export function CreateLimitRangePage() {
     Record<SectionStep, 'done' | 'active' | 'pending'>
   >({
     'basic-info': 'active',
-    data: 'pending',
-    'labels-annotations': 'pending',
+    data: isV2 ? 'active' : 'pending',
+    'labels-annotations': isV2 ? 'active' : 'pending',
   });
 
   // Validation errors
