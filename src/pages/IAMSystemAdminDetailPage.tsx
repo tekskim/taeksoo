@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Table,
@@ -227,7 +227,9 @@ export default function IAMSystemAdminDetailPage() {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeDetailTab, setActiveDetailTab] = useState('security-credentials');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'security-credentials';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [sessionsSearchQuery, setSessionsSearchQuery] = useState('');
   const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
 

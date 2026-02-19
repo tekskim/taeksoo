@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -310,7 +310,9 @@ export default function RouterDetailPage() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');

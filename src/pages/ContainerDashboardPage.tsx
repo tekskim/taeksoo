@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
@@ -329,7 +330,9 @@ const eventsColumns: TableColumn<EventRow>[] = [
 
 export function ContainerDashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('events');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'events';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [currentPage, setCurrentPage] = useState(1);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();

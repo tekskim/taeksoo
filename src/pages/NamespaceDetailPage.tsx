@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -691,7 +691,9 @@ export function NamespaceDetailPage() {
   const { namespaceName } = useParams<{ namespaceName: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('resources');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'resources';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get namespace data
   const namespace = mockNamespaceData[namespaceName || ''] || {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   TabBar,
@@ -940,7 +940,9 @@ function EmptyStateChartCard({
 export function OverallPerformancePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeTab, setActiveTab] = useState('pools');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'pools';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
   const { isDark } = useDarkMode();
 

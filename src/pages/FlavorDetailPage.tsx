@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -410,7 +410,9 @@ export function FlavorDetailPage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Instances tab state
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
