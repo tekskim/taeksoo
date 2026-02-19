@@ -171,7 +171,7 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
 
         {/* Compute Section */}
         <VStack gap={0} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
+          <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-2">
             Compute <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
           <QuotaRow
@@ -224,9 +224,11 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           />
         </VStack>
 
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
         {/* Volume Section */}
         <VStack gap={0} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
+          <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-2">
             Volume <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
           <QuotaRow
@@ -287,9 +289,11 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           </div>
         </VStack>
 
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
         {/* Network Section */}
         <VStack gap={0} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5 mb-2">
+          <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-2">
             Network <span className="text-[var(--color-state-danger)]">*</span>
           </h3>
           <QuotaRow
