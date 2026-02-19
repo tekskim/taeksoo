@@ -842,7 +842,7 @@ export function ComputeAdminCreateFlavorPage() {
                       </VStack>
 
                       {/* Two Column Layout */}
-                      <div className="flex gap-6">
+                      <div className="flex gap-3">
                         {/* Left Column - Available Metadata */}
                         <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3">
                           <span className="text-label-lg text-[var(--color-text-default)]">

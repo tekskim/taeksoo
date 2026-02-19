@@ -139,7 +139,7 @@ export default function IAMSessionPoliciesPage() {
                             min={15}
                             max={60}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
@@ -164,7 +164,7 @@ export default function IAMSessionPoliciesPage() {
                             min={1}
                             max={24}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Hours
@@ -188,7 +188,7 @@ export default function IAMSessionPoliciesPage() {
                             min={1}
                             max={60}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
@@ -212,7 +212,7 @@ export default function IAMSessionPoliciesPage() {
                             min={1}
                             max={10}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes

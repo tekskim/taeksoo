@@ -311,9 +311,6 @@ export function EntryPage() {
                 <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
                   Topology Popovers{' '}
                 </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/design/comparison')}>
-                  Production Comparison{' '}
-                </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
                   Iconography{' '}
                 </Button>

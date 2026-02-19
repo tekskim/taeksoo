@@ -639,7 +639,7 @@ export default function IAMUserGroupDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8}>
+      <VStack gap={6}>
         {/* Header Card */}
         <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
