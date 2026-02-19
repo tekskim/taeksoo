@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -1128,7 +1128,9 @@ export function CreateJobPage() {
   }));
 
   // Active form tab (Job, Pod, Container-X)
-  const [activeTab, setActiveTab] = useState('job');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'job';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Build inner tabs for the form
   const formTabs = [

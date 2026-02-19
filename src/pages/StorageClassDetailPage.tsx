@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   TabBar,
@@ -132,7 +132,9 @@ export function StorageClassDetailPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [activeTab, setActiveTab] = useState('parameters');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'parameters';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Shell Panel state
   const shellPanel = useShellPanel();

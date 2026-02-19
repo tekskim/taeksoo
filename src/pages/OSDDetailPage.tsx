@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
 import {
@@ -879,7 +879,9 @@ export function OSDDetailPage() {
   const osd = mockOSDs[osdId] || mockOSDs[1];
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'details';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [deviceSearchQuery, setDeviceSearchQuery] = useState('');
   const [deviceCurrentPage, setDeviceCurrentPage] = useState(1);
   const deviceRowsPerPage = 10;

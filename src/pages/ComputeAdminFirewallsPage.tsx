@@ -24,7 +24,7 @@ import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconBell, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -159,7 +159,9 @@ const firewallStatusMap: Record<FirewallStatus, 'active' | 'down' | 'error'> = {
 export default function ComputeAdminFirewallsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeTab, setActiveTab] = useState('firewalls');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'firewalls';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Firewalls state
   const [firewallSearchTerm, setFirewallSearchTerm] = useState('');

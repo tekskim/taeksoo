@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -178,7 +178,9 @@ export function KeyPairDetailPage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get key pair data based on URL ID
   const keyPair = id ? mockKeyPairsMap[id] || defaultKeyPairDetail : defaultKeyPairDetail;

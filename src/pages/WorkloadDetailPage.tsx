@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -284,7 +284,9 @@ function CopyableCommand({ command }: CopyableCommandProps) {
 export function WorkloadDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [activeDetailTab, setActiveDetailTab] = useState('connect');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'connect';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get workload data based on the ID from URL
   const workload = id ? mockWorkloadsMap[id] || defaultWorkloadDetail : defaultWorkloadDetail;

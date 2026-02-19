@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -3329,7 +3329,9 @@ function TemplatesSection({
   onEditCancel,
   onEditDone,
 }: TemplatesSectionProps) {
-  const [activeTab, setActiveTab] = useState('favorites');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'favorites';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [resourceType, setResourceType] = useState<'vm' | 'baremetal'>('vm');

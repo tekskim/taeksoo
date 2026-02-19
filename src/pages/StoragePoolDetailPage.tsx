@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
 import {
@@ -1019,7 +1019,9 @@ export function StoragePoolDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeDetailTab, setActiveDetailTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Time labels for charts
   const timeLabels = ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50'];

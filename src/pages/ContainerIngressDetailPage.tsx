@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -184,7 +184,9 @@ export function ContainerIngressDetailPage() {
   const navigate = useNavigate();
   const [ingress, setIngress] = useState<IngressData | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('rules');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'rules';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
   const shellPanel = useShellPanel();

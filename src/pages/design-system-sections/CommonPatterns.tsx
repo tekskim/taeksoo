@@ -376,20 +376,74 @@ export function FormDrawerPatternDemo() {
 /**
  * Selection Drawer Pattern
  * 선택 Drawer 패턴
- * 구성: Search + Table with Radio + SelectionIndicator
+ * 구성: Header + Description + InfoBox + SectionTitle + Search + Pagination + Table with Radio + SelectionIndicator
  */
 export function SelectionDrawerPatternDemo() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const items = [
-    { id: '1', name: 'network-01', status: 'active', cidr: '10.0.0.0/16' },
-    { id: '2', name: 'network-02', status: 'active', cidr: '10.1.0.0/16' },
-    { id: '3', name: 'network-03', status: 'error', cidr: '10.2.0.0/16' },
+    {
+      id: '29tgj234',
+      name: 'server-01',
+      status: 'active',
+      fixedIP: '10.62.0.30',
+      flavor: 'm1.small',
+    },
+    {
+      id: '29tgj235',
+      name: 'server-02',
+      status: 'active',
+      fixedIP: '10.62.0.31',
+      flavor: 'm1.medium',
+    },
+    {
+      id: '29tgj236',
+      name: 'server-03',
+      status: 'shutoff',
+      fixedIP: '10.62.0.32',
+      flavor: 'm1.large',
+    },
+    {
+      id: '29tgj237',
+      name: 'server-04',
+      status: 'active',
+      fixedIP: '10.62.0.33',
+      flavor: 'm1.small',
+    },
+    {
+      id: '29tgj238',
+      name: 'server-05',
+      status: 'error',
+      fixedIP: '10.62.0.34',
+      flavor: 'm1.medium',
+    },
   ];
 
+  const filteredItems = items.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const selectedItem = items.find((i) => i.id === selectedId);
+
+  const handleSubmit = () => {
+    setHasAttemptedSubmit(true);
+    if (!selectedId) return;
+    setIsOpen(false);
+  };
+
+  const handleClose = () => {
+    setSelectedId(null);
+    setSearchQuery('');
+    setCurrentPage(1);
+    setHasAttemptedSubmit(false);
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -397,80 +451,121 @@ export function SelectionDrawerPatternDemo() {
 
       <Drawer
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={handleClose}
         title=""
         showCloseButton={false}
         width={696}
         footer={
-          <HStack gap={2} className="w-full">
-            <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">
+          <HStack gap={2} justify="center" className="w-full">
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onClick={() => setIsOpen(false)}
-              disabled={!selectedId}
-              className="flex-1"
-            >
-              Select
+            <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
+              Attach
             </Button>
           </HStack>
         }
       >
-        <VStack gap={4}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Select Network</h2>
-
-          <SearchInput
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search networks..."
-            size="sm"
-            fullWidth
-          />
-
+        <VStack gap={3} className="h-full">
+          {/* Header */}
           <VStack gap={2}>
-            {/* Selection Indicator */}
-            {selectedItem && (
-              <SelectionIndicator
-                selectedItems={[{ id: selectedItem.id, label: selectedItem.name }]}
-                onRemove={() => setSelectedId(null)}
-              />
-            )}
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
+              Attach Volume
+            </h2>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Attach one or more available volumes to this instance. Once attached, the volumes will
+              appear as additional storage devices inside the instance.
+            </p>
+          </VStack>
 
-            {/* Selection Table */}
-            <Table
-              columns={[
-                {
-                  key: 'select',
-                  label: '',
-                  width: fixedColumns.select,
-                  render: (_, row) => (
-                    <div
-                      className="flex items-center justify-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+          {/* Info Box */}
+          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <VStack gap={1.5}>
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                Volume
+              </span>
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                vol-demo-01
+              </span>
+            </VStack>
+          </div>
+
+          {/* Selection Section */}
+          <VStack gap={3} className="mt-3 pb-5">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
+
+            {/* Search */}
+            <div className="w-[280px]">
+              <SearchInput
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                placeholder="Search instance by attributes"
+                size="sm"
+                fullWidth
+              />
+            </div>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={1}
+              totalItems={filteredItems.length}
+              onPageChange={setCurrentPage}
+              selectedCount={selectedId ? 1 : 0}
+            />
+
+            {/* Table + SelectionIndicator */}
+            <VStack gap={2} className="w-full">
+              <Table
+                columns={[
+                  {
+                    key: 'radio' as string,
+                    label: '',
+                    width: '40px',
+                    render: (_, row) => (
                       <Radio
+                        name="instance-select"
+                        value={row.id}
                         checked={selectedId === row.id}
                         onChange={() => setSelectedId(row.id)}
                       />
-                    </div>
-                  ),
-                },
-                {
-                  key: 'status',
-                  label: 'Status',
-                  width: fixedColumns.status,
-                  render: (_, row) => (
-                    <StatusIndicator status={row.status as 'active' | 'error'} layout="icon-only" />
-                  ),
-                },
-                { key: 'name', label: 'Name', flex: 1 },
-                { key: 'cidr', label: 'CIDR', flex: 1 },
-              ]}
-              data={items}
-              rowKey="id"
-              onRowClick={(row) => setSelectedId(row.id)}
-            />
+                    ),
+                  },
+                  {
+                    key: 'status',
+                    label: 'Status',
+                    width: fixedColumns.status,
+                    align: 'center' as const,
+                    render: (_, row) => (
+                      <StatusIndicator
+                        status={row.status as 'active' | 'error' | 'shutoff'}
+                        layout="icon-only"
+                        size="sm"
+                      />
+                    ),
+                  },
+                  { key: 'name', label: 'Name', flex: 1 },
+                  { key: 'fixedIP', label: 'Fixed IP', flex: 1 },
+                  { key: 'flavor', label: 'Flavor', flex: 1 },
+                ]}
+                data={filteredItems}
+                rowKey="id"
+                onRowClick={(row) => setSelectedId(row.id)}
+                emptyMessage="No instances found"
+              />
+
+              <SelectionIndicator
+                selectedItems={
+                  selectedItem ? [{ id: selectedItem.id, label: selectedItem.name }] : []
+                }
+                onRemove={() => setSelectedId(null)}
+                emptyText="No item selected"
+                error={hasAttemptedSubmit && !selectedId}
+                errorMessage="Please select an instance."
+                className="shrink-0 w-full"
+              />
+            </VStack>
           </VStack>
         </VStack>
       </Drawer>
@@ -703,30 +798,14 @@ export function RadioGroupPatternDemo() {
 export function InfoBoxPatternDemo() {
   return (
     <VStack gap={4} className="w-full max-w-md">
-      {/* Single Value */}
-      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-        <span className="text-label-sm text-[var(--color-text-subtle)]">Instance Name</span>
-        <span className="text-body-md text-[var(--color-text-default)]">
-          instance-production-01
-        </span>
-      </div>
-
-      {/* Multiple Values */}
-      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3">
-        <HStack gap={6}>
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Name</span>
-            <span className="text-body-md text-[var(--color-text-default)]">instance-01</span>
-          </VStack>
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Type</span>
-            <span className="text-body-md text-[var(--color-text-default)]">Standard</span>
-          </VStack>
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
-            <StatusIndicator status="active" label="Running" />
-          </VStack>
-        </HStack>
+      {/* Single Value InfoBox */}
+      <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+        <VStack gap={1.5}>
+          <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Volume</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">
+            vol-production-01 (100GiB)
+          </span>
+        </VStack>
       </div>
     </VStack>
   );
@@ -933,7 +1012,8 @@ export function CommonPatternsSection() {
           <VStack gap={2}>
             <h4 className="text-heading-h5 text-[var(--color-text-default)]">Selection Drawer</h4>
             <p className="text-body-md text-[var(--color-text-muted)]">
-              선택 Drawer 패턴입니다. Search + Radio Table + SelectionIndicator 구조입니다.
+              선택 Drawer 패턴입니다. Header + Description + InfoBox + SectionTitle + Search +
+              Pagination + Radio Table + SelectionIndicator 구조입니다.
             </p>
             <div className="p-4 border border-[var(--color-border-default)] rounded-lg">
               <SelectionDrawerPatternDemo />

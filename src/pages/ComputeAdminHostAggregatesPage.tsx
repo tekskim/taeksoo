@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -145,7 +146,9 @@ export function ComputeAdminHostAggregatesPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hostAggregates, setHostAggregates] = useState(mockHostAggregates);
-  const [activeTab, setActiveTab] = useState('host-aggregates');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'host-aggregates';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

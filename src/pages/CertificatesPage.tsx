@@ -30,7 +30,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -214,7 +214,9 @@ export function CertificatesPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [certificates] = useState(mockCertificates);
-  const [activeTab, setActiveTab] = useState('server');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'server';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -155,7 +155,9 @@ export function NetworkPolicyDetailPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [activeTab, setActiveTab] = useState('ingress-rules');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'ingress-rules';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedRule, setSelectedRule] = useState<string>('rule1');
   const [selectedEgressRule, setSelectedEgressRule] = useState<string>('egress1');
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);

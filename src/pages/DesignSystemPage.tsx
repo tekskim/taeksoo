@@ -80,7 +80,6 @@ import {
   HStack,
   MenuItem,
   MenuSection,
-  MenuDivider,
   Tooltip,
   Popover,
   DetailHeader,
@@ -6646,15 +6645,15 @@ outline: 2px solid var(--color-border-focus);`}
                             </h4>
                             <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                               <li>
-                                <strong>sm (32px)</strong>: Toolbar, 테이블 인라인 편집, Drawer 내부
+                                <strong>sm (28px)</strong>: Toolbar, 테이블 인라인 편집, Drawer 내부
                                 등 밀집된 영역.
                               </li>
                               <li>
-                                <strong>md (40px)</strong>: 일반 폼 필드. Create/Edit 페이지의 기본
+                                <strong>md (32px)</strong>: 일반 폼 필드. Create/Edit 페이지의 기본
                                 크기.
                               </li>
                               <li>
-                                <strong>lg (48px)</strong>: 로그인, 단독 입력 화면 등 강조가 필요한
+                                <strong>lg (40px)</strong>: 로그인, 단독 입력 화면 등 강조가 필요한
                                 경우.
                               </li>
                             </ul>
@@ -7564,23 +7563,17 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-label-sm text-[var(--color-text-subtle)]">
                             Select with Error
                           </span>
-                          <FormField error>
-                            <FormField.Label>
-                              Region <span className="text-[var(--color-state-danger)]">*</span>
-                            </FormField.Label>
-                            <FormField.Control>
-                              <Select
-                                options={[
-                                  { value: '1', label: 'Seoul' },
-                                  { value: '2', label: 'Tokyo' },
-                                ]}
-                                placeholder="Select region"
-                                fullWidth
-                                error
-                              />
-                            </FormField.Control>
-                            <FormField.ErrorMessage>Please select a region.</FormField.ErrorMessage>
-                          </FormField>
+                          <Select
+                            label="Region"
+                            error="Please select a region."
+                            options={[
+                              { value: '1', label: 'Seoul' },
+                              { value: '2', label: 'Tokyo' },
+                            ]}
+                            placeholder="Select region"
+                            fullWidth
+                            required
+                          />
                         </VStack>
                       </div>
                     </VStack>
@@ -8176,7 +8169,10 @@ outline: 2px solid var(--color-border-focus);`}
                                 (예: Select region).
                               </li>
                               <li>기본 선택값이 있는 경우 미리 설정하여 사용자 입력을 줄입니다.</li>
-                              <li>옵션 목록이 길 경우(20개 이상) 검색 가능 Select를 사용합니다.</li>
+                              <li>
+                                옵션 목록이 길 경우(20개 이상) 스크롤 영역 내에서 탐색합니다. (검색
+                                가능 Select는 현재 미지원)
+                              </li>
                               <li>FormField와 함께 사용하여 라벨과 helperText를 제공합니다.</li>
                             </ul>
                           </VStack>
@@ -8826,7 +8822,7 @@ outline: 2px solid var(--color-border-focus);`}
                             </li>
                             <li>선택된 항목의 개별 제거(X 클릭)와 전체 해제를 지원합니다.</li>
                             <li>
-                              Drawer 내 리소스 선택 시 테이블 위에 배치하여 선택 상태를 알립니다.
+                              Drawer 내 리소스 선택 시 테이블 아래에 배치하여 선택 상태를 알립니다.
                             </li>
                           </ul>
                         </VStack>
@@ -8914,7 +8910,7 @@ outline: 2px solid var(--color-border-focus);`}
                               표시합니다.
                             </li>
                             <li>
-                              <strong>페이지 크기 옵션</strong>: 기본 20. Settings 버튼으로 사용자가
+                              <strong>페이지 크기 옵션</strong>: 기본 10. Settings 버튼으로 사용자가
                               변경 가능 (10, 20, 50, 100).
                             </li>
                             <li>
@@ -9262,12 +9258,12 @@ outline: 2px solid var(--color-border-focus);`}
                             </h4>
                             <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                               <li>
-                                Toggle 옆에 현재 상태를 라벨로 표시합니다 (On/Off 또는
-                                Enabled/Disabled).
+                                Toggle 옆에 설정 항목의 라벨을 표시합니다 (e.g. &quot;Auto
+                                scaling&quot;, &quot;Enable monitoring&quot;).
                               </li>
                               <li>
-                                Toggle 전환 시 즉시 UI에 반영되지 않는 폼(Save 버튼이 있는
-                                경우)에서는 Checkbox를 사용합니다.
+                                Toggle은 On/Off 이진 선택에 사용합니다. Checkbox는 다중 항목
+                                선택(체크리스트)에 사용합니다.
                               </li>
                               <li>
                                 Toggle로 추가 옵션 영역을 열고 닫는 패턴 (conditional display)이
@@ -9433,7 +9429,7 @@ outline: 2px solid var(--color-border-focus);`}
                               합니다.
                             </li>
                             <li>
-                              폼 제출(Save) 시 반영되는 설정에는 Checkbox, 즉시 반영에는 Toggle을
+                              Toggle은 On/Off 이진 선택, Checkbox는 다중 항목 선택(체크리스트)에
                               사용합니다.
                             </li>
                           </ul>
@@ -9579,19 +9575,16 @@ outline: 2px solid var(--color-border-focus);`}
                           </h4>
                           <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                             <li>
-                              옵션이 <strong>2~5개</strong>이고, 모든 옵션을 한눈에 볼 필요가 있을
+                              옵션이 <strong>2~3개</strong>이고, 모든 옵션을 한눈에 볼 필요가 있을
                               때 사용합니다.
                             </li>
-                            <li>옵션이 6개 이상이면 Select를 사용합니다.</li>
+                            <li>옵션이 4개 이상이면 Select를 사용합니다.</li>
                             <li>반드시 하나의 옵션이 선택된 상태여야 합니다 (기본값 설정 권장).</li>
                             <li>
                               라벨은 간결하게 작성하고, 부가 설명이 필요하면 description을
                               활용합니다.
                             </li>
-                            <li>
-                              수평 배치는 옵션이 2~3개이고 라벨이 짧을 때, 수직 배치는 기본값으로
-                              사용합니다.
-                            </li>
+                            <li>수직 배치를 기본으로 사용합니다.</li>
                           </ul>
                         </VStack>
                       </div>
@@ -9915,10 +9908,6 @@ outline: 2px solid var(--color-border-focus);`}
                               <li>
                                 탭 라벨은 간결한 명사형으로 작성합니다 (Details, Volumes,
                                 Networking).
-                              </li>
-                              <li>
-                                Detail Page에서 첫 번째 탭 패널은 <code>pt-0</code>으로 상단 여백을
-                                제거하고 내부에 <code>pt-4</code>를 적용합니다.
                               </li>
                             </ul>
                           </VStack>
@@ -10441,7 +10430,6 @@ outline: 2px solid var(--color-border-focus);`}
                             Don&apos;t
                           </h4>
                           <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                            <li>한 테이블에 10개 이상의 컬럼을 배치하지 않습니다 (가독성 저하).</li>
                             <li>
                               Status 컬럼에 텍스트만 표시하지 않습니다 (StatusIndicator 사용).
                             </li>
@@ -10743,15 +10731,8 @@ outline: 2px solid var(--color-border-focus);`}
                               이전 항목은 클릭 가능한 링크로 제공합니다.
                             </li>
                             <li>
-                              <strong>깊이 제한</strong>: 최대 4단계를 권장합니다. 깊이가 깊으면
-                              중간 단계를 생략(&quot;...&quot;)합니다.
-                            </li>
-                            <li>
                               첫 번째 항목은 앱/클러스터 이름으로, 클릭 시 해당 앱의 홈 페이지로
                               이동합니다.
-                            </li>
-                            <li>
-                              구분자는 <code>/</code> (슬래시)를 사용합니다.
                             </li>
                           </ul>
                         </VStack>
@@ -10922,10 +10903,6 @@ outline: 2px solid var(--color-border-focus);`}
                                 합니다.
                               </li>
                               <li>DetailHeader의 InfoCard에서 리소스 상태를 표시합니다.</li>
-                              <li>
-                                라벨 없이 도트(dot)만 사용하는 것도 가능하지만, 접근성을 위해 라벨
-                                포함을 권장합니다.
-                              </li>
                             </ul>
                           </VStack>
                         </VStack>
@@ -11315,7 +11292,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 텍스트가 말줄임(truncate)된 경우 hover 시 전체 텍스트를 Tooltip으로
                                 표시합니다.
                               </li>
-                              <li>Tooltip 텍스트는 최대 2줄로 제한하며, maxWidth는 230px입니다.</li>
+                              <li>Tooltip 텍스트는 최대 2줄로 제한하며, maxWidth는 240px입니다.</li>
                               <li>이미 충분히 설명적인 요소에는 Tooltip을 추가하지 않습니다.</li>
                               <li>
                                 delay를 적절히 설정하여 불필요한 Tooltip 표시를 방지합니다 (기본
@@ -11707,18 +11684,8 @@ outline: 2px solid var(--color-border-focus);`}
                             <li>
                               데스크톱 앱(Electron 등) 환경에서 윈도우 제어 버튼을 제공합니다.
                             </li>
-                            <li>
-                              <strong>macOS</strong>: 트래픽 라이트 스타일 (빨강/노랑/초록 원형
-                              버튼), 좌측 배치.
-                            </li>
-                            <li>
-                              <strong>Windows</strong>: 최소화/최대화/닫기 아이콘 버튼, 우측 배치.
-                            </li>
-                            <li>
-                              <strong>Linux</strong>: Windows와 동일한 스타일 및 우측 배치를
-                              적용합니다.
-                            </li>
-                            <li>OS에 따라 자동으로 적절한 스타일이 적용됩니다.</li>
+                            <li>최소화/최대화/닫기 아이콘 버튼을 우측에 배치합니다.</li>
+                            <li>모든 OS에서 동일한 스타일이 적용됩니다.</li>
                           </ul>
                         </VStack>
                       </div>
@@ -12148,9 +12115,6 @@ outline: 2px solid var(--color-border-focus);`}
                                 <strong>날짜</strong>: Created at, Updated at 등 시간 정보를
                                 표시합니다.
                               </li>
-                              <li>
-                                카드 수는 4~6개를 권장합니다. 6개 초과 시 Detail 탭으로 이동합니다.
-                              </li>
                             </ul>
                           </VStack>
                         </VStack>
@@ -12460,10 +12424,6 @@ outline: 2px solid var(--color-border-focus);`}
                               <strong>활성 상태</strong>: 현재 페이지에 해당하는 메뉴 아이템을
                               시각적으로 강조합니다.
                             </li>
-                            <li>
-                              <strong>구분선</strong>: 논리적으로 다른 그룹 사이에 divider를
-                              사용합니다.
-                            </li>
                           </ul>
                         </VStack>
                       </div>
@@ -12490,7 +12450,6 @@ outline: 2px solid var(--color-border-focus);`}
                             label="Home"
                             active
                           />
-                          <MenuDivider />
                           <MenuItem icon={<IconCube size={16} stroke={1.5} />} label="Instances" />
                           <MenuItem
                             icon={<IconTemplate size={16} stroke={1.5} />}
@@ -12680,10 +12639,6 @@ outline: 2px solid var(--color-border-focus);`}
                               <li>
                                 <strong>구분선</strong>: 별도 divider 항목이 아닌, 항목의{' '}
                                 <code>divider: true</code> 속성으로 아래에 구분선을 표시합니다.
-                              </li>
-                              <li>
-                                <strong>항목 수</strong>: 최대 8개를 권장합니다. 초과 시 서브메뉴로
-                                분리합니다.
                               </li>
                               <li>
                                 <strong>순서</strong>: 자주 사용하는 액션을 위에, 위험 액션을 아래에
@@ -15663,9 +15618,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 <code>--layout-sidebar-width</code>). 메뉴 아이콘 + 라벨 표시.
                               </li>
                               <li>
-                                <strong>접힘 상태</strong>: 너비 40px (
-                                <code>--layout-sidebar-width-collapsed</code>). 아이콘만 표시. hover
-                                시 라벨 tooltip 제공.
+                                <strong>접힘 상태</strong>: 사이드바가 완전히 숨겨집니다.
                               </li>
                               <li>사이드바 토글은 사이드바 하단 또는 TopBar에서 제공합니다.</li>
                             </ul>
@@ -15680,7 +15633,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 레이아웃이 깨지지 않도록 합니다.
                               </li>
                               <li>
-                                <strong>패딩</strong>: 상단 12px (pt-3), 좌우 32px (px-8), 하단 80px
+                                <strong>패딩</strong>: 상단 16px (pt-4), 좌우 32px (px-8), 하단 80px
                                 (pb-20).
                               </li>
                               <li>

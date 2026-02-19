@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -316,7 +316,9 @@ export function ContainerHPADetailPage() {
   const { hpaId } = useParams<{ hpaId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('metrics');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'metrics';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get HPA data
   const hpa = mockHPAData[hpaId || ''] || mockHPAData['1'];

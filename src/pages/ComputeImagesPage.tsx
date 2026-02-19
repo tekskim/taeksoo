@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -225,7 +225,9 @@ export function ComputeImagesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('current');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'current';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [images, setImages] = useState(mockImages);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 

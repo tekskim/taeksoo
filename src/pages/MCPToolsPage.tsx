@@ -37,7 +37,7 @@ import {
   IconBell,
   IconPalette,
 } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Status Card Component
@@ -137,7 +137,9 @@ export function MCPToolsPage() {
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('my-servers');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'my-servers';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [templateVisibility, setTemplateVisibility] = useState<
     Record<string, 'visible' | 'hidden'>
   >({});

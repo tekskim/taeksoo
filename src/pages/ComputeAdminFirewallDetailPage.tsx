@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -141,7 +141,9 @@ export default function ComputeAdminFirewallDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [activeTab, setActiveTab] = useState('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'details';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Ports state
   const [portSearchTerm, setPortSearchTerm] = useState('');

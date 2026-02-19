@@ -28,7 +28,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -270,7 +270,9 @@ export function ComputeAdminFlavorsPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('cpu');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'cpu';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Selection state
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -361,7 +361,9 @@ export function PersistentVolumeClaimDetailPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [activeTab, setActiveTab] = useState('volume-claim');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'volume-claim';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedEventKeys, setSelectedEventKeys] = useState<string[]>([]);
 
   // Shell Panel state
