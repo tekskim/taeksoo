@@ -19,6 +19,7 @@ import {
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
@@ -232,6 +233,7 @@ function SummarySidebar({
    ---------------------------------------- */
 export default function CreateHPAPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
 
   // Sidebar state
@@ -244,7 +246,7 @@ export default function CreateHPAPage() {
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [showDescription, setShowDescription] = useState(true);
+  const [showDescription, setShowDescription] = useState(isV2);
 
   // Target state
   const [targetReference, setTargetReference] = useState('');
@@ -256,7 +258,24 @@ export default function CreateHPAPage() {
   const [scaleUpBehavior, setScaleUpBehavior] = useState(false);
 
   // Metrics state
-  const [metrics, setMetrics] = useState<Metric[]>([]);
+  const [metrics, setMetrics] = useState<Metric[]>(
+    isV2
+      ? [
+          {
+            id: Date.now().toString(),
+            source: 'Resource',
+            resourceName: 'CPU',
+            type: 'AverageUtilization',
+            quantity: 1,
+            metricName: '',
+            referentApiVersion: '',
+            referentKind: '',
+            referentName: '',
+            selectors: [],
+          },
+        ]
+      : []
+  );
 
   // Labels & Annotations state
   const [labels, setLabels] = useState<Label[]>([]);

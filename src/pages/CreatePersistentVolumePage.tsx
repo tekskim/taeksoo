@@ -184,6 +184,7 @@ interface BasicInfoSectionProps {
   onCapacityChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
@@ -195,6 +196,7 @@ function BasicInfoSection({
   onCapacityChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
@@ -236,7 +238,7 @@ function BasicInfoSection({
           </FormField>
 
           {/* Description */}
-          <Disclosure>
+          <Disclosure defaultOpen={isV2}>
             <Disclosure.Trigger>Description</Disclosure.Trigger>
             <Disclosure.Panel>
               <div className="pt-2">
@@ -781,12 +783,16 @@ export function CreatePersistentVolumePage() {
     manyNodesReadWrite: false,
   });
   const [storageClassName, setStorageClassName] = useState('');
-  const [mountOptions, setMountOptions] = useState<MountOption[]>([]);
-  const [nodeSelectors, setNodeSelectors] = useState<NodeSelector[]>([]);
+  const [mountOptions, setMountOptions] = useState<MountOption[]>(isV2 ? [{ key: '' }] : []);
+  const [nodeSelectors, setNodeSelectors] = useState<NodeSelector[]>(
+    isV2 ? [{ rules: [{ key: '', operator: 'In', value: '' }] }] : []
+  );
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(isV2 ? [{ key: '', value: '' }] : []);
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Validation errors
   const [pvNameError, setNamespaceNameError] = useState<string | null>(null);
@@ -1008,6 +1014,7 @@ export function CreatePersistentVolumePage() {
               onCapacityChange={setCapacity}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Storage Configuration Section */}

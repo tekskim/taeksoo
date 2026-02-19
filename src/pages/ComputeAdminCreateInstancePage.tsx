@@ -3677,7 +3677,9 @@ export function ComputeAdminCreateInstancePage() {
   const [instanceName, setInstanceName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('nova');
   const [description, setDescription] = useState('');
-  const [labels, setLabels] = useState<{ key: string; value: string }[]>([]);
+  const [labels, setLabels] = useState<{ key: string; value: string }[]>(
+    isV2 ? [{ key: '', value: '' }] : []
+  );
 
   // Image state
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);

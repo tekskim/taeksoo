@@ -212,7 +212,9 @@ export default function CreateVirtualAdapterPage() {
     ipMode: 'auto' | 'manual';
     ipAddress: string;
   }
-  const [fixedIPs, setFixedIPs] = useState<FixedIPEntry[]>([]);
+  const [fixedIPs, setFixedIPs] = useState<FixedIPEntry[]>(
+    isV2 ? [{ id: 'default-1', subnet: '', ipMode: 'auto', ipAddress: '' }] : []
+  );
 
   const addFixedIP = () => {
     if (!selectedNetwork) return;
