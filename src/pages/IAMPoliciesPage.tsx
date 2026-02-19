@@ -496,7 +496,12 @@ export default function IAMPoliciesPage() {
           }
           bulkActions={
             <ListToolbar.Actions>
-              <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedRows.length === 0}
+              >
                 Delete
               </Button>
             </ListToolbar.Actions>

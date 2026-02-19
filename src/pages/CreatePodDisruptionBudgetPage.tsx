@@ -280,9 +280,6 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
   { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025' },
 ];
 
-// Budget unit options
-const BUDGET_UNIT_OPTIONS = [{ value: 'pods', label: 'Pods' }];
-
 /* ----------------------------------------
    BudgetSection Component
    ---------------------------------------- */
@@ -290,23 +287,15 @@ const BUDGET_UNIT_OPTIONS = [{ value: 'pods', label: 'Pods' }];
 interface BudgetSectionProps {
   minAvailablePods: number;
   onMinAvailablePodsChange: (value: number) => void;
-  minAvailableUnit: string;
-  onMinAvailableUnitChange: (value: string) => void;
   maxUnavailablePods: number;
   onMaxUnavailablePodsChange: (value: number) => void;
-  maxUnavailableUnit: string;
-  onMaxUnavailableUnitChange: (value: string) => void;
 }
 
 function BudgetSection({
   minAvailablePods,
   onMinAvailablePodsChange,
-  minAvailableUnit,
-  onMinAvailableUnitChange,
   maxUnavailablePods,
   onMaxUnavailablePodsChange,
-  maxUnavailableUnit,
-  onMaxUnavailableUnitChange,
 }: BudgetSectionProps) {
   return (
     <SectionCard>
@@ -317,23 +306,14 @@ function BudgetSection({
           <FormField className="flex-1">
             <FormField.Label>Min. available Pods</FormField.Label>
             <FormField.Control>
-              <HStack gap={2}>
-                <div className="flex-1">
-                  <NumberInput
-                    value={minAvailablePods}
-                    onChange={onMinAvailablePodsChange}
-                    min={0}
-                    width="sm"
-                  />
-                </div>
-                <div>
-                  <Select
-                    options={BUDGET_UNIT_OPTIONS}
-                    value={minAvailableUnit}
-                    onChange={onMinAvailableUnitChange}
-                    fullWidth
-                  />
-                </div>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={minAvailablePods}
+                  onChange={onMinAvailablePodsChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-muted)]">Pods</span>
               </HStack>
             </FormField.Control>
           </FormField>
@@ -342,23 +322,14 @@ function BudgetSection({
           <FormField className="flex-1">
             <FormField.Label>Max. unavailable Pods</FormField.Label>
             <FormField.Control>
-              <HStack gap={2}>
-                <div className="flex-1">
-                  <NumberInput
-                    value={maxUnavailablePods}
-                    onChange={onMaxUnavailablePodsChange}
-                    min={0}
-                    width="sm"
-                  />
-                </div>
-                <div>
-                  <Select
-                    options={BUDGET_UNIT_OPTIONS}
-                    value={maxUnavailableUnit}
-                    onChange={onMaxUnavailableUnitChange}
-                    fullWidth
-                  />
-                </div>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={maxUnavailablePods}
+                  onChange={onMaxUnavailablePodsChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-muted)]">Pods</span>
               </HStack>
             </FormField.Control>
           </FormField>
@@ -421,7 +392,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Selector Rules Container */}
-          <div className="bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] p-3 border border-[var(--color-border-default)]">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3">
             <VStack gap={3}>
               {/* Column Headers and Selector Rules - only show when there are rules */}
               {selectorRules.length > 0 && (
@@ -723,9 +694,7 @@ export function CreatePodDisruptionBudgetPage() {
 
   // Budget state
   const [minAvailablePods, setMinAvailablePods] = useState(0);
-  const [minAvailableUnit, setMinAvailableUnit] = useState('pods');
   const [maxUnavailablePods, setMaxUnavailablePods] = useState(0);
-  const [maxUnavailableUnit, setMaxUnavailableUnit] = useState('pods');
 
   // Selector state
   const [selectorRules, setSelectorRules] = useState<SelectorRule[]>([]);
@@ -773,9 +742,7 @@ export function CreatePodDisruptionBudgetPage() {
       namespace,
       description,
       minAvailablePods,
-      minAvailableUnit,
       maxUnavailablePods,
-      maxUnavailableUnit,
       selectorRules,
       labels,
       annotations,
@@ -786,9 +753,7 @@ export function CreatePodDisruptionBudgetPage() {
     namespace,
     description,
     minAvailablePods,
-    minAvailableUnit,
     maxUnavailablePods,
-    maxUnavailableUnit,
     selectorRules,
     labels,
     annotations,
@@ -929,12 +894,8 @@ export function CreatePodDisruptionBudgetPage() {
             <BudgetSection
               minAvailablePods={minAvailablePods}
               onMinAvailablePodsChange={setMinAvailablePods}
-              minAvailableUnit={minAvailableUnit}
-              onMinAvailableUnitChange={setMinAvailableUnit}
               maxUnavailablePods={maxUnavailablePods}
               onMaxUnavailablePodsChange={setMaxUnavailablePods}
-              maxUnavailableUnit={maxUnavailableUnit}
-              onMaxUnavailableUnitChange={setMaxUnavailableUnit}
             />
 
             {/* Selector Section */}

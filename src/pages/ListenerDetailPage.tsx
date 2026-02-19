@@ -947,7 +947,7 @@ export default function ListenerDetailPage() {
                     />
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
                     Delete
                   </Button>
                 </div>

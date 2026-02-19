@@ -3745,18 +3745,18 @@ export function CreateJobPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={3}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Container Image{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Container Image{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Input
                                 placeholder="nginx:latest"
                                 fullWidth
@@ -3767,17 +3767,19 @@ export function CreateJobPage() {
                                   })
                                 }
                               />
+                            </div>
+                          </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Pull Policy
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                            <VStack gap={3}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Pull Policy
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Select
                                 options={[
                                   { value: 'Always', label: 'Always' },
@@ -3792,20 +3794,19 @@ export function CreateJobPage() {
                                 }
                                 fullWidth
                               />
+                            </div>
+                          </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Pull Secrets
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={3}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Pull Secrets
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Select
                                 options={[
                                   { value: '', label: 'Select a secret...' },
@@ -3820,8 +3821,8 @@ export function CreateJobPage() {
                                 }
                                 fullWidth
                               />
-                            </VStack>
-                          </div>
+                            </div>
+                          </VStack>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>

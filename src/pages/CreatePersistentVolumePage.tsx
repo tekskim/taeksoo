@@ -415,12 +415,14 @@ function StorageConfigSection({
           <FormField>
             <FormField.Label>Assign to Storage Class</FormField.Label>
             <FormField.Control>
-              <Select
-                options={STORAGE_CLASS_OPTIONS}
-                value={storageClassName}
-                onChange={(value) => onStorageClassNameChange(value)}
-                fullWidth
-              />
+              <div className="w-[calc(50%-12px)]">
+                <Select
+                  options={STORAGE_CLASS_OPTIONS}
+                  value={storageClassName}
+                  onChange={(value) => onStorageClassNameChange(value)}
+                  fullWidth
+                />
+              </div>
             </FormField.Control>
           </FormField>
 

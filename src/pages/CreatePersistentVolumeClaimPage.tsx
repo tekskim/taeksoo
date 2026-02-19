@@ -310,12 +310,14 @@ function VolumeClaimSection({
             <FormField>
               <FormField.Label>Storage Class</FormField.Label>
               <FormField.Control>
-                <Select
-                  options={STORAGE_CLASS_OPTIONS}
-                  value={storageClass}
-                  onChange={(value) => onStorageClassChange(value)}
-                  fullWidth
-                />
+                <div className="w-[calc(50%-12px)]">
+                  <Select
+                    options={STORAGE_CLASS_OPTIONS}
+                    value={storageClass}
+                    onChange={(value) => onStorageClassChange(value)}
+                    fullWidth
+                  />
+                </div>
               </FormField.Control>
             </FormField>
           )}
@@ -324,25 +326,20 @@ function VolumeClaimSection({
           <FormField required>
             <FormField.Label>Request Storage</FormField.Label>
             <FormField.Control>
-              <div className="flex gap-2 w-full">
-                <div className="flex-1">
-                  <NumberInput
-                    value={requestStorage}
-                    onChange={(value) => onRequestStorageChange(value)}
-                    min={1}
-                    placeholder="10"
-                    width="sm"
-                  />
-                </div>
-                <div>
-                  <Select
-                    options={STORAGE_UNIT_OPTIONS}
-                    value={storageUnit}
-                    onChange={(value) => onStorageUnitChange(value)}
-                    fullWidth
-                  />
-                </div>
-              </div>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={requestStorage}
+                  onChange={(value) => onRequestStorageChange(value)}
+                  min={1}
+                  width="sm"
+                />
+                <Select
+                  options={STORAGE_UNIT_OPTIONS}
+                  value={storageUnit}
+                  onChange={(value) => onStorageUnitChange(value)}
+                  width="xs"
+                />
+              </HStack>
             </FormField.Control>
           </FormField>
         </VStack>
@@ -789,7 +786,7 @@ export function CreatePersistentVolumeClaimPage() {
       }
       contentClassName="pt-3 px-8 pb-20"
     >
-      <VStack gap={3}>
+      <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">

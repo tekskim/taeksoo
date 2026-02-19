@@ -744,7 +744,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Cluster IP
                     </label>
-                    <div className="w-[320px]">
+                    <div className="w-[calc(50%-12px)]">
                       <Input
                         placeholder="e.g. 1.1.1.1"
                         value={clusterIP}
@@ -759,7 +759,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Load Balancer IP
                     </label>
-                    <div className="w-[320px]">
+                    <div className="w-[calc(50%-12px)]">
                       <Input
                         placeholder="e.g. 1.1.1.1"
                         value={loadBalancerIP}
