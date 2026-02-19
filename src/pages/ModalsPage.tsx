@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -92,146 +92,32 @@ function ModalListItem({ title, description, category, size, onOpen }: ModalList
 export function ModalsPage() {
   const navigate = useNavigate();
 
+  // Modal URL state
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openModal = searchParams.get('modal');
+  const openModalFn = useCallback(
+    (id: string) => {
+      setSearchParams({ modal: id }, { replace: true });
+    },
+    [setSearchParams]
+  );
+  const closeModal = useCallback(() => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('modal');
+    setSearchParams(params, { replace: true });
+  }, [searchParams, setSearchParams]);
+
   // Modal states
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-  const [isDeleteSecurityGroupOpen, setIsDeleteSecurityGroupOpen] = useState(false);
-  const [isDeleteSecurityGroupsMultipleOpen, setIsDeleteSecurityGroupsMultipleOpen] =
-    useState(false);
-  const [isDeleteRuleOpen, setIsDeleteRuleOpen] = useState(false);
-  const [isDeleteRulesMultipleOpen, setIsDeleteRulesMultipleOpen] = useState(false);
-  const [isDetachVolumeOpen, setIsDetachVolumeOpen] = useState(false);
-  const [isRestoreBackupSmallOpen, setIsRestoreBackupSmallOpen] = useState(false);
-  const [isRestoreBackupMediumOpen, setIsRestoreBackupMediumOpen] = useState(false);
-  const [isRestoreBackupLargeOpen, setIsRestoreBackupLargeOpen] = useState(false);
-  const [isDisassociateFloatingIPOpen, setIsDisassociateFloatingIPOpen] = useState(false);
-  const [isDisassociateFloatingIPLBOpen, setIsDisassociateFloatingIPLBOpen] = useState(false);
-  const [isReleaseFloatingIPSmallOpen, setIsReleaseFloatingIPSmallOpen] = useState(false);
-  const [isReleaseFloatingIPMediumOpen, setIsReleaseFloatingIPMediumOpen] = useState(false);
-  const [isDeleteLoadBalancerOpen, setIsDeleteLoadBalancerOpen] = useState(false);
-  const [isDeleteLoadBalancersMultipleOpen, setIsDeleteLoadBalancersMultipleOpen] = useState(false);
 
   // IAM Modal states
-  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
-  const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
-  const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
-  const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
-  const [isDetachUserGroupOpen, setIsDetachUserGroupOpen] = useState(false);
-  const [isDetachRoleOpen, setIsDetachRoleOpen] = useState(false);
-  const [isRemoveOtpMfaOpen, setIsRemoveOtpMfaOpen] = useState(false);
-  const [isTerminateAllSessionsOpen, setIsTerminateAllSessionsOpen] = useState(false);
-  const [isTerminateSessionOpen, setIsTerminateSessionOpen] = useState(false);
-  const [isRemoveUserFromGroupOpen, setIsRemoveUserFromGroupOpen] = useState(false);
-  const [isDeleteRoleOpen, setIsDeleteRoleOpen] = useState(false);
-  const [isDeleteRolesMultipleOpen, setIsDeleteRolesMultipleOpen] = useState(false);
-  const [isDetachPolicyOpen, setIsDetachPolicyOpen] = useState(false);
-  const [isDeletePolicyOpen, setIsDeletePolicyOpen] = useState(false);
-  const [isDeletePoliciesMultipleOpen, setIsDeletePoliciesMultipleOpen] = useState(false);
-  const [isRevertPolicyVersionOpen, setIsRevertPolicyVersionOpen] = useState(false);
-  const [isDeletePolicyVersionOpen, setIsDeletePolicyVersionOpen] = useState(false);
-  const [isUpdateMfaEnforcementOpen, setIsUpdateMfaEnforcementOpen] = useState(false);
-  const [isUpdateOtpPolicyOpen, setIsUpdateOtpPolicyOpen] = useState(false);
-  const [isUpdateOtpPolicySettingsOpen, setIsUpdateOtpPolicySettingsOpen] = useState(false);
-  const [isUpdateEmailPolicyOpen, setIsUpdateEmailPolicyOpen] = useState(false);
-  const [isUpdateEmailPolicySettingsOpen, setIsUpdateEmailPolicySettingsOpen] = useState(false);
-  const [isUpdateGeneralSessionPolicyOpen, setIsUpdateGeneralSessionPolicyOpen] = useState(false);
-  const [isDeleteDomainOpen, setIsDeleteDomainOpen] = useState(false);
-  const [isSwitchToDomainOpen, setIsSwitchToDomainOpen] = useState(false);
-  const [isDeleteSystemAdminOpen, setIsDeleteSystemAdminOpen] = useState(false);
-  const [isUpdatePasswordPolicyOpen, setIsUpdatePasswordPolicyOpen] = useState(false);
-  const [isUpdateAccountLockoutPolicyOpen, setIsUpdateAccountLockoutPolicyOpen] = useState(false);
-  const [isUpdateTokenPolicyOpen, setIsUpdateTokenPolicyOpen] = useState(false);
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
 
   // Storage Modal states
-  const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
 
   // Container Modal states
-  const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
-  const [isDeleteNamespaceOpen, setIsDeleteNamespaceOpen] = useState(false);
-  const [isDeletePodOpen, setIsDeletePodOpen] = useState(false);
-  const [isDeleteJobOpen, setIsDeleteJobOpen] = useState(false);
-  const [isDeleteCronJobOpen, setIsDeleteCronJobOpen] = useState(false);
-  const [isDeleteDeploymentOpen, setIsDeleteDeploymentOpen] = useState(false);
-  const [isDeleteStatefulSetOpen, setIsDeleteStatefulSetOpen] = useState(false);
-  const [isDeleteDaemonSetOpen, setIsDeleteDaemonSetOpen] = useState(false);
-  const [isRedeployDeploymentOpen, setIsRedeployDeploymentOpen] = useState(false);
-  const [isRedeployStatefulSetOpen, setIsRedeployStatefulSetOpen] = useState(false);
-  const [isRedeployDaemonSetOpen, setIsRedeployDaemonSetOpen] = useState(false);
-  const [isRollBackDeploymentOpen, setIsRollBackDeploymentOpen] = useState(false);
 
   // Compute Admin Modal states
-  const [isStopInstanceOpen, setIsStopInstanceOpen] = useState(false);
-  const [isRebootInstanceOpen, setIsRebootInstanceOpen] = useState(false);
-  const [isSoftRebootInstanceOpen, setIsSoftRebootInstanceOpen] = useState(false);
-  const [isConfirmResizeOpen, setIsConfirmResizeOpen] = useState(false);
-  const [isRevertResizeOpen, setIsRevertResizeOpen] = useState(false);
-  const [isDeleteInstanceOpen, setIsDeleteInstanceOpen] = useState(false);
-  const [isShelveInstanceOpen, setIsShelveInstanceOpen] = useState(false);
-  const [isStartInstancesOpen, setIsStartInstancesOpen] = useState(false);
-  const [isStopInstancesOpen, setIsStopInstancesOpen] = useState(false);
-  const [isRebootInstancesOpen, setIsRebootInstancesOpen] = useState(false);
-  const [isDeleteInstancesOpen, setIsDeleteInstancesOpen] = useState(false);
-  const [isDeleteInstanceTemplateOpen, setIsDeleteInstanceTemplateOpen] = useState(false);
-  const [isDeleteInstanceTemplatesOpen, setIsDeleteInstanceTemplatesOpen] = useState(false);
-  const [isDeleteImageOpen, setIsDeleteImageOpen] = useState(false);
-  const [isDeleteImagesOpen, setIsDeleteImagesOpen] = useState(false);
-  const [isDeleteSnapshotOpen, setIsDeleteSnapshotOpen] = useState(false);
-  const [isDeleteSnapshotsOpen, setIsDeleteSnapshotsOpen] = useState(false);
-  const [isDeleteVolumeOpen, setIsDeleteVolumeOpen] = useState(false);
-  const [isDeleteVolumesOpen, setIsDeleteVolumesOpen] = useState(false);
-  const [isDeleteVolumeTypeOpen, setIsDeleteVolumeTypeOpen] = useState(false);
-  const [isDeleteVolumeTypesOpen, setIsDeleteVolumeTypesOpen] = useState(false);
-  const [isDeleteBackupOpen, setIsDeleteBackupOpen] = useState(false);
-  const [isDeleteBackupsOpen, setIsDeleteBackupsOpen] = useState(false);
-  const [isDeleteEncryptionOpen, setIsDeleteEncryptionOpen] = useState(false);
-  const [isDeleteExtraSpecOpen, setIsDeleteExtraSpecOpen] = useState(false);
-  const [isDeleteExtraSpecsOpen, setIsDeleteExtraSpecsOpen] = useState(false);
-  const [isDeleteQoSSpecOpen, setIsDeleteQoSSpecOpen] = useState(false);
-  const [isDeleteQoSSpecsOpen, setIsDeleteQoSSpecsOpen] = useState(false);
-  const [isDeleteQoSExtraSpecOpen, setIsDeleteQoSExtraSpecOpen] = useState(false);
-  const [isDeleteQoSExtraSpecsOpen, setIsDeleteQoSExtraSpecsOpen] = useState(false);
-  const [isDeleteNetworkOpen, setIsDeleteNetworkOpen] = useState(false);
-  const [isDeleteNetworksOpen, setIsDeleteNetworksOpen] = useState(false);
-  const [isDeleteSubnetOpen, setIsDeleteSubnetOpen] = useState(false);
-  const [isDeleteSubnetsOpen, setIsDeleteSubnetsOpen] = useState(false);
-  const [isDeletePortOpen, setIsDeletePortOpen] = useState(false);
-  const [isDeletePortsOpen, setIsDeletePortsOpen] = useState(false);
-  const [isDeleteRouterOpen, setIsDeleteRouterOpen] = useState(false);
-  const [isDeleteRoutersOpen, setIsDeleteRoutersOpen] = useState(false);
-  const [isDeleteStaticRoutesOpen, setIsDeleteStaticRoutesOpen] = useState(false);
-  const [isRemoveDHCPAgentsOpen, setIsRemoveDHCPAgentsOpen] = useState(false);
-  const [isReleaseFixedIPOpen, setIsReleaseFixedIPOpen] = useState(false);
-  const [isDeleteAllowedAddressPairOpen, setIsDeleteAllowedAddressPairOpen] = useState(false);
-  const [isDeleteSecurityGroupAdminOpen, setIsDeleteSecurityGroupAdminOpen] = useState(false);
-  const [isDeleteSecurityGroupsAdminOpen, setIsDeleteSecurityGroupsAdminOpen] = useState(false);
-  const [isDeleteFirewallOpen, setIsDeleteFirewallOpen] = useState(false);
-  const [isDeleteFirewallsOpen, setIsDeleteFirewallsOpen] = useState(false);
-  const [isUnsavedChangesAdminOpen, setIsUnsavedChangesAdminOpen] = useState(false);
-  const [isReleaseFloatingIPOpen, setIsReleaseFloatingIPOpen] = useState(false);
-  const [isReleaseFloatingIPsOpen, setIsReleaseFloatingIPsOpen] = useState(false);
-  const [isDeleteLoadBalancerAdminOpen, setIsDeleteLoadBalancerAdminOpen] = useState(false);
-  const [isDeleteLoadBalancersAdminOpen, setIsDeleteLoadBalancersAdminOpen] = useState(false);
-  const [isDeleteListenerOpen, setIsDeleteListenerOpen] = useState(false);
-  const [isDeleteListenersOpen, setIsDeleteListenersOpen] = useState(false);
-  const [isDeletePoolOpen, setIsDeletePoolOpen] = useState(false);
-  const [isDeletePoolsOpen, setIsDeletePoolsOpen] = useState(false);
-  const [isDeleteMemberOpen, setIsDeleteMemberOpen] = useState(false);
-  const [isDeleteMembersOpen, setIsDeleteMembersOpen] = useState(false);
-  const [isDeleteSecurityGroupRuleOpen, setIsDeleteSecurityGroupRuleOpen] = useState(false);
-  const [isDeleteSecurityGroupRulesOpen, setIsDeleteSecurityGroupRulesOpen] = useState(false);
-  const [isDeleteL7PolicyOpen, setIsDeleteL7PolicyOpen] = useState(false);
-  const [isDeleteL7PoliciesOpen, setIsDeleteL7PoliciesOpen] = useState(false);
-  const [isDeleteHealthMonitorOpen, setIsDeleteHealthMonitorOpen] = useState(false);
-  const [isDeleteFirewallPolicyOpen, setIsDeleteFirewallPolicyOpen] = useState(false);
-  const [isDeleteFirewallPoliciesOpen, setIsDeleteFirewallPoliciesOpen] = useState(false);
-  const [isDeleteFirewallRuleOpen, setIsDeleteFirewallRuleOpen] = useState(false);
-  const [isDeleteFirewallRulesOpen, setIsDeleteFirewallRulesOpen] = useState(false);
-  const [isDeleteTenantOpen, setIsDeleteTenantOpen] = useState(false);
-  const [isDeleteTenantsOpen, setIsDeleteTenantsOpen] = useState(false);
-  const [isDeleteMetadataOpen, setIsDeleteMetadataOpen] = useState(false);
-  const [isDeleteMetadatasOpen, setIsDeleteMetadatasOpen] = useState(false);
-  const [isManageMemberOpen, setIsManageMemberOpen] = useState(false);
 
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
@@ -242,7 +128,6 @@ export function ModalsPage() {
   const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
 
   // AI Agent modal states
-  const [isDeleteAgentSourceOpen, setIsDeleteAgentSourceOpen] = useState(false);
 
   const sidebarWidth = 0;
 
@@ -309,35 +194,35 @@ export function ModalsPage() {
                       description="Confirm deletion of a snapshot with warning about permanent action."
                       category="Confirm"
                       size="sm"
-                      onOpen={() => setIsConfirmDeleteOpen(true)}
+                      onOpen={() => openModalFn('confirm-delete')}
                     />
                     <ModalListItem
                       title="Delete security group"
                       description="Confirm deletion of a single security group with warning."
                       category="Confirm"
                       size="sm"
-                      onOpen={() => setIsDeleteSecurityGroupOpen(true)}
+                      onOpen={() => openModalFn('delete-security-group')}
                     />
                     <ModalListItem
                       title="Delete security groups (multiple)"
                       description="Confirm deletion of multiple security groups with scrollable list."
                       category="Confirm"
                       size="md"
-                      onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-security-groups-multiple')}
                     />
                     <ModalListItem
                       title="Delete rule"
                       description="Confirm deletion of a single security group rule."
                       category="Confirm"
                       size="sm"
-                      onOpen={() => setIsDeleteRuleOpen(true)}
+                      onOpen={() => openModalFn('delete-rule')}
                     />
                     <ModalListItem
                       title="Delete rules (multiple)"
                       description="Confirm deletion of multiple rules with scrollable list and warning."
                       category="Confirm"
                       size="md"
-                      onOpen={() => setIsDeleteRulesMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-rules-multiple')}
                     />
                   </div>
                 </VStack>
@@ -353,7 +238,7 @@ export function ModalsPage() {
                       description="Confirm detachment of a volume with warning about data corruption."
                       category="Volume"
                       size="sm"
-                      onOpen={() => setIsDetachVolumeOpen(true)}
+                      onOpen={() => openModalFn('detach-volume')}
                     />
                   </div>
                 </VStack>
@@ -369,21 +254,21 @@ export function ModalsPage() {
                       description="Simple restore backup confirmation with volume info."
                       category="Backup"
                       size="sm"
-                      onOpen={() => setIsRestoreBackupSmallOpen(true)}
+                      onOpen={() => openModalFn('restore-backup-small')}
                     />
                     <ModalListItem
                       title="Restore backup (with instance name)"
                       description="Restore backup with volume and instance list information."
                       category="Backup"
                       size="md"
-                      onOpen={() => setIsRestoreBackupMediumOpen(true)}
+                      onOpen={() => openModalFn('restore-backup-medium')}
                     />
                     <ModalListItem
                       title="Restore backup (with instance name and warning)"
                       description="Restore backup with warning alert and disabled action button."
                       category="Backup"
                       size="lg"
-                      onOpen={() => setIsRestoreBackupLargeOpen(true)}
+                      onOpen={() => openModalFn('restore-backup-large')}
                     />
                   </div>
                 </VStack>
@@ -399,28 +284,28 @@ export function ModalsPage() {
                       description="Confirm disassociation of a floating IP from a resource."
                       category="Network"
                       size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                      onOpen={() => openModalFn('disassociate-floating-i-p')}
                     />
                     <ModalListItem
                       title="Disassociate floating IP (Load balancer)"
                       description="Disassociate a floating IP from a load balancer."
                       category="Network"
                       size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
+                      onOpen={() => openModalFn('disassociate-floating-i-p-l-b')}
                     />
                     <ModalListItem
                       title="Release floating IP"
                       description="Release a single floating IP with warning about permanent action."
                       category="Network"
                       size="sm"
-                      onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
+                      onOpen={() => openModalFn('release-floating-i-p-small')}
                     />
                     <ModalListItem
                       title="Release floating IP (Associated to)"
                       description="Release multiple floating IPs with scrollable list."
                       category="Network"
                       size="md"
-                      onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
+                      onOpen={() => openModalFn('release-floating-i-p-medium')}
                     />
                   </div>
                 </VStack>
@@ -436,14 +321,14 @@ export function ModalsPage() {
                       description="Delete a single load balancer with warning about associated resources."
                       category="Network"
                       size="sm"
-                      onOpen={() => setIsDeleteLoadBalancerOpen(true)}
+                      onOpen={() => openModalFn('delete-load-balancer')}
                     />
                     <ModalListItem
                       title="Release load balancers"
                       description="Delete multiple load balancers with scrollable list and warning."
                       category="Network"
                       size="md"
-                      onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-load-balancers-multiple')}
                     />
                   </div>
                 </VStack>
@@ -484,196 +369,196 @@ export function ModalsPage() {
                       description="Confirm deletion of a user with warning about permanent action."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsDeleteUserOpen(true)}
+                      onOpen={() => openModalFn('delete-user')}
                     />
                     <ModalListItem
                       title="Delete users (Multiple)"
                       description="Delete multiple users with lists of deletable and non-deletable users."
                       category="User"
                       size="md"
-                      onOpen={() => setIsDeleteUsersMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-users-multiple')}
                     />
                     <ModalListItem
                       title="Confirm user password"
                       description="Display username and password credentials with copy functionality."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsConfirmUserPasswordOpen(true)}
+                      onOpen={() => openModalFn('confirm-user-password')}
                     />
                     <ModalListItem
                       title="Detach user group"
                       description="Confirm detaching a user from a user group with warning about permission removal."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsDetachUserGroupOpen(true)}
+                      onOpen={() => openModalFn('detach-user-group')}
                     />
                     <ModalListItem
                       title="Detach role"
                       description="Confirm detaching a role from a user with warning about permission removal."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsDetachRoleOpen(true)}
+                      onOpen={() => openModalFn('detach-role')}
                     />
                     <ModalListItem
                       title="Remove OTP MFA"
                       description="Confirm removing OTP MFA for a user with warning about re-registration."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsRemoveOtpMfaOpen(true)}
+                      onOpen={() => openModalFn('remove-otp-mfa')}
                     />
                     <ModalListItem
                       title="Terminate all sessions"
                       description="Confirm terminating all sessions for a user with warning about sign-out."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsTerminateAllSessionsOpen(true)}
+                      onOpen={() => openModalFn('terminate-all-sessions')}
                     />
                     <ModalListItem
                       title="Terminate session"
                       description="Confirm terminating a single session with warning about sign-out from device."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsTerminateSessionOpen(true)}
+                      onOpen={() => openModalFn('terminate-session')}
                     />
                     <ModalListItem
                       title="Remove user from group"
                       description="Confirm removing a user from a group with warning about permission removal."
                       category="User"
                       size="sm"
-                      onOpen={() => setIsRemoveUserFromGroupOpen(true)}
+                      onOpen={() => openModalFn('remove-user-from-group')}
                     />
                     <ModalListItem
                       title="Delete role"
                       description="Confirm deleting a role with warning about permission removal."
                       category="Role"
                       size="sm"
-                      onOpen={() => setIsDeleteRoleOpen(true)}
+                      onOpen={() => openModalFn('delete-role')}
                     />
                     <ModalListItem
                       title="Delete roles (Multiple)"
                       description="Confirm deleting multiple roles with lists of deletable and non-deletable roles."
                       category="Role"
                       size="md"
-                      onOpen={() => setIsDeleteRolesMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-roles-multiple')}
                     />
                     <ModalListItem
                       title="Detach policy"
                       description="Confirm detaching a policy from a role with warning about permission revocation."
                       category="Role"
                       size="sm"
-                      onOpen={() => setIsDetachPolicyOpen(true)}
+                      onOpen={() => openModalFn('detach-policy')}
                     />
                     <ModalListItem
                       title="Delete policy"
                       description="Confirm deleting a policy with warning about permanent removal and access loss."
                       category="Policy"
                       size="sm"
-                      onOpen={() => setIsDeletePolicyOpen(true)}
+                      onOpen={() => openModalFn('delete-policy')}
                     />
                     <ModalListItem
                       title="Delete policies (Multiple)"
                       description="Confirm deleting multiple policies with lists of deletable/non-deletable policies."
                       category="Policy"
                       size="md"
-                      onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
+                      onOpen={() => openModalFn('delete-policies-multiple')}
                     />
                     <ModalListItem
                       title="Revert policy version"
                       description="Confirm reverting a policy to a previous version with warning about permission changes."
                       category="Policy"
                       size="sm"
-                      onOpen={() => setIsRevertPolicyVersionOpen(true)}
+                      onOpen={() => openModalFn('revert-policy-version')}
                     />
                     <ModalListItem
                       title="Delete policy version"
                       description="Confirm deleting a specific policy version with warning about permanent removal."
                       category="Policy"
                       size="sm"
-                      onOpen={() => setIsDeletePolicyVersionOpen(true)}
+                      onOpen={() => openModalFn('delete-policy-version')}
                     />
                     <ModalListItem
                       title="Update MFA enforcement policy"
                       description="Confirm applying MFA enforcement policy changes with warning about authentication impact."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
+                      onOpen={() => openModalFn('update-mfa-enforcement')}
                     />
                     <ModalListItem
                       title="Update OTP policy"
                       description="Confirm applying OTP policy changes with warning about MFA method availability."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateOtpPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-otp-policy')}
                     />
                     <ModalListItem
                       title="Update OTP policy settings"
                       description="Confirm applying OTP policy settings changes without warning alert."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateOtpPolicySettingsOpen(true)}
+                      onOpen={() => openModalFn('update-otp-policy-settings')}
                     />
                     <ModalListItem
                       title="Update email policy"
                       description="Confirm applying email policy changes with warning about MFA method availability."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateEmailPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-email-policy')}
                     />
                     <ModalListItem
                       title="Update email policy settings"
                       description="Confirm applying email policy settings changes without warning alert."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
+                      onOpen={() => openModalFn('update-email-policy-settings')}
                     />
                     <ModalListItem
                       title="Update general session policy"
                       description="Confirm applying session policy changes for timeout and lifespan settings."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-general-session-policy')}
                     />
                     <ModalListItem
                       title="Delete domain"
                       description="Permanently delete a domain and all its configurations."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsDeleteDomainOpen(true)}
+                      onOpen={() => openModalFn('delete-domain')}
                     />
                     <ModalListItem
                       title="Switch to domain"
                       description="Confirm switching to a different domain with unsaved changes warning."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsSwitchToDomainOpen(true)}
+                      onOpen={() => openModalFn('switch-to-domain')}
                     />
                     <ModalListItem
                       title="Delete system administrator"
                       description="Permanently delete a system administrator and their global access."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsDeleteSystemAdminOpen(true)}
+                      onOpen={() => openModalFn('delete-system-admin')}
                     />
                     <ModalListItem
                       title="Update password policy"
                       description="Confirm applying password policy changes for length, requirements, and expiration."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-password-policy')}
                     />
                     <ModalListItem
                       title="Update account lockout policy"
                       description="Confirm applying account lockout policy changes for lockout type settings."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-account-lockout-policy')}
                     />
                     <ModalListItem
                       title="Update token policy"
                       description="Confirm applying token policy changes for access and refresh token lifespan."
                       category="Security"
                       size="sm"
-                      onOpen={() => setIsUpdateTokenPolicyOpen(true)}
+                      onOpen={() => openModalFn('update-token-policy')}
                     />
                   </div>
                 </VStack>
@@ -689,7 +574,7 @@ export function ModalsPage() {
                       description="Confirm leaving page with unsaved changes."
                       category="Navigation"
                       size="sm"
-                      onOpen={() => setIsUnsavedChangesOpen(true)}
+                      onOpen={() => openModalFn('unsaved-changes')}
                     />
                   </div>
                 </VStack>
@@ -730,14 +615,14 @@ export function ModalsPage() {
                       description="Confirm deletion of a Kubernetes cluster."
                       category="Cluster"
                       size="sm"
-                      onOpen={() => setIsDeleteClusterOpen(true)}
+                      onOpen={() => openModalFn('delete-cluster')}
                     />
                     <ModalListItem
                       title="Delete namespace"
                       description="Confirm deletion of a Kubernetes namespace."
                       category="Namespace"
                       size="sm"
-                      onOpen={() => setIsDeleteNamespaceOpen(true)}
+                      onOpen={() => openModalFn('delete-namespace')}
                     />
                   </div>
                 </VStack>
@@ -753,70 +638,70 @@ export function ModalsPage() {
                       description="Confirm deletion of a Kubernetes pod."
                       category="Pod"
                       size="sm"
-                      onOpen={() => setIsDeletePodOpen(true)}
+                      onOpen={() => openModalFn('delete-pod')}
                     />
                     <ModalListItem
                       title="Delete deployment"
                       description="Confirm deletion of a Kubernetes deployment."
                       category="Deployment"
                       size="sm"
-                      onOpen={() => setIsDeleteDeploymentOpen(true)}
+                      onOpen={() => openModalFn('delete-deployment')}
                     />
                     <ModalListItem
                       title="Redeploy deployment"
                       description="Redeploy a Kubernetes deployment with warning about downtime."
                       category="Deployment"
                       size="sm"
-                      onOpen={() => setIsRedeployDeploymentOpen(true)}
+                      onOpen={() => openModalFn('redeploy-deployment')}
                     />
                     <ModalListItem
                       title="Roll back deployment"
                       description="Roll back a Kubernetes deployment to a previous revision."
                       category="Deployment"
                       size="sm"
-                      onOpen={() => setIsRollBackDeploymentOpen(true)}
+                      onOpen={() => openModalFn('roll-back-deployment')}
                     />
                     <ModalListItem
                       title="Delete statefulSet"
                       description="Confirm deletion of a Kubernetes stateful set."
                       category="StatefulSet"
                       size="sm"
-                      onOpen={() => setIsDeleteStatefulSetOpen(true)}
+                      onOpen={() => openModalFn('delete-stateful-set')}
                     />
                     <ModalListItem
                       title="Redeploy statefulSet"
                       description="Redeploy a Kubernetes stateful set with warning about downtime."
                       category="StatefulSet"
                       size="sm"
-                      onOpen={() => setIsRedeployStatefulSetOpen(true)}
+                      onOpen={() => openModalFn('redeploy-stateful-set')}
                     />
                     <ModalListItem
                       title="Delete daemonSet"
                       description="Confirm deletion of a Kubernetes daemon set."
                       category="DaemonSet"
                       size="sm"
-                      onOpen={() => setIsDeleteDaemonSetOpen(true)}
+                      onOpen={() => openModalFn('delete-daemon-set')}
                     />
                     <ModalListItem
                       title="Redeploy daemonSet"
                       description="Redeploy a Kubernetes daemon set with warning about downtime."
                       category="DaemonSet"
                       size="sm"
-                      onOpen={() => setIsRedeployDaemonSetOpen(true)}
+                      onOpen={() => openModalFn('redeploy-daemon-set')}
                     />
                     <ModalListItem
                       title="Delete job"
                       description="Confirm deletion of a Kubernetes job."
                       category="Job"
                       size="sm"
-                      onOpen={() => setIsDeleteJobOpen(true)}
+                      onOpen={() => openModalFn('delete-job')}
                     />
                     <ModalListItem
                       title="Delete cronjob"
                       description="Confirm deletion of a Kubernetes cron job."
                       category="CronJob"
                       size="sm"
-                      onOpen={() => setIsDeleteCronJobOpen(true)}
+                      onOpen={() => openModalFn('delete-cron-job')}
                     />
                   </div>
                 </VStack>
@@ -857,7 +742,7 @@ export function ModalsPage() {
                       description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
                       category="Bucket"
                       size="sm"
-                      onOpen={() => setIsDeleteBucketOpen(true)}
+                      onOpen={() => openModalFn('delete-bucket')}
                     />
                   </div>
                 </VStack>
@@ -898,49 +783,49 @@ export function ModalsPage() {
                       description="Stop a single instance with warning about service interruption."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsStopInstanceOpen(true)}
+                      onOpen={() => openModalFn('stop-instance')}
                     />
                     <ModalListItem
                       title="Reboot instance"
                       description="Reboot a single instance with warning about service interruption."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsRebootInstanceOpen(true)}
+                      onOpen={() => openModalFn('reboot-instance')}
                     />
                     <ModalListItem
                       title="Soft reboot instance"
                       description="Perform a soft reboot of a single instance."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsSoftRebootInstanceOpen(true)}
+                      onOpen={() => openModalFn('soft-reboot-instance')}
                     />
                     <ModalListItem
                       title="Confirm resize"
                       description="Confirm the resized state of an instance."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsConfirmResizeOpen(true)}
+                      onOpen={() => openModalFn('confirm-resize')}
                     />
                     <ModalListItem
                       title="Revert resize"
                       description="Revert an instance to its previous state before resize."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsRevertResizeOpen(true)}
+                      onOpen={() => openModalFn('revert-resize')}
                     />
                     <ModalListItem
                       title="Delete instance"
                       description="Permanently delete a single instance."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsDeleteInstanceOpen(true)}
+                      onOpen={() => openModalFn('delete-instance')}
                     />
                     <ModalListItem
                       title="Shelve instance"
                       description="Shelve a single instance with warning about service interruption."
                       category="Instance"
                       size="sm"
-                      onOpen={() => setIsShelveInstanceOpen(true)}
+                      onOpen={() => openModalFn('shelve-instance')}
                     />
                   </div>
                 </VStack>
@@ -956,28 +841,28 @@ export function ModalsPage() {
                       description="Start multiple selected instances with eligibility check."
                       category="Instances"
                       size="md"
-                      onOpen={() => setIsStartInstancesOpen(true)}
+                      onOpen={() => openModalFn('start-instances')}
                     />
                     <ModalListItem
                       title="Stop instances"
                       description="Stop multiple selected instances with eligibility check."
                       category="Instances"
                       size="md"
-                      onOpen={() => setIsStopInstancesOpen(true)}
+                      onOpen={() => openModalFn('stop-instances')}
                     />
                     <ModalListItem
                       title="Reboot instances"
                       description="Reboot multiple selected instances with eligibility check."
                       category="Instances"
                       size="md"
-                      onOpen={() => setIsRebootInstancesOpen(true)}
+                      onOpen={() => openModalFn('reboot-instances')}
                     />
                     <ModalListItem
                       title="Delete instances"
                       description="Permanently delete multiple selected instances with eligibility check."
                       category="Instances"
                       size="md"
-                      onOpen={() => setIsDeleteInstancesOpen(true)}
+                      onOpen={() => openModalFn('delete-instances')}
                     />
                   </div>
                 </VStack>
@@ -993,42 +878,42 @@ export function ModalsPage() {
                       description="Permanently delete a single instance template."
                       category="Template"
                       size="sm"
-                      onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
+                      onOpen={() => openModalFn('delete-instance-template')}
                     />
                     <ModalListItem
                       title="Delete instance templates"
                       description="Permanently delete multiple instance templates."
                       category="Templates"
                       size="md"
-                      onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
+                      onOpen={() => openModalFn('delete-instance-templates')}
                     />
                     <ModalListItem
                       title="Delete image"
                       description="Permanently delete a single image."
                       category="Image"
                       size="sm"
-                      onOpen={() => setIsDeleteImageOpen(true)}
+                      onOpen={() => openModalFn('delete-image')}
                     />
                     <ModalListItem
                       title="Delete images"
                       description="Permanently delete multiple images with eligibility check."
                       category="Images"
                       size="md"
-                      onOpen={() => setIsDeleteImagesOpen(true)}
+                      onOpen={() => openModalFn('delete-images')}
                     />
                     <ModalListItem
                       title="Delete snapshot"
                       description="Permanently delete a single snapshot."
                       category="Snapshot"
                       size="sm"
-                      onOpen={() => setIsDeleteSnapshotOpen(true)}
+                      onOpen={() => openModalFn('delete-snapshot')}
                     />
                     <ModalListItem
                       title="Delete snapshots"
                       description="Permanently delete multiple snapshots with eligibility check."
                       category="Snapshots"
                       size="md"
-                      onOpen={() => setIsDeleteSnapshotsOpen(true)}
+                      onOpen={() => openModalFn('delete-snapshots')}
                     />
                   </div>
                 </VStack>
@@ -1044,91 +929,91 @@ export function ModalsPage() {
                       description="Permanently delete a single volume."
                       category="Volume"
                       size="sm"
-                      onOpen={() => setIsDeleteVolumeOpen(true)}
+                      onOpen={() => openModalFn('delete-volume')}
                     />
                     <ModalListItem
                       title="Delete volumes"
                       description="Permanently delete multiple volumes with eligibility check."
                       category="Volumes"
                       size="md"
-                      onOpen={() => setIsDeleteVolumesOpen(true)}
+                      onOpen={() => openModalFn('delete-volumes')}
                     />
                     <ModalListItem
                       title="Delete volume type"
                       description="Permanently delete a single volume type."
                       category="VolumeType"
                       size="sm"
-                      onOpen={() => setIsDeleteVolumeTypeOpen(true)}
+                      onOpen={() => openModalFn('delete-volume-type')}
                     />
                     <ModalListItem
                       title="Delete volume types"
                       description="Permanently delete multiple volume types."
                       category="VolumeTypes"
                       size="sm"
-                      onOpen={() => setIsDeleteVolumeTypesOpen(true)}
+                      onOpen={() => openModalFn('delete-volume-types')}
                     />
                     <ModalListItem
                       title="Delete backup"
                       description="Permanently delete a single backup."
                       category="Backup"
                       size="sm"
-                      onOpen={() => setIsDeleteBackupOpen(true)}
+                      onOpen={() => openModalFn('delete-backup')}
                     />
                     <ModalListItem
                       title="Delete backups"
                       description="Permanently delete multiple backups with eligibility check."
                       category="Backups"
                       size="md"
-                      onOpen={() => setIsDeleteBackupsOpen(true)}
+                      onOpen={() => openModalFn('delete-backups')}
                     />
                     <ModalListItem
                       title="Delete encryption"
                       description="Remove encryption configuration from a volume type."
                       category="Encryption"
                       size="sm"
-                      onOpen={() => setIsDeleteEncryptionOpen(true)}
+                      onOpen={() => openModalFn('delete-encryption')}
                     />
                     <ModalListItem
                       title="Delete extra spec"
                       description="Remove extra specification from a volume type."
                       category="ExtraSpec"
                       size="sm"
-                      onOpen={() => setIsDeleteExtraSpecOpen(true)}
+                      onOpen={() => openModalFn('delete-extra-spec')}
                     />
                     <ModalListItem
                       title="Delete extra specs"
                       description="Remove multiple extra specifications from a volume type."
                       category="ExtraSpecs"
                       size="sm"
-                      onOpen={() => setIsDeleteExtraSpecsOpen(true)}
+                      onOpen={() => openModalFn('delete-extra-specs')}
                     />
                     <ModalListItem
                       title="Delete QoS spec"
                       description="Permanently delete a single QoS specification."
                       category="QoSSpec"
                       size="sm"
-                      onOpen={() => setIsDeleteQoSSpecOpen(true)}
+                      onOpen={() => openModalFn('delete-qo-s-spec')}
                     />
                     <ModalListItem
                       title="Delete QoS specs"
                       description="Permanently delete multiple QoS specifications."
                       category="QoSSpecs"
                       size="sm"
-                      onOpen={() => setIsDeleteQoSSpecsOpen(true)}
+                      onOpen={() => openModalFn('delete-qo-s-specs')}
                     />
                     <ModalListItem
                       title="Delete QoS extra spec"
                       description="Remove extra specification from a QoS spec."
                       category="QoSExtra"
                       size="sm"
-                      onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
+                      onOpen={() => openModalFn('delete-qo-s-extra-spec')}
                     />
                     <ModalListItem
                       title="Delete QoS extra specs"
                       description="Remove multiple extra specifications from a QoS spec."
                       category="QoSExtras"
                       size="sm"
-                      onOpen={() => setIsDeleteQoSExtraSpecsOpen(true)}
+                      onOpen={() => openModalFn('delete-qo-s-extra-specs')}
                     />
                   </div>
                 </VStack>
@@ -1144,119 +1029,119 @@ export function ModalsPage() {
                       description="Permanently delete a single network with warning."
                       category="Network"
                       size="sm"
-                      onOpen={() => setIsDeleteNetworkOpen(true)}
+                      onOpen={() => openModalFn('delete-network')}
                     />
                     <ModalListItem
                       title="Delete networks"
                       description="Permanently delete multiple networks with eligibility check."
                       category="Networks"
                       size="md"
-                      onOpen={() => setIsDeleteNetworksOpen(true)}
+                      onOpen={() => openModalFn('delete-networks')}
                     />
                     <ModalListItem
                       title="Delete subnet"
                       description="Permanently delete a single subnet with warning."
                       category="Subnet"
                       size="sm"
-                      onOpen={() => setIsDeleteSubnetOpen(true)}
+                      onOpen={() => openModalFn('delete-subnet')}
                     />
                     <ModalListItem
                       title="Delete subnets"
                       description="Permanently delete multiple subnets."
                       category="Subnets"
                       size="sm"
-                      onOpen={() => setIsDeleteSubnetsOpen(true)}
+                      onOpen={() => openModalFn('delete-subnets')}
                     />
                     <ModalListItem
                       title="Delete port"
                       description="Permanently delete a single port with warning."
                       category="Port"
                       size="sm"
-                      onOpen={() => setIsDeletePortOpen(true)}
+                      onOpen={() => openModalFn('delete-port')}
                     />
                     <ModalListItem
                       title="Delete ports"
                       description="Permanently delete multiple ports with warning."
                       category="Ports"
                       size="sm"
-                      onOpen={() => setIsDeletePortsOpen(true)}
+                      onOpen={() => openModalFn('delete-ports')}
                     />
                     <ModalListItem
                       title="Delete router"
                       description="Permanently delete a single router with warning."
                       category="Router"
                       size="sm"
-                      onOpen={() => setIsDeleteRouterOpen(true)}
+                      onOpen={() => openModalFn('delete-router')}
                     />
                     <ModalListItem
                       title="Delete routers"
                       description="Permanently delete multiple routers with eligibility check."
                       category="Routers"
                       size="md"
-                      onOpen={() => setIsDeleteRoutersOpen(true)}
+                      onOpen={() => openModalFn('delete-routers')}
                     />
                     <ModalListItem
                       title="Delete static routes"
                       description="Permanently delete multiple static routes."
                       category="Routes"
                       size="sm"
-                      onOpen={() => setIsDeleteStaticRoutesOpen(true)}
+                      onOpen={() => openModalFn('delete-static-routes')}
                     />
                     <ModalListItem
                       title="Remove DHCP agents"
                       description="Remove DHCP agents from a network."
                       category="DHCP"
                       size="sm"
-                      onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
+                      onOpen={() => openModalFn('remove-d-h-c-p-agents')}
                     />
                     <ModalListItem
                       title="Release fixed IP"
                       description="Release a fixed IP address from a port."
                       category="IP"
                       size="sm"
-                      onOpen={() => setIsReleaseFixedIPOpen(true)}
+                      onOpen={() => openModalFn('release-fixed-i-p')}
                     />
                     <ModalListItem
                       title="Delete allowed address pair"
                       description="Remove an allowed address pair from a port."
                       category="Address"
                       size="sm"
-                      onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
+                      onOpen={() => openModalFn('delete-allowed-address-pair')}
                     />
                     <ModalListItem
                       title="Delete security group"
                       description="Permanently delete a single security group."
                       category="SecGroup"
                       size="sm"
-                      onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
+                      onOpen={() => openModalFn('delete-security-group-admin')}
                     />
                     <ModalListItem
                       title="Delete security groups"
                       description="Permanently delete multiple security groups."
                       category="SecGroups"
                       size="md"
-                      onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
+                      onOpen={() => openModalFn('delete-security-groups-admin')}
                     />
                     <ModalListItem
                       title="Delete firewall"
                       description="Permanently delete a single firewall."
                       category="Firewall"
                       size="sm"
-                      onOpen={() => setIsDeleteFirewallOpen(true)}
+                      onOpen={() => openModalFn('delete-firewall')}
                     />
                     <ModalListItem
                       title="Delete firewalls"
                       description="Permanently delete multiple firewalls."
                       category="Firewalls"
                       size="md"
-                      onOpen={() => setIsDeleteFirewallsOpen(true)}
+                      onOpen={() => openModalFn('delete-firewalls')}
                     />
                     <ModalListItem
                       title="Unsaved changes"
                       description="Confirm leaving with unsaved changes."
                       category="Confirm"
                       size="sm"
-                      onOpen={() => setIsUnsavedChangesAdminOpen(true)}
+                      onOpen={() => openModalFn('unsaved-changes-admin')}
                     />
                   </div>
                 </VStack>
@@ -1272,112 +1157,112 @@ export function ModalsPage() {
                       description="Disassociate a floating IP from a resource."
                       category="FloatingIP"
                       size="sm"
-                      onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                      onOpen={() => openModalFn('disassociate-floating-i-p')}
                     />
                     <ModalListItem
                       title="Release floating IP"
                       description="Release a single floating IP address."
                       category="FloatingIP"
                       size="sm"
-                      onOpen={() => setIsReleaseFloatingIPOpen(true)}
+                      onOpen={() => openModalFn('release-floating-i-p')}
                     />
                     <ModalListItem
                       title="Release floating IPs"
                       description="Release multiple floating IP addresses."
                       category="FloatingIPs"
                       size="sm"
-                      onOpen={() => setIsReleaseFloatingIPsOpen(true)}
+                      onOpen={() => openModalFn('release-floating-i-ps')}
                     />
                     <ModalListItem
                       title="Delete load balancer"
                       description="Permanently delete a single load balancer."
                       category="LB"
                       size="sm"
-                      onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
+                      onOpen={() => openModalFn('delete-load-balancer-admin')}
                     />
                     <ModalListItem
                       title="Delete load balancers"
                       description="Permanently delete multiple load balancers."
                       category="LBs"
                       size="md"
-                      onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
+                      onOpen={() => openModalFn('delete-load-balancers-admin')}
                     />
                     <ModalListItem
                       title="Delete listener"
                       description="Permanently delete a single listener."
                       category="Listener"
                       size="sm"
-                      onOpen={() => setIsDeleteListenerOpen(true)}
+                      onOpen={() => openModalFn('delete-listener')}
                     />
                     <ModalListItem
                       title="Delete listeners"
                       description="Permanently delete multiple listeners."
                       category="Listeners"
                       size="md"
-                      onOpen={() => setIsDeleteListenersOpen(true)}
+                      onOpen={() => openModalFn('delete-listeners')}
                     />
                     <ModalListItem
                       title="Delete pool"
                       description="Permanently delete a single pool."
                       category="Pool"
                       size="sm"
-                      onOpen={() => setIsDeletePoolOpen(true)}
+                      onOpen={() => openModalFn('delete-pool')}
                     />
                     <ModalListItem
                       title="Delete pools"
                       description="Permanently delete multiple pools."
                       category="Pools"
                       size="md"
-                      onOpen={() => setIsDeletePoolsOpen(true)}
+                      onOpen={() => openModalFn('delete-pools')}
                     />
                     <ModalListItem
                       title="Delete member"
                       description="Remove a single member from a pool."
                       category="Member"
                       size="sm"
-                      onOpen={() => setIsDeleteMemberOpen(true)}
+                      onOpen={() => openModalFn('delete-member')}
                     />
                     <ModalListItem
                       title="Delete members"
                       description="Remove multiple members from a pool."
                       category="Members"
                       size="md"
-                      onOpen={() => setIsDeleteMembersOpen(true)}
+                      onOpen={() => openModalFn('delete-members')}
                     />
                     <ModalListItem
                       title="Delete security group rule"
                       description="Permanently delete a single security group rule."
                       category="Rule"
                       size="sm"
-                      onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
+                      onOpen={() => openModalFn('delete-security-group-rule')}
                     />
                     <ModalListItem
                       title="Delete security group rules"
                       description="Permanently delete multiple security group rules."
                       category="Rules"
                       size="md"
-                      onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
+                      onOpen={() => openModalFn('delete-security-group-rules')}
                     />
                     <ModalListItem
                       title="Delete L7 policy"
                       description="Permanently delete a single L7 policy."
                       category="L7Policy"
                       size="sm"
-                      onOpen={() => setIsDeleteL7PolicyOpen(true)}
+                      onOpen={() => openModalFn('delete-l7-policy')}
                     />
                     <ModalListItem
                       title="Delete L7 policies"
                       description="Permanently delete multiple L7 policies."
                       category="L7Policies"
                       size="md"
-                      onOpen={() => setIsDeleteL7PoliciesOpen(true)}
+                      onOpen={() => openModalFn('delete-l7-policies')}
                     />
                     <ModalListItem
                       title="Delete health monitor"
                       description="Permanently delete a health monitor from a pool."
                       category="Monitor"
                       size="sm"
-                      onOpen={() => setIsDeleteHealthMonitorOpen(true)}
+                      onOpen={() => openModalFn('delete-health-monitor')}
                     />
                   </div>
                 </VStack>
@@ -1393,63 +1278,63 @@ export function ModalsPage() {
                       description="Permanently delete a single firewall policy."
                       category="FWPolicy"
                       size="sm"
-                      onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
+                      onOpen={() => openModalFn('delete-firewall-policy')}
                     />
                     <ModalListItem
                       title="Delete firewall policies"
                       description="Permanently delete multiple firewall policies."
                       category="FWPolicies"
                       size="md"
-                      onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
+                      onOpen={() => openModalFn('delete-firewall-policies')}
                     />
                     <ModalListItem
                       title="Delete firewall rule"
                       description="Permanently delete a single firewall rule."
                       category="FWRule"
                       size="sm"
-                      onOpen={() => setIsDeleteFirewallRuleOpen(true)}
+                      onOpen={() => openModalFn('delete-firewall-rule')}
                     />
                     <ModalListItem
                       title="Delete firewall rules"
                       description="Permanently delete multiple firewall rules."
                       category="FWRules"
                       size="md"
-                      onOpen={() => setIsDeleteFirewallRulesOpen(true)}
+                      onOpen={() => openModalFn('delete-firewall-rules')}
                     />
                     <ModalListItem
                       title="Delete tenant"
                       description="Permanently delete a single tenant."
                       category="Tenant"
                       size="sm"
-                      onOpen={() => setIsDeleteTenantOpen(true)}
+                      onOpen={() => openModalFn('delete-tenant')}
                     />
                     <ModalListItem
                       title="Delete tenants"
                       description="Permanently delete multiple tenants."
                       category="Tenants"
                       size="sm"
-                      onOpen={() => setIsDeleteTenantsOpen(true)}
+                      onOpen={() => openModalFn('delete-tenants')}
                     />
                     <ModalListItem
                       title="Delete metadata"
                       description="Remove a single metadata entry."
                       category="Metadata"
                       size="sm"
-                      onOpen={() => setIsDeleteMetadataOpen(true)}
+                      onOpen={() => openModalFn('delete-metadata')}
                     />
                     <ModalListItem
                       title="Delete metadatas"
                       description="Remove multiple metadata entries."
                       category="Metadatas"
                       size="md"
-                      onOpen={() => setIsDeleteMetadatasOpen(true)}
+                      onOpen={() => openModalFn('delete-metadatas')}
                     />
                     <ModalListItem
                       title="Manage member"
                       description="Redirect to IAM to manage users and groups."
                       category="IAM"
                       size="sm"
-                      onOpen={() => setIsManageMemberOpen(true)}
+                      onOpen={() => openModalFn('manage-member')}
                     />
                   </div>
                 </VStack>
@@ -1490,7 +1375,7 @@ export function ModalsPage() {
                       description="Confirm deletion of an agent source with warning."
                       category="Agent"
                       size="sm"
-                      onOpen={() => setIsDeleteAgentSourceOpen(true)}
+                      onOpen={() => openModalFn('delete-agent-source')}
                     />
                   </div>
                 </VStack>
@@ -1504,8 +1389,8 @@ export function ModalsPage() {
 
       {/* Delete Snapshot Modal */}
       <Modal
-        isOpen={isConfirmDeleteOpen}
-        onClose={() => setIsConfirmDeleteOpen(false)}
+        isOpen={openModal === 'confirm-delete'}
+        onClose={closeModal}
         title="Delete snapshot"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -1537,12 +1422,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsConfirmDeleteOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1550,7 +1430,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Snapshot deleted');
-              setIsConfirmDeleteOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1561,8 +1441,8 @@ export function ModalsPage() {
 
       {/* Delete Security group Modal (Single) */}
       <Modal
-        isOpen={isDeleteSecurityGroupOpen}
-        onClose={() => setIsDeleteSecurityGroupOpen(false)}
+        isOpen={openModal === 'delete-security-group'}
+        onClose={closeModal}
         title="Delete security group"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -1593,12 +1473,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1606,7 +1481,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security group deleted');
-              setIsDeleteSecurityGroupOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1617,8 +1492,8 @@ export function ModalsPage() {
 
       {/* Delete Security groups Modal (Multiple) */}
       <Modal
-        isOpen={isDeleteSecurityGroupsMultipleOpen}
-        onClose={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
+        isOpen={openModal === 'delete-security-groups-multiple'}
+        onClose={closeModal}
         title="Delete security groups"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -1660,12 +1535,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1673,7 +1543,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security groups deleted');
-              setIsDeleteSecurityGroupsMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1684,8 +1554,8 @@ export function ModalsPage() {
 
       {/* Delete Rule Modal (Single) */}
       <Modal
-        isOpen={isDeleteRuleOpen}
-        onClose={() => setIsDeleteRuleOpen(false)}
+        isOpen={openModal === 'delete-rule'}
+        onClose={closeModal}
         title="Delete rule"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -1702,12 +1572,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRuleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1715,7 +1580,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Rule deleted');
-              setIsDeleteRuleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1726,8 +1591,8 @@ export function ModalsPage() {
 
       {/* Delete Rules Modal (Multiple with Warning) */}
       <Modal
-        isOpen={isDeleteRulesMultipleOpen}
-        onClose={() => setIsDeleteRulesMultipleOpen(false)}
+        isOpen={openModal === 'delete-rules-multiple'}
+        onClose={closeModal}
         title="Delete rules"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -1769,12 +1634,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRulesMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1782,7 +1642,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Rules deleted');
-              setIsDeleteRulesMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1793,8 +1653,8 @@ export function ModalsPage() {
 
       {/* Detach volume Modal */}
       <Modal
-        isOpen={isDetachVolumeOpen}
-        onClose={() => setIsDetachVolumeOpen(false)}
+        isOpen={openModal === 'detach-volume'}
+        onClose={closeModal}
         title="Detach volume"
         description="This action detaches the volume."
         size="sm"
@@ -1824,12 +1684,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDetachVolumeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1837,7 +1692,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Volume detached');
-              setIsDetachVolumeOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1848,8 +1703,8 @@ export function ModalsPage() {
 
       {/* Restore backup (Small) Modal */}
       <Modal
-        isOpen={isRestoreBackupSmallOpen}
-        onClose={() => setIsRestoreBackupSmallOpen(false)}
+        isOpen={openModal === 'restore-backup-small'}
+        onClose={closeModal}
         title="Restore backup"
         description="This action restores the backup."
         size="sm"
@@ -1868,12 +1723,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRestoreBackupSmallOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1881,7 +1731,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Backup restored');
-              setIsRestoreBackupSmallOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1892,8 +1742,8 @@ export function ModalsPage() {
 
       {/* Restore backup (Medium) Modal */}
       <Modal
-        isOpen={isRestoreBackupMediumOpen}
-        onClose={() => setIsRestoreBackupMediumOpen(false)}
+        isOpen={openModal === 'restore-backup-medium'}
+        onClose={closeModal}
         title="Restore backup"
         description="This action restores the backup."
         size="md"
@@ -1925,12 +1775,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRestoreBackupMediumOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -1938,7 +1783,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Backup restored');
-              setIsRestoreBackupMediumOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -1949,8 +1794,8 @@ export function ModalsPage() {
 
       {/* Restore backup (Large) Modal */}
       <Modal
-        isOpen={isRestoreBackupLargeOpen}
-        onClose={() => setIsRestoreBackupLargeOpen(false)}
+        isOpen={openModal === 'restore-backup-large'}
+        onClose={closeModal}
         title="Restore backup"
         description="This action restores the backup."
         size="lg"
@@ -1995,12 +1840,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRestoreBackupLargeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button variant="primary" size="md" disabled className="flex-1">
@@ -2011,8 +1851,8 @@ export function ModalsPage() {
 
       {/* Disassociate floating IP Modal */}
       <Modal
-        isOpen={isDisassociateFloatingIPOpen}
-        onClose={() => setIsDisassociateFloatingIPOpen(false)}
+        isOpen={openModal === 'disassociate-floating-i-p'}
+        onClose={closeModal}
         title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately. The IP will remain in your project and can be re-associated later."
         size="sm"
@@ -2043,12 +1883,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDisassociateFloatingIPOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2056,7 +1891,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Disassociate floating IP confirmed');
-              setIsDisassociateFloatingIPOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2067,8 +1902,8 @@ export function ModalsPage() {
 
       {/* Disassociate floating IP (Load balancer) Modal */}
       <Modal
-        isOpen={isDisassociateFloatingIPLBOpen}
-        onClose={() => setIsDisassociateFloatingIPLBOpen(false)}
+        isOpen={openModal === 'disassociate-floating-i-p-l-b'}
+        onClose={closeModal}
         title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from this load balancer. External access to the load balancer will be interrupted."
         size="sm"
@@ -2097,12 +1932,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDisassociateFloatingIPLBOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2110,7 +1940,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Disassociate floating IP from load balancer confirmed');
-              setIsDisassociateFloatingIPLBOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2121,8 +1951,8 @@ export function ModalsPage() {
 
       {/* Release floating IP (Small) Modal */}
       <Modal
-        isOpen={isReleaseFloatingIPSmallOpen}
-        onClose={() => setIsReleaseFloatingIPSmallOpen(false)}
+        isOpen={openModal === 'release-floating-i-p-small'}
+        onClose={closeModal}
         title="Release floating IP"
         description="This action releases the floating IP."
         size="sm"
@@ -2154,12 +1984,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsReleaseFloatingIPSmallOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2167,7 +1992,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Release floating IP confirmed');
-              setIsReleaseFloatingIPSmallOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2178,8 +2003,8 @@ export function ModalsPage() {
 
       {/* Release floating IP (Medium) Modal */}
       <Modal
-        isOpen={isReleaseFloatingIPMediumOpen}
-        onClose={() => setIsReleaseFloatingIPMediumOpen(false)}
+        isOpen={openModal === 'release-floating-i-p-medium'}
+        onClose={closeModal}
         title="Release floating IP"
         description="This action releases the floating IP."
         size="md"
@@ -2216,12 +2041,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsReleaseFloatingIPMediumOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2229,7 +2049,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Disassociate floating IPs confirmed');
-              setIsReleaseFloatingIPMediumOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2240,8 +2060,8 @@ export function ModalsPage() {
 
       {/* Delete Load balancer Modal (Single) */}
       <Modal
-        isOpen={isDeleteLoadBalancerOpen}
-        onClose={() => setIsDeleteLoadBalancerOpen(false)}
+        isOpen={openModal === 'delete-load-balancer'}
+        onClose={closeModal}
         title="Delete load balancer"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -2272,12 +2092,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteLoadBalancerOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2285,7 +2100,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Load balancer deleted');
-              setIsDeleteLoadBalancerOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2296,8 +2111,8 @@ export function ModalsPage() {
 
       {/* Release Load balancers Modal (Multiple) */}
       <Modal
-        isOpen={isDeleteLoadBalancersMultipleOpen}
-        onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
+        isOpen={openModal === 'delete-load-balancers-multiple'}
+        onClose={closeModal}
         title="Release load balancers"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -2333,12 +2148,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteLoadBalancersMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2346,7 +2156,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Load balancers deleted');
-              setIsDeleteLoadBalancersMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2360,8 +2170,8 @@ export function ModalsPage() {
 
       {/* Delete User Modal */}
       <Modal
-        isOpen={isDeleteUserOpen}
-        onClose={() => setIsDeleteUserOpen(false)}
+        isOpen={openModal === 'delete-user'}
+        onClose={closeModal}
         title="Delete user"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -2391,12 +2201,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteUserOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2404,7 +2209,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('User deleted');
-              setIsDeleteUserOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2415,8 +2220,8 @@ export function ModalsPage() {
 
       {/* Delete Users (Multiple) Modal */}
       <Modal
-        isOpen={isDeleteUsersMultipleOpen}
-        onClose={() => setIsDeleteUsersMultipleOpen(false)}
+        isOpen={openModal === 'delete-users-multiple'}
+        onClose={closeModal}
         title="Delete users"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -2465,12 +2270,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteUsersMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2478,7 +2278,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Users deleted');
-              setIsDeleteUsersMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2489,8 +2289,8 @@ export function ModalsPage() {
 
       {/* Confirm User Password Modal */}
       <Modal
-        isOpen={isConfirmUserPasswordOpen}
-        onClose={() => setIsConfirmUserPasswordOpen(false)}
+        isOpen={openModal === 'confirm-user-password'}
+        onClose={closeModal}
         title="Confirm user password"
         description="Review the username and password. The password can only be viewed at this step."
         size="sm"
@@ -2553,12 +2353,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex w-full">
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => setIsConfirmUserPasswordOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="primary" size="md" onClick={closeModal} className="flex-1">
             Close{' '}
           </Button>
         </div>
@@ -2566,8 +2361,8 @@ export function ModalsPage() {
 
       {/* Unsaved Changes Modal */}
       <Modal
-        isOpen={isUnsavedChangesOpen}
-        onClose={() => setIsUnsavedChangesOpen(false)}
+        isOpen={openModal === 'unsaved-changes'}
+        onClose={closeModal}
         title="Unsaved changes"
         description="Any unsaved changes will be lost. Do you want to leave?"
         size="sm"
@@ -2579,18 +2374,13 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Leave clicked');
-              setIsUnsavedChangesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
             Leave{' '}
           </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => setIsUnsavedChangesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="primary" size="md" onClick={closeModal} className="flex-1">
             Stay{' '}
           </Button>
         </div>
@@ -2598,8 +2388,8 @@ export function ModalsPage() {
 
       {/* Detach User Group Modal */}
       <Modal
-        isOpen={isDetachUserGroupOpen}
-        onClose={() => setIsDetachUserGroupOpen(false)}
+        isOpen={openModal === 'detach-user-group'}
+        onClose={closeModal}
         title="Detach user group"
         description="This action detaches the user from the group."
         size="sm"
@@ -2639,12 +2429,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDetachUserGroupOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2652,7 +2437,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('User detached from group');
-              setIsDetachUserGroupOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2663,8 +2448,8 @@ export function ModalsPage() {
 
       {/* Detach Role Modal */}
       <Modal
-        isOpen={isDetachRoleOpen}
-        onClose={() => setIsDetachRoleOpen(false)}
+        isOpen={openModal === 'detach-role'}
+        onClose={closeModal}
         title="Detach role"
         description="This action detaches the role from the user."
         size="sm"
@@ -2701,12 +2486,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDetachRoleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2714,7 +2494,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Role detached from user');
-              setIsDetachRoleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2725,8 +2505,8 @@ export function ModalsPage() {
 
       {/* Remove OTP MFA Modal */}
       <Modal
-        isOpen={isRemoveOtpMfaOpen}
-        onClose={() => setIsRemoveOtpMfaOpen(false)}
+        isOpen={openModal === 'remove-otp-mfa'}
+        onClose={closeModal}
         title="Remove OTP MFA"
         description="This action removes OTP MFA for the user."
         size="sm"
@@ -2755,12 +2535,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRemoveOtpMfaOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2768,7 +2543,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('OTP MFA removed');
-              setIsRemoveOtpMfaOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2779,8 +2554,8 @@ export function ModalsPage() {
 
       {/* Terminate All Sessions Modal */}
       <Modal
-        isOpen={isTerminateAllSessionsOpen}
-        onClose={() => setIsTerminateAllSessionsOpen(false)}
+        isOpen={openModal === 'terminate-all-sessions'}
+        onClose={closeModal}
         title="Terminate all sessions"
         description="This action terminates all sessions for the user."
         size="sm"
@@ -2810,12 +2585,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsTerminateAllSessionsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2823,7 +2593,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('All sessions terminated');
-              setIsTerminateAllSessionsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2834,8 +2604,8 @@ export function ModalsPage() {
 
       {/* Terminate Session Modal (Single Session) */}
       <Modal
-        isOpen={isTerminateSessionOpen}
-        onClose={() => setIsTerminateSessionOpen(false)}
+        isOpen={openModal === 'terminate-session'}
+        onClose={closeModal}
         title="Terminate session"
         description="This action terminates the session."
         size="sm"
@@ -2867,12 +2637,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsTerminateSessionOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2880,7 +2645,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Session terminated');
-              setIsTerminateSessionOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2891,8 +2656,8 @@ export function ModalsPage() {
 
       {/* Remove User From Group Modal */}
       <Modal
-        isOpen={isRemoveUserFromGroupOpen}
-        onClose={() => setIsRemoveUserFromGroupOpen(false)}
+        isOpen={openModal === 'remove-user-from-group'}
+        onClose={closeModal}
         title="Remove user"
         description="This action removes the user from the group."
         size="sm"
@@ -2931,12 +2696,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRemoveUserFromGroupOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2944,7 +2704,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('User removed from group');
-              setIsRemoveUserFromGroupOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -2955,8 +2715,8 @@ export function ModalsPage() {
 
       {/* Delete Role Modal */}
       <Modal
-        isOpen={isDeleteRoleOpen}
-        onClose={() => setIsDeleteRoleOpen(false)}
+        isOpen={openModal === 'delete-role'}
+        onClose={closeModal}
         title="Delete role"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -2985,12 +2745,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRoleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -2998,7 +2753,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Role deleted');
-              setIsDeleteRoleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3009,8 +2764,8 @@ export function ModalsPage() {
 
       {/* Delete Roles (Multiple) Modal */}
       <Modal
-        isOpen={isDeleteRolesMultipleOpen}
-        onClose={() => setIsDeleteRolesMultipleOpen(false)}
+        isOpen={openModal === 'delete-roles-multiple'}
+        onClose={closeModal}
         title="Delete roles"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -3059,12 +2814,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRolesMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3072,7 +2822,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Multiple roles deleted');
-              setIsDeleteRolesMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3083,8 +2833,8 @@ export function ModalsPage() {
 
       {/* Detach Policy Modal */}
       <Modal
-        isOpen={isDetachPolicyOpen}
-        onClose={() => setIsDetachPolicyOpen(false)}
+        isOpen={openModal === 'detach-policy'}
+        onClose={closeModal}
         title="Detach policy"
         description="This action detaches the policy from the role."
         size="sm"
@@ -3124,12 +2874,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDetachPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3137,7 +2882,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Policy detached from role');
-              setIsDetachPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3148,8 +2893,8 @@ export function ModalsPage() {
 
       {/* Delete Policy Modal */}
       <Modal
-        isOpen={isDeletePolicyOpen}
-        onClose={() => setIsDeletePolicyOpen(false)}
+        isOpen={openModal === 'delete-policy'}
+        onClose={closeModal}
         title="Delete policy"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -3181,12 +2926,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3194,7 +2934,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Policy deleted');
-              setIsDeletePolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3205,8 +2945,8 @@ export function ModalsPage() {
 
       {/* Delete Policies (Multiple) Modal */}
       <Modal
-        isOpen={isDeletePoliciesMultipleOpen}
-        onClose={() => setIsDeletePoliciesMultipleOpen(false)}
+        isOpen={openModal === 'delete-policies-multiple'}
+        onClose={closeModal}
         title="Delete policies"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -3255,12 +2995,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePoliciesMultipleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3268,7 +3003,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Multiple policies deleted');
-              setIsDeletePoliciesMultipleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3279,8 +3014,8 @@ export function ModalsPage() {
 
       {/* Revert Policy Version Modal */}
       <Modal
-        isOpen={isRevertPolicyVersionOpen}
-        onClose={() => setIsRevertPolicyVersionOpen(false)}
+        isOpen={openModal === 'revert-policy-version'}
+        onClose={closeModal}
         title="Revert policy version"
         description="This action reverts the policy to the selected version."
         size="sm"
@@ -3318,12 +3053,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRevertPolicyVersionOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3331,7 +3061,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Policy version reverted');
-              setIsRevertPolicyVersionOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3342,8 +3072,8 @@ export function ModalsPage() {
 
       {/* Delete Policy Version Modal */}
       <Modal
-        isOpen={isDeletePolicyVersionOpen}
-        onClose={() => setIsDeletePolicyVersionOpen(false)}
+        isOpen={openModal === 'delete-policy-version'}
+        onClose={closeModal}
         title="Delete policy version"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -3365,12 +3095,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePolicyVersionOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3378,7 +3103,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Policy version deleted');
-              setIsDeletePolicyVersionOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3389,8 +3114,8 @@ export function ModalsPage() {
 
       {/* Update MFA Enforcement Policy Modal */}
       <Modal
-        isOpen={isUpdateMfaEnforcementOpen}
-        onClose={() => setIsUpdateMfaEnforcementOpen(false)}
+        isOpen={openModal === 'update-mfa-enforcement'}
+        onClose={closeModal}
         title="Update MFA enforcement policy"
         description="This action applies the changes."
         size="sm"
@@ -3422,12 +3147,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateMfaEnforcementOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3435,7 +3155,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('MFA enforcement policy updated');
-              setIsUpdateMfaEnforcementOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3446,8 +3166,8 @@ export function ModalsPage() {
 
       {/* Update OTP Policy Modal */}
       <Modal
-        isOpen={isUpdateOtpPolicyOpen}
-        onClose={() => setIsUpdateOtpPolicyOpen(false)}
+        isOpen={openModal === 'update-otp-policy'}
+        onClose={closeModal}
         title="Update OTP policy"
         description="This action applies the changes."
         size="sm"
@@ -3479,12 +3199,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateOtpPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3492,7 +3207,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('OTP policy updated');
-              setIsUpdateOtpPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3503,8 +3218,8 @@ export function ModalsPage() {
 
       {/* Update OTP Policy Settings Modal */}
       <Modal
-        isOpen={isUpdateOtpPolicySettingsOpen}
-        onClose={() => setIsUpdateOtpPolicySettingsOpen(false)}
+        isOpen={openModal === 'update-otp-policy-settings'}
+        onClose={closeModal}
         title="Update OTP policy"
         description="This action applies the changes."
         size="sm"
@@ -3524,12 +3239,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateOtpPolicySettingsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3537,7 +3247,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('OTP policy settings updated');
-              setIsUpdateOtpPolicySettingsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3548,8 +3258,8 @@ export function ModalsPage() {
 
       {/* Update Email Policy Modal */}
       <Modal
-        isOpen={isUpdateEmailPolicyOpen}
-        onClose={() => setIsUpdateEmailPolicyOpen(false)}
+        isOpen={openModal === 'update-email-policy'}
+        onClose={closeModal}
         title="Update email policy"
         description="This action applies the changes."
         size="sm"
@@ -3581,12 +3291,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateEmailPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3594,7 +3299,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Email policy updated');
-              setIsUpdateEmailPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3605,8 +3310,8 @@ export function ModalsPage() {
 
       {/* Update Email Policy Settings Modal */}
       <Modal
-        isOpen={isUpdateEmailPolicySettingsOpen}
-        onClose={() => setIsUpdateEmailPolicySettingsOpen(false)}
+        isOpen={openModal === 'update-email-policy-settings'}
+        onClose={closeModal}
         title="Update email policy"
         description="This action applies the changes."
         size="sm"
@@ -3628,12 +3333,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateEmailPolicySettingsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3641,7 +3341,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Email policy settings updated');
-              setIsUpdateEmailPolicySettingsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3652,8 +3352,8 @@ export function ModalsPage() {
 
       {/* Update General Session Policy Modal */}
       <Modal
-        isOpen={isUpdateGeneralSessionPolicyOpen}
-        onClose={() => setIsUpdateGeneralSessionPolicyOpen(false)}
+        isOpen={openModal === 'update-general-session-policy'}
+        onClose={closeModal}
         title="Update general session policy"
         description="This action applies the changes."
         size="sm"
@@ -3675,12 +3375,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateGeneralSessionPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3688,7 +3383,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('General session policy updated');
-              setIsUpdateGeneralSessionPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3699,8 +3394,8 @@ export function ModalsPage() {
 
       {/* Delete Domain Modal */}
       <Modal
-        isOpen={isDeleteDomainOpen}
-        onClose={() => setIsDeleteDomainOpen(false)}
+        isOpen={openModal === 'delete-domain'}
+        onClose={closeModal}
         title="Delete domain"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -3732,12 +3427,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteDomainOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3745,7 +3435,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Domain deleted');
-              setIsDeleteDomainOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3756,8 +3446,8 @@ export function ModalsPage() {
 
       {/* Switch to Domain Modal */}
       <Modal
-        isOpen={isSwitchToDomainOpen}
-        onClose={() => setIsSwitchToDomainOpen(false)}
+        isOpen={openModal === 'switch-to-domain'}
+        onClose={closeModal}
         title="Switch to domain"
         description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
         size="sm"
@@ -3789,12 +3479,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsSwitchToDomainOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3802,7 +3487,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Switched to domain');
-              setIsSwitchToDomainOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3813,8 +3498,8 @@ export function ModalsPage() {
 
       {/* Delete System Administrator Modal */}
       <Modal
-        isOpen={isDeleteSystemAdminOpen}
-        onClose={() => setIsDeleteSystemAdminOpen(false)}
+        isOpen={openModal === 'delete-system-admin'}
+        onClose={closeModal}
         title="Delete system administrator"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
@@ -3846,12 +3531,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSystemAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3859,7 +3539,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('System administrator deleted');
-              setIsDeleteSystemAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3870,8 +3550,8 @@ export function ModalsPage() {
 
       {/* Update Password Policy Modal */}
       <Modal
-        isOpen={isUpdatePasswordPolicyOpen}
-        onClose={() => setIsUpdatePasswordPolicyOpen(false)}
+        isOpen={openModal === 'update-password-policy'}
+        onClose={closeModal}
         title="Update password policy"
         description="This action applies the changes."
         size="sm"
@@ -3897,12 +3577,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdatePasswordPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3910,7 +3585,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Password policy updated');
-              setIsUpdatePasswordPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3921,8 +3596,8 @@ export function ModalsPage() {
 
       {/* Update Account Lockout Policy Modal */}
       <Modal
-        isOpen={isUpdateAccountLockoutPolicyOpen}
-        onClose={() => setIsUpdateAccountLockoutPolicyOpen(false)}
+        isOpen={openModal === 'update-account-lockout-policy'}
+        onClose={closeModal}
         title="Update account lockout policy"
         description="This action applies the changes."
         size="sm"
@@ -3943,12 +3618,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateAccountLockoutPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -3956,7 +3626,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Account lockout policy updated');
-              setIsUpdateAccountLockoutPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -3967,8 +3637,8 @@ export function ModalsPage() {
 
       {/* Update Token Policy Modal */}
       <Modal
-        isOpen={isUpdateTokenPolicyOpen}
-        onClose={() => setIsUpdateTokenPolicyOpen(false)}
+        isOpen={openModal === 'update-token-policy'}
+        onClose={closeModal}
         title="Update token policy"
         description="This action applies the changes."
         size="sm"
@@ -4001,12 +3671,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUpdateTokenPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4014,7 +3679,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Token policy updated');
-              setIsUpdateTokenPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4028,8 +3693,8 @@ export function ModalsPage() {
 
       {/* Delete Bucket Modal */}
       <Modal
-        isOpen={isDeleteBucketOpen}
-        onClose={() => setIsDeleteBucketOpen(false)}
+        isOpen={openModal === 'delete-bucket'}
+        onClose={closeModal}
         title="Delete bucket"
         size="sm"
       >
@@ -4051,12 +3716,7 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteBucketOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4064,7 +3724,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Bucket deleted');
-              setIsDeleteBucketOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4078,133 +3738,133 @@ export function ModalsPage() {
 
       {/* Delete Cluster Modal */}
       <DeleteClusterModal
-        isOpen={isDeleteClusterOpen}
-        onClose={() => setIsDeleteClusterOpen(false)}
+        isOpen={openModal === 'delete-cluster'}
+        onClose={closeModal}
         cluster={{ id: 'cluster-001', name: 'production-cluster' }}
         onConfirm={() => {
           console.log('Cluster deleted');
-          setIsDeleteClusterOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete Namespace Modal */}
       <DeleteNamespaceModal
-        isOpen={isDeleteNamespaceOpen}
-        onClose={() => setIsDeleteNamespaceOpen(false)}
+        isOpen={openModal === 'delete-namespace'}
+        onClose={closeModal}
         namespace={{ id: 'ns-001', name: 'default' }}
         onConfirm={() => {
           console.log('Namespace deleted');
-          setIsDeleteNamespaceOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete Pod Modal */}
       <DeletePodModal
-        isOpen={isDeletePodOpen}
-        onClose={() => setIsDeletePodOpen(false)}
+        isOpen={openModal === 'delete-pod'}
+        onClose={closeModal}
         pod={{ id: 'pod-001', name: 'nginx-deployment-7fb96c846b-abc12' }}
         onConfirm={() => {
           console.log('Pod deleted');
-          setIsDeletePodOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete Job Modal */}
       <DeleteJobModal
-        isOpen={isDeleteJobOpen}
-        onClose={() => setIsDeleteJobOpen(false)}
+        isOpen={openModal === 'delete-job'}
+        onClose={closeModal}
         job={{ id: 'job-001', name: 'backup-job-20240115' }}
         onConfirm={() => {
           console.log('Job deleted');
-          setIsDeleteJobOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete CronJob Modal */}
       <DeleteCronJobModal
-        isOpen={isDeleteCronJobOpen}
-        onClose={() => setIsDeleteCronJobOpen(false)}
+        isOpen={openModal === 'delete-cron-job'}
+        onClose={closeModal}
         cronJob={{ id: 'cronjob-001', name: 'daily-backup' }}
         onConfirm={() => {
           console.log('CronJob deleted');
-          setIsDeleteCronJobOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete Deployment Modal */}
       <DeleteDeploymentModal
-        isOpen={isDeleteDeploymentOpen}
-        onClose={() => setIsDeleteDeploymentOpen(false)}
+        isOpen={openModal === 'delete-deployment'}
+        onClose={closeModal}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={() => {
           console.log('Deployment deleted');
-          setIsDeleteDeploymentOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete StatefulSet Modal */}
       <DeleteStatefulSetModal
-        isOpen={isDeleteStatefulSetOpen}
-        onClose={() => setIsDeleteStatefulSetOpen(false)}
+        isOpen={openModal === 'delete-stateful-set'}
+        onClose={closeModal}
         statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
         onConfirm={() => {
           console.log('StatefulSet deleted');
-          setIsDeleteStatefulSetOpen(false);
+          closeModal();
         }}
       />
 
       {/* Delete DaemonSet Modal */}
       <DeleteDaemonSetModal
-        isOpen={isDeleteDaemonSetOpen}
-        onClose={() => setIsDeleteDaemonSetOpen(false)}
+        isOpen={openModal === 'delete-daemon-set'}
+        onClose={closeModal}
         daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
         onConfirm={() => {
           console.log('DaemonSet deleted');
-          setIsDeleteDaemonSetOpen(false);
+          closeModal();
         }}
       />
 
       {/* Redeploy Deployment Modal */}
       <RedeployDeploymentModal
-        isOpen={isRedeployDeploymentOpen}
-        onClose={() => setIsRedeployDeploymentOpen(false)}
+        isOpen={openModal === 'redeploy-deployment'}
+        onClose={closeModal}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={() => {
           console.log('Deployment redeployed');
-          setIsRedeployDeploymentOpen(false);
+          closeModal();
         }}
       />
 
       {/* Redeploy StatefulSet Modal */}
       <RedeployStatefulSetModal
-        isOpen={isRedeployStatefulSetOpen}
-        onClose={() => setIsRedeployStatefulSetOpen(false)}
+        isOpen={openModal === 'redeploy-stateful-set'}
+        onClose={closeModal}
         statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
         onConfirm={() => {
           console.log('StatefulSet redeployed');
-          setIsRedeployStatefulSetOpen(false);
+          closeModal();
         }}
       />
 
       {/* Redeploy DaemonSet Modal */}
       <RedeployDaemonSetModal
-        isOpen={isRedeployDaemonSetOpen}
-        onClose={() => setIsRedeployDaemonSetOpen(false)}
+        isOpen={openModal === 'redeploy-daemon-set'}
+        onClose={closeModal}
         daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
         onConfirm={() => {
           console.log('DaemonSet redeployed');
-          setIsRedeployDaemonSetOpen(false);
+          closeModal();
         }}
       />
 
       {/* Roll Back Deployment Modal */}
       <RollBackDeploymentModal
-        isOpen={isRollBackDeploymentOpen}
-        onClose={() => setIsRollBackDeploymentOpen(false)}
+        isOpen={openModal === 'roll-back-deployment'}
+        onClose={closeModal}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={(revisionId) => {
           console.log('Deployment rolled back to:', revisionId);
-          setIsRollBackDeploymentOpen(false);
+          closeModal();
         }}
       />
 
@@ -4213,8 +3873,8 @@ export function ModalsPage() {
 
       {/* Stop Instance Modal */}
       <Modal
-        isOpen={isStopInstanceOpen}
-        onClose={() => setIsStopInstanceOpen(false)}
+        isOpen={openModal === 'stop-instance'}
+        onClose={closeModal}
         title="Stop instance"
         description="This action stops the instance."
         size="sm"
@@ -4240,12 +3900,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsStopInstanceOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4253,7 +3908,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance stopped');
-              setIsStopInstanceOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4264,8 +3919,8 @@ export function ModalsPage() {
 
       {/* Reboot Instance Modal */}
       <Modal
-        isOpen={isRebootInstanceOpen}
-        onClose={() => setIsRebootInstanceOpen(false)}
+        isOpen={openModal === 'reboot-instance'}
+        onClose={closeModal}
         title="Reboot instance"
         description="This action reboots the instance."
         size="sm"
@@ -4291,12 +3946,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRebootInstanceOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4304,7 +3954,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance rebooted');
-              setIsRebootInstanceOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4315,8 +3965,8 @@ export function ModalsPage() {
 
       {/* Soft Reboot Instance Modal */}
       <Modal
-        isOpen={isSoftRebootInstanceOpen}
-        onClose={() => setIsSoftRebootInstanceOpen(false)}
+        isOpen={openModal === 'soft-reboot-instance'}
+        onClose={closeModal}
         title="Soft reboot instance"
         description="This action performs a soft reboot of the instance."
         size="sm"
@@ -4342,12 +3992,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsSoftRebootInstanceOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4355,7 +4000,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance soft rebooted');
-              setIsSoftRebootInstanceOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4366,8 +4011,8 @@ export function ModalsPage() {
 
       {/* Confirm Resize Modal */}
       <Modal
-        isOpen={isConfirmResizeOpen}
-        onClose={() => setIsConfirmResizeOpen(false)}
+        isOpen={openModal === 'confirm-resize'}
+        onClose={closeModal}
         title="Confirm resize"
         description="This action confirms the resized state of the instance."
         size="sm"
@@ -4393,12 +4038,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsConfirmResizeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4406,7 +4046,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Resize confirmed');
-              setIsConfirmResizeOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4417,8 +4057,8 @@ export function ModalsPage() {
 
       {/* Revert Resize Modal */}
       <Modal
-        isOpen={isRevertResizeOpen}
-        onClose={() => setIsRevertResizeOpen(false)}
+        isOpen={openModal === 'revert-resize'}
+        onClose={closeModal}
         title="Revert resize"
         description="This action reverts the instance to its previous state before the resize."
         size="sm"
@@ -4444,12 +4084,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRevertResizeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4457,7 +4092,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Resize reverted');
-              setIsRevertResizeOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4468,8 +4103,8 @@ export function ModalsPage() {
 
       {/* Delete Instance Modal */}
       <Modal
-        isOpen={isDeleteInstanceOpen}
-        onClose={() => setIsDeleteInstanceOpen(false)}
+        isOpen={openModal === 'delete-instance'}
+        onClose={closeModal}
         title="Delete instance"
         description="Removing the instance is permanent and cannot be undone."
         size="sm"
@@ -4495,12 +4130,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteInstanceOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4508,7 +4138,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance deleted');
-              setIsDeleteInstanceOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4519,8 +4149,8 @@ export function ModalsPage() {
 
       {/* Shelve Instance Modal */}
       <Modal
-        isOpen={isShelveInstanceOpen}
-        onClose={() => setIsShelveInstanceOpen(false)}
+        isOpen={openModal === 'shelve-instance'}
+        onClose={closeModal}
         title="Shelve instance"
         description="This action shelves the instance."
         size="sm"
@@ -4546,12 +4176,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsShelveInstanceOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4559,7 +4184,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance shelved');
-              setIsShelveInstanceOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4570,8 +4195,8 @@ export function ModalsPage() {
 
       {/* Start Instances Modal */}
       <Modal
-        isOpen={isStartInstancesOpen}
-        onClose={() => setIsStartInstancesOpen(false)}
+        isOpen={openModal === 'start-instances'}
+        onClose={closeModal}
         title="Start instances"
         description="This action starts the selected instances."
         size="md"
@@ -4611,12 +4236,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsStartInstancesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4624,7 +4244,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instances started');
-              setIsStartInstancesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4635,8 +4255,8 @@ export function ModalsPage() {
 
       {/* Stop Instances Modal */}
       <Modal
-        isOpen={isStopInstancesOpen}
-        onClose={() => setIsStopInstancesOpen(false)}
+        isOpen={openModal === 'stop-instances'}
+        onClose={closeModal}
         title="Stop instances"
         description="This action stops the selected instances."
         size="md"
@@ -4676,12 +4296,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsStopInstancesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4689,7 +4304,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instances stopped');
-              setIsStopInstancesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4700,8 +4315,8 @@ export function ModalsPage() {
 
       {/* Reboot Instances Modal */}
       <Modal
-        isOpen={isRebootInstancesOpen}
-        onClose={() => setIsRebootInstancesOpen(false)}
+        isOpen={openModal === 'reboot-instances'}
+        onClose={closeModal}
         title="Reboot instances"
         description="This action reboots the selected instances."
         size="md"
@@ -4741,12 +4356,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRebootInstancesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4754,7 +4364,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instances rebooted');
-              setIsRebootInstancesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4765,8 +4375,8 @@ export function ModalsPage() {
 
       {/* Delete Instances Modal */}
       <Modal
-        isOpen={isDeleteInstancesOpen}
-        onClose={() => setIsDeleteInstancesOpen(false)}
+        isOpen={openModal === 'delete-instances'}
+        onClose={closeModal}
         title="Delete instances"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
@@ -4806,12 +4416,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteInstancesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4819,7 +4424,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instances deleted');
-              setIsDeleteInstancesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4830,8 +4435,8 @@ export function ModalsPage() {
 
       {/* Delete Instance Template Modal */}
       <Modal
-        isOpen={isDeleteInstanceTemplateOpen}
-        onClose={() => setIsDeleteInstanceTemplateOpen(false)}
+        isOpen={openModal === 'delete-instance-template'}
+        onClose={closeModal}
         title="Delete instance template"
         description="Deleting the instance template is permanent and cannot be undone."
         size="sm"
@@ -4847,12 +4452,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteInstanceTemplateOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4860,7 +4460,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance template deleted');
-              setIsDeleteInstanceTemplateOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4871,8 +4471,8 @@ export function ModalsPage() {
 
       {/* Delete Instance Templates Modal */}
       <Modal
-        isOpen={isDeleteInstanceTemplatesOpen}
-        onClose={() => setIsDeleteInstanceTemplatesOpen(false)}
+        isOpen={openModal === 'delete-instance-templates'}
+        onClose={closeModal}
         title="Delete instance templates"
         description="Deleting the selected instance templates is permanent and cannot be undone."
         size="md"
@@ -4891,12 +4491,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteInstanceTemplatesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4904,7 +4499,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Instance templates deleted');
-              setIsDeleteInstanceTemplatesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4915,8 +4510,8 @@ export function ModalsPage() {
 
       {/* Delete Image Modal */}
       <Modal
-        isOpen={isDeleteImageOpen}
-        onClose={() => setIsDeleteImageOpen(false)}
+        isOpen={openModal === 'delete-image'}
+        onClose={closeModal}
         title="Delete image"
         description="Deleting the image is permanent and cannot be undone."
         size="sm"
@@ -4930,12 +4525,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteImageOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4943,7 +4533,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Image deleted');
-              setIsDeleteImageOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -4954,8 +4544,8 @@ export function ModalsPage() {
 
       {/* Delete Images Modal */}
       <Modal
-        isOpen={isDeleteImagesOpen}
-        onClose={() => setIsDeleteImagesOpen(false)}
+        isOpen={openModal === 'delete-images'}
+        onClose={closeModal}
         title="Delete images"
         description="Deleting the selected images is permanent and cannot be undone."
         size="md"
@@ -4985,12 +4575,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteImagesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -4998,7 +4583,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Images deleted');
-              setIsDeleteImagesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5009,8 +4594,8 @@ export function ModalsPage() {
 
       {/* Delete Snapshot Modal */}
       <Modal
-        isOpen={isDeleteSnapshotOpen}
-        onClose={() => setIsDeleteSnapshotOpen(false)}
+        isOpen={openModal === 'delete-snapshot'}
+        onClose={closeModal}
         title="Delete snapshot"
         description="Deleting the snapshot is permanent and cannot be undone."
         size="sm"
@@ -5026,12 +4611,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSnapshotOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5039,7 +4619,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Snapshot deleted');
-              setIsDeleteSnapshotOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5050,8 +4630,8 @@ export function ModalsPage() {
 
       {/* Delete Snapshots Modal */}
       <Modal
-        isOpen={isDeleteSnapshotsOpen}
-        onClose={() => setIsDeleteSnapshotsOpen(false)}
+        isOpen={openModal === 'delete-snapshots'}
+        onClose={closeModal}
         title="Delete snapshots"
         description="Deleting the selected snapshots is permanent and cannot be undone."
         size="md"
@@ -5081,12 +4661,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSnapshotsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5094,7 +4669,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Snapshots deleted');
-              setIsDeleteSnapshotsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5105,8 +4680,8 @@ export function ModalsPage() {
 
       {/* Delete Volume Modal */}
       <Modal
-        isOpen={isDeleteVolumeOpen}
-        onClose={() => setIsDeleteVolumeOpen(false)}
+        isOpen={openModal === 'delete-volume'}
+        onClose={closeModal}
         title="Delete volume"
         description="Deleting the volume is permanent and cannot be undone."
         size="sm"
@@ -5122,12 +4697,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteVolumeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5135,7 +4705,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Volume deleted');
-              setIsDeleteVolumeOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5146,8 +4716,8 @@ export function ModalsPage() {
 
       {/* Delete Volumes Modal */}
       <Modal
-        isOpen={isDeleteVolumesOpen}
-        onClose={() => setIsDeleteVolumesOpen(false)}
+        isOpen={openModal === 'delete-volumes'}
+        onClose={closeModal}
         title="Delete volumes"
         description="Deleting the selected volumes is permanent and cannot be undone."
         size="md"
@@ -5177,12 +4747,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteVolumesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5190,7 +4755,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Volumes deleted');
-              setIsDeleteVolumesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5201,8 +4766,8 @@ export function ModalsPage() {
 
       {/* Delete Volume Type Modal */}
       <Modal
-        isOpen={isDeleteVolumeTypeOpen}
-        onClose={() => setIsDeleteVolumeTypeOpen(false)}
+        isOpen={openModal === 'delete-volume-type'}
+        onClose={closeModal}
         title="Delete volume type"
         description="Deleting the volume type is permanent and cannot be undone."
         size="sm"
@@ -5218,12 +4783,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteVolumeTypeOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5231,7 +4791,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Volume type deleted');
-              setIsDeleteVolumeTypeOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5242,8 +4802,8 @@ export function ModalsPage() {
 
       {/* Delete Volume Types Modal */}
       <Modal
-        isOpen={isDeleteVolumeTypesOpen}
-        onClose={() => setIsDeleteVolumeTypesOpen(false)}
+        isOpen={openModal === 'delete-volume-types'}
+        onClose={closeModal}
         title="Delete volume types"
         description="Deleting the selected volume types is permanent and cannot be undone."
         size="sm"
@@ -5262,12 +4822,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteVolumeTypesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5275,7 +4830,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Volume types deleted');
-              setIsDeleteVolumeTypesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5286,8 +4841,8 @@ export function ModalsPage() {
 
       {/* Delete Backup Modal */}
       <Modal
-        isOpen={isDeleteBackupOpen}
-        onClose={() => setIsDeleteBackupOpen(false)}
+        isOpen={openModal === 'delete-backup'}
+        onClose={closeModal}
         title="Delete backup"
         description="Deleting the backup is permanent and cannot be undone."
         size="sm"
@@ -5303,12 +4858,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteBackupOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5316,7 +4866,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Backup deleted');
-              setIsDeleteBackupOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5327,8 +4877,8 @@ export function ModalsPage() {
 
       {/* Delete Backups Modal */}
       <Modal
-        isOpen={isDeleteBackupsOpen}
-        onClose={() => setIsDeleteBackupsOpen(false)}
+        isOpen={openModal === 'delete-backups'}
+        onClose={closeModal}
         title="Delete backups"
         description="Deleting the selected backups is permanent and cannot be undone."
         size="md"
@@ -5358,12 +4908,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteBackupsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5371,7 +4916,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Backups deleted');
-              setIsDeleteBackupsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5382,8 +4927,8 @@ export function ModalsPage() {
 
       {/* Delete Encryption Modal */}
       <Modal
-        isOpen={isDeleteEncryptionOpen}
-        onClose={() => setIsDeleteEncryptionOpen(false)}
+        isOpen={openModal === 'delete-encryption'}
+        onClose={closeModal}
         title="Delete encryption"
         description="This action removes the encryption configuration from the volume type."
         size="sm"
@@ -5399,12 +4944,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteEncryptionOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5412,7 +4952,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Encryption deleted');
-              setIsDeleteEncryptionOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5423,8 +4963,8 @@ export function ModalsPage() {
 
       {/* Delete Extra Spec Modal */}
       <Modal
-        isOpen={isDeleteExtraSpecOpen}
-        onClose={() => setIsDeleteExtraSpecOpen(false)}
+        isOpen={openModal === 'delete-extra-spec'}
+        onClose={closeModal}
         title="Delete extra spec"
         description="This action removes the extra specification from the volume type."
         size="sm"
@@ -5448,12 +4988,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteExtraSpecOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5461,7 +4996,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Extra spec deleted');
-              setIsDeleteExtraSpecOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5472,8 +5007,8 @@ export function ModalsPage() {
 
       {/* Delete Extra Specs Modal */}
       <Modal
-        isOpen={isDeleteExtraSpecsOpen}
-        onClose={() => setIsDeleteExtraSpecsOpen(false)}
+        isOpen={openModal === 'delete-extra-specs'}
+        onClose={closeModal}
         title="Delete extra specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
         size="sm"
@@ -5500,12 +5035,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteExtraSpecsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5513,7 +5043,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Extra specs deleted');
-              setIsDeleteExtraSpecsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5524,8 +5054,8 @@ export function ModalsPage() {
 
       {/* Delete QoS Spec Modal */}
       <Modal
-        isOpen={isDeleteQoSSpecOpen}
-        onClose={() => setIsDeleteQoSSpecOpen(false)}
+        isOpen={openModal === 'delete-qo-s-spec'}
+        onClose={closeModal}
         title="Delete QoS spec"
         description="This action removes the QoS specification."
         size="sm"
@@ -5541,12 +5071,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteQoSSpecOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5554,7 +5079,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('QoS spec deleted');
-              setIsDeleteQoSSpecOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5565,8 +5090,8 @@ export function ModalsPage() {
 
       {/* Delete QoS Specs Modal */}
       <Modal
-        isOpen={isDeleteQoSSpecsOpen}
-        onClose={() => setIsDeleteQoSSpecsOpen(false)}
+        isOpen={openModal === 'delete-qo-s-specs'}
+        onClose={closeModal}
         title="Delete QoS specs"
         description="This action removes the selected QoS specifications."
         size="sm"
@@ -5585,12 +5110,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteQoSSpecsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5598,7 +5118,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('QoS specs deleted');
-              setIsDeleteQoSSpecsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5609,8 +5129,8 @@ export function ModalsPage() {
 
       {/* Delete QoS Extra Spec Modal */}
       <Modal
-        isOpen={isDeleteQoSExtraSpecOpen}
-        onClose={() => setIsDeleteQoSExtraSpecOpen(false)}
+        isOpen={openModal === 'delete-qo-s-extra-spec'}
+        onClose={closeModal}
         title="Delete extra spec"
         description="This action removes the extra specification from the volume type."
         size="sm"
@@ -5634,12 +5154,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteQoSExtraSpecOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5647,7 +5162,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('QoS extra spec deleted');
-              setIsDeleteQoSExtraSpecOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5658,8 +5173,8 @@ export function ModalsPage() {
 
       {/* Delete QoS Extra Specs Modal */}
       <Modal
-        isOpen={isDeleteQoSExtraSpecsOpen}
-        onClose={() => setIsDeleteQoSExtraSpecsOpen(false)}
+        isOpen={openModal === 'delete-qo-s-extra-specs'}
+        onClose={closeModal}
         title="Delete extra specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
         size="sm"
@@ -5686,12 +5201,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteQoSExtraSpecsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5699,7 +5209,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('QoS extra specs deleted');
-              setIsDeleteQoSExtraSpecsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5710,8 +5220,8 @@ export function ModalsPage() {
 
       {/* Delete Network Modal */}
       <Modal
-        isOpen={isDeleteNetworkOpen}
-        onClose={() => setIsDeleteNetworkOpen(false)}
+        isOpen={openModal === 'delete-network'}
+        onClose={closeModal}
         title="Delete network"
         description="Deleting the network is permanent and cannot be undone."
         size="sm"
@@ -5737,12 +5247,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteNetworkOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5750,7 +5255,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Network deleted');
-              setIsDeleteNetworkOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5761,8 +5266,8 @@ export function ModalsPage() {
 
       {/* Delete Networks Modal */}
       <Modal
-        isOpen={isDeleteNetworksOpen}
-        onClose={() => setIsDeleteNetworksOpen(false)}
+        isOpen={openModal === 'delete-networks'}
+        onClose={closeModal}
         title="Delete networks"
         description="Removing the selected networks is permanent and cannot be undone."
         size="md"
@@ -5802,12 +5307,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteNetworksOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5815,7 +5315,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Networks deleted');
-              setIsDeleteNetworksOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5826,8 +5326,8 @@ export function ModalsPage() {
 
       {/* Delete Subnet Modal */}
       <Modal
-        isOpen={isDeleteSubnetOpen}
-        onClose={() => setIsDeleteSubnetOpen(false)}
+        isOpen={openModal === 'delete-subnet'}
+        onClose={closeModal}
         title="Delete subnet"
         description="Deleting the subnet is permanent and cannot be undone."
         size="sm"
@@ -5853,12 +5353,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSubnetOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5866,7 +5361,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Subnet deleted');
-              setIsDeleteSubnetOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5877,8 +5372,8 @@ export function ModalsPage() {
 
       {/* Delete Subnets Modal */}
       <Modal
-        isOpen={isDeleteSubnetsOpen}
-        onClose={() => setIsDeleteSubnetsOpen(false)}
+        isOpen={openModal === 'delete-subnets'}
+        onClose={closeModal}
         title="Delete subnets"
         description="Deleting the selected subnets is permanent and cannot be undone."
         size="sm"
@@ -5907,12 +5402,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSubnetsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5920,7 +5410,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Subnets deleted');
-              setIsDeleteSubnetsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5931,8 +5421,8 @@ export function ModalsPage() {
 
       {/* Delete Port Modal */}
       <Modal
-        isOpen={isDeletePortOpen}
-        onClose={() => setIsDeletePortOpen(false)}
+        isOpen={openModal === 'delete-port'}
+        onClose={closeModal}
         title="Delete port"
         description="Deleting the port is permanent and cannot be undone."
         size="sm"
@@ -5956,12 +5446,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePortOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -5969,7 +5454,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Port deleted');
-              setIsDeletePortOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -5980,8 +5465,8 @@ export function ModalsPage() {
 
       {/* Delete Ports Modal */}
       <Modal
-        isOpen={isDeletePortsOpen}
-        onClose={() => setIsDeletePortsOpen(false)}
+        isOpen={openModal === 'delete-ports'}
+        onClose={closeModal}
         title="Delete ports"
         description="Deleting the selected ports is permanent and cannot be undone."
         size="sm"
@@ -6008,12 +5493,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePortsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6021,7 +5501,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Ports deleted');
-              setIsDeletePortsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6032,8 +5512,8 @@ export function ModalsPage() {
 
       {/* Delete Router Modal */}
       <Modal
-        isOpen={isDeleteRouterOpen}
-        onClose={() => setIsDeleteRouterOpen(false)}
+        isOpen={openModal === 'delete-router'}
+        onClose={closeModal}
         title="Delete router"
         description="Deleting the router is permanent and cannot be undone."
         size="sm"
@@ -6059,12 +5539,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRouterOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6072,7 +5547,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Router deleted');
-              setIsDeleteRouterOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6083,8 +5558,8 @@ export function ModalsPage() {
 
       {/* Delete Routers Modal */}
       <Modal
-        isOpen={isDeleteRoutersOpen}
-        onClose={() => setIsDeleteRoutersOpen(false)}
+        isOpen={openModal === 'delete-routers'}
+        onClose={closeModal}
         title="Delete routers"
         description="Removing the selected routers is permanent and cannot be undone."
         size="md"
@@ -6124,12 +5599,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteRoutersOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6137,7 +5607,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Routers deleted');
-              setIsDeleteRoutersOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6148,8 +5618,8 @@ export function ModalsPage() {
 
       {/* Delete Static Routes Modal */}
       <Modal
-        isOpen={isDeleteStaticRoutesOpen}
-        onClose={() => setIsDeleteStaticRoutesOpen(false)}
+        isOpen={openModal === 'delete-static-routes'}
+        onClose={closeModal}
         title="Delete static routes"
         description="Deleting the selected static routers is permanent and cannot be undone."
         size="sm"
@@ -6178,12 +5648,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteStaticRoutesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6191,7 +5656,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Static routes deleted');
-              setIsDeleteStaticRoutesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6202,8 +5667,8 @@ export function ModalsPage() {
 
       {/* Remove DHCP Agents Modal */}
       <Modal
-        isOpen={isRemoveDHCPAgentsOpen}
-        onClose={() => setIsRemoveDHCPAgentsOpen(false)}
+        isOpen={openModal === 'remove-d-h-c-p-agents'}
+        onClose={closeModal}
         title="Remove DHCP agents"
         description="This action removes the selected DHCP agents from the network."
         size="sm"
@@ -6241,12 +5706,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsRemoveDHCPAgentsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6254,7 +5714,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('DHCP agents removed');
-              setIsRemoveDHCPAgentsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6265,8 +5725,8 @@ export function ModalsPage() {
 
       {/* Release Fixed IP Modal */}
       <Modal
-        isOpen={isReleaseFixedIPOpen}
-        onClose={() => setIsReleaseFixedIPOpen(false)}
+        isOpen={openModal === 'release-fixed-i-p'}
+        onClose={closeModal}
         title="Release fixed IP"
         description="This action releases the fixed IP from the port."
         size="sm"
@@ -6298,12 +5758,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsReleaseFixedIPOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6311,7 +5766,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Fixed IP released');
-              setIsReleaseFixedIPOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6322,8 +5777,8 @@ export function ModalsPage() {
 
       {/* Delete Allowed Address Pair Modal */}
       <Modal
-        isOpen={isDeleteAllowedAddressPairOpen}
-        onClose={() => setIsDeleteAllowedAddressPairOpen(false)}
+        isOpen={openModal === 'delete-allowed-address-pair'}
+        onClose={closeModal}
         title="Delete allowed address pair"
         description="This action removes the allowed address pair from the port."
         size="sm"
@@ -6355,12 +5810,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteAllowedAddressPairOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6368,7 +5818,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Allowed address pair deleted');
-              setIsDeleteAllowedAddressPairOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6379,8 +5829,8 @@ export function ModalsPage() {
 
       {/* Delete Security Group Admin Modal */}
       <Modal
-        isOpen={isDeleteSecurityGroupAdminOpen}
-        onClose={() => setIsDeleteSecurityGroupAdminOpen(false)}
+        isOpen={openModal === 'delete-security-group-admin'}
+        onClose={closeModal}
         title="Delete security group"
         description="Deleting the security group is permanent and cannot be undone."
         size="sm"
@@ -6407,12 +5857,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6420,7 +5865,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security group deleted');
-              setIsDeleteSecurityGroupAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6431,8 +5876,8 @@ export function ModalsPage() {
 
       {/* Delete Security Groups Admin Modal */}
       <Modal
-        isOpen={isDeleteSecurityGroupsAdminOpen}
-        onClose={() => setIsDeleteSecurityGroupsAdminOpen(false)}
+        isOpen={openModal === 'delete-security-groups-admin'}
+        onClose={closeModal}
         title="Delete security groups"
         description="Deleting the selected security groups is permanent and cannot be undone."
         size="md"
@@ -6472,12 +5917,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupsAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6485,7 +5925,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security groups deleted');
-              setIsDeleteSecurityGroupsAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6496,8 +5936,8 @@ export function ModalsPage() {
 
       {/* Delete Firewall Modal */}
       <Modal
-        isOpen={isDeleteFirewallOpen}
-        onClose={() => setIsDeleteFirewallOpen(false)}
+        isOpen={openModal === 'delete-firewall'}
+        onClose={closeModal}
         title="Delete firewall"
         description="Deleting the firewall is permanent and cannot be undone."
         size="sm"
@@ -6523,12 +5963,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6536,7 +5971,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewall deleted');
-              setIsDeleteFirewallOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6547,8 +5982,8 @@ export function ModalsPage() {
 
       {/* Delete Firewalls Modal */}
       <Modal
-        isOpen={isDeleteFirewallsOpen}
-        onClose={() => setIsDeleteFirewallsOpen(false)}
+        isOpen={openModal === 'delete-firewalls'}
+        onClose={closeModal}
         title="Delete firewalls"
         description="Deleting the selected firewalls is permanent and cannot be undone."
         size="md"
@@ -6588,12 +6023,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6601,7 +6031,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewalls deleted');
-              setIsDeleteFirewallsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6612,19 +6042,14 @@ export function ModalsPage() {
 
       {/* Unsaved Changes Admin Modal */}
       <Modal
-        isOpen={isUnsavedChangesAdminOpen}
-        onClose={() => setIsUnsavedChangesAdminOpen(false)}
+        isOpen={openModal === 'unsaved-changes-admin'}
+        onClose={closeModal}
         title="Unsaved changes"
         description="Any unsaved changes will be lost. Do you want to leave?"
         size="sm"
       >
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsUnsavedChangesAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Leave{' '}
           </Button>
           <Button
@@ -6632,7 +6057,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Staying on page');
-              setIsUnsavedChangesAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6643,8 +6068,8 @@ export function ModalsPage() {
 
       {/* Release Floating IP Modal */}
       <Modal
-        isOpen={isReleaseFloatingIPOpen}
-        onClose={() => setIsReleaseFloatingIPOpen(false)}
+        isOpen={openModal === 'release-floating-i-p'}
+        onClose={closeModal}
         title="Release floating IP"
         description="Releasing the floating IP is permanent and cannot be undone."
         size="sm"
@@ -6670,12 +6095,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsReleaseFloatingIPOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6683,7 +6103,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Floating IP released');
-              setIsReleaseFloatingIPOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6694,8 +6114,8 @@ export function ModalsPage() {
 
       {/* Release Floating IPs Modal */}
       <Modal
-        isOpen={isReleaseFloatingIPsOpen}
-        onClose={() => setIsReleaseFloatingIPsOpen(false)}
+        isOpen={openModal === 'release-floating-i-ps'}
+        onClose={closeModal}
         title="Release floating IPs"
         description="Releasing the floating IPs is permanent and cannot be undone."
         size="sm"
@@ -6724,12 +6144,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsReleaseFloatingIPsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6737,7 +6152,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Floating IPs released');
-              setIsReleaseFloatingIPsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6748,8 +6163,8 @@ export function ModalsPage() {
 
       {/* Delete Load Balancer Admin Modal */}
       <Modal
-        isOpen={isDeleteLoadBalancerAdminOpen}
-        onClose={() => setIsDeleteLoadBalancerAdminOpen(false)}
+        isOpen={openModal === 'delete-load-balancer-admin'}
+        onClose={closeModal}
         title="Delete load balancer"
         description="Removing the load balancer is permanent and cannot be undone."
         size="sm"
@@ -6775,12 +6190,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteLoadBalancerAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6788,7 +6198,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Load balancer deleted');
-              setIsDeleteLoadBalancerAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6799,8 +6209,8 @@ export function ModalsPage() {
 
       {/* Delete Load Balancers Admin Modal */}
       <Modal
-        isOpen={isDeleteLoadBalancersAdminOpen}
-        onClose={() => setIsDeleteLoadBalancersAdminOpen(false)}
+        isOpen={openModal === 'delete-load-balancers-admin'}
+        onClose={closeModal}
         title="Delete load balancers"
         description="Removing the load balancers is permanent and cannot be undone."
         size="md"
@@ -6840,12 +6250,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteLoadBalancersAdminOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6853,7 +6258,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Load balancers deleted');
-              setIsDeleteLoadBalancersAdminOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6864,8 +6269,8 @@ export function ModalsPage() {
 
       {/* Delete Listener Modal */}
       <Modal
-        isOpen={isDeleteListenerOpen}
-        onClose={() => setIsDeleteListenerOpen(false)}
+        isOpen={openModal === 'delete-listener'}
+        onClose={closeModal}
         title="Delete listener"
         description="Removing the listener is permanent and cannot be undone."
         size="sm"
@@ -6881,12 +6286,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteListenerOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6894,7 +6294,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Listener deleted');
-              setIsDeleteListenerOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6905,8 +6305,8 @@ export function ModalsPage() {
 
       {/* Delete Listeners Modal */}
       <Modal
-        isOpen={isDeleteListenersOpen}
-        onClose={() => setIsDeleteListenersOpen(false)}
+        isOpen={openModal === 'delete-listeners'}
+        onClose={closeModal}
         title="Delete listeners"
         description="Removing the listeners is permanent and cannot be undone."
         size="md"
@@ -6936,12 +6336,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteListenersOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6949,7 +6344,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Listeners deleted');
-              setIsDeleteListenersOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -6960,8 +6355,8 @@ export function ModalsPage() {
 
       {/* Delete Pool Modal */}
       <Modal
-        isOpen={isDeletePoolOpen}
-        onClose={() => setIsDeletePoolOpen(false)}
+        isOpen={openModal === 'delete-pool'}
+        onClose={closeModal}
         title="Delete pool"
         description="Removing the pool is permanent and cannot be undone."
         size="sm"
@@ -6985,12 +6380,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePoolOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -6998,7 +6388,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Pool deleted');
-              setIsDeletePoolOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7009,8 +6399,8 @@ export function ModalsPage() {
 
       {/* Delete Pools Modal */}
       <Modal
-        isOpen={isDeletePoolsOpen}
-        onClose={() => setIsDeletePoolsOpen(false)}
+        isOpen={openModal === 'delete-pools'}
+        onClose={closeModal}
         title="Delete pools"
         description="Removing the pools is permanent and cannot be undone."
         size="md"
@@ -7050,12 +6440,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeletePoolsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7063,7 +6448,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Pools deleted');
-              setIsDeletePoolsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7074,8 +6459,8 @@ export function ModalsPage() {
 
       {/* Delete Member Modal */}
       <Modal
-        isOpen={isDeleteMemberOpen}
-        onClose={() => setIsDeleteMemberOpen(false)}
+        isOpen={openModal === 'delete-member'}
+        onClose={closeModal}
         title="Delete member"
         description="Removing the member is permanent and cannot be undone."
         size="sm"
@@ -7101,12 +6486,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteMemberOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7114,7 +6494,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Member deleted');
-              setIsDeleteMemberOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7125,8 +6505,8 @@ export function ModalsPage() {
 
       {/* Delete Members Modal */}
       <Modal
-        isOpen={isDeleteMembersOpen}
-        onClose={() => setIsDeleteMembersOpen(false)}
+        isOpen={openModal === 'delete-members'}
+        onClose={closeModal}
         title="Delete members"
         description="Removing the members is permanent and cannot be undone."
         size="md"
@@ -7166,12 +6546,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteMembersOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7179,7 +6554,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Members deleted');
-              setIsDeleteMembersOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7190,8 +6565,8 @@ export function ModalsPage() {
 
       {/* Delete Security Group Rule Modal */}
       <Modal
-        isOpen={isDeleteSecurityGroupRuleOpen}
-        onClose={() => setIsDeleteSecurityGroupRuleOpen(false)}
+        isOpen={openModal === 'delete-security-group-rule'}
+        onClose={closeModal}
         title="Delete rule"
         description="Removing the rule group is permanent and cannot be undone."
         size="sm"
@@ -7215,12 +6590,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupRuleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7228,7 +6598,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security group rule deleted');
-              setIsDeleteSecurityGroupRuleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7239,8 +6609,8 @@ export function ModalsPage() {
 
       {/* Delete Security Group Rules Modal */}
       <Modal
-        isOpen={isDeleteSecurityGroupRulesOpen}
-        onClose={() => setIsDeleteSecurityGroupRulesOpen(false)}
+        isOpen={openModal === 'delete-security-group-rules'}
+        onClose={closeModal}
         title="Delete rules"
         description="Removing the rules is permanent and cannot be undone."
         size="md"
@@ -7280,12 +6650,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteSecurityGroupRulesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7293,7 +6658,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Security group rules deleted');
-              setIsDeleteSecurityGroupRulesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7304,8 +6669,8 @@ export function ModalsPage() {
 
       {/* Delete L7 Policy Modal */}
       <Modal
-        isOpen={isDeleteL7PolicyOpen}
-        onClose={() => setIsDeleteL7PolicyOpen(false)}
+        isOpen={openModal === 'delete-l7-policy'}
+        onClose={closeModal}
         title="Delete L7 policy"
         description="Removing the L7 policy is permanent and cannot be undone."
         size="sm"
@@ -7331,12 +6696,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteL7PolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7344,7 +6704,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('L7 policy deleted');
-              setIsDeleteL7PolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7355,8 +6715,8 @@ export function ModalsPage() {
 
       {/* Delete L7 Policies Modal */}
       <Modal
-        isOpen={isDeleteL7PoliciesOpen}
-        onClose={() => setIsDeleteL7PoliciesOpen(false)}
+        isOpen={openModal === 'delete-l7-policies'}
+        onClose={closeModal}
         title="Delete L7 policies"
         description="Removing the L7 policies is permanent and cannot be undone."
         size="md"
@@ -7396,12 +6756,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteL7PoliciesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7409,7 +6764,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('L7 policies deleted');
-              setIsDeleteL7PoliciesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7420,8 +6775,8 @@ export function ModalsPage() {
 
       {/* Delete Health Monitor Modal */}
       <Modal
-        isOpen={isDeleteHealthMonitorOpen}
-        onClose={() => setIsDeleteHealthMonitorOpen(false)}
+        isOpen={openModal === 'delete-health-monitor'}
+        onClose={closeModal}
         title="Delete health monitor"
         description="Removing the health monitor is permanent and cannot be undone."
         size="sm"
@@ -7448,12 +6803,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteHealthMonitorOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7461,7 +6811,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Health monitor deleted');
-              setIsDeleteHealthMonitorOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7472,8 +6822,8 @@ export function ModalsPage() {
 
       {/* Delete Firewall Policy Modal */}
       <Modal
-        isOpen={isDeleteFirewallPolicyOpen}
-        onClose={() => setIsDeleteFirewallPolicyOpen(false)}
+        isOpen={openModal === 'delete-firewall-policy'}
+        onClose={closeModal}
         title="Delete firewall policy"
         description="Deleting the firewall policy is permanent and cannot be undone."
         size="sm"
@@ -7489,12 +6839,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallPolicyOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7502,7 +6847,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewall policy deleted');
-              setIsDeleteFirewallPolicyOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7513,8 +6858,8 @@ export function ModalsPage() {
 
       {/* Delete Firewall Policies Modal */}
       <Modal
-        isOpen={isDeleteFirewallPoliciesOpen}
-        onClose={() => setIsDeleteFirewallPoliciesOpen(false)}
+        isOpen={openModal === 'delete-firewall-policies'}
+        onClose={closeModal}
         title="Delete firewall policies"
         description="Removing the selected firewall policies is permanent and cannot be undone."
         size="md"
@@ -7544,12 +6889,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallPoliciesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7557,7 +6897,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewall policies deleted');
-              setIsDeleteFirewallPoliciesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7568,8 +6908,8 @@ export function ModalsPage() {
 
       {/* Delete Firewall Rule Modal */}
       <Modal
-        isOpen={isDeleteFirewallRuleOpen}
-        onClose={() => setIsDeleteFirewallRuleOpen(false)}
+        isOpen={openModal === 'delete-firewall-rule'}
+        onClose={closeModal}
         title="Delete firewall rule"
         description="Deleting the firewall rule is permanent and cannot be undone."
         size="sm"
@@ -7585,12 +6925,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallRuleOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7598,7 +6933,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewall rule deleted');
-              setIsDeleteFirewallRuleOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7609,8 +6944,8 @@ export function ModalsPage() {
 
       {/* Delete Firewall Rules Modal */}
       <Modal
-        isOpen={isDeleteFirewallRulesOpen}
-        onClose={() => setIsDeleteFirewallRulesOpen(false)}
+        isOpen={openModal === 'delete-firewall-rules'}
+        onClose={closeModal}
         title="Delete firewall rules"
         description="Removing the selected firewall rules is permanent and cannot be undone."
         size="md"
@@ -7640,12 +6975,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteFirewallRulesOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7653,7 +6983,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Firewall rules deleted');
-              setIsDeleteFirewallRulesOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7664,8 +6994,8 @@ export function ModalsPage() {
 
       {/* Delete Tenant Modal */}
       <Modal
-        isOpen={isDeleteTenantOpen}
-        onClose={() => setIsDeleteTenantOpen(false)}
+        isOpen={openModal === 'delete-tenant'}
+        onClose={closeModal}
         title="Delete tenant"
         description="Deleting the tenant is permanent and cannot be undone."
         size="sm"
@@ -7692,12 +7022,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteTenantOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7705,7 +7030,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Tenant deleted');
-              setIsDeleteTenantOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7716,8 +7041,8 @@ export function ModalsPage() {
 
       {/* Delete Tenants Modal */}
       <Modal
-        isOpen={isDeleteTenantsOpen}
-        onClose={() => setIsDeleteTenantsOpen(false)}
+        isOpen={openModal === 'delete-tenants'}
+        onClose={closeModal}
         title="Delete tenant"
         description="Removing the selected tenants is permanent and cannot be undone."
         size="sm"
@@ -7747,12 +7072,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteTenantsOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7760,7 +7080,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Tenants deleted');
-              setIsDeleteTenantsOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7771,8 +7091,8 @@ export function ModalsPage() {
 
       {/* Delete Metadata Modal */}
       <Modal
-        isOpen={isDeleteMetadataOpen}
-        onClose={() => setIsDeleteMetadataOpen(false)}
+        isOpen={openModal === 'delete-metadata'}
+        onClose={closeModal}
         title="Delete metadata"
         description="This action removes the metadata."
         size="sm"
@@ -7788,12 +7108,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteMetadataOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7801,7 +7116,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Metadata deleted');
-              setIsDeleteMetadataOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7812,8 +7127,8 @@ export function ModalsPage() {
 
       {/* Delete Metadatas Modal */}
       <Modal
-        isOpen={isDeleteMetadatasOpen}
-        onClose={() => setIsDeleteMetadatasOpen(false)}
+        isOpen={openModal === 'delete-metadatas'}
+        onClose={closeModal}
         title="Delete metadata"
         description="This action removes the selected metadata."
         size="md"
@@ -7843,12 +7158,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsDeleteMetadatasOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7856,7 +7166,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Metadatas deleted');
-              setIsDeleteMetadatasOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7867,8 +7177,8 @@ export function ModalsPage() {
 
       {/* Manage Member Modal */}
       <Modal
-        isOpen={isManageMemberOpen}
-        onClose={() => setIsManageMemberOpen(false)}
+        isOpen={openModal === 'manage-member'}
+        onClose={closeModal}
         title="Manage member"
         description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
         size="sm"
@@ -7884,12 +7194,7 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => setIsManageMemberOpen(false)}
-            className="flex-1"
-          >
+          <Button variant="outline" size="md" onClick={closeModal} className="flex-1">
             Cancel{' '}
           </Button>
           <Button
@@ -7897,7 +7202,7 @@ export function ModalsPage() {
             size="md"
             onClick={() => {
               console.log('Redirecting to IAM');
-              setIsManageMemberOpen(false);
+              closeModal();
             }}
             className="flex-1"
           >
@@ -7911,8 +7216,8 @@ export function ModalsPage() {
 
       {/* Delete Agent Source Modal */}
       <DeleteAgentSourceModal
-        isOpen={isDeleteAgentSourceOpen}
-        onClose={() => setIsDeleteAgentSourceOpen(false)}
+        isOpen={openModal === 'delete-agent-source'}
+        onClose={closeModal}
         agentName="my-research-agent"
       />
     </PageShell>
