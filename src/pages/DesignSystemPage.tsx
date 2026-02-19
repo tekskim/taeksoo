@@ -285,7 +285,11 @@ import {
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
-import { IconExpandOff, IconExpandOn } from '@/design-system/components/Icons/CustomIcons';
+import {
+  IconExpandOff,
+  IconExpandOn,
+  IconAction,
+} from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -2565,46 +2569,6 @@ function TabBarDemo() {
           </div>
         </div>
       </VStack>
-
-      {/* With Icons */}
-      <VStack gap={3}>
-        <Label>With icons</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-          <TabBar
-            tabs={[
-              {
-                id: 'home',
-                label: 'Home',
-                icon: <IconHome size={14} stroke={1.5} />,
-                closable: false,
-              },
-              { id: 'docs', label: 'Documents', icon: <IconFile size={14} stroke={1.5} /> },
-              { id: 'settings', label: 'Settings', icon: <IconSettings size={14} stroke={1.5} /> },
-            ]}
-            activeTab="docs"
-            onTabChange={() => {}}
-            onTabClose={() => {}}
-            showAddButton={false}
-          />
-        </div>
-      </VStack>
-
-      {/* No Add Button */}
-      <VStack gap={3}>
-        <Label>Without Add Button</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
-          <TabBar
-            tabs={[
-              { id: 'tab-a', label: 'Tab A' },
-              { id: 'tab-b', label: 'Tab B' },
-            ]}
-            activeTab="tab-a"
-            onTabChange={() => {}}
-            onTabClose={() => {}}
-            showAddButton={false}
-          />
-        </div>
-      </VStack>
     </VStack>
   );
 }
@@ -2874,7 +2838,7 @@ function TableDemo() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center' as const,
       render: () => (
         <div className="flex items-center gap-1">
@@ -2882,7 +2846,7 @@ function TableDemo() {
             <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
-            <IconDotsVertical size={16} stroke={1.5} />
+            <IconAction size={16} stroke={1} />
           </button>
         </div>
       ),
@@ -3046,7 +3010,7 @@ function TableDemo() {
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: fixedColumns.status },
+    { key: 'status', label: 'Status', width: fixedColumns.status, align: 'center' as const },
     { key: 'name', label: 'Name', flex: 1 },
     { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
     { key: 'image', label: 'Image', width: columnMinWidths.image },
@@ -11348,26 +11312,31 @@ outline: 2px solid var(--color-border-focus);`}
                         <Tooltip content="Delete this item permanently">
                           <Button
                             variant="danger"
-                            icon={<IconTrash size={16} />}
+                            size="sm"
+                            icon={<IconTrash size={12} />}
                             aria-label="Delete"
                           />
                         </Tooltip>
                         <Tooltip content="Add to favorites">
                           <Button
                             variant="ghost"
-                            icon={<IconStar size={16} />}
+                            size="sm"
+                            icon={<IconStar size={12} />}
                             aria-label="Favorite"
                           />
                         </Tooltip>
                         <Tooltip content="Copy to clipboard">
                           <Button
                             variant="secondary"
+                            size="sm"
                             icon={<IconCopy size={12} />}
                             aria-label="Copy"
                           />
                         </Tooltip>
                         <Tooltip content="This action requires admin permissions" position="bottom">
-                          <Badge variant="warning">Restricted</Badge>
+                          <Badge variant="warning" size="sm">
+                            Restricted
+                          </Badge>
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11734,18 +11703,6 @@ outline: 2px solid var(--color-border-focus);`}
                             All Controls
                           </span>
                           <WindowControls />
-                        </VStack>
-                        <VStack gap={1}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Minimize + Close
-                          </span>
-                          <WindowControls showMaximize={false} />
-                        </VStack>
-                        <VStack gap={1}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Close Only
-                          </span>
-                          <WindowControls showMinimize={false} showMaximize={false} />
                         </VStack>
                       </div>
                     </VStack>
@@ -13079,7 +13036,7 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
                             Info Box (single value)
                           </span>
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1">
                             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
                               Volume name
                             </span>
@@ -13094,11 +13051,11 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
                             Scrollable List (max-h: 96px)
                           </span>
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto sidebar-scroll">
                             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
                               Security groups (6)
                             </span>
-                            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+                            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-1">
                               <li>sg-01</li>
                               <li>sg-02</li>
                               <li>sg-03</li>

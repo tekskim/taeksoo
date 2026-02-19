@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 import {
   PageShell,
   Button,
@@ -142,13 +143,14 @@ function SummarySidebar({
 
 export default function ComputeAdminCreateFirewallRulePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    configuration: 'pending',
+    configuration: isV2 ? 'active' : 'pending',
   });
 
   // Form state - Basic Info
@@ -362,7 +364,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={isV2 || sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
@@ -379,7 +381,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -591,7 +593,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Rule name" value={ruleName || '-'} />
                   {description && <SectionCard.DataRow label="Description" value={description} />}
@@ -602,8 +604,21 @@ export default function ComputeAdminCreateFirewallRulePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Rule name" value={ruleName || '-'} />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow label="Owned tenant" value={selectedTenantName} />
+                  <SectionCard.DataRow label="Enabled" value={enabled ? 'On' : 'Off'} />
+                  <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Configuration Section */}
-            <SectionCard isActive={sectionStatus['configuration'] === 'active'}>
+            <SectionCard isActive={isV2 || sectionStatus['configuration'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['configuration']}
                 showDivider={sectionStatus['configuration'] === 'done'}
@@ -620,7 +635,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                   )
                 }
               />
-              {sectionStatus['configuration'] === 'active' && (
+              {(isV2 || sectionStatus['configuration'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -779,7 +794,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['configuration'] === 'done' && (
+              {!isV2 && sectionStatus['configuration'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Protocol" value={protocol.toUpperCase() || '-'} />
                   <SectionCard.DataRow
@@ -793,15 +808,45 @@ export default function ComputeAdminCreateFirewallRulePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['configuration']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Protocol" value={protocol.toUpperCase() || '-'} />
+                  <SectionCard.DataRow
+                    label="Action"
+                    value={action.charAt(0).toUpperCase() + action.slice(1) || '-'}
+                  />
+                  <SectionCard.DataRow label="Source CIDR" value={sourceIp || '-'} />
+                  <SectionCard.DataRow label="Source port" value={sourcePort || '-'} />
+                  <SectionCard.DataRow label="Destination CIDR" value={destinationIp || '-'} />
+                  <SectionCard.DataRow label="Destination port" value={destinationPort || '-'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
+            {isV2 && (
+              <HStack justify="end" gap={2} className="pt-4">
+                <Button variant="secondary" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={handleCreate}>
+                  Create
+                </Button>
+              </HStack>
+            )}
           </VStack>
 
           {/* Summary Sidebar */}
-          <SummarySidebar
-            sectionStatus={sectionStatus}
-            onCancel={handleCancel}
-            onCreate={handleCreate}
-            isCreateDisabled={isCreateDisabled}
-          />
+          {!isV2 && (
+            <SummarySidebar
+              sectionStatus={sectionStatus}
+              onCancel={handleCancel}
+              onCreate={handleCreate}
+              isCreateDisabled={isCreateDisabled}
+            />
+          )}
         </HStack>
       </VStack>
     </PageShell>

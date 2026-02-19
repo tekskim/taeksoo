@@ -32,6 +32,7 @@ import {
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { IconBell, IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
@@ -176,6 +177,7 @@ function SummarySidebar({
 
 export default function CreateVirtualAdapterPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, addTab, closeTab, selectTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -183,8 +185,8 @@ export default function CreateVirtualAdapterPage() {
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    network: 'pre',
-    security: 'pre',
+    network: isV2 ? 'active' : 'pre',
+    security: isV2 ? 'active' : 'pre',
   });
 
   // Form state - Basic Info
@@ -427,10 +429,11 @@ export default function CreateVirtualAdapterPage() {
   );
 
   // Computed states
-  const isCreateDisabled = !adapterName.trim() || sectionStatus['security'] !== 'done';
+  const isCreateDisabled = !adapterName.trim() || (!isV2 && sectionStatus['security'] !== 'done');
 
   // Helper function to edit a section
   const editSection = (section: SectionStep) => {
+    if (isV2) return;
     setSectionStatus((prev) => {
       const newStatus = { ...prev };
       // Set the clicked section to active
@@ -534,11 +537,12 @@ export default function CreateVirtualAdapterPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -551,7 +555,7 @@ export default function CreateVirtualAdapterPage() {
                   )
                 }
               />
-              {sectionStatus['basic-info'] === 'active' && (
+              {(isV2 || sectionStatus['basic-info'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -601,7 +605,6 @@ export default function CreateVirtualAdapterPage() {
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                    {/* Next Button */}
                     <HStack justify="end" className="pt-3">
                       <Button
                         variant="primary"
@@ -624,20 +627,30 @@ export default function CreateVirtualAdapterPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Virtual adapter Name" value={adapterName} />
                   {description && <SectionCard.DataRow label="Description" value={description} />}
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName} />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Network Section */}
-            <SectionCard isActive={sectionStatus['network'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['network'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['network']}
                 showDivider={sectionStatus['network'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['network'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -650,7 +663,7 @@ export default function CreateVirtualAdapterPage() {
                   )
                 }
               />
-              {sectionStatus['network'] === 'active' && (
+              {(isV2 || sectionStatus['network'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -875,7 +888,7 @@ export default function CreateVirtualAdapterPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['network'] === 'done' && (
+              {!isV2 && sectionStatus['network'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Network"
@@ -891,6 +904,24 @@ export default function CreateVirtualAdapterPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['network']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Network"
+                    value={selectedNetworkDetails?.name || '-'}
+                  />
+                  <SectionCard.DataRow label="Fixed IP" value="Auto-allocate" />
+                  <SectionCard.DataRow
+                    label="MAC address"
+                    value={
+                      macAddressMode === 'auto' ? 'Auto-allocate' : manualMacAddress || 'Manual'
+                    }
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Security Section */}
             <SectionCard isActive={sectionStatus['security'] === 'active'}>
@@ -910,7 +941,7 @@ export default function CreateVirtualAdapterPage() {
                   )
                 }
               />
-              {sectionStatus['security'] === 'active' && (
+              {(isV2 || sectionStatus['security'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1018,7 +1049,7 @@ export default function CreateVirtualAdapterPage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['security'] === 'done' && (
+              {!isV2 && sectionStatus['security'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Port security"
@@ -1038,6 +1069,28 @@ export default function CreateVirtualAdapterPage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['security']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Port security"
+                    value={portSecurityEnabled ? 'Enabled' : 'Disabled'}
+                  />
+                  <SectionCard.DataRow
+                    label="Security groups"
+                    value={
+                      selectedSecurityGroups.length > 0
+                        ? mockSecurityGroups
+                            .filter((sg) => selectedSecurityGroups.includes(sg.id))
+                            .map((sg) => sg.name)
+                            .join(', ')
+                        : 'None'
+                    }
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Summary Sidebar */}

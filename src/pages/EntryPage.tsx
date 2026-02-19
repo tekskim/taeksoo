@@ -320,6 +320,9 @@ export function EntryPage() {
                 <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
                   Create Pages{' '}
                 </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/detail-pages')}>
+                  Create Pages 2{' '}
+                </Button>
               </div>
             </div>
           </div>

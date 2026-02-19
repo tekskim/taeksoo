@@ -34,6 +34,7 @@ import {
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
 
@@ -126,6 +127,7 @@ function SummarySidebar({
 
 export function ComputeAdminCreateImagePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Form state
@@ -166,8 +168,8 @@ export function ComputeAdminCreateImagePage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    source: 'pre',
-    specification: 'pre',
+    source: isV2 ? 'active' : 'pre',
+    specification: isV2 ? 'active' : 'pre',
     advanced: 'done',
   });
 
@@ -386,27 +388,33 @@ export function ComputeAdminCreateImagePage() {
         }));
       }
     },
-    [selectedTenantIds, imageName, sourceType, sourceUrl, diskFormat, os, osVersion, osAdmin]
+    [selectedTenantIds, imageName, sourceType, sourceUrl, diskFormat, os, osVersion, osAdmin, isV2]
   );
 
-  const editSection = useCallback((section: SectionStep) => {
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((s) => {
-        if (s === section) {
-          newStatus[s] = 'active';
-        } else if (newStatus[s] === 'active') {
-          newStatus[s] = 'done';
-        }
+  const editSection = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((s) => {
+          if (s === section) {
+            newStatus[s] = 'active';
+          } else if (newStatus[s] === 'active') {
+            newStatus[s] = 'done';
+          }
+        });
+        return newStatus;
       });
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   // Check if create button should be enabled
   const isCreateDisabled =
-    !imageName.trim() || selectedTenantIds.length === 0 || sectionStatus['basic-info'] === 'active';
+    !imageName.trim() ||
+    selectedTenantIds.length === 0 ||
+    (!isV2 && sectionStatus['basic-info'] === 'active');
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -454,11 +462,12 @@ export function ComputeAdminCreateImagePage() {
           {/* Left Column - Main Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic information Section */}
-            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['basic-info'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['basic-info']}
                 showDivider={sectionStatus['basic-info'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['basic-info'] === 'done' && (
                     <Button
                       variant="secondary"
@@ -705,7 +714,7 @@ export function ComputeAdminCreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['basic-info'] === 'done' && (
+              {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Image name" value={imageName || '-'} />
                   <SectionCard.DataRow label="Description" value={description || '-'} />
@@ -736,6 +745,39 @@ export function ComputeAdminCreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['basic-info']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Image name" value={imageName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
+                  <SectionCard.DataRow
+                    label="Owned tenant"
+                    value={
+                      selectedTenants.length > 0
+                        ? selectedTenants.map((t) => `${t.name} (ID: ${t.id})`).join(', ')
+                        : '-'
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="Visibility"
+                    value={visibility.charAt(0).toUpperCase() + visibility.slice(1)}
+                  />
+                  {visibility === 'shared' && (
+                    <SectionCard.DataRow
+                      label="Shared with"
+                      value={
+                        selectedSharedTenants.length > 0
+                          ? selectedSharedTenants.map((t) => `${t.name} (ID: ${t.id})`).join(', ')
+                          : '-'
+                      }
+                    />
+                  )}
+                  <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Source Section */}
             <SectionCard isActive={sectionStatus['source'] === 'active'}>
               <SectionCard.Header
@@ -754,7 +796,7 @@ export function ComputeAdminCreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['source'] === 'active' && (
+              {(isV2 || sectionStatus['source'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -836,7 +878,7 @@ export function ComputeAdminCreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['source'] === 'done' && (
+              {!isV2 && sectionStatus['source'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Upload type"
@@ -849,12 +891,28 @@ export function ComputeAdminCreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['source']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Upload type"
+                    value={sourceType === 'file' ? 'Upload File' : 'File URL'}
+                  />
+                  {sourceType === 'url' && (
+                    <SectionCard.DataRow label="URL" value={sourceUrl || '-'} />
+                  )}
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Specification Section */}
-            <SectionCard isActive={sectionStatus['specification'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['specification'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['specification']}
                 showDivider={sectionStatus['specification'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['specification'] === 'done' && (
                     <HStack gap={3} align="center">
                       <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -872,7 +930,7 @@ export function ComputeAdminCreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['specification'] === 'active' && (
+              {(isV2 || sectionStatus['specification'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1082,7 +1140,7 @@ export function ComputeAdminCreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['specification'] === 'done' && (
+              {!isV2 && sectionStatus['specification'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
                   <SectionCard.DataRow label="OS" value={os || '-'} />
@@ -1100,12 +1158,33 @@ export function ComputeAdminCreateImagePage() {
               )}
             </SectionCard>
 
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['specification']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow label="OS" value={os || '-'} />
+                  <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
+                  <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
+                  <SectionCard.DataRow
+                    label="Min system Disk"
+                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Min RAM"
+                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
             {/* Advanced Section */}
-            <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
+            <SectionCard isActive={!isV2 && sectionStatus['advanced'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['advanced']}
                 showDivider={sectionStatus['advanced'] === 'done'}
                 actions={
+                  !isV2 &&
                   sectionStatus['advanced'] === 'done' && (
                     <HStack gap={3} align="center">
                       <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -1123,7 +1202,7 @@ export function ComputeAdminCreateImagePage() {
                   )
                 }
               />
-              {sectionStatus['advanced'] === 'active' && (
+              {(isV2 || sectionStatus['advanced'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1198,7 +1277,6 @@ export function ComputeAdminCreateImagePage() {
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Action Buttons */}
                     <HStack justify="end" gap={2} className="pt-3">
                       <Button
                         variant="secondary"
@@ -1226,7 +1304,7 @@ export function ComputeAdminCreateImagePage() {
                   </VStack>
                 </SectionCard.Content>
               )}
-              {sectionStatus['advanced'] === 'done' && (
+              {!isV2 && sectionStatus['advanced'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="QEMU Guest Agent"
@@ -1251,16 +1329,57 @@ export function ComputeAdminCreateImagePage() {
                 </SectionCard.Content>
               )}
             </SectionCard>
+
+            {isV2 && (
+              <SectionCard>
+                <SectionCard.Header title={SECTION_LABELS['advanced']} />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="QEMU Guest Agent"
+                    value={qemuGuestAgent ? 'On' : 'Off'}
+                  />
+                  <SectionCard.DataRow
+                    label="CPU Policy"
+                    value={
+                      cpuPolicy === 'none'
+                        ? 'None'
+                        : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="CPU Thread Policy"
+                    value={
+                      cpuThreadPolicy === 'none'
+                        ? 'None'
+                        : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)
+                    }
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+            )}
           </VStack>
 
           {/* Right Column - Summary Sidebar */}
-          <SummarySidebar
-            sectionStatus={sectionStatus}
-            onCancel={handleCancel}
-            onCreate={handleCreate}
-            isCreateDisabled={isCreateDisabled}
-          />
+          {!isV2 && (
+            <SummarySidebar
+              sectionStatus={sectionStatus}
+              onCancel={handleCancel}
+              onCreate={handleCreate}
+              isCreateDisabled={isCreateDisabled}
+            />
+          )}
         </HStack>
+
+        {isV2 && (
+          <HStack justify="end" gap={2} className="pt-4">
+            <Button variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleCreate} disabled={isCreateDisabled}>
+              Create
+            </Button>
+          </HStack>
+        )}
       </VStack>
     </PageShell>
   );

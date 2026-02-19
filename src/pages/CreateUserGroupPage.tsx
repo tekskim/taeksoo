@@ -431,6 +431,7 @@ interface BasicInformationSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   onNext: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -444,6 +445,7 @@ function BasicInformationSection({
   description,
   onDescriptionChange,
   onNext,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -536,7 +538,7 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing and active) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -562,6 +564,7 @@ interface AddUsersSectionProps {
   onSelectionChange: (ids: string[]) => void;
   onNext: () => void;
   onSkip: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -574,6 +577,7 @@ function AddUsersSection({
   onSelectionChange,
   onNext,
   onSkip,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -779,6 +783,7 @@ function AddUsersSection({
 
 export default function CreateUserGroupPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -794,7 +799,7 @@ export default function CreateUserGroupPage() {
   // Section status
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    'add-users': 'pre',
+    'add-users': isV2 ? 'active' : 'pre',
   });
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
@@ -812,6 +817,7 @@ export default function CreateUserGroupPage() {
 
   // Helper functions for editing
   const handleEdit = useCallback((section: SectionStep) => {
+    if (isV2) return;
     setEditingSection(section);
     const sectionIndex = SECTION_ORDER.indexOf(section);
 
@@ -902,16 +908,19 @@ export default function CreateUserGroupPage() {
   }, [editingSection]);
 
   // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
+  const handleNext = useCallback(
+    (currentSection: SectionStep) => {
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
 
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
+      setSectionStatus((prev) => ({
+        ...prev,
+        [currentSection]: 'done',
+        ...(nextSection && { [nextSection]: 'active' }),
+      }));
+    },
+    [isV2]
+  );
 
   // Handle cancel
   const handleCancel = useCallback(() => {
@@ -1002,12 +1011,13 @@ export default function CreateUserGroupPage() {
                 description={description}
                 onDescriptionChange={setDescription}
                 onNext={() => handleNext('basic-info')}
+                isActive={!isV2}
                 isEditing={editingSection === 'basic-info'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -1018,13 +1028,13 @@ export default function CreateUserGroupPage() {
             )}
 
             {/* Add Users Section */}
-            {sectionStatus['add-users'] === 'pre' && (
+            {!isV2 && sectionStatus['add-users'] === 'pre' && (
               <PreSection title={SECTION_LABELS['add-users']} />
             )}
-            {sectionStatus['add-users'] === 'writing' && (
+            {!isV2 && sectionStatus['add-users'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['add-users']} />
             )}
-            {sectionStatus['add-users'] === 'active' && (
+            {(isV2 || sectionStatus['add-users'] === 'active') && (
               <AddUsersSection
                 selectedUsers={selectedUsers}
                 onSelectionChange={(ids) => {
@@ -1035,6 +1045,7 @@ export default function CreateUserGroupPage() {
                 }}
                 onNext={() => handleNext('add-users')}
                 onSkip={() => handleNext('add-users')}
+                isActive={!isV2}
                 isEditing={editingSection === 'add-users'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
@@ -1042,7 +1053,7 @@ export default function CreateUserGroupPage() {
                 onUsersErrorChange={setUsersError}
               />
             )}
-            {sectionStatus['add-users'] === 'done' && (
+            {(isV2 || sectionStatus['add-users'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['add-users']}
                 onEdit={() => handleEdit('add-users')}

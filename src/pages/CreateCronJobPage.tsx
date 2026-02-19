@@ -866,6 +866,7 @@ function ScalingPolicySection({
                 value={startingDeadlineSeconds}
                 onChange={onStartingDeadlineSecondsChange}
                 min={0}
+                size="sm"
                 width="sm"
               />
               <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
@@ -1996,17 +1997,14 @@ export function CreateCronJobPage() {
                           forcibly terminated.
                         </span>
                         <HStack gap={2} align="center">
-                          <div className="w-[160px]">
-                            <NumberInput
-                              value={
-                                terminationGracePeriod
-                                  ? parseInt(terminationGracePeriod)
-                                  : undefined
-                              }
-                              onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
-                              fullWidth
-                            />
-                          </div>
+                          <NumberInput
+                            value={
+                              terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
+                            }
+                            onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
+                            size="sm"
+                            width="sm"
+                          />
                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                             Seconds
                           </span>
@@ -3874,18 +3872,18 @@ export function CreateCronJobPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={6}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Container Image{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Container Image{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Input
                                 placeholder="nginx:latest"
                                 fullWidth
@@ -3896,17 +3894,19 @@ export function CreateCronJobPage() {
                                   })
                                 }
                               />
+                            </div>
+                          </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Pull Policy
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                            <VStack gap={6}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Pull Policy
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Select
                                 options={[
                                   { value: 'Always', label: 'Always' },
@@ -3921,20 +3921,19 @@ export function CreateCronJobPage() {
                                 }
                                 fullWidth
                               />
+                            </div>
+                          </VStack>
+                          <VStack gap={3}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Pull Secrets
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={6}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Pull Secrets
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  The period allowed after receiving a termination request before
-                                  the pod is forcibly terminated.
-                                </span>
-                              </VStack>
+                            <div className="w-[calc(50%-12px)]">
                               <Select
                                 options={[
                                   { value: '', label: 'Select a secret...' },
@@ -3949,8 +3948,8 @@ export function CreateCronJobPage() {
                                 }
                                 fullWidth
                               />
-                            </VStack>
-                          </div>
+                            </div>
+                          </VStack>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>
@@ -4712,7 +4711,7 @@ export function CreateCronJobPage() {
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -4725,11 +4724,12 @@ export function CreateCronJobPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -4770,7 +4770,7 @@ export function CreateCronJobPage() {
                                           check.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -4783,11 +4783,12 @@ export function CreateCronJobPage() {
                                             })
                                           }
                                           min={0}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
@@ -4801,7 +4802,7 @@ export function CreateCronJobPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4814,11 +4815,12 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     )}
@@ -4836,7 +4838,7 @@ export function CreateCronJobPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -4849,11 +4851,12 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     )}
@@ -4867,15 +4870,20 @@ export function CreateCronJobPage() {
                                           checks to consider the status healthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="1"
-                                        fullWidth
-                                        value={config.readinessProbe?.successThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(
+                                            config.readinessProbe?.successThreshold || '1'
+                                          ) || 1
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('readinessProbe', {
-                                            successThreshold: e.target.value,
+                                            successThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
@@ -4889,15 +4897,20 @@ export function CreateCronJobPage() {
                                             to consider the status unhealthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="3"
-                                          fullWidth
-                                          value={config.readinessProbe?.failureThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.readinessProbe?.failureThreshold || '3'
+                                            ) || 3
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('readinessProbe', {
-                                              failureThreshold: e.target.value,
+                                              failureThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                     )}
@@ -4914,15 +4927,20 @@ export function CreateCronJobPage() {
                                           consider the status unhealthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="3"
-                                        fullWidth
-                                        value={config.readinessProbe?.failureThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(
+                                            config.readinessProbe?.failureThreshold || '3'
+                                          ) || 3
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('readinessProbe', {
-                                            failureThreshold: e.target.value,
+                                            failureThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                   )}
@@ -5165,7 +5183,7 @@ export function CreateCronJobPage() {
                                             Specify the interval between health check requests.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -5178,11 +5196,12 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     </div>
@@ -5198,7 +5217,7 @@ export function CreateCronJobPage() {
                                             check.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -5211,11 +5230,12 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             min={0}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -5228,7 +5248,7 @@ export function CreateCronJobPage() {
                                             response.
                                           </span>
                                         </VStack>
-                                        <HStack gap={2}>
+                                        <HStack gap={2} align="center">
                                           <NumberInput
                                             value={
                                               parseInt(
@@ -5241,11 +5261,12 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             min={1}
-                                            fullWidth
+                                            size="sm"
+                                            width="sm"
                                           />
-                                          <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
-                                          </div>
+                                          </span>
                                         </HStack>
                                       </VStack>
                                     </div>
@@ -5261,15 +5282,20 @@ export function CreateCronJobPage() {
                                             checks to consider the status healthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="1"
-                                          fullWidth
-                                          value={config.livenessProbe?.successThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.livenessProbe?.successThreshold || '1'
+                                            ) || 1
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('livenessProbe', {
-                                              successThreshold: e.target.value,
+                                              successThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -5282,15 +5308,20 @@ export function CreateCronJobPage() {
                                             to consider the status unhealthy.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="3"
-                                          fullWidth
-                                          value={config.livenessProbe?.failureThreshold || ''}
-                                          onChange={(e) =>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.livenessProbe?.failureThreshold || '3'
+                                            ) || 3
+                                          }
+                                          onChange={(val) =>
                                             updateProbe('livenessProbe', {
-                                              failureThreshold: e.target.value,
+                                              failureThreshold: String(val),
                                             })
                                           }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
                                         />
                                       </VStack>
                                     </div>
@@ -5415,7 +5446,7 @@ export function CreateCronJobPage() {
                                           Specify the interval between health check requests.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(config.startupProbe?.periodSeconds || '10') ||
@@ -5427,11 +5458,12 @@ export function CreateCronJobPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -5447,7 +5479,7 @@ export function CreateCronJobPage() {
                                           check.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(
@@ -5460,11 +5492,12 @@ export function CreateCronJobPage() {
                                             })
                                           }
                                           min={0}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
@@ -5477,7 +5510,7 @@ export function CreateCronJobPage() {
                                           response.
                                         </span>
                                       </VStack>
-                                      <HStack gap={2}>
+                                      <HStack gap={2} align="center">
                                         <NumberInput
                                           value={
                                             parseInt(config.startupProbe?.timeoutSeconds || '1') ||
@@ -5489,11 +5522,12 @@ export function CreateCronJobPage() {
                                             })
                                           }
                                           min={1}
-                                          fullWidth
+                                          size="sm"
+                                          width="sm"
                                         />
-                                        <div className="px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
-                                        </div>
+                                        </span>
                                       </HStack>
                                     </VStack>
                                   </div>
@@ -5509,15 +5543,19 @@ export function CreateCronJobPage() {
                                           checks to consider the status healthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="1"
-                                        fullWidth
-                                        value={config.startupProbe?.successThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(config.startupProbe?.successThreshold || '1') ||
+                                          1
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('startupProbe', {
-                                            successThreshold: e.target.value,
+                                            successThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                     <VStack gap={3} className="flex-1">
@@ -5530,15 +5568,19 @@ export function CreateCronJobPage() {
                                           consider the status unhealthy.
                                         </span>
                                       </VStack>
-                                      <Input
-                                        placeholder="3"
-                                        fullWidth
-                                        value={config.startupProbe?.failureThreshold || ''}
-                                        onChange={(e) =>
+                                      <NumberInput
+                                        value={
+                                          parseInt(config.startupProbe?.failureThreshold || '3') ||
+                                          3
+                                        }
+                                        onChange={(val) =>
                                           updateProbe('startupProbe', {
-                                            failureThreshold: e.target.value,
+                                            failureThreshold: String(val),
                                           })
                                         }
+                                        min={1}
+                                        size="sm"
+                                        width="sm"
                                       />
                                     </VStack>
                                   </div>

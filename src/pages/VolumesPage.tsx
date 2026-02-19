@@ -652,10 +652,20 @@ export function VolumesPage() {
           }
           bulkActions={
             <ListToolbar.Actions>
-              <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedVolumes.length === 0}
+              >
                 Delete
               </Button>
-              <Button variant="muted" size="sm" leftIcon={<IconTransfer size={12} />} disabled>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTransfer size={12} />}
+                disabled={selectedVolumes.length === 0}
+              >
                 Accept Volume Transfer
               </Button>
             </ListToolbar.Actions>

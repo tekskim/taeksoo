@@ -2317,6 +2317,54 @@ export const IconRequest = forwardRef<SVGSVGElement, CustomIconProps>(
 IconRequest.displayName = 'IconRequest';
 
 /**
+ * RouterArrows - 16x16 프레임 (arrows from 4 directions)
+ */
+export const IconRouterArrows = forwardRef<SVGSVGElement, CustomIconProps>(
+  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 16 16"
+        fill="none"
+        className={className}
+        style={style}
+        {...props}
+      >
+        <g clipPath="url(#routerArrowsClip)">
+          <path d="M1 8H5" stroke={color} strokeLinecap="round" />
+          <path
+            d="M3.25 6L5.25 8L3.25 10"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path d="M8 5V1" stroke={color} strokeLinecap="round" />
+          <path d="M6 3L8 1L10 3" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8 11V15" stroke={color} strokeLinecap="round" />
+          <path d="M6 13L8 15L10 13" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M15 8L11 8" stroke={color} strokeLinecap="round" />
+          <path
+            d="M12.75 6L10.75 8L12.75 10"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </g>
+        <defs>
+          <clipPath id="routerArrowsClip">
+            <rect width="16" height="16" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+    );
+  }
+);
+IconRouterArrows.displayName = 'IconRouterArrows';
+
+/**
  * Routers-1 - 16x16 프레임
  */
 export const IconRouters1 = forwardRef<SVGSVGElement, CustomIconProps>(

@@ -93,6 +93,7 @@ import {
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import RouterIcon from '@/assets/Router.svg';
+import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { Button, PageShell, TopBar, HStack, SearchInput } from '@/design-system';
 
 /* ----------------------------------------
@@ -203,8 +204,9 @@ const appIconData: AppData[] = [
         items: [
           { icon: IconNetwork, name: 'IconNetwork', label: 'Networks', slug: 'network' },
           {
+            icon: IconRouterArrows,
             customIcon: RouterIcon,
-            name: 'Router.svg',
+            name: 'IconRouterArrows',
             label: 'Routers',
             slug: 'router',
             library: 'custom',
@@ -829,7 +831,7 @@ function IconCard({ item, sidebarFile }: IconCardProps) {
           ref={iconRef}
           className="w-8 h-8 flex items-center justify-center bg-[var(--color-surface-subtle)] rounded-md"
         >
-          {isCustom && item.customIcon ? (
+          {isCustom && item.customIcon && !Icon ? (
             <CustomIcon
               src={item.customIcon}
               size={16}

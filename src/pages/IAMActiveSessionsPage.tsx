@@ -20,7 +20,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh } from '@tabler/icons-react';
+import { IconRefresh, IconCircleX } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -289,7 +289,12 @@ export default function IAMActiveSessionsPage() {
             }
             bulkActions={
               <ListToolbar.Actions>
-                <Button variant="muted" size="sm" disabled={selectedRows.length === 0}>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconCircleX size={12} stroke={1.5} />}
+                  disabled={selectedRows.length === 0}
+                >
                   Terminate
                 </Button>
               </ListToolbar.Actions>

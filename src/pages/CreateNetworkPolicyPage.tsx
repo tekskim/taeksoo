@@ -341,7 +341,7 @@ function TrafficRulesSection({
             <VStack gap={3}>
               <label className="text-label-lg text-[var(--color-text-default)]">Rules</label>
 
-              <div className="border border-[var(--color-border-default)] rounded-[6px] w-full">
+              <div className="border border-[var(--color-border-default)] rounded-[6px] w-full overflow-hidden">
                 <div className="flex w-full">
                   {/* Left tabs */}
                   <div className="flex flex-col border-r border-[var(--color-border-default)] shrink-0 min-w-[100px]">

@@ -33,7 +33,7 @@ import {
 import { EthernetPort, ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
-import RouterIcon from '@/assets/Router.svg';
+import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { ProjectSelector } from './ProjectSelector';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -281,15 +281,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                   active={isActive('/compute-admin/networks')}
                 />
                 <MenuItem
-                  icon={
-                    <img
-                      src={RouterIcon}
-                      width={16}
-                      height={16}
-                      alt=""
-                      className="opacity-80 icon-theme-adaptive"
-                    />
-                  }
+                  icon={<IconRouterArrows size={16} />}
                   label="Routers"
                   href="/compute-admin/routers"
                   active={isActive('/compute-admin/routers')}
@@ -437,15 +429,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                   active={isActive(`${basePath}/networks`)}
                 />
                 <MenuItem
-                  icon={
-                    <img
-                      src={RouterIcon}
-                      width={16}
-                      height={16}
-                      alt=""
-                      className="opacity-80 icon-theme-adaptive"
-                    />
-                  }
+                  icon={<IconRouterArrows size={16} />}
                   label="Routers"
                   href={`${basePath}/routers`}
                   active={isActive(`${basePath}/routers`)}

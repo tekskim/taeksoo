@@ -106,7 +106,7 @@ export function CheckboxGroup({
           <p
             id={errorId}
             role="alert"
-            className="text-[length:var(--checkbox-error-size)] leading-[var(--checkbox-error-line-height)] text-[var(--checkbox-error-text)]"
+            className="text-[length:var(--checkbox-error-size)] leading-[var(--checkbox-error-line-height)] text-[var(--checkbox-error-text)] mt-[var(--primitive-spacing-2)]"
           >
             {errorMessage}
           </p>

@@ -747,7 +747,7 @@ export default function IAMUserGroupDetailPage() {
                   </HStack>
 
                   {/* Actions */}
-                  <Button variant="secondary" size="sm" disabled>
+                  <Button variant="muted" size="sm" disabled>
                     Detach
                   </Button>
                 </HStack>

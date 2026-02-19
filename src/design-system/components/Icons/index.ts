@@ -86,6 +86,7 @@ export {
 export {
   IconReset1,
   IconReset2,
+  IconRouterArrows,
   IconRouters1,
   IconSchedule,
   IconSearch,
@@ -362,6 +363,7 @@ export {
   IconRotateClockwise as Retry,
   IconProgress as Pending,
   IconProgress as Progress,
+  IconCircleX as Terminate,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -508,6 +510,7 @@ import {
   IconRefreshDot,
   IconRotateClockwise,
   IconProgress,
+  IconCircleX,
 } from '@tabler/icons-react';
 
 /**
@@ -680,6 +683,7 @@ export const Icons = {
   Pending: IconProgress,
   Progress: IconProgress,
   Timeout: IconTimeout,
+  Terminate: IconCircleX,
 } as const;
 
 export type IconName = keyof typeof Icons;

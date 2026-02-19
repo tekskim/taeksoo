@@ -21,6 +21,7 @@ import {
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconEye, IconEyeOff, IconCircle, IconCircleCheck } from '@tabler/icons-react';
 
@@ -471,6 +472,7 @@ interface BasicInformationSectionProps {
   status: boolean;
   onStatusChange: (value: boolean) => void;
   onNext: () => void;
+  isActive: boolean;
   isEditing: boolean;
   onEditCancel: () => void;
   onEditDone: () => void;
@@ -500,6 +502,7 @@ function BasicInformationSection({
   status,
   onStatusChange,
   onNext,
+  isActive,
   isEditing,
   onEditCancel,
   onEditDone,
@@ -716,7 +719,7 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing) */}
+          {/* Divider + Next Button (only when not editing and active) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -965,6 +968,7 @@ function DefaultDomainSection({
 
 export default function CreateSystemAdministratorPage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -980,7 +984,7 @@ export default function CreateSystemAdministratorPage() {
   // Section status
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
     'basic-info': 'active',
-    'default-domain': 'pre',
+    'default-domain': isV2 ? 'active' : 'pre',
   });
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
@@ -1005,29 +1009,34 @@ export default function CreateSystemAdministratorPage() {
   const allSectionsDone = Object.values(sectionStatus).every((s) => s === 'done');
 
   // Helper functions for editing
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
+  const handleEdit = useCallback(
+    (section: SectionStep) => {
+      if (isV2) return;
+      setEditingSection(section);
+      const sectionIndex = SECTION_ORDER.indexOf(section);
 
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
+      setSectionStatus((prev) => {
+        const newStatus = { ...prev };
 
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((key, index) => {
-        if (index < sectionIndex) {
-          newStatus[key] = 'done';
-        } else if (index === sectionIndex) {
-          newStatus[key] = 'active';
-        } else if (prev[key] === 'done' || prev[key] === 'active') {
-          newStatus[key] = 'writing';
-        }
+        // Set all sections to their appropriate state
+        SECTION_ORDER.forEach((key, index) => {
+          if (index < sectionIndex) {
+            newStatus[key] = 'done';
+          } else if (index === sectionIndex) {
+            newStatus[key] = 'active';
+          } else if (prev[key] === 'done' || prev[key] === 'active') {
+            newStatus[key] = 'writing';
+          }
+        });
+
+        return newStatus;
       });
-
-      return newStatus;
-    });
-  }, []);
+    },
+    [isV2]
+  );
 
   const handleEditCancel = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -1059,9 +1068,10 @@ export default function CreateSystemAdministratorPage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   const handleEditDone = useCallback(() => {
+    if (isV2) return;
     if (!editingSection) return;
 
     setSectionStatus((prev) => {
@@ -1093,19 +1103,23 @@ export default function CreateSystemAdministratorPage() {
     });
 
     setEditingSection(null);
-  }, [editingSection]);
+  }, [editingSection, isV2]);
 
   // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
+  const handleNext = useCallback(
+    (currentSection: SectionStep) => {
+      if (isV2) return;
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
 
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
+      setSectionStatus((prev) => ({
+        ...prev,
+        [currentSection]: 'done',
+        ...(nextSection && { [nextSection]: 'active' }),
+      }));
+    },
+    [isV2]
+  );
 
   // Handle cancel
   const handleCancel = useCallback(() => {
@@ -1186,13 +1200,13 @@ export default function CreateSystemAdministratorPage() {
           {/* Left Column - Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            {sectionStatus['basic-info'] === 'pre' && (
+            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
               <PreSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'writing' && (
+            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
                 username={username}
                 onUsernameChange={setUsername}
@@ -1217,12 +1231,13 @@ export default function CreateSystemAdministratorPage() {
                 status={status}
                 onStatusChange={setStatus}
                 onNext={() => handleNext('basic-info')}
+                isActive={!isV2}
                 isEditing={editingSection === 'basic-info'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
               />
             )}
-            {sectionStatus['basic-info'] === 'done' && (
+            {(isV2 || sectionStatus['basic-info'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
@@ -1236,13 +1251,13 @@ export default function CreateSystemAdministratorPage() {
             )}
 
             {/* Default Domain Section */}
-            {sectionStatus['default-domain'] === 'pre' && (
+            {!isV2 && sectionStatus['default-domain'] === 'pre' && (
               <PreSection title={SECTION_LABELS['default-domain']} />
             )}
-            {sectionStatus['default-domain'] === 'writing' && (
+            {!isV2 && sectionStatus['default-domain'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['default-domain']} />
             )}
-            {sectionStatus['default-domain'] === 'active' && (
+            {(isV2 || sectionStatus['default-domain'] === 'active') && (
               <DefaultDomainSection
                 selectedDomain={selectedDomain}
                 onSelectionChange={(id) => {
@@ -1252,6 +1267,7 @@ export default function CreateSystemAdministratorPage() {
                   }
                 }}
                 onNext={() => handleNext('default-domain')}
+                isActive={!isV2}
                 isEditing={editingSection === 'default-domain'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
@@ -1259,7 +1275,7 @@ export default function CreateSystemAdministratorPage() {
                 onDomainErrorChange={setDomainError}
               />
             )}
-            {sectionStatus['default-domain'] === 'done' && (
+            {(isV2 || sectionStatus['default-domain'] === 'done') && (
               <DoneSection
                 title={SECTION_LABELS['default-domain']}
                 onEdit={() => handleEdit('default-domain')}
