@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   VStack,
   TabBar,
@@ -20,7 +21,9 @@ import { IconBell, IconSearch, IconRefresh, IconFileDescription } from '@tabler/
 
 export function TextGenerationPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('experiments');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'experiments';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -741,7 +741,9 @@ export function StatefulSetDetailPage() {
   const { statefulsetId } = useParams<{ statefulsetId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('pods');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'pods';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get statefulset data
   const statefulset = mockStatefulSetData[statefulsetId || '1'] || mockStatefulSetData['1'];

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -374,7 +374,9 @@ export default function IAMPolicyDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('permissions');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'permissions';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Permissions tab state
   const [permSearchQuery, setPermSearchQuery] = useState('');

@@ -18,7 +18,7 @@ import {
 } from '@/design-system';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   IconBell,
   IconTerminal2,
@@ -142,7 +142,9 @@ export function ClusterDetailPage() {
   const navigate = useNavigate();
   const { clusterId } = useParams<{ clusterId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('networking');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'networking';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 

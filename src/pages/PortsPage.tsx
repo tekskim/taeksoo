@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -255,7 +255,9 @@ export function PortsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [ports] = useState(mockPorts);
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'all';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

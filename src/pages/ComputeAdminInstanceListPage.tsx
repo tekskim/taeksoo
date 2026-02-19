@@ -56,7 +56,7 @@ import {
   type InstanceInfo as EditInstanceInfo,
 } from '@/components/EditInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -853,7 +853,9 @@ export function ComputeAdminInstanceListPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [currentPage, setCurrentPage] = useState(1);
   const [currentBareMetalPage, setCurrentBareMetalPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('vm');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'vm';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
 
   const handleFiltersChange = (filters: AppliedFilter[]) => {

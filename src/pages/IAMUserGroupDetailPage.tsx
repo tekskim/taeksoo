@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -365,7 +365,9 @@ export default function IAMUserGroupDetailPage() {
 
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('users');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'users';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [usersSearchQuery, setUsersSearchQuery] = useState('');
   const [usersCurrentPage, setUsersCurrentPage] = useState(1);
   const [rolesSearchQuery, setRolesSearchQuery] = useState('');

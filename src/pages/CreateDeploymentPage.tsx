@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -1217,7 +1217,9 @@ export function CreateDeploymentPage() {
   }));
 
   // Active form tab (Deployment, Pod, Container-X)
-  const [activeTab, setActiveTab] = useState('deployment');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'deployment';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Build inner tabs for the form
   const formTabs = [

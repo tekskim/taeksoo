@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   HStack,
@@ -32,7 +32,9 @@ import { IconRefresh, IconInfoCircle, IconDeviceMobile } from '@tabler/icons-rea
 export default function IAMMFAPoliciesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState('enforcement');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'enforcement';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [mfaEnforcement, setMfaEnforcement] = useState<'voluntary' | 'required'>('voluntary');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();

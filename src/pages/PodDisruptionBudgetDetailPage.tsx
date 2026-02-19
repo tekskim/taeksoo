@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -182,7 +182,9 @@ export function PodDisruptionBudgetDetailPage() {
     addTab,
     updateActiveTabLabel,
   } = useTabs();
-  const [activeTab, setActiveTab] = useState('budget');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'budget';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [eventsPage, setEventsPage] = useState(1);

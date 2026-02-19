@@ -35,7 +35,7 @@ import {
   IconStar,
   IconStarFilled,
 } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -219,7 +219,9 @@ export function InstanceTemplatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('favorites');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'favorites';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [templates, setTemplates] = useState(mockTemplates);
 
   // Delete modal state

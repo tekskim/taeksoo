@@ -276,10 +276,12 @@ export function DrawerDemo() {
       <Drawer
         isOpen={isBasicOpen}
         onClose={() => setIsBasicOpen(false)}
-        title="Drawer Title"
+        title=""
+        showCloseButton={false}
         width={376}
       >
         <VStack gap={4}>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Drawer Title</h2>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
             <p className="text-body-md text-[var(--color-text-default)]">
               This is a basic drawer with content. Drawers are useful for secondary content, forms,
@@ -302,7 +304,8 @@ export function DrawerDemo() {
       <Drawer
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title="Edit Settings"
+        title=""
+        showCloseButton={false}
         width={376}
         footer={
           <div className="flex gap-2 w-full">
@@ -316,6 +319,7 @@ export function DrawerDemo() {
         }
       >
         <VStack gap={4}>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit Settings</h2>
           <VStack gap={2}>
             <label className="text-label-md text-[var(--color-text-default)]">Setting Name </label>
             <Input
@@ -1474,10 +1478,14 @@ export function DeleteAgentSourceModal({
       size="sm"
     >
       {/* Info Box */}
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3 w-full">
-        <div className="border-l-2 border-[var(--color-border-default)] pl-3">
-          <p className="text-body-md font-medium text-[var(--color-text-default)]">agent Name</p>
-          <p className="text-body-md text-[var(--color-text-subtle)]">{agentName}</p>
+      <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+        <div className="flex flex-col gap-1.5">
+          <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+            Agent name
+          </span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">
+            {agentName}
+          </span>
         </div>
       </div>
 
