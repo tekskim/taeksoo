@@ -86,6 +86,7 @@ export {
 export {
   IconReset1,
   IconReset2,
+  IconRouterArrows,
   IconRouters1,
   IconSchedule,
   IconSearch,
