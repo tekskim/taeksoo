@@ -423,7 +423,7 @@ export function ContainerNamespacesPage() {
             {/* Actions */}
             <HStack gap={1} align="center">
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
@@ -431,7 +431,7 @@ export function ContainerNamespacesPage() {
                 Download YAML
               </Button>
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}

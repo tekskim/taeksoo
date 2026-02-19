@@ -14,6 +14,7 @@ import {
   SectionCard,
   Checkbox,
   InlineMessage,
+  FormField,
   PageShell,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
@@ -521,7 +522,7 @@ export default function CreateHPAPage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Target Reference <span className="text-[var(--color-state-danger)]">*</span>
                     </label>
-                    <div className="w-[240px]">
+                    <div className="w-[calc(50%-12px)]">
                       <Select
                         options={TARGET_REFERENCE_OPTIONS}
                         value={targetReference}
@@ -639,7 +640,7 @@ export default function CreateHPAPage() {
                           <label className="text-label-lg text-[var(--color-text-default)]">
                             Source
                           </label>
-                          <div className="w-[80px]">
+                          <div className="w-[calc(50%-12px)]">
                             <Select
                               options={METRIC_SOURCE_OPTIONS}
                               value={metric.source}
