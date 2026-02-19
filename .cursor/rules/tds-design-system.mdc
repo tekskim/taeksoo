@@ -781,7 +781,7 @@ const menuItems = [
   onClose={handleClose}
   title=""                    // Custom header 사용 시 빈 문자열
   showCloseButton={false}     // Custom header 사용 시 false
-  width={376}                 // Form: 376, Selection: 696
+  width={360}                 // 4col: 360, 8col: 696, 12col: 1032
   footer={
     <HStack gap={2} className="w-full">
       <Button variant="secondary" onClick={handleClose} className="flex-1">Cancel</Button>
@@ -950,7 +950,7 @@ const shellPanel = useShellPanel();
   onClose={handleClose}
   title=""
   showCloseButton={false}
-  width={376}
+  width={360}
   footer={
     <HStack gap={2} className="w-full">
       <Button variant="secondary" onClick={handleClose} className="flex-1">Cancel</Button>
@@ -1201,7 +1201,7 @@ PageShell > VStack gap={4} >
 
 ### 3. Form Drawer 패턴
 ```
-Drawer (width: 376px) >
+Drawer (width: 360px) >
   h2 "Edit [Resource]"
   InfoBox (컨텍스트 정보)
   FormField들

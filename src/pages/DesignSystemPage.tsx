@@ -13175,7 +13175,7 @@ outline: 2px solid var(--color-border-focus);`}
                                       간단한 폼 (필드 1~5개)
                                     </td>
                                     <td className="py-2 font-medium text-[var(--color-text-default)]">
-                                      Drawer (376px)
+                                      Drawer (4col / 360px)
                                     </td>
                                   </tr>
                                   <tr className="border-b border-[var(--color-border-subtle)]">
@@ -13183,7 +13183,7 @@ outline: 2px solid var(--color-border-focus);`}
                                       선택/검색 필요 (리스트에서 선택)
                                     </td>
                                     <td className="py-2 font-medium text-[var(--color-text-default)]">
-                                      Drawer (696px)
+                                      Drawer (8col / 696px)
                                     </td>
                                   </tr>
                                   <tr>
@@ -13200,17 +13200,63 @@ outline: 2px solid var(--color-border-focus);`}
                           </VStack>
                           <VStack gap={2}>
                             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                              너비 정책
+                              너비 정책 (Grid 기반)
                             </h4>
-                            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                              <li>
-                                <strong>376px</strong>: 폼 Drawer (Edit, Create with few fields)
-                              </li>
-                              <li>
-                                <strong>696px</strong>: 선택 Drawer (리스트에서 리소스 선택, 상세
-                                정보 표시)
-                              </li>
-                            </ul>
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                              Column 60px, Gutter 24px, Margin 24px 그리드 기준
+                            </p>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-body-sm border-collapse">
+                                <thead>
+                                  <tr className="border-b border-[var(--color-border-default)]">
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      컬럼
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      너비
+                                    </th>
+                                    <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                      용도
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      4 columns
+                                    </td>
+                                    <td className="py-2 pr-4 font-mono text-[var(--color-text-default)]">
+                                      360px
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      폼 Drawer (Edit, Create with few fields)
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      8 columns
+                                    </td>
+                                    <td className="py-2 pr-4 font-mono text-[var(--color-text-default)]">
+                                      696px
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      선택 Drawer (리스트에서 리소스 선택, 상세 정보 표시)
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      12 columns
+                                    </td>
+                                    <td className="py-2 pr-4 font-mono text-[var(--color-text-default)]">
+                                      1032px
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      대형 Drawer (복잡한 레이아웃, 멀티 패널)
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </VStack>
                           <VStack gap={2}>
                             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
@@ -13277,9 +13323,10 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Design tokens</Label>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                        <code>width: 320px (default)</code> · <code>Form: 376px</code> ·{' '}
-                        <code>Selection: 696px</code> · <code>padding-x: 24px</code> ·{' '}
-                        <code>padding-y: 16px</code> · <code>animation: 300ms ease-out</code>
+                        <code>width: 320px (default)</code> · <code>Form: 360px (4col)</code> ·{' '}
+                        <code>Selection: 696px (8col)</code> · <code>Large: 1032px (12col)</code> ·{' '}
+                        <code>padding-x: 24px</code> · <code>padding-y: 16px</code> ·{' '}
+                        <code>animation: 300ms ease-out</code>
                       </div>
                     </VStack>
 

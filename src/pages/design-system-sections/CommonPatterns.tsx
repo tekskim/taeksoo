@@ -321,7 +321,7 @@ export function FormDrawerPatternDemo() {
         onClose={() => setIsOpen(false)}
         title=""
         showCloseButton={false}
-        width={376}
+        width={360}
         footer={
           <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">

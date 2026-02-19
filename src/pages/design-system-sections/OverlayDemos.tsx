@@ -278,7 +278,7 @@ export function DrawerDemo() {
         onClose={() => setIsBasicOpen(false)}
         title=""
         showCloseButton={false}
-        width={376}
+        width={360}
       >
         <VStack gap={4}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Drawer Title</h2>
@@ -306,7 +306,7 @@ export function DrawerDemo() {
         onClose={() => setIsFormOpen(false)}
         title=""
         showCloseButton={false}
-        width={376}
+        width={360}
         footer={
           <div className="flex gap-2 w-full">
             <Button variant="secondary" className="flex-1" onClick={() => setIsFormOpen(false)}>
@@ -386,7 +386,7 @@ export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onCl
       onClose={onClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
@@ -512,7 +512,7 @@ export function EditModelSettingsDrawer({
       onClose={onClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
@@ -630,7 +630,7 @@ export function EditPromptSettingsDrawer({
       onClose={onClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
@@ -2062,7 +2062,7 @@ export function ToolAccessControlDrawer({
       onClose={onClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
@@ -2132,7 +2132,7 @@ export function ToolAuthenticationDrawer({
       onClose={onClose}
       title=""
       showCloseButton={false}
-      width={376}
+      width={360}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
