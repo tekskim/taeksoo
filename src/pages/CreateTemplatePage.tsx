@@ -2395,7 +2395,7 @@ function AdvancedSection({
           {/* Tags Section */}
           <div className="py-6">
             <VStack gap={3} align="stretch">
-              <VStack gap={2} align="stretch">
+              <VStack gap={3} align="stretch">
                 <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   A tag consists of a Key that defines the resource category and a Value that
@@ -2479,7 +2479,7 @@ function AdvancedSection({
                     fullWidth
                     rows={4}
                   />
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] self-end">
                     {userDataSizeDisplay} / {MAX_USER_DATA_KB} KB
                   </span>
                 </VStack>

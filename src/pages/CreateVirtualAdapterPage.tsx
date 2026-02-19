@@ -638,8 +638,8 @@ export default function CreateVirtualAdapterPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['basic-info']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName} />
-                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow label="Virtual adapter Name" value={adapterName || '-'} />
+                  <SectionCard.DataRow label="Description" value={description || '-'} />
                 </SectionCard.Content>
               </SectionCard>
             )}

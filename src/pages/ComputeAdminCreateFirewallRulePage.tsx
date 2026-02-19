@@ -440,80 +440,82 @@ export default function ComputeAdminCreateFirewallRulePage() {
                           Select the tenant that will own the rule.
                         </FormField.Description>
                         <FormField.Control>
-                          {/* Tenant Search */}
-                          <SearchInput
-                            placeholder="Search tenants by attributes"
-                            value={tenantSearch}
-                            onChange={(e) => {
-                              setTenantSearch(e.target.value);
-                              setTenantPage(1);
-                            }}
-                            className="w-[280px]"
-                          />
-
-                          {/* Tenant Pagination */}
-                          <div className="flex items-center gap-2">
-                            <button
-                              className="size-6 flex items-center justify-center disabled:opacity-40"
-                              disabled={tenantPage === 1}
-                              onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
-                            >
-                              <IconChevronLeft size={16} stroke={1.5} />
-                            </button>
-                            {Array.from(
-                              { length: Math.min(5, totalTenantPages) },
-                              (_, i) => i + 1
-                            ).map((page) => (
-                              <button
-                                key={page}
-                                className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
-                                  page === tenantPage
-                                    ? 'bg-[var(--color-action-primary)] text-white'
-                                    : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
-                                }`}
-                                onClick={() => setTenantPage(page)}
-                              >
-                                {page}
-                              </button>
-                            ))}
-                            <button
-                              className="size-6 flex items-center justify-center disabled:opacity-40"
-                              disabled={tenantPage === totalTenantPages}
-                              onClick={() =>
-                                setTenantPage((p) => Math.min(totalTenantPages, p + 1))
-                              }
-                            >
-                              <IconChevronRight size={16} stroke={1.5} />
-                            </button>
-                            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              {filteredTenants.length} items
-                            </span>
-                          </div>
-
-                          {/* Tenant Table with Radio Selection */}
-                          <VStack gap={2}>
-                            <div className="w-full">
-                              <Table
-                                columns={tenantColumns}
-                                data={paginatedTenants}
-                                rowKey="id"
-                                emptyMessage="No tenants found"
-                                onRowClick={(row) => {
-                                  if (row.status !== 'deactivated') {
-                                    setSelectedTenant(row.id);
-                                    setTenantError(false);
-                                  }
-                                }}
-                              />
-                            </div>
-                            <SelectionIndicator
-                              selectedItems={selectedTenantItems}
-                              onRemove={() => setSelectedTenant(null)}
-                              emptyText="No item selected"
-                              error={tenantError}
-                              errorMessage="Please select a tenant"
+                          <VStack gap={3} align="stretch">
+                            {/* Tenant Search */}
+                            <SearchInput
+                              placeholder="Search tenants by attributes"
+                              value={tenantSearch}
+                              onChange={(e) => {
+                                setTenantSearch(e.target.value);
+                                setTenantPage(1);
+                              }}
+                              className="w-[280px]"
                             />
+
+                            {/* Tenant Pagination */}
+                            <div className="flex items-center gap-2">
+                              <button
+                                className="size-6 flex items-center justify-center disabled:opacity-40"
+                                disabled={tenantPage === 1}
+                                onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
+                              >
+                                <IconChevronLeft size={16} stroke={1.5} />
+                              </button>
+                              {Array.from(
+                                { length: Math.min(5, totalTenantPages) },
+                                (_, i) => i + 1
+                              ).map((page) => (
+                                <button
+                                  key={page}
+                                  className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
+                                    page === tenantPage
+                                      ? 'bg-[var(--color-action-primary)] text-white'
+                                      : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
+                                  }`}
+                                  onClick={() => setTenantPage(page)}
+                                >
+                                  {page}
+                                </button>
+                              ))}
+                              <button
+                                className="size-6 flex items-center justify-center disabled:opacity-40"
+                                disabled={tenantPage === totalTenantPages}
+                                onClick={() =>
+                                  setTenantPage((p) => Math.min(totalTenantPages, p + 1))
+                                }
+                              >
+                                <IconChevronRight size={16} stroke={1.5} />
+                              </button>
+                              <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                {filteredTenants.length} items
+                              </span>
+                            </div>
+
+                            {/* Tenant Table with Radio Selection */}
+                            <VStack gap={2}>
+                              <div className="w-full">
+                                <Table
+                                  columns={tenantColumns}
+                                  data={paginatedTenants}
+                                  rowKey="id"
+                                  emptyMessage="No tenants found"
+                                  onRowClick={(row) => {
+                                    if (row.status !== 'deactivated') {
+                                      setSelectedTenant(row.id);
+                                      setTenantError(false);
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <SelectionIndicator
+                                selectedItems={selectedTenantItems}
+                                onRemove={() => setSelectedTenant(null)}
+                                emptyText="No item selected"
+                                error={tenantError}
+                                errorMessage="Please select a tenant"
+                              />
+                            </VStack>
                           </VStack>
                         </FormField.Control>
                       </FormField>
@@ -839,14 +841,12 @@ export default function ComputeAdminCreateFirewallRulePage() {
           </VStack>
 
           {/* Summary Sidebar */}
-          {!isV2 && (
-            <SummarySidebar
-              sectionStatus={sectionStatus}
-              onCancel={handleCancel}
-              onCreate={handleCreate}
-              isCreateDisabled={isCreateDisabled}
-            />
-          )}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
         </HStack>
       </VStack>
     </PageShell>
