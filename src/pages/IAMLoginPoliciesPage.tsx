@@ -351,8 +351,7 @@ export default function IAMLoginPoliciesPage() {
                               </span>
                               <Tooltip content="Prevents reusing the last 'N' passwords.">
                                 <IconInfoCircle
-                                  size={16}
-                                  stroke={1.5}
+                                  size={14}
                                   className="text-[var(--color-text-subtle)]"
                                 />
                               </Tooltip>
@@ -372,8 +371,7 @@ export default function IAMLoginPoliciesPage() {
                               </span>
                               <Tooltip content="Prevents reusing any password used within the last 'N' days.">
                                 <IconInfoCircle
-                                  size={16}
-                                  stroke={1.5}
+                                  size={14}
                                   className="text-[var(--color-text-subtle)]"
                                 />
                               </Tooltip>
@@ -516,8 +514,7 @@ export default function IAMLoginPoliciesPage() {
                                 </span>
                                 <Tooltip content="Wait time increases only when failures are multiples of factor">
                                   <IconInfoCircle
-                                    size={16}
-                                    stroke={1.5}
+                                    size={14}
                                     className="text-[var(--color-text-subtle)]"
                                   />
                                 </Tooltip>
@@ -533,8 +530,7 @@ export default function IAMLoginPoliciesPage() {
                                 </span>
                                 <Tooltip content="Wait time increases after every failure starting from factor">
                                   <IconInfoCircle
-                                    size={16}
-                                    stroke={1.5}
+                                    size={14}
                                     className="text-[var(--color-text-subtle)]"
                                   />
                                 </Tooltip>

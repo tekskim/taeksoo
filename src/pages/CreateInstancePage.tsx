@@ -36,6 +36,7 @@ import {
   fixedColumns,
   columnMinWidths,
   WizardSectionStatusIcon,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -586,68 +587,68 @@ function BasicInformationSection({
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
-          <VStack gap={2} className="py-6">
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </label>
-            <VStack gap={2}>
-              <Input
-                placeholder="Instance name"
-                value={instanceName}
-                onChange={(e) => handleInstanceNameChange(e.target.value)}
-                fullWidth
-                error={!!instanceNameError}
-              />
-              {instanceNameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {instanceNameError}
-                </span>
-              )}
-            </VStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              The name should start with upper letter, lower letter or chinese, and be a string with
-              1~128 characters.
-            </span>
-          </VStack>
+          <div className="py-6">
+            <FormField required error={!!instanceNameError}>
+              <FormField.Label>Instance name</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Instance name"
+                  value={instanceName}
+                  onChange={(e) => handleInstanceNameChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.ErrorMessage>{instanceNameError}</FormField.ErrorMessage>
+              <FormField.HelperText>
+                The name should start with upper letter, lower letter or chinese, and be a string
+                with 1~128 characters.
+              </FormField.HelperText>
+            </FormField>
+          </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* AZ (Availability zone) */}
-          <VStack gap={2} className="py-6">
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              AZ (Availability zone){' '}
-              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </label>
-            <Select
-              options={availabilityZoneOptions}
-              value={availabilityZone}
-              onChange={onAvailabilityZoneChange}
-              placeholder="Select AZ"
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              Select the availability zone for the instance.
-            </span>
-          </VStack>
+          <div className="py-6">
+            <FormField required>
+              <FormField.Label>AZ (Availability zone)</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={availabilityZoneOptions}
+                  value={availabilityZone}
+                  onChange={onAvailabilityZoneChange}
+                  placeholder="Select AZ"
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                Select the availability zone for the instance.
+              </FormField.HelperText>
+            </FormField>
+          </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <VStack gap={2} className="py-6">
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter description"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              You can use letters, numbers, and special characters (+=.@-_,()[]), and maximum 255
-              characters.
-            </span>
-          </VStack>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Description</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter description"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (+=.@-_,()[]), and maximum 255
+                characters.
+              </FormField.HelperText>
+            </FormField>
+          </div>
 
           {/* Divider + Next Button - hidden in edit mode or v2 */}
           {!isEditing && (
@@ -3904,34 +3905,30 @@ function TemplatesSection({
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Resource type */}
-          <VStack gap={2} align="start" className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Resource type <span className="text-[var(--color-state-danger)]">*</span>
-            </span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Choose the resource category to apply to the flavor.
-            </span>
-            <VStack gap={2} align="start">
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <Radio
-                  value="vm"
-                  checked={resourceType === 'vm'}
-                  onChange={() => setResourceType('vm')}
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  Virtual machine
-                </span>
-              </label>
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <Radio
-                  value="baremetal"
-                  checked={resourceType === 'baremetal'}
-                  onChange={() => setResourceType('baremetal')}
-                />
-                <span className="text-body-md text-[var(--color-text-default)]">Bare metal</span>
-              </label>
-            </VStack>
-          </VStack>
+          <div className="py-6">
+            <FormField required>
+              <FormField.Label>Resource type</FormField.Label>
+              <FormField.Description>
+                Choose the resource category to apply to the flavor.
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <VStack gap={3} align="start">
+                  <Radio
+                    value="vm"
+                    checked={resourceType === 'vm'}
+                    onChange={() => setResourceType('vm')}
+                    label="Virtual machine"
+                  />
+                  <Radio
+                    value="baremetal"
+                    checked={resourceType === 'baremetal'}
+                    onChange={() => setResourceType('baremetal')}
+                    label="Bare metal"
+                  />
+                </VStack>
+              </FormField.Control>
+            </FormField>
+          </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

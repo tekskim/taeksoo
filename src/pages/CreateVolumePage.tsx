@@ -561,7 +561,7 @@ export function CreateVolumePage() {
             <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
-              <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
+              <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
             )}
           </div>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>

@@ -453,7 +453,7 @@ export function WorkloadDetailPage() {
                   >
                     {workload.httpServices.status === 'error' && (
                       <div className="flex items-center gap-2 mt-3 text-[var(--color-text-subtle)]">
-                        <IconInfoCircle size={16} stroke={1.5} />
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                         <span className="text-label-lg">{workload.httpServices.message}</span>
                       </div>
                     )}

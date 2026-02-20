@@ -333,7 +333,7 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
         </HStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
           </button>
         </Tooltip>
       </HStack>
@@ -475,7 +475,7 @@ function LabelWithTooltip({ label, tooltip }: LabelWithTooltipProps) {
       {label}
       <Tooltip content={tooltip}>
         <button className="p-0 bg-transparent border-none cursor-pointer">
-          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
         </button>
       </Tooltip>
     </span>

@@ -776,7 +776,7 @@ export default function CreateLoadBalancerPage() {
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'error' && (
-                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+                <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -845,7 +845,7 @@ export default function CreateLoadBalancerPage() {
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
-                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+                <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -932,7 +932,7 @@ export default function CreateLoadBalancerPage() {
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
-                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+                <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -1044,7 +1044,7 @@ export default function CreateLoadBalancerPage() {
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
-                <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
+                <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -1511,10 +1511,12 @@ export default function CreateLoadBalancerPage() {
                                   onChange={() => handleProviderChange('ovn')}
                                   label="OVN"
                                 />
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-subtle)]"
-                                />
+                                <Tooltip content="Distributed load balancer with OVN-based architecture">
+                                  <IconInfoCircle
+                                    size={14}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
                               </HStack>
                               <HStack gap={1.5} align="center">
                                 <Radio
@@ -1523,10 +1525,12 @@ export default function CreateLoadBalancerPage() {
                                   onChange={() => handleProviderChange('amphora')}
                                   label="Amphora"
                                 />
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-subtle)]"
-                                />
+                                <Tooltip content="Load balancer using dedicated Amphora VMs">
+                                  <IconInfoCircle
+                                    size={14}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
                               </HStack>
                             </VStack>
                             {providerError && (
@@ -2021,7 +2025,7 @@ export default function CreateLoadBalancerPage() {
                                   ]
                             }
                             placeholder="Select a protocol"
-                            width="half"
+                            fullWidth
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{listenerProtocolError}</FormField.ErrorMessage>
@@ -2345,34 +2349,36 @@ export default function CreateLoadBalancerPage() {
                               <FormField.Description>
                                 Defines custom header values to be forwarded to backend servers.
                               </FormField.Description>
-                              <VStack gap={3} align="start">
-                                <HStack gap={2} align="center">
-                                  <Checkbox
-                                    checked={xForwardedFor}
-                                    onChange={(e) => setXForwardedFor(e.target.checked)}
-                                    label="X-Forwarded-For"
-                                  />
-                                  <Tooltip content="Captures the original client IP address">
-                                    <IconInfoCircle
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
+                              <FormField.Control>
+                                <VStack gap={3} align="start">
+                                  <HStack gap={2} align="center">
+                                    <Checkbox
+                                      checked={xForwardedFor}
+                                      onChange={(e) => setXForwardedFor(e.target.checked)}
+                                      label="X-Forwarded-For"
                                     />
-                                  </Tooltip>
-                                </HStack>
-                                <HStack gap={2} align="center">
-                                  <Checkbox
-                                    checked={xForwardedPort}
-                                    onChange={(e) => setXForwardedPort(e.target.checked)}
-                                    label="X-Forwarded-Port"
-                                  />
-                                  <Tooltip content="Captures the original client port">
-                                    <IconInfoCircle
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
+                                    <Tooltip content="Captures the original client IP address">
+                                      <IconInfoCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)]"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                  <HStack gap={2} align="center">
+                                    <Checkbox
+                                      checked={xForwardedPort}
+                                      onChange={(e) => setXForwardedPort(e.target.checked)}
+                                      label="X-Forwarded-Port"
                                     />
-                                  </Tooltip>
-                                </HStack>
-                              </VStack>
+                                    <Tooltip content="Captures the original client port">
+                                      <IconInfoCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)]"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                </VStack>
+                              </FormField.Control>
                             </FormField>
 
                             {/* Client data timeout */}
@@ -2659,7 +2665,7 @@ export default function CreateLoadBalancerPage() {
                                 value={poolAlgorithm}
                                 onChange={setPoolAlgorithm}
                                 placeholder="Select algorithm"
-                                width="half"
+                                fullWidth
                               />
                             </FormField.Control>
                             <FormField.HelperText>
@@ -2689,28 +2695,30 @@ export default function CreateLoadBalancerPage() {
                                 value={poolProtocol}
                                 onChange={setPoolProtocol}
                                 placeholder="Select protocol"
-                                width="half"
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Pool admin state */}
-                        <VStack gap={3} className="py-6">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Pool admin state
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Set the administrative state of the pool. 'UP' enables traffic handling,
-                            while 'DOWN' disables it.
-                          </p>
-                          <HStack gap={2} align="center">
-                            <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {poolAdminState ? 'Up' : 'Down'}
-                            </span>
-                          </HStack>
-                        </VStack>
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Pool admin state</FormField.Label>
+                            <FormField.Description>
+                              Set the administrative state of the pool. 'UP' enables traffic
+                              handling, while 'DOWN' disables it.
+                            </FormField.Description>
+                            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                              <HStack gap={2} align="center">
+                                <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  {poolAdminState ? 'Up' : 'Down'}
+                                </span>
+                              </HStack>
+                            </FormField.Control>
+                          </FormField>
+                        </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Advanced Section */}
                         <div className="py-6">
@@ -2722,49 +2730,51 @@ export default function CreateLoadBalancerPage() {
                             <Disclosure.Panel>
                               <VStack gap={4} align="stretch" className="pt-4">
                                 {/* Session persistence */}
-                                <VStack gap={3} align="start">
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Session persistence
-                                  </span>
-                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                <FormField>
+                                  <FormField.Label>Session persistence</FormField.Label>
+                                  <FormField.Description>
                                     Select the protocol used to communicate with backend members. It
                                     must match or be compatible with the listener's protocol.
-                                  </p>
-                                  <RadioGroup
-                                    value={sessionPersistence}
-                                    onChange={(value) =>
-                                      setSessionPersistence(
-                                        value as 'none' | 'source_ip' | 'http_cookie' | 'app_cookie'
-                                      )
-                                    }
-                                  >
-                                    <VStack gap={3} align="start">
-                                      <Radio value="none" label="None" />
-                                      <Radio value="source_ip" label="Source IP" />
-                                      {/* HTTP Cookie - only shown when pool protocol is HTTP */}
-                                      {poolProtocol === 'HTTP' && (
-                                        <Radio value="http_cookie" label="HTTP Cookie" />
-                                      )}
-                                      {/* App Cookie - only shown when pool protocol is HTTP */}
-                                      {poolProtocol === 'HTTP' && (
-                                        <VStack gap={2} align="start">
-                                          <Radio value="app_cookie" label="App cookie" />
-                                          <Input
-                                            placeholder="Enter cookie name"
-                                            value={cookieName}
-                                            onChange={(e) => setCookieName(e.target.value)}
-                                            disabled={sessionPersistence !== 'app_cookie'}
-                                            className="w-[var(--layout-sidebar-width)]"
-                                          />
-                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                            You can use letters, numbers, and special
-                                            characters(+.-_!#$%&'*^|~).
-                                          </span>
-                                        </VStack>
-                                      )}
-                                    </VStack>
-                                  </RadioGroup>
-                                </VStack>
+                                  </FormField.Description>
+                                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                                    <RadioGroup
+                                      value={sessionPersistence}
+                                      onChange={(value) =>
+                                        setSessionPersistence(
+                                          value as
+                                            | 'none'
+                                            | 'source_ip'
+                                            | 'http_cookie'
+                                            | 'app_cookie'
+                                        )
+                                      }
+                                    >
+                                      <VStack gap={3} align="start">
+                                        <Radio value="none" label="None" />
+                                        <Radio value="source_ip" label="Source IP" />
+                                        {poolProtocol === 'HTTP' && (
+                                          <Radio value="http_cookie" label="HTTP Cookie" />
+                                        )}
+                                        {poolProtocol === 'HTTP' && (
+                                          <VStack gap={2} align="start">
+                                            <Radio value="app_cookie" label="App cookie" />
+                                            <Input
+                                              placeholder="Enter cookie name"
+                                              value={cookieName}
+                                              onChange={(e) => setCookieName(e.target.value)}
+                                              disabled={sessionPersistence !== 'app_cookie'}
+                                              className="w-[var(--layout-sidebar-width)]"
+                                            />
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                              You can use letters, numbers, and special
+                                              characters(+.-_!#$%&'*^|~).
+                                            </span>
+                                          </VStack>
+                                        )}
+                                      </VStack>
+                                    </RadioGroup>
+                                  </FormField.Control>
+                                </FormField>
                               </VStack>
                             </Disclosure.Panel>
                           </Disclosure>
@@ -3152,7 +3162,7 @@ export default function CreateLoadBalancerPage() {
                                 value={healthMonitorType}
                                 onChange={setHealthMonitorType}
                                 placeholder="Select type"
-                                width="half"
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>

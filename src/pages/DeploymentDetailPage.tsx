@@ -263,7 +263,7 @@ function MetricCard({ title, value, tooltip }: MetricCardProps) {
           <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{title}</span>
           <Tooltip content={tooltip} position="top">
             <button className="text-[var(--color-text-subtle)]">
-              <IconInfoCircle size={14} stroke={1.5} />
+              <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
             </button>
           </Tooltip>
         </HStack>

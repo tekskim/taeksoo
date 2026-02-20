@@ -368,11 +368,7 @@ export function AssociateFloatingIPDrawer({
               className="text-[var(--color-action-primary)]"
             />
             {row.hasAlert && (
-              <IconAlertCircle
-                size={12}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
+              <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
@@ -440,11 +436,7 @@ export function AssociateFloatingIPDrawer({
               className="text-[var(--color-action-primary)]"
             />
             {row.status === 'error' && (
-              <IconAlertCircle
-                size={12}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
+              <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
@@ -534,7 +526,7 @@ export function AssociateFloatingIPDrawer({
         <HStack gap={1.5} align="center">
           <span className="text-body-md text-[var(--color-text-default)]">{row.fixedIp}</span>
           {row.hasAlert && (
-            <IconAlertCircle size={12} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
           )}
         </HStack>
       ),
