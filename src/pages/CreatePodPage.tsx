@@ -1117,7 +1117,30 @@ export function CreatePodPage() {
 
   // Volumes state
   const [volumes, setVolumes] = useState<Volume[]>(
-    isV2 ? [{ type: 'configmap' as const, volumeName: '', configMapName: '', optional: false }] : []
+    isV2
+      ? [
+          { type: 'configmap' as const, volumeName: '', configMapName: '', optional: false },
+          {
+            type: 'secret' as const,
+            volumeName: '',
+            secretName: '',
+            optional: false,
+            defaultMode: '',
+          },
+          { type: 'pvc' as const, volumeName: '', pvcName: '', readOnly: false },
+          {
+            type: 'create-pvc' as const,
+            volumeName: '',
+            pvcName: '',
+            useExistingPV: false,
+            storageClass: '',
+            capacity: '',
+            persistentVolume: '',
+            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            readOnly: false,
+          },
+        ]
+      : []
   );
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
@@ -3092,7 +3115,7 @@ export function CreatePodPage() {
                             </div>
 
                             {/* ConfigMap content */}
-                            {(isV2 || volume.type === 'configmap') && (
+                            {volume.type === 'configmap' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3161,7 +3184,7 @@ export function CreatePodPage() {
                             )}
 
                             {/* Secret content */}
-                            {(isV2 || volume.type === 'secret') && (
+                            {volume.type === 'secret' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3228,7 +3251,7 @@ export function CreatePodPage() {
                             )}
 
                             {/* PVC content */}
-                            {(isV2 || volume.type === 'pvc') && (
+                            {volume.type === 'pvc' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3277,7 +3300,7 @@ export function CreatePodPage() {
                             )}
 
                             {/* Create PVC content */}
-                            {(isV2 || volume.type === 'create-pvc') && (
+                            {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
                                   <VStack gap={6}>
@@ -4787,7 +4810,7 @@ export function CreatePodPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={3} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -4821,20 +4844,26 @@ export function CreatePodPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {isV2 &&
-                              config.readinessProbe?.type !== 'none' &&
-                              renderV2ProbeBlock(
-                                'readinessProbe',
-                                (config.readinessProbe?.type === 'httpGet'
-                                  ? 'httpGet'
-                                  : config.readinessProbe?.type === 'tcpSocket'
-                                    ? 'tcpSocket'
-                                    : 'exec') as 'httpGet' | 'tcpSocket' | 'exec',
-                                'Readiness Probe',
-                                config.readinessProbe?.type === 'httpGet'
-                                  ? { showRequestPath: true, showHeaders: true }
-                                  : undefined
-                              )}
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                                 <VStack gap={6}>
@@ -5269,7 +5298,7 @@ export function CreatePodPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={3} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5303,18 +5332,26 @@ export function CreatePodPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {isV2 &&
-                              config.livenessProbe?.type !== 'none' &&
-                              config.livenessProbe?.type &&
-                              renderV2ProbeBlock(
-                                'livenessProbe',
-                                (config.livenessProbe?.type === 'httpGet'
-                                  ? 'httpGet'
-                                  : config.livenessProbe?.type === 'tcpSocket'
-                                    ? 'tcpSocket'
-                                    : 'exec') as 'httpGet' | 'tcpSocket' | 'exec',
-                                'Liveness Probe'
-                              )}
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
                             {!isV2 &&
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
@@ -5546,7 +5583,7 @@ export function CreatePodPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Startup Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={3} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5580,18 +5617,26 @@ export function CreatePodPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {isV2 &&
-                              config.startupProbe?.type !== 'none' &&
-                              config.startupProbe?.type &&
-                              renderV2ProbeBlock(
-                                'startupProbe',
-                                (config.startupProbe?.type === 'httpGet'
-                                  ? 'httpGet'
-                                  : config.startupProbe?.type === 'tcpSocket'
-                                    ? 'tcpSocket'
-                                    : 'exec') as 'httpGet' | 'tcpSocket' | 'exec',
-                                'Startup Probe'
-                              )}
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
                             {!isV2 &&
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
