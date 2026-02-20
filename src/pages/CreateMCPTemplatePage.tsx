@@ -24,6 +24,7 @@ import {
 } from '@/design-system';
 import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useIsV2 } from '@/hooks/useIsV2';
 
 /* ----------------------------------------
    Create MCP Template Page Component
@@ -56,6 +57,7 @@ interface ToolParameter {
 
 export function CreateMCPTemplatePage() {
   const navigate = useNavigate();
+  const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeStep, setActiveStep] = useState<'configuration' | 'publish'>('configuration');
 
@@ -467,7 +469,7 @@ export function CreateMCPTemplatePage() {
                       </SectionCard>
 
                       {/* Container settings - only show when STDIO selected */}
-                      {templateType === 'stdio' && (
+                      {(isV2 || templateType === 'stdio') && (
                         <SectionCard id="container-settings">
                           <SectionCard.Header title="Container settings" />
                           <SectionCard.Content>
@@ -580,7 +582,7 @@ export function CreateMCPTemplatePage() {
                       )}
 
                       {/* HTTP settings - only show when HTTP selected */}
-                      {templateType === 'http' && (
+                      {(isV2 || templateType === 'http') && (
                         <SectionCard id="http-settings">
                           <SectionCard.Header title="HTTP settings" />
                           <SectionCard.Content>

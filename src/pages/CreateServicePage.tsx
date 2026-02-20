@@ -264,7 +264,7 @@ export function CreateServicePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
-  const [serviceType, setServiceType] = useState('ClusterIP');
+  const [serviceType, setServiceType] = useState(isV2 ? 'NodePort' : 'ClusterIP');
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -285,7 +285,9 @@ export function CreateServicePage() {
   const [selectors, setSelectors] = useState<Selector[]>(isV2 ? [{ key: '', value: '' }] : []);
 
   // Session Affinity state
-  const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>('None');
+  const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>(
+    isV2 ? 'ClientIP' : 'None'
+  );
   const [sessionAffinityTimeout, setSessionAffinityTimeout] = useState(10800);
 
   // Labels & Annotations state
@@ -956,7 +958,7 @@ export function CreateServicePage() {
                     </RadioGroup>
                   </VStack>
 
-                  {sessionAffinity === 'ClientIP' && (
+                  {(isV2 || sessionAffinity === 'ClientIP') && (
                     <VStack gap={3}>
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Session Sticky Time

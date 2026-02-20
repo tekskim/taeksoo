@@ -182,7 +182,7 @@ export default function CreateNetworkPage() {
   const [networkName, setNetworkName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedTenants, setSelectedTenants] = useState<string[]>([]);
-  const [externalNetwork, setExternalNetwork] = useState(false); // false = No
+  const [externalNetwork, setExternalNetwork] = useState(isV2); // false = No, true = Yes
   const [providerNetworkType, setProviderNetworkType] = useState<'vlan' | 'flat'>('vlan');
   const [segmentationId, setSegmentationId] = useState<string>('');
   const [mtu, setMtu] = useState<number | undefined>(undefined);
@@ -573,7 +573,7 @@ export default function CreateNetworkPage() {
                     </VStack>
 
                     {/* Provider Network Type - Only visible when External Network is Yes */}
-                    {externalNetwork && (
+                    {(isV2 || externalNetwork) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <VStack gap={2} className="py-6">
@@ -601,7 +601,7 @@ export default function CreateNetworkPage() {
                     )}
 
                     {/* Segmentation ID - Only visible when External Network is Yes */}
-                    {externalNetwork && (
+                    {(isV2 || externalNetwork) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <VStack gap={2} className="py-6">
@@ -854,7 +854,7 @@ export default function CreateNetworkPage() {
                       />
                     </VStack>
 
-                    {createSubnet && (
+                    {(isV2 || createSubnet) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

@@ -484,7 +484,7 @@ export function CreateImagePage() {
                         </TabList>
                       </Tabs>
 
-                      {sourceType === 'file' && (
+                      {(isV2 || sourceType === 'file') && (
                         <VStack gap={3} align="start">
                           <Button variant="secondary" size="sm" leftIcon={<IconUpload size={12} />}>
                             Choose File
@@ -495,7 +495,7 @@ export function CreateImagePage() {
                         </VStack>
                       )}
 
-                      {sourceType === 'url' && (
+                      {(isV2 || sourceType === 'url') && (
                         <VStack gap={3} align="stretch">
                           <Input
                             value={sourceUrl}

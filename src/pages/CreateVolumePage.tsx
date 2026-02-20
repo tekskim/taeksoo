@@ -806,7 +806,7 @@ export function CreateVolumePage() {
                       </FormField>
 
                       {/* Image Selection */}
-                      {sourceType === 'image' && (
+                      {(isV2 || sourceType === 'image') && (
                         <VStack gap={3} align="stretch">
                           {/* OS Filter Tabs */}
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
@@ -892,7 +892,7 @@ export function CreateVolumePage() {
                       )}
 
                       {/* Snapshot Selection */}
-                      {sourceType === 'snapshot' && (
+                      {(isV2 || sourceType === 'snapshot') && (
                         <VStack gap={4} align="stretch">
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
@@ -1051,7 +1051,7 @@ export function CreateVolumePage() {
                   <VStack gap={0}>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Different content for snapshot vs other sources */}
-                    {sourceType === 'snapshot' ? (
+                    {(isV2 || sourceType === 'snapshot') && (
                       <>
                         {/* Volume type - Read-only for snapshot */}
                         <div className="py-6">
@@ -1115,7 +1115,8 @@ export function CreateVolumePage() {
                           </FormField>
                         </div>
                       </>
-                    ) : (
+                    )}
+                    {(isV2 || sourceType !== 'snapshot') && (
                       <>
                         {/* Standard Volume type selection for blank/image sources */}
                         <div className="py-6">

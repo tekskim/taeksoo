@@ -1001,6 +1001,7 @@ interface ImageSectionProps {
   isEditing?: boolean;
   onEditCancel?: () => void;
   onEditDone?: () => void;
+  isV2?: boolean;
 }
 
 function ImageSection({
@@ -1017,12 +1018,13 @@ function ImageSection({
   isEditing = false,
   onEditCancel,
   onEditDone,
+  isV2 = false,
 }: ImageSectionProps) {
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [createSystemDisk, setCreateSystemDisk] = useState(true);
+  const [createSystemDisk, setCreateSystemDisk] = useState(isV2 ? true : false);
   const [_dataDisks, setDataDisks] = useState<{ id: string; type: string; size: number }[]>([]);
   const itemsPerPage = 5;
 
@@ -1280,7 +1282,7 @@ function ImageSection({
               </Tabs>
 
               {/* OS Filter Chips Container - Only for Image tab */}
-              {sourceTab === 'image' && (
+              {(isV2 || sourceTab === 'image') && (
                 <Tabs
                   variant="boxed"
                   size="sm"
@@ -1386,7 +1388,7 @@ function ImageSection({
               />
 
               {/* Storage Type Row - Bordered Container */}
-              {createSystemDisk && (
+              {(isV2 || createSystemDisk) && (
                 <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                   <HStack gap={6} align="center">
                     <HStack gap={1.5} align="center">
@@ -1710,6 +1712,7 @@ interface NetworkSectionProps {
   isEditing?: boolean;
   onEditCancel?: () => void;
   onEditDone?: () => void;
+  isV2?: boolean;
 }
 
 function NetworkSection({
@@ -1722,6 +1725,7 @@ function NetworkSection({
   isEditing = false,
   onEditCancel,
   onEditDone,
+  isV2 = false,
 }: NetworkSectionProps) {
   // Validation errors
   const [networkError, setNetworkError] = useState<string | null>(null);
@@ -1796,7 +1800,7 @@ function NetworkSection({
   ]);
 
   // Port section state
-  const [portExpanded, setPortExpanded] = useState(true);
+  const [portExpanded, setPortExpanded] = useState(isV2 ? true : false);
   const [portSearch, setPortSearch] = useState('');
   const [portPage, setPortPage] = useState(1);
   const [selectedPortIds, setSelectedPortIds] = useState<Set<string>>(new Set());
@@ -2371,7 +2375,7 @@ function NetworkSection({
                 Port
               </button>
 
-              {portExpanded && (
+              {(isV2 || portExpanded) && (
                 <VStack gap={3} align="stretch">
                   {/* Port Search */}
                   <SearchInput
@@ -2448,6 +2452,7 @@ interface AuthenticationSectionProps {
   isEditing?: boolean;
   onEditCancel?: () => void;
   onEditDone?: () => void;
+  isV2?: boolean;
 }
 
 function AuthenticationSection({
@@ -2460,6 +2465,7 @@ function AuthenticationSection({
   isEditing = false,
   onEditCancel,
   onEditDone,
+  isV2 = false,
 }: AuthenticationSectionProps) {
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
@@ -2554,7 +2560,7 @@ function AuthenticationSection({
             </HStack>
           </VStack>
 
-          {loginType === 'keypair' && (
+          {(isV2 || loginType === 'keypair') && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               <div className="py-6">
@@ -3212,6 +3218,7 @@ export function ComputeAdminCreateTemplatePage() {
                 isEditing={editingSection === 'image'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
+                isV2={isV2}
               />
             )}
             {(isV2 || sectionStatus.image === 'done') && (
@@ -3271,6 +3278,7 @@ export function ComputeAdminCreateTemplatePage() {
                 isEditing={editingSection === 'network'}
                 onEditCancel={handleEditCancel}
                 onEditDone={handleEditDone}
+                isV2={isV2}
               />
             )}
             {(isV2 || sectionStatus.network === 'done') && (

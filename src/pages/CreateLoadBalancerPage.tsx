@@ -2269,7 +2269,7 @@ export default function CreateLoadBalancerPage() {
                             </FormField>
 
                             {/* Allowed CIDRs */}
-                            <FormField>
+                            <FormField className={isV2 ? 'gap-3' : ''}>
                               <FormField.Label>Allowed CIDRs</FormField.Label>
                               <FormField.Description>
                                 Defines the client IP ranges allowed to access the listener.

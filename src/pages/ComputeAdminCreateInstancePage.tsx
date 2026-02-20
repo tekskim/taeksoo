@@ -927,11 +927,12 @@ function ImageSection({
   onEditCancel,
   onEditDone,
 }: ImageSectionProps) {
+  const isV2 = useIsV2();
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [createSystemDisk, setCreateSystemDisk] = useState(true);
+  const [createSystemDisk, setCreateSystemDisk] = useState(isV2 ? true : false);
   const [storageType, setStorageType] = useState('_DEFAULT_');
   const [storageSize, setStorageSize] = useState(30);
   const [deleteWithInstance, setDeleteWithInstance] = useState(true);
@@ -1208,7 +1209,7 @@ function ImageSection({
             </Tabs>
 
             {/* OS Filter Chips - Only show for Image tab */}
-            {sourceTab === 'image' && (
+            {(isV2 || sourceTab === 'image') && (
               <Tabs
                 variant="boxed"
                 size="sm"
@@ -1275,7 +1276,7 @@ function ImageSection({
 
             {/* Table - Dynamic based on tab */}
             <VStack gap={2}>
-              {sourceTab === 'image' && (
+              {(isV2 || sourceTab === 'image') && (
                 <Table
                   columns={imageColumns}
                   data={paginatedImages}
@@ -2414,7 +2415,7 @@ function NetworkSection({
               </VStack>
 
               {/* Conditional Table for Auto-assign IP */}
-              {floatingIpOption === 'auto' && (
+              {(isV2 || floatingIpOption === 'auto') && (
                 <VStack gap={3} className="mt-2">
                   <SearchInput
                     placeholder="Search network by attributes"
@@ -2441,7 +2442,7 @@ function NetworkSection({
               )}
 
               {/* Conditional Table for Use existing IP */}
-              {floatingIpOption === 'existing' && (
+              {(isV2 || floatingIpOption === 'existing') && (
                 <VStack gap={3} className="mt-2">
                   <HStack justify="between" align="center" className="w-full">
                     <SearchInput
@@ -2820,132 +2821,91 @@ function AuthenticationSection({
                 </TabList>
 
                 {/* Key pair Tab Content */}
-                <TabPanel value="keypair" className="pt-4">
-                  <VStack gap={3}>
-                    {/* Search */}
-                    <SearchInput
-                      placeholder="Search key pair by attributes"
-                      value={keyPairSearch}
-                      onChange={(e) => setKeyPairSearch(e.target.value)}
-                      onClear={() => setKeyPairSearch('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={keyPairPage}
-                      totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
-                      totalItems={filteredKeyPairs.length}
-                      onPageChange={setKeyPairPage}
-                      selectedCount={selectedKeyPairId ? 1 : 0}
-                    />
-
-                    {/* Key pair Table */}
-                    <VStack gap={2}>
-                      <Table
-                        columns={keyPairColumns}
-                        data={filteredKeyPairs}
-                        rowKey="id"
-                        onRowClick={(row) => handleSelectKeyPair(row.id)}
+                {(isV2 || loginType === 'keypair') && (
+                  <div className="pt-4" role="tabpanel">
+                    <VStack gap={3}>
+                      {/* Search */}
+                      <SearchInput
+                        placeholder="Search key pair by attributes"
+                        value={keyPairSearch}
+                        onChange={(e) => setKeyPairSearch(e.target.value)}
+                        onClear={() => setKeyPairSearch('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
                       />
 
-                      {/* Selection Indicator for Key Pair */}
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedKeyPairId
-                            ? [
-                                {
-                                  id: selectedKeyPairId,
-                                  label:
-                                    mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                    selectedKeyPairId,
-                                },
-                              ]
-                            : []
-                        }
-                        onRemove={() => setSelectedKeyPairId(null)}
+                      {/* Pagination */}
+                      <Pagination
+                        currentPage={keyPairPage}
+                        totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
+                        totalItems={filteredKeyPairs.length}
+                        onPageChange={setKeyPairPage}
+                        selectedCount={selectedKeyPairId ? 1 : 0}
                       />
+
+                      {/* Key pair Table */}
+                      <VStack gap={2}>
+                        <Table
+                          columns={keyPairColumns}
+                          data={filteredKeyPairs}
+                          rowKey="id"
+                          onRowClick={(row) => handleSelectKeyPair(row.id)}
+                        />
+
+                        {/* Selection Indicator for Key Pair */}
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedKeyPairId
+                              ? [
+                                  {
+                                    id: selectedKeyPairId,
+                                    label:
+                                      mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                      selectedKeyPairId,
+                                  },
+                                ]
+                              : []
+                          }
+                          onRemove={() => setSelectedKeyPairId(null)}
+                        />
+                      </VStack>
                     </VStack>
-                  </VStack>
-                </TabPanel>
+                  </div>
+                )}
 
                 {/* Password Tab Content */}
-                <TabPanel value="password" className="pt-4">
-                  <VStack gap={4}>
-                    <div>
-                      <label className="block text-label-lg mb-2">Login Name</label>
-                      <Input
-                        value={loginName}
-                        onChange={(e) => {
-                          setLoginName(e.target.value);
-                          setAuthError(null);
-                        }}
-                        placeholder="Input login name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Password</label>
-                      <div className="relative">
+                {(isV2 || loginType === 'password') && (
+                  <div className="pt-4" role="tabpanel">
+                    <VStack gap={4}>
+                      <div>
+                        <label className="block text-label-lg mb-2">Login Name</label>
                         <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
+                          value={loginName}
                           onChange={(e) => {
-                            setPassword(e.target.value);
+                            setLoginName(e.target.value);
                             setAuthError(null);
                           }}
-                          placeholder="Input password"
+                          placeholder="Input login name"
                         />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showPassword ? (
-                            <svg
-                              className="w-4 h-4"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-4 h-4"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Confirm Password</label>
-                      <VStack gap={2}>
+                      <div>
+                        <label className="block text-label-lg mb-2">Password</label>
                         <div className="relative">
                           <Input
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            value={confirmPassword}
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
                             onChange={(e) => {
-                              setConfirmPassword(e.target.value);
+                              setPassword(e.target.value);
                               setAuthError(null);
                             }}
                             placeholder="Input password"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                           >
-                            {showConfirmPassword ? (
+                            {showPassword ? (
                               <svg
                                 className="w-4 h-4"
                                 viewBox="0 0 24 24"
@@ -2970,15 +2930,60 @@ function AuthenticationSection({
                             )}
                           </button>
                         </div>
-                        {authError && loginType === 'password' && (
-                          <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                            {authError}
-                          </span>
-                        )}
-                      </VStack>
-                    </div>
-                  </VStack>
-                </TabPanel>
+                      </div>
+                      <div>
+                        <label className="block text-label-lg mb-2">Confirm Password</label>
+                        <VStack gap={2}>
+                          <div className="relative">
+                            <Input
+                              type={showConfirmPassword ? 'text' : 'password'}
+                              value={confirmPassword}
+                              onChange={(e) => {
+                                setConfirmPassword(e.target.value);
+                                setAuthError(null);
+                              }}
+                              placeholder="Input password"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                            >
+                              {showConfirmPassword ? (
+                                <svg
+                                  className="w-4 h-4"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                  <line x1="1" y1="1" x2="23" y2="23" />
+                                </svg>
+                              ) : (
+                                <svg
+                                  className="w-4 h-4"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+                          {authError && loginType === 'password' && (
+                            <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                              {authError}
+                            </span>
+                          )}
+                        </VStack>
+                      </div>
+                    </VStack>
+                  </div>
+                )}
               </Tabs>
             </VStack>
           </div>
