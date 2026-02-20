@@ -425,6 +425,7 @@ const COMPUTE_ACTIONS = {
    ---------------------------------------- */
 
 interface PolicyEditorSectionProps {
+  isV2?: boolean;
   permissions: Permission[];
   onPermissionsChange: (permissions: Permission[]) => void;
   permissionsError: string | null;
@@ -455,6 +456,7 @@ const createEmptyPermission = (): Permission => ({
 });
 
 function PolicyEditorSection({
+  isV2,
   permissions,
   onPermissionsChange,
   permissionsError,
@@ -466,7 +468,7 @@ function PolicyEditorSection({
   onEditDone,
 }: PolicyEditorSectionProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [conditionsExpanded, setConditionsExpanded] = useState(false);
+  const [conditionsExpanded, setConditionsExpanded] = useState(isV2 ?? false);
   const [targetErrors, setTargetErrors] = useState<Record<string, boolean>>({});
   const [invalidTargetErrors, setInvalidTargetErrors] = useState<Record<string, boolean>>({});
   const [actionErrors, setActionErrors] = useState<Record<string, boolean>>({});
@@ -876,7 +878,7 @@ function PolicyEditorSection({
                   </div>
 
                   {/* Action Cards - Simple view for non-compute applications */}
-                  {!shouldShowDetailedActions(permission) && (
+                  {!isV2 && !shouldShowDetailedActions(permission) && (
                     <div
                       className={`flex gap-3 w-full h-[44px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
                     >
@@ -905,7 +907,7 @@ function PolicyEditorSection({
                   )}
 
                   {/* Detailed Action Tabs - For compute application with all fields filled */}
-                  {shouldShowDetailedActions(permission) && (
+                  {(isV2 || shouldShowDetailedActions(permission)) && (
                     <div
                       className={`flex gap-3 w-full h-[320px] ${actionErrors[permission.id] ? 'p-px' : ''}`}
                     >
@@ -1027,7 +1029,7 @@ function PolicyEditorSection({
               </span>
             </div>
 
-            {conditionsExpanded && (
+            {(isV2 || conditionsExpanded) && (
               <label className="flex items-center gap-1.5 cursor-pointer">
                 <Checkbox
                   checked={permissions[0]?.mfaRequired || false}
@@ -1353,6 +1355,7 @@ export default function CreatePolicyPage() {
             )}
             {(isV2 || sectionStatus['policy-document'] === 'active') && (
               <PolicyEditorSection
+                isV2={isV2}
                 permissions={permissions}
                 onPermissionsChange={setPermissions}
                 permissionsError={permissionsError}

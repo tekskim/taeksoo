@@ -202,7 +202,7 @@ export default function CreateVirtualAdapterPage() {
   const [networkTab, setNetworkTab] = useState<'current' | 'shared' | 'external'>('current');
   const [networkSearch, setNetworkSearch] = useState('');
   const [networkPage, setNetworkPage] = useState(1);
-  const [macAddressMode, setMacAddressMode] = useState<'auto' | 'manual'>('auto');
+  const [macAddressMode, setMacAddressMode] = useState<'auto' | 'manual'>(isV2 ? 'manual' : 'auto');
   const [manualMacAddress, setManualMacAddress] = useState('');
 
   // Fixed IP entries
@@ -239,7 +239,7 @@ export default function CreateVirtualAdapterPage() {
   };
 
   // Form state - Security
-  const [portSecurityEnabled, setPortSecurityEnabled] = useState(true);
+  const [portSecurityEnabled, setPortSecurityEnabled] = useState(isV2 ? true : false);
   const [securityGroupSearch, setSecurityGroupSearch] = useState('');
   const [securityGroupPage, setSecurityGroupPage] = useState(1);
   const [selectedSecurityGroups, setSelectedSecurityGroups] = useState<string[]>([]);
@@ -794,11 +794,12 @@ export default function CreateVirtualAdapterPage() {
                                   />
 
                                   {/* IP Range Info or Manual Input */}
-                                  {entry.ipMode === 'auto' ? (
+                                  {(isV2 || entry.ipMode === 'auto') && (
                                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                                       192.168.1.100 - 192.168.1.200
                                     </span>
-                                  ) : (
+                                  )}
+                                  {(isV2 || entry.ipMode === 'manual') && (
                                     <Input
                                       placeholder="Enter IP address"
                                       value={entry.ipAddress}
@@ -853,7 +854,7 @@ export default function CreateVirtualAdapterPage() {
                                 <Radio value="auto" label="Auto-allocate" />
                                 <Radio value="manual" label="Manual" />
                               </RadioGroup>
-                              {macAddressMode === 'manual' && (
+                              {(isV2 || macAddressMode === 'manual') && (
                                 <Input
                                   placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
                                   value={manualMacAddress}
@@ -967,7 +968,7 @@ export default function CreateVirtualAdapterPage() {
                       </HStack>
                     </VStack>
                     {/* Security Groups Section */}
-                    {portSecurityEnabled && (
+                    {(isV2 || portSecurityEnabled) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="py-6">

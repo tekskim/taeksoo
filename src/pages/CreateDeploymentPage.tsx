@@ -495,6 +495,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
+  const isV2 = useIsV2();
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" />
@@ -1054,7 +1055,7 @@ export function CreateDeploymentPage() {
       port: '8080',
       scheme: 'HTTP',
       host: '',
-      httpHeaders: [],
+      httpHeaders: isV2 ? [{ name: '', value: '' }] : [],
     },
     tcpSocket: {
       port: '8080',
@@ -1078,7 +1079,7 @@ export function CreateDeploymentPage() {
       path: '',
       port: '',
       scheme: 'HTTP',
-      httpHeaders: [],
+      httpHeaders: isV2 ? [{ name: '', value: '' }] : [],
     },
   };
 
@@ -1099,7 +1100,7 @@ export function CreateDeploymentPage() {
       // Ports
       ports: [],
       // Environment Variables
-      envVars: [],
+      envVars: isV2 ? [{ name: '', value: '', type: 'value' as const }] : [],
       // Service Account
       serviceAccountName: '',
       // Lifecycle Hooks
@@ -1181,7 +1182,30 @@ export function CreateDeploymentPage() {
 
   // Volumes state
   const [volumes, setVolumes] = useState<Volume[]>(
-    isV2 ? [{ type: 'configmap' as const, volumeName: '', configMapName: '', optional: false }] : []
+    isV2
+      ? [
+          { type: 'configmap' as const, volumeName: '', configMapName: '', optional: false },
+          {
+            type: 'secret' as const,
+            volumeName: '',
+            secretName: '',
+            optional: false,
+            defaultMode: '',
+          },
+          { type: 'pvc' as const, volumeName: '', pvcName: '', readOnly: false },
+          {
+            type: 'create-pvc' as const,
+            volumeName: '',
+            pvcName: '',
+            useExistingPV: false,
+            storageClass: '',
+            capacity: '',
+            persistentVolume: '',
+            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            readOnly: false,
+          },
+        ]
+      : []
   );
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
@@ -1203,7 +1227,9 @@ export function CreateDeploymentPage() {
 
   // Node Affinity state
   const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>(
-    isV2 ? [{ priority: '', weight: '', matchExpressions: [] }] : []
+    isV2
+      ? [{ priority: '', weight: '', matchExpressions: [{ key: '', operator: 'In', value: '' }] }]
+      : []
   );
 
   // Pod Affinity state
@@ -1217,7 +1243,16 @@ export function CreateDeploymentPage() {
             selectedNamespaces: [],
             topologyKey: '',
             weight: '',
-            matchExpressions: [],
+            matchExpressions: [{ key: '', operator: 'In', value: '' }],
+          },
+          {
+            type: '',
+            priority: '',
+            namespaces: 'selected' as const,
+            selectedNamespaces: [],
+            topologyKey: '',
+            weight: '',
+            matchExpressions: [{ key: '', operator: 'In', value: '' }],
           },
         ]
       : []
@@ -2399,8 +2434,33 @@ export function CreateDeploymentPage() {
                           label="Run pods on node(s) matching scheduling rules"
                         />
                       </RadioGroup>
-                      {nodeScheduling === 'specific' && (
-                        <VStack gap={1} className="w-full max-w-[606px]">
+                      {isV2 && (
+                        <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <VStack gap={6}>
+                            <span className="text-label-lg text-[var(--color-text-default)]">
+                              Specific node(s)
+                            </span>
+                            <VStack gap={1} className="w-1/2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Node
+                              </span>
+                              <Select
+                                options={[
+                                  { value: 'node-1', label: 'node-1' },
+                                  { value: 'node-2', label: 'node-2' },
+                                  { value: 'node-3', label: 'node-3' },
+                                ]}
+                                value={selectedNode}
+                                onChange={setSelectedNode}
+                                placeholder="Select a node"
+                                fullWidth
+                              />
+                            </VStack>
+                          </VStack>
+                        </div>
+                      )}
+                      {!isV2 && nodeScheduling === 'specific' && (
+                        <VStack gap={1} className="w-1/2">
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Node
                           </span>
@@ -2417,7 +2477,243 @@ export function CreateDeploymentPage() {
                           />
                         </VStack>
                       )}
-                      {nodeScheduling === 'matching' && (
+                      {isV2 && (
+                        <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <VStack gap={3}>
+                            <VStack gap={1.5}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Matching scheduling rules
+                              </span>
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
+                                Define rules for scheduling pods on specific nodes based on node
+                                labels.
+                              </p>
+                            </VStack>
+
+                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <VStack gap={3}>
+                                {nodeAffinityTerms.map((term, termIndex) => (
+                                  <div
+                                    key={termIndex}
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  >
+                                    <VStack gap={6}>
+                                      <div className="flex items-start justify-between w-full">
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Rule {termIndex + 1}
+                                        </span>
+                                        <button
+                                          onClick={() => {
+                                            setNodeAffinityTerms(
+                                              nodeAffinityTerms.filter((_, i) => i !== termIndex)
+                                            );
+                                          }}
+                                          className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+
+                                      <div className="grid grid-cols-2 gap-3">
+                                        <VStack gap={2}>
+                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            Priority
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'required', label: 'Required' },
+                                              { value: 'preferred', label: 'Preferred' },
+                                            ]}
+                                            value={term.priority}
+                                            onChange={(val) => {
+                                              const newTerms = [...nodeAffinityTerms];
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                priority: val,
+                                              };
+                                              setNodeAffinityTerms(newTerms);
+                                            }}
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        {term.priority === 'preferred' && (
+                                          <VStack gap={2}>
+                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              Weight
+                                            </span>
+                                            <Input
+                                              placeholder="1-100"
+                                              value={term.weight}
+                                              onChange={(e) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: e.target.value,
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              fullWidth
+                                            />
+                                          </VStack>
+                                        )}
+                                      </div>
+
+                                      <VStack gap={2}>
+                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          Match Expressions
+                                        </span>
+                                        {term.matchExpressions.length > 0 && (
+                                          <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              Key
+                                            </span>
+                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              Operator
+                                            </span>
+                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              Value
+                                            </span>
+                                            <div />
+                                          </div>
+                                        )}
+                                        {term.matchExpressions.map((expr, exprIndex) => (
+                                          <div
+                                            key={exprIndex}
+                                            className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                                          >
+                                            <Input
+                                              placeholder="e.g. kubernetes.io/os"
+                                              value={expr.key}
+                                              onChange={(e) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex].matchExpressions[exprIndex] = {
+                                                  ...expr,
+                                                  key: e.target.value,
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              fullWidth
+                                            />
+                                            <Select
+                                              options={[
+                                                { value: 'In', label: 'In' },
+                                                { value: 'NotIn', label: 'NotIn' },
+                                                { value: 'Exists', label: 'Exists' },
+                                                {
+                                                  value: 'DoesNotExist',
+                                                  label: 'DoesNotExist',
+                                                },
+                                                { value: 'Gt', label: 'Gt' },
+                                                { value: 'Lt', label: 'Lt' },
+                                              ]}
+                                              value={expr.operator}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex].matchExpressions[exprIndex] = {
+                                                  ...expr,
+                                                  operator: val,
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              fullWidth
+                                            />
+                                            <Input
+                                              placeholder="e.g. linux"
+                                              value={expr.value}
+                                              onChange={(e) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex].matchExpressions[exprIndex] = {
+                                                  ...expr,
+                                                  value: e.target.value,
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              fullWidth
+                                            />
+                                            <button
+                                              onClick={() => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex].matchExpressions = newTerms[
+                                                  termIndex
+                                                ].matchExpressions.filter(
+                                                  (_, i) => i !== exprIndex
+                                                );
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        ))}
+                                        <div className="w-fit">
+                                          <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                            onClick={() => {
+                                              const newTerms = [...nodeAffinityTerms];
+                                              newTerms[termIndex].matchExpressions.push({
+                                                key: '',
+                                                operator: 'In',
+                                                value: '',
+                                              });
+                                              setNodeAffinityTerms(newTerms);
+                                            }}
+                                          >
+                                            Add Expression
+                                          </Button>
+                                        </div>
+                                      </VStack>
+                                    </VStack>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={() => {
+                                      setNodeAffinityTerms([
+                                        ...nodeAffinityTerms,
+                                        {
+                                          priority: 'required',
+                                          weight: '',
+                                          matchExpressions: [
+                                            { key: '', operator: 'In', value: '' },
+                                          ],
+                                        },
+                                      ]);
+                                    }}
+                                  >
+                                    Add Rule
+                                  </Button>
+                                </div>
+                              </VStack>
+                            </div>
+
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              >
+                                Add Node Selector
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
+                      )}
+                      {!isV2 && nodeScheduling === 'matching' && (
                         <VStack gap={3}>
                           <VStack gap={1.5}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3470,7 +3766,7 @@ export function CreateDeploymentPage() {
                                       />
                                     </RadioGroup>
 
-                                    {!(volume as CreatePVCVolume).useExistingPV && (
+                                    {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
                                       <VStack gap={6}>
                                         <VStack gap={3} className="w-[calc(50%+1px)]">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3517,7 +3813,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     )}
 
-                                    {(volume as CreatePVCVolume).useExistingPV && (
+                                    {(isV2 || (volume as CreatePVCVolume).useExistingPV) && (
                                       <VStack gap={3}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Persistent Volume{' '}
@@ -3549,7 +3845,7 @@ export function CreateDeploymentPage() {
                                         <Checkbox
                                           label="Single node read-write"
                                           checked={
-                                            (volume as CreatePVCVolume).accessModes.readWriteOnce
+                                            (volume as CreatePVCVolume).accessModes?.readWriteOnce
                                           }
                                           onChange={(e) =>
                                             updateVolume(index, {
@@ -3563,7 +3859,7 @@ export function CreateDeploymentPage() {
                                         <Checkbox
                                           label="Many nodes read-only"
                                           checked={
-                                            (volume as CreatePVCVolume).accessModes.readOnlyMany
+                                            (volume as CreatePVCVolume).accessModes?.readOnlyMany
                                           }
                                           onChange={(e) =>
                                             updateVolume(index, {
@@ -3577,7 +3873,7 @@ export function CreateDeploymentPage() {
                                         <Checkbox
                                           label="Many nodes read-write"
                                           checked={
-                                            (volume as CreatePVCVolume).accessModes.readWriteMany
+                                            (volume as CreatePVCVolume).accessModes?.readWriteMany
                                           }
                                           onChange={(e) =>
                                             updateVolume(index, {
@@ -3695,7 +3991,7 @@ export function CreateDeploymentPage() {
                                 <Radio value="existing" label="Use existing Persistent Volume" />
                               </RadioGroup>
 
-                              {!template.useExistingPV && (
+                              {(isV2 || !template.useExistingPV) && (
                                 <VStack gap={3}>
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3738,7 +4034,7 @@ export function CreateDeploymentPage() {
                                 </VStack>
                               )}
 
-                              {template.useExistingPV && (
+                              {(isV2 || template.useExistingPV) && (
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Persistent Volume{' '}
@@ -3769,7 +4065,7 @@ export function CreateDeploymentPage() {
                                 <VStack gap={2}>
                                   <Checkbox
                                     label="Single node read-write"
-                                    checked={template.accessModes.readWriteOnce}
+                                    checked={template.accessModes?.readWriteOnce}
                                     onChange={(e) =>
                                       updateVolumeClaimTemplate(index, {
                                         accessModes: {
@@ -3781,7 +4077,7 @@ export function CreateDeploymentPage() {
                                   />
                                   <Checkbox
                                     label="Many nodes read-only"
-                                    checked={template.accessModes.readOnlyMany}
+                                    checked={template.accessModes?.readOnlyMany}
                                     onChange={(e) =>
                                       updateVolumeClaimTemplate(index, {
                                         accessModes: {
@@ -3793,7 +4089,7 @@ export function CreateDeploymentPage() {
                                   />
                                   <Checkbox
                                     label="Many nodes read-write"
-                                    checked={template.accessModes.readWriteMany}
+                                    checked={template.accessModes?.readWriteMany}
                                     onChange={(e) =>
                                       updateVolumeClaimTemplate(index, {
                                         accessModes: {
@@ -3862,6 +4158,414 @@ export function CreateDeploymentPage() {
                       ...updates,
                     },
                   });
+                };
+
+                const renderV2ProbeBlock = (
+                  probeKey: 'readinessProbe' | 'livenessProbe' | 'startupProbe',
+                  type: 'httpGet' | 'tcpSocket' | 'exec',
+                  label: string,
+                  options?: { showRequestPath?: boolean; showHeaders?: boolean }
+                ) => {
+                  const probe = config[probeKey];
+                  const showRequestPath = options?.showRequestPath ?? false;
+                  const showHeaders = options?.showHeaders ?? false;
+                  return (
+                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                      <VStack gap={6}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          {label}
+                        </span>
+                        <div className="flex gap-6 w-full">
+                          {type !== 'exec' ? (
+                            <VStack gap={3} className="flex-1">
+                              <VStack gap={1}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Check Port
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Specify the port used to send health check requests.
+                                </span>
+                              </VStack>
+                              <Input
+                                placeholder="e.g. 80"
+                                fullWidth
+                                value={
+                                  type === 'httpGet'
+                                    ? probe?.httpGet?.port || ''
+                                    : probe?.tcpSocket?.port || ''
+                                }
+                                onChange={(e) =>
+                                  type === 'httpGet'
+                                    ? updateProbe(probeKey, {
+                                        httpGet: { ...probe?.httpGet, port: e.target.value },
+                                      })
+                                    : updateProbe(probeKey, {
+                                        tcpSocket: { ...probe?.tcpSocket, port: e.target.value },
+                                      })
+                                }
+                              />
+                            </VStack>
+                          ) : (
+                            <VStack gap={3} className="flex-1">
+                              <VStack gap={1}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Command to run
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Specify the command to execute when the container starts.
+                                </span>
+                              </VStack>
+                              <Input
+                                placeholder="e.g. cat /tmp/health"
+                                fullWidth
+                                value={probe?.exec?.command || ''}
+                                onChange={(e) =>
+                                  updateProbe(probeKey, {
+                                    exec: { ...probe?.exec, command: e.target.value },
+                                  })
+                                }
+                              />
+                            </VStack>
+                          )}
+                          <VStack gap={3} className="flex-1">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Check Interval
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Specify the interval between health check requests.
+                              </span>
+                            </VStack>
+                            <HStack gap={2} align="center">
+                              <NumberInput
+                                value={parseInt(probe?.periodSeconds || '10') || 10}
+                                onChange={(val) =>
+                                  updateProbe(probeKey, { periodSeconds: String(val) })
+                                }
+                                min={1}
+                                size="sm"
+                                width="sm"
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                Seconds
+                              </span>
+                            </HStack>
+                          </VStack>
+                        </div>
+                        {showRequestPath ? (
+                          <>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Request Path
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the request path used for HTTP health checks.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="e.g./healthz"
+                                  fullWidth
+                                  value={probe?.httpGet?.path || ''}
+                                  onChange={(e) =>
+                                    updateProbe(probeKey, {
+                                      httpGet: { ...probe?.httpGet, path: e.target.value },
+                                    })
+                                  }
+                                />
+                              </VStack>
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Initial Delay
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the delay before initiating the first health check.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.initialDelaySeconds || '0') || 0}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { initialDelaySeconds: String(val) })
+                                    }
+                                    min={0}
+                                    size="sm"
+                                    width="sm"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Timeout
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the maximum time to wait for a health check response.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.timeoutSeconds || '1') || 1}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { timeoutSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="sm"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Success Threshold
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the minimum number of consecutive successful checks to
+                                    consider the status healthy.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.successThreshold || '1') || 1}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, { successThreshold: String(val) })
+                                  }
+                                  min={1}
+                                  size="sm"
+                                  width="sm"
+                                />
+                              </VStack>
+                            </div>
+                            <VStack gap={3}>
+                              <VStack gap={1}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Failure Threshold
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Specify the minimum number of consecutive failed checks to
+                                  consider the status unhealthy.
+                                </span>
+                              </VStack>
+                              <NumberInput
+                                value={parseInt(probe?.failureThreshold || '3') || 3}
+                                onChange={(val) =>
+                                  updateProbe(probeKey, { failureThreshold: String(val) })
+                                }
+                                min={1}
+                                size="sm"
+                                width="sm"
+                              />
+                            </VStack>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Initial Delay
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the delay before initiating the first health check.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.initialDelaySeconds || '0') || 0}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { initialDelaySeconds: String(val) })
+                                    }
+                                    min={0}
+                                    size="sm"
+                                    width="sm"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Timeout
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the maximum time to wait for a health check response.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.timeoutSeconds || '1') || 1}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { timeoutSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="sm"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Success Threshold
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the minimum number of consecutive successful checks to
+                                    consider the status healthy.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.successThreshold || '1') || 1}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, { successThreshold: String(val) })
+                                  }
+                                  min={1}
+                                  size="sm"
+                                  width="sm"
+                                />
+                              </VStack>
+                              <VStack gap={3} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Failure Threshold
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the minimum number of consecutive failed checks to
+                                    consider the status unhealthy.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.failureThreshold || '3') || 3}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, { failureThreshold: String(val) })
+                                  }
+                                  min={1}
+                                  size="sm"
+                                  width="sm"
+                                />
+                              </VStack>
+                            </div>
+                          </>
+                        )}
+                        {showHeaders && (
+                          <VStack gap={3}>
+                            <span className="text-label-lg text-[var(--color-text-default)]">
+                              Request Headers
+                            </span>
+                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <VStack gap={2}>
+                                {(probe?.httpGet?.httpHeaders || []).length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                      Name
+                                    </label>
+                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                      Value
+                                    </label>
+                                    <div />
+                                  </div>
+                                )}
+                                {(probe?.httpGet?.httpHeaders || []).map(
+                                  (header: { name: string; value: string }, index: number) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                    >
+                                      <Input
+                                        placeholder="e.g. X-Custom-Header"
+                                        fullWidth
+                                        value={header.name}
+                                        onChange={(e) => {
+                                          const newHeaders = [
+                                            ...(probe?.httpGet?.httpHeaders || []),
+                                          ];
+                                          newHeaders[index] = {
+                                            ...newHeaders[index],
+                                            name: e.target.value,
+                                          };
+                                          updateProbe(probeKey, {
+                                            httpGet: { ...probe?.httpGet, httpHeaders: newHeaders },
+                                          });
+                                        }}
+                                      />
+                                      <Input
+                                        placeholder="e.g. value"
+                                        fullWidth
+                                        value={header.value}
+                                        onChange={(e) => {
+                                          const newHeaders = [
+                                            ...(probe?.httpGet?.httpHeaders || []),
+                                          ];
+                                          newHeaders[index] = {
+                                            ...newHeaders[index],
+                                            value: e.target.value,
+                                          };
+                                          updateProbe(probeKey, {
+                                            httpGet: { ...probe?.httpGet, httpHeaders: newHeaders },
+                                          });
+                                        }}
+                                      />
+                                      <button
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        onClick={() => {
+                                          const newHeaders = (
+                                            probe?.httpGet?.httpHeaders || []
+                                          ).filter((_: unknown, i: number) => i !== index);
+                                          updateProbe(probeKey, {
+                                            httpGet: { ...probe?.httpGet, httpHeaders: newHeaders },
+                                          });
+                                        }}
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  )
+                                )}
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={() => {
+                                      const newHeaders = [
+                                        ...(probe?.httpGet?.httpHeaders || []),
+                                        { name: '', value: '' },
+                                      ];
+                                      updateProbe(probeKey, {
+                                        httpGet: { ...probe?.httpGet, httpHeaders: newHeaders },
+                                      });
+                                    }}
+                                  >
+                                    Add Header
+                                  </Button>
+                                </div>
+                              </VStack>
+                            </div>
+                          </VStack>
+                        )}
+                      </VStack>
+                    </div>
+                  );
                 };
 
                 return (
@@ -4159,7 +4863,7 @@ export function CreateDeploymentPage() {
                               </RadioGroup>
                             </VStack>
 
-                            {config.lifecycleHooks?.postStart?.type === 'exec' && (
+                            {(isV2 || config.lifecycleHooks?.postStart?.type === 'exec') && (
                               <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Execute Command
@@ -4177,7 +4881,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             )}
 
-                            {config.lifecycleHooks?.postStart?.type === 'httpGet' && (
+                            {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
                               <VStack gap={3}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
@@ -4384,7 +5088,7 @@ export function CreateDeploymentPage() {
 
                           {/* Pre Stop */}
                           <VStack gap={6}>
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
                               </span>
@@ -4402,7 +5106,7 @@ export function CreateDeploymentPage() {
                               </RadioGroup>
                             </VStack>
 
-                            {config.lifecycleHooks?.preStop?.type === 'exec' && (
+                            {(isV2 || config.lifecycleHooks?.preStop?.type === 'exec') && (
                               <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Execute Command
@@ -4420,7 +5124,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             )}
 
-                            {config.lifecycleHooks?.preStop?.type === 'httpGet' && (
+                            {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
                               <VStack gap={3}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
@@ -4671,7 +5375,27 @@ export function CreateDeploymentPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {config.readinessProbe?.type !== 'none' && (
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
+                            {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                                 <VStack gap={6}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
@@ -5076,7 +5800,7 @@ export function CreateDeploymentPage() {
                                             <Button
                                               variant="secondary"
                                               size="sm"
-                                              leftIcon={<IconCirclePlus size={16} stroke={1.5} />}
+                                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                               onClick={() => {
                                                 const newHeaders = [
                                                   ...(config.readinessProbe?.httpGet?.httpHeaders ||
@@ -5142,7 +5866,27 @@ export function CreateDeploymentPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {config.livenessProbe?.type !== 'none' &&
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
+                            {!isV2 &&
+                              config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                                   <VStack gap={6}>
@@ -5406,224 +6150,249 @@ export function CreateDeploymentPage() {
                                 fullWidth
                               />
                             </VStack>
-                            {config.startupProbe?.type !== 'none' && config.startupProbe?.type && (
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                <VStack gap={6}>
-                                  {/* Row 1: Check Port/Command + Check Interval */}
-                                  <div className="flex gap-6 w-full">
-                                    {(config.startupProbe?.type === 'httpGet' ||
-                                      config.startupProbe?.type === 'tcpSocket') && (
+                            {isV2 && (
+                              <>
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'httpGet',
+                                  'HTTP request returns a successful status (200-399)'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'tcpSocket',
+                                  'TCP Connection opens successfully'
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'exec',
+                                  'Command run inside the container exits with status 0'
+                                )}
+                              </>
+                            )}
+                            {!isV2 &&
+                              config.startupProbe?.type !== 'none' &&
+                              config.startupProbe?.type && (
+                                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                  <VStack gap={6}>
+                                    {/* Row 1: Check Port/Command + Check Interval */}
+                                    <div className="flex gap-6 w-full">
+                                      {(config.startupProbe?.type === 'httpGet' ||
+                                        config.startupProbe?.type === 'tcpSocket') && (
+                                        <VStack gap={3} className="flex-1">
+                                          <VStack gap={1}>
+                                            <span className="text-label-lg text-[var(--color-text-default)]">
+                                              Check Port
+                                            </span>
+                                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                                              Specify the port used to send health check requests.
+                                            </span>
+                                          </VStack>
+                                          <Input
+                                            placeholder="e.g. 80"
+                                            fullWidth
+                                            value={
+                                              config.startupProbe?.type === 'httpGet'
+                                                ? config.startupProbe?.httpGet?.port || ''
+                                                : config.startupProbe?.tcpSocket?.port || ''
+                                            }
+                                            onChange={(e) =>
+                                              config.startupProbe?.type === 'httpGet'
+                                                ? updateProbe('startupProbe', {
+                                                    httpGet: {
+                                                      ...config.startupProbe?.httpGet,
+                                                      port: e.target.value,
+                                                    },
+                                                  })
+                                                : updateProbe('startupProbe', {
+                                                    tcpSocket: {
+                                                      ...config.startupProbe?.tcpSocket,
+                                                      port: e.target.value,
+                                                    },
+                                                  })
+                                            }
+                                          />
+                                        </VStack>
+                                      )}
+                                      {config.startupProbe?.type === 'exec' && (
+                                        <VStack gap={3} className="flex-1">
+                                          <VStack gap={1}>
+                                            <span className="text-label-lg text-[var(--color-text-default)]">
+                                              Command to run
+                                            </span>
+                                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                                              Specify the command to execute when the container
+                                              starts.
+                                            </span>
+                                          </VStack>
+                                          <Input
+                                            placeholder="e.g. cat /tmp/health"
+                                            fullWidth
+                                            value={config.startupProbe?.exec?.command || ''}
+                                            onChange={(e) =>
+                                              updateProbe('startupProbe', {
+                                                exec: {
+                                                  ...config.startupProbe?.exec,
+                                                  command: e.target.value,
+                                                },
+                                              })
+                                            }
+                                          />
+                                        </VStack>
+                                      )}
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
-                                            Check Port
+                                            Check Interval
                                           </span>
                                           <span className="text-body-md text-[var(--color-text-subtle)]">
-                                            Specify the port used to send health check requests.
+                                            Specify the interval between health check requests.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="e.g. 80"
-                                          fullWidth
-                                          value={
-                                            config.startupProbe?.type === 'httpGet'
-                                              ? config.startupProbe?.httpGet?.port || ''
-                                              : config.startupProbe?.tcpSocket?.port || ''
-                                          }
-                                          onChange={(e) =>
-                                            config.startupProbe?.type === 'httpGet'
-                                              ? updateProbe('startupProbe', {
-                                                  httpGet: {
-                                                    ...config.startupProbe?.httpGet,
-                                                    port: e.target.value,
-                                                  },
-                                                })
-                                              : updateProbe('startupProbe', {
-                                                  tcpSocket: {
-                                                    ...config.startupProbe?.tcpSocket,
-                                                    port: e.target.value,
-                                                  },
-                                                })
-                                          }
-                                        />
+                                        <HStack gap={2} align="center">
+                                          <NumberInput
+                                            value={
+                                              parseInt(
+                                                config.startupProbe?.periodSeconds || '10'
+                                              ) || 10
+                                            }
+                                            onChange={(val) =>
+                                              updateProbe('startupProbe', {
+                                                periodSeconds: String(val),
+                                              })
+                                            }
+                                            min={1}
+                                            size="sm"
+                                            width="sm"
+                                          />
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                            Seconds
+                                          </span>
+                                        </HStack>
                                       </VStack>
-                                    )}
-                                    {config.startupProbe?.type === 'exec' && (
+                                    </div>
+                                    {/* Row 2: Initial Delay + Timeout */}
+                                    <div className="flex gap-6 w-full">
                                       <VStack gap={3} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
-                                            Command to run
+                                            Initial Delay
                                           </span>
                                           <span className="text-body-md text-[var(--color-text-subtle)]">
-                                            Specify the command to execute when the container
-                                            starts.
+                                            Specify the delay before initiating the first health
+                                            check.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="e.g. cat /tmp/health"
-                                          fullWidth
-                                          value={config.startupProbe?.exec?.command || ''}
-                                          onChange={(e) =>
-                                            updateProbe('startupProbe', {
-                                              exec: {
-                                                ...config.startupProbe?.exec,
-                                                command: e.target.value,
-                                              },
-                                            })
-                                          }
-                                        />
+                                        <HStack gap={2} align="center">
+                                          <NumberInput
+                                            value={
+                                              parseInt(
+                                                config.startupProbe?.initialDelaySeconds || '0'
+                                              ) || 0
+                                            }
+                                            onChange={(val) =>
+                                              updateProbe('startupProbe', {
+                                                initialDelaySeconds: String(val),
+                                              })
+                                            }
+                                            min={0}
+                                            size="sm"
+                                            width="sm"
+                                          />
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                            Seconds
+                                          </span>
+                                        </HStack>
                                       </VStack>
-                                    )}
-                                    <VStack gap={3} className="flex-1">
-                                      <VStack gap={1}>
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Check Interval
-                                        </span>
-                                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                                          Specify the interval between health check requests.
-                                        </span>
+                                      <VStack gap={3} className="flex-1">
+                                        <VStack gap={1}>
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
+                                            Timeout
+                                          </span>
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                                            Specify the maximum time to wait for a health check
+                                            response.
+                                          </span>
+                                        </VStack>
+                                        <HStack gap={2} align="center">
+                                          <NumberInput
+                                            value={
+                                              parseInt(
+                                                config.startupProbe?.timeoutSeconds || '1'
+                                              ) || 1
+                                            }
+                                            onChange={(val) =>
+                                              updateProbe('startupProbe', {
+                                                timeoutSeconds: String(val),
+                                              })
+                                            }
+                                            min={1}
+                                            size="sm"
+                                            width="sm"
+                                          />
+                                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                            Seconds
+                                          </span>
+                                        </HStack>
                                       </VStack>
-                                      <HStack gap={2} align="center">
-                                        <NumberInput
-                                          value={
-                                            parseInt(config.startupProbe?.periodSeconds || '10') ||
-                                            10
-                                          }
-                                          onChange={(val) =>
-                                            updateProbe('startupProbe', {
-                                              periodSeconds: String(val),
-                                            })
-                                          }
-                                          min={1}
-                                          size="sm"
-                                          width="sm"
-                                        />
-                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                          Seconds
-                                        </span>
-                                      </HStack>
-                                    </VStack>
-                                  </div>
-                                  {/* Row 2: Initial Delay + Timeout */}
-                                  <div className="flex gap-6 w-full">
-                                    <VStack gap={3} className="flex-1">
-                                      <VStack gap={1}>
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Initial Delay
-                                        </span>
-                                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                                          Specify the delay before initiating the first health
-                                          check.
-                                        </span>
-                                      </VStack>
-                                      <HStack gap={2} align="center">
+                                    </div>
+                                    {/* Row 3: Success Threshold + Failure Threshold */}
+                                    <div className="flex gap-6 w-full">
+                                      <VStack gap={3} className="flex-1">
+                                        <VStack gap={1}>
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
+                                            Success Threshold
+                                          </span>
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                                            Specify the minimum number of consecutive successful
+                                            checks to consider the status healthy.
+                                          </span>
+                                        </VStack>
                                         <NumberInput
                                           value={
                                             parseInt(
-                                              config.startupProbe?.initialDelaySeconds || '0'
-                                            ) || 0
+                                              config.startupProbe?.successThreshold || '1'
+                                            ) || 1
                                           }
                                           onChange={(val) =>
                                             updateProbe('startupProbe', {
-                                              initialDelaySeconds: String(val),
-                                            })
-                                          }
-                                          min={0}
-                                          size="sm"
-                                          width="sm"
-                                        />
-                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                          Seconds
-                                        </span>
-                                      </HStack>
-                                    </VStack>
-                                    <VStack gap={3} className="flex-1">
-                                      <VStack gap={1}>
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Timeout
-                                        </span>
-                                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                                          Specify the maximum time to wait for a health check
-                                          response.
-                                        </span>
-                                      </VStack>
-                                      <HStack gap={2} align="center">
-                                        <NumberInput
-                                          value={
-                                            parseInt(config.startupProbe?.timeoutSeconds || '1') ||
-                                            1
-                                          }
-                                          onChange={(val) =>
-                                            updateProbe('startupProbe', {
-                                              timeoutSeconds: String(val),
+                                              successThreshold: String(val),
                                             })
                                           }
                                           min={1}
                                           size="sm"
                                           width="sm"
                                         />
-                                        <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                          Seconds
-                                        </span>
-                                      </HStack>
-                                    </VStack>
-                                  </div>
-                                  {/* Row 3: Success Threshold + Failure Threshold */}
-                                  <div className="flex gap-6 w-full">
-                                    <VStack gap={3} className="flex-1">
-                                      <VStack gap={1}>
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Success Threshold
-                                        </span>
-                                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                                          Specify the minimum number of consecutive successful
-                                          checks to consider the status healthy.
-                                        </span>
                                       </VStack>
-                                      <NumberInput
-                                        value={
-                                          parseInt(config.startupProbe?.successThreshold || '1') ||
-                                          1
-                                        }
-                                        onChange={(val) =>
-                                          updateProbe('startupProbe', {
-                                            successThreshold: String(val),
-                                          })
-                                        }
-                                        min={1}
-                                        size="sm"
-                                        width="sm"
-                                      />
-                                    </VStack>
-                                    <VStack gap={3} className="flex-1">
-                                      <VStack gap={1}>
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Failure Threshold
-                                        </span>
-                                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                                          Specify the minimum number of consecutive failed checks to
-                                          consider the status unhealthy.
-                                        </span>
+                                      <VStack gap={3} className="flex-1">
+                                        <VStack gap={1}>
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
+                                            Failure Threshold
+                                          </span>
+                                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                                            Specify the minimum number of consecutive failed checks
+                                            to consider the status unhealthy.
+                                          </span>
+                                        </VStack>
+                                        <NumberInput
+                                          value={
+                                            parseInt(
+                                              config.startupProbe?.failureThreshold || '3'
+                                            ) || 3
+                                          }
+                                          onChange={(val) =>
+                                            updateProbe('startupProbe', {
+                                              failureThreshold: String(val),
+                                            })
+                                          }
+                                          min={1}
+                                          size="sm"
+                                          width="sm"
+                                        />
                                       </VStack>
-                                      <NumberInput
-                                        value={
-                                          parseInt(config.startupProbe?.failureThreshold || '3') ||
-                                          3
-                                        }
-                                        onChange={(val) =>
-                                          updateProbe('startupProbe', {
-                                            failureThreshold: String(val),
-                                          })
-                                        }
-                                        min={1}
-                                        size="sm"
-                                        width="sm"
-                                      />
-                                    </VStack>
-                                  </div>
-                                </VStack>
-                              </div>
-                            )}
+                                    </div>
+                                  </VStack>
+                                </div>
+                              )}
                           </VStack>
                         </VStack>
                       </SectionCard.Content>

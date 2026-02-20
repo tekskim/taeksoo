@@ -363,6 +363,7 @@ function BasicInformationSection({
    ---------------------------------------- */
 
 interface SettingsSectionProps {
+  isV2?: boolean;
   objectLocking: 'disabled' | 'enabled';
   onObjectLockingChange: (value: 'disabled' | 'enabled') => void;
   lockingMode: string;
@@ -383,6 +384,7 @@ interface SettingsSectionProps {
 }
 
 function SettingsSection({
+  isV2,
   objectLocking,
   onObjectLockingChange,
   lockingMode,
@@ -453,7 +455,7 @@ function SettingsSection({
             </FormField>
 
             {/* Object Locking Options - shown when enabled */}
-            {objectLocking === 'enabled' && (
+            {(isV2 || objectLocking === 'enabled') && (
               <div className="flex flex-col gap-3 mt-3">
                 {/* Mode */}
                 <FormField>
@@ -798,7 +800,9 @@ export default function CreateBucketPage() {
   const [ownerError, setOwnerError] = useState<string | null>(null);
 
   // Settings form state
-  const [objectLocking, setObjectLocking] = useState<'disabled' | 'enabled'>('disabled');
+  const [objectLocking, setObjectLocking] = useState<'disabled' | 'enabled'>(
+    isV2 ? 'enabled' : 'disabled'
+  );
   const [lockingMode, setLockingMode] = useState('compliance');
   const [retentionDays, setRetentionDays] = useState('');
   const [tags, setTags] = useState<TagItem[]>(
@@ -1132,6 +1136,7 @@ export default function CreateBucketPage() {
             )}
             {(isV2 || sectionStatus['settings'] === 'active') && (
               <SettingsSection
+                isV2={isV2}
                 objectLocking={objectLocking}
                 onObjectLockingChange={setObjectLocking}
                 lockingMode={lockingMode}
