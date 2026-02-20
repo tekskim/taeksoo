@@ -31,8 +31,6 @@ import {
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
-import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import containerIcon from '@/assets/container.png';
 
 /* ----------------------------------------
@@ -502,7 +500,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
           {/* Logo */}
           <div className="h-[33px] px-3 flex items-center justify-between">
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-4" />
+            <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
             <button
               type="button"
               onClick={onToggle}

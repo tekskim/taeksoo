@@ -271,7 +271,7 @@ export default function IAMMFAPoliciesPage() {
                             min={0}
                             max={2}
                             step={1}
-                            width="sm"
+                            width="xs"
                             disabled={!otpEnabled}
                           />
                         </FormField.Control>

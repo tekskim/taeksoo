@@ -316,7 +316,7 @@ export default function IAMLoginPoliciesPage() {
                               min={1}
                               max={1095}
                               step={1}
-                              width="sm"
+                              width="xs"
                               disabled={!passwordExpirationEnabled}
                             />
                             <span className="text-body-md text-[var(--color-text-default)]">
