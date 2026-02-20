@@ -142,14 +142,14 @@ export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
           'inline-flex items-center justify-center',
           'border rounded-[var(--radius-sm)]',
           'font-medium',
-          'transition-all duration-[var(--duration-fast)]',
+          'transition-colors duration-[var(--duration-fast)]',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-action-primary)]',
           sizeConfig.button,
           variantStyles[variant],
-          copied && successStyles,
           disabled && 'opacity-50 cursor-not-allowed',
           iconOnly && 'px-1.5',
-          className
+          className,
+          copied && successStyles
         )}
         {...props}
       >

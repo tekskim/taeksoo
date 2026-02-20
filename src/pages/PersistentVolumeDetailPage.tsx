@@ -400,7 +400,7 @@ export function PersistentVolumeDetailPage() {
             <VStack gap={3}>
               {/* Customize Content */}
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
-                <VStack gap={4}>
+                <VStack gap={6}>
                   {/* Access Modes */}
                   <VStack gap={2} align="start">
                     <h3 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h3>
@@ -446,14 +446,16 @@ export function PersistentVolumeDetailPage() {
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount Options
                     </h3>
-                    <FormField label="Value" labelSize="sm" disabled className="w-full">
-                      <Input
-                        placeholder="e.g. bar"
-                        value={pvData.mountOptions}
-                        onChange={() => {}}
-                        fullWidth
-                      />
-                    </FormField>
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <FormField label="Value" disabled className="w-full">
+                        <Input
+                          placeholder="e.g. bar"
+                          value={pvData.mountOptions}
+                          onChange={() => {}}
+                          fullWidth
+                        />
+                      </FormField>
+                    </div>
                   </VStack>
 
                   {/* Node Selectors */}
@@ -471,17 +473,17 @@ export function PersistentVolumeDetailPage() {
                             {/* Header Row */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Key
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Operator
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Value
                                 </span>
                               </div>

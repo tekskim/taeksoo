@@ -11,9 +11,12 @@ import {
   Tab,
   TabPanel,
   Button,
+  Input,
+  FormField,
   ContextMenu,
   DetailHeader,
   PageShell,
+  CopyButton,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -401,54 +404,40 @@ export function ConfigMapDetailPage() {
               <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
                 <VStack gap={3}>
                   {/* Section Header */}
-                  <HStack gap={1} align="center">
-                    <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Data
-                    </span>
-                    <span className="text-label-lg leading-[20px] text-[var(--color-text-subtle)]">
-                      ({dataEntries.length})
-                    </span>
-                  </HStack>
+                  <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Data
+                  </span>
 
                   {/* Data Entries */}
                   {dataEntries.length > 0 ? (
-                    <VStack gap={3}>
-                      {dataEntries.map(([key, value], index) => (
-                        <HStack key={key} gap={2} align="end" className="w-full">
-                          {/* Key Column */}
-                          <div className="w-[240px]">
-                            {index === 0 && (
-                              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                Key
-                              </label>
-                            )}
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center">
-                              {key}
-                            </div>
-                          </div>
-                          {/* Value Column */}
-                          <div className="flex-1">
-                            {index === 0 && (
-                              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                Value
-                              </label>
-                            )}
-                            <div className="w-full h-[36px] px-2.5 py-1.5 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
-                              <span className="truncate">{value}</span>
-                              <button
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors flex-shrink-0"
-                                onClick={() => copyToClipboard(value)}
-                                aria-label="Copy value"
-                              >
-                                <IconCopy
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </HStack>
+                    <VStack gap={2}>
+                      {dataEntries.map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                        >
+                          <HStack gap={2} className="w-full">
+                            <FormField label="Key" className="flex-1">
+                              <Input value={key} onChange={() => {}} fullWidth />
+                            </FormField>
+                            <FormField label="Value" className="flex-1">
+                              <Input
+                                value={value}
+                                onChange={() => {}}
+                                fullWidth
+                                rightElement={
+                                  <CopyButton
+                                    value={value}
+                                    size="md"
+                                    iconOnly
+                                    variant="ghost"
+                                    className="text-[var(--color-action-primary)] hover:bg-transparent"
+                                  />
+                                }
+                              />
+                            </FormField>
+                          </HStack>
+                        </div>
                       ))}
                     </VStack>
                   ) : (
@@ -461,54 +450,40 @@ export function ConfigMapDetailPage() {
               <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
                 <VStack gap={3}>
                   {/* Section Header */}
-                  <HStack gap={1} align="center">
-                    <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Binary Data
-                    </span>
-                    <span className="text-label-lg leading-[20px] text-[var(--color-text-subtle)]">
-                      ({binaryDataEntries.length})
-                    </span>
-                  </HStack>
+                  <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Binary Data
+                  </span>
 
                   {/* Binary Data Entries */}
                   {binaryDataEntries.length > 0 ? (
-                    <VStack gap={3}>
-                      {binaryDataEntries.map(([key, value], index) => (
-                        <HStack key={key} gap={2} align="end" className="w-full">
-                          {/* Key Column */}
-                          <div className="w-[240px]">
-                            {index === 0 && (
-                              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                Key
-                              </label>
-                            )}
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center">
-                              {key}
-                            </div>
-                          </div>
-                          {/* Value Column */}
-                          <div className="flex-1">
-                            {index === 0 && (
-                              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                Value
-                              </label>
-                            )}
-                            <div className="w-full h-[36px] px-2.5 py-1.5 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
-                              <span className="truncate">{value}</span>
-                              <button
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors flex-shrink-0"
-                                onClick={() => copyToClipboard(value)}
-                                aria-label="Copy value"
-                              >
-                                <IconCopy
-                                  size={16}
-                                  className="text-[var(--color-text-muted)]"
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </HStack>
+                    <VStack gap={2}>
+                      {binaryDataEntries.map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                        >
+                          <HStack gap={2} className="w-full">
+                            <FormField label="Key" className="flex-1">
+                              <Input value={key} onChange={() => {}} fullWidth />
+                            </FormField>
+                            <FormField label="Value" className="flex-1">
+                              <Input
+                                value={value}
+                                onChange={() => {}}
+                                fullWidth
+                                rightElement={
+                                  <CopyButton
+                                    value={value}
+                                    size="md"
+                                    iconOnly
+                                    variant="ghost"
+                                    className="text-[var(--color-action-primary)] hover:bg-transparent"
+                                  />
+                                }
+                              />
+                            </FormField>
+                          </HStack>
+                        </div>
                       ))}
                     </VStack>
                   ) : (

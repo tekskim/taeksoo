@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -10,6 +11,8 @@ import {
   Tab,
   TabPanel,
   Button,
+  Input,
+  FormField,
   ContextMenu,
   DetailHeader,
   Radio,
@@ -393,40 +396,23 @@ export function StorageClassDetailPage() {
                 </h3>
 
                 {parametersEntries.length > 0 ? (
-                  <div className="flex gap-2 w-full">
-                    {/* Key Column */}
-                    <div className="flex-1">
-                      <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                        Key
-                      </label>
-                      <VStack gap={2}>
-                        {parametersEntries.map(([key]) => (
-                          <div
-                            key={key}
-                            className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-subtle)]"
-                          >
-                            {key}
-                          </div>
-                        ))}
-                      </VStack>
-                    </div>
-                    {/* Value Column */}
-                    <div className="flex-1">
-                      <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                        Value
-                      </label>
-                      <VStack gap={2}>
-                        {parametersEntries.map(([key, val]) => (
-                          <div
-                            key={key}
-                            className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
-                          >
-                            {val}
-                          </div>
-                        ))}
-                      </VStack>
-                    </div>
-                  </div>
+                  <VStack gap={2} className="w-full">
+                    {parametersEntries.map(([key, val]) => (
+                      <div
+                        key={key}
+                        className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                      >
+                        <HStack gap={2} className="w-full">
+                          <FormField label="Key" disabled className="flex-1">
+                            <Input value={key} onChange={() => {}} fullWidth />
+                          </FormField>
+                          <FormField label="Value" disabled className="flex-1">
+                            <Input value={val} onChange={() => {}} fullWidth />
+                          </FormField>
+                        </HStack>
+                      </div>
+                    ))}
+                  </VStack>
                 ) : (
                   <p className="text-body-md text-[var(--color-text-subtle)]">
                     No parameters defined.
@@ -439,19 +425,19 @@ export function StorageClassDetailPage() {
           {/* Customize Tab */}
           <TabPanel value="customize">
             {/* Content Box */}
-            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-4 py-3">
-              <VStack gap={3}>
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+              <VStack gap={6}>
                 {/* Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                   Customize
                 </h3>
 
                 {/* Reclaim Policy */}
-                <VStack gap={1.5} align="start">
+                <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
                     Reclaim Policy
                   </label>
-                  <VStack gap={1} align="start">
+                  <VStack gap={2} align="start">
                     <Radio
                       label="Delete volumes and underlying device when volume claim is deleted"
                       checked={scData.reclaimPolicy === 'Delete'}
@@ -468,11 +454,11 @@ export function StorageClassDetailPage() {
                 </VStack>
 
                 {/* Allow Volume Expansion */}
-                <VStack gap={1.5} align="start">
+                <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
                     Allow Volume Expansion
                   </label>
-                  <VStack gap={1} align="start">
+                  <VStack gap={2} align="start">
                     <Radio
                       label="Enabled"
                       checked={scData.allowVolumeExpansion === true}
@@ -489,11 +475,11 @@ export function StorageClassDetailPage() {
                 </VStack>
 
                 {/* Volume Binding Mode */}
-                <VStack gap={1.5} align="start">
+                <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
                     Volume Binding Mode
                   </label>
-                  <VStack gap={1} align="start">
+                  <VStack gap={2} align="start">
                     <Radio
                       label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
                       checked={scData.volumeBindingMode === 'Immediate'}
@@ -510,19 +496,14 @@ export function StorageClassDetailPage() {
                 </VStack>
 
                 {/* Mount Options */}
-                <VStack gap={2} align="start" className="w-full">
+                <VStack gap={3} align="start" className="w-full">
                   <label className="text-label-lg text-[var(--color-text-default)]">
                     Mount Options
                   </label>
                   {scData.mountOptions.length > 0 ? (
                     <VStack gap={2} className="w-full">
                       {scData.mountOptions.map((option, index) => (
-                        <div
-                          key={index}
-                          className="w-full h-[32px] px-[10px] py-[8px] bg-[var(--primitive-color-cool-gray200)] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
-                        >
-                          {option}
-                        </div>
+                        <Input key={index} value={option} onChange={() => {}} fullWidth disabled />
                       ))}
                     </VStack>
                   ) : (

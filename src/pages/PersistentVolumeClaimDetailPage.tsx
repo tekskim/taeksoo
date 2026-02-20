@@ -16,14 +16,15 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Input,
   NumberInput,
+  FormField,
   Chip,
   Checkbox,
   Table,
   Pagination,
   SearchInput,
   PageShell,
-  columnMinWidths,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -632,16 +633,16 @@ export function PersistentVolumeClaimDetailPage() {
           <TabPanel value="volume-claim">
             {/* Content Box */}
             <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
-              <VStack gap={4}>
+              <VStack gap={6}>
                 {/* Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                   Volume Claim
                 </h3>
                 {/* Source */}
-                <VStack gap={1.5} align="start">
+                <VStack gap={3} align="start">
                   <h4 className="text-label-lg text-[var(--color-text-default)]">Source</h4>
                   <RadioGroup value={pvcData.source} onChange={() => {}}>
-                    <VStack gap={1} align="start">
+                    <VStack gap={2} align="start">
                       <Radio
                         value="storage-class"
                         label="Use a Storage Class to provision a new Persistent Volume"
@@ -657,40 +658,31 @@ export function PersistentVolumeClaimDetailPage() {
                 </VStack>
 
                 {/* Storage Class */}
-                <VStack gap={2} align="start" className="w-full">
-                  <label className="text-label-sm text-[var(--color-text-default)]">
-                    Storage Class
-                  </label>
+                <FormField label="Storage Class" disabled className="w-full">
                   <Select
                     options={storageClassOptions}
                     value={pvcData.storageClass}
                     onChange={() => {}}
                     placeholder="Default storage class"
                     fullWidth
-                    disabled
                   />
-                </VStack>
+                </FormField>
 
                 {/* Request Storage */}
-                <VStack gap={2} align="start" className="w-full">
-                  <label className="text-label-lg text-[var(--color-text-default)]">
-                    Request Storage <span className="text-[var(--color-state-warning)]">*</span>
-                  </label>
-                  <div className="flex items-center gap-3 w-full">
-                    <div className="flex-1">
-                      <NumberInput
-                        value={pvcData.requestStorage}
-                        onChange={() => {}}
-                        min={1}
-                        fullWidth
-                        disabled
-                      />
-                    </div>
+                <FormField label="Request Storage" required disabled className="w-full">
+                  <div className="flex items-center gap-3">
+                    <NumberInput
+                      value={pvcData.requestStorage}
+                      onChange={() => {}}
+                      min={1}
+                      width="sm"
+                      disabled
+                    />
                     <span className="text-body-md text-[var(--color-text-default)]">
                       {pvcData.storageUnit}
                     </span>
                   </div>
-                </VStack>
+                </FormField>
               </VStack>
             </div>
           </TabPanel>
@@ -705,9 +697,9 @@ export function PersistentVolumeClaimDetailPage() {
                   Customize
                 </h3>
                 {/* Access Modes */}
-                <VStack gap={1.5} align="start">
+                <VStack gap={3} align="start">
                   <h4 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h4>
-                  <VStack gap={1} align="start">
+                  <VStack gap={2} align="start">
                     <Checkbox
                       label="Single node read-write"
                       checked={pvcData.accessModes.singleNodeReadWrite}
@@ -798,65 +790,49 @@ export function PersistentVolumeClaimDetailPage() {
                   Labels & Annotations
                 </h3>
                 {/* Labels Section */}
-                <VStack gap={4} align="start" className="w-full">
+                <VStack gap={2} align="start" className="w-full">
                   <h4 className="text-label-lg text-[var(--color-text-default)]">Labels</h4>
-                  <VStack gap={2} align="start" className="w-full">
-                    {labelsCount > 0 ? (
-                      Object.entries(pvcData.labels).map(([key, val]) => (
-                        <div key={key} className="flex gap-2 w-full">
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Key
-                            </label>
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                              {key}
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Value
-                            </label>
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                              {val}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-body-md text-[var(--color-text-subtle)]">No labels</p>
-                    )}
-                  </VStack>
+                  {labelsCount > 0 ? (
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <VStack gap={2}>
+                        {Object.entries(pvcData.labels).map(([key, val]) => (
+                          <HStack key={key} gap={2} className="w-full">
+                            <FormField label="Key" disabled className="flex-1">
+                              <Input value={key} onChange={() => {}} fullWidth />
+                            </FormField>
+                            <FormField label="Value" disabled className="flex-1">
+                              <Input value={val} onChange={() => {}} fullWidth />
+                            </FormField>
+                          </HStack>
+                        ))}
+                      </VStack>
+                    </div>
+                  ) : (
+                    <p className="text-body-md text-[var(--color-text-subtle)]">No labels</p>
+                  )}
                 </VStack>
 
                 {/* Annotations Section */}
-                <VStack gap={4} align="start" className="w-full">
+                <VStack gap={2} align="start" className="w-full">
                   <h4 className="text-label-lg text-[var(--color-text-default)]">Annotations</h4>
-                  <VStack gap={2} align="start" className="w-full">
-                    {annotationsCount > 0 ? (
-                      Object.entries(pvcData.annotations).map(([key, val]) => (
-                        <div key={key} className="flex gap-2 w-full">
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Key
-                            </label>
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                              {key}
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Value
-                            </label>
-                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                              {val}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-body-md text-[var(--color-text-subtle)]">No annotations</p>
-                    )}
-                  </VStack>
+                  {annotationsCount > 0 ? (
+                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
+                      <VStack gap={2}>
+                        {Object.entries(pvcData.annotations).map(([key, val]) => (
+                          <HStack key={key} gap={2} className="w-full">
+                            <FormField label="Key" disabled className="flex-1">
+                              <Input value={key} onChange={() => {}} fullWidth />
+                            </FormField>
+                            <FormField label="Value" disabled className="flex-1">
+                              <Input value={val} onChange={() => {}} fullWidth />
+                            </FormField>
+                          </HStack>
+                        ))}
+                      </VStack>
+                    </div>
+                  ) : (
+                    <p className="text-body-md text-[var(--color-text-subtle)]">No annotations</p>
+                  )}
                 </VStack>
               </VStack>
             </div>
@@ -877,13 +853,22 @@ export function PersistentVolumeClaimDetailPage() {
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
                 <HStack gap={1}>
-                  <Button variant="muted" size="sm" disabled={selectedEventKeys.length === 0}>
-                    <IconDownload size={14} stroke={1.5} />
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconDownload size={12} stroke={1.5} />}
+                    disabled={selectedEventKeys.length === 0}
+                  >
                     Download YAML
                   </Button>
-                  <Button variant="muted" size="sm" disabled={selectedEventKeys.length === 0}>
-                    <IconTrash size={14} stroke={1.5} />
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} stroke={1.5} />}
+                    disabled={selectedEventKeys.length === 0}
+                  >
                     Delete
                   </Button>
                 </HStack>
@@ -906,62 +891,54 @@ export function PersistentVolumeClaimDetailPage() {
                       key: 'lastSeen',
                       label: 'Last seen',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.lastSeen,
+                      width: '90px',
                     },
                     {
                       key: 'type',
                       label: 'Type',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.type,
+                      width: '80px',
                     },
                     {
                       key: 'reason',
                       label: 'Reason',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.reason,
+                      width: '120px',
                     },
                     {
                       key: 'subobject',
                       label: 'Subobject',
-                      flex: 1,
-                      minWidth: columnMinWidths.subobject,
+                      width: '100px',
                     },
                     {
                       key: 'source',
                       label: 'Source',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.source,
+                      width: '120px',
                     },
                     {
                       key: 'message',
                       label: 'Message',
                       sortable: true,
-                      flex: 1,
+                      width: '350px',
                     },
                     {
                       key: 'firstSeen',
                       label: 'First seen',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.firstSeen,
+                      width: '90px',
                     },
                     {
                       key: 'count',
                       label: 'Count',
                       sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.count,
+                      width: '60px',
                     },
                     {
                       key: 'name',
                       label: 'Name',
                       sortable: true,
                       flex: 1,
-                      minWidth: columnMinWidths.name,
                       render: (value: string) => (
                         <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
                           {value}
