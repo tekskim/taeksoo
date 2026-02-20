@@ -116,10 +116,10 @@ export default function CreateNetworkPage() {
   const [cidrError, setCidrError] = useState<string | null>(null);
 
   // Form state - Subnet
-  const [createSubnet, setCreateSubnet] = useState(true); // true = Yes
+  const [createSubnet, setCreateSubnet] = useState(isV2 ? true : false); // true = Yes
   const [subnetName, setSubnetName] = useState('');
   const [cidr, setCidr] = useState('');
-  const [gateway, setGateway] = useState(true); // true = On
+  const [gateway, setGateway] = useState(isV2 ? true : false); // true = On
   const [gatewayIp, setGatewayIp] = useState('');
   const [dhcp, setDhcp] = useState(true); // true = On
   const [allocationPools, setAllocationPools] = useState('');
@@ -456,7 +456,7 @@ export default function CreateNetworkPage() {
                       />
                     </VStack>
 
-                    {createSubnet && (
+                    {(isV2 || createSubnet) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Subnet name (optional) */}
@@ -509,7 +509,7 @@ export default function CreateNetworkPage() {
                             onChange={(e) => setGateway(e.target.checked)}
                             label={gateway ? 'On' : 'Off'}
                           />
-                          {gateway && (
+                          {(isV2 || gateway) && (
                             <FormField>
                               <FormField.Control>
                                 <Input

@@ -133,7 +133,7 @@ export function ComputeAdminCreateFlavorPage() {
   // Basic info form state
   const [flavorName, setFlavorName] = useState('');
   const [category, setCategory] = useState<'cpu' | 'gpu' | 'npu' | 'bare-metal'>('cpu');
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPublic, setIsPublic] = useState(!isV2);
 
   // Tenant selection state (when isPublic is false)
   const [tenantSearch, setTenantSearch] = useState('');
@@ -466,7 +466,7 @@ export function ComputeAdminCreateFlavorPage() {
                     </VStack>
 
                     {/* Tenant section - shown when Public is Off */}
-                    {!isPublic && (
+                    {(isV2 || !isPublic) && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

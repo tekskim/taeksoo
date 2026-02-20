@@ -930,11 +930,12 @@ function ImageSection({
   onEditCancel,
   onEditDone,
 }: ImageSectionProps) {
+  const isV2 = useIsV2();
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [createSystemDisk, setCreateSystemDisk] = useState(true);
+  const [createSystemDisk, setCreateSystemDisk] = useState(isV2 ? true : false);
   const [storageType, setStorageType] = useState('_DEFAULT_');
   const [storageSize, setStorageSize] = useState(30);
   const [deleteWithInstance, setDeleteWithInstance] = useState(true);
@@ -1281,7 +1282,7 @@ function ImageSection({
 
             <VStack gap={2}>
               {/* Table - Dynamic based on tab */}
-              {sourceTab === 'image' && (
+              {(isV2 || sourceTab === 'image') && (
                 <Table
                   columns={imageColumns}
                   data={paginatedImages}
@@ -1289,7 +1290,7 @@ function ImageSection({
                   onRowClick={(row) => onSelectImage(row.id)}
                 />
               )}
-              {sourceTab === 'snapshot' && (
+              {(isV2 || sourceTab === 'snapshot') && (
                 <Table
                   columns={snapshotColumns}
                   data={filteredSnapshots.slice(
@@ -1346,7 +1347,7 @@ function ImageSection({
             />
 
             {/* Storage Type & Size Row */}
-            {createSystemDisk && (
+            {(isV2 || createSystemDisk) && (
               <HStack gap={4} align="end" className="flex-wrap">
                 <VStack gap={2}>
                   <label className="text-label-md text-[var(--color-text-default)]">Type</label>
@@ -2448,7 +2449,7 @@ function NetworkSection({
             </VStack>
 
             {/* Conditional Table for Auto-assign IP */}
-            {floatingIpOption === 'auto' && (
+            {(isV2 || floatingIpOption === 'auto') && (
               <VStack gap={3} className="mt-2">
                 <SearchInput
                   placeholder="Search network by attributes"
@@ -2475,7 +2476,7 @@ function NetworkSection({
             )}
 
             {/* Conditional Table for Use existing IP */}
-            {floatingIpOption === 'existing' && (
+            {(isV2 || floatingIpOption === 'existing') && (
               <VStack gap={3} className="mt-2">
                 <HStack justify="between" align="center" className="w-full">
                   <SearchInput
@@ -2735,6 +2736,7 @@ function AuthenticationSection({
   onEditCancel,
   onEditDone,
 }: AuthenticationSectionProps) {
+  const isV2 = useIsV2();
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');
   const [selectedKeyPairId, setSelectedKeyPairId] = useState<string | null>(null);
   const [keyPairSearch, setKeyPairSearch] = useState('');

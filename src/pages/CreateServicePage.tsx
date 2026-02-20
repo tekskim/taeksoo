@@ -264,7 +264,7 @@ export function CreateServicePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
-  const [serviceType, setServiceType] = useState('ClusterIP');
+  const [serviceType, setServiceType] = useState(isV2 ? 'NodePort' : 'ClusterIP');
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -285,7 +285,9 @@ export function CreateServicePage() {
   const [selectors, setSelectors] = useState<Selector[]>(isV2 ? [{ key: '', value: '' }] : []);
 
   // Session Affinity state
-  const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>('None');
+  const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>(
+    isV2 ? 'ClientIP' : 'None'
+  );
   const [sessionAffinityTimeout, setSessionAffinityTimeout] = useState(10800);
 
   // Labels & Annotations state
@@ -784,12 +786,14 @@ export function CreateServicePage() {
                       <VStack gap={2}>
                         {externalIPs.map((ip) => (
                           <div key={ip.id} className="flex gap-2 items-center">
-                            <Input
-                              placeholder="e.g. 1.1.1.1"
-                              value={ip.value}
-                              onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                              width="lg"
-                            />
+                            <div className="w-[calc(50%-12px)]">
+                              <Input
+                                placeholder="e.g. 1.1.1.1"
+                                value={ip.value}
+                                onChange={(e) => updateExternalIP(ip.id, e.target.value)}
+                                fullWidth
+                              />
+                            </div>
                             <button
                               onClick={() => removeExternalIP(ip.id)}
                               className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -956,7 +960,7 @@ export function CreateServicePage() {
                     </RadioGroup>
                   </VStack>
 
-                  {sessionAffinity === 'ClientIP' && (
+                  {(isV2 || sessionAffinity === 'ClientIP') && (
                     <VStack gap={3}>
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Session Sticky Time
