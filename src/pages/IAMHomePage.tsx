@@ -124,7 +124,7 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff',
+          color: '#0f172a',
           fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         },
         emphasis: {
@@ -330,7 +330,7 @@ export function IAMHomePage() {
                     { name: 'Success', value: 1234, color: '#4ade80' },
                     { name: 'Failure', value: 45, color: '#f87171' },
                   ]}
-                  size={100}
+                  size={120}
                 />
               </div>
 
@@ -358,7 +358,7 @@ export function IAMHomePage() {
                     { name: 'Enabled', value: 117, color: '#4ade80' },
                     { name: 'Disabled', value: 33, color: '#e2e8f0' },
                   ]}
-                  size={100}
+                  size={120}
                 />
               </div>
             </div>
