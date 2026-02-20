@@ -1205,124 +1205,381 @@ function ImageSection({
               or an existing volume.
             </span>
 
-            {/* Source Tabs */}
-            <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance snapshot</Tab>
-                <Tab value="volume">Bootable volume</Tab>
-              </TabList>
-            </Tabs>
+            {isV2 ? (
+              <VStack gap={6}>
+                {/* Image block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search image by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalImagePages}
+                      totalItems={filteredImages.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={imageColumns}
+                      data={paginatedImages}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
 
-            {/* OS Filter Chips - Only show for Image tab */}
-            {sourceTab === 'image' && (
-              <Tabs
-                variant="boxed"
-                size="sm"
-                value={osFilter}
-                onChange={(value) => {
-                  setOsFilter(value as typeof osFilter);
-                  setCurrentPage(1);
-                }}
-              >
-                <TabList className="mt-2">
-                  <Tab value="other">
-                    <HStack gap={1} align="center">
-                      <IconDots size={14} />
-                      <span>Others</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="ubuntu">
-                    <HStack gap={1} align="center">
-                      <IconUbuntu size={14} />
-                      <span>Ubuntu</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="windows">
-                    <HStack gap={1} align="center">
-                      <IconGrid size={14} />
-                      <span>Windows</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="rocky">
-                    <HStack gap={1} align="center">
-                      <IconRocky size={14} />
-                      <span>Rocky</span>
-                    </HStack>
-                  </Tab>
-                </TabList>
-              </Tabs>
+                {/* Instance snapshot block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search snapshot by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
+                      totalItems={filteredSnapshots.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={snapshotColumns}
+                      data={filteredSnapshots.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
+
+                {/* Bootable volume block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search volume by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredVolumes.length / itemsPerPage) || 1}
+                      totalItems={filteredVolumes.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={volumeColumns}
+                      data={filteredVolumes.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
+              </VStack>
+            ) : (
+              <>
+                {/* Source Tabs */}
+                <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="image">Image</Tab>
+                    <Tab value="snapshot">Instance snapshot</Tab>
+                    <Tab value="volume">Bootable volume</Tab>
+                  </TabList>
+                </Tabs>
+
+                {/* OS Filter Chips - Only show for Image tab */}
+                {sourceTab === 'image' && (
+                  <Tabs
+                    variant="boxed"
+                    size="sm"
+                    value={osFilter}
+                    onChange={(value) => {
+                      setOsFilter(value as typeof osFilter);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <TabList className="mt-2">
+                      <Tab value="other">
+                        <HStack gap={1} align="center">
+                          <IconDots size={14} />
+                          <span>Others</span>
+                        </HStack>
+                      </Tab>
+                      <Tab value="ubuntu">
+                        <HStack gap={1} align="center">
+                          <IconUbuntu size={14} />
+                          <span>Ubuntu</span>
+                        </HStack>
+                      </Tab>
+                      <Tab value="windows">
+                        <HStack gap={1} align="center">
+                          <IconGrid size={14} />
+                          <span>Windows</span>
+                        </HStack>
+                      </Tab>
+                      <Tab value="rocky">
+                        <HStack gap={1} align="center">
+                          <IconRocky size={14} />
+                          <span>Rocky</span>
+                        </HStack>
+                      </Tab>
+                    </TabList>
+                  </Tabs>
+                )}
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search image by attributes"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)] mt-2"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={
+                    sourceTab === 'image'
+                      ? totalImagePages
+                      : Math.ceil(filteredSnapshots.length / itemsPerPage) || 1
+                  }
+                  totalItems={
+                    sourceTab === 'image' ? filteredImages.length : filteredSnapshots.length
+                  }
+                  onPageChange={setCurrentPage}
+                  selectedCount={selectedImageId ? 1 : 0}
+                />
+
+                <VStack gap={2}>
+                  {/* Table - Dynamic based on tab */}
+                  {sourceTab === 'image' && (
+                    <Table
+                      columns={imageColumns}
+                      data={paginatedImages}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                  )}
+                  {sourceTab === 'snapshot' && (
+                    <Table
+                      columns={snapshotColumns}
+                      data={filteredSnapshots.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                  )}
+                  {sourceTab === 'volume' && (
+                    <Table
+                      columns={volumeColumns}
+                      data={filteredVolumes.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => onSelectImage(row.id)}
+                    />
+                  )}
+
+                  {/* Selected / Error Message */}
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                    }
+                    onRemove={() => onSelectImage('')}
+                    error={!!sourceError}
+                    errorMessage={sourceError}
+                  />
+                </VStack>
+              </>
             )}
-
-            {/* Search */}
-            <SearchInput
-              placeholder="Search image by attributes"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onClear={() => {
-                setSearchQuery('');
-                setCurrentPage(1);
-              }}
-              size="sm"
-              className="w-[var(--search-input-width)] mt-2"
-            />
-
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={
-                sourceTab === 'image'
-                  ? totalImagePages
-                  : Math.ceil(filteredSnapshots.length / itemsPerPage) || 1
-              }
-              totalItems={sourceTab === 'image' ? filteredImages.length : filteredSnapshots.length}
-              onPageChange={setCurrentPage}
-              selectedCount={selectedImageId ? 1 : 0}
-            />
-
-            <VStack gap={2}>
-              {/* Table - Dynamic based on tab */}
-              {(isV2 || sourceTab === 'image') && (
-                <Table
-                  columns={imageColumns}
-                  data={paginatedImages}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-              {(isV2 || sourceTab === 'snapshot') && (
-                <Table
-                  columns={snapshotColumns}
-                  data={filteredSnapshots.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-              {sourceTab === 'volume' && (
-                <Table
-                  columns={volumeColumns}
-                  data={filteredVolumes.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-
-              {/* Selected / Error Message */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                }
-                onRemove={() => onSelectImage('')}
-                error={!!sourceError}
-                errorMessage={sourceError}
-              />
-            </VStack>
           </VStack>
 
           {/* Divider */}
@@ -2466,12 +2723,29 @@ function NetworkSection({
                   onPageChange={setFipPage}
                   selectedCount={selectedFloatingPool ? 1 : 0}
                 />
-                <Table
-                  columns={floatingPoolColumns}
-                  data={filteredFloatingPools}
-                  rowKey="id"
-                  onRowClick={(row) => setSelectedFloatingPool(row.id)}
-                />
+                <VStack gap={2}>
+                  <Table
+                    columns={floatingPoolColumns}
+                    data={filteredFloatingPools}
+                    rowKey="id"
+                    onRowClick={(row) => setSelectedFloatingPool(row.id)}
+                  />
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedFloatingPool
+                        ? [
+                            {
+                              id: selectedFloatingPool,
+                              label:
+                                mockFloatingIPPools.find((p) => p.id === selectedFloatingPool)
+                                  ?.name || selectedFloatingPool,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => setSelectedFloatingPool(null)}
+                  />
+                </VStack>
               </VStack>
             )}
 
@@ -2511,20 +2785,32 @@ function NetworkSection({
                   onPageChange={setFipPage}
                   selectedCount={selectedExistingFip.size}
                 />
-                <Table
-                  columns={existingFipColumns}
-                  data={filteredExistingFips}
-                  rowKey="id"
-                  onRowClick={(row) => {
-                    const newSet = new Set(selectedExistingFip);
-                    if (newSet.has(row.id)) {
-                      newSet.delete(row.id);
-                    } else {
-                      newSet.add(row.id);
-                    }
-                    setSelectedExistingFip(newSet);
-                  }}
-                />
+                <VStack gap={2}>
+                  <Table
+                    columns={existingFipColumns}
+                    data={filteredExistingFips}
+                    rowKey="id"
+                    onRowClick={(row) => {
+                      const newSet = new Set(selectedExistingFip);
+                      if (newSet.has(row.id)) {
+                        newSet.delete(row.id);
+                      } else {
+                        newSet.add(row.id);
+                      }
+                      setSelectedExistingFip(newSet);
+                    }}
+                  />
+                  <SelectionIndicator
+                    selectedItems={mockExistingFloatingIPs
+                      .filter((f) => selectedExistingFip.has(f.id))
+                      .map((f) => ({ id: f.id, label: `${f.ipAddress} (${f.description})` }))}
+                    onRemove={(id) => {
+                      const newSet = new Set(selectedExistingFip);
+                      newSet.delete(id);
+                      setSelectedExistingFip(newSet);
+                    }}
+                  />
+                </VStack>
               </VStack>
             )}
           </VStack>
@@ -2847,45 +3133,38 @@ function AuthenticationSection({
           <VStack gap={4} className="py-6">
             <span className="text-label-lg">Login type</span>
 
-            {/* Login type Tabs */}
-            <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
-              <TabList>
-                <Tab value="keypair">Key pair</Tab>
-                <Tab value="password">Password</Tab>
-              </TabList>
-
-              {/* Key pair Tab Content */}
-              <TabPanel value="keypair" className="pt-4">
-                <VStack gap={3}>
-                  {/* Search */}
-                  <SearchInput
-                    placeholder="Search key pair by attributes"
-                    value={keyPairSearch}
-                    onChange={(e) => setKeyPairSearch(e.target.value)}
-                    onClear={() => setKeyPairSearch('')}
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={keyPairPage}
-                    totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
-                    totalItems={filteredKeyPairs.length}
-                    onPageChange={setKeyPairPage}
-                    selectedCount={selectedKeyPairId ? 1 : 0}
-                  />
-
-                  {/* Key pair Table */}
-                  <VStack gap={2}>
+            {isV2 ? (
+              <VStack gap={6}>
+                {/* Key pair block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={4}>
+                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="keypair">Key pair</Tab>
+                        <Tab value="password">Password</Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search key pair by attributes"
+                      value={keyPairSearch}
+                      onChange={(e) => setKeyPairSearch(e.target.value)}
+                      onClear={() => setKeyPairSearch('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Pagination
+                      currentPage={keyPairPage}
+                      totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
+                      totalItems={filteredKeyPairs.length}
+                      onPageChange={setKeyPairPage}
+                      selectedCount={selectedKeyPairId ? 1 : 0}
+                    />
                     <Table
                       columns={keyPairColumns}
                       data={filteredKeyPairs}
                       rowKey="id"
                       onRowClick={(row) => handleSelectKeyPair(row.id)}
                     />
-
-                    {/* Selection Indicator for Key Pair */}
                     <SelectionIndicator
                       selectedItems={
                         selectedKeyPairId
@@ -2902,87 +3181,50 @@ function AuthenticationSection({
                       onRemove={() => setSelectedKeyPairId(null)}
                     />
                   </VStack>
-                </VStack>
-              </TabPanel>
+                </div>
 
-              {/* Password Tab Content */}
-              <TabPanel value="password" className="pt-4">
-                <VStack gap={4}>
-                  <div>
-                    <label className="block text-label-lg mb-2">Login Name</label>
-                    <Input
-                      value={loginName}
-                      onChange={(e) => {
-                        setLoginName(e.target.value);
-                        setAuthError(null);
-                      }}
-                      placeholder="Input login name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-label-lg mb-2">Password</label>
-                    <div className="relative">
+                {/* Password block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={4}>
+                    <Tabs value="password" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="keypair">Key pair</Tab>
+                        <Tab value="password">Password</Tab>
+                      </TabList>
+                    </Tabs>
+                    <div>
+                      <label className="block text-label-lg mb-2">Login Name</label>
                       <Input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
+                        value={loginName}
                         onChange={(e) => {
-                          setPassword(e.target.value);
+                          setLoginName(e.target.value);
                           setAuthError(null);
                         }}
-                        placeholder="Input password"
+                        placeholder="Input login name"
+                        fullWidth
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                      >
-                        {showPassword ? (
-                          <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                            <line x1="1" y1="1" x2="23" y2="23" />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                        )}
-                      </button>
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-label-lg mb-2">Confirm Password</label>
-                    <VStack gap={2}>
+                    <div>
+                      <label className="block text-label-lg mb-2">Password</label>
                       <div className="relative">
                         <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
                           onChange={(e) => {
-                            setConfirmPassword(e.target.value);
+                            setPassword(e.target.value);
                             setAuthError(null);
                           }}
                           placeholder="Input password"
+                          fullWidth
                         />
                         <button
                           type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                         >
-                          {showConfirmPassword ? (
+                          {showPassword ? (
                             <svg
-                              className="w-4 h-4"
+                              className="w-3.5 h-3.5"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -2993,7 +3235,7 @@ function AuthenticationSection({
                             </svg>
                           ) : (
                             <svg
-                              className="w-4 h-4"
+                              className="w-3.5 h-3.5"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -3005,16 +3247,223 @@ function AuthenticationSection({
                           )}
                         </button>
                       </div>
-                      {authError && loginType === 'password' && (
-                        <span className="text-body-sm text-[var(--color-state-danger)]">
-                          {authError}
-                        </span>
-                      )}
+                    </div>
+                    <div>
+                      <label className="block text-label-lg mb-2">Confirm Password</label>
+                      <VStack gap={2}>
+                        <div className="relative">
+                          <Input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            value={confirmPassword}
+                            onChange={(e) => {
+                              setConfirmPassword(e.target.value);
+                              setAuthError(null);
+                            }}
+                            placeholder="Input password"
+                            fullWidth
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                          >
+                            {showConfirmPassword ? (
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
+                              </svg>
+                            ) : (
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                        {authError && (
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                            {authError}
+                          </span>
+                        )}
+                      </VStack>
+                    </div>
+                  </VStack>
+                </div>
+              </VStack>
+            ) : (
+              <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
+                <TabList>
+                  <Tab value="keypair">Key pair</Tab>
+                  <Tab value="password">Password</Tab>
+                </TabList>
+
+                {/* Key pair Tab Content */}
+                <TabPanel value="keypair" className="pt-4">
+                  <VStack gap={3}>
+                    <SearchInput
+                      placeholder="Search key pair by attributes"
+                      value={keyPairSearch}
+                      onChange={(e) => setKeyPairSearch(e.target.value)}
+                      onClear={() => setKeyPairSearch('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Pagination
+                      currentPage={keyPairPage}
+                      totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
+                      totalItems={filteredKeyPairs.length}
+                      onPageChange={setKeyPairPage}
+                      selectedCount={selectedKeyPairId ? 1 : 0}
+                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={keyPairColumns}
+                        data={filteredKeyPairs}
+                        rowKey="id"
+                        onRowClick={(row) => handleSelectKeyPair(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedKeyPairId
+                            ? [
+                                {
+                                  id: selectedKeyPairId,
+                                  label:
+                                    mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                    selectedKeyPairId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => setSelectedKeyPairId(null)}
+                      />
                     </VStack>
-                  </div>
-                </VStack>
-              </TabPanel>
-            </Tabs>
+                  </VStack>
+                </TabPanel>
+
+                {/* Password Tab Content */}
+                <TabPanel value="password" className="pt-4">
+                  <VStack gap={4}>
+                    <div>
+                      <label className="block text-label-lg mb-2">Login Name</label>
+                      <Input
+                        value={loginName}
+                        onChange={(e) => {
+                          setLoginName(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Input login name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-label-lg mb-2">Password</label>
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        >
+                          {showPassword ? (
+                            <svg
+                              className="w-3.5 h-3.5"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                              <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-3.5 h-3.5"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-label-lg mb-2">Confirm Password</label>
+                      <VStack gap={2}>
+                        <div className="relative">
+                          <Input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            value={confirmPassword}
+                            onChange={(e) => {
+                              setConfirmPassword(e.target.value);
+                              setAuthError(null);
+                            }}
+                            placeholder="Input password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                          >
+                            {showConfirmPassword ? (
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
+                              </svg>
+                            ) : (
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                        {authError && loginType === 'password' && (
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                            {authError}
+                          </span>
+                        )}
+                      </VStack>
+                    </div>
+                  </VStack>
+                </TabPanel>
+              </Tabs>
+            )}
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
