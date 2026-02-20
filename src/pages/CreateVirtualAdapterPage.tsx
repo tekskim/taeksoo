@@ -744,96 +744,87 @@ export default function CreateVirtualAdapterPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Fixed IP Section */}
                     <div className="py-6">
-                      <VStack gap={3} align="stretch">
-                        <FormField>
-                          <FormField.Label>Fixed IP</FormField.Label>
-                          <FormField.Description>
+                      <VStack gap={3}>
+                        <VStack gap={1.5}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Fixed IP
+                          </span>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             Select a subnet and choose whether to auto-allocate fixed IP or enter
                             one manually.
-                          </FormField.Description>
-                        </FormField>
+                          </p>
+                        </VStack>
 
-                        {/* Fixed IP Entries */}
-                        {fixedIPs.length > 0 && (
-                          <VStack gap={2} align="stretch">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
                             {fixedIPs.map((entry) => (
                               <div
                                 key={entry.id}
-                                className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                                className="grid grid-cols-[auto_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
-                                <div className="flex items-center gap-2">
-                                  {/* Subnet Label + Dropdown */}
-                                  <FormField>
-                                    <FormField.Label>Subnet</FormField.Label>
-                                    <FormField.Control>
-                                      <Select
-                                        value={entry.subnet}
-                                        onChange={(value) =>
-                                          updateFixedIP(entry.id, { subnet: value })
-                                        }
-                                        options={[{ value: entry.subnet, label: entry.subnet }]}
-                                        placeholder="Select"
-                                        style={{ width: '120px' }}
-                                      />
-                                    </FormField.Control>
-                                  </FormField>
-
-                                  {/* IP Allocation Dropdown */}
-                                  <Select
-                                    value={entry.ipMode}
-                                    onChange={(value) =>
-                                      updateFixedIP(entry.id, {
-                                        ipMode: value as 'auto' | 'manual',
-                                      })
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Subnet
+                                </span>
+                                <Select
+                                  value={entry.subnet}
+                                  onChange={(value) => updateFixedIP(entry.id, { subnet: value })}
+                                  options={[{ value: entry.subnet, label: entry.subnet }]}
+                                  placeholder="Select"
+                                  fullWidth
+                                />
+                                <Select
+                                  value={entry.ipMode}
+                                  onChange={(value) =>
+                                    updateFixedIP(entry.id, {
+                                      ipMode: value as 'auto' | 'manual',
+                                    })
+                                  }
+                                  options={[
+                                    { value: 'auto', label: 'Auto-allocate' },
+                                    { value: 'manual', label: 'Manual' },
+                                  ]}
+                                  disabled
+                                  fullWidth
+                                />
+                                {entry.ipMode === 'auto' ? (
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    192.168.1.100 - 192.168.1.200
+                                  </span>
+                                ) : (
+                                  <Input
+                                    placeholder="Enter IP address"
+                                    value={entry.ipAddress}
+                                    onChange={(e) =>
+                                      updateFixedIP(entry.id, { ipAddress: e.target.value })
                                     }
-                                    options={[
-                                      { value: 'auto', label: 'Auto-allocate' },
-                                      { value: 'manual', label: 'Manual' },
-                                    ]}
-                                    className="w-[var(--layout-sidebar-width)]"
+                                    fullWidth
                                   />
-
-                                  {/* IP Range Info or Manual Input */}
-                                  {(isV2 || entry.ipMode === 'auto') && (
-                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                      192.168.1.100 - 192.168.1.200
-                                    </span>
-                                  )}
-                                  {(isV2 || entry.ipMode === 'manual') && (
-                                    <Input
-                                      placeholder="Enter IP address"
-                                      value={entry.ipAddress}
-                                      onChange={(e) =>
-                                        updateFixedIP(entry.id, { ipAddress: e.target.value })
-                                      }
-                                      style={{ width: '180px' }}
-                                    />
-                                  )}
-                                </div>
-
-                                {/* Close Button */}
+                                )}
                                 <button
-                                  type="button"
                                   onClick={() => removeFixedIP(entry.id)}
-                                  className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
-                                  <IconX size={16} />
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
                                 </button>
                               </div>
                             ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                disabled={!selectedNetwork}
+                                onClick={addFixedIP}
+                              >
+                                Add fixed IP
+                              </Button>
+                            </div>
                           </VStack>
-                        )}
-
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                          disabled={!selectedNetwork}
-                          onClick={addFixedIP}
-                          className="w-fit"
-                        >
-                          Add fixed IP
-                        </Button>
+                        </div>
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

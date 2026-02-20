@@ -11,6 +11,7 @@ import {
   TopBar,
   TopBarAction,
   Input,
+  NumberInput,
   Select,
   SectionCard,
   Radio,
@@ -428,7 +429,7 @@ function SettingsSection({
             <FormField>
               <FormField.Label>Object Locking</FormField.Label>
               <FormField.Control>
-                <HStack gap={6}>
+                <VStack gap={2}>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <Radio
                       value="disabled"
@@ -445,12 +446,13 @@ function SettingsSection({
                     />
                     <span className="text-body-md text-[var(--color-text-default)]">Enabled</span>
                   </label>
-                </HStack>
+                </VStack>
               </FormField.Control>
               <FormField.HelperText>
                 Store objects using a write-once-read-many (WORM) model to prevent objects from
-                being deleted or overwritten for a fixed amount of time or indefinitely. Object
-                Locking works only in versioned buckets.
+                being deleted or overwritten for a fixed amount of time or indefinitely.
+                <br />
+                Object Locking works only in versioned buckets.
               </FormField.HelperText>
             </FormField>
 
@@ -469,7 +471,7 @@ function SettingsSection({
                       ]}
                       value={lockingMode}
                       onChange={onLockingModeChange}
-                      fullWidth
+                      width="half"
                     />
                   </FormField.Control>
                   <FormField.HelperText>
@@ -483,11 +485,11 @@ function SettingsSection({
                 <FormField>
                   <FormField.Label>Days</FormField.Label>
                   <FormField.Control>
-                    <Input
-                      placeholder="-"
-                      value={retentionDays}
-                      onChange={(e) => onRetentionDaysChange(e.target.value)}
-                      fullWidth
+                    <NumberInput
+                      value={retentionDays ? Number(retentionDays) : 0}
+                      onChange={(val) => onRetentionDaysChange(String(val))}
+                      min={0}
+                      width="sm"
                     />
                   </FormField.Control>
                   <FormField.HelperText>
@@ -504,60 +506,60 @@ function SettingsSection({
 
           {/* Tags */}
           <div className="py-6">
-            <FormField>
-              <FormField.Label>Tags</FormField.Label>
-              <FormField.Control>
+            <VStack gap={3}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
+
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
-                  <VStack gap={2} align="stretch">
-                    {tags.map((tag) => (
-                      <div
-                        key={tag.id}
-                        className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]"
-                      >
-                        <HStack gap={1.5} align="center">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Key <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <Input
-                            value={tag.key}
-                            onChange={(e) => onUpdateTag(tag.id, 'key', e.target.value)}
-                            style={{ width: '240px' }}
-                          />
-                        </HStack>
-                        <HStack gap={1.5} align="center">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Value <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <Input
-                            value={tag.value}
-                            onChange={(e) => onUpdateTag(tag.id, 'value', e.target.value)}
-                            style={{ width: '240px' }}
-                          />
-                        </HStack>
-                        <div className="flex-1" />
-                        <button
-                          type="button"
-                          onClick={() => onRemoveTag(tag.id)}
-                          className="w-[25px] h-[25px] flex items-center justify-center rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
-                        >
-                          <IconX size={14} stroke={1.5} />
-                        </button>
-                      </div>
-                    ))}
-                  </VStack>
-                  <div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} />}
-                      onClick={onAddTag}
+                  {tags.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {tags.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      Add Tags
-                    </Button>
-                  </div>
+                      <Input
+                        placeholder="tag key"
+                        value={tag.key}
+                        onChange={(e) => onUpdateTag(tag.id, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="tag value"
+                        value={tag.value}
+                        onChange={(e) => onUpdateTag(tag.id, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveTag(tag.id)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddTag}
+                    className="self-start"
+                  >
+                    Add Tags
+                  </Button>
                 </VStack>
-              </FormField.Control>
-            </FormField>
+              </div>
+            </VStack>
           </div>
 
           {/* Divider */}
@@ -576,7 +578,7 @@ function SettingsSection({
                   ]}
                   value={placementTarget}
                   onChange={onPlacementTargetChange}
-                  fullWidth
+                  width="half"
                 />
               </FormField.Control>
               <FormField.HelperText>
@@ -700,12 +702,26 @@ function PolicySection({
 
           {/* ACL */}
           <div className="py-6">
-            <FormField>
-              <FormField.Label>ACL</FormField.Label>
-              <FormField.Control>
-                <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Grantee</span>
+            <VStack gap={3}>
+              <VStack gap={2}>
+                <span className="text-label-lg text-[var(--color-text-default)]">ACL</span>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  Any changes to the ACL will overwrite previous one. You can choose any of the
+                  available options to modify the specified user group.
+                </span>
+              </VStack>
+
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Grantee
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Permissions
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
                     <Select
                       options={[
                         { value: 'owner', label: 'Owner' },
@@ -714,13 +730,8 @@ function PolicySection({
                       ]}
                       value={grantee}
                       onChange={onGranteeChange}
-                      style={{ width: '276px' }}
+                      fullWidth
                     />
-                  </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Permissions
-                    </span>
                     <Select
                       options={
                         grantee === 'owner'
@@ -734,16 +745,12 @@ function PolicySection({
                       }
                       value={permissions}
                       onChange={onPermissionsChange}
-                      style={{ width: '140px' }}
+                      fullWidth
                     />
-                  </HStack>
-                </div>
-              </FormField.Control>
-              <FormField.HelperText>
-                Any changes to the ACL will overwrite previous one. You can choose any of the
-                available options to modify the specified user group.
-              </FormField.HelperText>
-            </FormField>
+                  </div>
+                </VStack>
+              </div>
+            </VStack>
           </div>
 
           {/* Divider + Next Button (only when not editing or v2) */}
