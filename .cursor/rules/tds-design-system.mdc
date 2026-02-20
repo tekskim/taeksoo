@@ -1051,6 +1051,57 @@ import { IconPlus, IconEdit, IconTrash, IconStar, IconStarFilled } from '@tabler
 <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
 ```
 
+### 인라인 아이콘 정책
+
+폼 컨트롤, 테이블, 메시지 등에서 텍스트 옆에 사용하는 **인라인 아이콘**에 대한 규칙입니다. DS 내부 컴포넌트(InlineMessage, Toast, Badge 등)는 자체 토큰을 따르므로 이 정책 대상에서 제외합니다.
+
+#### 정보 아이콘 (Info Icon)
+
+| 항목 | 값 |
+|---|---|
+| 아이콘 | `IconInfoCircle` |
+| Size | `14` |
+| Stroke | `2` (기본값, 명시 불필요) |
+| Color | `text-[var(--color-text-subtle)]` |
+| Tooltip | **필수** — 반드시 `<Tooltip>`으로 감싸야 함 |
+
+```tsx
+import { IconInfoCircle } from '@tabler/icons-react';
+
+// Label / Radio / Checkbox 옆 정보 아이콘 — Tooltip 필수
+<HStack gap={1.5} align="center">
+  <Radio value="option" label="Option A" />
+  <Tooltip content="Option A에 대한 설명">
+    <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+  </Tooltip>
+</HStack>
+```
+
+#### 경고/에러 아이콘 (Alert Icon)
+
+| 항목 | 값 |
+|---|---|
+| 아이콘 | `IconAlertCircle` |
+| Size | `14` |
+| Stroke | `2` (기본값, 명시 불필요) |
+| Color | `text-[var(--color-state-danger)]` |
+
+```tsx
+import { IconAlertCircle } from '@tabler/icons-react';
+
+// 테이블 행, 인라인 상태 표시
+<IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
+```
+
+#### 인라인 아이콘 금지 패턴
+
+| 금지 | 권장 |
+|---|---|
+| `size={12}` 또는 `size={16}` | `size={14}` |
+| `stroke={1.5}` | 생략 (기본값 `2` 사용) |
+| `text-[var(--color-text-muted)]` | `text-[var(--color-text-subtle)]` |
+| Tooltip 없는 `IconInfoCircle` | 반드시 `<Tooltip>`으로 감쌈 |
+
 ## CSS 변수 사용 예시
 
 ```tsx

@@ -958,8 +958,8 @@ export default function PortDetailPage() {
           {/* Warning Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
-              className="text-[var(--semantic-color-state-danger)] flex-shrink-0 mt-0.5"
+              size={14}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             />
             <span className="text-body-sm text-[var(--color-text-default)] leading-4">
               Detaching this security group may affect network access for the port.

@@ -1409,7 +1409,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1459,7 +1459,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1521,7 +1521,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1620,7 +1620,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1671,7 +1671,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1827,7 +1827,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1971,7 +1971,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2028,7 +2028,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2080,7 +2080,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2136,7 +2136,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2188,7 +2188,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2257,7 +2257,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2416,7 +2416,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2474,7 +2474,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2523,7 +2523,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2572,7 +2572,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2624,7 +2624,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2684,7 +2684,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2733,7 +2733,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2801,7 +2801,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2861,7 +2861,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2913,7 +2913,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2982,7 +2982,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3040,7 +3040,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3082,7 +3082,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3134,7 +3134,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3186,7 +3186,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3278,7 +3278,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3414,7 +3414,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3518,7 +3518,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3658,7 +3658,7 @@ export function ModalsPage() {
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3701,7 +3701,7 @@ export function ModalsPage() {
         {/* Warning Alert Box */}
         <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
           <IconAlertCircle
-            size={16}
+            size={14}
             className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             stroke={1.5}
           />
@@ -3890,7 +3890,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3936,7 +3936,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3982,7 +3982,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4028,7 +4028,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4074,7 +4074,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4120,7 +4120,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4166,7 +4166,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4226,7 +4226,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4286,7 +4286,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4346,7 +4346,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4406,7 +4406,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5237,7 +5237,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5297,7 +5297,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5343,7 +5343,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5392,7 +5392,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5436,7 +5436,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5483,7 +5483,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5529,7 +5529,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5589,7 +5589,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5638,7 +5638,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5695,7 +5695,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5748,7 +5748,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5800,7 +5800,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5846,7 +5846,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5907,7 +5907,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5953,7 +5953,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6013,7 +6013,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6085,7 +6085,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6134,7 +6134,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6180,7 +6180,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6240,7 +6240,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6370,7 +6370,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6430,7 +6430,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6476,7 +6476,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6536,7 +6536,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6580,7 +6580,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6640,7 +6640,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6686,7 +6686,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6746,7 +6746,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6792,7 +6792,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -7011,7 +7011,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -7061,7 +7061,7 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
-              size={16}
+              size={14}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />

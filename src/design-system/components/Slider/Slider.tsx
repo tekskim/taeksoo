@@ -56,7 +56,7 @@ export function Slider({
   const currentValue = isControlled ? controlledValue : internalValue;
 
   // Calculate percentage and thumb offset to keep thumb within track bounds
-  const percentage = ((currentValue - min) / (max - min)) * 100;
+  const percentage = Math.max(0, Math.min(100, ((currentValue - min) / (max - min)) * 100));
   const thumbSize = 16;
   const thumbOffset = (percentage / 100) * thumbSize;
 

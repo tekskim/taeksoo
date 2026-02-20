@@ -383,7 +383,7 @@ const layoutItems = [
 const graphItems = [
   { id: 'chart-overview', label: 'Chart overview', icon: IconChartBar },
   { id: 'status-colors', label: 'Status colors', icon: IconPalette },
-  { id: 'bar-chart', label: 'Bar chart', icon: IconChartBar },
+  { id: 'bar-chart', label: 'Progress Bar', icon: IconChartBar },
   { id: 'area-chart', label: 'Area chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut chart', icon: IconGauge },
@@ -16743,10 +16743,10 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
                 </Section>
 
-                {/* Bar chart */}
+                {/* Progress Bar */}
                 <Section
                   id="bar-chart"
-                  title="Bar chart"
+                  title="Progress Bar"
                   description="Visual indicator for quota usage and progress with status-based colors"
                 >
                   <VStack gap={8}>

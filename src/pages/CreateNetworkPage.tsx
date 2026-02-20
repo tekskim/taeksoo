@@ -109,7 +109,7 @@ export default function CreateNetworkPage() {
   const [description, setDescription] = useState('');
   const [adminState, setAdminState] = useState(true); // true = Up
   const [portSecurity, setPortSecurity] = useState(true); // true = On
-  const [mtu, setMtu] = useState<number | undefined>(undefined);
+  const [mtu, setMtu] = useState<number | undefined>(1500);
 
   // Validation errors
   const [networkNameError, setNetworkNameError] = useState<string | null>(null);
@@ -320,17 +320,15 @@ export default function CreateNetworkPage() {
                             </VStack>
 
                             {/* MTU */}
-                            <VStack gap={2} align="start">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                MTU
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                            <FormField>
+                              <FormField.Label>MTU</FormField.Label>
+                              <FormField.Description>
                                 Specifies the maximum transmission unit (MTU) size for a network
                                 packet. Leave blank to use the system default unless you have a
                                 specific requirement.
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <div>
+                              </FormField.Description>
+                              <FormField.Control>
+                                <HStack gap={2} align="center">
                                   <NumberInput
                                     value={mtu}
                                     onChange={setMtu}
@@ -339,15 +337,13 @@ export default function CreateNetworkPage() {
                                     placeholder=""
                                     width="sm"
                                   />
-                                </div>
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  bytes
-                                </span>
-                              </div>
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                68 - 9000
-                              </span>
-                            </VStack>
+                                  <span className="text-body-md text-[var(--color-text-default)]">
+                                    bytes
+                                  </span>
+                                </HStack>
+                              </FormField.Control>
+                              <FormField.HelperText>68 - 9000</FormField.HelperText>
+                            </FormField>
                           </VStack>
                         </Disclosure.Panel>
                       </Disclosure>
@@ -500,32 +496,34 @@ export default function CreateNetworkPage() {
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Gateway */}
-                        <VStack gap={3} align="start" className="py-6">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Gateway
-                          </span>
-                          <Toggle
-                            checked={gateway}
-                            onChange={(e) => setGateway(e.target.checked)}
-                            label={gateway ? 'On' : 'Off'}
-                          />
-                          {(isV2 || gateway) && (
-                            <FormField>
-                              <FormField.Control>
-                                <Input
-                                  placeholder="e.g. 192.168.0.1"
-                                  value={gatewayIp}
-                                  onChange={(e) => setGatewayIp(e.target.value)}
-                                  fullWidth
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Gateway</FormField.Label>
+                            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                              <VStack gap={3}>
+                                <Toggle
+                                  checked={gateway}
+                                  onChange={(e) => setGateway(e.target.checked)}
+                                  label={gateway ? 'On' : 'Off'}
                                 />
-                              </FormField.Control>
+                                {(isV2 || gateway) && (
+                                  <Input
+                                    placeholder="e.g. 192.168.0.1"
+                                    value={gatewayIp}
+                                    onChange={(e) => setGatewayIp(e.target.value)}
+                                    fullWidth
+                                  />
+                                )}
+                              </VStack>
+                            </FormField.Control>
+                            {(isV2 || gateway) && (
                               <FormField.HelperText>
                                 Gateway must be an IP address within the subnet range, excluding the
                                 network and broadcast addresses.
                               </FormField.HelperText>
-                            </FormField>
-                          )}
-                        </VStack>
+                            )}
+                          </FormField>
+                        </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Advanced (optional) */}
@@ -535,16 +533,16 @@ export default function CreateNetworkPage() {
                             <Disclosure.Panel>
                               <VStack gap={6} align="stretch" className="mt-4">
                                 {/* DHCP */}
-                                <VStack gap={2} align="start">
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    DHCP
-                                  </span>
-                                  <Toggle
-                                    checked={dhcp}
-                                    onChange={(e) => setDhcp(e.target.checked)}
-                                    label={dhcp ? 'On' : 'Off'}
-                                  />
-                                </VStack>
+                                <FormField>
+                                  <FormField.Label>DHCP</FormField.Label>
+                                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                                    <Toggle
+                                      checked={dhcp}
+                                      onChange={(e) => setDhcp(e.target.checked)}
+                                      label={dhcp ? 'On' : 'Off'}
+                                    />
+                                  </FormField.Control>
+                                </FormField>
 
                                 {/* Allocation pools */}
                                 <FormField>

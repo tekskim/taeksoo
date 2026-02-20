@@ -180,11 +180,7 @@ export default function IAMMFAPoliciesPage() {
                           label="Voluntary"
                         />
                         <Tooltip content="Users can choose whether to enable MFA for their accounts.">
-                          <IconInfoCircle
-                            size={16}
-                            stroke={1.5}
-                            className="text-[var(--color-text-subtle)]"
-                          />
+                          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                         </Tooltip>
                       </HStack>
                       <Radio

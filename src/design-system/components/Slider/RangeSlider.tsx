@@ -51,8 +51,8 @@ export function RangeSlider({
   const [minValue, maxValue] = currentValue;
 
   // Calculate percentages and thumb offsets to keep thumbs within track bounds
-  const minPercentage = ((minValue - min) / (max - min)) * 100;
-  const maxPercentage = ((maxValue - min) / (max - min)) * 100;
+  const minPercentage = Math.max(0, Math.min(100, ((minValue - min) / (max - min)) * 100));
+  const maxPercentage = Math.max(0, Math.min(100, ((maxValue - min) / (max - min)) * 100));
   const thumbSize = 16;
   const minThumbOffset = (minPercentage / 100) * thumbSize;
   const maxThumbOffset = (maxPercentage / 100) * thumbSize;

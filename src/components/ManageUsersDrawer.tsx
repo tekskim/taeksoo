@@ -158,11 +158,7 @@ const userColumns: TableColumn<UserItem>[] = [
           className="shrink-0 text-[var(--color-action-primary)]"
         />
         {row.hasWarning && (
-          <IconAlertCircle
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-state-danger)]"
-          />
+          <IconAlertCircle size={14} className="shrink-0 text-[var(--color-state-danger)]" />
         )}
       </span>
     ),
