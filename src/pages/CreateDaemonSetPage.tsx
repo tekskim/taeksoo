@@ -1102,7 +1102,30 @@ export function CreateDaemonSetPage() {
 
   // Volumes state
   const [volumes, setVolumes] = useState<Volume[]>(
-    isV2 ? [{ type: 'configmap' as const, volumeName: '', configMapName: '', optional: false }] : []
+    isV2
+      ? [
+          { type: 'configmap' as const, volumeName: '', configMapName: '', optional: false },
+          {
+            type: 'secret' as const,
+            volumeName: '',
+            secretName: '',
+            optional: false,
+            defaultMode: '',
+          },
+          { type: 'pvc' as const, volumeName: '', pvcName: '', readOnly: false },
+          {
+            type: 'create-pvc' as const,
+            volumeName: '',
+            pvcName: '',
+            useExistingPV: false,
+            storageClass: '',
+            capacity: '',
+            persistentVolume: '',
+            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            readOnly: false,
+          },
+        ]
+      : []
   );
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
@@ -3419,7 +3442,7 @@ export function CreateDaemonSetPage() {
                             </div>
 
                             {/* ConfigMap content */}
-                            {(isV2 || volume.type === 'configmap') && (
+                            {volume.type === 'configmap' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3488,7 +3511,7 @@ export function CreateDaemonSetPage() {
                             )}
 
                             {/* Secret content */}
-                            {(isV2 || volume.type === 'secret') && (
+                            {volume.type === 'secret' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3555,7 +3578,7 @@ export function CreateDaemonSetPage() {
                             )}
 
                             {/* PVC content */}
-                            {(isV2 || volume.type === 'pvc') && (
+                            {volume.type === 'pvc' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
                                   <VStack gap={2} className="w-[calc(50%+1px)]">
@@ -3604,7 +3627,7 @@ export function CreateDaemonSetPage() {
                             )}
 
                             {/* Create PVC content */}
-                            {(isV2 || volume.type === 'create-pvc') && (
+                            {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
                                   <VStack gap={6}>
@@ -3906,7 +3929,7 @@ export function CreateDaemonSetPage() {
                                           capacity: val?.toString() || '',
                                         })
                                       }
-                                      suffix="Gi"
+                                      suffix="GiB"
                                       fullWidth
                                     />
                                   </VStack>

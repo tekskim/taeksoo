@@ -786,12 +786,14 @@ export function CreateServicePage() {
                       <VStack gap={2}>
                         {externalIPs.map((ip) => (
                           <div key={ip.id} className="flex gap-2 items-center">
-                            <Input
-                              placeholder="e.g. 1.1.1.1"
-                              value={ip.value}
-                              onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                              width="lg"
-                            />
+                            <div className="w-[calc(50%-12px)]">
+                              <Input
+                                placeholder="e.g. 1.1.1.1"
+                                value={ip.value}
+                                onChange={(e) => updateExternalIP(ip.id, e.target.value)}
+                                fullWidth
+                              />
+                            </div>
                             <button
                               onClick={() => removeExternalIP(ip.id)}
                               className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
