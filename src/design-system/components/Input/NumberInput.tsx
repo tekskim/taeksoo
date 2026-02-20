@@ -175,9 +175,10 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     // Get width class
     const getWidthClass = () => {
       if (fullWidth) return 'w-full'; // backward compatibility
-      if (width === undefined) return 'w-fit';
-      if (typeof width === 'number') return `w-[${width}px]`;
-      return widthStyles[width];
+      if (width === undefined) return 'w-fit shrink-0';
+      if (typeof width === 'number') return `w-[${width}px] shrink-0`;
+      if (width === 'full' || width === 'half') return widthStyles[width];
+      return `${widthStyles[width]} shrink-0`;
     };
 
     // Apply className to wrapper so width classes work correctly
@@ -278,12 +279,11 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       return (
         <div
           className={twMerge(
-            'flex items-center gap-[var(--primitive-spacing-2)]',
-            getWidthClass(),
+            'flex items-center gap-[var(--primitive-spacing-2)] shrink-0',
             className
           )}
         >
-          <div className="flex flex-col gap-[var(--input-label-gap)] flex-1 min-w-0">
+          <div className={twMerge('flex flex-col gap-[var(--input-label-gap)]', getWidthClass())}>
             {coreElement}
           </div>
           <span className="text-body-md text-[var(--color-text-default)] shrink-0">{suffix}</span>

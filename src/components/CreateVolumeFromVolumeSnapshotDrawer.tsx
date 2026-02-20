@@ -269,6 +269,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
                 onChange={setCapacity}
                 min={minCapacity}
                 max={maxCapacity}
+                step={50}
                 className="flex-1"
               />
               <NumberInput
@@ -276,8 +277,9 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
                 onChange={(val) => setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity))}
                 min={minCapacity}
                 max={maxCapacity}
+                step={1}
                 width="xs"
-                className="shrink-0"
+                suffix="GiB"
               />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">

@@ -2358,19 +2358,12 @@ function SliderWithNumberInputDemo() {
 
   return (
     <VStack gap={3}>
-      <Label>With Value Display</Label>
-      <div className="flex items-center gap-4 w-[var(--wizard-summary-width)]">
+      <Label>Pattern B: Slider + NumberInput</Label>
+      <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
         <div className="flex-1">
           <Slider value={value} onChange={setValue} min={0} max={100} step={1} />
         </div>
-        <NumberInput
-          value={value}
-          onChange={setValue}
-          min={0}
-          max={100}
-          step={1}
-          className="w-[80px]"
-        />
+        <NumberInput value={value} onChange={setValue} min={0} max={100} step={1} width="xs" />
       </div>
     </VStack>
   );
@@ -2385,18 +2378,19 @@ function SliderWithCustomRangeDemo() {
 
   return (
     <VStack gap={3}>
-      <Label>Custom Range (0-1000 GB)</Label>
-      <div className="flex items-center gap-4 w-[var(--wizard-summary-width)]">
+      <Label>Pattern B: Storage Capacity (0-1000 GiB)</Label>
+      <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
         <div className="flex-1">
-          <Slider value={value} onChange={setValue} min={0} max={1000} step={50} />
+          <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
         </div>
         <NumberInput
           value={value}
           onChange={setValue}
           min={0}
           max={1000}
-          step={50}
-          className="w-[80px]"
+          step={1}
+          width="xs"
+          suffix="GiB"
         />
       </div>
     </VStack>
@@ -2413,9 +2407,9 @@ function RangeSliderDemo() {
 
   return (
     <VStack gap={3}>
-      <Label>Range Slider with Number Inputs</Label>
+      <Label>Pattern D: RangeSlider + NumberInput 2개</Label>
       <VStack gap={2}>
-        <div className="flex items-center gap-4 w-1/2">
+        <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
           <NumberInput
             value={minLength}
             onChange={(val) => {
@@ -2426,7 +2420,7 @@ function RangeSliderDemo() {
             min={6}
             max={maxLength - 1}
             step={1}
-            className="w-[80px]"
+            width="xs"
           />
           <div className="flex-1">
             <RangeSlider
@@ -2450,10 +2444,10 @@ function RangeSliderDemo() {
             min={minLength + 1}
             max={128}
             step={1}
-            className="w-[80px]"
+            width="xs"
           />
         </div>
-        <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
           6 - 128 / Maximum length must be greater than or equal to the minimum length.
         </p>
       </VStack>
@@ -8532,70 +8526,283 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>사용 정책</Label>
                       <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-                        <VStack gap={4}>
+                        <VStack gap={6}>
+                          {/* 판단 기준 */}
                           <VStack gap={2}>
                             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                              Slider vs NumberInput 선택 기준
+                              패턴 선택 기준
                             </h4>
                             <div className="overflow-x-auto">
                               <table className="w-full text-body-sm border-collapse">
                                 <thead>
                                   <tr className="border-b border-[var(--color-border-default)]">
                                     <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                                      조건
+                                      질문
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      예
                                     </th>
                                     <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                                      권장 컴포넌트
+                                      아니오
                                     </th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr className="border-b border-[var(--color-border-subtle)]">
                                     <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                                      범위 내 대략적인 값 선택 (정밀도 낮음)
+                                      사용자가 값을 미리 알고 있는가?
                                     </td>
-                                    <td className="py-2 font-medium text-[var(--color-text-default)]">
-                                      Slider
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      NumberInput 단독
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-subtle)]">
+                                      다음 질문 →
                                     </td>
                                   </tr>
                                   <tr className="border-b border-[var(--color-border-subtle)]">
                                     <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                                      정확한 숫자 입력이 필요
+                                      명확한 min~max 범위가 있는가?
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-subtle)]">
+                                      다음 질문 →
                                     </td>
                                     <td className="py-2 font-medium text-[var(--color-text-default)]">
-                                      NumberInput
+                                      NumberInput 단독
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      정확한 값 입력이 필요한가?
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      Slider + NumberInput
+                                    </td>
+                                    <td className="py-2 font-medium text-[var(--color-text-default)]">
+                                      Slider 단독
                                     </td>
                                   </tr>
                                   <tr>
                                     <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                                      범위 선택 + 정확한 값 확인 필요
+                                      min~max 범위 자체를 정의하는가?
                                     </td>
-                                    <td className="py-2 font-medium text-[var(--color-text-default)]">
-                                      Slider + NumberInput 병행
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      RangeSlider + NumberInput ×2
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-subtle)]">—</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </VStack>
+
+                          {/* 4가지 패턴 */}
+                          <VStack gap={2}>
+                            <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                              4가지 패턴
+                            </h4>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-body-sm border-collapse">
+                                <thead>
+                                  <tr className="border-b border-[var(--color-border-default)]">
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      패턴
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      사용 조건
+                                    </th>
+                                    <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                      적용 대상
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      A. NumberInput 단독
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      값을 미리 알고 있거나 범위가 좁음 (~20개)
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      포트 번호, 레플리카 수, Parallelism
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      B. Slider + NumberInput
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      넓은 범위 + 정밀 입력 + 위치 인지 필요
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      스토리지(GiB), vCPU, 메모리, 디스크
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      C. Slider 단독
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      대략적 값, 감각적 조절이 자연스러운 값
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      AI Temperature, Top-p
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      D. RangeSlider + NumberInput ×2
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      min~max 범위 자체를 사용자가 정의
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      비밀번호 길이 정책, 포트 범위
                                     </td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                           </VStack>
+
+                          {/* Slider step 가이드 */}
                           <VStack gap={2}>
                             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                              사용 규칙
+                              Slider step 가이드
                             </h4>
-                            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                              <li>
-                                <strong>Step</strong>: 의미 있는 단위로 step을 설정합니다 (e.g. CPU:
-                                1코어 단위, 메모리: 1GB 단위).
-                              </li>
-                              <li>
-                                <strong>Range</strong>: 최소~최대 범위 선택 시 Range Slider를
-                                사용합니다.
-                              </li>
-                              <li>
-                                <strong>현재 값 표시</strong>: Slider 옆에 현재 선택 값을 숫자로
-                                표시합니다.
-                              </li>
-                            </ul>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-body-sm border-collapse">
+                                <thead>
+                                  <tr className="border-b border-[var(--color-border-default)]">
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      범위 크기
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      Slider step
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      NumberInput step
+                                    </th>
+                                    <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                      예시
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      ~50
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      1
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                                      1
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      vCPU (1~64)
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      50~200
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      5
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                                      1
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      메모리 (1~256 GiB)
+                                    </td>
+                                  </tr>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      200~1000
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      10
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                                      1
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      스토리지 (10~1000 GiB)
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      1000+
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      50~100
+                                    </td>
+                                    <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                                      1
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      대용량 스토리지
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
+                              Slider step은 빠른 조절용으로 크게, NumberInput step은 정밀 입력용으로
+                              1 고정.
+                            </p>
+                          </VStack>
+
+                          {/* Slider 행 너비 규칙 */}
+                          <VStack gap={2}>
+                            <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                              Slider 행 너비 규칙
+                            </h4>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-body-sm border-collapse">
+                                <thead>
+                                  <tr className="border-b border-[var(--color-border-default)]">
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      컨텍스트
+                                    </th>
+                                    <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                      Slider 행 너비
+                                    </th>
+                                    <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                      적용 방법
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr className="border-b border-[var(--color-border-subtle)]">
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      Drawer (360px)
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      w-full (자동 312px)
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      Drawer 패딩이 자동 제한
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                                      Create / Settings 페이지
+                                    </td>
+                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                                      max-w-[var(--slider-row-max-width)]
+                                    </td>
+                                    <td className="py-2 text-[var(--color-text-muted)]">
+                                      312px — Drawer 콘텐츠 영역과 동일
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <div className="text-body-xs text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
+                              <code>--slider-row-max-width: 312px</code>
+                            </div>
                           </VStack>
                         </VStack>
                       </div>
@@ -8610,18 +8817,18 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
-                    {/* Basic */}
+                    {/* Pattern C: Slider alone */}
                     <VStack gap={3}>
-                      <Label>Basic</Label>
-                      <div className="w-[var(--wizard-summary-width)]">
-                        <Slider defaultValue={40} />
+                      <Label>Pattern C: Slider 단독 (showValue)</Label>
+                      <div className="max-w-[var(--slider-row-max-width)]">
+                        <Slider defaultValue={40} showValue />
                       </div>
                     </VStack>
 
-                    {/* With Value Display */}
+                    {/* Pattern B: Slider + NumberInput */}
                     <SliderWithNumberInputDemo />
 
-                    {/* Custom Range */}
+                    {/* Pattern B: Custom Range */}
                     <SliderWithCustomRangeDemo />
 
                     {/* States */}
@@ -8629,25 +8836,25 @@ outline: 2px solid var(--color-border-focus);`}
                       <Label>States</Label>
                       <div className="flex flex-col gap-4">
                         <VStack gap={1}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                          <span className="text-body-xs text-[var(--color-text-subtle)]">
                             Default
                           </span>
-                          <div className="w-[var(--wizard-summary-width)]">
-                            <Slider defaultValue={30} />
+                          <div className="max-w-[var(--slider-row-max-width)]">
+                            <Slider defaultValue={30} showValue />
                           </div>
                         </VStack>
                         <VStack gap={1}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                          <span className="text-body-xs text-[var(--color-text-subtle)]">
                             Disabled
                           </span>
-                          <div className="w-[var(--wizard-summary-width)]">
-                            <Slider defaultValue={60} disabled />
+                          <div className="max-w-[var(--slider-row-max-width)]">
+                            <Slider defaultValue={60} disabled showValue />
                           </div>
                         </VStack>
                       </div>
                     </VStack>
 
-                    {/* Range Slider with Number Inputs */}
+                    {/* Pattern D: RangeSlider */}
                     <RangeSliderDemo />
                   </VStack>
                 </Section>

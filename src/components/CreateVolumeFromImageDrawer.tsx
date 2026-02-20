@@ -241,6 +241,7 @@ export function CreateVolumeFromImageDrawer({
                 max={maxCapacity}
                 value={capacity}
                 onChange={handleCapacityChange}
+                step={50}
                 className="flex-1"
               />
               <NumberInput
@@ -248,8 +249,9 @@ export function CreateVolumeFromImageDrawer({
                 onChange={handleCapacityChange}
                 min={minCapacity}
                 max={maxCapacity}
+                step={1}
                 width="xs"
-                className="shrink-0"
+                suffix="GiB"
               />
             </HStack>
           </FormField.Control>

@@ -570,19 +570,16 @@ export function CreateAgentPage() {
                             <p className="text-body-md text-[var(--color-text-subtle)]">
                               Adjust how creative or deterministic the model's responses should be.
                             </p>
-                            <div className="flex items-center gap-3 w-[289px]">
-                              <div className="flex-1">
-                                <Slider
-                                  value={temperature}
-                                  onChange={setTemperature}
-                                  min={0}
-                                  max={1}
-                                  step={0.1}
-                                />
-                              </div>
-                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                                {temperature}
-                              </span>
+                            <div className="max-w-[var(--slider-row-max-width)]">
+                              <Slider
+                                value={temperature}
+                                onChange={setTemperature}
+                                min={0}
+                                max={1}
+                                step={0.1}
+                                showValue
+                                formatValue={(v) => v.toFixed(1)}
+                              />
                             </div>
                             <p className="text-body-md text-[var(--color-text-subtle)]">
                               Lower values make answers more consistent, while higher values
@@ -599,20 +596,16 @@ export function CreateAgentPage() {
                             <p className="text-body-md text-[var(--color-text-subtle)]">
                               Adjust how creative or deterministic the model's responses should be.
                             </p>
-                            <div className="flex items-center gap-3 w-fit">
-                              <div>
-                                <Slider
-                                  value={maxTokens}
-                                  onChange={setMaxTokens}
-                                  min={0}
-                                  max={64000}
-                                  step={1000}
-                                  className="w-full"
-                                />
-                              </div>
-                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                                {maxTokens.toLocaleString()}
-                              </span>
+                            <div className="max-w-[var(--slider-row-max-width)]">
+                              <Slider
+                                value={maxTokens}
+                                onChange={setMaxTokens}
+                                min={0}
+                                max={64000}
+                                step={1000}
+                                showValue
+                                formatValue={(v) => v.toLocaleString()}
+                              />
                             </div>
                             <p className="text-body-md text-[var(--color-text-subtle)]">
                               Max: 64,000

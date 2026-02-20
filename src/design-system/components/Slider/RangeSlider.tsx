@@ -50,9 +50,12 @@ export function RangeSlider({
   const currentValue = isControlled ? controlledValue : internalValue;
   const [minValue, maxValue] = currentValue;
 
-  // Calculate percentages
+  // Calculate percentages and thumb offsets to keep thumbs within track bounds
   const minPercentage = ((minValue - min) / (max - min)) * 100;
   const maxPercentage = ((maxValue - min) / (max - min)) * 100;
+  const thumbSize = 16;
+  const minThumbOffset = (minPercentage / 100) * thumbSize;
+  const maxThumbOffset = (maxPercentage / 100) * thumbSize;
 
   // Update value
   const updateValue = useCallback(
@@ -254,8 +257,8 @@ export function RangeSlider({
             'transition-none'
           )}
           style={{
-            left: `${minPercentage}%`,
-            width: `${maxPercentage - minPercentage}%`,
+            left: `calc(${minPercentage}% - ${minThumbOffset - thumbSize / 2}px)`,
+            width: `calc(${maxPercentage - minPercentage}% - ${maxThumbOffset - minThumbOffset}px)`,
           }}
         />
 
@@ -291,7 +294,7 @@ export function RangeSlider({
             'z-10'
           )}
           style={{
-            left: `calc(${minPercentage}% - 8px)`,
+            left: `calc(${minPercentage}% - ${minThumbOffset}px)`,
             marginTop: '-8px',
           }}
         />
@@ -328,7 +331,7 @@ export function RangeSlider({
             'z-10'
           )}
           style={{
-            left: `calc(${maxPercentage}% - 8px)`,
+            left: `calc(${maxPercentage}% - ${maxThumbOffset}px)`,
             marginTop: '-8px',
           }}
         />
