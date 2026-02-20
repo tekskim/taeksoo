@@ -10,7 +10,7 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { IconCheck, IconEye, IconEyeClosed, IconEdit, IconLock } from '@tabler/icons-react';
+import { IconCheck, IconEye, IconEyeOff, IconEdit, IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -602,9 +602,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowNewPassword(!showNewPassword)}
                             >
                               {showNewPassword ? (
-                                <IconEye size={12} stroke={1.5} />
+                                <IconEye size={14} stroke={1.5} />
                               ) : (
-                                <IconEyeClosed size={12} stroke={1.5} />
+                                <IconEyeOff size={14} stroke={1.5} />
                               )}
                             </button>
                           }
@@ -628,9 +628,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
                               {showConfirmPassword ? (
-                                <IconEye size={12} stroke={1.5} />
+                                <IconEye size={14} stroke={1.5} />
                               ) : (
-                                <IconEyeClosed size={12} stroke={1.5} />
+                                <IconEyeOff size={14} stroke={1.5} />
                               )}
                             </button>
                           }
@@ -1246,7 +1246,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 {showNewPassword ? (
                   <IconEye size={16} stroke={1.5} />
                 ) : (
-                  <IconEyeClosed size={16} stroke={1.5} />
+                  <IconEyeOff size={16} stroke={1.5} />
                 )}
               </button>
             </div>
@@ -1280,7 +1280,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 {showConfirmPassword ? (
                   <IconEye size={16} stroke={1.5} />
                 ) : (
-                  <IconEyeClosed size={16} stroke={1.5} />
+                  <IconEyeOff size={16} stroke={1.5} />
                 )}
               </button>
             </div>

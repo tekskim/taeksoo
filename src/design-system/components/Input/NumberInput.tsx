@@ -158,7 +158,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       '[&::-webkit-inner-spin-button]:appearance-none',
       error ? 'border-[var(--input-border-error)]' : 'border-[var(--input-border)]',
       disabled
-        ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed'
+        ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed border-transparent'
         : ''
     );
 

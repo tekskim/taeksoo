@@ -817,7 +817,6 @@ export default function CreateVirtualAdapterPage() {
                                 variant="secondary"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                disabled={!selectedNetwork}
                                 onClick={addFixedIP}
                               >
                                 Add fixed IP
