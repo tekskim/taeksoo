@@ -2400,57 +2400,70 @@ function AdvancedSection({
         <VStack gap={0}>
           {/* Tags Section */}
           <div className="py-6">
-            <VStack gap={3} align="stretch">
-              <VStack gap={3} align="stretch">
+            <VStack gap={3}>
+              <VStack gap={1.5}>
                 <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
+                <p className="text-body-md text-[var(--color-text-subtle)]">
                   A tag consists of a Key that defines the resource category and a Value that
                   describes it. Each resource can have up to 50 tags.
-                </span>
+                </p>
               </VStack>
 
-              {/* Tag entries */}
-              {tags.length > 0 && (
-                <VStack gap={2} align="stretch">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {tags.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
                   {tags.map((tag, index) => (
-                    <HStack key={index} gap={3} align="center">
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    >
                       <Input
-                        placeholder="Key"
+                        placeholder="tag key"
                         value={tag.key}
                         onChange={(e) => handleTagChange(index, 'key', e.target.value)}
                         fullWidth
                       />
                       <Input
-                        placeholder="Value"
+                        placeholder="tag value"
                         value={tag.value}
                         onChange={(e) => handleTagChange(index, 'value', e.target.value)}
                         fullWidth
                       />
                       <button
                         onClick={() => handleRemoveTag(index)}
-                        className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
-                        <IconX size={12} />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
-                    </HStack>
+                    </div>
                   ))}
-                </VStack>
-              )}
 
-              <HStack gap={3} align="center">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={handleAddTag}
-                  disabled={tags.length >= MAX_TAGS}
-                >
-                  Add tag
-                </Button>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  {tags.length} / {MAX_TAGS} tags
-                </span>
-              </HStack>
+                  <HStack gap={3} align="center">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={handleAddTag}
+                      disabled={tags.length >= MAX_TAGS}
+                    >
+                      Add tag
+                    </Button>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      {tags.length} / {MAX_TAGS} tags
+                    </span>
+                  </HStack>
+                </VStack>
+              </div>
             </VStack>
           </div>
 

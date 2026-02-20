@@ -547,7 +547,7 @@ export function ComputeAdminCreateImagePage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Select the tenant that will own the image.
                         </span>
                       </VStack>
@@ -612,75 +612,163 @@ export function ComputeAdminCreateImagePage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Specifies the availability scope of the image based on its visibility
                           setting.
                         </span>
                       </VStack>
-                      <RadioGroup
-                        value={visibility}
-                        onChange={(val) => setVisibility(val as 'public' | 'shared' | 'private')}
-                      >
-                        <Radio value="public" label="Public" />
-                        <Radio value="shared" label="Shared" />
-                        <Radio value="private" label="Private" />
-                      </RadioGroup>
+                      {isV2 ? (
+                        <VStack gap={6}>
+                          {/* Public block */}
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <VStack gap={3}>
+                              <RadioGroup value="public" onChange={() => {}}>
+                                <Radio value="public" label="Public" />
+                                <Radio value="shared" label="Shared" />
+                                <Radio value="private" label="Private" />
+                              </RadioGroup>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The image is available to all tenants.
+                              </span>
+                            </VStack>
+                          </div>
 
-                      {/* Shared tenants table - shown when visibility is 'shared' */}
-                      {visibility === 'shared' && (
-                        <VStack gap={3}>
-                          <VStack gap={2}>
-                            <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                              Tenants
-                            </span>
-                            <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                              Select the tenants to share the image with.
-                            </span>
-                          </VStack>
+                          {/* Shared block */}
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <VStack gap={3}>
+                              <RadioGroup value="shared" onChange={() => {}}>
+                                <Radio value="public" label="Public" />
+                                <Radio value="shared" label="Shared" />
+                                <Radio value="private" label="Private" />
+                              </RadioGroup>
 
-                          {/* Search */}
-                          <SearchInput
-                            value={sharedTenantSearch}
-                            onChange={(e) => setSharedTenantSearch(e.target.value)}
-                            placeholder="Search tenants by attributes"
-                            className="w-[280px]"
-                          />
+                              <VStack gap={2}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Tenants
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Select the tenants to share the image with.
+                                </span>
+                              </VStack>
 
-                          {/* Pagination */}
-                          <Pagination
-                            currentPage={sharedTenantCurrentPage}
-                            totalPages={totalSharedTenantPages}
-                            onPageChange={setSharedTenantCurrentPage}
-                            totalItems={filteredSharedTenants.length}
-                            selectedCount={sharedTenantIds.length}
-                          />
+                              <SearchInput
+                                value={sharedTenantSearch}
+                                onChange={(e) => setSharedTenantSearch(e.target.value)}
+                                placeholder="Search tenants by attributes"
+                                className="w-[280px]"
+                              />
 
-                          {/* Shared Tenant Table + Selection Indicator */}
-                          <VStack gap={2}>
-                            <Table<Tenant>
-                              columns={tenantColumns}
-                              data={paginatedSharedTenants}
-                              rowKey="id"
-                              emptyMessage="No tenants found"
-                              selectable
-                              selectedKeys={sharedTenantIds}
-                              onSelectionChange={(keys) => {
-                                setSharedTenantIds(keys);
-                              }}
-                            />
+                              <Pagination
+                                currentPage={sharedTenantCurrentPage}
+                                totalPages={totalSharedTenantPages}
+                                onPageChange={setSharedTenantCurrentPage}
+                                totalItems={filteredSharedTenants.length}
+                                selectedCount={sharedTenantIds.length}
+                              />
 
-                            {/* Selection Indicator */}
-                            <SelectionIndicator
-                              selectedItems={selectedSharedTenants.map((t) => ({
-                                id: t.id,
-                                label: `${t.name} (ID: ${t.id})`,
-                              }))}
-                              onRemove={(id) =>
-                                setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
-                              }
-                            />
-                          </VStack>
+                              <VStack gap={2}>
+                                <Table<Tenant>
+                                  columns={tenantColumns}
+                                  data={paginatedSharedTenants}
+                                  rowKey="id"
+                                  emptyMessage="No tenants found"
+                                  selectable
+                                  selectedKeys={sharedTenantIds}
+                                  onSelectionChange={(keys) => {
+                                    setSharedTenantIds(keys);
+                                  }}
+                                />
+                                <SelectionIndicator
+                                  selectedItems={selectedSharedTenants.map((t) => ({
+                                    id: t.id,
+                                    label: `${t.name} (ID: ${t.id})`,
+                                  }))}
+                                  onRemove={(id) =>
+                                    setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                                  }
+                                />
+                              </VStack>
+                            </VStack>
+                          </div>
+
+                          {/* Private block */}
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <VStack gap={3}>
+                              <RadioGroup value="private" onChange={() => {}}>
+                                <Radio value="public" label="Public" />
+                                <Radio value="shared" label="Shared" />
+                                <Radio value="private" label="Private" />
+                              </RadioGroup>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The image is only visible to its owner.
+                              </span>
+                            </VStack>
+                          </div>
                         </VStack>
+                      ) : (
+                        <>
+                          <RadioGroup
+                            value={visibility}
+                            onChange={(val) =>
+                              setVisibility(val as 'public' | 'shared' | 'private')
+                            }
+                          >
+                            <Radio value="public" label="Public" />
+                            <Radio value="shared" label="Shared" />
+                            <Radio value="private" label="Private" />
+                          </RadioGroup>
+
+                          {visibility === 'shared' && (
+                            <VStack gap={3}>
+                              <VStack gap={2}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Tenants
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Select the tenants to share the image with.
+                                </span>
+                              </VStack>
+
+                              <SearchInput
+                                value={sharedTenantSearch}
+                                onChange={(e) => setSharedTenantSearch(e.target.value)}
+                                placeholder="Search tenants by attributes"
+                                className="w-[280px]"
+                              />
+
+                              <Pagination
+                                currentPage={sharedTenantCurrentPage}
+                                totalPages={totalSharedTenantPages}
+                                onPageChange={setSharedTenantCurrentPage}
+                                totalItems={filteredSharedTenants.length}
+                                selectedCount={sharedTenantIds.length}
+                              />
+
+                              <VStack gap={2}>
+                                <Table<Tenant>
+                                  columns={tenantColumns}
+                                  data={paginatedSharedTenants}
+                                  rowKey="id"
+                                  emptyMessage="No tenants found"
+                                  selectable
+                                  selectedKeys={sharedTenantIds}
+                                  onSelectionChange={(keys) => {
+                                    setSharedTenantIds(keys);
+                                  }}
+                                />
+                                <SelectionIndicator
+                                  selectedItems={selectedSharedTenants.map((t) => ({
+                                    id: t.id,
+                                    label: `${t.name} (ID: ${t.id})`,
+                                  }))}
+                                  onRemove={(id) =>
+                                    setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                                  }
+                                />
+                              </VStack>
+                            </VStack>
+                          )}
+                        </>
                       )}
                     </VStack>
 
@@ -692,7 +780,7 @@ export function ComputeAdminCreateImagePage() {
                         <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                           Protected
                         </span>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Protected images cannot be deleted, preventing accidental removal.
                         </span>
                       </VStack>
@@ -815,56 +903,122 @@ export function ComputeAdminCreateImagePage() {
                         </span>
                       </VStack>
 
-                      {/* Upload type Tabs */}
-                      <Tabs
-                        value={sourceType}
-                        onChange={(value) => setSourceType(value as 'file' | 'url')}
-                        variant="underline"
-                        size="sm"
-                      >
-                        <TabList>
-                          <Tab value="file">Upload file</Tab>
-                          <Tab value="url">File URL</Tab>
-                        </TabList>
-                      </Tabs>
+                      {isV2 ? (
+                        <VStack gap={6}>
+                          {/* Upload file block */}
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <VStack gap={3}>
+                              <Tabs value="file" onChange={() => {}} variant="underline" size="sm">
+                                <TabList>
+                                  <Tab value="file">Upload file</Tab>
+                                  <Tab value="url">File URL</Tab>
+                                </TabList>
+                              </Tabs>
+                              <VStack gap={3} align="start">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconUpload size={12} />}
+                                >
+                                  Choose File
+                                </Button>
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                                </span>
+                              </VStack>
+                            </VStack>
+                          </div>
 
-                      {/* File Upload */}
-                      {sourceType === 'file' && (
-                        <VStack gap={3} align="start">
-                          <Button variant="secondary" size="sm" leftIcon={<IconUpload size={12} />}>
-                            Choose File
-                          </Button>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
-                          </span>
+                          {/* File URL block */}
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <VStack gap={3}>
+                              <Tabs value="url" onChange={() => {}} variant="underline" size="sm">
+                                <TabList>
+                                  <Tab value="file">Upload file</Tab>
+                                  <Tab value="url">File URL</Tab>
+                                </TabList>
+                              </Tabs>
+                              <VStack gap={2} align="stretch">
+                                <Input
+                                  value={sourceUrl}
+                                  onChange={(e) => {
+                                    setSourceUrl(e.target.value);
+                                    if (e.target.value.trim()) {
+                                      setShowSourceUrlError(false);
+                                    }
+                                  }}
+                                  placeholder="e.g. https://example.com/image.qcow2"
+                                  fullWidth
+                                  error={showSourceUrlError}
+                                />
+                                {showSourceUrlError ? (
+                                  <span className="text-body-sm text-[var(--color-state-danger)]">
+                                    Please enter a file URL.
+                                  </span>
+                                ) : (
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    The URL must start with http:// or https://.
+                                  </span>
+                                )}
+                              </VStack>
+                            </VStack>
+                          </div>
                         </VStack>
-                      )}
+                      ) : (
+                        <>
+                          <Tabs
+                            value={sourceType}
+                            onChange={(value) => setSourceType(value as 'file' | 'url')}
+                            variant="underline"
+                            size="sm"
+                          >
+                            <TabList>
+                              <Tab value="file">Upload file</Tab>
+                              <Tab value="url">File URL</Tab>
+                            </TabList>
+                          </Tabs>
 
-                      {/* File URL */}
-                      {sourceType === 'url' && (
-                        <VStack gap={2} align="stretch">
-                          <Input
-                            value={sourceUrl}
-                            onChange={(e) => {
-                              setSourceUrl(e.target.value);
-                              if (e.target.value.trim()) {
-                                setShowSourceUrlError(false);
-                              }
-                            }}
-                            placeholder="e.g. https://example.com/image.qcow2"
-                            fullWidth
-                            error={showSourceUrlError}
-                          />
-                          {showSourceUrlError ? (
-                            <span className="text-body-sm text-[var(--color-state-danger)]">
-                              Please enter a file URL.
-                            </span>
-                          ) : (
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              The URL must start with http:// or https://.
-                            </span>
+                          {sourceType === 'file' && (
+                            <VStack gap={3} align="start">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconUpload size={12} />}
+                              >
+                                Choose File
+                              </Button>
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                              </span>
+                            </VStack>
                           )}
-                        </VStack>
+
+                          {sourceType === 'url' && (
+                            <VStack gap={2} align="stretch">
+                              <Input
+                                value={sourceUrl}
+                                onChange={(e) => {
+                                  setSourceUrl(e.target.value);
+                                  if (e.target.value.trim()) {
+                                    setShowSourceUrlError(false);
+                                  }
+                                }}
+                                placeholder="e.g. https://example.com/image.qcow2"
+                                fullWidth
+                                error={showSourceUrlError}
+                              />
+                              {showSourceUrlError ? (
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
+                                  Please enter a file URL.
+                                </span>
+                              ) : (
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  The URL must start with http:// or https://.
+                                </span>
+                              )}
+                            </VStack>
+                          )}
+                        </>
                       )}
                     </VStack>
 

@@ -244,7 +244,7 @@ export const StatusIndicator = memo(function StatusIndicator({
         ? 'icon-only'
         : (rawLayout as StatusLayout);
 
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? statusConfig.error;
 
   // thaki-ui compatibility: use customIcon if provided
   const displayIcon = customIcon ?? config.icon;

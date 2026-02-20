@@ -1272,101 +1272,348 @@ function ImageSection({
                 snapshot, or an existing volume.
               </span>
 
-              {/* Source Tabs */}
-              <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="image">Image</Tab>
-                  <Tab value="snapshot">Instance snapshot</Tab>
-                  <Tab value="volume">Bootable volume</Tab>
-                </TabList>
-              </Tabs>
+              {isV2 ? (
+                <VStack gap={6}>
+                  {/* Image block */}
+                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <VStack gap={2}>
+                      <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
+                        <TabList>
+                          <Tab value="image">Image</Tab>
+                          <Tab value="snapshot">Instance snapshot</Tab>
+                          <Tab value="volume">Bootable volume</Tab>
+                        </TabList>
+                      </Tabs>
+                      <Tabs
+                        variant="boxed"
+                        size="sm"
+                        value={osFilter}
+                        onChange={(value) => {
+                          setOsFilter(value as typeof osFilter);
+                          setCurrentPage(1);
+                        }}
+                      >
+                        <TabList className="mt-2">
+                          <Tab value="other">
+                            <HStack gap={1} align="center">
+                              <IconDots size={14} />
+                              <span>Others</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="ubuntu">
+                            <HStack gap={1} align="center">
+                              <IconUbuntu size={14} />
+                              <span>Ubuntu</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="windows">
+                            <HStack gap={1} align="center">
+                              <IconGrid size={14} />
+                              <span>Windows</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="rocky">
+                            <HStack gap={1} align="center">
+                              <IconRocky size={14} />
+                              <span>Rocky</span>
+                            </HStack>
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                      <SearchInput
+                        placeholder="Search image by attributes"
+                        value={searchQuery}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)] mt-2"
+                      />
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredImages.length}
+                        itemsPerPage={itemsPerPage}
+                        selectedCount={selectedImageId ? 1 : 0}
+                      />
+                      <Table
+                        columns={imageColumns}
+                        data={paginatedImages}
+                        onRowClick={(row) => handleSelectImage(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                      />
+                    </VStack>
+                  </div>
 
-              {/* OS Filter Chips Container - Only for Image tab */}
-              {(isV2 || sourceTab === 'image') && (
-                <Tabs
-                  variant="boxed"
-                  size="sm"
-                  value={osFilter}
-                  onChange={(value) => {
-                    setOsFilter(value as typeof osFilter);
-                    setCurrentPage(1);
-                  }}
-                >
-                  <TabList>
-                    <Tab value="other">
-                      <HStack gap={1} align="center">
-                        <IconDots size={14} />
-                        <span>Others</span>
-                      </HStack>
-                    </Tab>
-                    <Tab value="ubuntu">
-                      <HStack gap={1} align="center">
-                        <IconUbuntu size={14} />
-                        <span>Ubuntu</span>
-                      </HStack>
-                    </Tab>
-                    <Tab value="windows">
-                      <HStack gap={1} align="center">
-                        <IconGrid size={14} />
-                        <span>Windows</span>
-                      </HStack>
-                    </Tab>
-                    <Tab value="rocky">
-                      <HStack gap={1} align="center">
-                        <IconRocky size={14} />
-                        <span>Rocky</span>
-                      </HStack>
-                    </Tab>
-                  </TabList>
-                </Tabs>
+                  {/* Instance snapshot block */}
+                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <VStack gap={2}>
+                      <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
+                        <TabList>
+                          <Tab value="image">Image</Tab>
+                          <Tab value="snapshot">Instance snapshot</Tab>
+                          <Tab value="volume">Bootable volume</Tab>
+                        </TabList>
+                      </Tabs>
+                      <Tabs
+                        variant="boxed"
+                        size="sm"
+                        value={osFilter}
+                        onChange={(value) => {
+                          setOsFilter(value as typeof osFilter);
+                          setCurrentPage(1);
+                        }}
+                      >
+                        <TabList className="mt-2">
+                          <Tab value="other">
+                            <HStack gap={1} align="center">
+                              <IconDots size={14} />
+                              <span>Others</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="ubuntu">
+                            <HStack gap={1} align="center">
+                              <IconUbuntu size={14} />
+                              <span>Ubuntu</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="windows">
+                            <HStack gap={1} align="center">
+                              <IconGrid size={14} />
+                              <span>Windows</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="rocky">
+                            <HStack gap={1} align="center">
+                              <IconRocky size={14} />
+                              <span>Rocky</span>
+                            </HStack>
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                      <SearchInput
+                        placeholder="Search snapshot by attributes"
+                        value={searchQuery}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)] mt-2"
+                      />
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredImages.length}
+                        itemsPerPage={itemsPerPage}
+                        selectedCount={selectedImageId ? 1 : 0}
+                      />
+                      <Table
+                        columns={snapshotColumns}
+                        data={paginatedImages}
+                        onRowClick={(row) => handleSelectImage(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                      />
+                    </VStack>
+                  </div>
+
+                  {/* Bootable volume block */}
+                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <VStack gap={2}>
+                      <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
+                        <TabList>
+                          <Tab value="image">Image</Tab>
+                          <Tab value="snapshot">Instance snapshot</Tab>
+                          <Tab value="volume">Bootable volume</Tab>
+                        </TabList>
+                      </Tabs>
+                      <Tabs
+                        variant="boxed"
+                        size="sm"
+                        value={osFilter}
+                        onChange={(value) => {
+                          setOsFilter(value as typeof osFilter);
+                          setCurrentPage(1);
+                        }}
+                      >
+                        <TabList className="mt-2">
+                          <Tab value="other">
+                            <HStack gap={1} align="center">
+                              <IconDots size={14} />
+                              <span>Others</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="ubuntu">
+                            <HStack gap={1} align="center">
+                              <IconUbuntu size={14} />
+                              <span>Ubuntu</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="windows">
+                            <HStack gap={1} align="center">
+                              <IconGrid size={14} />
+                              <span>Windows</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="rocky">
+                            <HStack gap={1} align="center">
+                              <IconRocky size={14} />
+                              <span>Rocky</span>
+                            </HStack>
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                      <SearchInput
+                        placeholder="Search volume by attributes"
+                        value={searchQuery}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)] mt-2"
+                      />
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalItems={filteredImages.length}
+                        itemsPerPage={itemsPerPage}
+                        selectedCount={selectedImageId ? 1 : 0}
+                      />
+                      <Table
+                        columns={volumeColumns}
+                        data={paginatedImages}
+                        onRowClick={(row) => handleSelectImage(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                      />
+                    </VStack>
+                  </div>
+                </VStack>
+              ) : (
+                <>
+                  <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                    <TabList>
+                      <Tab value="image">Image</Tab>
+                      <Tab value="snapshot">Instance snapshot</Tab>
+                      <Tab value="volume">Bootable volume</Tab>
+                    </TabList>
+                  </Tabs>
+
+                  {sourceTab === 'image' && (
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList>
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                  )}
+
+                  <SearchInput
+                    placeholder="Search image by attributes"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    onClear={() => {
+                      setSearchQuery('');
+                      setCurrentPage(1);
+                    }}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                  />
+
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    totalItems={filteredImages.length}
+                    itemsPerPage={itemsPerPage}
+                    selectedCount={selectedImageId ? 1 : 0}
+                  />
+
+                  <VStack gap={2}>
+                    <Table
+                      columns={
+                        sourceTab === 'snapshot'
+                          ? snapshotColumns
+                          : sourceTab === 'volume'
+                            ? volumeColumns
+                            : imageColumns
+                      }
+                      data={paginatedImages}
+                      onRowClick={(row) => handleSelectImage(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                    />
+                  </VStack>
+                </>
               )}
-
-              {/* Search */}
-              <SearchInput
-                placeholder="Search image by attributes"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                onClear={() => {
-                  setSearchQuery('');
-                  setCurrentPage(1);
-                }}
-                size="sm"
-                className="w-[var(--search-input-width)]"
-              />
-
-              {/* Pagination - Above Table */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                totalItems={filteredImages.length}
-                itemsPerPage={itemsPerPage}
-                selectedCount={selectedImageId ? 1 : 0}
-              />
-
-              {/* Image Table + Selection Indicator */}
-              <VStack gap={2}>
-                <Table
-                  columns={
-                    sourceTab === 'snapshot'
-                      ? snapshotColumns
-                      : sourceTab === 'volume'
-                        ? volumeColumns
-                        : imageColumns
-                  }
-                  data={paginatedImages}
-                  onRowClick={(row) => handleSelectImage(row.id)}
-                />
-                <SelectionIndicator
-                  selectedItems={
-                    selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                  }
-                  onRemove={() => onSelectImage('')}
-                />
-              </VStack>
             </VStack>
           </div>
 
@@ -2236,60 +2483,65 @@ function NetworkSection({
                 </span>
               </VStack>
 
-              {/* Virtual LAN Rows + Add Button */}
-              <VStack gap={2}>
-                {virtualLANs.map((vlan) => (
-                  <div
-                    key={vlan.id}
-                    className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
-                  >
-                    <HStack gap={4} align="center">
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Network
-                        </span>
-                        <Select
-                          options={[{ value: 'network', label: 'network' }]}
-                          value={vlan.network}
-                          onChange={() => {}}
-                        />
-                      </HStack>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Subnet
-                        </span>
-                        <Select
-                          options={[{ value: 'subnet', label: 'subnet' }]}
-                          value={vlan.subnet}
-                          onChange={() => {}}
-                        />
-                      </HStack>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {virtualLANs.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Network
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Subnet
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        IP assignment
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {virtualLANs.map((vlan) => (
+                    <div
+                      key={vlan.id}
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                    >
+                      <Select
+                        options={[{ value: 'network', label: 'network' }]}
+                        value={vlan.network}
+                        onChange={() => {}}
+                        fullWidth
+                      />
+                      <Select
+                        options={[{ value: 'subnet', label: 'subnet' }]}
+                        value={vlan.subnet}
+                        onChange={() => {}}
+                        fullWidth
+                      />
                       <Select
                         options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
                         value={vlan.autoAssign}
                         onChange={() => {}}
+                        fullWidth
                       />
-                    </HStack>
-                    <button
-                      className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                      onClick={() => removeVirtualLAN(vlan.id)}
-                    >
-                      <IconX size={12} className="text-[var(--color-text-subtle)]" />
-                    </button>
-                  </div>
-                ))}
+                      <button
+                        className="p-1 hover:bg-[var(--color-surface-hover)] rounded flex items-center justify-center"
+                        onClick={() => removeVirtualLAN(vlan.id)}
+                      >
+                        <IconX size={12} className="text-[var(--color-text-subtle)]" />
+                      </button>
+                    </div>
+                  ))}
 
-                {/* Add Virtual LAN Button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={addVirtualLAN}
-                  className="self-start"
-                >
-                  Add virtual LAN
-                </Button>
-              </VStack>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={addVirtualLAN}
+                    className="self-start"
+                  >
+                    Add virtual LAN
+                  </Button>
+                </VStack>
+              </div>
             </VStack>
           </div>
 
@@ -2722,48 +2974,61 @@ function AdvancedSection({
                 </span>
               </VStack>
 
-              {/* Tag entries */}
-              {tags.length > 0 && (
-                <VStack gap={2} align="stretch">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {tags.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
                   {tags.map((tag, index) => (
-                    <HStack key={index} gap={3} align="center">
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    >
                       <Input
-                        placeholder="Key"
+                        placeholder="tag key"
                         value={tag.key}
                         onChange={(e) => handleTagChange(index, 'key', e.target.value)}
                         fullWidth
                       />
                       <Input
-                        placeholder="Value"
+                        placeholder="tag value"
                         value={tag.value}
                         onChange={(e) => handleTagChange(index, 'value', e.target.value)}
                         fullWidth
                       />
                       <button
                         onClick={() => handleRemoveTag(index)}
-                        className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
-                        <IconX size={12} />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
-                    </HStack>
+                    </div>
                   ))}
-                </VStack>
-              )}
 
-              <HStack gap={3} align="center">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={handleAddTag}
-                  disabled={tags.length >= MAX_TAGS}
-                >
-                  Add tag
-                </Button>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  {tags.length} / {MAX_TAGS} tags
-                </span>
-              </HStack>
+                  <HStack gap={3} align="center">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={handleAddTag}
+                      disabled={tags.length >= MAX_TAGS}
+                    >
+                      Add tag
+                    </Button>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      {tags.length} / {MAX_TAGS} tags
+                    </span>
+                  </HStack>
+                </VStack>
+              </div>
             </VStack>
           </div>
 
