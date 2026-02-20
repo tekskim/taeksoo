@@ -271,15 +271,31 @@ export default function CreateHPAPage() {
             referentApiVersion: '',
             referentKind: '',
             referentName: '',
-            selectors: [],
+            selectors: [{ id: Date.now().toString(), key: '', operator: 'In', value: '' }],
+          },
+          {
+            id: (Date.now() + 2).toString(),
+            source: 'External',
+            resourceName: '',
+            type: 'AverageUtilization',
+            quantity: 1,
+            metricName: '',
+            referentApiVersion: '',
+            referentKind: '',
+            referentName: '',
+            selectors: [{ id: (Date.now() + 3).toString(), key: '', operator: 'In', value: '' }],
           },
         ]
       : []
   );
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [labels, setLabels] = useState<Label[]>(
+    isV2 ? [{ id: Date.now().toString(), key: '', value: '' }] : []
+  );
+  const [annotations, setAnnotations] = useState<Annotation[]>(
+    isV2 ? [{ id: (Date.now() + 1).toString(), key: '', value: '' }] : []
+  );
 
   // Section states for summary
   const getSectionStates = (): Record<HPASectionStep, WizardSectionState> => {
@@ -670,7 +686,7 @@ export default function CreateHPAPage() {
                         </VStack>
 
                         {/* Resource Name (for Resource source) */}
-                        {metric.source === 'Resource' && (
+                        {(isV2 || metric.source === 'Resource') && (
                           <VStack gap={2}>
                             <label className="text-label-lg text-[var(--color-text-default)]">
                               Resource Name
@@ -709,7 +725,7 @@ export default function CreateHPAPage() {
                                 }
                                 fullWidth
                               />
-                              {metric.type === 'AverageUtilization' && (
+                              {(isV2 || metric.type === 'AverageUtilization') && (
                                 <span className="text-body-md text-[var(--color-text-default)]">
                                   %
                                 </span>
@@ -719,7 +735,7 @@ export default function CreateHPAPage() {
                         </HStack>
 
                         {/* External metrics specific fields */}
-                        {metric.source === 'External' && (
+                        {(isV2 || metric.source === 'External') && (
                           <>
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">

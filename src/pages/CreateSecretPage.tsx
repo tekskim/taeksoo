@@ -194,6 +194,7 @@ function SummarySidebar({
    ---------------------------------------- */
 
 interface BasicInfoSectionProps {
+  isV2: boolean;
   secretType: string;
   onSecretTypeChange: (value: string) => void;
   customType: string;
@@ -211,6 +212,7 @@ interface BasicInfoSectionProps {
 }
 
 function BasicInfoSection({
+  isV2,
   secretType,
   onSecretTypeChange,
   customType,
@@ -248,7 +250,7 @@ function BasicInfoSection({
           </FormField>
 
           {/* Custom Type (shown when Secret Type is "custom") */}
-          {secretType === 'custom' && (
+          {(isV2 || secretType === 'custom') && (
             <FormField required error={!!customTypeError}>
               <FormField.Label>Custom Type</FormField.Label>
               <FormField.Control>
@@ -594,7 +596,7 @@ export function CreateSecretPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
-  const [secretType, setSecretType] = useState('custom');
+  const [secretType, setSecretType] = useState(isV2 ? 'custom' : 'opaque');
   const [customType, setCustomType] = useState('');
   const [customTypeError, setCustomTypeError] = useState<string | null>(null);
   const [secretName, setSecretName] = useState('');
@@ -802,6 +804,7 @@ export function CreateSecretPage() {
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
+              isV2={isV2}
               secretType={secretType}
               onSecretTypeChange={setSecretType}
               customType={customType}

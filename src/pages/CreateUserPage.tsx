@@ -263,6 +263,7 @@ function SummarySidebar({
    ---------------------------------------- */
 
 interface PasswordSectionProps {
+  isV2?: boolean;
   passwordOption: 'temporary' | 'manual';
   onPasswordOptionChange: (value: 'temporary' | 'manual') => void;
   password: string;
@@ -276,6 +277,7 @@ interface PasswordSectionProps {
 }
 
 function PasswordSection({
+  isV2,
   passwordOption,
   onPasswordOptionChange,
   password,
@@ -417,7 +419,7 @@ function PasswordSection({
       </FormField>
 
       {/* Password inputs - shown when manual is selected */}
-      {passwordOption === 'manual' && (
+      {(isV2 || passwordOption === 'manual') && (
         <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
           <HStack gap={6} align="center">
             {/* Password */}
@@ -504,6 +506,7 @@ function PasswordSection({
    ---------------------------------------- */
 
 interface BasicInformationSectionProps {
+  isV2?: boolean;
   username: string;
   onUsernameChange: (value: string) => void;
   usernameError: string | null;
@@ -534,6 +537,7 @@ interface BasicInformationSectionProps {
 }
 
 function BasicInformationSection({
+  isV2,
   username,
   onUsernameChange,
   usernameError,
@@ -694,6 +698,7 @@ function BasicInformationSection({
 
           {/* Password */}
           <PasswordSection
+            isV2={isV2}
             passwordOption={passwordOption}
             onPasswordOptionChange={onPasswordOptionChange}
             password={password}
@@ -1029,7 +1034,9 @@ export default function CreateUserPage() {
   // Form state - Basic Information
   const [username, setUsername] = useState('');
   const [usernameError, setUsernameError] = useState<string | null>(null);
-  const [passwordOption, setPasswordOption] = useState<'temporary' | 'manual'>('temporary');
+  const [passwordOption, setPasswordOption] = useState<'temporary' | 'manual'>(
+    isV2 ? 'manual' : 'temporary'
+  );
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -1243,8 +1250,9 @@ export default function CreateUserPage() {
             {sectionStatus['basic-info'] === 'writing' && (
               <WritingSection title={SECTION_LABELS['basic-info']} />
             )}
-            {sectionStatus['basic-info'] === 'active' && (
+            {(isV2 || sectionStatus['basic-info'] === 'active') && (
               <BasicInformationSection
+                isV2={isV2}
                 username={username}
                 onUsernameChange={setUsername}
                 usernameError={usernameError}
