@@ -134,7 +134,7 @@ export default function IAMTokenPoliciesPage() {
                             min={5}
                             max={15}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Minutes
@@ -158,7 +158,7 @@ export default function IAMTokenPoliciesPage() {
                             min={1}
                             max={30}
                             step={1}
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)]">
                             Days
