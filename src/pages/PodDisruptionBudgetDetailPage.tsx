@@ -16,6 +16,7 @@ import {
   DetailHeader,
   Select,
   Input,
+  NumberInput,
   SearchInput,
   Pagination,
   Table,
@@ -572,54 +573,46 @@ export function PodDisruptionBudgetDetailPage() {
             {/* Budget Tab */}
             <TabPanel value="budget">
               <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
-                <VStack gap={4}>
+                <VStack gap={6}>
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                     Budget
                   </h3>
 
-                  <HStack gap={3} className="w-full pl-3">
+                  <VStack gap={4} className="w-full">
                     {/* Min. available Pods */}
-                    <VStack gap={2} className="flex-1">
-                      <span className="text-label-sm text-[var(--color-text-default)]">
+                    <VStack gap={2}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         Min. available Pods
                       </span>
-                      <HStack gap={2} className="w-full">
-                        <div className="flex-1">
-                          <Input
-                            value={pdbData.minAvailable || ''}
-                            onChange={() => {}}
-                            size="sm"
-                            fullWidth
-                            disabled
-                          />
-                        </div>
-                        <div className="w-[103px]">
-                          <Input value="Pods" onChange={() => {}} size="sm" fullWidth disabled />
-                        </div>
+                      <HStack gap={3} align="center">
+                        <NumberInput
+                          value={Number(pdbData.minAvailable) || 0}
+                          onChange={() => {}}
+                          min={0}
+                          width="sm"
+                          disabled
+                        />
+                        <span className="text-body-md text-[var(--color-text-default)]">Pods</span>
                       </HStack>
                     </VStack>
 
                     {/* Max. unavailable Pods */}
-                    <VStack gap={2} className="flex-1">
-                      <span className="text-label-sm text-[var(--color-text-default)]">
+                    <VStack gap={2}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         Max. unavailable Pods
                       </span>
-                      <HStack gap={2} className="w-full">
-                        <div className="flex-1">
-                          <Input
-                            value={pdbData.maxUnavailable || ''}
-                            onChange={() => {}}
-                            size="sm"
-                            fullWidth
-                            disabled
-                          />
-                        </div>
-                        <div className="w-[103px]">
-                          <Input value="Pods" onChange={() => {}} size="sm" fullWidth disabled />
-                        </div>
+                      <HStack gap={3} align="center">
+                        <NumberInput
+                          value={Number(pdbData.maxUnavailable) || 0}
+                          onChange={() => {}}
+                          min={0}
+                          width="sm"
+                          disabled
+                        />
+                        <span className="text-body-md text-[var(--color-text-default)]">Pods</span>
                       </HStack>
                     </VStack>
-                  </HStack>
+                  </VStack>
                 </VStack>
               </div>
             </TabPanel>
@@ -640,17 +633,17 @@ export function PodDisruptionBudgetDetailPage() {
                         {/* Column Headers */}
                         <HStack gap={2} className="w-full">
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Key
                             </span>
                           </div>
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Operator
                             </span>
                           </div>
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Value
                             </span>
                           </div>
@@ -664,7 +657,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={key}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                   className="bg-[var(--color-surface-muted)]"
@@ -675,7 +668,7 @@ export function PodDisruptionBudgetDetailPage() {
                                   options={operatorOptions}
                                   value="In List"
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                 />
@@ -684,7 +677,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={value}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                   className="bg-[var(--color-surface-muted)]"
@@ -702,8 +695,8 @@ export function PodDisruptionBudgetDetailPage() {
                   </VStack>
 
                   {/* Matching Pods Section */}
-                  <VStack gap={2}>
-                    <span className="text-label-sm text-[var(--color-text-default)]">
+                  <VStack gap={3}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Matching Pods ({pdbData.matchingPods.length}/10)
                     </span>
 
@@ -764,20 +757,18 @@ export function PodDisruptionBudgetDetailPage() {
 
                   {/* Labels */}
                   <VStack gap={2} className="w-full">
-                    <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                      Labels
-                    </h4>
+                    <h4 className="text-label-lg text-[var(--color-text-default)]">Labels</h4>
                     <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                       <VStack gap={2}>
                         {/* Column Headers */}
                         <HStack gap={2} className="w-full">
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Key
                             </span>
                           </div>
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Value
                             </span>
                           </div>
@@ -790,7 +781,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={key}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                 />
@@ -799,7 +790,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={value}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                 />
@@ -817,20 +808,18 @@ export function PodDisruptionBudgetDetailPage() {
 
                   {/* Annotations */}
                   <VStack gap={2} className="w-full">
-                    <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
-                      Annotations
-                    </h4>
+                    <h4 className="text-label-lg text-[var(--color-text-default)]">Annotations</h4>
                     <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                       <VStack gap={2}>
                         {/* Column Headers */}
                         <HStack gap={2} className="w-full">
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Key
                             </span>
                           </div>
                           <div className="flex-1">
-                            <span className="text-label-sm text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Value
                             </span>
                           </div>
@@ -843,7 +832,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={key}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                 />
@@ -852,7 +841,7 @@ export function PodDisruptionBudgetDetailPage() {
                                 <Input
                                   value={value}
                                   onChange={() => {}}
-                                  size="sm"
+                                  size="md"
                                   fullWidth
                                   disabled
                                 />
@@ -880,30 +869,30 @@ export function PodDisruptionBudgetDetailPage() {
 
                 {/* Search and Actions */}
                 <HStack gap={2} align="center" className="w-full">
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search events by attributes"
+                  <SearchInput
+                    placeholder="Search events by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <HStack gap={1}>
+                    <Button
+                      variant="outline"
                       size="sm"
-                      className="w-[200px]"
-                    />
+                      leftIcon={<IconDownload size={12} stroke={1.5} />}
+                      disabled={selectedEvents.length === 0}
+                    >
+                      Download YAML
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} stroke={1.5} />}
+                      disabled={selectedEvents.length === 0}
+                    >
+                      Delete
+                    </Button>
                   </HStack>
-
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconDownload size={12} stroke={1.5} />}
-                    disabled={selectedEvents.length === 0}
-                  >
-                    Download YAML
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} stroke={1.5} />}
-                    disabled={selectedEvents.length === 0}
-                  >
-                    Delete
-                  </Button>
                 </HStack>
 
                 {/* Pagination */}
