@@ -1470,6 +1470,131 @@ import { EmptyState } from '@/design-system';
 <PageHeader title="Title" actions={<Button>Create</Button>} />
 ```
 
+## NumberInput / Slider 사용 정책
+
+숫자 입력이 필요할 때 **4가지 패턴** 중 하나를 선택합니다.
+
+### 판단 기준
+
+| 질문 | 예 → | 아니오 → |
+|---|---|---|
+| 사용자가 값을 미리 알고 있는가? | **NumberInput 단독** | 다음 질문 |
+| 명확한 min~max 범위가 있는가? | 다음 질문 | **NumberInput 단독** |
+| 정확한 값 입력이 필요한가? | **Slider + NumberInput** | **Slider 단독** |
+| min~max 범위 자체를 정의하는가? | **RangeSlider + NumberInput 2개** | — |
+
+### Slider 행 너비 규칙
+
+모든 Slider 행(Pattern B, C, D)은 동일한 max-width를 사용합니다.
+
+```css
+--slider-row-max-width: 312px; /* Drawer(360px) 콘텐츠 영역과 동일 */
+```
+
+| 컨텍스트 | Slider 행 너비 | 적용 방법 |
+|---|---|---|
+| Drawer (360px) | `w-full` (패딩 제외 자동 312px) | 추가 제한 불필요 |
+| Create/Settings 페이지 | `max-w-[var(--slider-row-max-width)]` | 명시적 제한 필요 |
+
+### Pattern A: NumberInput 단독
+
+**사용 조건** (하나라도 해당):
+- 사용자가 입력할 값을 이미 알고 있음 (포트 번호, IP 등)
+- 범위가 좁음 (가능한 값 ~20개 이하)
+- 상한/하한이 없거나 의미 없음
+- 범위 내 위치보다 절대값 자체가 중요
+
+**적용 대상**: 포트 번호, 레플리카 수 (1~10), Parallelism, Completions, Backoff Limit, Max Surge(%)
+
+```tsx
+<FormField label="Replicas" required>
+  <NumberInput min={1} max={10} step={1} value={replicas}
+    onChange={setReplicas} width="xs" />
+</FormField>
+```
+
+### Pattern B: Slider + NumberInput (조합)
+
+**사용 조건** (모두 해당):
+- 명확한 min~max 범위가 있음
+- 범위가 넓음 (가능한 값 20개 이상)
+- 정확한 값 입력도 필요
+- 범위 내 위치를 시각적으로 인지하는 것이 의사결정에 도움
+
+**적용 대상**: 스토리지 용량(GiB), vCPU 할당, 메모리 할당(GiB), 디스크 크기, HPA Min/Max 레플리카
+
+```tsx
+// Drawer 내부: w-full (Drawer 패딩이 자동으로 312px 제한)
+<FormField label="Storage capacity" required>
+  <HStack gap={3} align="center" className="w-full">
+    <Slider min={1} max={1000} step={10} value={capacity}
+      onChange={setCapacity} className="flex-1" />
+    <NumberInput min={1} max={1000} step={1} value={capacity}
+      onChange={setCapacity} width="xs" suffix="GiB" />
+  </HStack>
+</FormField>
+
+// Create/Settings 페이지: max-w로 제한
+<FormField label="Storage capacity" required>
+  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+    <Slider min={1} max={1000} step={10} value={capacity}
+      onChange={setCapacity} className="flex-1" />
+    <NumberInput min={1} max={1000} step={1} value={capacity}
+      onChange={setCapacity} width="xs" suffix="GiB" />
+  </HStack>
+</FormField>
+```
+
+**Slider step 가이드**:
+
+| 범위 크기 | Slider step | NumberInput step | 예시 |
+|---|---|---|---|
+| ~50 | 1 | 1 | vCPU (1~64) |
+| 50~200 | 5 | 1 | 메모리 (1~256 GiB) |
+| 200~1000 | 10 | 1 | 스토리지 (10~1000 GiB) |
+| 1000+ | 50~100 | 1 | 대용량 스토리지 |
+
+> Slider step은 빠른 조절용으로 크게, NumberInput step은 정밀 입력용으로 1 고정.
+
+### Pattern C: Slider 단독 (값 표시 포함)
+
+**사용 조건** (모두 해당):
+- 대략적인 값이면 충분
+- 시각적/감각적 조절이 자연스러운 값
+- 정확한 숫자를 직접 타이핑할 필요가 거의 없음
+
+**적용 대상**: AI Temperature (0~1), Top-p (0~1)
+
+```tsx
+<FormField label="Temperature">
+  <div className="max-w-[var(--slider-row-max-width)]">
+    <Slider min={0} max={1} step={0.1} value={temperature}
+      onChange={setTemperature} showValue
+      formatValue={(v) => v.toFixed(1)} />
+  </div>
+</FormField>
+```
+
+### Pattern D: RangeSlider + NumberInput 2개 (범위 입력)
+
+**사용 조건**: min~max 범위 자체를 사용자가 정의해야 할 때
+
+**적용 대상**: 비밀번호 길이 정책, 포트 범위
+
+```tsx
+<FormField label="Password length">
+  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+    <NumberInput min={4} max={minVal} value={minVal}
+      onChange={setMinVal} width="xs" />
+    <RangeSlider min={4} max={128} value={[minVal, maxVal]}
+      onChange={([min, max]) => { setMinVal(min); setMaxVal(max); }}
+      className="flex-1" />
+    <NumberInput min={maxVal} max={128} value={maxVal}
+      onChange={setMaxVal} width="xs" />
+  </HStack>
+</FormField>
+```
+
 ## 참고
 
 - 디자인 시스템 페이지: `/design`
@@ -1478,5 +1603,5 @@ import { EmptyState } from '@/design-system';
 - 페이지 패턴 스토리: Storybook > Patterns > Page Patterns
 
 ## 버전- **Current Version**: 1.1.0
-- **Last Updated**: 2026-02-07
+- **Last Updated**: 2026-02-20
 - **Changelog**: `/CHANGELOG.md`

@@ -1086,30 +1086,29 @@ export function CreateVolumePage() {
                               minimum required size may apply.
                             </FormField.Description>
                             <FormField.Control>
-                              <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                                <div className="flex-1">
-                                  <Slider
-                                    value={volumeCapacity}
-                                    onChange={setVolumeCapacity}
-                                    min={1}
-                                    max={1460}
-                                  />
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                  <div>
-                                    <NumberInput
-                                      value={volumeCapacity}
-                                      onChange={(val) => setVolumeCapacity(val ?? 64)}
-                                      min={1}
-                                      max={1460}
-                                      width="xs"
-                                    />
-                                  </div>
-                                  <span className="text-body-md text-[var(--color-text-default)]">
-                                    GiB
-                                  </span>
-                                </div>
-                              </div>
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  value={volumeCapacity}
+                                  onChange={setVolumeCapacity}
+                                  min={1}
+                                  max={1460}
+                                  step={10}
+                                  className="flex-1"
+                                />
+                                <NumberInput
+                                  value={volumeCapacity}
+                                  onChange={(val) => setVolumeCapacity(val ?? 64)}
+                                  min={1}
+                                  max={1460}
+                                  step={1}
+                                  width="xs"
+                                  suffix="GiB"
+                                />
+                              </HStack>
                             </FormField.Control>
                             <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                           </FormField>
@@ -1191,30 +1190,29 @@ export function CreateVolumePage() {
                               minimum required size may apply.
                             </FormField.Description>
                             <FormField.Control>
-                              <div className="flex items-center gap-4 w-1/2">
-                                <div className="flex-1">
-                                  <Slider
-                                    value={volumeCapacity}
-                                    onChange={setVolumeCapacity}
-                                    min={1}
-                                    max={1000}
-                                  />
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div>
-                                    <NumberInput
-                                      value={volumeCapacity}
-                                      onChange={(val) => setVolumeCapacity(val ?? 10)}
-                                      min={1}
-                                      max={1000}
-                                      width="xs"
-                                    />
-                                  </div>
-                                  <span className="text-body-lg text-[var(--color-text-default)]">
-                                    GiB
-                                  </span>
-                                </div>
-                              </div>
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  value={volumeCapacity}
+                                  onChange={setVolumeCapacity}
+                                  min={1}
+                                  max={1000}
+                                  step={10}
+                                  className="flex-1"
+                                />
+                                <NumberInput
+                                  value={volumeCapacity}
+                                  onChange={(val) => setVolumeCapacity(val ?? 10)}
+                                  min={1}
+                                  max={1000}
+                                  step={1}
+                                  width="xs"
+                                  suffix="GiB"
+                                />
+                              </HStack>
                             </FormField.Control>
                             <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
                           </FormField>

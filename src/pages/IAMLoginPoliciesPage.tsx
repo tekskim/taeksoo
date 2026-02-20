@@ -200,7 +200,11 @@ export default function IAMLoginPoliciesPage() {
                         Defines the minimum length required for passwords.
                       </FormField.Description>
                       <FormField.Control>
-                        <div className="flex items-center gap-[var(--primitive-spacing-2)] w-1/2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)]">
+                        <HStack
+                          gap={3}
+                          align="center"
+                          className="max-w-[var(--slider-row-max-width)]"
+                        >
                           <NumberInput
                             value={minLength}
                             onChange={(val) => {
@@ -209,20 +213,19 @@ export default function IAMLoginPoliciesPage() {
                             min={6}
                             max={maxLength - 1}
                             step={1}
-                            className="w-[80px]"
+                            width="xs"
                           />
-                          <div className="flex-1">
-                            <RangeSlider
-                              value={[minLength, maxLength]}
-                              onChange={([min, max]) => {
-                                setMinLength(min);
-                                setMaxLength(max);
-                              }}
-                              min={6}
-                              max={128}
-                              step={1}
-                            />
-                          </div>
+                          <RangeSlider
+                            value={[minLength, maxLength]}
+                            onChange={([min, max]) => {
+                              setMinLength(min);
+                              setMaxLength(max);
+                            }}
+                            min={6}
+                            max={128}
+                            step={1}
+                            className="flex-1"
+                          />
                           <NumberInput
                             value={maxLength}
                             onChange={(val) => {
@@ -231,9 +234,9 @@ export default function IAMLoginPoliciesPage() {
                             min={minLength + 1}
                             max={128}
                             step={1}
-                            className="w-[80px]"
+                            width="xs"
                           />
-                        </div>
+                        </HStack>
                       </FormField.Control>
                       <FormField.HelperText>
                         6 - 128 / Maximum length must be greater than or equal to the minimum
@@ -359,7 +362,7 @@ export default function IAMLoginPoliciesPage() {
                                 min={1}
                                 max={24}
                                 step={1}
-                                className="w-[80px]"
+                                width="xs"
                                 disabled={!preventReuseEnabled}
                               />
                             </HStack>
@@ -380,7 +383,7 @@ export default function IAMLoginPoliciesPage() {
                                 min={1}
                                 max={365}
                                 step={1}
-                                className="w-[80px]"
+                                width="xs"
                                 disabled={!preventReuseEnabled}
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">

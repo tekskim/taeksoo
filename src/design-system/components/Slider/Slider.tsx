@@ -55,8 +55,10 @@ export function Slider({
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
 
-  // Calculate percentage
+  // Calculate percentage and thumb offset to keep thumb within track bounds
   const percentage = ((currentValue - min) / (max - min)) * 100;
+  const thumbSize = 16;
+  const thumbOffset = (percentage / 100) * thumbSize;
 
   // Update value
   const updateValue = useCallback(
@@ -204,7 +206,7 @@ export function Slider({
             'rounded-[var(--slider-track-radius)]',
             'transition-none'
           )}
-          style={{ width: `${percentage}%` }}
+          style={{ width: `calc(${percentage}% - ${thumbOffset - thumbSize / 2}px)` }}
         />
 
         {/* Thumb */}
@@ -230,7 +232,7 @@ export function Slider({
             isDragging && !disabled && 'cursor-grabbing'
           )}
           style={{
-            left: `calc(${percentage}% - 8px)`,
+            left: `calc(${percentage}% - ${thumbOffset}px)`,
             marginTop: '-8px',
           }}
         />

@@ -206,6 +206,7 @@ export function ExtendVolumeDrawer({
                 max={maxCapacity}
                 value={capacity}
                 onChange={handleCapacityChange}
+                step={50}
                 className="flex-1"
               />
               <NumberInput
@@ -213,8 +214,9 @@ export function ExtendVolumeDrawer({
                 onChange={handleCapacityChange}
                 min={minCapacity}
                 max={maxCapacity}
+                step={1}
                 width="xs"
-                className="shrink-0"
+                suffix="GiB"
               />
             </HStack>
           </FormField.Control>

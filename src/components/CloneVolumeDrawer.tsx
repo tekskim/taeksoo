@@ -263,6 +263,7 @@ export function CloneVolumeDrawer({
                 max={maxCapacity}
                 value={capacity}
                 onChange={handleCapacityChange}
+                step={50}
                 className="flex-1"
               />
               <NumberInput
@@ -270,8 +271,9 @@ export function CloneVolumeDrawer({
                 onChange={handleCapacityChange}
                 min={minCapacity}
                 max={maxCapacity}
+                step={1}
                 width="xs"
-                className="shrink-0"
+                suffix="GiB"
               />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
