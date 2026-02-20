@@ -1199,124 +1199,425 @@ function ImageSection({
               or an existing volume.
             </span>
 
-            {/* Source Tabs */}
-            <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance snapshot</Tab>
-                <Tab value="volume">Bootable volume</Tab>
-              </TabList>
-            </Tabs>
+            {isV2 ? (
+              <VStack gap={6}>
+                {/* Image block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search image by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalImagePages}
+                      totalItems={filteredImages.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={imageColumns}
+                      data={paginatedImages}
+                      rowKey="id"
+                      onRowClick={(row) => handleImageSelect(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
 
-            {/* OS Filter Chips - Only show for Image tab */}
-            {(isV2 || sourceTab === 'image') && (
-              <Tabs
-                variant="boxed"
-                size="sm"
-                value={osFilter}
-                onChange={(value) => {
-                  setOsFilter(value as typeof osFilter);
-                  setCurrentPage(1);
-                }}
-              >
-                <TabList className="mt-2">
-                  <Tab value="other">
-                    <HStack gap={1} align="center">
-                      <IconDots size={14} />
-                      <span>Others</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="ubuntu">
-                    <HStack gap={1} align="center">
-                      <IconUbuntu size={14} />
-                      <span>Ubuntu</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="windows">
-                    <HStack gap={1} align="center">
-                      <IconGrid size={14} />
-                      <span>Windows</span>
-                    </HStack>
-                  </Tab>
-                  <Tab value="rocky">
-                    <HStack gap={1} align="center">
-                      <IconRocky size={14} />
-                      <span>Rocky</span>
-                    </HStack>
-                  </Tab>
+                {/* Instance snapshot block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search snapshot by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
+                      totalItems={filteredSnapshots.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={snapshotColumns}
+                      data={filteredSnapshots.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => handleImageSelect(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
+
+                {/* Bootable volume block */}
+                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <VStack gap={2}>
+                    <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList className="mt-2">
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search volume by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)] mt-2"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredVolumes.length / itemsPerPage) || 1}
+                      totalItems={filteredVolumes.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <Table
+                      columns={volumeColumns}
+                      data={filteredVolumes.slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )}
+                      rowKey="id"
+                      onRowClick={(row) => handleImageSelect(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                      }
+                      onRemove={() => onSelectImage('')}
+                      error={!!sourceError}
+                      errorMessage={sourceError}
+                    />
+                  </VStack>
+                </div>
+              </VStack>
+            ) : (
+              <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="image">Image</Tab>
+                  <Tab value="snapshot">Instance snapshot</Tab>
+                  <Tab value="volume">Bootable volume</Tab>
                 </TabList>
+
+                <TabPanel value="image" className="pt-3">
+                  <VStack gap={3} className="w-full">
+                    <Tabs
+                      variant="boxed"
+                      size="sm"
+                      value={osFilter}
+                      onChange={(value) => {
+                        setOsFilter(value as typeof osFilter);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <TabList>
+                        <Tab value="other">
+                          <HStack gap={1} align="center">
+                            <IconDots size={14} />
+                            <span>Others</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="ubuntu">
+                          <HStack gap={1} align="center">
+                            <IconUbuntu size={14} />
+                            <span>Ubuntu</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="windows">
+                          <HStack gap={1} align="center">
+                            <IconGrid size={14} />
+                            <span>Windows</span>
+                          </HStack>
+                        </Tab>
+                        <Tab value="rocky">
+                          <HStack gap={1} align="center">
+                            <IconRocky size={14} />
+                            <span>Rocky</span>
+                          </HStack>
+                        </Tab>
+                      </TabList>
+                    </Tabs>
+                    <SearchInput
+                      placeholder="Search image by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalImagePages}
+                      totalItems={filteredImages.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={imageColumns}
+                        data={paginatedImages}
+                        rowKey="id"
+                        onRowClick={(row) => handleImageSelect(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                        error={!!sourceError}
+                        errorMessage={sourceError}
+                      />
+                    </VStack>
+                  </VStack>
+                </TabPanel>
+
+                <TabPanel value="snapshot" className="pt-3">
+                  <VStack gap={3} className="w-full">
+                    <SearchInput
+                      placeholder="Search snapshot by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
+                      totalItems={filteredSnapshots.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={snapshotColumns}
+                        data={filteredSnapshots.slice(
+                          (currentPage - 1) * itemsPerPage,
+                          currentPage * itemsPerPage
+                        )}
+                        rowKey="id"
+                        onRowClick={(row) => handleImageSelect(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                        error={!!sourceError}
+                        errorMessage={sourceError}
+                      />
+                    </VStack>
+                  </VStack>
+                </TabPanel>
+
+                <TabPanel value="volume" className="pt-3">
+                  <VStack gap={3} className="w-full">
+                    <SearchInput
+                      placeholder="Search volume by attributes"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onClear={() => {
+                        setSearchQuery('');
+                        setCurrentPage(1);
+                      }}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(filteredVolumes.length / itemsPerPage) || 1}
+                      totalItems={filteredVolumes.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedImageId ? 1 : 0}
+                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={volumeColumns}
+                        data={filteredVolumes.slice(
+                          (currentPage - 1) * itemsPerPage,
+                          currentPage * itemsPerPage
+                        )}
+                        rowKey="id"
+                        onRowClick={(row) => handleImageSelect(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+                        }
+                        onRemove={() => onSelectImage('')}
+                        error={!!sourceError}
+                        errorMessage={sourceError}
+                      />
+                    </VStack>
+                  </VStack>
+                </TabPanel>
               </Tabs>
             )}
-
-            {/* Search */}
-            <SearchInput
-              placeholder="Search image by attributes"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onClear={() => {
-                setSearchQuery('');
-                setCurrentPage(1);
-              }}
-              size="sm"
-              className="w-[var(--search-input-width)] mt-2"
-            />
-
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={
-                sourceTab === 'image'
-                  ? totalImagePages
-                  : Math.ceil(filteredSnapshots.length / itemsPerPage) || 1
-              }
-              totalItems={sourceTab === 'image' ? filteredImages.length : filteredSnapshots.length}
-              onPageChange={setCurrentPage}
-              selectedCount={selectedImageId ? 1 : 0}
-            />
-
-            {/* Table - Dynamic based on tab */}
-            <VStack gap={2}>
-              {(isV2 || sourceTab === 'image') && (
-                <Table
-                  columns={imageColumns}
-                  data={paginatedImages}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-              {sourceTab === 'snapshot' && (
-                <Table
-                  columns={snapshotColumns}
-                  data={filteredSnapshots.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-              {sourceTab === 'volume' && (
-                <Table
-                  columns={volumeColumns}
-                  data={filteredVolumes.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  rowKey="id"
-                  onRowClick={(row) => onSelectImage(row.id)}
-                />
-              )}
-
-              {/* Selected / Error Message */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                }
-                onRemove={() => onSelectImage('')}
-                error={!!sourceError}
-                errorMessage={sourceError}
-              />
-            </VStack>
           </VStack>
 
           {/* Divider */}
@@ -2432,12 +2733,29 @@ function NetworkSection({
                     onPageChange={setFipPage}
                     selectedCount={selectedFloatingPool ? 1 : 0}
                   />
-                  <Table
-                    columns={floatingPoolColumns}
-                    data={filteredFloatingPools}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedFloatingPool(row.id)}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={floatingPoolColumns}
+                      data={filteredFloatingPools}
+                      rowKey="id"
+                      onRowClick={(row) => setSelectedFloatingPool(row.id)}
+                    />
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedFloatingPool
+                          ? [
+                              {
+                                id: selectedFloatingPool,
+                                label:
+                                  mockFloatingIPPools.find((p) => p.id === selectedFloatingPool)
+                                    ?.name || selectedFloatingPool,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => setSelectedFloatingPool(null)}
+                    />
+                  </VStack>
                 </VStack>
               )}
 
@@ -2477,20 +2795,32 @@ function NetworkSection({
                     onPageChange={setFipPage}
                     selectedCount={selectedExistingFip.size}
                   />
-                  <Table
-                    columns={existingFipColumns}
-                    data={filteredExistingFips}
-                    rowKey="id"
-                    onRowClick={(row) => {
-                      const newSet = new Set(selectedExistingFip);
-                      if (newSet.has(row.id)) {
-                        newSet.delete(row.id);
-                      } else {
-                        newSet.add(row.id);
-                      }
-                      setSelectedExistingFip(newSet);
-                    }}
-                  />
+                  <VStack gap={2}>
+                    <Table
+                      columns={existingFipColumns}
+                      data={filteredExistingFips}
+                      rowKey="id"
+                      onRowClick={(row) => {
+                        const newSet = new Set(selectedExistingFip);
+                        if (newSet.has(row.id)) {
+                          newSet.delete(row.id);
+                        } else {
+                          newSet.add(row.id);
+                        }
+                        setSelectedExistingFip(newSet);
+                      }}
+                    />
+                    <SelectionIndicator
+                      selectedItems={mockExistingFloatingIPs
+                        .filter((f) => selectedExistingFip.has(f.id))
+                        .map((f) => ({ id: f.id, label: `${f.id}(${f.description})` }))}
+                      onRemove={(id) => {
+                        const newSet = new Set(selectedExistingFip);
+                        newSet.delete(id);
+                        setSelectedExistingFip(newSet);
+                      }}
+                    />
+                  </VStack>
                 </VStack>
               )}
             </VStack>
@@ -2705,6 +3035,7 @@ function AuthenticationSection({
   onEditCancel,
   onEditDone,
 }: AuthenticationSectionProps) {
+  const isV2 = useIsV2();
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');
   const [selectedKeyPairId, setSelectedKeyPairId] = useState<string | null>(null);
   const [keyPairSearch, setKeyPairSearch] = useState('');
@@ -2886,6 +3217,7 @@ function AuthenticationSection({
                             setAuthError(null);
                           }}
                           placeholder="Input login name"
+                          fullWidth
                         />
                       </div>
                       <div>
@@ -2899,6 +3231,7 @@ function AuthenticationSection({
                               setAuthError(null);
                             }}
                             placeholder="Input password"
+                            fullWidth
                           />
                           <button
                             type="button"
@@ -2907,7 +3240,7 @@ function AuthenticationSection({
                           >
                             {showPassword ? (
                               <svg
-                                className="w-4 h-4"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -2918,7 +3251,7 @@ function AuthenticationSection({
                               </svg>
                             ) : (
                               <svg
-                                className="w-4 h-4"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -2943,6 +3276,7 @@ function AuthenticationSection({
                                 setAuthError(null);
                               }}
                               placeholder="Input password"
+                              fullWidth
                             />
                             <button
                               type="button"
@@ -2951,7 +3285,7 @@ function AuthenticationSection({
                             >
                               {showConfirmPassword ? (
                                 <svg
-                                  className="w-4 h-4"
+                                  className="w-[14px] h-[14px]"
                                   viewBox="0 0 24 24"
                                   fill="none"
                                   stroke="currentColor"
@@ -2962,7 +3296,7 @@ function AuthenticationSection({
                                 </svg>
                               ) : (
                                 <svg
-                                  className="w-4 h-4"
+                                  className="w-[14px] h-[14px]"
                                   viewBox="0 0 24 24"
                                   fill="none"
                                   stroke="currentColor"
@@ -3517,6 +3851,22 @@ function TemplatesSection({
                         No favorite templates
                       </div>
                     )}
+
+                    {/* Selection Indicator for Templates */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedId
+                          ? [
+                              {
+                                id: selectedId,
+                                label:
+                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => onSelect('')}
+                    />
                   </VStack>
                 </TabPanel>
 
@@ -3560,6 +3910,22 @@ function TemplatesSection({
                         No templates in current tenant
                       </div>
                     )}
+
+                    {/* Selection Indicator for Templates */}
+                    <SelectionIndicator
+                      selectedItems={
+                        selectedId
+                          ? [
+                              {
+                                id: selectedId,
+                                label:
+                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
+                              },
+                            ]
+                          : []
+                      }
+                      onRemove={() => onSelect('')}
+                    />
                   </VStack>
                 </TabPanel>
 

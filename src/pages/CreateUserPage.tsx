@@ -445,7 +445,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                    {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
                   </button>
                 </div>
               </Tooltip>
@@ -474,7 +474,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                    {showConfirmPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
                   </button>
                 </div>
               </Tooltip>

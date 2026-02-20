@@ -655,20 +655,18 @@ export default function ComputeAdminCreateFirewallRulePage() {
                       <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                         Select the protocol to which the rule applies.
                       </span>
-                      <div>
-                        <Select
-                          options={[
-                            { value: 'tcp', label: 'TCP' },
-                            { value: 'udp', label: 'UDP' },
-                            { value: 'icmp', label: 'ICMP' },
-                            { value: 'any', label: 'Any' },
-                          ]}
-                          value={protocol}
-                          onChange={setProtocol}
-                          placeholder="Select a protocol"
-                          fullWidth
-                        />
-                      </div>
+                      <Select
+                        options={[
+                          { value: 'tcp', label: 'TCP' },
+                          { value: 'udp', label: 'UDP' },
+                          { value: 'icmp', label: 'ICMP' },
+                          { value: 'any', label: 'Any' },
+                        ]}
+                        value={protocol}
+                        onChange={setProtocol}
+                        placeholder="Select a protocol"
+                        width="half"
+                      />
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

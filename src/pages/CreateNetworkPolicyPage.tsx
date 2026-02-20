@@ -564,13 +564,23 @@ export function CreateNetworkPolicyPage() {
   // Ingress Rules state
   const [ingressEnabled, setIngressEnabled] = useState(isV2);
   const [ingressRules, setIngressRules] = useState<TrafficRule[]>([
-    { id: 'ingress-rule-1', name: 'Rule 1', targets: [], allowedPorts: [] },
+    {
+      id: 'ingress-rule-1',
+      name: 'Rule 1',
+      targets: isV2 ? [{ id: 'target-i1', ruleType: 'ipBlock', cidr: '' }] : [],
+      allowedPorts: isV2 ? [{ id: 'port-i1', port: '', protocol: 'TCP' }] : [],
+    },
   ]);
 
   // Egress Rules state
   const [egressEnabled, setEgressEnabled] = useState(isV2);
   const [egressRules, setEgressRules] = useState<TrafficRule[]>([
-    { id: 'egress-rule-1', name: 'Rule 1', targets: [], allowedPorts: [] },
+    {
+      id: 'egress-rule-1',
+      name: 'Rule 1',
+      targets: isV2 ? [{ id: 'target-e1', ruleType: 'ipBlock', cidr: '' }] : [],
+      allowedPorts: isV2 ? [{ id: 'port-e1', port: '', protocol: 'TCP' }] : [],
+    },
   ]);
 
   // Selector state

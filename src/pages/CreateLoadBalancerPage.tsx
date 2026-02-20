@@ -1803,7 +1803,7 @@ export default function CreateLoadBalancerPage() {
                           manually enter one within the subnet range.
                         </FormField.Description>
                         <FormField.Control>
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-6">
                             <HStack gap={2} align="center">
                               <span className="text-label-md text-[var(--color-text-default)]">
                                 Subnet
@@ -1824,7 +1824,7 @@ export default function CreateLoadBalancerPage() {
                                 value={subnet}
                                 onChange={setSubnet}
                                 placeholder="Select"
-                                width="sm"
+                                width="md"
                               />
                             </HStack>
                             <HStack gap={2} align="center">
@@ -1839,7 +1839,7 @@ export default function CreateLoadBalancerPage() {
                                 value={vipMode}
                                 onChange={(value) => setVipMode(value as 'auto' | 'manual')}
                                 placeholder="Auto-assign"
-                                width="sm"
+                                width="md"
                               />
                               {vipMode === 'manual' && (
                                 <Input
@@ -2000,31 +2000,29 @@ export default function CreateLoadBalancerPage() {
                           Select the protocol used to handle client requests.
                         </FormField.Description>
                         <FormField.Control>
-                          <div className="w-[calc(50%-12px)]">
-                            <Select
-                              value={listenerProtocol}
-                              onChange={(value) => {
-                                handleListenerProtocolChange(value);
-                                setListenerProtocolError(null);
-                              }}
-                              options={
-                                provider === 'ovn'
-                                  ? [
-                                      { value: 'TCP', label: 'TCP' },
-                                      { value: 'UDP', label: 'UDP' },
-                                    ]
-                                  : [
-                                      { value: 'HTTP', label: 'HTTP' },
-                                      { value: 'HTTPS', label: 'HTTPS' },
-                                      { value: 'TCP', label: 'TCP' },
-                                      { value: 'UDP', label: 'UDP' },
-                                      { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
-                                    ]
-                              }
-                              placeholder="Select a protocol"
-                              fullWidth
-                            />
-                          </div>
+                          <Select
+                            value={listenerProtocol}
+                            onChange={(value) => {
+                              handleListenerProtocolChange(value);
+                              setListenerProtocolError(null);
+                            }}
+                            options={
+                              provider === 'ovn'
+                                ? [
+                                    { value: 'TCP', label: 'TCP' },
+                                    { value: 'UDP', label: 'UDP' },
+                                  ]
+                                : [
+                                    { value: 'HTTP', label: 'HTTP' },
+                                    { value: 'HTTPS', label: 'HTTPS' },
+                                    { value: 'TCP', label: 'TCP' },
+                                    { value: 'UDP', label: 'UDP' },
+                                    { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
+                                  ]
+                            }
+                            placeholder="Select a protocol"
+                            width="half"
+                          />
                         </FormField.Control>
                         <FormField.ErrorMessage>{listenerProtocolError}</FormField.ErrorMessage>
                       </FormField>
@@ -2444,15 +2442,28 @@ export default function CreateLoadBalancerPage() {
                             </FormField>
 
                             {/* Allowed CIDRs */}
-                            <FormField className={isV2 ? 'gap-3' : ''}>
-                              <FormField.Label>Allowed CIDRs</FormField.Label>
-                              <FormField.Description>
-                                Defines the client IP ranges allowed to access the listener.
-                              </FormField.Description>
-                              <VStack gap={2} align="start">
-                                {allowedCidrs.map((cidr, index) => (
-                                  <HStack key={index} gap={2} align="center">
-                                    <div className="w-[calc(50%-12px)]">
+                            <VStack gap={3}>
+                              <VStack gap={1.5}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Allowed CIDRs
+                                </span>
+                                <p className="text-body-md text-[var(--color-text-subtle)]">
+                                  Defines the client IP ranges allowed to access the listener.
+                                </p>
+                              </VStack>
+
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {allowedCidrs.length > 0 && (
+                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                      CIDR
+                                    </span>
+                                  )}
+                                  {allowedCidrs.map((cidr, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                    >
                                       <Input
                                         value={cidr}
                                         onChange={(e) => {
@@ -2463,31 +2474,35 @@ export default function CreateLoadBalancerPage() {
                                         placeholder="e.g. 10.0.0.0/24"
                                         fullWidth
                                       />
+                                      <button
+                                        onClick={() => {
+                                          setAllowedCidrs(
+                                            allowedCidrs.filter((_, i) => i !== index)
+                                          );
+                                        }}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
-                                    <button
-                                      onClick={() => {
-                                        setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
-                                      }}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  ))}
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
                                     >
-                                      <IconX
-                                        size={16}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </HStack>
-                                ))}
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} />}
-                                  onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
-                                >
-                                  Add CIDR
-                                </Button>
-                              </VStack>
-                            </FormField>
+                                      Add CIDR
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
+                            </VStack>
                           </VStack>
                         </Disclosure.Panel>
                       </Disclosure>
@@ -2634,20 +2649,18 @@ export default function CreateLoadBalancerPage() {
                               The chosen algorithm determines how traffic is routed to each server.
                             </FormField.Description>
                             <FormField.Control>
-                              <div className="w-[calc(50%-12px)]">
-                                <Select
-                                  options={[
-                                    { value: 'ROUND_ROBIN', label: 'Round robin' },
-                                    { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
-                                    { value: 'SOURCE_IP', label: 'Source IP' },
-                                    { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
-                                  ]}
-                                  value={poolAlgorithm}
-                                  onChange={setPoolAlgorithm}
-                                  placeholder="Select algorithm"
-                                  fullWidth
-                                />
-                              </div>
+                              <Select
+                                options={[
+                                  { value: 'ROUND_ROBIN', label: 'Round robin' },
+                                  { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
+                                  { value: 'SOURCE_IP', label: 'Source IP' },
+                                  { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
+                                ]}
+                                value={poolAlgorithm}
+                                onChange={setPoolAlgorithm}
+                                placeholder="Select algorithm"
+                                width="half"
+                              />
                             </FormField.Control>
                             <FormField.HelperText>
                               {poolAlgorithm === 'ROUND_ROBIN' &&
@@ -2671,15 +2684,13 @@ export default function CreateLoadBalancerPage() {
                               match or be compatible with the listener's protocol.
                             </FormField.Description>
                             <FormField.Control>
-                              <div className="w-[calc(50%-12px)]">
-                                <Select
-                                  options={poolProtocolOptions}
-                                  value={poolProtocol}
-                                  onChange={setPoolProtocol}
-                                  placeholder="Select protocol"
-                                  fullWidth
-                                />
-                              </div>
+                              <Select
+                                options={poolProtocolOptions}
+                                value={poolProtocol}
+                                onChange={setPoolProtocol}
+                                placeholder="Select protocol"
+                                width="half"
+                              />
                             </FormField.Control>
                           </FormField>
                         </div>
@@ -2919,104 +2930,105 @@ export default function CreateLoadBalancerPage() {
                           </p>
                         </VStack>
 
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                          className="w-fit"
-                          onClick={() => {
-                            setExternalMembers((prev) => [
-                              ...prev,
-                              {
-                                id: `ext-${Date.now()}`,
-                                ipAddress: '',
-                                port: undefined,
-                                weight: 1,
-                              },
-                            ]);
-                          }}
-                        >
-                          Add External Member
-                        </Button>
-
-                        {/* External Member Rows */}
-                        {externalMembers.map((extMember) => (
-                          <div
-                            key={extMember.id}
-                            className="w-full border border-[var(--color-border-default)] rounded-md p-3 flex gap-3 items-end bg-[var(--color-surface-default)]"
-                          >
-                            {/* IP Address */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                IP address
-                              </span>
-                              <Input
-                                placeholder="Enter IP address"
-                                value={extMember.ipAddress}
-                                onChange={(e) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id
-                                        ? { ...m, ipAddress: e.target.value }
-                                        : m
-                                    )
-                                  );
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
+                            {externalMembers.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  IP address
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Port
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Weights
+                                </span>
+                                <div />
+                              </div>
+                            )}
+                            {externalMembers.map((extMember) => (
+                              <div
+                                key={extMember.id}
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                              >
+                                <Input
+                                  placeholder="Enter IP address"
+                                  value={extMember.ipAddress}
+                                  onChange={(e) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id
+                                          ? { ...m, ipAddress: e.target.value }
+                                          : m
+                                      )
+                                    );
+                                  }}
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={extMember.port}
+                                  onChange={(value) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, port: value } : m
+                                      )
+                                    );
+                                  }}
+                                  min={1}
+                                  max={65535}
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={extMember.weight}
+                                  onChange={(value) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, weight: value } : m
+                                      )
+                                    );
+                                  }}
+                                  min={1}
+                                  max={256}
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => {
+                                    setExternalMembers((prev) =>
+                                      prev.filter((m) => m.id !== extMember.id)
+                                    );
+                                  }}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
+                              </div>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() => {
+                                  setExternalMembers((prev) => [
+                                    ...prev,
+                                    {
+                                      id: `ext-${Date.now()}`,
+                                      ipAddress: '',
+                                      port: undefined,
+                                      weight: 1,
+                                    },
+                                  ]);
                                 }}
-                                fullWidth
-                              />
+                              >
+                                Add External Member
+                              </Button>
                             </div>
-                            {/* Port */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                Port
-                              </span>
-                              <NumberInput
-                                value={extMember.port}
-                                onChange={(value) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id ? { ...m, port: value } : m
-                                    )
-                                  );
-                                }}
-                                min={1}
-                                max={65535}
-                                fullWidth
-                              />
-                            </div>
-                            {/* Weights */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                Weights
-                              </span>
-                              <NumberInput
-                                value={extMember.weight}
-                                onChange={(value) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id ? { ...m, weight: value } : m
-                                    )
-                                  );
-                                }}
-                                min={1}
-                                max={256}
-                                fullWidth
-                              />
-                            </div>
-                            {/* Remove Button */}
-                            <button
-                              type="button"
-                              className="inline-flex items-center justify-center w-[25px] h-[25px] rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors duration-[var(--duration-fast)] shrink-0 self-end mb-[3.5px]"
-                              onClick={() => {
-                                setExternalMembers((prev) =>
-                                  prev.filter((m) => m.id !== extMember.id)
-                                );
-                              }}
-                            >
-                              <IconX size={14} stroke={1.5} />
-                            </button>
-                          </div>
-                        ))}
+                          </VStack>
+                        </div>
 
                         {/* Allocated Members Table (shown when there are members) */}
                         {allocatedMembers.length > 0 && (
@@ -3140,7 +3152,7 @@ export default function CreateLoadBalancerPage() {
                                 value={healthMonitorType}
                                 onChange={setHealthMonitorType}
                                 placeholder="Select type"
-                                style={{ width: '240px' }}
+                                width="half"
                               />
                             </FormField.Control>
                           </FormField>
@@ -3159,7 +3171,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorInterval}
                                 min={1}
                                 max={3600}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>
@@ -3183,7 +3194,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorTimeout}
                                 min={1}
                                 max={3599}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>
@@ -3208,7 +3218,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorMaxRetries}
                                 min={3}
                                 max={10}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>
