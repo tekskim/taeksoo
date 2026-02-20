@@ -1549,75 +1549,248 @@ export default function CreateLoadBalancerPage() {
                           </FormField.Description>
                         </FormField>
 
-                        {/* Network Tabs */}
-                        <Tabs
-                          value={networkTab}
-                          onChange={(value) =>
-                            setNetworkTab(value as 'current' | 'shared' | 'external')
-                          }
-                          variant="underline"
-                        >
-                          <TabList>
-                            <Tab value="current">Current tenant</Tab>
-                            <Tab value="shared">Shared</Tab>
-                            <Tab value="external">External</Tab>
-                          </TabList>
-                        </Tabs>
-
-                        {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search networks by attributes"
-                            value={networkSearch}
-                            onChange={(e) => setNetworkSearch(e.target.value)}
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <Pagination
-                          currentPage={networkPage}
-                          totalPages={5}
-                          totalItems={115}
-                          onPageChange={setNetworkPage}
-                        />
-
-                        {/* Network Table */}
-                        <VStack gap={2}>
-                          {provider ? (
-                            <Table
-                              columns={networkColumns}
-                              data={mockNetworks}
-                              getRowId={(row) => row.id}
-                              onRowClick={(row) => {
-                                setSelectedNetwork(row.id);
-                                setNetworkError(null);
-                              }}
-                            />
-                          ) : (
-                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
-                              Select a provider to view the network list.
+                        {isV2 ? (
+                          <VStack gap={6}>
+                            {/* No provider selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  No provider selected
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                                    Select a provider to view the network list.
+                                  </div>
+                                  <SelectionIndicator selectedItems={[]} onRemove={() => {}} />
+                                </VStack>
+                              </VStack>
                             </div>
-                          )}
 
-                          {/* Selection Indicator for Network */}
-                          <SelectionIndicator
-                            selectedItems={
-                              selectedNetwork
-                                ? [
-                                    {
-                                      id: selectedNetwork,
-                                      label:
-                                        mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
-                                        selectedNetwork,
-                                    },
-                                  ]
-                                : []
-                            }
-                            onRemove={() => setSelectedNetwork('')}
-                            error={!!networkError}
-                            errorMessage={networkError || undefined}
-                          />
-                        </VStack>
+                            {/* OVN selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  OVN
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <Table
+                                    columns={networkColumns}
+                                    data={mockNetworks}
+                                    getRowId={(row) => row.id}
+                                    onRowClick={(row) => {
+                                      setSelectedNetwork(row.id);
+                                      setNetworkError(null);
+                                    }}
+                                  />
+                                  <SelectionIndicator
+                                    selectedItems={
+                                      selectedNetwork
+                                        ? [
+                                            {
+                                              id: selectedNetwork,
+                                              label:
+                                                mockNetworks.find((n) => n.id === selectedNetwork)
+                                                  ?.name || selectedNetwork,
+                                            },
+                                          ]
+                                        : []
+                                    }
+                                    onRemove={() => setSelectedNetwork('')}
+                                    error={!!networkError}
+                                    errorMessage={networkError || undefined}
+                                  />
+                                </VStack>
+                              </VStack>
+                            </div>
+
+                            {/* Amphora selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Amphora
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <Table
+                                    columns={networkColumns}
+                                    data={mockNetworks}
+                                    getRowId={(row) => row.id}
+                                    onRowClick={(row) => {
+                                      setSelectedNetwork(row.id);
+                                      setNetworkError(null);
+                                    }}
+                                  />
+                                  <SelectionIndicator
+                                    selectedItems={
+                                      selectedNetwork
+                                        ? [
+                                            {
+                                              id: selectedNetwork,
+                                              label:
+                                                mockNetworks.find((n) => n.id === selectedNetwork)
+                                                  ?.name || selectedNetwork,
+                                            },
+                                          ]
+                                        : []
+                                    }
+                                    onRemove={() => setSelectedNetwork('')}
+                                    error={!!networkError}
+                                    errorMessage={networkError || undefined}
+                                  />
+                                </VStack>
+                              </VStack>
+                            </div>
+                          </VStack>
+                        ) : (
+                          <>
+                            {/* Network Tabs */}
+                            <Tabs
+                              value={networkTab}
+                              onChange={(value) =>
+                                setNetworkTab(value as 'current' | 'shared' | 'external')
+                              }
+                              variant="underline"
+                            >
+                              <TabList>
+                                <Tab value="current">Current tenant</Tab>
+                                <Tab value="shared">Shared</Tab>
+                                <Tab value="external">External</Tab>
+                              </TabList>
+                            </Tabs>
+
+                            {/* Search */}
+                            <div className="w-[var(--search-input-width)]">
+                              <SearchInput
+                                placeholder="Search networks by attributes"
+                                value={networkSearch}
+                                onChange={(e) => setNetworkSearch(e.target.value)}
+                              />
+                            </div>
+
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={networkPage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setNetworkPage}
+                            />
+
+                            {/* Network Table */}
+                            <VStack gap={2}>
+                              {provider ? (
+                                <Table
+                                  columns={networkColumns}
+                                  data={mockNetworks}
+                                  getRowId={(row) => row.id}
+                                  onRowClick={(row) => {
+                                    setSelectedNetwork(row.id);
+                                    setNetworkError(null);
+                                  }}
+                                />
+                              ) : (
+                                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                                  Select a provider to view the network list.
+                                </div>
+                              )}
+
+                              {/* Selection Indicator for Network */}
+                              <SelectionIndicator
+                                selectedItems={
+                                  selectedNetwork
+                                    ? [
+                                        {
+                                          id: selectedNetwork,
+                                          label:
+                                            mockNetworks.find((n) => n.id === selectedNetwork)
+                                              ?.name || selectedNetwork,
+                                        },
+                                      ]
+                                    : []
+                                }
+                                onRemove={() => setSelectedNetwork('')}
+                                error={!!networkError}
+                                errorMessage={networkError || undefined}
+                              />
+                            </VStack>
+                          </>
+                        )}
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1827,29 +2000,31 @@ export default function CreateLoadBalancerPage() {
                           Select the protocol used to handle client requests.
                         </FormField.Description>
                         <FormField.Control>
-                          <Select
-                            value={listenerProtocol}
-                            onChange={(value) => {
-                              handleListenerProtocolChange(value);
-                              setListenerProtocolError(null);
-                            }}
-                            options={
-                              provider === 'ovn'
-                                ? [
-                                    { value: 'TCP', label: 'TCP' },
-                                    { value: 'UDP', label: 'UDP' },
-                                  ]
-                                : [
-                                    { value: 'HTTP', label: 'HTTP' },
-                                    { value: 'HTTPS', label: 'HTTPS' },
-                                    { value: 'TCP', label: 'TCP' },
-                                    { value: 'UDP', label: 'UDP' },
-                                    { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
-                                  ]
-                            }
-                            placeholder="Select a protocol"
-                            width="sm"
-                          />
+                          <div className="w-[calc(50%-12px)]">
+                            <Select
+                              value={listenerProtocol}
+                              onChange={(value) => {
+                                handleListenerProtocolChange(value);
+                                setListenerProtocolError(null);
+                              }}
+                              options={
+                                provider === 'ovn'
+                                  ? [
+                                      { value: 'TCP', label: 'TCP' },
+                                      { value: 'UDP', label: 'UDP' },
+                                    ]
+                                  : [
+                                      { value: 'HTTP', label: 'HTTP' },
+                                      { value: 'HTTPS', label: 'HTTPS' },
+                                      { value: 'TCP', label: 'TCP' },
+                                      { value: 'UDP', label: 'UDP' },
+                                      { value: 'TERMINATED_HTTPS', label: 'TERMINATED_HTTPS' },
+                                    ]
+                              }
+                              placeholder="Select a protocol"
+                              fullWidth
+                            />
+                          </div>
                         </FormField.Control>
                         <FormField.ErrorMessage>{listenerProtocolError}</FormField.ErrorMessage>
                       </FormField>
@@ -2277,25 +2452,30 @@ export default function CreateLoadBalancerPage() {
                               <VStack gap={2} align="start">
                                 {allowedCidrs.map((cidr, index) => (
                                   <HStack key={index} gap={2} align="center">
-                                    <Input
-                                      value={cidr}
-                                      onChange={(e) => {
-                                        const newCidrs = [...allowedCidrs];
-                                        newCidrs[index] = e.target.value;
-                                        setAllowedCidrs(newCidrs);
-                                      }}
-                                      placeholder="e.g. 10.0.0.0/24"
-                                      className="w-[var(--layout-sidebar-width)]"
-                                    />
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
+                                    <div className="w-[calc(50%-12px)]">
+                                      <Input
+                                        value={cidr}
+                                        onChange={(e) => {
+                                          const newCidrs = [...allowedCidrs];
+                                          newCidrs[index] = e.target.value;
+                                          setAllowedCidrs(newCidrs);
+                                        }}
+                                        placeholder="e.g. 10.0.0.0/24"
+                                        fullWidth
+                                      />
+                                    </div>
+                                    <button
                                       onClick={() => {
                                         setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
                                       }}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
-                                      Remove
-                                    </Button>
+                                      <IconX
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
                                   </HStack>
                                 ))}
                                 <Button
@@ -2454,18 +2634,20 @@ export default function CreateLoadBalancerPage() {
                               The chosen algorithm determines how traffic is routed to each server.
                             </FormField.Description>
                             <FormField.Control>
-                              <Select
-                                options={[
-                                  { value: 'ROUND_ROBIN', label: 'Round robin' },
-                                  { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
-                                  { value: 'SOURCE_IP', label: 'Source IP' },
-                                  { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
-                                ]}
-                                value={poolAlgorithm}
-                                onChange={setPoolAlgorithm}
-                                placeholder="Select algorithm"
-                                className="w-[var(--layout-sidebar-width)]"
-                              />
+                              <div className="w-[calc(50%-12px)]">
+                                <Select
+                                  options={[
+                                    { value: 'ROUND_ROBIN', label: 'Round robin' },
+                                    { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
+                                    { value: 'SOURCE_IP', label: 'Source IP' },
+                                    { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
+                                  ]}
+                                  value={poolAlgorithm}
+                                  onChange={setPoolAlgorithm}
+                                  placeholder="Select algorithm"
+                                  fullWidth
+                                />
+                              </div>
                             </FormField.Control>
                             <FormField.HelperText>
                               {poolAlgorithm === 'ROUND_ROBIN' &&
@@ -2489,13 +2671,15 @@ export default function CreateLoadBalancerPage() {
                               match or be compatible with the listener's protocol.
                             </FormField.Description>
                             <FormField.Control>
-                              <Select
-                                options={poolProtocolOptions}
-                                value={poolProtocol}
-                                onChange={setPoolProtocol}
-                                placeholder="Select protocol"
-                                className="w-[var(--layout-sidebar-width)]"
-                              />
+                              <div className="w-[calc(50%-12px)]">
+                                <Select
+                                  options={poolProtocolOptions}
+                                  value={poolProtocol}
+                                  onChange={setPoolProtocol}
+                                  placeholder="Select protocol"
+                                  fullWidth
+                                />
+                              </div>
                             </FormField.Control>
                           </FormField>
                         </div>

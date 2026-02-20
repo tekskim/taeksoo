@@ -3224,7 +3224,7 @@ function AuthenticationSection({
                         >
                           {showPassword ? (
                             <svg
-                              className="w-3.5 h-3.5"
+                              className="w-[14px] h-[14px]"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -3235,7 +3235,7 @@ function AuthenticationSection({
                             </svg>
                           ) : (
                             <svg
-                              className="w-3.5 h-3.5"
+                              className="w-[14px] h-[14px]"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -3269,7 +3269,7 @@ function AuthenticationSection({
                           >
                             {showConfirmPassword ? (
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -3280,7 +3280,7 @@ function AuthenticationSection({
                               </svg>
                             ) : (
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -3386,7 +3386,7 @@ function AuthenticationSection({
                         >
                           {showPassword ? (
                             <svg
-                              className="w-3.5 h-3.5"
+                              className="w-[14px] h-[14px]"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -3397,7 +3397,7 @@ function AuthenticationSection({
                             </svg>
                           ) : (
                             <svg
-                              className="w-3.5 h-3.5"
+                              className="w-[14px] h-[14px]"
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -3430,7 +3430,7 @@ function AuthenticationSection({
                           >
                             {showConfirmPassword ? (
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -3441,7 +3441,7 @@ function AuthenticationSection({
                               </svg>
                             ) : (
                               <svg
-                                className="w-3.5 h-3.5"
+                                className="w-[14px] h-[14px]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
