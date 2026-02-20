@@ -627,7 +627,7 @@ export default function CreateNetworkPage() {
                             value={segmentationId}
                             onChange={setSegmentationId}
                             placeholder="Select Segmentation ID"
-                            fullWidth
+                            width="half"
                           />
                         </VStack>
                       </>

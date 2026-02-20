@@ -1549,75 +1549,248 @@ export default function CreateLoadBalancerPage() {
                           </FormField.Description>
                         </FormField>
 
-                        {/* Network Tabs */}
-                        <Tabs
-                          value={networkTab}
-                          onChange={(value) =>
-                            setNetworkTab(value as 'current' | 'shared' | 'external')
-                          }
-                          variant="underline"
-                        >
-                          <TabList>
-                            <Tab value="current">Current tenant</Tab>
-                            <Tab value="shared">Shared</Tab>
-                            <Tab value="external">External</Tab>
-                          </TabList>
-                        </Tabs>
-
-                        {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search networks by attributes"
-                            value={networkSearch}
-                            onChange={(e) => setNetworkSearch(e.target.value)}
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <Pagination
-                          currentPage={networkPage}
-                          totalPages={5}
-                          totalItems={115}
-                          onPageChange={setNetworkPage}
-                        />
-
-                        {/* Network Table */}
-                        <VStack gap={2}>
-                          {provider ? (
-                            <Table
-                              columns={networkColumns}
-                              data={mockNetworks}
-                              getRowId={(row) => row.id}
-                              onRowClick={(row) => {
-                                setSelectedNetwork(row.id);
-                                setNetworkError(null);
-                              }}
-                            />
-                          ) : (
-                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
-                              Select a provider to view the network list.
+                        {isV2 ? (
+                          <VStack gap={6}>
+                            {/* No provider selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  No provider selected
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                                    Select a provider to view the network list.
+                                  </div>
+                                  <SelectionIndicator selectedItems={[]} onRemove={() => {}} />
+                                </VStack>
+                              </VStack>
                             </div>
-                          )}
 
-                          {/* Selection Indicator for Network */}
-                          <SelectionIndicator
-                            selectedItems={
-                              selectedNetwork
-                                ? [
-                                    {
-                                      id: selectedNetwork,
-                                      label:
-                                        mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
-                                        selectedNetwork,
-                                    },
-                                  ]
-                                : []
-                            }
-                            onRemove={() => setSelectedNetwork('')}
-                            error={!!networkError}
-                            errorMessage={networkError || undefined}
-                          />
-                        </VStack>
+                            {/* OVN selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  OVN
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <Table
+                                    columns={networkColumns}
+                                    data={mockNetworks}
+                                    getRowId={(row) => row.id}
+                                    onRowClick={(row) => {
+                                      setSelectedNetwork(row.id);
+                                      setNetworkError(null);
+                                    }}
+                                  />
+                                  <SelectionIndicator
+                                    selectedItems={
+                                      selectedNetwork
+                                        ? [
+                                            {
+                                              id: selectedNetwork,
+                                              label:
+                                                mockNetworks.find((n) => n.id === selectedNetwork)
+                                                  ?.name || selectedNetwork,
+                                            },
+                                          ]
+                                        : []
+                                    }
+                                    onRemove={() => setSelectedNetwork('')}
+                                    error={!!networkError}
+                                    errorMessage={networkError || undefined}
+                                  />
+                                </VStack>
+                              </VStack>
+                            </div>
+
+                            {/* Amphora selected block */}
+                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <VStack gap={4}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Amphora
+                                </span>
+                                <Tabs
+                                  value={networkTab}
+                                  onChange={(value) =>
+                                    setNetworkTab(value as 'current' | 'shared' | 'external')
+                                  }
+                                  variant="underline"
+                                >
+                                  <TabList>
+                                    <Tab value="current">Current tenant</Tab>
+                                    <Tab value="shared">Shared</Tab>
+                                    <Tab value="external">External</Tab>
+                                  </TabList>
+                                </Tabs>
+                                <div className="w-[var(--search-input-width)]">
+                                  <SearchInput
+                                    placeholder="Search networks by attributes"
+                                    value={networkSearch}
+                                    onChange={(e) => setNetworkSearch(e.target.value)}
+                                  />
+                                </div>
+                                <Pagination
+                                  currentPage={networkPage}
+                                  totalPages={5}
+                                  totalItems={115}
+                                  onPageChange={setNetworkPage}
+                                />
+                                <VStack gap={2}>
+                                  <Table
+                                    columns={networkColumns}
+                                    data={mockNetworks}
+                                    getRowId={(row) => row.id}
+                                    onRowClick={(row) => {
+                                      setSelectedNetwork(row.id);
+                                      setNetworkError(null);
+                                    }}
+                                  />
+                                  <SelectionIndicator
+                                    selectedItems={
+                                      selectedNetwork
+                                        ? [
+                                            {
+                                              id: selectedNetwork,
+                                              label:
+                                                mockNetworks.find((n) => n.id === selectedNetwork)
+                                                  ?.name || selectedNetwork,
+                                            },
+                                          ]
+                                        : []
+                                    }
+                                    onRemove={() => setSelectedNetwork('')}
+                                    error={!!networkError}
+                                    errorMessage={networkError || undefined}
+                                  />
+                                </VStack>
+                              </VStack>
+                            </div>
+                          </VStack>
+                        ) : (
+                          <>
+                            {/* Network Tabs */}
+                            <Tabs
+                              value={networkTab}
+                              onChange={(value) =>
+                                setNetworkTab(value as 'current' | 'shared' | 'external')
+                              }
+                              variant="underline"
+                            >
+                              <TabList>
+                                <Tab value="current">Current tenant</Tab>
+                                <Tab value="shared">Shared</Tab>
+                                <Tab value="external">External</Tab>
+                              </TabList>
+                            </Tabs>
+
+                            {/* Search */}
+                            <div className="w-[var(--search-input-width)]">
+                              <SearchInput
+                                placeholder="Search networks by attributes"
+                                value={networkSearch}
+                                onChange={(e) => setNetworkSearch(e.target.value)}
+                              />
+                            </div>
+
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={networkPage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setNetworkPage}
+                            />
+
+                            {/* Network Table */}
+                            <VStack gap={2}>
+                              {provider ? (
+                                <Table
+                                  columns={networkColumns}
+                                  data={mockNetworks}
+                                  getRowId={(row) => row.id}
+                                  onRowClick={(row) => {
+                                    setSelectedNetwork(row.id);
+                                    setNetworkError(null);
+                                  }}
+                                />
+                              ) : (
+                                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
+                                  Select a provider to view the network list.
+                                </div>
+                              )}
+
+                              {/* Selection Indicator for Network */}
+                              <SelectionIndicator
+                                selectedItems={
+                                  selectedNetwork
+                                    ? [
+                                        {
+                                          id: selectedNetwork,
+                                          label:
+                                            mockNetworks.find((n) => n.id === selectedNetwork)
+                                              ?.name || selectedNetwork,
+                                        },
+                                      ]
+                                    : []
+                                }
+                                onRemove={() => setSelectedNetwork('')}
+                                error={!!networkError}
+                                errorMessage={networkError || undefined}
+                              />
+                            </VStack>
+                          </>
+                        )}
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1630,7 +1803,7 @@ export default function CreateLoadBalancerPage() {
                           manually enter one within the subnet range.
                         </FormField.Description>
                         <FormField.Control>
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-6">
                             <HStack gap={2} align="center">
                               <span className="text-label-md text-[var(--color-text-default)]">
                                 Subnet
@@ -1651,7 +1824,7 @@ export default function CreateLoadBalancerPage() {
                                 value={subnet}
                                 onChange={setSubnet}
                                 placeholder="Select"
-                                width="sm"
+                                width="md"
                               />
                             </HStack>
                             <HStack gap={2} align="center">
@@ -1666,7 +1839,7 @@ export default function CreateLoadBalancerPage() {
                                 value={vipMode}
                                 onChange={(value) => setVipMode(value as 'auto' | 'manual')}
                                 placeholder="Auto-assign"
-                                width="sm"
+                                width="md"
                               />
                               {vipMode === 'manual' && (
                                 <Input
@@ -1848,7 +2021,7 @@ export default function CreateLoadBalancerPage() {
                                   ]
                             }
                             placeholder="Select a protocol"
-                            width="sm"
+                            width="half"
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{listenerProtocolError}</FormField.ErrorMessage>
@@ -2269,45 +2442,67 @@ export default function CreateLoadBalancerPage() {
                             </FormField>
 
                             {/* Allowed CIDRs */}
-                            <FormField className={isV2 ? 'gap-3' : ''}>
-                              <FormField.Label>Allowed CIDRs</FormField.Label>
-                              <FormField.Description>
-                                Defines the client IP ranges allowed to access the listener.
-                              </FormField.Description>
-                              <VStack gap={2} align="start">
-                                {allowedCidrs.map((cidr, index) => (
-                                  <HStack key={index} gap={2} align="center">
-                                    <Input
-                                      value={cidr}
-                                      onChange={(e) => {
-                                        const newCidrs = [...allowedCidrs];
-                                        newCidrs[index] = e.target.value;
-                                        setAllowedCidrs(newCidrs);
-                                      }}
-                                      placeholder="e.g. 10.0.0.0/24"
-                                      className="w-[var(--layout-sidebar-width)]"
-                                    />
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        setAllowedCidrs(allowedCidrs.filter((_, i) => i !== index));
-                                      }}
-                                    >
-                                      Remove
-                                    </Button>
-                                  </HStack>
-                                ))}
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} />}
-                                  onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
-                                >
-                                  Add CIDR
-                                </Button>
+                            <VStack gap={3}>
+                              <VStack gap={1.5}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Allowed CIDRs
+                                </span>
+                                <p className="text-body-md text-[var(--color-text-subtle)]">
+                                  Defines the client IP ranges allowed to access the listener.
+                                </p>
                               </VStack>
-                            </FormField>
+
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {allowedCidrs.length > 0 && (
+                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                      CIDR
+                                    </span>
+                                  )}
+                                  {allowedCidrs.map((cidr, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                    >
+                                      <Input
+                                        value={cidr}
+                                        onChange={(e) => {
+                                          const newCidrs = [...allowedCidrs];
+                                          newCidrs[index] = e.target.value;
+                                          setAllowedCidrs(newCidrs);
+                                        }}
+                                        placeholder="e.g. 10.0.0.0/24"
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => {
+                                          setAllowedCidrs(
+                                            allowedCidrs.filter((_, i) => i !== index)
+                                          );
+                                        }}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
+                                    >
+                                      Add CIDR
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
+                            </VStack>
                           </VStack>
                         </Disclosure.Panel>
                       </Disclosure>
@@ -2464,7 +2659,7 @@ export default function CreateLoadBalancerPage() {
                                 value={poolAlgorithm}
                                 onChange={setPoolAlgorithm}
                                 placeholder="Select algorithm"
-                                className="w-[var(--layout-sidebar-width)]"
+                                width="half"
                               />
                             </FormField.Control>
                             <FormField.HelperText>
@@ -2494,7 +2689,7 @@ export default function CreateLoadBalancerPage() {
                                 value={poolProtocol}
                                 onChange={setPoolProtocol}
                                 placeholder="Select protocol"
-                                className="w-[var(--layout-sidebar-width)]"
+                                width="half"
                               />
                             </FormField.Control>
                           </FormField>
@@ -2735,104 +2930,105 @@ export default function CreateLoadBalancerPage() {
                           </p>
                         </VStack>
 
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                          className="w-fit"
-                          onClick={() => {
-                            setExternalMembers((prev) => [
-                              ...prev,
-                              {
-                                id: `ext-${Date.now()}`,
-                                ipAddress: '',
-                                port: undefined,
-                                weight: 1,
-                              },
-                            ]);
-                          }}
-                        >
-                          Add External Member
-                        </Button>
-
-                        {/* External Member Rows */}
-                        {externalMembers.map((extMember) => (
-                          <div
-                            key={extMember.id}
-                            className="w-full border border-[var(--color-border-default)] rounded-md p-3 flex gap-3 items-end bg-[var(--color-surface-default)]"
-                          >
-                            {/* IP Address */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                IP address
-                              </span>
-                              <Input
-                                placeholder="Enter IP address"
-                                value={extMember.ipAddress}
-                                onChange={(e) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id
-                                        ? { ...m, ipAddress: e.target.value }
-                                        : m
-                                    )
-                                  );
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
+                            {externalMembers.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  IP address
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Port
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Weights
+                                </span>
+                                <div />
+                              </div>
+                            )}
+                            {externalMembers.map((extMember) => (
+                              <div
+                                key={extMember.id}
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                              >
+                                <Input
+                                  placeholder="Enter IP address"
+                                  value={extMember.ipAddress}
+                                  onChange={(e) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id
+                                          ? { ...m, ipAddress: e.target.value }
+                                          : m
+                                      )
+                                    );
+                                  }}
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={extMember.port}
+                                  onChange={(value) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, port: value } : m
+                                      )
+                                    );
+                                  }}
+                                  min={1}
+                                  max={65535}
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={extMember.weight}
+                                  onChange={(value) => {
+                                    setExternalMembers((prev) =>
+                                      prev.map((m) =>
+                                        m.id === extMember.id ? { ...m, weight: value } : m
+                                      )
+                                    );
+                                  }}
+                                  min={1}
+                                  max={256}
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => {
+                                    setExternalMembers((prev) =>
+                                      prev.filter((m) => m.id !== extMember.id)
+                                    );
+                                  }}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
+                              </div>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() => {
+                                  setExternalMembers((prev) => [
+                                    ...prev,
+                                    {
+                                      id: `ext-${Date.now()}`,
+                                      ipAddress: '',
+                                      port: undefined,
+                                      weight: 1,
+                                    },
+                                  ]);
                                 }}
-                                fullWidth
-                              />
+                              >
+                                Add External Member
+                              </Button>
                             </div>
-                            {/* Port */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                Port
-                              </span>
-                              <NumberInput
-                                value={extMember.port}
-                                onChange={(value) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id ? { ...m, port: value } : m
-                                    )
-                                  );
-                                }}
-                                min={1}
-                                max={65535}
-                                fullWidth
-                              />
-                            </div>
-                            {/* Weights */}
-                            <div className="flex-1 flex flex-col gap-2">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                Weights
-                              </span>
-                              <NumberInput
-                                value={extMember.weight}
-                                onChange={(value) => {
-                                  setExternalMembers((prev) =>
-                                    prev.map((m) =>
-                                      m.id === extMember.id ? { ...m, weight: value } : m
-                                    )
-                                  );
-                                }}
-                                min={1}
-                                max={256}
-                                fullWidth
-                              />
-                            </div>
-                            {/* Remove Button */}
-                            <button
-                              type="button"
-                              className="inline-flex items-center justify-center w-[25px] h-[25px] rounded-[var(--primitive-radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors duration-[var(--duration-fast)] shrink-0 self-end mb-[3.5px]"
-                              onClick={() => {
-                                setExternalMembers((prev) =>
-                                  prev.filter((m) => m.id !== extMember.id)
-                                );
-                              }}
-                            >
-                              <IconX size={14} stroke={1.5} />
-                            </button>
-                          </div>
-                        ))}
+                          </VStack>
+                        </div>
 
                         {/* Allocated Members Table (shown when there are members) */}
                         {allocatedMembers.length > 0 && (
@@ -2956,7 +3152,7 @@ export default function CreateLoadBalancerPage() {
                                 value={healthMonitorType}
                                 onChange={setHealthMonitorType}
                                 placeholder="Select type"
-                                style={{ width: '240px' }}
+                                width="half"
                               />
                             </FormField.Control>
                           </FormField>
@@ -2975,7 +3171,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorInterval}
                                 min={1}
                                 max={3600}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>
@@ -2999,7 +3194,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorTimeout}
                                 min={1}
                                 max={3599}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>
@@ -3024,7 +3218,6 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorMaxRetries}
                                 min={3}
                                 max={10}
-                                fullWidth
                                 width="sm"
                               />
                             </FormField.Control>

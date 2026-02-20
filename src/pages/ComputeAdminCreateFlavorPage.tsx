@@ -19,10 +19,12 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
-  Checkbox,
   PageShell,
+  Table,
+  SelectionIndicator,
+  fixedColumns,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
+import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
@@ -269,6 +271,47 @@ export function ComputeAdminCreateFlavorPage() {
   const allPageTenantsSelected =
     paginatedTenants.length > 0 && paginatedTenants.every((t) => selectedTenants.includes(t.id));
 
+  const tenantColumns: TableColumn<Tenant>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: fixedColumns.status,
+      align: 'center',
+      render: (_, row) => (
+        <StatusIndicator
+          status={row.status === 'active' ? 'active' : 'deactivated'}
+          layout="icon-only"
+        />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <Link
+              to={`/compute-admin/tenants/${row.id}`}
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+    },
+  ];
+
   // Section navigation
   const goToNextSection = useCallback(
     (currentSection: SectionStep) => {
@@ -428,7 +471,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Choose the resource category to apply to the flavor.
                         </span>
                       </VStack>
@@ -454,7 +497,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Indicates whether the flavor is available to other tenants.
                         </span>
                       </VStack>
@@ -478,7 +521,7 @@ export function ComputeAdminCreateFlavorPage() {
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
                               Select the tenant that can use the flavor.
                             </span>
                           </VStack>
@@ -501,81 +544,25 @@ export function ComputeAdminCreateFlavorPage() {
                           />
 
                           {/* Tenant Table */}
-                          <VStack gap={3}>
-                            <div className="flex flex-col gap-1 w-full">
-                              {/* Table Header */}
-                              <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                                <div className="flex items-center justify-center p-3 w-[48px]">
-                                  <Checkbox
-                                    checked={allPageTenantsSelected}
-                                    onChange={(e) => handleSelectAllTenants(e.target.checked)}
-                                  />
-                                </div>
-                                <div className="flex items-center justify-center p-3 w-[60px] border-l border-[var(--color-border-default)]">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Status
-                                  </span>
-                                </div>
-                                <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Name
-                                  </span>
-                                </div>
-                                <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                  <span className="text-label-sm text-[var(--color-text-default)]">
-                                    Description
-                                  </span>
-                                </div>
-                              </div>
-
-                              {/* Table Rows */}
-                              {paginatedTenants.map((tenant) => (
-                                <div
-                                  key={tenant.id}
-                                  className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                                >
-                                  <div className="flex items-center justify-center p-3 w-[48px]">
-                                    <Checkbox
-                                      checked={selectedTenants.includes(tenant.id)}
-                                      onChange={(e) =>
-                                        handleTenantSelect(tenant.id, e.target.checked)
-                                      }
-                                    />
-                                  </div>
-                                  <div className="flex items-center justify-center p-2 w-[60px]">
-                                    <StatusIndicator
-                                      status={tenant.status === 'active' ? 'active' : 'muted'}
-                                    />
-                                  </div>
-                                  <div className="flex-1 flex flex-col gap-0.5 min-w-0 p-3">
-                                    <Link
-                                      to={`/compute-admin/tenants/${tenant.id}`}
-                                      className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"
-                                    >
-                                      {tenant.name}
-                                      <IconExternalLink size={12} />
-                                    </Link>
-                                    <span className="text-body-sm text-[var(--color-text-muted)]">
-                                      ID: {tenant.id}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1 p-3">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {tenant.description}
-                                    </span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Selection count */}
-                            <div className="bg-[var(--color-surface-subtle)] px-2 py-2 rounded-md w-full">
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                {selectedTenants.length === 0
-                                  ? 'No item selected'
-                                  : `${selectedTenants.length} item${selectedTenants.length > 1 ? 's' : ''} selected`}
-                              </span>
-                            </div>
+                          <VStack gap={2}>
+                            <Table<Tenant>
+                              columns={tenantColumns}
+                              data={paginatedTenants}
+                              rowKey="id"
+                              emptyMessage="No tenants found"
+                              selectable
+                              selectedKeys={selectedTenants}
+                              onSelectionChange={setSelectedTenants}
+                            />
+                            <SelectionIndicator
+                              selectedItems={selectedTenants.map((id) => {
+                                const t = mockTenants.find((t) => t.id === id);
+                                return { id, label: t ? `${t.name} (ID: ${t.id})` : id };
+                              })}
+                              onRemove={(id) =>
+                                setSelectedTenants((prev) => prev.filter((tid) => tid !== id))
+                              }
+                            />
                           </VStack>
                         </VStack>
                       </>
@@ -668,7 +655,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Number of virtual CPUs for instances using this flavor.
                       </span>
                       <NumberInput
@@ -691,7 +678,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Amount of memory for instances using this flavor.
                       </span>
                       <NumberInput
@@ -714,7 +701,7 @@ export function ComputeAdminCreateFlavorPage() {
                         </span>
                         <span className="text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of the root disk. Use 0 for no local disk (boot from volume).
                       </span>
                       <NumberInput
@@ -734,7 +721,7 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                         Ephemeral disk
                       </span>
-                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of temporary disk. This disk is deleted when the instance is
                         terminated.
                       </span>
@@ -755,7 +742,7 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                         Swap disk
                       </span>
-                      <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of swap space. Use 0 for no swap.
                       </span>
                       <NumberInput
@@ -835,7 +822,7 @@ export function ComputeAdminCreateFlavorPage() {
                           </span>
                           <span className="text-[var(--color-state-danger)]">*</span>
                         </div>
-                        <span className="text-body-lg leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           Select existing metadata or define new metadata to apply to the host
                           aggregate.
                         </span>
