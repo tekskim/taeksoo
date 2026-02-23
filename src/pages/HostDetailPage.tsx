@@ -15,7 +15,7 @@ import {
   TabPanel,
   SectionCard,
   DetailHeader,
-  Chip,
+  Badge,
   Table,
   StatusIndicator,
   SearchInput,
@@ -1183,7 +1183,9 @@ export default function HostDetailPage() {
       render: (_, row) => (
         <div className="flex flex-wrap gap-0.5">
           {row.daemons.map((daemon, index) => (
-            <Chip key={index} value={daemon} />
+            <Badge key={index} theme="white" size="sm">
+              {daemon}
+            </Badge>
           ))}
         </div>
       ),
@@ -1216,7 +1218,12 @@ export default function HostDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.osd,
       sortable: true,
-      render: (_, row) => (row.osd ? <Chip value={row.osd} /> : null),
+      render: (_, row) =>
+        row.osd ? (
+          <Badge theme="white" size="sm">
+            {row.osd}
+          </Badge>
+        ) : null,
     },
     {
       key: 'identify',
@@ -1459,7 +1466,9 @@ export default function HostDetailPage() {
                     <SectionCard.DataRow label="Service instances">
                       <div className="flex flex-wrap gap-1">
                         {host.serviceInstances.map((instance, index) => (
-                          <Chip key={index} value={instance} />
+                          <Badge key={index} theme="white" size="sm">
+                            {instance}
+                          </Badge>
                         ))}
                       </div>
                     </SectionCard.DataRow>

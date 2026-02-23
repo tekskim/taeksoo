@@ -11,7 +11,7 @@ import {
   TabList,
   Tab,
   TabPanel,
-  Chip,
+  Badge,
   Pagination,
   DetailHeader,
   Button,
@@ -836,7 +836,9 @@ export function NamespaceDetailPage() {
                 Object.keys(namespace.labels).length > 0 ? (
                   <div className="flex flex-wrap gap-1 min-w-0 w-full">
                     {Object.entries(namespace.labels).map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   </div>
                 ) : (

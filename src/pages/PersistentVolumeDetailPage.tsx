@@ -16,7 +16,7 @@ import {
   Checkbox,
   Select,
   Input,
-  Chip,
+  Badge,
   PageShell,
   FormField,
   type ContextMenuItem,
@@ -359,7 +359,9 @@ export function PersistentVolumeDetailPage() {
                   {Object.entries(pvData.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {labelsCount > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -376,7 +378,9 @@ export function PersistentVolumeDetailPage() {
                   {Object.entries(pvData.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {annotationsCount > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   NumberInput,
+  Slider,
   Disclosure,
   SectionCard,
   Radio,
@@ -543,13 +544,25 @@ function BasicInfoSection({
             <p className="text-body-md text-[var(--color-text-subtle)]">
               Select the number of pod replicas to create.
             </p>
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              width="sm"
-            />
+            <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={1}
+                max={100}
+                step={5}
+                value={replicas}
+                onChange={onReplicasChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={replicas}
+                onChange={onReplicasChange}
+                min={1}
+                max={100}
+                step={1}
+                width="xs"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">1-100</span>
           </VStack>
 
           {/* Description (Collapsible) */}

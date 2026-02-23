@@ -20,7 +20,7 @@ import {
   DetailHeader,
   SectionCard,
   FormField,
-  Chip,
+  Badge,
   SelectionIndicator,
   Modal,
   Drawer,
@@ -831,8 +831,12 @@ export function SectionCardWithActionsDemo() {
         <SectionCard.DataRow label="Role" value="Administrator" />
         <SectionCard.DataRow label="Labels">
           <HStack gap={1}>
-            <Chip value="admin" />
-            <Chip value="developer" />
+            <Badge theme="white" size="sm">
+              admin
+            </Badge>
+            <Badge theme="white" size="sm">
+              developer
+            </Badge>
           </HStack>
         </SectionCard.DataRow>
       </SectionCard.Content>

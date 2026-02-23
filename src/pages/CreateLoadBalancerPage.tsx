@@ -3201,6 +3201,7 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </HStack>
                             </FormField.Control>
+                            <FormField.HelperText>1-3,600 Seconds</FormField.HelperText>
                           </FormField>
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3236,6 +3237,7 @@ export default function CreateLoadBalancerPage() {
                                 />
                               </HStack>
                             </FormField.Control>
+                            <FormField.HelperText>1-3,599 Seconds</FormField.HelperText>
                           </FormField>
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />

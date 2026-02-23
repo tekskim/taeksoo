@@ -5,7 +5,7 @@ import { twMerge } from '../../utils/cn';
    Badge Types
    ---------------------------------------- */
 
-export type BadgeTheme = 'blue' | 'red' | 'green' | 'yellow' | 'gray';
+export type BadgeTheme = 'blue' | 'red' | 'green' | 'yellow' | 'gray' | 'white';
 // thaki-ui compatibility aliases
 export type BadgeThemeAlias = 'blu' | 'gry' | 'gre' | 'ylw';
 
@@ -67,14 +67,15 @@ const themeStyles = {
     green: 'bg-[var(--color-state-success)] text-white',
     yellow: 'bg-[var(--color-state-warning)] text-white',
     gray: 'bg-[var(--color-text-subtle)] text-white',
+    white: 'bg-white text-[var(--color-text-default)] border border-[var(--color-border-default)]',
   },
-  // Subtle variants (light bg + colored text) - uses badge-specific tokens for dark mode support
   subtle: {
     blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
     red: 'bg-[var(--badge-subtle-red-bg)] text-[var(--badge-subtle-red-text)]',
     green: 'bg-[var(--badge-subtle-green-bg)] text-[var(--badge-subtle-green-text)]',
     yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
     gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
+    white: 'bg-white text-[var(--color-text-default)] border border-[var(--color-border-default)]',
   },
 } as const;
 
@@ -150,6 +151,7 @@ export const Badge = memo(function Badge({
     green: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-success)]',
     yellow: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-warning)]',
     gray: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-text-subtle)]',
+    white: 'bg-[var(--color-text-default)]',
   };
 
   return (

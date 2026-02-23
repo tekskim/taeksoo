@@ -2379,20 +2379,23 @@ function SliderWithCustomRangeDemo() {
   return (
     <VStack gap={3}>
       <Label>Pattern B: Storage Capacity (0-1000 GiB)</Label>
-      <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
-        <div className="flex-1">
-          <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
+      <VStack gap={1}>
+        <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
+          <div className="flex-1">
+            <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
+          </div>
+          <NumberInput
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={1000}
+            step={1}
+            width="xs"
+            suffix="GiB"
+          />
         </div>
-        <NumberInput
-          value={value}
-          onChange={setValue}
-          min={0}
-          max={1000}
-          step={1}
-          width="xs"
-          suffix="GiB"
-        />
-      </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">0-1000 GiB</span>
+      </VStack>
     </VStack>
   );
 }
@@ -8909,26 +8912,6 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
-                    {/* Basic */}
-                    <VStack gap={3}>
-                      <Label>Basic</Label>
-                      <div className="flex gap-2 flex-wrap">
-                        <Chip value="Active" />
-                        <Chip value="Running" />
-                        <Chip value="Completed" />
-                      </div>
-                    </VStack>
-
-                    {/* With Label (Key-Value) */}
-                    <VStack gap={3}>
-                      <Label>With Label (Key-Value)</Label>
-                      <div className="flex gap-2 flex-wrap">
-                        <Chip label="Status" value="Active" />
-                        <Chip label="Region" value="Korea" />
-                        <Chip label="Type" value="Standard" />
-                      </div>
-                    </VStack>
-
                     {/* With Remove Button */}
                     <VStack gap={3}>
                       <Label>With Remove Button</Label>
@@ -10807,28 +10790,6 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="flex gap-6">
                         <VStack gap={2}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Solid
-                          </span>
-                          <div className="flex gap-2">
-                            <Badge size="sm" type="solid" theme="blue">
-                              Blue
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="green">
-                              Green
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="red">
-                              Red
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="yellow">
-                              Yellow
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="gray">
-                              Gray
-                            </Badge>
-                          </div>
-                        </VStack>
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Subtle
                           </span>
                           <div className="flex gap-2">
@@ -10847,6 +10808,9 @@ outline: 2px solid var(--color-border-focus);`}
                             <Badge size="sm" type="subtle" theme="gray">
                               Gray
                             </Badge>
+                            <Badge size="sm" type="subtle" theme="white">
+                              White
+                            </Badge>
                           </div>
                         </VStack>
                       </div>
@@ -10864,25 +10828,6 @@ outline: 2px solid var(--color-border-focus);`}
                         </Badge>
                         <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>
                           Right icon
-                        </Badge>
-                      </div>
-                    </VStack>
-
-                    {/* Status Examples */}
-                    <VStack gap={3}>
-                      <Label>Status examples</Label>
-                      <div className="flex gap-3 items-center">
-                        <Badge size="sm" type="solid" theme="green">
-                          Running
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="red">
-                          Stopped
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="yellow">
-                          Warning
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="gray">
-                          Unknown
                         </Badge>
                       </div>
                     </VStack>

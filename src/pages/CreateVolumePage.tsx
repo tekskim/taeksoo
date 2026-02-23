@@ -1112,6 +1112,7 @@ export function CreateVolumePage() {
                                 />
                               </HStack>
                             </FormField.Control>
+                            <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                           </FormField>
                         </div>
                       </>
@@ -1217,6 +1218,7 @@ export function CreateVolumePage() {
                                 />
                               </HStack>
                             </FormField.Control>
+                            <FormField.HelperText>1-1000 GiB</FormField.HelperText>
                           </FormField>
                         </div>
                       </>

@@ -707,6 +707,7 @@ export function CreateImagePage() {
                             <FormField
                               label="Min system disk"
                               description="Defines the minimum disk size required to boot an instance from this image."
+                              helperText="0-500 GiB"
                             >
                               <HStack
                                 gap={3}
@@ -736,6 +737,7 @@ export function CreateImagePage() {
                             <FormField
                               label="Min RAM"
                               description="Defines the minimum amount of RAM required to boot an instance from this image."
+                              helperText="0-500 GiB"
                             >
                               <HStack
                                 gap={3}
