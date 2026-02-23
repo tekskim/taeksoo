@@ -33,7 +33,6 @@ import {
 import type { FilterField, AppliedFilter } from '@/design-system';
 import {
   IconChevronDown,
-  IconPlus,
   IconEdit,
   IconTrash,
   IconDownload,
@@ -856,9 +855,9 @@ export function KeyValueGridPatternDemo() {
     <VStack gap={3} className="w-full">
       {data.map((item, index) => (
         <HStack key={item.key} gap={2} align="end" className="w-full">
-          <div className="w-[200px]">
+          <div className="flex-1">
             {index === 0 && (
-              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+              <label className="text-label-lg text-[var(--color-text-default)] mb-2 block">
                 Key
               </label>
             )}
@@ -868,7 +867,7 @@ export function KeyValueGridPatternDemo() {
           </div>
           <div className="flex-1">
             {index === 0 && (
-              <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+              <label className="text-label-lg text-[var(--color-text-default)] mb-2 block">
                 Value
               </label>
             )}
@@ -919,19 +918,6 @@ export function ActionButtonPatternsDemo() {
           </Button>
           <Button variant="danger" className="flex-1 min-w-[120px]">
             Delete
-          </Button>
-        </HStack>
-      </VStack>
-
-      {/* Toolbar Actions */}
-      <VStack gap={2} align="start">
-        <span className="text-label-sm text-[var(--color-text-muted)]">Toolbar Actions</span>
-        <HStack gap={2}>
-          <Button variant="secondary" size="sm" disabled>
-            Delete (0)
-          </Button>
-          <Button variant="primary" size="sm" leftIcon={<IconPlus size={14} />}>
-            Create
           </Button>
         </HStack>
       </VStack>
