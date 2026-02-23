@@ -77,7 +77,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '3',
     status: 'Available',
-    name: 'pv-nfs-storage-01',
+    name: 'pvc-a1b2c3d4-e5f6-7890-abcd-1234567890ab-data-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: '',
     source: 'nfs.csi.k8s.io',
@@ -87,7 +87,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '4',
     status: 'Released',
-    name: 'pvc-old-volume-xyz789',
+    name: 'pvc-f1e2d3c4-b5a6-7890-fedc-0987654321ba-logs-storage',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
@@ -97,7 +97,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '5',
     status: 'Bound',
-    name: 'pvc-redis-data-001',
+    name: 'pvc-redis-cluster-sentinel-persistent-data-01-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: 'redis-data',
     source: 'local.csi.k8s.io',
@@ -107,7 +107,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '6',
     status: 'Failed',
-    name: 'pv-failed-provision',
+    name: 'pvc-failed-provisioning-rbd-csi-ceph-storage-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
@@ -117,7 +117,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '7',
     status: 'Pending',
-    name: 'pvc-pending-volume',
+    name: 'pvc-pending-nfs-provisioning-waiting-for-node-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: 'pending-claim',
     source: 'nfs.csi.k8s.io',
@@ -230,7 +230,7 @@ export function PersistentVolumesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

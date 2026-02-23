@@ -57,7 +57,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'cart-manager',
+    name: 'frontend-web-application-nginx-deployment',
     namespace: 'cart5-production-dev-api-system',
     image: 'mirrored-cluster-api-controller:v1.6.2',
     ready: '1/1',
@@ -68,7 +68,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'nginx-ingress-controller',
+    name: 'ingress-nginx-controller-admission-webhook-deployment',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
     ready: '3/3',
@@ -79,7 +79,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'prometheus-server',
+    name: 'monitoring-prometheus-alertmanager-server-deployment',
     namespace: 'monitoring',
     image: 'prometheus/prometheus:v2.47.0',
     ready: '1/1',
@@ -90,7 +90,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '4',
     status: 'Pending',
-    name: 'grafana',
+    name: 'monitoring-grafana-dashboard-visualization-deployment',
     namespace: 'monitoring',
     image: 'grafana/grafana:10.2.0',
     ready: '0/1',
@@ -101,7 +101,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '5',
     status: 'Running',
-    name: 'redis-master',
+    name: 'cache-redis-master-replication-deployment',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
     ready: '1/1',
@@ -112,7 +112,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '6',
     status: 'Failed',
-    name: 'payment-service',
+    name: 'payment-service-gateway-microservice-deployment',
     namespace: 'payment-system',
     image: 'payment-service:v2.1.0',
     ready: '0/2',
@@ -123,7 +123,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '7',
     status: 'Running',
-    name: 'api-gateway',
+    name: 'backend-api-gateway-microservice-deployment',
     namespace: 'gateway',
     image: 'api-gateway:v3.0.1',
     ready: '2/2',
@@ -134,7 +134,7 @@ const deploymentsData: DeploymentRow[] = [
   {
     id: '8',
     status: 'Running',
-    name: 'user-service',
+    name: 'user-management-service-authentication-deployment',
     namespace: 'user-management',
     image: 'user-service:v1.5.3',
     ready: '3/3',
@@ -214,12 +214,12 @@ export function DeploymentsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -246,20 +246,17 @@ export function DeploymentsPage() {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
     },
     {
       key: 'upToDate',
       label: 'Up-To-Date',
-      flex: 1,
-      minWidth: columnMinWidths.upToDate,
+      width: '100px',
     },
     {
       key: 'available',
       label: 'Available',
-      flex: 1,
-      minWidth: columnMinWidths.available,
+      width: '80px',
     },
     {
       key: 'createdAt',

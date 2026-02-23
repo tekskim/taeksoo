@@ -560,8 +560,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
       sortable: true,
     },
     {

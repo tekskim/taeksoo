@@ -1154,7 +1154,11 @@ export default function CreateRolePage() {
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
               >
-                <SectionCard.DataRow label="Role name" value={roleName} showDivider={false} />
+                <SectionCard.DataRow
+                  label="Role name"
+                  value={roleName || '-'}
+                  showDivider={false}
+                />
                 <SectionCard.DataRow label="Description" value={description || '-'} />
               </DoneSection>
             )}

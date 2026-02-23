@@ -457,23 +457,22 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField label="Namespace" required>
             <Select
               options={NAMESPACE_OPTIONS}
               value={namespace}
               onChange={(value) => onNamespaceChange(value)}
               fullWidth
             />
-          </VStack>
+          </FormField>
 
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField
+            label="Name"
+            required
+            error={!!nameError}
+            errorMessage={nameError || undefined}
+          >
             <Input
               placeholder="Enter a unique name"
               value={name}
@@ -484,10 +483,7 @@ function BasicInfoSection({
               error={!!nameError}
               fullWidth
             />
-            {nameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">{nameError}</span>
-            )}
-          </VStack>
+          </FormField>
 
           {/* Description (Collapsible) */}
           <Disclosure defaultOpen={isV2}>

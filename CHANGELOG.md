@@ -89,6 +89,27 @@ MAJOR.MINOR.PATCH
 
 ---
 
+## [1.1.1] - 2026-02-23
+
+### Changed
+
+#### 디자인 토큰
+
+- Select 드롭다운 아이템 텍스트 스타일 변경: `body-sm` (11px/16px) → `body-md` (12px/18px)
+  - `--select-item-font-size`: `var(--font-size-11)` → `var(--font-size-12)`
+  - `--select-item-line-height`: `var(--line-height-16)` → `var(--line-height-18)`
+
+#### Table
+
+- Table 컴포넌트 render 래퍼: `span` → `div` + `flex` 적용으로 truncate 정상 동작
+- 짧은 숫자 컬럼(Ready, Available, Completions 등) flex → 고정 width 변경
+
+#### 기타
+
+- Create 페이지 DoneSection에서 빈 name 값 `-` 표시 처리
+
+---
+
 ## [1.0.0] - 2026-02-06
 
 ### 🎉 첫 번째 안정 버전 릴리스

@@ -567,28 +567,22 @@ export default function CreateHPAPage() {
 
                   {/* Min/Max Replicas */}
                   <VStack gap={6}>
-                    <VStack gap={2}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Minimum Replicas <span className="text-[var(--color-state-danger)]">*</span>
-                      </label>
+                    <FormField label="Minimum Replicas" required>
                       <NumberInput
                         value={minReplicas}
                         onChange={setMinReplicas}
                         min={1}
                         width="sm"
                       />
-                    </VStack>
-                    <VStack gap={2}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Maximum Replicas <span className="text-[var(--color-state-danger)]">*</span>
-                      </label>
+                    </FormField>
+                    <FormField label="Maximum Replicas" required>
                       <NumberInput
                         value={maxReplicas}
                         onChange={setMaxReplicas}
                         min={1}
                         width="sm"
                       />
-                    </VStack>
+                    </FormField>
                   </VStack>
                 </VStack>
               </SectionCard.Content>
@@ -683,17 +677,14 @@ export default function CreateHPAPage() {
 
                         {/* Resource Name (for Resource source) */}
                         {(isV2 || metric.source === 'Resource') && (
-                          <VStack gap={2}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Resource Name
-                            </label>
+                          <FormField label="Resource Name">
                             <Select
                               options={RESOURCE_NAME_OPTIONS}
                               value={metric.resourceName}
                               onChange={(value) => updateMetric(metric.id, 'resourceName', value)}
                               fullWidth
                             />
-                          </VStack>
+                          </FormField>
                         )}
 
                         {/* Type and Quantity */}

@@ -258,8 +258,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
       sortable: true,
       render: (value: boolean) =>
         value ? (
@@ -298,8 +297,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
       sortable: true,
     },
     {

@@ -57,7 +57,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '1',
     status: 'Active',
-    name: 'jobName1',
+    name: 'automated-database-backup-daily-schedule-cronjob',
     namespace: 'namespaceName',
     image: 'imageName',
     schedule: '@daily',
@@ -67,7 +67,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '2',
     status: 'Active',
-    name: 'backup-cronjob',
+    name: 'database-backup-nightly-incremental-schedule-cronjob',
     namespace: 'database',
     image: 'backup-tool:v2.1',
     schedule: '0 2 * * *',
@@ -77,7 +77,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'cleanup-cronjob',
+    name: 'log-rotation-cleanup-weekly-maintenance-cronjob',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.5',
     schedule: '*/30 * * * *',
@@ -87,7 +87,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '4',
     status: 'Suspended',
-    name: 'report-generator',
+    name: 'analytics-weekly-report-generator-schedule-cronjob',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
     schedule: '0 9 * * 1',
@@ -97,7 +97,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '5',
     status: 'Active',
-    name: 'sync-cronjob',
+    name: 'data-sync-incremental-replication-schedule-cronjob',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
     schedule: '*/5 * * * *',
@@ -107,7 +107,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '6',
     status: 'Active',
-    name: 'index-rebuild',
+    name: 'search-index-rebuild-weekly-full-sync-cronjob',
     namespace: 'search',
     image: 'indexer:v4.1',
     schedule: '0 3 * * 0',
@@ -117,7 +117,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '7',
     status: 'Suspended',
-    name: 'cache-warmup',
+    name: 'cache-warmup-daily-preload-schedule-cronjob',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
     schedule: '0 6 * * *',
@@ -127,7 +127,7 @@ const cronJobsData: CronJobRow[] = [
   {
     id: '8',
     status: 'Active',
-    name: 'metrics-collector',
+    name: 'monitoring-metrics-collector-aggregation-cronjob',
     namespace: 'monitoring',
     image: 'metrics:v1.0',
     schedule: '*/10 * * * *',
@@ -249,7 +249,7 @@ export function CronJobsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

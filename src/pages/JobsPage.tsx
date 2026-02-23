@@ -57,7 +57,7 @@ const jobsData: JobRow[] = [
   {
     id: '1',
     status: 'Completed',
-    name: 'jobName1',
+    name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'namespaceName',
     image: 'imageName',
     completions: '1/1',
@@ -67,7 +67,7 @@ const jobsData: JobRow[] = [
   {
     id: '2',
     status: 'Completed',
-    name: 'data-migration-job',
+    name: 'data-warehouse-etl-pipeline-extraction-transform-job',
     namespace: 'database',
     image: 'migration-tool:v2.1',
     completions: '1/1',
@@ -77,7 +77,7 @@ const jobsData: JobRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'backup-job',
+    name: 'backup-automated-daily-snapshot-creation-job',
     namespace: 'backup',
     image: 'backup-agent:v1.5',
     completions: '0/1',
@@ -87,7 +87,7 @@ const jobsData: JobRow[] = [
   {
     id: '4',
     status: 'Failed',
-    name: 'cleanup-job',
+    name: 'maintenance-cleanup-temp-files-retention-job',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.0',
     completions: '0/3',
@@ -97,7 +97,7 @@ const jobsData: JobRow[] = [
   {
     id: '5',
     status: 'Completed',
-    name: 'report-generator',
+    name: 'analytics-report-generator-weekly-summary-job',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
     completions: '5/5',
@@ -107,7 +107,7 @@ const jobsData: JobRow[] = [
   {
     id: '6',
     status: 'Pending',
-    name: 'sync-job',
+    name: 'data-sync-incremental-replication-worker-job',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
     completions: '0/1',
@@ -117,7 +117,7 @@ const jobsData: JobRow[] = [
   {
     id: '7',
     status: 'Completed',
-    name: 'index-rebuild',
+    name: 'search-index-rebuild-full-sync-job',
     namespace: 'search',
     image: 'indexer:v4.1',
     completions: '1/1',
@@ -127,7 +127,7 @@ const jobsData: JobRow[] = [
   {
     id: '8',
     status: 'Completed',
-    name: 'cache-warmup',
+    name: 'cache-warmup-preload-frequently-accessed-job',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
     completions: '10/10',
@@ -212,7 +212,7 @@ export function JobsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -244,8 +244,7 @@ export function JobsPage() {
     {
       key: 'completions',
       label: 'Completions',
-      flex: 1,
-      minWidth: columnMinWidths.completions,
+      width: '100px',
     },
     {
       key: 'duration',

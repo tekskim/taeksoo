@@ -64,7 +64,7 @@ const nodesData: NodeRow[] = [
   {
     id: '1',
     status: 'Ready',
-    name: 'node-control-plane-01',
+    name: 'master-control-plane-high-availability-node-01',
     roles: 'Control Plane',
     version: 'v1.34',
     externalIp: '-',
@@ -78,7 +78,7 @@ const nodesData: NodeRow[] = [
   {
     id: '2',
     status: 'Ready',
-    name: 'node-worker-01',
+    name: 'worker-node-production-cluster-az1-pool-001',
     roles: 'Worker',
     version: 'v1.34',
     externalIp: '-',
@@ -92,7 +92,7 @@ const nodesData: NodeRow[] = [
   {
     id: '3',
     status: 'Ready',
-    name: 'node-worker-02',
+    name: 'worker-node-production-cluster-az1-pool-002',
     roles: 'Worker',
     version: 'v1.34',
     externalIp: '-',
@@ -106,7 +106,7 @@ const nodesData: NodeRow[] = [
   {
     id: '4',
     status: 'Ready',
-    name: 'node-worker-03',
+    name: 'worker-node-production-cluster-az2-pool-003',
     roles: 'Worker',
     version: 'v1.34',
     externalIp: '10.0.1.100',
@@ -120,7 +120,7 @@ const nodesData: NodeRow[] = [
   {
     id: '5',
     status: 'NotReady',
-    name: 'node-worker-04',
+    name: 'worker-node-production-cluster-az2-pool-004',
     roles: 'Worker',
     version: 'v1.34',
     externalIp: '-',
@@ -134,7 +134,7 @@ const nodesData: NodeRow[] = [
   {
     id: '6',
     status: 'Ready',
-    name: 'node-gpu-01',
+    name: 'worker-node-gpu-inference-accelerator-pool-001',
     roles: 'Worker, GPU',
     version: 'v1.34',
     externalIp: '10.0.1.101',
@@ -234,7 +234,7 @@ export function ContainerNodesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (

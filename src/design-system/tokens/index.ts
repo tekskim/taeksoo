@@ -456,8 +456,8 @@ export const component = {
     item: {
       paddingX: 'var(--select-item-padding-x)', // 10px
       paddingY: 'var(--select-item-padding-y)', // 6px
-      fontSize: 'var(--select-item-font-size)', // 11px
-      lineHeight: 'var(--select-item-line-height)', // 16px
+      fontSize: 'var(--select-item-font-size)', // 12px
+      lineHeight: 'var(--select-item-line-height)', // 18px
       hoverBg: 'var(--select-item-hover-bg)', // slate-50
       selectedBg: 'var(--select-item-selected-bg)', // blue-50
       selectedText: 'var(--select-item-selected-text)', // action-primary

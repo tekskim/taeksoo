@@ -55,7 +55,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'statefulset1',
+    name: 'postgresql-primary-replication-statefulset',
     namespace: 'default',
     image: 'nginx',
     ready: '1/1',
@@ -64,7 +64,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'mysql-primary',
+    name: 'mysql-primary-replication-cluster-statefulset',
     namespace: 'database',
     image: 'mysql:8.0',
     ready: '1/1',
@@ -73,7 +73,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'elasticsearch',
+    name: 'elasticsearch-cluster-data-node-statefulset',
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
     ready: '3/3',
@@ -82,7 +82,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '4',
     status: 'Pending',
-    name: 'mongodb-replica',
+    name: 'mongodb-replica-set-sharded-cluster-statefulset',
     namespace: 'database',
     image: 'mongo:7.0',
     ready: '0/3',
@@ -91,7 +91,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '5',
     status: 'Running',
-    name: 'kafka-broker',
+    name: 'kafka-broker-messaging-cluster-statefulset',
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
     ready: '3/3',
@@ -100,7 +100,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '6',
     status: 'Failed',
-    name: 'zookeeper',
+    name: 'zookeeper-ensemble-coordination-statefulset',
     namespace: 'messaging',
     image: 'zookeeper:3.9',
     ready: '0/3',
@@ -109,7 +109,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '7',
     status: 'Running',
-    name: 'redis-cluster',
+    name: 'redis-cluster-sentinel-high-availability-statefulset',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
     ready: '6/6',
@@ -118,7 +118,7 @@ const statefulSetsData: StatefulSetRow[] = [
   {
     id: '8',
     status: 'Running',
-    name: 'cockroachdb',
+    name: 'cockroachdb-distributed-sql-database-statefulset',
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',
     ready: '3/3',
@@ -196,7 +196,7 @@ export function StatefulSetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -228,8 +228,7 @@ export function StatefulSetsPage() {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
     },
     {
       key: 'createdAt',

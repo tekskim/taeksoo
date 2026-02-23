@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -299,17 +300,14 @@ export function CreateNamespacePage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Namespace Name */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Namespace Name <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
+                  <FormField label="Namespace Name" required>
                     <Input
                       placeholder="Enter a unique name"
                       value={namespaceName}
                       onChange={(e) => setNamespaceName(e.target.value)}
                       fullWidth
                     />
-                  </VStack>
+                  </FormField>
 
                   {/* Description (collapsible) */}
                   <Disclosure defaultOpen={isV2}>
