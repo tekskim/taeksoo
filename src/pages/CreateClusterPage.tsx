@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconX, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus, IconInfoCircle, IconEye, IconEyeOff } from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -22,9 +22,11 @@ import {
   Slider,
   FormField,
   SelectionIndicator,
+  Tooltip,
   Tabs,
   TabList,
   Tab,
+  TabPanel,
   PageShell,
   WizardSummary,
 } from '@/design-system';
@@ -48,6 +50,12 @@ interface FlavorRow {
   vcpu: number;
   ram: string;
   disk: string;
+}
+
+interface KeyPairRow {
+  id: string;
+  name: string;
+  fingerprint: string;
 }
 
 interface Label {
@@ -120,6 +128,39 @@ const imageOptions = [
   { value: 'rocky-9-tk-base', label: 'rocky_9_tk_base' },
 ];
 
+const mockKeyPairs: KeyPairRow[] = [
+  {
+    id: 'kp-1',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-2',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-3',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-4',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-5',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-6',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+];
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -154,6 +195,17 @@ export function CreateClusterPage() {
   const [etcdDiskType, setEtcdDiskType] = useState<'external' | 'local'>('external');
   const [etcdVolumeSize, setEtcdVolumeSize] = useState(10);
   const [cpFlavorFilter, setCpFlavorFilter] = useState('vcpu');
+
+  // Authentication
+  const [authMethod, setAuthMethod] = useState<'keypair' | 'password'>('keypair');
+  const [selectedKeyPair, setSelectedKeyPair] = useState<string>('');
+  const [keyPairSearch, setKeyPairSearch] = useState('');
+  const [keyPairPage, setKeyPairPage] = useState(1);
+  const [loginName, setLoginName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Worker Nodes
   const [nodeImage, setNodeImage] = useState('ubuntu-24.04-tk-base');
@@ -241,6 +293,24 @@ export function CreateClusterPage() {
     { key: 'name', label: 'Name', sortable: true },
     { key: 'subnetCidr', label: 'SubnetCIDR', sortable: true },
   ];
+
+  // Key Pair columns
+  const keyPairColumns: TableColumn<KeyPairRow>[] = [
+    {
+      key: 'select',
+      label: '',
+      width: 48,
+      render: (_value, row) => (
+        <Radio checked={selectedKeyPair === row.id} onChange={() => setSelectedKeyPair(row.id)} />
+      ),
+    },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'fingerprint', label: 'Fingerprint', sortable: true },
+  ];
+
+  const filteredKeyPairs = mockKeyPairs.filter((kp) =>
+    kp.name.toLowerCase().includes(keyPairSearch.toLowerCase())
+  );
 
   // Control Plane Flavor columns
   const cpFlavorColumns: TableColumn<FlavorRow>[] = [
@@ -360,11 +430,11 @@ export function CreateClusterPage() {
       {/* Main Content Grid */}
       <div className="flex gap-6">
         {/* Left Column - Form */}
-        <div className="flex-1 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-[24px]">
           {/* Basic Information */}
           <SectionCard>
             <SectionCard.Header title="Basic information" />
-            <SectionCard.Content>
+            <SectionCard.Content className="pt-3">
               <VStack gap={6}>
                 {/* Name */}
                 <FormField required>
@@ -444,11 +514,19 @@ export function CreateClusterPage() {
           {/* Networking */}
           <SectionCard>
             <SectionCard.Header title="Networking" />
-            <SectionCard.Content>
+            <SectionCard.Content className="pt-3">
               <VStack gap={6}>
                 {/* External Network */}
-                <FormField required>
-                  <FormField.Label>External Network</FormField.Label>
+                <FormField>
+                  <FormField.Label>
+                    <HStack gap={1} align="center">
+                      External Network
+                      <span className="text-[var(--color-state-danger)]">*</span>
+                      <Tooltip content="Displays the list of External Networks created in the user domain for enabling external access for the cluster.">
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  </FormField.Label>
                   <FormField.Description>
                     Select the external network for outbound access.
                   </FormField.Description>
@@ -493,8 +571,16 @@ export function CreateClusterPage() {
                 </FormField>
 
                 {/* Tenant Network */}
-                <FormField required>
-                  <FormField.Label>Tenant Network</FormField.Label>
+                <FormField>
+                  <FormField.Label>
+                    <HStack gap={1} align="center">
+                      Tenant Network
+                      <span className="text-[var(--color-state-danger)]">*</span>
+                      <Tooltip content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External Network.">
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  </FormField.Label>
                   <FormField.Description>
                     Select a tenant network for your cluster resources.
                   </FormField.Description>
@@ -534,8 +620,16 @@ export function CreateClusterPage() {
                 </FormField>
 
                 {/* Subnet */}
-                <FormField required>
-                  <FormField.Label>Subnet</FormField.Label>
+                <FormField>
+                  <FormField.Label>
+                    <HStack gap={1} align="center">
+                      Subnet
+                      <span className="text-[var(--color-state-danger)]">*</span>
+                      <Tooltip content="Displays the subnets within the selected Tenant Network. Only subnets connected to a router open to External Gateway for the selected External Network are shown.">
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  </FormField.Label>
                   <FormField.Description>
                     You can also enter the private IP address for the kubernetes api server.
                   </FormField.Description>
@@ -555,7 +649,7 @@ export function CreateClusterPage() {
           {/* Node Configuration */}
           <SectionCard>
             <SectionCard.Header title="Node configuration" />
-            <SectionCard.Content>
+            <SectionCard.Content className="pt-3">
               <VStack gap={6}>
                 {/* Node Type */}
                 <FormField required>
@@ -724,106 +818,132 @@ export function CreateClusterPage() {
                       </FormField.Control>
                       <FormField.HelperText>10-100 GiB</FormField.HelperText>
                     </FormField>
-                  </VStack>
-                </div>
 
-                {/* Worker Nodes */}
-                <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                  <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
-                    Worker Nodes
-                  </h6>
-                  <VStack gap={6}>
-                    {/* Image */}
+                    {/* Authentication */}
                     <FormField required>
-                      <FormField.Label>Image</FormField.Label>
+                      <FormField.Label>Authentication</FormField.Label>
                       <FormField.Description>
-                        Select the operating system image to use for the worker nodes.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <Select
-                          options={imageOptions}
-                          value={nodeImage}
-                          onChange={setNodeImage}
-                          fullWidth
-                        />
-                      </FormField.Control>
-                    </FormField>
-
-                    {/* Flavor */}
-                    <FormField required>
-                      <FormField.Label>Flavor</FormField.Label>
-                      <FormField.Description>
-                        Select the Flavor that defines the vCPU, memory, and disk capacity for the
-                        worker nodes.
+                        Select the authentication method for accessing your instance. You can choose
+                        either the Key Pair method or the Password method.
                       </FormField.Description>
                       <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                        <VStack gap={3}>
-                          <Tabs
-                            value={nodeFlavorFilter}
-                            onChange={setNodeFlavorFilter}
-                            variant="underline"
-                            size="sm"
-                          >
-                            <TabList>
-                              <Tab value="vcpu">vCPU</Tab>
-                              <Tab value="gpu">GPU</Tab>
-                              <Tab value="npu">NPU</Tab>
-                              <Tab value="custom">Custom</Tab>
-                            </TabList>
-                          </Tabs>
-                          <SearchInput
-                            placeholder="Find Flavor with filters"
-                            className="w-[var(--search-input-width)]"
-                          />
-                          <Pagination
-                            currentPage={1}
-                            totalPages={5}
-                            onPageChange={() => {}}
-                            totalItems={115}
-                            selectedCount={nodeFlavor ? 1 : 0}
-                          />
-                          <VStack gap={2}>
-                            <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
-                            <SelectionIndicator
-                              selectedItems={
-                                nodeFlavor
-                                  ? [
-                                      {
-                                        id: nodeFlavor,
-                                        label:
-                                          mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
-                                          nodeFlavor,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              emptyText="No flavor selected"
-                              onRemove={() => setNodeFlavor('')}
-                            />
-                          </VStack>
-                        </VStack>
-                      </FormField.Control>
-                    </FormField>
+                        <Tabs
+                          value={authMethod}
+                          onChange={(v) => setAuthMethod(v as 'keypair' | 'password')}
+                          variant="underline"
+                          size="sm"
+                        >
+                          <TabList>
+                            <Tab value="keypair">Key Pair</Tab>
+                            <Tab value="password">Password</Tab>
+                          </TabList>
 
-                    {/* Node Count */}
-                    <FormField required>
-                      <FormField.Label>Node Count</FormField.Label>
-                      <FormField.Description>
-                        Select the number of worker nodes to create.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <Select
-                          options={[
-                            { value: '1', label: '1' },
-                            { value: '2', label: '2' },
-                            { value: '3', label: '3' },
-                            { value: '5', label: '5' },
-                            { value: '10', label: '10' },
-                          ]}
-                          value={nodeCount}
-                          onChange={setNodeCount}
-                          fullWidth
-                        />
+                          <TabPanel value="keypair" className="pt-0">
+                            <VStack gap={3} className="pt-4">
+                              <SearchInput
+                                placeholder="Search key pairs by attributes"
+                                value={keyPairSearch}
+                                onChange={(e) => setKeyPairSearch(e.target.value)}
+                                className="w-[var(--search-input-width)]"
+                              />
+                              <Pagination
+                                currentPage={keyPairPage}
+                                totalPages={5}
+                                onPageChange={setKeyPairPage}
+                                totalItems={115}
+                                selectedCount={selectedKeyPair ? 1 : 0}
+                              />
+                              <VStack gap={2}>
+                                <Table
+                                  columns={keyPairColumns}
+                                  data={filteredKeyPairs}
+                                  rowKey="id"
+                                />
+                                <SelectionIndicator
+                                  selectedItems={
+                                    selectedKeyPair
+                                      ? [
+                                          {
+                                            id: selectedKeyPair,
+                                            label:
+                                              mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
+                                                ?.name || selectedKeyPair,
+                                          },
+                                        ]
+                                      : []
+                                  }
+                                  emptyText="No key pair selected"
+                                  onRemove={() => setSelectedKeyPair('')}
+                                />
+                              </VStack>
+                            </VStack>
+                          </TabPanel>
+
+                          <TabPanel value="password" className="pt-0">
+                            <VStack gap={6} className="pt-4">
+                              <FormField>
+                                <FormField.Label>Login Name</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    placeholder="Enter login name"
+                                    value={loginName}
+                                    onChange={(e) => setLoginName(e.target.value)}
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                              <FormField>
+                                <FormField.Label>Password</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    rightElement={
+                                      <button
+                                        type="button"
+                                        className="flex items-center"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        tabIndex={-1}
+                                      >
+                                        {showPassword ? (
+                                          <IconEyeOff size={14} />
+                                        ) : (
+                                          <IconEye size={14} />
+                                        )}
+                                      </button>
+                                    }
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                              <FormField>
+                                <FormField.Label>Confirm Password</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    placeholder="Enter password again"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    rightElement={
+                                      <button
+                                        type="button"
+                                        className="flex items-center"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        tabIndex={-1}
+                                      >
+                                        {showConfirmPassword ? (
+                                          <IconEyeOff size={14} />
+                                        ) : (
+                                          <IconEye size={14} />
+                                        )}
+                                      </button>
+                                    }
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                            </VStack>
+                          </TabPanel>
+                        </Tabs>
                       </FormField.Control>
                     </FormField>
                   </VStack>
@@ -832,10 +952,112 @@ export function CreateClusterPage() {
             </SectionCard.Content>
           </SectionCard>
 
+          {/* Worker Nodes */}
+          <SectionCard>
+            <SectionCard.Header title="Worker Nodes" />
+            <SectionCard.Content className="pt-3">
+              <VStack gap={6}>
+                {/* Image */}
+                <FormField required>
+                  <FormField.Label>Image</FormField.Label>
+                  <FormField.Description>
+                    Select the operating system image to use for the worker nodes.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select
+                      options={imageOptions}
+                      value={nodeImage}
+                      onChange={setNodeImage}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
+
+                {/* Flavor */}
+                <FormField required>
+                  <FormField.Label>Flavor</FormField.Label>
+                  <FormField.Description>
+                    Select the Flavor that defines the vCPU, memory, and disk capacity for the
+                    worker nodes.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <VStack gap={3}>
+                      <Tabs
+                        value={nodeFlavorFilter}
+                        onChange={setNodeFlavorFilter}
+                        variant="underline"
+                        size="sm"
+                      >
+                        <TabList>
+                          <Tab value="vcpu">vCPU</Tab>
+                          <Tab value="gpu">GPU</Tab>
+                          <Tab value="npu">NPU</Tab>
+                          <Tab value="custom">Custom</Tab>
+                        </TabList>
+                      </Tabs>
+                      <SearchInput
+                        placeholder="Find Flavor with filters"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Pagination
+                        currentPage={1}
+                        totalPages={5}
+                        onPageChange={() => {}}
+                        totalItems={115}
+                        selectedCount={nodeFlavor ? 1 : 0}
+                      />
+                      <VStack gap={2}>
+                        <Table columns={nodeFlavorColumns} data={mockFlavors} rowKey="id" />
+                        <SelectionIndicator
+                          selectedItems={
+                            nodeFlavor
+                              ? [
+                                  {
+                                    id: nodeFlavor,
+                                    label:
+                                      mockFlavors.find((f) => f.id === nodeFlavor)?.name ||
+                                      nodeFlavor,
+                                  },
+                                ]
+                              : []
+                          }
+                          emptyText="No flavor selected"
+                          onRemove={() => setNodeFlavor('')}
+                        />
+                      </VStack>
+                    </VStack>
+                  </FormField.Control>
+                </FormField>
+
+                {/* Node Count */}
+                <FormField required>
+                  <FormField.Label>Node Count</FormField.Label>
+                  <FormField.Description>
+                    Select the number of worker nodes to create.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select
+                      options={[
+                        { value: '1', label: '1' },
+                        { value: '2', label: '2' },
+                        { value: '3', label: '3' },
+                        { value: '5', label: '5' },
+                        { value: '10', label: '10' },
+                      ]}
+                      value={nodeCount}
+                      onChange={setNodeCount}
+                      fullWidth
+                    />
+                  </FormField.Control>
+                </FormField>
+              </VStack>
+            </SectionCard.Content>
+          </SectionCard>
+
           {/* Labels & Annotations */}
           <SectionCard>
             <SectionCard.Header title="Labels & Annotations" />
-            <SectionCard.Content>
+            <SectionCard.Content className="pt-3">
               <VStack gap={6}>
                 {/* Labels */}
                 <VStack gap={3}>
