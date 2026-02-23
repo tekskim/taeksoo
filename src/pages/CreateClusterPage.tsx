@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconX, IconCirclePlus, IconInfoCircle } from '@tabler/icons-react';
+import { IconX, IconCirclePlus, IconInfoCircle, IconEye, IconEyeOff } from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -26,6 +26,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  TabPanel,
   PageShell,
   WizardSummary,
 } from '@/design-system';
@@ -49,6 +50,12 @@ interface FlavorRow {
   vcpu: number;
   ram: string;
   disk: string;
+}
+
+interface KeyPairRow {
+  id: string;
+  name: string;
+  fingerprint: string;
 }
 
 interface Label {
@@ -121,6 +128,39 @@ const imageOptions = [
   { value: 'rocky-9-tk-base', label: 'rocky_9_tk_base' },
 ];
 
+const mockKeyPairs: KeyPairRow[] = [
+  {
+    id: 'kp-1',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-2',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-3',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-4',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-5',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+  {
+    id: 'kp-6',
+    name: 'dev-keypair',
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
+];
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -155,6 +195,17 @@ export function CreateClusterPage() {
   const [etcdDiskType, setEtcdDiskType] = useState<'external' | 'local'>('external');
   const [etcdVolumeSize, setEtcdVolumeSize] = useState(10);
   const [cpFlavorFilter, setCpFlavorFilter] = useState('vcpu');
+
+  // Authentication
+  const [authMethod, setAuthMethod] = useState<'keypair' | 'password'>('keypair');
+  const [selectedKeyPair, setSelectedKeyPair] = useState<string>('');
+  const [keyPairSearch, setKeyPairSearch] = useState('');
+  const [keyPairPage, setKeyPairPage] = useState(1);
+  const [loginName, setLoginName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Worker Nodes
   const [nodeImage, setNodeImage] = useState('ubuntu-24.04-tk-base');
@@ -242,6 +293,24 @@ export function CreateClusterPage() {
     { key: 'name', label: 'Name', sortable: true },
     { key: 'subnetCidr', label: 'SubnetCIDR', sortable: true },
   ];
+
+  // Key Pair columns
+  const keyPairColumns: TableColumn<KeyPairRow>[] = [
+    {
+      key: 'select',
+      label: '',
+      width: 48,
+      render: (_value, row) => (
+        <Radio checked={selectedKeyPair === row.id} onChange={() => setSelectedKeyPair(row.id)} />
+      ),
+    },
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'fingerprint', label: 'Fingerprint', sortable: true },
+  ];
+
+  const filteredKeyPairs = mockKeyPairs.filter((kp) =>
+    kp.name.toLowerCase().includes(keyPairSearch.toLowerCase())
+  );
 
   // Control Plane Flavor columns
   const cpFlavorColumns: TableColumn<FlavorRow>[] = [
@@ -748,6 +817,134 @@ export function CreateClusterPage() {
                         </HStack>
                       </FormField.Control>
                       <FormField.HelperText>10-100 GiB</FormField.HelperText>
+                    </FormField>
+
+                    {/* Authentication */}
+                    <FormField required>
+                      <FormField.Label>Authentication</FormField.Label>
+                      <FormField.Description>
+                        Select the authentication method for accessing your instance. You can choose
+                        either the Key Pair method or the Password method.
+                      </FormField.Description>
+                      <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                        <Tabs
+                          value={authMethod}
+                          onChange={(v) => setAuthMethod(v as 'keypair' | 'password')}
+                          variant="underline"
+                          size="sm"
+                        >
+                          <TabList>
+                            <Tab value="keypair">Key Pair</Tab>
+                            <Tab value="password">Password</Tab>
+                          </TabList>
+
+                          <TabPanel value="keypair" className="pt-0">
+                            <VStack gap={3} className="pt-4">
+                              <SearchInput
+                                placeholder="Search key pairs by attributes"
+                                value={keyPairSearch}
+                                onChange={(e) => setKeyPairSearch(e.target.value)}
+                                className="w-[var(--search-input-width)]"
+                              />
+                              <Pagination
+                                currentPage={keyPairPage}
+                                totalPages={5}
+                                onPageChange={setKeyPairPage}
+                                totalItems={115}
+                                selectedCount={selectedKeyPair ? 1 : 0}
+                              />
+                              <VStack gap={2}>
+                                <Table
+                                  columns={keyPairColumns}
+                                  data={filteredKeyPairs}
+                                  rowKey="id"
+                                />
+                                <SelectionIndicator
+                                  selectedItems={
+                                    selectedKeyPair
+                                      ? [
+                                          {
+                                            id: selectedKeyPair,
+                                            label:
+                                              mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
+                                                ?.name || selectedKeyPair,
+                                          },
+                                        ]
+                                      : []
+                                  }
+                                  emptyText="No key pair selected"
+                                  onRemove={() => setSelectedKeyPair('')}
+                                />
+                              </VStack>
+                            </VStack>
+                          </TabPanel>
+
+                          <TabPanel value="password" className="pt-0">
+                            <VStack gap={6} className="pt-4">
+                              <FormField>
+                                <FormField.Label>Login Name</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    placeholder="Enter login name"
+                                    value={loginName}
+                                    onChange={(e) => setLoginName(e.target.value)}
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                              <FormField>
+                                <FormField.Label>Password</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    rightElement={
+                                      <button
+                                        type="button"
+                                        className="flex items-center"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        tabIndex={-1}
+                                      >
+                                        {showPassword ? (
+                                          <IconEyeOff size={14} />
+                                        ) : (
+                                          <IconEye size={14} />
+                                        )}
+                                      </button>
+                                    }
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                              <FormField>
+                                <FormField.Label>Confirm Password</FormField.Label>
+                                <FormField.Control>
+                                  <Input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    placeholder="Enter password again"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    rightElement={
+                                      <button
+                                        type="button"
+                                        className="flex items-center"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        tabIndex={-1}
+                                      >
+                                        {showConfirmPassword ? (
+                                          <IconEyeOff size={14} />
+                                        ) : (
+                                          <IconEye size={14} />
+                                        )}
+                                      </button>
+                                    }
+                                  />
+                                </FormField.Control>
+                              </FormField>
+                            </VStack>
+                          </TabPanel>
+                        </Tabs>
+                      </FormField.Control>
                     </FormField>
                   </VStack>
                 </div>
