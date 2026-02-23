@@ -1204,8 +1204,7 @@ export default function HostDetailPage() {
     {
       key: 'available',
       label: 'Available',
-      flex: 1,
-      minWidth: columnMinWidths.available,
+      width: '80px',
       sortable: true,
       render: (_, row) => (row.available ? 'Yes' : ''),
     },

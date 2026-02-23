@@ -51,7 +51,7 @@ interface SecretRow {
 const secretsData: SecretRow[] = [
   {
     id: '1',
-    name: 'secretName',
+    name: 'database-postgresql-connection-credentials-secret',
     namespace: 'namespaceName',
     type: 'Opaque',
     data: 'keyName01 (+3)',
@@ -59,7 +59,7 @@ const secretsData: SecretRow[] = [
   },
   {
     id: '2',
-    name: 'db-credentials',
+    name: 'database-mysql-replication-user-credentials-secret',
     namespace: 'default',
     type: 'Opaque',
     data: 'username, password (+1)',
@@ -67,7 +67,7 @@ const secretsData: SecretRow[] = [
   },
   {
     id: '3',
-    name: 'tls-secret',
+    name: 'tls-certificate-wildcard-production-domain',
     namespace: 'nginx-ingress',
     type: 'kubernetes.io/tls',
     data: 'tls.crt, tls.key',
@@ -75,7 +75,7 @@ const secretsData: SecretRow[] = [
   },
   {
     id: '4',
-    name: 'docker-registry',
+    name: 'docker-registry-pull-image-credentials-secret',
     namespace: 'default',
     type: 'kubernetes.io/dockerconfigjson',
     data: '.dockerconfigjson',
@@ -83,7 +83,7 @@ const secretsData: SecretRow[] = [
   },
   {
     id: '5',
-    name: 'service-account-token',
+    name: 'service-account-token-default-namespace-secret',
     namespace: 'kube-system',
     type: 'kubernetes.io/service-account-token',
     data: 'ca.crt, namespace, token',
@@ -176,7 +176,7 @@ export function SecretsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

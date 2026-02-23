@@ -59,7 +59,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '1',
     status: 'Bound',
-    name: 'cert-manager',
+    name: 'cert-manager-tls-wildcard-production-domain-claim',
     namespace: 'default',
     volume: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
     capacity: '10Gi',
@@ -71,7 +71,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '2',
     status: 'Bound',
-    name: 'data-postgres-0',
+    name: 'data-postgresql-primary-statefulset-0-volume-claim',
     namespace: 'database',
     volume: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
     capacity: '50Gi',
@@ -83,7 +83,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '3',
     status: 'Bound',
-    name: 'redis-data',
+    name: 'redis-cluster-sentinel-persistent-data-01',
     namespace: 'cache',
     volume: 'pvc-redis-data-001',
     capacity: '5Gi',
@@ -95,7 +95,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '4',
     status: 'Pending',
-    name: 'pending-claim',
+    name: 'pending-analytics-logs-storage-volume-claim',
     namespace: 'default',
     volume: '',
     capacity: '20Gi',
@@ -107,7 +107,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '5',
     status: 'Bound',
-    name: 'elasticsearch-data-0',
+    name: 'elasticsearch-cluster-data-node-statefulset-0',
     namespace: 'logging',
     volume: 'pvc-elastic-001',
     capacity: '100Gi',
@@ -214,7 +214,7 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

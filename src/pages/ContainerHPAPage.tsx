@@ -59,7 +59,7 @@ const hpaData: HPARow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'horizontalpodautoscalerName',
+    name: 'frontend-web-application-horizontal-autoscaler',
     namespace: 'namespaceName',
     workload: 'workloadName',
     minReplicas: 1,
@@ -70,7 +70,7 @@ const hpaData: HPARow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'api-hpa',
+    name: 'backend-api-gateway-cpu-memory-autoscaler',
     namespace: 'default',
     workload: 'api-deployment',
     minReplicas: 2,
@@ -81,7 +81,7 @@ const hpaData: HPARow[] = [
   {
     id: '3',
     status: 'Pending',
-    name: 'web-hpa',
+    name: 'frontend-web-production-pending-workload-autoscaler',
     namespace: 'production',
     workload: 'web-deployment',
     minReplicas: 3,
@@ -92,7 +92,7 @@ const hpaData: HPARow[] = [
   {
     id: '4',
     status: 'Error',
-    name: 'staging-hpa',
+    name: 'staging-environment-workload-autoscaler',
     namespace: 'staging',
     workload: 'staging-deployment',
     minReplicas: 1,
@@ -171,7 +171,7 @@ export function ContainerHPAPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (

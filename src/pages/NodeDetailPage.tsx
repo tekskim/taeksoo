@@ -422,8 +422,7 @@ function PodsTab({ pods }: PodsTabProps) {
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
     },
     { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
     { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node },

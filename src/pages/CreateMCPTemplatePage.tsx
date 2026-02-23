@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import {
+  PageShell,
+  TabBar,
   TopBar,
   TopBarAction,
   Breadcrumb,
@@ -14,16 +16,20 @@ import {
   TabList,
   Tab,
   FloatingCard,
+  Chip,
   SectionCard,
+  FormField,
   VStack,
   HStack,
   Disclosure,
   Toggle,
   Badge,
 } from '@/design-system';
+import { AgentSidebar } from '@/components/AgentSidebar';
 import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
+import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
    Create MCP Template Page Component
@@ -325,36 +331,37 @@ export function CreateMCPTemplatePage() {
                           />
 
                           {/* Tags */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Tag
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Tags help categorize and identify your resources.
-                            </p>
-                            <Input
-                              placeholder="Enter tags"
-                              value={tagInput}
-                              onChange={(e) => setTagInput(e.target.value)}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleAddTag();
-                                }
-                              }}
-                              helperText="Comma-separated tags for filtering, up to 10 tags allowed."
-                              fullWidth
-                            />
-                            {tags.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {tags.map((tag, index) => (
-                                  <Badge key={index} theme="white" size="sm">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </VStack>
+                          <FormField
+                            label="Tag"
+                            description="Tags help categorize and identify your resources."
+                            helperText="Comma-separated tags for filtering, up to 10 tags allowed."
+                          >
+                            <VStack gap={2}>
+                              <Input
+                                placeholder="Enter tags"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleAddTag();
+                                  }
+                                }}
+                                fullWidth
+                              />
+                              {tags.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {tags.map((tag, index) => (
+                                    <Chip
+                                      key={index}
+                                      value={tag}
+                                      onRemove={() => handleRemoveTag(index)}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </VStack>
+                          </FormField>
 
                           {/* Category */}
                           <div>
@@ -482,10 +489,10 @@ export function CreateMCPTemplatePage() {
                             />
 
                             {/* Port */}
-                            <VStack gap={2} className="w-full">
-                              <label className="text-label-lg text-[var(--color-text-default)]">
-                                Port
-                              </label>
+                            <FormField
+                              label="Port"
+                              description="The port on which the container listens for incoming requests."
+                            >
                               <NumberInput
                                 value={port}
                                 onChange={setPort}
@@ -493,10 +500,7 @@ export function CreateMCPTemplatePage() {
                                 max={65535}
                                 width="sm"
                               />
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                The port on which the container listens for incoming requests.
-                              </p>
-                            </VStack>
+                            </FormField>
 
                             {/* CPU request & limit */}
                             <div className="grid grid-cols-2 gap-4">
@@ -835,35 +839,31 @@ export function CreateMCPTemplatePage() {
                                   />
 
                                   {/* Tag */}
-                                  <VStack gap={2} className="w-full">
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
-                                      Tag
-                                    </label>
-                                    <p className="text-body-md text-[var(--color-text-subtle)]">
-                                      Tags help categorize and identify your resources.
-                                    </p>
-                                    <Input
-                                      placeholder="Enter tags"
-                                      helperText="Comma-separated tags for filtering. Up to 10 tags allowed."
-                                      fullWidth
-                                    />
-                                    <div className="flex flex-wrap gap-2">
-                                      {tool.tags.map((tag, index) => (
-                                        <Badge key={index} theme="white" size="sm">
-                                          {tag}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </VStack>
+                                  <FormField
+                                    label="Tag"
+                                    description="Tags help categorize and identify your resources."
+                                    helperText="Comma-separated tags for filtering. Up to 10 tags allowed."
+                                  >
+                                    <VStack gap={2}>
+                                      <Input placeholder="Enter tags" fullWidth />
+                                      <div className="flex flex-wrap gap-2">
+                                        {tool.tags.map((tag, index) => (
+                                          <Chip key={index} value={tag} onRemove={() => {}} />
+                                        ))}
+                                      </div>
+                                    </VStack>
+                                  </FormField>
 
                                   {/* Parameters */}
                                   <VStack gap={2} className="w-full">
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
-                                      Parameters (input schema)
-                                    </label>
-                                    <p className="text-body-md text-[var(--color-text-subtle)]">
-                                      Define the input parameters for this tool.
-                                    </p>
+                                    <VStack gap={1}>
+                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                        Parameters (input schema)
+                                      </label>
+                                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                                        Define the input parameters for this tool.
+                                      </p>
+                                    </VStack>
 
                                     {tool.parameters.map((param, paramIndex) => (
                                       <div
@@ -949,15 +949,11 @@ export function CreateMCPTemplatePage() {
                         <SectionCard.Header title="Publishing settings" />
                         <SectionCard.Content>
                           {/* Visibility */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Visibility
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Control whether this template appears in the templates catalog and is
-                              available to all users.
-                            </p>
+                          <FormField
+                            label="Visibility"
+                            required
+                            description="Control whether this template appears in the templates catalog and is available to all users."
+                          >
                             <RadioGroup
                               value={visibility}
                               onChange={(value) => setVisibility(value as 'visible' | 'hidden')}
@@ -965,25 +961,21 @@ export function CreateMCPTemplatePage() {
                               <Radio value="visible">Visible</Radio>
                               <Radio value="hidden">Hidden</Radio>
                             </RadioGroup>
-                          </VStack>
+                          </FormField>
 
                           {/* Add official badge */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Add official badge
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Add a official badge to indicate that this MCP server is an official
-                              template provided by your organization.
-                            </p>
+                          <FormField
+                            label="Add official badge"
+                            required
+                            description="Add a official badge to indicate that this MCP server is an official template provided by your organization."
+                          >
                             <HStack gap={2}>
                               <Toggle checked={addOfficialBadge} onChange={setAddOfficialBadge} />
                               <span className="text-label-sm text-[var(--color-text-default)]">
                                 {addOfficialBadge ? 'On' : 'Off'}
                               </span>
                             </HStack>
-                          </VStack>
+                          </FormField>
                         </SectionCard.Content>
                       </SectionCard>
 

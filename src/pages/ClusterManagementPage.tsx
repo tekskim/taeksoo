@@ -56,35 +56,35 @@ interface Cluster {
 const mockClusters: Cluster[] = [
   {
     id: 'cluster-001',
-    name: 'Cluster1',
+    name: 'production-kubernetes-high-availability-cluster',
     status: 'building',
     kubernetesVersion: 'v1.34',
     createdAt: 'Nov 11, 2025',
   },
   {
     id: 'cluster-002',
-    name: 'ClusterName',
+    name: 'staging-development-testing-environment-cluster',
     status: 'active',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 6, 2025',
   },
   {
     id: 'cluster-003',
-    name: 'production-cluster',
+    name: 'production-microservices-platform-cluster',
     status: 'active',
     kubernetesVersion: 'v1.32.2',
     createdAt: 'Sep 15, 2025',
   },
   {
     id: 'cluster-004',
-    name: 'staging-cluster',
+    name: 'staging-integration-testing-environment-cluster',
     status: 'active',
     kubernetesVersion: 'v1.33.1',
     createdAt: 'Aug 20, 2025',
   },
   {
     id: 'cluster-005',
-    name: 'dev-cluster',
+    name: 'development-sandbox-experimental-cluster',
     status: 'error',
     kubernetesVersion: 'v1.31.0',
     createdAt: 'Jul 10, 2025',
@@ -146,12 +146,12 @@ export function ClusterManagementPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value as string}
           onClick={(e) => {
             e.stopPropagation();

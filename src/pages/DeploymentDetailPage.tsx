@@ -355,7 +355,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value}
         >
           {value}
@@ -372,15 +372,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
       sortable: true,
     },
     {
@@ -397,7 +395,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2">
+        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
           {value}
         </span>
       ),
@@ -537,7 +535,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value}
           onClick={() => navigate(`/container/services/${row.id}`)}
         >
@@ -662,7 +660,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
+        <span className="truncate" title={`[${row.reason}] ${value}`}>
           [{row.reason}] {value}
         </span>
       ),

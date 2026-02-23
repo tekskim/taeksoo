@@ -238,8 +238,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'completions',
       label: 'Completions',
-      flex: 1,
-      minWidth: columnMinWidths.completions,
+      width: '100px',
       sortable: true,
     },
     {
@@ -252,8 +251,7 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
       sortable: true,
     },
     {

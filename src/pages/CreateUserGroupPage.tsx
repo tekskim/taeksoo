@@ -1023,7 +1023,11 @@ export default function CreateUserGroupPage() {
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
               >
-                <SectionCard.DataRow label="Group name" value={groupName} showDivider={false} />
+                <SectionCard.DataRow
+                  label="Group name"
+                  value={groupName || '-'}
+                  showDivider={false}
+                />
                 <SectionCard.DataRow label="Description" value={description || '-'} />
               </DoneSection>
             )}

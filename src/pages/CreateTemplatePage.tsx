@@ -4,8 +4,8 @@ import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,
+  FormField,
   NumberInput,
-  Slider,
   HStack,
   VStack,
   TabBar,
@@ -640,62 +640,51 @@ function TemplateInformationSection({
         <VStack gap={0}>
           {/* Template name */}
           <div className="pt-3 pb-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Template name <span className="text-[var(--color-state-danger)]">*</span>
-              </span>
-              <VStack gap={2}>
-                <Input
-                  placeholder="Enter instance template name"
-                  value={templateName}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  fullWidth
-                  error={!!templateNameError}
-                />
-                {templateNameError && (
-                  <span className="text-body-sm text-[var(--color-state-danger)]">
-                    {templateNameError}
-                  </span>
-                )}
-              </VStack>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                You can use letters, numbers, and special characters (+=,.@-_), and the length must
-                be between 2-128 characters.
-              </span>
-            </VStack>
+            <FormField
+              label="Template name"
+              required
+              error={!!templateNameError}
+              errorMessage={templateNameError || undefined}
+              helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+            >
+              <Input
+                placeholder="Enter instance template name"
+                value={templateName}
+                onChange={(e) => handleNameChange(e.target.value)}
+                fullWidth
+                error={!!templateNameError}
+              />
+            </FormField>
           </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
           <div className="py-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
+            <FormField
+              label="Description"
+              helperText="You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters."
+            >
               <Input
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => onDescriptionChange(e.target.value)}
                 fullWidth
               />
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
-                characters.
-              </span>
-            </VStack>
+            </FormField>
           </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Favorite */}
           <div className="py-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Favorite</span>
+            <FormField label="Favorite">
               <Checkbox
                 label="Mark as Favorite"
                 checked={isFavorite}
                 onChange={() => onIsFavoriteChange(!isFavorite)}
               />
-            </VStack>
+            </FormField>
           </div>
 
           {!isEditing && (
@@ -763,14 +752,11 @@ function BasicInformationSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* AZ (Availability zone) */}
-          <div className="pt-3 pb-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                AZ (Availability zone)
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the availability zone for the instance.
-              </span>
+          <div className="py-6">
+            <FormField
+              label="AZ (Availability zone)"
+              description="Select the availability zone for the instance."
+            >
               <Select
                 options={azOptions}
                 value={availabilityZone}
@@ -778,7 +764,7 @@ function BasicInformationSection({
                 placeholder="Select AZ"
                 fullWidth
               />
-            </VStack>
+            </FormField>
           </div>
 
           {!isEditing && (
@@ -908,7 +894,6 @@ function ImageSection({
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      align: 'center' as const,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -917,12 +902,16 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
-      width: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
-          <a href="#" className="text-[var(--color-action-primary)] hover:underline text-label-md">
-            {value}
-          </a>
+          <HStack gap={1} align="center">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+            >
+              {value}
+            </a>
+          </HStack>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
@@ -931,34 +920,24 @@ function ImageSection({
       key: 'version',
       label: 'Version',
       sortable: true,
-      width: columnMinWidths.version,
+      flex: 1,
+      minWidth: columnMinWidths.version,
     },
-    {
-      key: 'size',
-      label: 'Size',
-      sortable: true,
-      width: columnMinWidths.size,
-      align: 'right' as const,
-    },
+    { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
     {
       key: 'minDisk',
       label: 'Min disk',
       sortable: true,
-      width: columnMinWidths.minDisk,
-      align: 'right' as const,
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
     },
-    {
-      key: 'minRam',
-      label: 'Min RAM',
-      sortable: true,
-      width: columnMinWidths.minRam,
-      align: 'right' as const,
-    },
+    { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRam },
     {
       key: 'access',
       label: 'Visibility',
       sortable: true,
-      width: columnMinWidths.access,
+      flex: 1,
+      minWidth: columnMinWidths.access,
     },
   ];
 
@@ -984,13 +963,15 @@ function ImageSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Start Source */}
-          <div className="pt-3 pb-6">
-            <VStack gap={3}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select a template to launch the instance. You can start from an OS image, a
-                snapshot, or an existing volume.
-              </span>
+          <div className="py-6">
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Select a template to launch the instance. You can start from an OS image, a
+                  snapshot, or an existing volume.
+                </span>
+              </VStack>
 
               {/* Source Tabs */}
               <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
@@ -1092,10 +1073,12 @@ function ImageSection({
 
           {/* System disk Section */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Configure whether to create a system disk for booting.
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Configure whether to create a system disk for booting.
+              </span>
+            </VStack>
 
             {/* Toggle */}
             <Toggle
@@ -1106,8 +1089,8 @@ function ImageSection({
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
-                <HStack gap={6} align="start" className="flex-wrap">
+              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+                <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
                     <Select
@@ -1116,31 +1099,17 @@ function ImageSection({
                       onChange={onStorageTypeChange}
                     />
                   </HStack>
-                  <VStack gap={2}>
+                  <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                    <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
-                      <Slider
-                        min={10}
-                        max={1000}
-                        step={10}
-                        value={storageSize}
-                        onChange={onStorageSizeChange}
-                        className="flex-1"
-                      />
-                      <NumberInput
-                        value={storageSize}
-                        onChange={onStorageSizeChange}
-                        min={10}
-                        max={1000}
-                        step={1}
-                        width="xs"
-                        suffix="GiB"
-                      />
-                    </HStack>
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      10-1,000 GiB
-                    </span>
-                  </VStack>
+                    <NumberInput
+                      value={storageSize}
+                      onChange={onStorageSizeChange}
+                      min={10}
+                      max={1000}
+                      width="sm"
+                      suffix="GiB"
+                    />
+                  </HStack>
                   <Checkbox
                     label="Deleted with the instance"
                     checked={deleteWithInstance}
@@ -1156,10 +1125,12 @@ function ImageSection({
           {/* Data disk Section */}
           <div className="py-6">
             <VStack gap={3} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Attach additional volumes for data storage.
-              </span>
+              <VStack gap={1} align="start">
+                <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Attach additional volumes for data storage.
+                </span>
+              </VStack>
 
               <Button
                 variant="outline"
@@ -1330,81 +1301,83 @@ function FlavorSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Flavors Label & Description */}
-          <div className="pt-3 pb-6">
-            <VStack gap={2} align="start">
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select a flavor from the list to use for the instance.
-              </span>
-            </VStack>
+          <div className="py-6">
+            <VStack gap={2} align="stretch">
+              <VStack gap={1} align="start">
+                <span className="text-label-lg text-[var(--color-text-default)]">
+                  Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Select a flavor from the list to use for the instance.
+                </span>
+              </VStack>
 
-            {/* Flavor Type Tabs */}
-            <VStack gap={3} align="stretch" className="mt-4">
-              <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="cpu">CPU</Tab>
-                  <Tab value="gpu">GPU</Tab>
-                  <Tab value="npu">NPU</Tab>
-                </TabList>
-              </Tabs>
+              {/* Flavor Type Tabs */}
+              <VStack gap={3} align="stretch">
+                <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="cpu">CPU</Tab>
+                    <Tab value="gpu">GPU</Tab>
+                    <Tab value="npu">NPU</Tab>
+                  </TabList>
+                </Tabs>
 
-              {/* Search & Download */}
-              <HStack gap={1} align="center">
-                <SearchInput
-                  placeholder="Search flavors by attributes"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  onClear={() => {
-                    setSearchQuery('');
-                    setCurrentPage(1);
-                  }}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
-                <button
-                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
-                  title="Download"
-                >
-                  <IconDownload size={12} stroke={1.5} />
-                </button>
-              </HStack>
+                {/* Search & Download */}
+                <HStack gap={1} align="center">
+                  <SearchInput
+                    placeholder="Search flavors by attributes"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onClear={() => {
+                      setSearchQuery('');
+                      setCurrentPage(1);
+                    }}
+                    size="sm"
+                    className="w-[var(--search-input-width)]"
+                  />
+                  <button
+                    className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-white hover:bg-[var(--color-surface-subtle)]"
+                    title="Download"
+                  >
+                    <IconDownload size={12} stroke={1.5} />
+                  </button>
+                </HStack>
 
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredFlavors.length}
-                onPageChange={setCurrentPage}
-                selectedCount={selectedFlavorId ? 1 : 0}
-              />
-
-              {/* Flavor Table */}
-              <VStack gap={2}>
-                <Table
-                  columns={flavorColumns}
-                  data={paginatedFlavors}
-                  rowKey="id"
-                  onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredFlavors.length}
+                  onPageChange={setCurrentPage}
+                  selectedCount={selectedFlavorId ? 1 : 0}
                 />
 
-                {/* Selection Indicator for Flavor */}
-                <SelectionIndicator
-                  selectedItems={
-                    selectedFlavor
-                      ? [
-                          {
-                            id: selectedFlavor.id,
-                            label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
-                          },
-                        ]
-                      : []
-                  }
-                  onRemove={() => onSelectFlavor('')}
-                  error={!!flavorError}
-                  errorMessage={flavorError || undefined}
-                />
+                {/* Flavor Table */}
+                <VStack gap={2}>
+                  <Table
+                    columns={flavorColumns}
+                    data={paginatedFlavors}
+                    rowKey="id"
+                    onRowClick={(row) => !row.hasWarning && handleSelectFlavor(row.id)}
+                  />
+
+                  {/* Selection Indicator for Flavor */}
+                  <SelectionIndicator
+                    selectedItems={
+                      selectedFlavor
+                        ? [
+                            {
+                              id: selectedFlavor.id,
+                              label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
+                            },
+                          ]
+                        : []
+                    }
+                    onRemove={() => onSelectFlavor('')}
+                    error={!!flavorError}
+                    errorMessage={flavorError || undefined}
+                  />
+                </VStack>
               </VStack>
             </VStack>
           </div>
@@ -1857,9 +1830,9 @@ function NetworkSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Networks Section */}
-          <div className="pt-3 pb-6">
-            <VStack gap={3} align="stretch">
-              <VStack gap={2} align="start">
+          <div className="py-6">
+            <VStack gap={2} align="stretch">
+              <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
                 </span>
@@ -1940,8 +1913,8 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={3} align="stretch">
-              <VStack gap={2} align="start">
+            <VStack gap={2} align="stretch">
+              <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   Each selected network requires at least one Virtual LAN configuration. Each VLAN
@@ -2005,9 +1978,9 @@ function NetworkSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
-          <div className="pt-6 pb-6">
-            <VStack gap={3} align="stretch">
-              <VStack gap={2} align="start">
+          <div className="py-6">
+            <VStack gap={2} align="stretch">
+              <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Security groups
                   <span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -2249,11 +2222,8 @@ function AuthenticationSection({
         <VStack gap={0}>
           {/* Login type */}
           <div className="py-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Login type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-              </span>
-              <HStack gap={4} className="mt-2">
+            <FormField label="Login type" required>
+              <HStack gap={4}>
                 <Radio
                   value="keypair"
                   checked={loginType === 'keypair'}
@@ -2267,7 +2237,7 @@ function AuthenticationSection({
                   label="Password"
                 />
               </HStack>
-            </VStack>
+            </FormField>
           </div>
 
           {(isV2 || loginType === 'keypair') && (
@@ -2421,7 +2391,7 @@ function AdvancedSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Tags Section */}
-          <div className="pt-3 pb-6">
+          <div className="py-6">
             <VStack gap={3}>
               <VStack gap={1.5}>
                 <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>

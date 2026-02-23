@@ -56,7 +56,7 @@ const podsData: PodRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'podName1',
+    name: 'frontend-web-application-deployment-7fb96c846b-x2vnl',
     namespace: 'namespaceName',
     image: 'imageName',
     ready: '1/1',
@@ -67,7 +67,7 @@ const podsData: PodRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'nginx-deployment-7fb96c846b-x2vnl',
+    name: 'backend-api-gateway-service-5d4f8b7c9a-k8m2n',
     namespace: 'default',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -78,7 +78,7 @@ const podsData: PodRow[] = [
   {
     id: '3',
     status: 'Pending',
-    name: 'backend-api-5d8f7b9c4d-kj2nl',
+    name: 'monitoring-prometheus-alertmanager-statefulset-0',
     namespace: 'production',
     image: 'backend-api:v2.1.0',
     ready: '0/1',
@@ -89,7 +89,7 @@ const podsData: PodRow[] = [
   {
     id: '4',
     status: 'Failed',
-    name: 'data-processor-6f8a9b2c1d-lm3op',
+    name: 'ingress-nginx-controller-admission-create-28t5q',
     namespace: 'analytics',
     image: 'data-processor:v1.5',
     ready: '0/1',
@@ -100,7 +100,7 @@ const podsData: PodRow[] = [
   {
     id: '5',
     status: 'Running',
-    name: 'redis-master-0',
+    name: 'kube-system-coredns-autoscaler-7f89d5c6b4-2pv8r',
     namespace: 'cache',
     image: 'redis:7.2',
     ready: '1/1',
@@ -111,7 +111,7 @@ const podsData: PodRow[] = [
   {
     id: '6',
     status: 'Running',
-    name: 'postgres-0',
+    name: 'postgresql-primary-replication-statefulset-0',
     namespace: 'database',
     image: 'postgres:15',
     ready: '1/1',
@@ -122,7 +122,7 @@ const podsData: PodRow[] = [
   {
     id: '7',
     status: 'Succeeded',
-    name: 'migration-job-abc123',
+    name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'database',
     image: 'migration:v1.0',
     ready: '0/1',
@@ -133,7 +133,7 @@ const podsData: PodRow[] = [
   {
     id: '8',
     status: 'Running',
-    name: 'monitoring-agent-ds-node1',
+    name: 'monitoring-node-exporter-prometheus-daemonset-node1',
     namespace: 'monitoring',
     image: 'prometheus-agent:v2.45',
     ready: '1/1',
@@ -263,7 +263,7 @@ export function PodsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -295,14 +295,12 @@ export function PodsPage() {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
-      minWidth: columnMinWidths.restarts,
+      width: '80px',
     },
     {
       key: 'ip',
