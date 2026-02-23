@@ -3160,27 +3160,29 @@ function AuthenticationSection({
                       onPageChange={setKeyPairPage}
                       selectedCount={selectedKeyPairId ? 1 : 0}
                     />
-                    <Table
-                      columns={keyPairColumns}
-                      data={filteredKeyPairs}
-                      rowKey="id"
-                      onRowClick={(row) => handleSelectKeyPair(row.id)}
-                    />
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedKeyPairId
-                          ? [
-                              {
-                                id: selectedKeyPairId,
-                                label:
-                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                  selectedKeyPairId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => setSelectedKeyPairId(null)}
-                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={keyPairColumns}
+                        data={filteredKeyPairs}
+                        rowKey="id"
+                        onRowClick={(row) => handleSelectKeyPair(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedKeyPairId
+                            ? [
+                                {
+                                  id: selectedKeyPairId,
+                                  label:
+                                    mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                    selectedKeyPairId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => setSelectedKeyPairId(null)}
+                      />
+                    </VStack>
                   </VStack>
                 </div>
 
