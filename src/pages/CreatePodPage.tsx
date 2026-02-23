@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -1928,69 +1929,69 @@ export function CreatePodPage() {
                           Network Settings
                         </span>
                         <VStack gap={6} className="w-full">
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Network Mode
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                          <FormField>
+                            <FormField.Label>Network Mode</FormField.Label>
+                            <FormField.Description>
                               Select the networking mode for the pod.
-                            </span>
-                            <Select
-                              options={[
-                                { value: 'normal', label: 'Normal' },
-                                { value: 'host', label: 'Host' },
-                              ]}
-                              value={networkMode}
-                              onChange={setNetworkMode}
-                              fullWidth
-                            />
-                          </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              DNS Policy
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Select
+                                options={[
+                                  { value: 'normal', label: 'Normal' },
+                                  { value: 'host', label: 'Host' },
+                                ]}
+                                value={networkMode}
+                                onChange={setNetworkMode}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>DNS Policy</FormField.Label>
+                            <FormField.Description>
                               Select the DNS policy to apply to the pod.
-                            </span>
-                            <Select
-                              options={[
-                                { value: 'cluster-first', label: 'Cluster first' },
-                                { value: 'default', label: 'Default' },
-                                { value: 'none', label: 'None' },
-                              ]}
-                              value={dnsPolicy}
-                              onChange={setDnsPolicy}
-                              fullWidth
-                            />
-                          </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Hostname
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Select
+                                options={[
+                                  { value: 'cluster-first', label: 'Cluster first' },
+                                  { value: 'default', label: 'Default' },
+                                  { value: 'none', label: 'None' },
+                                ]}
+                                value={dnsPolicy}
+                                onChange={setDnsPolicy}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Hostname</FormField.Label>
+                            <FormField.Description>
                               Specify the hostname assigned to the pod.
-                            </span>
-                            <Input
-                              placeholder="e.g. web"
-                              fullWidth
-                              value={hostname}
-                              onChange={(e) => setHostname(e.target.value)}
-                            />
-                          </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Subdomain
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Input
+                                placeholder="e.g. web"
+                                fullWidth
+                                value={hostname}
+                                onChange={(e) => setHostname(e.target.value)}
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Subdomain</FormField.Label>
+                            <FormField.Description>
                               Specify the subdomain assigned to the pod.
-                            </span>
-                            <Input
-                              placeholder="e.g. web"
-                              fullWidth
-                              value={subdomain}
-                              onChange={(e) => setSubdomain(e.target.value)}
-                            />
-                          </VStack>
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Input
+                                placeholder="e.g. web"
+                                fullWidth
+                                value={subdomain}
+                                onChange={(e) => setSubdomain(e.target.value)}
+                              />
+                            </FormField.Control>
+                          </FormField>
                         </VStack>
                       </VStack>
 
@@ -2261,22 +2262,22 @@ export function CreatePodPage() {
                         />
                       </RadioGroup>
                       {(isV2 || nodeScheduling === 'specific') && (
-                        <VStack gap={1} className="w-full max-w-[606px]">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Node
-                          </span>
-                          <Select
-                            options={[
-                              { value: 'node-1', label: 'node-1' },
-                              { value: 'node-2', label: 'node-2' },
-                              { value: 'node-3', label: 'node-3' },
-                            ]}
-                            value={selectedNode}
-                            onChange={setSelectedNode}
-                            placeholder="Select a node"
-                            fullWidth
-                          />
-                        </VStack>
+                        <FormField>
+                          <FormField.Label>Node</FormField.Label>
+                          <FormField.Control>
+                            <Select
+                              options={[
+                                { value: 'node-1', label: 'node-1' },
+                                { value: 'node-2', label: 'node-2' },
+                                { value: 'node-3', label: 'node-3' },
+                              ]}
+                              value={selectedNode}
+                              onChange={setSelectedNode}
+                              placeholder="Select a node"
+                              fullWidth
+                            />
+                          </FormField.Control>
+                        </FormField>
                       )}
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
@@ -3118,38 +3119,36 @@ export function CreatePodPage() {
                             {volume.type === 'configmap' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Volume Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Input
-                                      placeholder="Input name"
-                                      value={volume.volumeName}
-                                      onChange={(e) =>
-                                        updateVolume(index, { volumeName: e.target.value })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      ConfigMap{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Select
-                                      options={[
-                                        { value: 'config-1', label: 'config-1' },
-                                        { value: 'config-2', label: 'config-2' },
-                                      ]}
-                                      value={(volume as ConfigMapVolume).configMapName}
-                                      onChange={(val) =>
-                                        updateVolume(index, { configMapName: val })
-                                      }
-                                      placeholder="Select configMap"
-                                      fullWidth
-                                    />
-                                  </VStack>
+                                  <FormField required>
+                                    <FormField.Label>Volume Name</FormField.Label>
+                                    <FormField.Control>
+                                      <Input
+                                        placeholder="Input name"
+                                        value={volume.volumeName}
+                                        onChange={(e) =>
+                                          updateVolume(index, { volumeName: e.target.value })
+                                        }
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
+                                  <FormField required>
+                                    <FormField.Label>ConfigMap</FormField.Label>
+                                    <FormField.Control>
+                                      <Select
+                                        options={[
+                                          { value: 'config-1', label: 'config-1' },
+                                          { value: 'config-2', label: 'config-2' },
+                                        ]}
+                                        value={(volume as ConfigMapVolume).configMapName}
+                                        onChange={(val) =>
+                                          updateVolume(index, { configMapName: val })
+                                        }
+                                        placeholder="Select configMap"
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
                                 </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
@@ -3187,36 +3186,34 @@ export function CreatePodPage() {
                             {volume.type === 'secret' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Volume Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Input
-                                      placeholder="Input name"
-                                      value={volume.volumeName}
-                                      onChange={(e) =>
-                                        updateVolume(index, { volumeName: e.target.value })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Secret{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Select
-                                      options={[
-                                        { value: 'secret-1', label: 'secret-1' },
-                                        { value: 'secret-2', label: 'secret-2' },
-                                      ]}
-                                      value={(volume as SecretVolume).secretName}
-                                      onChange={(val) => updateVolume(index, { secretName: val })}
-                                      placeholder="Select secret"
-                                      fullWidth
-                                    />
-                                  </VStack>
+                                  <FormField required>
+                                    <FormField.Label>Volume Name</FormField.Label>
+                                    <FormField.Control>
+                                      <Input
+                                        placeholder="Input name"
+                                        value={volume.volumeName}
+                                        onChange={(e) =>
+                                          updateVolume(index, { volumeName: e.target.value })
+                                        }
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
+                                  <FormField required>
+                                    <FormField.Label>Secret</FormField.Label>
+                                    <FormField.Control>
+                                      <Select
+                                        options={[
+                                          { value: 'secret-1', label: 'secret-1' },
+                                          { value: 'secret-2', label: 'secret-2' },
+                                        ]}
+                                        value={(volume as SecretVolume).secretName}
+                                        onChange={(val) => updateVolume(index, { secretName: val })}
+                                        placeholder="Select secret"
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
                                 </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
@@ -3254,36 +3251,34 @@ export function CreatePodPage() {
                             {volume.type === 'pvc' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Volume Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Input
-                                      placeholder="Input name"
-                                      value={volume.volumeName}
-                                      onChange={(e) =>
-                                        updateVolume(index, { volumeName: e.target.value })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Persistent Volume Claim{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Select
-                                      options={[
-                                        { value: 'pvc-1', label: 'pvc-1' },
-                                        { value: 'pvc-2', label: 'pvc-2' },
-                                      ]}
-                                      value={(volume as PVCVolume).pvcName}
-                                      onChange={(val) => updateVolume(index, { pvcName: val })}
-                                      placeholder="Select PVC"
-                                      fullWidth
-                                    />
-                                  </VStack>
+                                  <FormField required>
+                                    <FormField.Label>Volume Name</FormField.Label>
+                                    <FormField.Control>
+                                      <Input
+                                        placeholder="Input name"
+                                        value={volume.volumeName}
+                                        onChange={(e) =>
+                                          updateVolume(index, { volumeName: e.target.value })
+                                        }
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
+                                  <FormField required>
+                                    <FormField.Label>Persistent Volume Claim</FormField.Label>
+                                    <FormField.Control>
+                                      <Select
+                                        options={[
+                                          { value: 'pvc-1', label: 'pvc-1' },
+                                          { value: 'pvc-2', label: 'pvc-2' },
+                                        ]}
+                                        value={(volume as PVCVolume).pvcName}
+                                        onChange={(val) => updateVolume(index, { pvcName: val })}
+                                        placeholder="Select PVC"
+                                        fullWidth
+                                      />
+                                    </FormField.Control>
+                                  </FormField>
                                 </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
@@ -3343,49 +3338,43 @@ export function CreatePodPage() {
 
                                     {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
                                       <VStack gap={6}>
-                                        <VStack gap={3} className="w-[calc(50%+1px)]">
-                                          <span className="text-label-lg text-[var(--color-text-default)]">
-                                            Storage Class{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
-                                            </span>
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'standard', label: 'standard' },
-                                              { value: 'fast', label: 'fast' },
-                                            ]}
-                                            value={(volume as CreatePVCVolume).storageClass}
-                                            onChange={(val) =>
-                                              updateVolume(index, { storageClass: val })
-                                            }
-                                            placeholder=""
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={3} className="w-[calc(50%+1px)]">
-                                          <span className="text-label-lg text-[var(--color-text-default)]">
-                                            Capacity{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
-                                            </span>
-                                          </span>
-                                          <NumberInput
-                                            placeholder=""
-                                            value={
-                                              (volume as CreatePVCVolume).capacity
-                                                ? parseInt((volume as CreatePVCVolume).capacity)
-                                                : undefined
-                                            }
-                                            onChange={(val) =>
-                                              updateVolume(index, {
-                                                capacity: val?.toString() || '',
-                                              })
-                                            }
-                                            suffix="GiB"
-                                            width="sm"
-                                          />
-                                        </VStack>
+                                        <FormField required>
+                                          <FormField.Label>Storage Class</FormField.Label>
+                                          <FormField.Control>
+                                            <Select
+                                              options={[
+                                                { value: 'standard', label: 'standard' },
+                                                { value: 'fast', label: 'fast' },
+                                              ]}
+                                              value={(volume as CreatePVCVolume).storageClass}
+                                              onChange={(val) =>
+                                                updateVolume(index, { storageClass: val })
+                                              }
+                                              placeholder=""
+                                              fullWidth
+                                            />
+                                          </FormField.Control>
+                                        </FormField>
+                                        <FormField required>
+                                          <FormField.Label>Capacity</FormField.Label>
+                                          <FormField.Control>
+                                            <NumberInput
+                                              placeholder=""
+                                              value={
+                                                (volume as CreatePVCVolume).capacity
+                                                  ? parseInt((volume as CreatePVCVolume).capacity)
+                                                  : undefined
+                                              }
+                                              onChange={(val) =>
+                                                updateVolume(index, {
+                                                  capacity: val?.toString() || '',
+                                                })
+                                              }
+                                              suffix="GiB"
+                                              width="sm"
+                                            />
+                                          </FormField.Control>
+                                        </FormField>
                                       </VStack>
                                     )}
 
@@ -3497,20 +3486,18 @@ export function CreatePodPage() {
                         </div>
                       ))}
 
-                      <div className="w-[calc(50%-12px)]">
-                        <Select
-                          options={[
-                            { value: 'configmap', label: 'ConfigMap' },
-                            { value: 'secret', label: 'Secret' },
-                            { value: 'pvc', label: 'Persistent volume claim' },
-                            { value: 'create-pvc', label: 'Create persistent volume claim' },
-                          ]}
-                          value=""
-                          onChange={(val) => addVolume(val)}
-                          placeholder="Add volume"
-                          fullWidth
-                        />
-                      </div>
+                      <Select
+                        options={[
+                          { value: 'configmap', label: 'ConfigMap' },
+                          { value: 'secret', label: 'Secret' },
+                          { value: 'pvc', label: 'Persistent volume claim' },
+                          { value: 'create-pvc', label: 'Create persistent volume claim' },
+                        ]}
+                        value=""
+                        onChange={(val) => addVolume(val)}
+                        placeholder="Add volume"
+                        fullWidth
+                      />
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
@@ -4008,18 +3995,13 @@ export function CreatePodPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Container Image{' '}
-                                <span className="text-[var(--color-state-danger)]">*</span>
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
-                            </VStack>
-                            <div className="w-[calc(50%-12px)]">
+                          <FormField required>
+                            <FormField.Label>Container Image</FormField.Label>
+                            <FormField.Description>
+                              The period allowed after receiving a termination request before the
+                              pod is forcibly terminated.
+                            </FormField.Description>
+                            <FormField.Control>
                               <Input
                                 placeholder="nginx:latest"
                                 fullWidth
@@ -4030,19 +4012,15 @@ export function CreatePodPage() {
                                   })
                                 }
                               />
-                            </div>
-                          </VStack>
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Pull Policy
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
-                            </VStack>
-                            <div className="w-[calc(50%-12px)]">
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Pull Policy</FormField.Label>
+                            <FormField.Description>
+                              The period allowed after receiving a termination request before the
+                              pod is forcibly terminated.
+                            </FormField.Description>
+                            <FormField.Control>
                               <Select
                                 options={[
                                   { value: 'Always', label: 'Always' },
@@ -4057,19 +4035,15 @@ export function CreatePodPage() {
                                 }
                                 fullWidth
                               />
-                            </div>
-                          </VStack>
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Pull Secrets
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
-                            </VStack>
-                            <div className="w-[calc(50%-12px)]">
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Pull Secrets</FormField.Label>
+                            <FormField.Description>
+                              The period allowed after receiving a termination request before the
+                              pod is forcibly terminated.
+                            </FormField.Description>
+                            <FormField.Control>
                               <Select
                                 options={[
                                   { value: '', label: 'Select a secret...' },
@@ -4084,8 +4058,8 @@ export function CreatePodPage() {
                                 }
                                 fullWidth
                               />
-                            </div>
-                          </VStack>
+                            </FormField.Control>
+                          </FormField>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>
