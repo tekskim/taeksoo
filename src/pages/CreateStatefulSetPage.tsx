@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -777,7 +778,7 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
-          <VStack gap={3}>
+          <VStack gap={3} align="start">
             <Radio
               checked={strategy === 'rolling-update'}
               onChange={() => onStrategyChange('rolling-update')}
@@ -791,46 +792,44 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Pod Management Policy */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Pod Management Policy
-            </span>
-            <VStack gap={3}>
-              <Radio
-                checked={podManagementPolicy === 'ordered-ready'}
-                onChange={() => onPodManagementPolicyChange('ordered-ready')}
-                label="OrderedReady"
-              />
-              <Radio
-                checked={podManagementPolicy === 'parallel'}
-                onChange={() => onPodManagementPolicyChange('parallel')}
-                label="Parallel"
-              />
-            </VStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Pod Management Policy</FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <VStack gap={3} align="start">
+                <Radio
+                  checked={podManagementPolicy === 'ordered-ready'}
+                  onChange={() => onPodManagementPolicyChange('ordered-ready')}
+                  label="OrderedReady"
+                />
+                <Radio
+                  checked={podManagementPolicy === 'parallel'}
+                  onChange={() => onPodManagementPolicyChange('parallel')}
+                  label="Parallel"
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Revision History Limit */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Revision History Limit
-              </span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                The maximum number of revision histories to retain for the StatefulSet.
-              </p>
-            </VStack>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={revisionHistoryLimit}
-                onChange={onRevisionHistoryLimitChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Revisions
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Revision History Limit</FormField.Label>
+            <FormField.Description>
+              The maximum number of revision histories to retain for the StatefulSet.
+            </FormField.Description>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={revisionHistoryLimit}
+                  onChange={onRevisionHistoryLimitChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Revisions
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

@@ -311,14 +311,12 @@ function VolumeClaimSection({
             <FormField>
               <FormField.Label>Storage Class</FormField.Label>
               <FormField.Control>
-                <div className="w-[calc(50%-12px)]">
-                  <Select
-                    options={STORAGE_CLASS_OPTIONS}
-                    value={storageClass}
-                    onChange={(value) => onStorageClassChange(value)}
-                    fullWidth
-                  />
-                </div>
+                <Select
+                  options={STORAGE_CLASS_OPTIONS}
+                  value={storageClass}
+                  onChange={(value) => onStorageClassChange(value)}
+                  fullWidth
+                />
               </FormField.Control>
             </FormField>
           )}

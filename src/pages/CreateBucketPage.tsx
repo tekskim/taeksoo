@@ -428,37 +428,32 @@ function SettingsSection({
           <div className="py-6">
             <FormField>
               <FormField.Label>Object Locking</FormField.Label>
-              <FormField.Control>
-                <VStack gap={2}>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <Radio
-                      value="disabled"
-                      checked={objectLocking === 'disabled'}
-                      onChange={() => onObjectLockingChange('disabled')}
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">Disabled</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <Radio
-                      value="enabled"
-                      checked={objectLocking === 'enabled'}
-                      onChange={() => onObjectLockingChange('enabled')}
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)]">Enabled</span>
-                  </label>
+              <FormField.Description>
+                Store objects using a write-once-read-many (WORM) model to prevent objects from
+                being deleted or overwritten for a fixed amount of time or indefinitely. Object
+                Locking works only in versioned buckets.
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <VStack gap={3} align="start">
+                  <Radio
+                    value="disabled"
+                    checked={objectLocking === 'disabled'}
+                    onChange={() => onObjectLockingChange('disabled')}
+                    label="Disabled"
+                  />
+                  <Radio
+                    value="enabled"
+                    checked={objectLocking === 'enabled'}
+                    onChange={() => onObjectLockingChange('enabled')}
+                    label="Enabled"
+                  />
                 </VStack>
               </FormField.Control>
-              <FormField.HelperText>
-                Store objects using a write-once-read-many (WORM) model to prevent objects from
-                being deleted or overwritten for a fixed amount of time or indefinitely.
-                <br />
-                Object Locking works only in versioned buckets.
-              </FormField.HelperText>
             </FormField>
 
             {/* Object Locking Options - shown when enabled */}
             {(isV2 || objectLocking === 'enabled') && (
-              <div className="flex flex-col gap-3 mt-3">
+              <div className="flex flex-col gap-6 mt-6">
                 {/* Mode */}
                 <FormField>
                   <FormField.Label>Mode</FormField.Label>
@@ -471,7 +466,7 @@ function SettingsSection({
                       ]}
                       value={lockingMode}
                       onChange={onLockingModeChange}
-                      width="half"
+                      fullWidth
                     />
                   </FormField.Control>
                   <FormField.HelperText>
@@ -578,7 +573,7 @@ function SettingsSection({
                   ]}
                   value={placementTarget}
                   onChange={onPlacementTargetChange}
-                  width="half"
+                  fullWidth
                 />
               </FormField.Control>
               <FormField.HelperText>

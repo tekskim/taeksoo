@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -763,58 +764,76 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Completions */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Completions</span>
-            <HStack gap={2} align="center">
-              <NumberInput value={completions} onChange={onCompletionsChange} min={0} width="sm" />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Completions</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={completions}
+                  onChange={onCompletionsChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Parallelism */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Parallelism</span>
-            <HStack gap={2} align="center">
-              <NumberInput value={parallelism} onChange={onParallelismChange} min={0} width="sm" />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Parallelism</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={parallelism}
+                  onChange={onParallelismChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Back Off Limit */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Back Off Limit</span>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={backOffLimit}
-                onChange={onBackOffLimitChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Back Off Limit</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={backOffLimit}
+                  onChange={onBackOffLimitChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Active Deadline */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Active Deadline</span>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={activeDeadline}
-                onChange={onActiveDeadlineChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Seconds
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Active Deadline</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={activeDeadline}
+                  onChange={onActiveDeadlineChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Seconds
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
