@@ -19,6 +19,7 @@ import {
   Pagination,
   SearchInput,
   NumberInput,
+  Slider,
   FormField,
   SelectionIndicator,
   Tabs,
@@ -77,6 +78,12 @@ const containerNetworkOptions = [
   { value: 'flannel', label: 'Flannel' },
 ];
 
+const tenantOptions = [
+  { value: 'tenant-a', label: 'Tenant_A' },
+  { value: 'tenant-b', label: 'Tenant_B' },
+  { value: 'tenant-c', label: 'Tenant_C' },
+];
+
 const mockExternalNetworks: NetworkRow[] = [
   { id: 'ext-01', name: 'ext-01', subnetCidr: '10.70.62.120/91 +9' },
   { id: 'ext-02', name: 'ext-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
@@ -127,6 +134,7 @@ export function CreateClusterPage() {
   const [clusterName, setClusterName] = useState('');
   const [kubernetesVersion, setKubernetesVersion] = useState('v1.34');
   const [containerNetwork, setContainerNetwork] = useState('kube-ovn');
+  const [tenant, setTenant] = useState('tenant-a');
   const [description, setDescription] = useState('');
 
   // Networking
@@ -405,6 +413,17 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
+                {/* Tenant */}
+                <FormField required>
+                  <FormField.Label>Tenant</FormField.Label>
+                  <FormField.Description>
+                    Select a tenant to use for your cluster resources.
+                  </FormField.Description>
+                  <FormField.Control>
+                    <Select options={tenantOptions} value={tenant} onChange={setTenant} fullWidth />
+                  </FormField.Control>
+                </FormField>
+
                 {/* Description */}
                 <Disclosure defaultOpen={isV2} className={isV2 ? 'gap-3' : ''}>
                   <Disclosure.Trigger>Description</Disclosure.Trigger>
@@ -679,15 +698,31 @@ export function CreateClusterPage() {
                         Specify the volume size for the etcd data disk.
                       </FormField.Description>
                       <FormField.Control>
-                        <NumberInput
-                          value={etcdVolumeSize}
-                          onChange={setEtcdVolumeSize}
-                          min={10}
-                          max={100}
-                          width="sm"
-                          suffix="GiB"
-                        />
+                        <HStack
+                          gap={3}
+                          align="center"
+                          className="max-w-[var(--slider-row-max-width)]"
+                        >
+                          <Slider
+                            min={10}
+                            max={100}
+                            step={5}
+                            value={etcdVolumeSize}
+                            onChange={setEtcdVolumeSize}
+                            className="flex-1"
+                          />
+                          <NumberInput
+                            value={etcdVolumeSize}
+                            onChange={setEtcdVolumeSize}
+                            min={10}
+                            max={100}
+                            step={1}
+                            width="xs"
+                            suffix="GiB"
+                          />
+                        </HStack>
                       </FormField.Control>
+                      <FormField.HelperText>10-100 GiB</FormField.HelperText>
                     </FormField>
                   </VStack>
                 </div>

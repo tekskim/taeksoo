@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
+  Badge,
   HStack,
   VStack,
   TabBar,
@@ -16,7 +17,6 @@ import {
   Tooltip,
   Toggle,
   NumberInput,
-  Chip,
   PageShell,
   PageHeader,
   FormField,
@@ -299,14 +299,20 @@ export default function IAMMFAPoliciesPage() {
                         </FormField.Description>
                         <FormField.Control>
                           <HStack className="gap-[var(--primitive-spacing-1-5)]">
-                            <Chip
-                              value="Google auth"
+                            <Badge
+                              theme="white"
+                              size="sm"
                               leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                            />
-                            <Chip
-                              value="MS Auth"
+                            >
+                              Google auth
+                            </Badge>
+                            <Badge
+                              theme="white"
+                              size="sm"
                               leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                            />
+                            >
+                              MS Auth
+                            </Badge>
                           </HStack>
                         </FormField.Control>
                       </FormField>

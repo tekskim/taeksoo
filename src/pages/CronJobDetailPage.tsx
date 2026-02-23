@@ -18,7 +18,7 @@ import {
   StatusIndicator,
   SearchInput,
   DetailHeader,
-  Chip,
+  Badge,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -647,7 +647,9 @@ export function CronJobDetailPage() {
                   {Object.entries(cronjob.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(cronjob.labels).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -666,7 +668,9 @@ export function CronJobDetailPage() {
                   {Object.entries(cronjob.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(cronjob.annotations).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

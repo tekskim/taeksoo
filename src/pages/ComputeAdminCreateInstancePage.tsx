@@ -5,6 +5,7 @@ import {
   Button,
   Breadcrumb,
   NumberInput,
+  Slider,
   ProgressBar,
   STATUS_THRESHOLDS,
   HStack,
@@ -568,6 +569,7 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -583,8 +585,9 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Instance name */}
-          <div className="pb-6">
+          <div className="py-6">
             <FormField required error={!!instanceNameError}>
               <FormField.Label>Instance name</FormField.Label>
               <FormField.Control>
@@ -1175,6 +1178,7 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1190,8 +1194,9 @@ function ImageSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
-          <VStack gap={3} className="pb-6">
+          <VStack gap={3} className="py-6">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -1655,14 +1660,26 @@ function ImageSection({
                 </VStack>
                 <VStack gap={2}>
                   <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                  <NumberInput
-                    value={storageSize}
-                    onChange={setStorageSize}
-                    min={1}
-                    max={1000}
-                    width="sm"
-                    suffix="GiB"
-                  />
+                  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+                    <Slider
+                      min={1}
+                      max={1000}
+                      step={10}
+                      value={storageSize}
+                      onChange={setStorageSize}
+                      className="flex-1"
+                    />
+                    <NumberInput
+                      value={storageSize}
+                      onChange={setStorageSize}
+                      min={1}
+                      max={1000}
+                      step={1}
+                      width="xs"
+                      suffix="GiB"
+                    />
+                  </HStack>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">1-1,000 GiB</span>
                 </VStack>
                 <div className="self-end pb-2">
                   <Checkbox
@@ -1933,6 +1950,7 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1948,8 +1966,9 @@ function FlavorSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Flavors Label & Description */}
-          <VStack gap={3} className="pb-6">
+          <VStack gap={3} className="pt-6 pb-3">
             <span className="text-label-lg text-[var(--color-text-default)]">
               Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
@@ -2582,6 +2601,7 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2597,8 +2617,9 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Network Sub-section */}
-          <div className="pb-6">
+          <div className="py-6">
             <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Network
@@ -3109,6 +3130,7 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3140,8 +3162,9 @@ function AuthenticationSection({
       </SectionCard.Header>
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type - Key pair / Password */}
-          <div className="pb-6">
+          <div className="py-6">
             <VStack gap={6}>
               <span className="text-label-lg">Login type</span>
 
@@ -3459,6 +3482,7 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3474,8 +3498,9 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Server group Disclosure */}
-          <div className="pb-6">
+          <div className="py-6">
             <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
               <Disclosure.Trigger>
                 <HStack gap={2} align="center">
@@ -3739,6 +3764,7 @@ function TemplatesSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Launch type"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -3754,8 +3780,9 @@ function TemplatesSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Resource type */}
-          <div className="pb-6">
+          <div className="py-6">
             <FormField required>
               <FormField.Label>Resource type</FormField.Label>
               <FormField.Description>
@@ -3834,34 +3861,36 @@ function TemplatesSection({
                     />
 
                     {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No favorite templates
-                      </div>
-                    )}
+                    <VStack gap={2}>
+                      {filteredTemplates.length > 0 ? (
+                        <Table
+                          columns={columns}
+                          data={filteredTemplates}
+                          rowKey="id"
+                          onRowClick={(row) => onSelect(row.id)}
+                        />
+                      ) : (
+                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                          No favorite templates
+                        </div>
+                      )}
 
-                    {/* Selection Indicator for Templates */}
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedId
-                          ? [
-                              {
-                                id: selectedId,
-                                label:
-                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => onSelect('')}
-                    />
+                      {/* Selection Indicator for Templates */}
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedId
+                            ? [
+                                {
+                                  id: selectedId,
+                                  label:
+                                    templates.find((t) => t.id === selectedId)?.name || selectedId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => onSelect('')}
+                      />
+                    </VStack>
                   </VStack>
                 </TabPanel>
 
@@ -3893,34 +3922,36 @@ function TemplatesSection({
                     />
 
                     {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No templates in current tenant
-                      </div>
-                    )}
+                    <VStack gap={2}>
+                      {filteredTemplates.length > 0 ? (
+                        <Table
+                          columns={columns}
+                          data={filteredTemplates}
+                          rowKey="id"
+                          onRowClick={(row) => onSelect(row.id)}
+                        />
+                      ) : (
+                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                          No templates in current tenant
+                        </div>
+                      )}
 
-                    {/* Selection Indicator for Templates */}
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedId
-                          ? [
-                              {
-                                id: selectedId,
-                                label:
-                                  templates.find((t) => t.id === selectedId)?.name || selectedId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => onSelect('')}
-                    />
+                      {/* Selection Indicator for Templates */}
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedId
+                            ? [
+                                {
+                                  id: selectedId,
+                                  label:
+                                    templates.find((t) => t.id === selectedId)?.name || selectedId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => onSelect('')}
+                      />
+                    </VStack>
                   </VStack>
                 </TabPanel>
 

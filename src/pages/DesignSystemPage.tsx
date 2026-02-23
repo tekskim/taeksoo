@@ -704,8 +704,8 @@ function OpenSectionTableDemo() {
       ),
     },
     { key: 'version', label: 'Version', sortable: true },
-    { key: 'size', label: 'Size', sortable: true },
-    { key: 'minDisk', label: 'Min disk', sortable: true },
+    { key: 'size', label: 'Size', sortable: true, align: 'right' as const },
+    { key: 'minDisk', label: 'Min disk', sortable: true, align: 'right' as const },
     { key: 'access', label: 'Visibility', sortable: true },
   ];
 
@@ -2379,20 +2379,23 @@ function SliderWithCustomRangeDemo() {
   return (
     <VStack gap={3}>
       <Label>Pattern B: Storage Capacity (0-1000 GiB)</Label>
-      <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
-        <div className="flex-1">
-          <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
+      <VStack gap={1}>
+        <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
+          <div className="flex-1">
+            <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
+          </div>
+          <NumberInput
+            value={value}
+            onChange={setValue}
+            min={0}
+            max={1000}
+            step={1}
+            width="xs"
+            suffix="GiB"
+          />
         </div>
-        <NumberInput
-          value={value}
-          onChange={setValue}
-          min={0}
-          max={1000}
-          step={1}
-          width="xs"
-          suffix="GiB"
-        />
-      </div>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">0-1000 GiB</span>
+      </VStack>
     </VStack>
   );
 }
@@ -2852,7 +2855,7 @@ function TableDemo() {
     {
       key: 'name',
       label: 'Name',
-      width: columnMinWidths.name,
+      flex: 1,
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
@@ -2864,14 +2867,14 @@ function TableDemo() {
         </div>
       ),
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1 },
     {
       key: 'attachedTo',
       label: 'Attached to',
       flex: 1,
       render: (_: string | null, row: InstanceData) =>
         row.attachedTo && row.attachedToId ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2 w-full">
             <div className="flex flex-col gap-0.5 min-w-0">
               <button
                 onClick={(e) => e.stopPropagation()}
@@ -2997,17 +3000,17 @@ function TableDemo() {
         </span>
       ),
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
-    { key: 'image', label: 'Image', width: columnMinWidths.image },
-    { key: 'flavor', label: 'Flavor', width: columnMinWidths.flavor },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1 },
+    { key: 'image', label: 'Image', flex: 1 },
+    { key: 'flavor', label: 'Flavor', flex: 1 },
   ];
 
   // Empty state columns
   const emptyColumns = [
     { key: 'status', label: 'Status', width: fixedColumns.status, align: 'center' as const },
     { key: 'name', label: 'Name', flex: 1 },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
-    { key: 'image', label: 'Image', width: columnMinWidths.image },
+    { key: 'fixedIp', label: 'Fixed IP', flex: 1 },
+    { key: 'image', label: 'Image', flex: 1 },
   ];
 
   return (
@@ -4368,7 +4371,7 @@ export function DesignSystemPage() {
                     {/* Red (Danger) */}
                     <VStack gap={2}>
                       <Label>Red (Danger)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
                         {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
@@ -4383,7 +4386,7 @@ export function DesignSystemPage() {
                     {/* Green (Success) */}
                     <VStack gap={2}>
                       <Label>Green (Success)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
                         {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
@@ -4398,7 +4401,7 @@ export function DesignSystemPage() {
                     {/* Orange (Warning) */}
                     <VStack gap={2}>
                       <Label>Orange (Warning)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
                         {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
@@ -6857,7 +6860,7 @@ outline: 2px solid var(--color-border-focus);`}
                           <HStack gap={2} align="center">
                             <Input placeholder="100" width="sm" />
                             <span className="text-body-md text-[var(--color-text-default)]">
-                              GB
+                              GiB
                             </span>
                           </HStack>
                         </VStack>
@@ -6901,13 +6904,13 @@ outline: 2px solid var(--color-border-focus);`}
                           </span>
                           <Input
                             placeholder="100"
-                            aria-describedby="suffix-gb"
+                            aria-describedby="suffix-gib"
                             rightElement={
                               <span
-                                id="suffix-gb"
+                                id="suffix-gib"
                                 className="text-body-sm text-[var(--color-text-muted)]"
                               >
-                                GB
+                                GiB
                               </span>
                             }
                             className="w-[120px]"
@@ -6933,7 +6936,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
                       </div>
                       <div className="text-body-xs text-[var(--color-text-subtle)] mt-1 p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>aria-describedby</code>로 suffix를 연결하면 스크린 리더가 "100 GB"로
+                        <code>aria-describedby</code>로 suffix를 연결하면 스크린 리더가 "100 GiB"로
                         읽습니다.
                       </div>
                     </VStack>
@@ -8909,26 +8912,6 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
-                    {/* Basic */}
-                    <VStack gap={3}>
-                      <Label>Basic</Label>
-                      <div className="flex gap-2 flex-wrap">
-                        <Chip value="Active" />
-                        <Chip value="Running" />
-                        <Chip value="Completed" />
-                      </div>
-                    </VStack>
-
-                    {/* With Label (Key-Value) */}
-                    <VStack gap={3}>
-                      <Label>With Label (Key-Value)</Label>
-                      <div className="flex gap-2 flex-wrap">
-                        <Chip label="Status" value="Active" />
-                        <Chip label="Region" value="Korea" />
-                        <Chip label="Type" value="Standard" />
-                      </div>
-                    </VStack>
-
                     {/* With Remove Button */}
                     <VStack gap={3}>
                       <Label>With Remove Button</Label>
@@ -9037,12 +9020,21 @@ outline: 2px solid var(--color-border-focus);`}
                       />
                     </VStack>
 
-                    {/* Non-removable */}
+                    {/* Multiple Selections (Wrapping) */}
                     <VStack gap={3}>
-                      <Label>Non-removable (Read-only)</Label>
+                      <Label>Multiple Selections (Wrapping)</Label>
                       <SelectionIndicator
-                        selectedItems={[{ id: '1', label: 'production-network' }]}
-                        removable={false}
+                        selectedItems={[
+                          { id: '1', label: 'default-sg' },
+                          { id: '2', label: 'web-server-sg' },
+                          { id: '3', label: 'database-sg' },
+                          { id: '4', label: 'monitoring-sg' },
+                          { id: '5', label: 'load-balancer-sg' },
+                          { id: '6', label: 'api-gateway-sg' },
+                          { id: '7', label: 'cache-cluster-sg' },
+                          { id: '8', label: 'message-queue-sg' },
+                        ]}
+                        onRemove={() => {}}
                       />
                     </VStack>
 
@@ -10256,7 +10248,7 @@ outline: 2px solid var(--color-border-focus);`}
                           <Disclosure.Panel>
                             <div className="mt-3 pl-[18px] text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
                               <p>Name: vol-12345</p>
-                              <p>Size: 100 GB</p>
+                              <p>Size: 100 GiB</p>
                               <p>Status: Available</p>
                             </div>
                           </Disclosure.Panel>
@@ -10798,28 +10790,6 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="flex gap-6">
                         <VStack gap={2}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Solid
-                          </span>
-                          <div className="flex gap-2">
-                            <Badge size="sm" type="solid" theme="blue">
-                              Blue
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="green">
-                              Green
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="red">
-                              Red
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="yellow">
-                              Yellow
-                            </Badge>
-                            <Badge size="sm" type="solid" theme="gray">
-                              Gray
-                            </Badge>
-                          </div>
-                        </VStack>
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Subtle
                           </span>
                           <div className="flex gap-2">
@@ -10838,6 +10808,9 @@ outline: 2px solid var(--color-border-focus);`}
                             <Badge size="sm" type="subtle" theme="gray">
                               Gray
                             </Badge>
+                            <Badge size="sm" type="subtle" theme="white">
+                              White
+                            </Badge>
                           </div>
                         </VStack>
                       </div>
@@ -10855,25 +10828,6 @@ outline: 2px solid var(--color-border-focus);`}
                         </Badge>
                         <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>
                           Right icon
-                        </Badge>
-                      </div>
-                    </VStack>
-
-                    {/* Status Examples */}
-                    <VStack gap={3}>
-                      <Label>Status examples</Label>
-                      <div className="flex gap-3 items-center">
-                        <Badge size="sm" type="solid" theme="green">
-                          Running
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="red">
-                          Stopped
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="yellow">
-                          Warning
-                        </Badge>
-                        <Badge size="sm" type="solid" theme="gray">
-                          Unknown
                         </Badge>
                       </div>
                     </VStack>
@@ -12944,7 +12898,7 @@ outline: 2px solid var(--color-border-focus);`}
                               Warning action
                             </div>
                             <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
-                              Delete forever
+                              Delete
                             </div>
                           </div>
                         </VStack>
@@ -13036,7 +12990,7 @@ outline: 2px solid var(--color-border-focus);`}
                           },
                           {
                             id: 'danger2',
-                            label: 'Delete forever',
+                            label: 'Delete',
                             status: 'danger',
                             onClick: () => {},
                           },

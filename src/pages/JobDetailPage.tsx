@@ -17,7 +17,7 @@ import {
   StatusIndicator,
   SearchInput,
   DetailHeader,
-  Chip,
+  Badge,
   PageShell,
   type TableColumn,
   type ContextMenuItem,
@@ -768,7 +768,9 @@ export function JobDetailPage() {
                   {Object.entries(job.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(job.labels).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -787,7 +789,9 @@ export function JobDetailPage() {
                   {Object.entries(job.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(job.annotations).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

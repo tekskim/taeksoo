@@ -11,7 +11,6 @@ import {
   TabList,
   Tab,
   Badge,
-  Chip,
   PageShell,
   PageHeader,
   EmptyState,
@@ -159,9 +158,9 @@ function DatasetCard({
         {/* Columns */}
         <HStack gap={2} className="flex-wrap">
           {columns.map((column) => (
-            <Chip key={column} size="sm" variant="outline">
+            <Badge key={column} theme="white" size="sm">
               {column}
-            </Chip>
+            </Badge>
           ))}
         </HStack>
       </VStack>

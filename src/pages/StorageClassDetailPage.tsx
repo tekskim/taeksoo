@@ -16,7 +16,7 @@ import {
   ContextMenu,
   DetailHeader,
   Radio,
-  Chip,
+  Badge,
   PageShell,
   type ContextMenuItem,
 } from '@/design-system';
@@ -341,7 +341,9 @@ export function StorageClassDetailPage() {
                     {Object.entries(scData.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {`${key}: ${val}`}
+                        </Badge>
                       ))}
                     {labelsCount > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -362,7 +364,9 @@ export function StorageClassDetailPage() {
                     {Object.entries(scData.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {`${key}: ${val}`}
+                        </Badge>
                       ))}
                     {annotationsCount > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

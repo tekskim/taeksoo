@@ -8,7 +8,7 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
-  Chip,
+  Badge,
   Tabs,
   TabList,
   Tab,
@@ -863,7 +863,9 @@ function DaemonsCell({ daemons }: DaemonsCellProps) {
   return (
     <div className="flex gap-0.5 flex-wrap">
       {daemons.map((daemon, index) => (
-        <Chip key={index} value={daemon} />
+        <Badge key={index} theme="white" size="sm">
+          {daemon}
+        </Badge>
       ))}
     </div>
   );
@@ -1007,7 +1009,9 @@ export function OSDDetailPage() {
               value={
                 <div className="flex gap-0.5">
                   {osd.status.map((s, index) => (
-                    <Chip key={index} value={s} />
+                    <Badge key={index} theme="white" size="sm">
+                      {s}
+                    </Badge>
                   ))}
                 </div>
               }
@@ -1035,7 +1039,9 @@ export function OSDDetailPage() {
                   <SectionCardHeader title="Basic information" />
                   <SectionCardContent>
                     <SectionCardDataRow label="Device class" showDivider={false}>
-                      <Chip value={osd.deviceClass} />
+                      <Badge theme="white" size="sm">
+                        {osd.deviceClass}
+                      </Badge>
                     </SectionCardDataRow>
                     <SectionCardDataRow label="PGs" value={String(osd.pgs)} />
                     <SectionCardDataRow label="Size" value={osd.size} />
