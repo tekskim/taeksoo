@@ -291,7 +291,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value}
           onClick={() => navigate(`/container/pods/${row.id}`)}
         >
@@ -309,13 +309,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      flex: 1,
+      width: '80px',
       sortable: true,
     },
     {

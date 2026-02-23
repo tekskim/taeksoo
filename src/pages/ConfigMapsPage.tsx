@@ -50,35 +50,35 @@ interface ConfigMapRow {
 const configMapsData: ConfigMapRow[] = [
   {
     id: '1',
-    name: 'app-config',
+    name: 'application-runtime-configuration-settings-map',
     namespace: 'default',
     data: 'config.yaml (+2)',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
-    name: 'nginx-config',
+    name: 'nginx-reverse-proxy-server-configuration',
     namespace: 'nginx-ingress',
     data: 'nginx.conf (+1)',
     createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
-    name: 'kube-root-ca.crt',
+    name: 'kube-root-ca-certificate-authority-configmap',
     namespace: 'kube-system',
     data: 'ca.crt',
     createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
-    name: 'coredns',
+    name: 'coredns-cluster-dns-configuration-map',
     namespace: 'kube-system',
     data: 'Corefile (+3)',
     createdAt: 'Nov 7, 2025',
   },
   {
     id: '5',
-    name: 'prometheus-config',
+    name: 'prometheus-scrape-targets-alerting-configuration',
     namespace: 'monitoring',
     data: 'prometheus.yml (+5)',
     createdAt: 'Nov 6, 2025',
@@ -170,7 +170,7 @@ export function ConfigMapsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

@@ -15,7 +15,6 @@ import {
   SectionCard,
   FormField,
   Toggle,
-  Slider,
   WizardSummary,
   Tabs,
   TabList,
@@ -120,8 +119,8 @@ export function CreateImagePage() {
   const [os, setOs] = useState('');
   const [osVersion, setOsVersion] = useState('');
   const [osAdmin, setOsAdmin] = useState('');
-  const [minDisk, setMinDisk] = useState(0);
-  const [minRam, setMinRam] = useState(0);
+  const [minDisk, setMinDisk] = useState<number | undefined>(undefined);
+  const [minRam, setMinRam] = useState<number | undefined>(undefined);
   const [specAdvancedOpen, setSpecAdvancedOpen] = useState(isV2);
 
   // Advanced section state
@@ -388,22 +387,19 @@ export function CreateImagePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Protected */}
-                    <VStack gap={3} className="py-6">
-                      <VStack gap={2}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Protected
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          Protected images cannot be deleted, preventing accidental removal.
-                        </span>
-                      </VStack>
-                      <HStack gap={2} align="center">
-                        <Toggle checked={isProtected} onChange={setIsProtected} />
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {isProtected ? 'Yes' : 'No'}
-                        </span>
-                      </HStack>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField
+                        label="Protected"
+                        description="Protected images cannot be deleted, preventing accidental removal."
+                      >
+                        <HStack gap={2} align="center">
+                          <Toggle checked={isProtected} onChange={setIsProtected} />
+                          <span className="text-body-md text-[var(--color-text-default)]">
+                            {isProtected ? 'Yes' : 'No'}
+                          </span>
+                        </HStack>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -460,61 +456,61 @@ export function CreateImagePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Upload type */}
-                    <VStack gap={3} className="py-6">
-                      <VStack gap={2}>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Upload type
-                          </span>
-                          <span className="text-[var(--color-state-danger)]">*</span>
-                        </div>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          Registers an image by uploading a file or entering a file URL.
-                        </span>
-                      </VStack>
-
-                      <Tabs
-                        value={sourceType}
-                        onChange={(value) => setSourceType(value as 'file' | 'url')}
-                        variant="underline"
-                        size="sm"
+                    <div className="py-6">
+                      <FormField
+                        label="Upload type"
+                        required
+                        description="Registers an image by uploading a file or entering a file URL."
                       >
-                        <TabList>
-                          <Tab value="file">Upload file</Tab>
-                          <Tab value="url">File URL</Tab>
-                        </TabList>
-                      </Tabs>
+                        <Tabs
+                          value={sourceType}
+                          onChange={(value) => setSourceType(value as 'file' | 'url')}
+                          variant="underline"
+                          size="sm"
+                        >
+                          <TabList>
+                            <Tab value="file">Upload file</Tab>
+                            <Tab value="url">File URL</Tab>
+                          </TabList>
+                        </Tabs>
 
-                      <VStack gap={3} align="start">
-                        <Button variant="secondary" size="sm" leftIcon={<IconUpload size={12} />}>
-                          Choose File
-                        </Button>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
-                        </span>
-                      </VStack>
-
-                      <VStack gap={3} align="stretch">
-                        <Input
-                          value={sourceUrl}
-                          onChange={(e) => {
-                            setSourceUrl(e.target.value);
-                            setSourceUrlError(null);
-                          }}
-                          placeholder="e.g. https://example.com/image.qcow2"
-                          fullWidth
-                          error={!!sourceUrlError}
-                        />
-                        {sourceUrlError && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            {sourceUrlError}
-                          </span>
+                        {(isV2 || sourceType === 'file') && (
+                          <VStack gap={3} align="start">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconUpload size={12} />}
+                            >
+                              Choose File
+                            </Button>
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                            </span>
+                          </VStack>
                         )}
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          The URL must start with http:// or https://.
-                        </span>
-                      </VStack>
-                    </VStack>
+
+                        {(isV2 || sourceType === 'url') && (
+                          <FormField
+                            label="File URL"
+                            required
+                            error={!!sourceUrlError}
+                            errorMessage={sourceUrlError || undefined}
+                            helperText="The URL must start with http:// or https://."
+                          >
+                            <Input
+                              value={sourceUrl}
+                              onChange={(e) => {
+                                setSourceUrl(e.target.value);
+                                setSourceUrlError(null);
+                              }}
+                              placeholder="e.g. https://example.com/image.qcow2"
+                              fullWidth
+                              error={!!sourceUrlError}
+                            />
+                          </FormField>
+                        )}
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -704,65 +700,55 @@ export function CreateImagePage() {
                         <DisclosureTrigger>Advanced</DisclosureTrigger>
                         <DisclosurePanel>
                           <VStack gap={4} align="stretch" className="pt-3">
-                            <FormField
-                              label="Min system disk"
-                              description="Defines the minimum disk size required to boot an instance from this image."
-                              helperText="0-500 GiB"
-                            >
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
-                                <Slider
-                                  min={0}
-                                  max={500}
-                                  step={10}
-                                  value={minDisk}
-                                  onChange={setMinDisk}
-                                  className="flex-1"
-                                />
+                            <div className="flex flex-col gap-2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Min system disk
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Defines the minimum disk size required to boot an instance from this
+                                image.
+                              </span>
+                              <HStack gap={2} align="center">
                                 <NumberInput
                                   value={minDisk}
                                   onChange={setMinDisk}
                                   min={0}
                                   max={500}
-                                  step={1}
-                                  width="xs"
-                                  suffix="GiB"
+                                  width="sm"
                                 />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  GiB
+                                </span>
                               </HStack>
-                            </FormField>
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                0-500 GiB
+                              </span>
+                            </div>
 
-                            <FormField
-                              label="Min RAM"
-                              description="Defines the minimum amount of RAM required to boot an instance from this image."
-                              helperText="0-500 GiB"
-                            >
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
-                                <Slider
-                                  min={0}
-                                  max={500}
-                                  step={10}
-                                  value={minRam}
-                                  onChange={setMinRam}
-                                  className="flex-1"
-                                />
+                            <div className="flex flex-col gap-2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Min RAM
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Defines the minimum amount of RAM required to boot an instance from
+                                this image.
+                              </span>
+                              <HStack gap={2} align="center">
                                 <NumberInput
                                   value={minRam}
                                   onChange={setMinRam}
                                   min={0}
                                   max={500}
-                                  step={1}
-                                  width="xs"
-                                  suffix="GiB"
+                                  width="sm"
                                 />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  GiB
+                                </span>
                               </HStack>
-                            </FormField>
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                0-500 GiB
+                              </span>
+                            </div>
                           </VStack>
                         </DisclosurePanel>
                       </Disclosure>
@@ -784,8 +770,14 @@ export function CreateImagePage() {
                   <SectionCard.DataRow label="OS" value={os || '-'} />
                   <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
                   <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
-                  <SectionCard.DataRow label="Min system Disk" value={`${minDisk} GiB`} />
-                  <SectionCard.DataRow label="Min RAM" value={`${minRam} GiB`} />
+                  <SectionCard.DataRow
+                    label="Min system Disk"
+                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
+                  />
+                  <SectionCard.DataRow
+                    label="Min RAM"
+                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                  />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -794,15 +786,18 @@ export function CreateImagePage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['specification']} />
                 <SectionCard.Content>
+                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow label="OS" value={os || '-'} />
+                  <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
+                  <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
                   <SectionCard.DataRow
-                    label="Disk format"
-                    value={diskFormat ? diskFormat.toUpperCase() : 'Not selected'}
+                    label="Min system Disk"
+                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
                   />
-                  <SectionCard.DataRow label="OS" value={os || 'Not specified'} />
-                  <SectionCard.DataRow label="OS Version" value={osVersion || 'Not specified'} />
-                  <SectionCard.DataRow label="OS Admin" value={osAdmin || 'Not specified'} />
-                  <SectionCard.DataRow label="Min system Disk" value={`${minDisk} GiB`} />
-                  <SectionCard.DataRow label="Min RAM" value={`${minRam} GiB`} />
+                  <SectionCard.DataRow
+                    label="Min RAM"
+                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                  />
                 </SectionCard.Content>
               </SectionCard>
             )}
@@ -834,24 +829,22 @@ export function CreateImagePage() {
               {(isV2 || sectionStatus['advanced'] === 'active') && (
                 <SectionCard.Content showDividers={false}>
                   <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
                     {/* QEMU Guest Agent */}
-                    <VStack gap={3} className="pt-3 pb-6">
-                      <VStack gap={2}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          QEMU guest agent
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          Enables communication and status retrieval between the hypervisor and the
-                          instance.
-                        </span>
-                      </VStack>
-                      <HStack gap={2} align="center">
-                        <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {qemuGuestAgent ? 'On' : 'Off'}
-                        </span>
-                      </HStack>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField
+                        label="QEMU guest agent"
+                        description="Enables communication and status retrieval between the hypervisor and the instance."
+                      >
+                        <HStack gap={2} align="center">
+                          <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
+                          <span className="text-body-md text-[var(--color-text-default)]">
+                            {qemuGuestAgent ? 'On' : 'Off'}
+                          </span>
+                        </HStack>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

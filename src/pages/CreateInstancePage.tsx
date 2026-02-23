@@ -380,10 +380,7 @@ function QuotaSidebar({
         </div>
 
         {/* Number of Instances */}
-        <VStack gap={2}>
-          <label className="text-label-lg text-[var(--color-text-default)]">
-            Number of Instances
-          </label>
+        <FormField label="Number of Instances">
           <NumberInput
             value={numberOfInstances}
             onChange={onNumberOfInstancesChange}
@@ -391,7 +388,7 @@ function QuotaSidebar({
             max={10}
             width="full"
           />
-        </VStack>
+        </FormField>
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -3208,8 +3205,7 @@ function AuthenticationSection({
                         <Tab value="password">Password</Tab>
                       </TabList>
                     </Tabs>
-                    <div>
-                      <label className="block text-label-lg mb-2">Login Name</label>
+                    <FormField label="Login Name">
                       <Input
                         value={loginName}
                         onChange={(e) => {
@@ -3219,9 +3215,8 @@ function AuthenticationSection({
                         placeholder="Input login name"
                         fullWidth
                       />
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Password</label>
+                    </FormField>
+                    <FormField label="Password">
                       <div className="relative">
                         <Input
                           type={showPassword ? 'text' : 'password'}
@@ -3263,58 +3258,54 @@ function AuthenticationSection({
                           )}
                         </button>
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Confirm Password</label>
-                      <VStack gap={2}>
-                        <div className="relative">
-                          <Input
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            value={confirmPassword}
-                            onChange={(e) => {
-                              setConfirmPassword(e.target.value);
-                              setAuthError(null);
-                            }}
-                            placeholder="Input password"
-                            fullWidth
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                          >
-                            {showConfirmPassword ? (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                <line x1="1" y1="1" x2="23" y2="23" />
-                              </svg>
-                            ) : (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
-                        {authError && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            {authError}
-                          </span>
-                        )}
-                      </VStack>
-                    </div>
+                    </FormField>
+                    <FormField
+                      label="Confirm Password"
+                      error={!!authError}
+                      errorMessage={authError || undefined}
+                    >
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                          fullWidth
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        >
+                          {showConfirmPassword ? (
+                            <svg
+                              className="w-[14px] h-[14px]"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                              <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-[14px] h-[14px]"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </FormField>
                   </VStack>
                 </div>
               </VStack>
@@ -3372,8 +3363,7 @@ function AuthenticationSection({
                 {/* Password Tab Content */}
                 <TabPanel value="password" className="pt-4">
                   <VStack gap={4}>
-                    <div>
-                      <label className="block text-label-lg mb-2">Login Name</label>
+                    <FormField label="Login Name">
                       <Input
                         value={loginName}
                         onChange={(e) => {
@@ -3381,10 +3371,10 @@ function AuthenticationSection({
                           setAuthError(null);
                         }}
                         placeholder="Input login name"
+                        fullWidth
                       />
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Password</label>
+                    </FormField>
+                    <FormField label="Password">
                       <div className="relative">
                         <Input
                           type={showPassword ? 'text' : 'password'}
@@ -3394,6 +3384,7 @@ function AuthenticationSection({
                             setAuthError(null);
                           }}
                           placeholder="Input password"
+                          fullWidth
                         />
                         <button
                           type="button"
@@ -3425,57 +3416,54 @@ function AuthenticationSection({
                           )}
                         </button>
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-label-lg mb-2">Confirm Password</label>
-                      <VStack gap={2}>
-                        <div className="relative">
-                          <Input
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            value={confirmPassword}
-                            onChange={(e) => {
-                              setConfirmPassword(e.target.value);
-                              setAuthError(null);
-                            }}
-                            placeholder="Input password"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                          >
-                            {showConfirmPassword ? (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                <line x1="1" y1="1" x2="23" y2="23" />
-                              </svg>
-                            ) : (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
-                        {authError && loginType === 'password' && (
-                          <span className="text-body-sm text-[var(--color-state-danger)]">
-                            {authError}
-                          </span>
-                        )}
-                      </VStack>
-                    </div>
+                    </FormField>
+                    <FormField
+                      label="Confirm Password"
+                      error={!!authError && loginType === 'password'}
+                      errorMessage={authError && loginType === 'password' ? authError : undefined}
+                    >
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                          fullWidth
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        >
+                          {showConfirmPassword ? (
+                            <svg
+                              className="w-[14px] h-[14px]"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                              <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                          ) : (
+                            <svg
+                              className="w-[14px] h-[14px]"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </FormField>
                   </VStack>
                 </TabPanel>
               </Tabs>

@@ -1341,7 +1341,11 @@ export default function CreatePolicyPage() {
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
               >
-                <SectionCard.DataRow label="Policy name" value={policyName} showDivider={false} />
+                <SectionCard.DataRow
+                  label="Policy name"
+                  value={policyName || '-'}
+                  showDivider={false}
+                />
                 <SectionCard.DataRow label="Description" value={description || '-'} />
               </DoneSection>
             )}

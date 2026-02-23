@@ -727,8 +727,8 @@ html.theme-transition *::after {
   /* Select - Items */
   --select-item-padding-x: var(--spacing-2-5);
   --select-item-padding-y: var(--spacing-1-5);
-  --select-item-font-size: var(--font-size-11);
-  --select-item-line-height: var(--line-height-16);
+  --select-item-font-size: var(--font-size-12);
+  --select-item-line-height: var(--line-height-18);
   --select-item-hover-bg: var(--color-slate-50);
   --select-item-selected-bg: var(--color-blue-50);
   --select-item-selected-text: var(--color-action-primary);

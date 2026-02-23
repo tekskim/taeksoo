@@ -59,7 +59,7 @@ const servicesData: ServiceRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'serviceName',
+    name: 'frontend-web-application-loadbalancer-service',
     namespace: 'namespaceName',
     target: ['http + 80/TCP', 'https-internal + 444/TCP'],
     selector: ['key1=value1'],
@@ -69,7 +69,7 @@ const servicesData: ServiceRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'serviceName',
+    name: 'backend-api-gateway-cluster-internal-service',
     namespace: 'namespaceName',
     target: ['myport + 80/TCP'],
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
@@ -79,7 +79,7 @@ const servicesData: ServiceRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'serviceName',
+    name: 'external-database-connection-externalname-service',
     namespace: 'namespaceName',
     target: ['my.database.example.com'],
     selector: ['-'],
@@ -89,7 +89,7 @@ const servicesData: ServiceRow[] = [
   {
     id: '4',
     status: 'Running',
-    name: 'serviceName',
+    name: 'ingress-nginx-loadbalancer-external-service',
     namespace: 'namespaceName',
     target: ['80/TCP', '443/TCP'],
     selector: ['key1=value1', 'key2=value2'],
@@ -99,7 +99,7 @@ const servicesData: ServiceRow[] = [
   {
     id: '5',
     status: 'Error',
-    name: 'serviceName',
+    name: 'legacy-application-nodeport-external-access-service',
     namespace: 'namespaceName',
     target: ['[Any Node]:31575'],
     selector: ['key1=value1'],
@@ -177,7 +177,7 @@ export function ContainerServicesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (

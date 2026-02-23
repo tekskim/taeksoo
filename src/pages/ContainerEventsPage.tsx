@@ -60,7 +60,7 @@ const eventsData: EventRow[] = [
   {
     id: '1',
     status: 'Normal',
-    name: 'pod-started-successfully',
+    name: 'frontend-web-server-pod-started-successfully-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
     type: 'Normal',
@@ -75,7 +75,7 @@ const eventsData: EventRow[] = [
   {
     id: '2',
     status: 'Normal',
-    name: 'pod-scheduled',
+    name: 'frontend-web-server-pod-scheduled-to-worker-node-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
     type: 'Normal',
@@ -90,7 +90,7 @@ const eventsData: EventRow[] = [
   {
     id: '3',
     status: 'Warning',
-    name: 'pod-failed-scheduling',
+    name: 'nginx-deployment-pod-failed-scheduling-no-nodes-event',
     namespace: 'kube-system',
     lastSeen: 'Oct 21, 2025',
     type: 'Warning',
@@ -105,7 +105,7 @@ const eventsData: EventRow[] = [
   {
     id: '4',
     status: 'Normal',
-    name: 'deployment-scaled',
+    name: 'api-server-deployment-scaled-replicaset-event',
     namespace: 'production',
     lastSeen: 'Oct 21, 2025',
     type: 'Normal',
@@ -120,7 +120,7 @@ const eventsData: EventRow[] = [
   {
     id: '5',
     status: 'Error',
-    name: 'pod-crash-loop',
+    name: 'backend-service-pod-crash-loop-backoff-event',
     namespace: 'staging',
     lastSeen: 'Oct 21, 2025',
     type: 'Warning',
@@ -135,7 +135,7 @@ const eventsData: EventRow[] = [
   {
     id: '6',
     status: 'Normal',
-    name: 'service-created',
+    name: 'web-frontend-service-created-clusterip-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
     type: 'Normal',
@@ -150,7 +150,7 @@ const eventsData: EventRow[] = [
   {
     id: '7',
     status: 'Normal',
-    name: 'node-ready',
+    name: 'worker-node-3-status-now-ready-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
     type: 'Normal',
@@ -165,7 +165,7 @@ const eventsData: EventRow[] = [
   {
     id: '8',
     status: 'Warning',
-    name: 'image-pull-failed',
+    name: 'database-replica-pod-image-pull-failed-event',
     namespace: 'production',
     lastSeen: 'Oct 21, 2025',
     type: 'Warning',
@@ -246,7 +246,7 @@ export function ContainerEventsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
     },

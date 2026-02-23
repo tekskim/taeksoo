@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -558,41 +559,36 @@ export function CreateServicePage() {
               <SectionCard.Content>
                 <VStack gap={4}>
                   {/* Service Type */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Service Type
-                      <span className="text-[var(--color-state-danger)]"> *</span>
-                    </label>
+                  <FormField
+                    label="Service Type"
+                    required
+                    helperText={SERVICE_TYPE_DESCRIPTIONS[serviceType]}
+                  >
                     <Select
                       options={SERVICE_TYPE_OPTIONS}
                       value={serviceType}
                       onChange={(value) => setServiceType(value)}
                       fullWidth
                     />
-                    <span className="text-body-md text-[var(--color-text-subtle)]">
-                      {SERVICE_TYPE_DESCRIPTIONS[serviceType]}
-                    </span>
-                  </VStack>
+                  </FormField>
 
                   {/* Namespace */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Namespace
-                      <span className="text-[var(--color-state-danger)]"> *</span>
-                    </label>
+                  <FormField label="Namespace" required>
                     <Select
                       options={NAMESPACE_OPTIONS}
                       value={namespace}
                       onChange={(value) => setNamespace(value)}
                       fullWidth
                     />
-                  </VStack>
+                  </FormField>
 
                   {/* Name */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Name<span className="text-[var(--color-state-danger)]"> *</span>
-                    </label>
+                  <FormField
+                    label="Name"
+                    required
+                    error={!!nameError}
+                    errorMessage={nameError || undefined}
+                  >
                     <Input
                       placeholder="Enter a unique name"
                       value={name}
@@ -603,12 +599,7 @@ export function CreateServicePage() {
                       error={!!nameError}
                       fullWidth
                     />
-                    {nameError && (
-                      <span className="text-body-sm text-[var(--color-state-danger)]">
-                        {nameError}
-                      </span>
-                    )}
-                  </VStack>
+                  </FormField>
 
                   {/* Description (Collapsible) */}
                   <Disclosure defaultOpen={isV2}>
@@ -748,34 +739,24 @@ export function CreateServicePage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Cluster IP */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Cluster IP
-                    </label>
-                    <div className="w-[calc(50%-12px)]">
-                      <Input
-                        placeholder="e.g. 1.1.1.1"
-                        value={clusterIP}
-                        onChange={(e) => setClusterIP(e.target.value)}
-                        fullWidth
-                      />
-                    </div>
-                  </VStack>
+                  <FormField label="Cluster IP" className="w-[calc(50%-12px)]">
+                    <Input
+                      placeholder="e.g. 1.1.1.1"
+                      value={clusterIP}
+                      onChange={(e) => setClusterIP(e.target.value)}
+                      fullWidth
+                    />
+                  </FormField>
 
                   {/* Load Balancer IP */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Load Balancer IP
-                    </label>
-                    <div className="w-[calc(50%-12px)]">
-                      <Input
-                        placeholder="e.g. 1.1.1.1"
-                        value={loadBalancerIP}
-                        onChange={(e) => setLoadBalancerIP(e.target.value)}
-                        fullWidth
-                      />
-                    </div>
-                  </VStack>
+                  <FormField label="Load Balancer IP" className="w-[calc(50%-12px)]">
+                    <Input
+                      placeholder="e.g. 1.1.1.1"
+                      value={loadBalancerIP}
+                      onChange={(e) => setLoadBalancerIP(e.target.value)}
+                      fullWidth
+                    />
+                  </FormField>
 
                   {/* External IPs */}
                   <VStack gap={2}>

@@ -430,9 +430,13 @@ export function CreateAgentPage() {
                         <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           {/* Agent name */}
-                          <VStack gap={2} className="w-full">
+                          <FormField
+                            label="Agent name"
+                            required
+                            error={!!agentNameError}
+                            errorMessage={agentNameError || undefined}
+                          >
                             <Input
-                              label="Agent name"
                               placeholder="Enter a name for this agent."
                               value={agentName}
                               onChange={(e) => {
@@ -440,37 +444,26 @@ export function CreateAgentPage() {
                                 setAgentNameError(null);
                               }}
                               fullWidth
-                              required
                               error={!!agentNameError}
                             />
-                            {agentNameError && (
-                              <span className="text-body-sm text-[var(--color-state-danger)]">
-                                {agentNameError}
-                              </span>
-                            )}
-                          </VStack>
+                          </FormField>
 
                           {/* Description */}
-                          <VStack gap={2} className="w-full">
+                          <FormField label="Description">
                             <Textarea
-                              label="Description"
                               placeholder="Add an description."
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
                               fullWidth
                             />
-                          </VStack>
+                          </FormField>
 
                           {/* Status */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Status
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Choose whether the agent will be active immediately or remain
-                              inactive.
-                            </p>
+                          <FormField
+                            label="Status"
+                            required
+                            description="Choose whether the agent will be active immediately or remain inactive."
+                          >
                             <RadioGroup
                               value={status}
                               onChange={(value) => setStatus(value as 'inactive' | 'active')}
@@ -478,41 +471,40 @@ export function CreateAgentPage() {
                               <Radio value="inactive">Inactive</Radio>
                               <Radio value="active">Active</Radio>
                             </RadioGroup>
-                          </VStack>
+                          </FormField>
 
                           {/* Tag */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Tag
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Tags help categorize and identify your resources.
-                            </p>
-                            <Input
-                              placeholder="Enter tags"
-                              value={tagInput}
-                              onChange={(e) => setTagInput(e.target.value)}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  handleAddTag();
-                                }
-                              }}
-                              helperText="Up to 10 tags allowed."
-                              fullWidth
-                            />
-                            {tags.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {tags.map((tag, index) => (
-                                  <Chip
-                                    key={index}
-                                    value={tag}
-                                    onRemove={() => handleRemoveTag(index)}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </VStack>
+                          <FormField
+                            label="Tag"
+                            description="Tags help categorize and identify your resources."
+                            helperText="Up to 10 tags allowed."
+                          >
+                            <VStack gap={2}>
+                              <Input
+                                placeholder="Enter tags"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleAddTag();
+                                  }
+                                }}
+                                fullWidth
+                              />
+                              {tags.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {tags.map((tag, index) => (
+                                    <Chip
+                                      key={index}
+                                      value={tag}
+                                      onRemove={() => handleRemoveTag(index)}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </VStack>
+                          </FormField>
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -521,55 +513,51 @@ export function CreateAgentPage() {
                         <SectionCard.Header title="Model settings" />
                         <SectionCard.Content>
                           {/* Model provider */}
-                          <VStack gap={2} className="w-full">
-                            <div>
-                              <Select
-                                label="Model provider"
-                                value={modelProvider}
-                                onChange={setModelProvider}
-                                options={[
-                                  { value: 'anthropic', label: 'Anthropic (Claude)' },
-                                  { value: 'openai', label: 'OpenAI' },
-                                  { value: 'google', label: 'Google' },
-                                ]}
-                                fullWidth
-                                required
-                                helperText="Select the LLM provider for this agent."
-                              />
-                            </div>
-                          </VStack>
+                          <FormField
+                            label="Model provider"
+                            required
+                            helperText="Select the LLM provider for this agent."
+                          >
+                            <Select
+                              value={modelProvider}
+                              onChange={setModelProvider}
+                              options={[
+                                { value: 'anthropic', label: 'Anthropic (Claude)' },
+                                { value: 'openai', label: 'OpenAI' },
+                                { value: 'google', label: 'Google' },
+                              ]}
+                              fullWidth
+                            />
+                          </FormField>
 
                           {/* Model */}
-                          <VStack gap={2} className="w-full">
-                            <div>
-                              <Select
-                                label="Model"
-                                value={model}
-                                onChange={setModel}
-                                options={[
-                                  {
-                                    value: 'claude-sonnet-4.5',
-                                    label: 'Claude Sonnet 4.5 (Latest) - Recommended',
-                                  },
-                                  { value: 'claude-opus', label: 'Claude Opus' },
-                                  { value: 'claude-haiku', label: 'Claude Haiku' },
-                                ]}
-                                fullWidth
-                                required
-                                helperText="Choose the model version offered by the selected provider."
-                              />
-                            </div>
-                          </VStack>
+                          <FormField
+                            label="Model"
+                            required
+                            helperText="Choose the model version offered by the selected provider."
+                          >
+                            <Select
+                              value={model}
+                              onChange={setModel}
+                              options={[
+                                {
+                                  value: 'claude-sonnet-4.5',
+                                  label: 'Claude Sonnet 4.5 (Latest) - Recommended',
+                                },
+                                { value: 'claude-opus', label: 'Claude Opus' },
+                                { value: 'claude-haiku', label: 'Claude Haiku' },
+                              ]}
+                              fullWidth
+                            />
+                          </FormField>
 
                           {/* Temperature */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Temperature
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Adjust how creative or deterministic the model's responses should be.
-                            </p>
+                          <FormField
+                            label="Temperature"
+                            required
+                            description="Adjust how creative or deterministic the model's responses should be."
+                            helperText="Lower values make answers more consistent, while higher values increase variability."
+                          >
                             <div className="max-w-[var(--slider-row-max-width)]">
                               <Slider
                                 value={temperature}
@@ -581,21 +569,15 @@ export function CreateAgentPage() {
                                 formatValue={(v) => v.toFixed(1)}
                               />
                             </div>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Lower values make answers more consistent, while higher values
-                              increase variability.
-                            </p>
-                          </VStack>
+                          </FormField>
 
                           {/* Max tokens */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Max tokens
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Adjust how creative or deterministic the model's responses should be.
-                            </p>
+                          <FormField
+                            label="Max tokens"
+                            required
+                            description="Adjust how creative or deterministic the model's responses should be."
+                            helperText="Max: 64,000"
+                          >
                             <div className="max-w-[var(--slider-row-max-width)]">
                               <Slider
                                 value={maxTokens}
@@ -607,10 +589,7 @@ export function CreateAgentPage() {
                                 formatValue={(v) => v.toLocaleString()}
                               />
                             </div>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Max: 64,000
-                            </p>
-                          </VStack>
+                          </FormField>
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -619,26 +598,24 @@ export function CreateAgentPage() {
                         <SectionCard.Header title="Prompt settings" />
                         <SectionCard.Content>
                           {/* System prompt */}
-                          <VStack gap={2} className="w-full">
+                          <FormField
+                            label="System prompt"
+                            helperText="Defines the agent's core behavior and response rules."
+                          >
                             <Textarea
-                              label="System prompt"
                               placeholder="Enter a prompt or task for your agent."
                               value={systemPrompt}
                               onChange={(e) => setSystemPrompt(e.target.value)}
-                              helperText="Defines the agent's core behavior and response rules."
                               fullWidth
                             />
-                          </VStack>
+                          </FormField>
 
                           {/* Tone */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Tone
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Select the response style the agent should use.
-                            </p>
+                          <FormField
+                            label="Tone"
+                            required
+                            description="Select the response style the agent should use."
+                          >
                             <RadioGroup value={tone} onChange={setTone}>
                               <Radio value="default">Default</Radio>
                               <Radio value="professional">Professional</Radio>
@@ -646,28 +623,23 @@ export function CreateAgentPage() {
                               <Radio value="technical">Technical</Radio>
                               <Radio value="creative">Creative</Radio>
                             </RadioGroup>
-                          </VStack>
+                          </FormField>
 
                           {/* Max iteration */}
-                          <VStack gap={2} className="w-full">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Max iteration
-                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                            </label>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              Limits how many reasoning cycles the agent can run.
-                            </p>
-                            <div>
-                              <NumberInput
-                                value={maxIteration}
-                                onChange={setMaxIteration}
-                                min={1}
-                                max={10}
-                                width="sm"
-                              />
-                            </div>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">Max: 10</p>
-                          </VStack>
+                          <FormField
+                            label="Max iteration"
+                            required
+                            description="Limits how many reasoning cycles the agent can run."
+                            helperText="Max: 10"
+                          >
+                            <NumberInput
+                              value={maxIteration}
+                              onChange={setMaxIteration}
+                              min={1}
+                              max={10}
+                              width="sm"
+                            />
+                          </FormField>
                         </SectionCard.Content>
                       </SectionCard>
 

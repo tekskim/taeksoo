@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -722,30 +723,24 @@ export function CreateNetworkPolicyPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Namespace */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
+                  <FormField label="Namespace" required>
                     <Select
                       options={NAMESPACE_OPTIONS}
                       value={namespace}
                       onChange={setNamespace}
                       fullWidth
                     />
-                  </VStack>
+                  </FormField>
 
                   {/* Name */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Name <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
+                  <FormField label="Name" required>
                     <Input
                       placeholder="Enter a unique name"
                       value={policyName}
                       onChange={(e) => setPolicyName(e.target.value)}
                       fullWidth
                     />
-                  </VStack>
+                  </FormField>
 
                   {/* Description (collapsible) */}
                   <Disclosure defaultOpen={isV2}>

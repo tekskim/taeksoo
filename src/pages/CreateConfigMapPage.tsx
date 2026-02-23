@@ -4,6 +4,7 @@ import {
   Button,
   Breadcrumb,
   Disclosure,
+  FormField,
   HStack,
   VStack,
   TabBar,
@@ -211,23 +212,22 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField label="Namespace" required>
             <Input
               placeholder="Enter namespace"
               value={namespace}
               onChange={(e) => onNamespaceChange(e.target.value)}
               fullWidth
             />
-          </VStack>
+          </FormField>
 
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField
+            label="Name"
+            required
+            error={!!configMapNameError}
+            errorMessage={configMapNameError || undefined}
+          >
             <Input
               placeholder="Enter a unique name"
               value={configMapName}
@@ -238,12 +238,7 @@ function BasicInfoSection({
               error={!!configMapNameError}
               fullWidth
             />
-            {configMapNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {configMapNameError}
-              </span>
-            )}
-          </VStack>
+          </FormField>
 
           {/* Description */}
           <Disclosure defaultOpen={isV2}>
