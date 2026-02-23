@@ -305,6 +305,68 @@ import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
+import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
+import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
+import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
+import { PrimitiveColorsPage } from '@/pages/design/foundation/PrimitiveColorsPage';
+import { SemanticColorsPage } from '@/pages/design/foundation/SemanticColorsPage';
+import { TypographyPage } from '@/pages/design/foundation/TypographyPage';
+import { SpacingPage } from '@/pages/design/foundation/SpacingPage';
+import { BordersPage } from '@/pages/design/foundation/BordersPage';
+import { ShadowsPage } from '@/pages/design/foundation/ShadowsPage';
+import { IconsPage } from '@/pages/design/foundation/IconsPage';
+import { AppIconsPage } from '@/pages/design/foundation/AppIconsPage';
+import { ButtonPage } from '@/pages/design/components/ButtonPage';
+import { InputPage } from '@/pages/design/components/InputPage';
+import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
+import { FilterSearchInputPage } from '@/pages/design/components/FilterSearchInputPage';
+import { SelectPage } from '@/pages/design/components/SelectPage';
+import { DatePickerPage } from '@/pages/design/components/DatePickerPage';
+import { SliderPage } from '@/pages/design/components/SliderPage';
+import { TogglePage } from '@/pages/design/components/TogglePage';
+import { CheckboxPage } from '@/pages/design/components/CheckboxPage';
+import { RadioPage } from '@/pages/design/components/RadioPage';
+import { TablePage } from '@/pages/design/components/TablePage';
+import { BadgePage } from '@/pages/design/components/BadgePage';
+import { ChipPage } from '@/pages/design/components/ChipPage';
+import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
+import { PaginationPage } from '@/pages/design/components/PaginationPage';
+import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndicatorPage';
+import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
+import { LoadingPage } from '@/pages/design/components/LoadingPage';
+import { TopBarPage } from '@/pages/design/components/TopBarPage';
+import { TabBarPage } from '@/pages/design/components/TabBarPage';
+import { TabsPage } from '@/pages/design/components/TabsPage';
+import { BreadcrumbPage } from '@/pages/design/components/BreadcrumbPage';
+import { TooltipPage } from '@/pages/design/components/TooltipPage';
+import { PopoverPage } from '@/pages/design/components/PopoverPage';
+import { MenuPage } from '@/pages/design/components/MenuPage';
+import { ContextMenuPage } from '@/pages/design/components/ContextMenuPage';
+import { ModalPage } from '@/pages/design/components/ModalPage';
+import { DrawerSectionPage } from '@/pages/design/components/DrawerSectionPage';
+import { NotificationCenterPage } from '@/pages/design/components/NotificationCenterPage';
+import { ToastPage } from '@/pages/design/components/ToastPage';
+import { GlobalNotificationPanelPage } from '@/pages/design/components/GlobalNotificationPanelPage';
+import { FloatingCardPage } from '@/pages/design/components/FloatingCardPage';
+import { DisclosurePage } from '@/pages/design/components/DisclosurePage';
+import { WindowControlPage } from '@/pages/design/components/WindowControlPage';
+import { ScrollbarPage } from '@/pages/design/components/ScrollbarPage';
+import { DetailHeaderPage } from '@/pages/design/components/DetailHeaderPage';
+import { SectionCardPage } from '@/pages/design/components/SectionCardPage';
+import { MonitoringToolbarPage } from '@/pages/design/components/MonitoringToolbarPage';
+import { CsvDownloadPage } from '@/pages/design/components/CsvDownloadPage';
+import { ShellPage } from '@/pages/design/components/ShellPage';
+import { CommonPatternsPage } from '@/pages/design/patterns/CommonPatternsPage';
+import { WizardPage } from '@/pages/design/patterns/WizardPage';
+import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
+import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
+import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
+import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
+import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
+import { AreaChartPage } from '@/pages/design/charts/AreaChartPage';
+import { PieChartPage } from '@/pages/design/charts/PieChartPage';
+import { HalfDoughnutChartPage } from '@/pages/design/charts/HalfDoughnutChartPage';
+import { DoughnutChartPage } from '@/pages/design/charts/DoughnutChartPage';
 
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
@@ -878,16 +940,86 @@ function AppRoutes() {
       <Route path="/ai-platform/system-admin" element={<SystemAdminPage />} />
       <Route path="/ai-platform/*" element={<AIPlatformPage />} />
 
-      {/* Design System Routes */}
-      <Route path="/design" element={<DesignSystemPage />} />
+      {/* Design System Routes (New Layout) */}
+      <Route path="/design" element={<DesignSystemLayout />}>
+        <Route index element={<DesignOverviewPage />} />
+        <Route path="foundation/tokens" element={<TokenArchitecturePage />} />
+        <Route path="foundation/primitive-colors" element={<PrimitiveColorsPage />} />
+        <Route path="foundation/semantic-colors" element={<SemanticColorsPage />} />
+        <Route path="foundation/typography" element={<TypographyPage />} />
+        <Route path="foundation/spacing" element={<SpacingPage />} />
+        <Route path="foundation/borders" element={<BordersPage />} />
+        <Route path="foundation/shadows" element={<ShadowsPage />} />
+        <Route path="foundation/icons" element={<IconsPage />} />
+        <Route path="foundation/app-icons" element={<AppIconsPage />} />
+        <Route path="foundation/*" element={<DesignOverviewPage />} />
+        <Route path="components/button" element={<ButtonPage />} />
+        <Route path="components/input" element={<InputPage />} />
+        <Route path="components/form-field" element={<FormFieldPage />} />
+        <Route path="components/filter-search-input" element={<FilterSearchInputPage />} />
+        <Route path="components/select" element={<SelectPage />} />
+        <Route path="components/datepicker" element={<DatePickerPage />} />
+        <Route path="components/slider" element={<SliderPage />} />
+        <Route path="components/toggle" element={<TogglePage />} />
+        <Route path="components/checkbox" element={<CheckboxPage />} />
+        <Route path="components/radio" element={<RadioPage />} />
+        <Route path="components/table" element={<TablePage />} />
+        <Route path="components/badge" element={<BadgePage />} />
+        <Route path="components/chip" element={<ChipPage />} />
+        <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
+        <Route path="components/pagination" element={<PaginationPage />} />
+        <Route path="components/selection-indicator" element={<SelectionIndicatorPage />} />
+        <Route path="components/inline-message" element={<InlineMessagePage />} />
+        <Route path="components/loading" element={<LoadingPage />} />
+        <Route path="components/topbar" element={<TopBarPage />} />
+        <Route path="components/tabbar" element={<TabBarPage />} />
+        <Route path="components/tabs" element={<TabsPage />} />
+        <Route path="components/breadcrumb" element={<BreadcrumbPage />} />
+        <Route path="components/tooltip" element={<TooltipPage />} />
+        <Route path="components/popover" element={<PopoverPage />} />
+        <Route path="components/menu" element={<MenuPage />} />
+        <Route path="components/context-menu" element={<ContextMenuPage />} />
+        <Route path="components/modal" element={<ModalPage />} />
+        <Route path="components/drawer" element={<DrawerSectionPage />} />
+        <Route path="components/notification-center" element={<NotificationCenterPage />} />
+        <Route path="components/toast" element={<ToastPage />} />
+        <Route
+          path="components/global-notification-panel"
+          element={<GlobalNotificationPanelPage />}
+        />
+        <Route path="components/floating-card" element={<FloatingCardPage />} />
+        <Route path="components/disclosure" element={<DisclosurePage />} />
+        <Route path="components/window-control" element={<WindowControlPage />} />
+        <Route path="components/scrollbar" element={<ScrollbarPage />} />
+        <Route path="components/detail-header" element={<DetailHeaderPage />} />
+        <Route path="components/section-card" element={<SectionCardPage />} />
+        <Route path="components/monitoring-toolbar" element={<MonitoringToolbarPage />} />
+        <Route path="components/csv-download" element={<CsvDownloadPage />} />
+        <Route path="components/shell" element={<ShellPage />} />
+        <Route path="components/*" element={<DesignOverviewPage />} />
+        <Route path="patterns/common" element={<CommonPatternsPage />} />
+        <Route path="patterns/wizard" element={<WizardPage />} />
+        <Route path="patterns/multi-tab-create" element={<MultiTabCreatePage />} />
+        <Route path="patterns/layout" element={<LayoutPage />} />
+        <Route path="patterns/*" element={<DesignOverviewPage />} />
+        <Route path="charts/overview" element={<ChartOverviewPage />} />
+        <Route path="charts/status-colors" element={<StatusColorsPage />} />
+        <Route path="charts/progress-bar" element={<ProgressBarPage />} />
+        <Route path="charts/area-chart" element={<AreaChartPage />} />
+        <Route path="charts/pie-chart" element={<PieChartPage />} />
+        <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />
+        <Route path="charts/doughnut" element={<DoughnutChartPage />} />
+        <Route path="charts/*" element={<DesignOverviewPage />} />
+        {/* Existing standalone pages */}
+        <Route path="drawers" element={<DrawersPage />} />
+        <Route path="modals" element={<ModalsPage />} />
+        <Route path="gradients" element={<GradientShowcasePage />} />
+        <Route path="colors" element={<ColorPalettePage />} />
+        <Route path="metallic" element={<MetallicPalettePage />} />
+        <Route path="comparison" element={<ProductionComparisonPage />} />
+      </Route>
+      {/* Legacy route */}
       <Route path="/design-system" element={<DesignSystemPage />} />
-      <Route path="/design/components" element={<DesignSystemPage />} />
-      <Route path="/design/drawers" element={<DrawersPage />} />
-      <Route path="/design/modals" element={<ModalsPage />} />
-      <Route path="/design/gradients" element={<GradientShowcasePage />} />
-      <Route path="/design/colors" element={<ColorPalettePage />} />
-      <Route path="/design/metallic" element={<MetallicPalettePage />} />
-      <Route path="/design/comparison" element={<ProductionComparisonPage />} />
 
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />
