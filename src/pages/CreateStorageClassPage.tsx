@@ -370,7 +370,7 @@ function CustomizeSection({
           {/* Reclaim Policy */}
           <FormField>
             <FormField.Label>Reclaim Policy</FormField.Label>
-            <FormField.Control>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
               <RadioGroup
                 value={reclaimPolicy}
                 onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
@@ -389,7 +389,7 @@ function CustomizeSection({
           {/* Allow Volume Expansion */}
           <FormField>
             <FormField.Label>Allow Volume Expansion</FormField.Label>
-            <FormField.Control>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
               <RadioGroup
                 value={volumeExpansion}
                 onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
@@ -405,7 +405,7 @@ function CustomizeSection({
           {/* Volume Binding Mode */}
           <FormField>
             <FormField.Label>Volume Binding Mode</FormField.Label>
-            <FormField.Control>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
               <RadioGroup
                 value={volumeBindingMode}
                 onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}

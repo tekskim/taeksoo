@@ -524,36 +524,40 @@ export default function ComputeAdminCreateFirewallRulePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Enabled */}
-                    <VStack gap={3} align="start" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Enabled
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Indicates whether the rule is enabled.
-                      </span>
-                      <Toggle
-                        checked={enabled}
-                        onChange={(e) => setEnabled(e.target.checked)}
-                        label={enabled ? 'On' : 'Off'}
-                      />
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Enabled</FormField.Label>
+                        <FormField.Description>
+                          Indicates whether the rule is enabled.
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <Toggle
+                            checked={enabled}
+                            onChange={(e) => setEnabled(e.target.checked)}
+                            label={enabled ? 'On' : 'Off'}
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Shared */}
-                    <VStack gap={3} align="start" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Shared
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Indicates whether the rule is shared with other tenants.
-                      </span>
-                      <Toggle
-                        checked={shared}
-                        onChange={(e) => setShared(e.target.checked)}
-                        label={shared ? 'Yes' : 'No'}
-                      />
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Shared</FormField.Label>
+                        <FormField.Description>
+                          Indicates whether the rule is shared with other tenants.
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <Toggle
+                            checked={shared}
+                            onChange={(e) => setShared(e.target.checked)}
+                            label={shared ? 'Yes' : 'No'}
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -643,137 +647,139 @@ export default function ComputeAdminCreateFirewallRulePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Protocol */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <div className="flex gap-[3px]">
-                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                          Protocol
-                        </span>
-                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Select the protocol to which the rule applies.
-                      </span>
-                      <Select
-                        options={[
-                          { value: 'tcp', label: 'TCP' },
-                          { value: 'udp', label: 'UDP' },
-                          { value: 'icmp', label: 'ICMP' },
-                          { value: 'any', label: 'Any' },
-                        ]}
-                        value={protocol}
-                        onChange={setProtocol}
-                        placeholder="Select a protocol"
-                        width="half"
-                      />
-                    </VStack>
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Protocol</FormField.Label>
+                        <FormField.Description>
+                          Select the protocol to which the rule applies.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Select
+                            options={[
+                              { value: 'tcp', label: 'TCP' },
+                              { value: 'udp', label: 'UDP' },
+                              { value: 'icmp', label: 'ICMP' },
+                              { value: 'any', label: 'Any' },
+                            ]}
+                            value={protocol}
+                            onChange={setProtocol}
+                            placeholder="Select a protocol"
+                            fullWidth
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Action */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <div className="flex gap-[6px] items-center">
-                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                          Action
-                        </span>
-                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                          *
-                        </span>
-                      </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        Choose whether to allow or deny the traffic.
-                      </span>
-                      <RadioGroup value={action} onChange={setAction} orientation="vertical">
-                        <Radio value="allow" label="Allow" />
-                        <Radio value="deny" label="Deny" />
-                        <Radio value="reject" label="Reject" />
-                      </RadioGroup>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Action</FormField.Label>
+                        <FormField.Description>
+                          Choose whether to allow or deny the traffic.
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <RadioGroup value={action} onChange={setAction} orientation="vertical">
+                            <Radio value="allow" label="Allow" />
+                            <Radio value="deny" label="Deny" />
+                            <Radio value="reject" label="Reject" />
+                          </RadioGroup>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Source CIDR */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Source CIDR
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Specifies the source network or IP address in CIDR format.
-                      </span>
-                      <Input
-                        placeholder="e.g. 192.168.0.0/24"
-                        value={sourceIp}
-                        onChange={(e) => setSourceIp(e.target.value)}
-                        fullWidth
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        Must be entered in CIDR format (IP/prefix).
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Source CIDR</FormField.Label>
+                        <FormField.Description>
+                          Specifies the source network or IP address in CIDR format.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Input
+                            placeholder="e.g. 192.168.0.0/24"
+                            value={sourceIp}
+                            onChange={(e) => setSourceIp(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          Must be entered in CIDR format (IP/prefix).
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Source Port */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Source Port
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Specifies the port range to which the rule applies.
-                      </span>
-                      <Input
-                        placeholder="e.g. 80 or 80–443"
-                        value={sourcePort}
-                        onChange={(e) => setSourcePort(e.target.value)}
-                        fullWidth
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        Must be a number between 1–65535 or a "start–end" range.
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Source Port</FormField.Label>
+                        <FormField.Description>
+                          Specifies the port range to which the rule applies.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Input
+                            placeholder="e.g. 80 or 80–443"
+                            value={sourcePort}
+                            onChange={(e) => setSourcePort(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          Must be a number between 1–65535 or a "start–end" range.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Destination CIDR */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Destination CIDR
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Specifies the destination network or IP address in CIDR format.
-                      </span>
-                      <Input
-                        placeholder="e.g. 10.0.0.0/16"
-                        value={destinationIp}
-                        onChange={(e) => setDestinationIp(e.target.value)}
-                        fullWidth
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        Must be entered in CIDR format (IP/prefix).
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Destination CIDR</FormField.Label>
+                        <FormField.Description>
+                          Specifies the destination network or IP address in CIDR format.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Input
+                            placeholder="e.g. 10.0.0.0/16"
+                            value={destinationIp}
+                            onChange={(e) => setDestinationIp(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          Must be entered in CIDR format (IP/prefix).
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Destination Port */}
-                    <VStack gap={3} align="stretch" className="py-6">
-                      <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                        Destination Port
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                        Defines the network address (CIDR) for the subnet.
-                      </span>
-                      <Input
-                        placeholder="e.g. 443 or 3000–4000"
-                        value={destinationPort}
-                        onChange={(e) => setDestinationPort(e.target.value)}
-                        fullWidth
-                      />
-                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                        Must be a number between 1–65535 or a "start–end" range.
-                      </span>
-                    </VStack>
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Destination Port</FormField.Label>
+                        <FormField.Description>
+                          Defines the network address (CIDR) for the subnet.
+                        </FormField.Description>
+                        <FormField.Control>
+                          <Input
+                            placeholder="e.g. 443 or 3000–4000"
+                            value={destinationPort}
+                            onChange={(e) => setDestinationPort(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          Must be a number between 1–65535 or a "start–end" range.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

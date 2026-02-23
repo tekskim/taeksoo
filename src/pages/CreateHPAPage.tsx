@@ -553,19 +553,17 @@ export default function CreateHPAPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Target Reference */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      Target Reference <span className="text-[var(--color-state-danger)]">*</span>
-                    </label>
-                    <div className="w-[calc(50%-12px)]">
+                  <FormField required>
+                    <FormField.Label>Target Reference</FormField.Label>
+                    <FormField.Control>
                       <Select
                         options={TARGET_REFERENCE_OPTIONS}
                         value={targetReference}
                         onChange={setTargetReference}
                         fullWidth
                       />
-                    </div>
-                  </VStack>
+                    </FormField.Control>
+                  </FormField>
 
                   {/* Min/Max Replicas */}
                   <VStack gap={6}>
@@ -671,19 +669,17 @@ export default function CreateHPAPage() {
                         </HStack>
 
                         {/* Source */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Source
-                          </label>
-                          <div className="w-[calc(50%-12px)]">
+                        <FormField>
+                          <FormField.Label>Source</FormField.Label>
+                          <FormField.Control>
                             <Select
                               options={METRIC_SOURCE_OPTIONS}
                               value={metric.source}
                               onChange={(value) => updateMetric(metric.id, 'source', value)}
                               fullWidth
                             />
-                          </div>
-                        </VStack>
+                          </FormField.Control>
+                        </FormField>
 
                         {/* Resource Name (for Resource source) */}
                         {(isV2 || metric.source === 'Resource') && (
