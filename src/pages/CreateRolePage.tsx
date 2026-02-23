@@ -12,7 +12,7 @@ import {
   Pagination,
   SelectionIndicator,
   SearchInput,
-  Chip,
+  Badge,
   Checkbox,
   FormField,
   PageShell,
@@ -591,7 +591,9 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
             </div>
             <div className="flex-[2] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center gap-1 flex-wrap">
               {perm.actions.map((action, i) => (
-                <Chip key={i} value={action} />
+                <Badge key={i} theme="white" size="sm">
+                  {action}
+                </Badge>
               ))}
             </div>
           </div>

@@ -20,7 +20,7 @@ import {
   STATUS_THRESHOLDS,
   Tooltip,
   DetailHeader,
-  Chip,
+  Badge,
   SectionCard,
   PageShell,
   type TableColumn,
@@ -950,7 +950,9 @@ export function NodeDetailPage() {
                     {Object.entries(node.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {val ? `${key}: ${val}` : key}
+                        </Badge>
                       ))}
                     {Object.keys(node.labels).length > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -971,7 +973,9 @@ export function NodeDetailPage() {
                     {Object.entries(node.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={val ? `${key}: ${val}` : key} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {val ? `${key}: ${val}` : key}
+                        </Badge>
                       ))}
                     {Object.keys(node.annotations).length > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

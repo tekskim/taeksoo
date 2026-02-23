@@ -14,7 +14,6 @@ import {
   TabList,
   Tab,
   FloatingCard,
-  Chip,
   SectionCard,
   VStack,
   HStack,
@@ -349,11 +348,9 @@ export function CreateMCPTemplatePage() {
                             {tags.length > 0 && (
                               <div className="flex flex-wrap gap-2">
                                 {tags.map((tag, index) => (
-                                  <Chip
-                                    key={index}
-                                    value={tag}
-                                    onRemove={() => handleRemoveTag(index)}
-                                  />
+                                  <Badge key={index} theme="white" size="sm">
+                                    {tag}
+                                  </Badge>
                                 ))}
                               </div>
                             )}
@@ -852,7 +849,9 @@ export function CreateMCPTemplatePage() {
                                     />
                                     <div className="flex flex-wrap gap-2">
                                       {tool.tags.map((tag, index) => (
-                                        <Chip key={index} value={tag} onRemove={() => {}} />
+                                        <Badge key={index} theme="white" size="sm">
+                                          {tag}
+                                        </Badge>
                                       ))}
                                     </div>
                                   </VStack>

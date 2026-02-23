@@ -15,7 +15,7 @@ import {
   Button,
   ContextMenu,
   DetailHeader,
-  Chip,
+  Badge,
   SectionCard,
   PageShell,
   type TableColumn,
@@ -494,7 +494,9 @@ export function ContainerHPADetailPage() {
                   {Object.entries(hpa.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(hpa.labels).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -513,7 +515,9 @@ export function ContainerHPADetailPage() {
                   {Object.entries(hpa.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(hpa.annotations).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

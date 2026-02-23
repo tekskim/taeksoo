@@ -5,6 +5,7 @@ import {
   Button,
   Breadcrumb,
   NumberInput,
+  Slider,
   HStack,
   VStack,
   TabBar,
@@ -1636,8 +1637,8 @@ function ImageSection({
 
               {/* Storage Type Row - Bordered Container */}
               {(isV2 || createSystemDisk) && (
-                <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
-                  <HStack gap={6} align="center">
+                <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+                  <HStack gap={6} align="start" className="flex-wrap">
                     <HStack gap={1.5} align="center">
                       <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
                       <Select
@@ -1646,17 +1647,35 @@ function ImageSection({
                         onChange={onStorageTypeChange}
                       />
                     </HStack>
-                    <HStack gap={1.5} align="center">
+                    <VStack gap={2}>
                       <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                      <NumberInput
-                        value={storageSize}
-                        onChange={onStorageSizeChange}
-                        min={10}
-                        max={1000}
-                        width="sm"
-                        suffix="GiB"
-                      />
-                    </HStack>
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={10}
+                          max={1000}
+                          step={10}
+                          value={storageSize}
+                          onChange={onStorageSizeChange}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={storageSize}
+                          onChange={onStorageSizeChange}
+                          min={10}
+                          max={1000}
+                          step={1}
+                          width="xs"
+                          suffix="GiB"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        10-1,000 GiB
+                      </span>
+                    </VStack>
                     <Checkbox
                       label="Deleted with the instance"
                       checked={deleteWithInstance}

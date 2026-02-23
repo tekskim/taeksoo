@@ -5,6 +5,7 @@ import {
   Button,
   Breadcrumb,
   NumberInput,
+  Slider,
   ProgressBar,
   STATUS_THRESHOLDS,
   HStack,
@@ -1617,14 +1618,26 @@ function ImageSection({
                 </VStack>
                 <VStack gap={2}>
                   <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                  <NumberInput
-                    value={storageSize}
-                    onChange={setStorageSize}
-                    min={1}
-                    max={1000}
-                    width="sm"
-                    suffix="GiB"
-                  />
+                  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+                    <Slider
+                      min={1}
+                      max={1000}
+                      step={10}
+                      value={storageSize}
+                      onChange={setStorageSize}
+                      className="flex-1"
+                    />
+                    <NumberInput
+                      value={storageSize}
+                      onChange={setStorageSize}
+                      min={1}
+                      max={1000}
+                      step={1}
+                      width="xs"
+                      suffix="GiB"
+                    />
+                  </HStack>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">1-1,000 GiB</span>
                 </VStack>
                 <div className="self-end pb-2">
                   <Checkbox
@@ -3160,27 +3173,29 @@ function AuthenticationSection({
                       onPageChange={setKeyPairPage}
                       selectedCount={selectedKeyPairId ? 1 : 0}
                     />
-                    <Table
-                      columns={keyPairColumns}
-                      data={filteredKeyPairs}
-                      rowKey="id"
-                      onRowClick={(row) => handleSelectKeyPair(row.id)}
-                    />
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedKeyPairId
-                          ? [
-                              {
-                                id: selectedKeyPairId,
-                                label:
-                                  mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                  selectedKeyPairId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => setSelectedKeyPairId(null)}
-                    />
+                    <VStack gap={2}>
+                      <Table
+                        columns={keyPairColumns}
+                        data={filteredKeyPairs}
+                        rowKey="id"
+                        onRowClick={(row) => handleSelectKeyPair(row.id)}
+                      />
+                      <SelectionIndicator
+                        selectedItems={
+                          selectedKeyPairId
+                            ? [
+                                {
+                                  id: selectedKeyPairId,
+                                  label:
+                                    mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
+                                    selectedKeyPairId,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => setSelectedKeyPairId(null)}
+                      />
+                    </VStack>
                   </VStack>
                 </div>
 

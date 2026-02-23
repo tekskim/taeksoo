@@ -14,7 +14,6 @@ import {
   Select,
   Checkbox,
   Toggle,
-  Chip,
 } from '@/design-system';
 import {
   IconExternalLink,
@@ -1000,16 +999,8 @@ export function ProductionComparisonPage() {
                     className="w-48"
                   />
                   <div className="flex gap-2">
-                    <Chip
-                      value={`일치 ${tokenStats.match}`}
-                      icon={<IconCheck size={12} />}
-                      variant="default"
-                    />
-                    <Chip
-                      value={`차이 ${tokenStats.different}`}
-                      icon={<IconMinus size={12} />}
-                      variant="default"
-                    />
+                    <Badge theme="white" size="sm">{`일치 ${tokenStats.match}`}</Badge>
+                    <Badge theme="white" size="sm">{`차이 ${tokenStats.different}`}</Badge>
                   </div>
                 </HStack>
 
