@@ -1454,7 +1454,7 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={2}>
                             <Input
                               placeholder="Enter Load balancer name"
-                              value={loadBalancerName}
+                              value={loadBalancerName || '-'}
                               onChange={(e) => {
                                 setLoadBalancerName(e.target.value);
                                 setLbNameError(null);
@@ -1892,7 +1892,7 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Load balancer name" value={loadBalancerName} />
+                  <SectionCard.DataRow label="Load balancer name" value={loadBalancerName || '-'} />
                   {description && <SectionCard.DataRow label="Description" value={description} />}
                   <SectionCard.DataRow
                     label="Provider"
@@ -1961,7 +1961,7 @@ export default function CreateLoadBalancerPage() {
                         <FormField.Label>Listener name</FormField.Label>
                         <FormField.Control>
                           <Input
-                            value={listenerName}
+                            value={listenerName || '-'}
                             onChange={(e) => {
                               setListenerName(e.target.value);
                               setListenerNameError(null);
@@ -2526,7 +2526,7 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['listener'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Listener name" value={listenerName} />
+                  <SectionCard.DataRow label="Listener name" value={listenerName || '-'} />
                   <SectionCard.DataRow
                     label="Protocol / Port"
                     value={`${listenerProtocol} / ${protocolPort}`}
@@ -2616,7 +2616,7 @@ export default function CreateLoadBalancerPage() {
                             <FormField.Control>
                               <Input
                                 placeholder="Enter pool name"
-                                value={poolName}
+                                value={poolName || '-'}
                                 onChange={(e) => setPoolName(e.target.value)}
                                 fullWidth
                               />
@@ -2795,7 +2795,7 @@ export default function CreateLoadBalancerPage() {
               {!isV2 && sectionStatus['pool'] === 'done' && (
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
-                  {createPool && <SectionCard.DataRow label="Pool name" value={poolName} />}
+                  {createPool && <SectionCard.DataRow label="Pool name" value={poolName || '-'} />}
                   {createPool && (
                     <SectionCard.DataRow
                       label="Pool algorithm"
@@ -2878,13 +2878,15 @@ export default function CreateLoadBalancerPage() {
                     <div className="py-6">
                       <VStack gap={3} align="stretch">
                         <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Ports
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Select one of the IP addresses associated with the port to add as a
-                            member.
-                          </p>
+                          <VStack gap={1} align="start">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
+                              Ports
+                            </span>
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
+                              Select one of the IP addresses associated with the port to add as a
+                              member.
+                            </p>
+                          </VStack>
                         </VStack>
 
                         {/* Search and Pagination */}
@@ -2929,16 +2931,18 @@ export default function CreateLoadBalancerPage() {
                     <div className="py-6">
                       <VStack gap={3} align="stretch">
                         <VStack gap={2} align="start">
-                          <HStack gap={1} align="center">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Allocated Members
-                            </span>
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </HStack>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Adding a member registers a new backend server to the pool, while
-                            removing a member excludes it from load balancing.
-                          </p>
+                          <VStack gap={1} align="start">
+                            <HStack gap={1} align="center">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Allocated Members
+                              </span>
+                              <span className="text-[var(--color-state-danger)]">*</span>
+                            </HStack>
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
+                              Adding a member registers a new backend server to the pool, while
+                              removing a member excludes it from load balancing.
+                            </p>
+                          </VStack>
                         </VStack>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -3138,7 +3142,7 @@ export default function CreateLoadBalancerPage() {
                             <FormField.Control>
                               <Input
                                 placeholder="Enter health monitor name"
-                                value={healthMonitorName}
+                                value={healthMonitorName || '-'}
                                 onChange={(e) => setHealthMonitorName(e.target.value)}
                                 fullWidth
                               />
@@ -3302,7 +3306,10 @@ export default function CreateLoadBalancerPage() {
                     value={createHealthMonitor ? 'Yes' : 'No'}
                   />
                   {createHealthMonitor && (
-                    <SectionCard.DataRow label="Health monitor name" value={healthMonitorName} />
+                    <SectionCard.DataRow
+                      label="Health monitor name"
+                      value={healthMonitorName || '-'}
+                    />
                   )}
                   {createHealthMonitor && (
                     <SectionCard.DataRow label="Health monitor type" value={healthMonitorType} />
@@ -3337,7 +3344,10 @@ export default function CreateLoadBalancerPage() {
                     value={createHealthMonitor ? 'Yes' : 'No'}
                   />
                   {createHealthMonitor && (
-                    <SectionCard.DataRow label="Health monitor name" value={healthMonitorName} />
+                    <SectionCard.DataRow
+                      label="Health monitor name"
+                      value={healthMonitorName || '-'}
+                    />
                   )}
                   {createHealthMonitor && (
                     <SectionCard.DataRow label="Health monitor type" value={healthMonitorType} />

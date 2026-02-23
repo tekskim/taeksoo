@@ -1287,7 +1287,7 @@ export default function CreateUserPage() {
                 title={SECTION_LABELS['basic-info']}
                 onEdit={() => handleEdit('basic-info')}
               >
-                <SectionCard.DataRow label="Username" value={username} showDivider={false} />
+                <SectionCard.DataRow label="Username" value={username || '-'} showDivider={false} />
                 <SectionCard.DataRow label="Password" value={getPasswordOptionDisplay()} />
                 <SectionCard.DataRow label="Email" value={email} />
                 <SectionCard.DataRow label="Display name" value={displayName || '-'} />

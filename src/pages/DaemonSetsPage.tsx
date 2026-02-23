@@ -57,7 +57,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'daemonset1',
+    name: 'monitoring-node-exporter-prometheus-daemonset',
     namespace: 'default',
     image: 'nginx',
     ready: 1,
@@ -68,7 +68,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'fluentd-logging',
+    name: 'logging-fluentd-elasticsearch-forwarder-daemonset',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
     ready: 3,
@@ -79,7 +79,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '3',
     status: 'Running',
-    name: 'node-exporter',
+    name: 'monitoring-node-exporter-metrics-collector-daemonset',
     namespace: 'monitoring',
     image: 'prom/node-exporter:v1.6.1',
     ready: 5,
@@ -90,7 +90,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '4',
     status: 'Pending',
-    name: 'calico-node',
+    name: 'networking-calico-node-cni-daemonset',
     namespace: 'kube-system',
     image: 'calico/node:v3.26.1',
     ready: 2,
@@ -101,7 +101,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '5',
     status: 'Running',
-    name: 'kube-proxy',
+    name: 'kube-system-proxy-network-routing-daemonset',
     namespace: 'kube-system',
     image: 'k8s.gcr.io/kube-proxy:v1.28.0',
     ready: 5,
@@ -112,7 +112,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '6',
     status: 'Failed',
-    name: 'filebeat',
+    name: 'logging-filebeat-elasticsearch-shipper-daemonset',
     namespace: 'logging',
     image: 'elastic/filebeat:8.10.2',
     ready: 0,
@@ -123,7 +123,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '7',
     status: 'Running',
-    name: 'nvidia-device-plugin',
+    name: 'gpu-nvidia-device-plugin-k8s-daemonset',
     namespace: 'gpu-operator',
     image: 'nvidia/k8s-device-plugin:v0.14.1',
     ready: 2,
@@ -134,7 +134,7 @@ const daemonSetsData: DaemonSetRow[] = [
   {
     id: '8',
     status: 'Running',
-    name: 'cilium',
+    name: 'networking-cilium-ebpf-cni-daemonset',
     namespace: 'kube-system',
     image: 'cilium/cilium:v1.14.2',
     ready: 5,
@@ -214,7 +214,7 @@ export function DaemonSetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -246,20 +246,17 @@ export function DaemonSetsPage() {
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1,
-      minWidth: columnMinWidths.ready,
+      width: '80px',
     },
     {
       key: 'current',
       label: 'Current',
-      flex: 1,
-      minWidth: columnMinWidths.current,
+      width: '80px',
     },
     {
       key: 'desired',
       label: 'Desired',
-      flex: 1,
-      minWidth: columnMinWidths.desired,
+      width: '80px',
     },
     {
       key: 'createdAt',

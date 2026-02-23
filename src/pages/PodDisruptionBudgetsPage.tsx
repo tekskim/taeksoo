@@ -57,7 +57,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '1',
     status: 'Active',
-    name: 'poddisruptionbudgetName',
+    name: 'frontend-web-deployment-disruption-budget-policy',
     namespace: 'default',
     minAvailable: '1',
     maxUnavailable: 'N/A',
@@ -67,7 +67,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '2',
     status: 'Active',
-    name: 'web-pdb',
+    name: 'frontend-web-production-minimum-availability-pdb',
     namespace: 'production',
     minAvailable: '2',
     maxUnavailable: 'N/A',
@@ -77,7 +77,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '3',
     status: 'Active',
-    name: 'api-pdb',
+    name: 'backend-api-minimum-availability-disruption-budget',
     namespace: 'kube-system',
     minAvailable: 'N/A',
     maxUnavailable: '1',
@@ -87,7 +87,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '4',
     status: 'Pending',
-    name: 'db-pdb',
+    name: 'database-primary-replication-disruption-budget',
     namespace: 'staging',
     minAvailable: '50%',
     maxUnavailable: 'N/A',
@@ -97,7 +97,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '5',
     status: 'Active',
-    name: 'cache-pdb',
+    name: 'cache-redis-cluster-disruption-budget-policy',
     namespace: 'monitoring',
     minAvailable: 'N/A',
     maxUnavailable: '25%',
@@ -203,7 +203,7 @@ export function PodDisruptionBudgetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (

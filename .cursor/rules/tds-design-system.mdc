@@ -216,6 +216,16 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --input-label-gap: 0.5rem;    /* 8px - label/input/helper 사이 간격 */
 ```
 
+### Select Dropdown Item
+
+```css
+--select-item-padding-x: 10px;   /* spacing-2-5 */
+--select-item-padding-y: 6px;    /* spacing-1-5 */
+--select-item-font-size: 0.75rem;   /* 12px (font-size-12, body-md) */
+--select-item-line-height: 1.125rem; /* 18px (line-height-18, body-md) */
+--select-item-font-weight: 400;  /* regular */
+```
+
 ### Badge
 
 | Size | Padding X | Padding Y | Font Size | Line Height |
@@ -1653,6 +1663,6 @@ import { EmptyState } from '@/design-system';
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
 - 페이지 패턴 스토리: Storybook > Patterns > Page Patterns
 
-## 버전- **Current Version**: 1.1.0
-- **Last Updated**: 2026-02-20
+## 버전- **Current Version**: 1.1.1
+- **Last Updated**: 2026-02-23
 - **Changelog**: `/CHANGELOG.md`

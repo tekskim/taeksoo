@@ -220,10 +220,12 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField
+            label="Name"
+            required
+            error={!!pvcNameError}
+            errorMessage={pvcNameError || undefined}
+          >
             <Input
               placeholder="Enter a unique name"
               value={pvcName}
@@ -234,21 +236,17 @@ function BasicInfoSection({
               error={!!pvcNameError}
               fullWidth
             />
-            {pvcNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">{pvcNameError}</span>
-            )}
-          </VStack>
+          </FormField>
 
           {/* Description */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
+          <FormField label="Description">
             <Input
               placeholder="Enter a description (optional)"
               value={description}
               onChange={(e) => onDescriptionChange(e.target.value)}
               fullWidth
             />
-          </VStack>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

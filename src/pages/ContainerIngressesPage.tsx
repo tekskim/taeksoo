@@ -58,7 +58,7 @@ const ingressesData: IngressRow[] = [
   {
     id: '1',
     status: 'Running',
-    name: 'ingressName',
+    name: 'frontend-web-application-tls-ingress-controller',
     namespace: 'namespaceName',
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
     default: '-',
@@ -68,7 +68,7 @@ const ingressesData: IngressRow[] = [
   {
     id: '2',
     status: 'Running',
-    name: 'api-ingress',
+    name: 'api-gateway-external-routing-ingress-rule',
     namespace: 'default',
     target: ['api → 8080/TCP'],
     default: '-',
@@ -78,7 +78,7 @@ const ingressesData: IngressRow[] = [
   {
     id: '3',
     status: 'Pending',
-    name: 'web-ingress',
+    name: 'web-application-production-tls-ingress-rule',
     namespace: 'production',
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
     default: 'backend-service:80',
@@ -88,7 +88,7 @@ const ingressesData: IngressRow[] = [
   {
     id: '4',
     status: 'Error',
-    name: 'staging-ingress',
+    name: 'staging-application-preview-ingress-rule',
     namespace: 'staging',
     target: ['app → 3000/TCP'],
     default: '-',
@@ -166,7 +166,7 @@ export function ContainerIngressesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: IngressRow) => (

@@ -10,8 +10,8 @@ import {
   Input,
   Select,
   NumberInput,
-  Slider,
   Disclosure,
+  FormField,
   SectionCard,
   Radio,
   RadioGroup,
@@ -504,23 +504,22 @@ function BasicInfoSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Namespace<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField label="Namespace" required>
             <Select
               options={NAMESPACE_OPTIONS}
               value={namespace}
               onChange={(value) => onNamespaceChange(value)}
               fullWidth
             />
-          </VStack>
+          </FormField>
 
           {/* Name */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Name<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
+          <FormField
+            label="Name"
+            required
+            error={!!nameError}
+            errorMessage={nameError || undefined}
+          >
             <Input
               placeholder="Enter a unique name"
               value={name}
@@ -531,39 +530,22 @@ function BasicInfoSection({
               error={!!nameError}
               fullWidth
             />
-            {nameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">{nameError}</span>
-            )}
-          </VStack>
+          </FormField>
 
           {/* Replicas */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Replicas<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Select the number of pod replicas to create.
-            </p>
-            <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
-              <Slider
-                min={1}
-                max={100}
-                step={5}
-                value={replicas}
-                onChange={onReplicasChange}
-                className="flex-1"
-              />
-              <NumberInput
-                value={replicas}
-                onChange={onReplicasChange}
-                min={1}
-                max={100}
-                step={1}
-                width="xs"
-              />
-            </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">1-100</span>
-          </VStack>
+          <FormField
+            label="Replicas"
+            required
+            description="Select the number of pod replicas to create."
+          >
+            <NumberInput
+              value={replicas}
+              onChange={onReplicasChange}
+              min={1}
+              max={100}
+              width="sm"
+            />
+          </FormField>
 
           {/* Description (Collapsible) */}
           <Disclosure defaultOpen={isV2}>

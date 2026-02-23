@@ -159,7 +159,7 @@ export function ContainerHomePage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 1,
+      flex: 2,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
@@ -187,7 +187,7 @@ export function ContainerHomePage() {
     },
     { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
     { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
-    { key: 'pods', label: 'Pods', flex: 1, minWidth: columnMinWidths.pods, sortable: true },
+    { key: 'pods', label: 'Pods', width: '80px', sortable: true },
   ];
 
   return (

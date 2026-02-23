@@ -259,7 +259,7 @@ export default function CreateNetworkPage() {
                           <VStack gap={2}>
                             <Input
                               placeholder="e.g. private-net"
-                              value={networkName}
+                              value={networkName || '-'}
                               onChange={(e) => {
                                 setNetworkName(e.target.value);
                                 setNetworkNameError(null);
@@ -396,7 +396,7 @@ export default function CreateNetworkPage() {
               )}
               {!isV2 && sectionStatus['basic-info'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Network name" value={networkName} />
+                  <SectionCard.DataRow label="Network name" value={networkName || '-'} />
                   <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
                   <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
                   {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
@@ -408,7 +408,7 @@ export default function CreateNetworkPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['basic-info']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Network name" value={networkName} />
+                  <SectionCard.DataRow label="Network name" value={networkName || '-'} />
                   <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
                   <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
                   {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
@@ -462,7 +462,7 @@ export default function CreateNetworkPage() {
                             <FormField.Control>
                               <Input
                                 placeholder="e.g. private-net-subnet-001"
-                                value={subnetName}
+                                value={subnetName || '-'}
                                 onChange={(e) => setSubnetName(e.target.value)}
                                 fullWidth
                               />
@@ -620,7 +620,7 @@ export default function CreateNetworkPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
                   {createSubnet && subnetName && (
-                    <SectionCard.DataRow label="Subnet name" value={subnetName} />
+                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
                   )}
                   {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
                   {createSubnet && (
@@ -639,7 +639,7 @@ export default function CreateNetworkPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
                   {createSubnet && subnetName && (
-                    <SectionCard.DataRow label="Subnet name" value={subnetName} />
+                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
                   )}
                   {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
                   {createSubnet && (

@@ -284,7 +284,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     sortable: true,
     render: (value: string) => (
       <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all"
+        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
         title={value}
       >
         {value}
@@ -300,7 +300,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     sortable: true,
     render: (value: string) => (
       <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all"
+        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
         title={value}
       >
         {value}
