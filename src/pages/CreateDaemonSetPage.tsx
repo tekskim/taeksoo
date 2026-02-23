@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -763,7 +764,7 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
-          <VStack gap={3}>
+          <VStack gap={3} align="start">
             <Radio
               checked={strategy === 'rolling-update'}
               onChange={() => onStrategyChange('rolling-update')}
@@ -777,53 +778,49 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Max Unavailable */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Max Unavailable
-              </span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                The maximum number of pods that can be unavailable during an update.
-              </p>
-            </VStack>
-            <HStack gap={2}>
-              <NumberInput
-                value={maxUnavailable}
-                onChange={onMaxUnavailableChange}
-                min={0}
-                width="sm"
-              />
-              <Select
-                options={UNIT_OPTIONS}
-                value={maxUnavailableUnit}
-                onChange={(value) => onMaxUnavailableUnitChange(value)}
-                className="w-[80px]"
-              />
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Max Unavailable</FormField.Label>
+            <FormField.Description>
+              The maximum number of pods that can be unavailable during an update.
+            </FormField.Description>
+            <FormField.Control>
+              <HStack gap={2}>
+                <NumberInput
+                  value={maxUnavailable}
+                  onChange={onMaxUnavailableChange}
+                  min={0}
+                  width="sm"
+                />
+                <Select
+                  options={UNIT_OPTIONS}
+                  value={maxUnavailableUnit}
+                  onChange={(value) => onMaxUnavailableUnitChange(value)}
+                  className="w-[80px]"
+                />
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Revision History Limit */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Revision History Limit
-              </span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                The maximum number of revision histories to retain for the DaemonSet.
-              </p>
-            </VStack>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={revisionHistoryLimit}
-                onChange={onRevisionHistoryLimitChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Revisions
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Revision History Limit</FormField.Label>
+            <FormField.Description>
+              The maximum number of revision histories to retain for the DaemonSet.
+            </FormField.Description>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={revisionHistoryLimit}
+                  onChange={onRevisionHistoryLimitChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Revisions
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

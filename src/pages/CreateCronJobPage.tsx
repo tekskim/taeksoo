@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -779,142 +780,164 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Completions */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Completions</span>
-            <HStack gap={2} align="center">
-              <NumberInput value={completions} onChange={onCompletionsChange} min={0} width="sm" />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Completions</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={completions}
+                  onChange={onCompletionsChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Parallelism */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Parallelism</span>
-            <HStack gap={2} align="center">
-              <NumberInput value={parallelism} onChange={onParallelismChange} min={0} width="sm" />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Parallelism</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={parallelism}
+                  onChange={onParallelismChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Back Off Limit */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Back Off Limit</span>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={backOffLimit}
-                onChange={onBackOffLimitChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Times
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Back Off Limit</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={backOffLimit}
+                  onChange={onBackOffLimitChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Times
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Active Deadline */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Active Deadline</span>
-            <HStack gap={2} align="center">
-              <NumberInput
-                value={activeDeadline}
-                onChange={onActiveDeadlineChange}
-                min={0}
-                width="sm"
-              />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Seconds
-              </span>
-            </HStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Active Deadline</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={activeDeadline}
+                  onChange={onActiveDeadlineChange}
+                  min={0}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Seconds
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Successful Job History Limit */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Successful Job History Limit
-            </span>
-            <NumberInput
-              value={successfulJobHistoryLimit}
-              onChange={onSuccessfulJobHistoryLimitChange}
-              min={0}
-              width="sm"
-            />
-          </VStack>
-
-          {/* Failed Job History Limit */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Failed Job History Limit
-            </span>
-            <NumberInput
-              value={failedJobHistoryLimit}
-              onChange={onFailedJobHistoryLimitChange}
-              min={0}
-              width="sm"
-            />
-          </VStack>
-
-          {/* Starting Deadline Seconds */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Starting Deadline Seconds
-            </span>
-            <HStack gap={2} align="center">
+          <FormField>
+            <FormField.Label>Successful Job History Limit</FormField.Label>
+            <FormField.Control>
               <NumberInput
-                value={startingDeadlineSeconds}
-                onChange={onStartingDeadlineSecondsChange}
+                value={successfulJobHistoryLimit}
+                onChange={onSuccessfulJobHistoryLimitChange}
                 min={0}
-                size="sm"
                 width="sm"
               />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Seconds
-              </span>
-            </HStack>
-          </VStack>
+            </FormField.Control>
+          </FormField>
+
+          {/* Failed Job History Limit */}
+          <FormField>
+            <FormField.Label>Failed Job History Limit</FormField.Label>
+            <FormField.Control>
+              <NumberInput
+                value={failedJobHistoryLimit}
+                onChange={onFailedJobHistoryLimitChange}
+                min={0}
+                width="sm"
+              />
+            </FormField.Control>
+          </FormField>
+
+          {/* Starting Deadline Seconds */}
+          <FormField>
+            <FormField.Label>Starting Deadline Seconds</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={startingDeadlineSeconds}
+                  onChange={onStartingDeadlineSecondsChange}
+                  min={0}
+                  size="sm"
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Seconds
+                </span>
+              </HStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Concurrency */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Concurrency</span>
-            <VStack gap={2}>
-              <Radio
-                checked={concurrencyPolicy === 'allow'}
-                onChange={() => onConcurrencyPolicyChange('allow')}
-                label="Allow CronJobs to run concurrently"
-              />
-              <Radio
-                checked={concurrencyPolicy === 'forbid'}
-                onChange={() => onConcurrencyPolicyChange('forbid')}
-                label="Skip next run if current run hasn't finished"
-              />
-              <Radio
-                checked={concurrencyPolicy === 'replace'}
-                onChange={() => onConcurrencyPolicyChange('replace')}
-                label="Replace run if current run hasn't finished"
-              />
-            </VStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Concurrency</FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <VStack gap={3} align="start">
+                <Radio
+                  checked={concurrencyPolicy === 'allow'}
+                  onChange={() => onConcurrencyPolicyChange('allow')}
+                  label="Allow CronJobs to run concurrently"
+                />
+                <Radio
+                  checked={concurrencyPolicy === 'forbid'}
+                  onChange={() => onConcurrencyPolicyChange('forbid')}
+                  label="Skip next run if current run hasn't finished"
+                />
+                <Radio
+                  checked={concurrencyPolicy === 'replace'}
+                  onChange={() => onConcurrencyPolicyChange('replace')}
+                  label="Replace run if current run hasn't finished"
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Suspend */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Suspend</span>
-            <VStack gap={2}>
-              <Radio
-                checked={suspend === true}
-                onChange={() => onSuspendChange(true)}
-                label="Yes"
-              />
-              <Radio
-                checked={suspend === false}
-                onChange={() => onSuspendChange(false)}
-                label="No"
-              />
-            </VStack>
-          </VStack>
+          <FormField>
+            <FormField.Label>Suspend</FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <VStack gap={3} align="start">
+                <Radio
+                  checked={suspend === true}
+                  onChange={() => onSuspendChange(true)}
+                  label="Yes"
+                />
+                <Radio
+                  checked={suspend === false}
+                  onChange={() => onSuspendChange(false)}
+                  label="No"
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
         </VStack>
       </SectionCard.Content>
     </SectionCard>

@@ -380,14 +380,12 @@ export function CreateClusterPage() {
                     application requires a specific older version.
                   </FormField.Description>
                   <FormField.Control>
-                    <div className="w-1/2">
-                      <Select
-                        options={kubernetesVersionOptions}
-                        value={kubernetesVersion}
-                        onChange={setKubernetesVersion}
-                        fullWidth
-                      />
-                    </div>
+                    <Select
+                      options={kubernetesVersionOptions}
+                      value={kubernetesVersion}
+                      onChange={setKubernetesVersion}
+                      fullWidth
+                    />
                   </FormField.Control>
                 </FormField>
 
@@ -398,14 +396,12 @@ export function CreateClusterPage() {
                     Select the container network (CNI) plugin that manages internal cluster traffic.
                   </FormField.Description>
                   <FormField.Control>
-                    <div className="w-1/2">
-                      <Select
-                        options={containerNetworkOptions}
-                        value={containerNetwork}
-                        onChange={setContainerNetwork}
-                        fullWidth
-                      />
-                    </div>
+                    <Select
+                      options={containerNetworkOptions}
+                      value={containerNetwork}
+                      onChange={setContainerNetwork}
+                      fullWidth
+                    />
                   </FormField.Control>
                 </FormField>
 
@@ -525,14 +521,12 @@ export function CreateClusterPage() {
                     You can also enter the private IP address for the kubernetes api server.
                   </FormField.Description>
                   <FormField.Control>
-                    <div className="w-1/2">
-                      <Select
-                        options={subnetOptions}
-                        value={selectedSubnet}
-                        onChange={setSelectedSubnet}
-                        fullWidth
-                      />
-                    </div>
+                    <Select
+                      options={subnetOptions}
+                      value={selectedSubnet}
+                      onChange={setSelectedSubnet}
+                      fullWidth
+                    />
                   </FormField.Control>
                 </FormField>
               </VStack>
@@ -575,14 +569,12 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the control plane nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <div className="w-1/2">
-                          <Select
-                            options={imageOptions}
-                            value={cpImage}
-                            onChange={setCpImage}
-                            fullWidth
-                          />
-                        </div>
+                        <Select
+                          options={imageOptions}
+                          value={cpImage}
+                          onChange={setCpImage}
+                          fullWidth
+                        />
                       </FormField.Control>
                     </FormField>
 
@@ -649,19 +641,17 @@ export function CreateClusterPage() {
                         Select the number of nodes to create.
                       </FormField.Description>
                       <FormField.Control>
-                        <div className="w-1/2">
-                          <Select
-                            options={[
-                              { value: '1', label: '1' },
-                              { value: '3', label: '3' },
-                              { value: '5', label: '5' },
-                              { value: '7', label: '7' },
-                            ]}
-                            value={cpNodeCount}
-                            onChange={setCpNodeCount}
-                            fullWidth
-                          />
-                        </div>
+                        <Select
+                          options={[
+                            { value: '1', label: '1' },
+                            { value: '3', label: '3' },
+                            { value: '5', label: '5' },
+                            { value: '7', label: '7' },
+                          ]}
+                          value={cpNodeCount}
+                          onChange={setCpNodeCount}
+                          fullWidth
+                        />
                       </FormField.Control>
                     </FormField>
 
@@ -715,14 +705,12 @@ export function CreateClusterPage() {
                         Select the operating system image to use for the worker nodes.
                       </FormField.Description>
                       <FormField.Control>
-                        <div className="w-1/2">
-                          <Select
-                            options={imageOptions}
-                            value={nodeImage}
-                            onChange={setNodeImage}
-                            fullWidth
-                          />
-                        </div>
+                        <Select
+                          options={imageOptions}
+                          value={nodeImage}
+                          onChange={setNodeImage}
+                          fullWidth
+                        />
                       </FormField.Control>
                     </FormField>
 
@@ -789,20 +777,18 @@ export function CreateClusterPage() {
                         Select the number of worker nodes to create.
                       </FormField.Description>
                       <FormField.Control>
-                        <div className="w-1/2">
-                          <Select
-                            options={[
-                              { value: '1', label: '1' },
-                              { value: '2', label: '2' },
-                              { value: '3', label: '3' },
-                              { value: '5', label: '5' },
-                              { value: '10', label: '10' },
-                            ]}
-                            value={nodeCount}
-                            onChange={setNodeCount}
-                            fullWidth
-                          />
-                        </div>
+                        <Select
+                          options={[
+                            { value: '1', label: '1' },
+                            { value: '2', label: '2' },
+                            { value: '3', label: '3' },
+                            { value: '5', label: '5' },
+                            { value: '10', label: '10' },
+                          ]}
+                          value={nodeCount}
+                          onChange={setNodeCount}
+                          fullWidth
+                        />
                       </FormField.Control>
                     </FormField>
                   </VStack>
