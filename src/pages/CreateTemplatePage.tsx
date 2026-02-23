@@ -762,7 +762,7 @@ function BasicInformationSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* AZ (Availability zone) */}
-          <div className="py-6">
+          <div className="pt-3 pb-6">
             <VStack gap={2}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 AZ (Availability zone)
@@ -907,6 +907,7 @@ function ImageSection({
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
+      align: 'center' as const,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -915,16 +916,12 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
+      width: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
-          <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
-              {value}
-            </a>
-          </HStack>
+          <a href="#" className="text-[var(--color-action-primary)] hover:underline text-label-md">
+            {value}
+          </a>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
@@ -933,24 +930,34 @@ function ImageSection({
       key: 'version',
       label: 'Version',
       sortable: true,
-      flex: 1,
-      minWidth: columnMinWidths.version,
+      width: columnMinWidths.version,
     },
-    { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
+    {
+      key: 'size',
+      label: 'Size',
+      sortable: true,
+      width: columnMinWidths.size,
+      align: 'right' as const,
+    },
     {
       key: 'minDisk',
       label: 'Min disk',
       sortable: true,
-      flex: 1,
-      minWidth: columnMinWidths.minDisk,
+      width: columnMinWidths.minDisk,
+      align: 'right' as const,
     },
-    { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRam },
+    {
+      key: 'minRam',
+      label: 'Min RAM',
+      sortable: true,
+      width: columnMinWidths.minRam,
+      align: 'right' as const,
+    },
     {
       key: 'access',
       label: 'Visibility',
       sortable: true,
-      flex: 1,
-      minWidth: columnMinWidths.access,
+      width: columnMinWidths.access,
     },
   ];
 
@@ -976,8 +983,8 @@ function ImageSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Start Source */}
-          <div className="py-6">
-            <VStack gap={2}>
+          <div className="pt-3 pb-6">
+            <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Select a template to launch the instance. You can start from an OS image, a
@@ -1308,7 +1315,7 @@ function FlavorSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Flavors Label & Description */}
-          <div className="py-6">
+          <div className="pt-3 pb-6">
             <VStack gap={2} align="start">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -1835,8 +1842,8 @@ function NetworkSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Networks Section */}
-          <div className="py-6">
-            <VStack gap={2} align="stretch">
+          <div className="pt-3 pb-6">
+            <VStack gap={3} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -1918,7 +1925,7 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={2} align="stretch">
+            <VStack gap={3} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -1983,8 +1990,8 @@ function NetworkSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
-          <div className="py-6">
-            <VStack gap={2} align="stretch">
+          <div className="pt-6 pb-6">
+            <VStack gap={3} align="stretch">
               <VStack gap={2} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Security groups
@@ -2399,7 +2406,7 @@ function AdvancedSection({
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Tags Section */}
-          <div className="py-6">
+          <div className="pt-3 pb-6">
             <VStack gap={3}>
               <VStack gap={1.5}>
                 <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>

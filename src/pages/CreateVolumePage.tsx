@@ -1066,7 +1066,7 @@ export function CreateVolumePage() {
                                 create the snapshot.
                               </span>
                             </VStack>
-                            <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
+                            <div className="bg-[var(--color-surface-subtle)] px-4 rounded-lg w-full h-8 flex items-center">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {selectedSnapshot.length > 0
                                   ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])
@@ -1076,6 +1076,8 @@ export function CreateVolumePage() {
                             </div>
                           </VStack>
                         </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                         {/* Volume type capacity */}
                         <div className="py-6">
@@ -1110,13 +1112,14 @@ export function CreateVolumePage() {
                                 />
                               </HStack>
                             </FormField.Control>
-                            <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                           </FormField>
                         </div>
                       </>
                     )}
                     {(isV2 || sourceType !== 'snapshot') && (
                       <>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
                         {/* Standard Volume type selection for blank/image sources */}
                         <div className="py-6">
                           <VStack gap={3} align="stretch">
@@ -1214,7 +1217,6 @@ export function CreateVolumePage() {
                                 />
                               </HStack>
                             </FormField.Control>
-                            <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
                           </FormField>
                         </div>
                       </>

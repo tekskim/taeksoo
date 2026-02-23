@@ -24,6 +24,7 @@ import {
   Radio,
   Toggle,
   NumberInput,
+  Slider,
   Checkbox,
   Disclosure,
   Tooltip,
@@ -3176,18 +3177,30 @@ export default function CreateLoadBalancerPage() {
                               Specifies the interval in seconds between health checks.
                             </FormField.Description>
                             <FormField.Control>
-                              <NumberInput
-                                value={healthMonitorInterval}
-                                onChange={setHealthMonitorInterval}
-                                min={1}
-                                max={3600}
-                                width="sm"
-                              />
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  min={1}
+                                  max={3600}
+                                  step={50}
+                                  value={healthMonitorInterval}
+                                  onChange={setHealthMonitorInterval}
+                                  className="flex-1"
+                                />
+                                <NumberInput
+                                  value={healthMonitorInterval}
+                                  onChange={setHealthMonitorInterval}
+                                  min={1}
+                                  max={3600}
+                                  step={1}
+                                  width="xs"
+                                  suffix="Seconds"
+                                />
+                              </HStack>
                             </FormField.Control>
-                            <FormField.HelperText>
-                              Only numbers are allowed, and the value must be between 1–3,600
-                              seconds.
-                            </FormField.HelperText>
                           </FormField>
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3199,18 +3212,30 @@ export default function CreateLoadBalancerPage() {
                               Specifies the timeout in seconds for health check responses.
                             </FormField.Description>
                             <FormField.Control>
-                              <NumberInput
-                                value={healthMonitorTimeout}
-                                onChange={setHealthMonitorTimeout}
-                                min={1}
-                                max={3599}
-                                width="sm"
-                              />
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  min={1}
+                                  max={3599}
+                                  step={50}
+                                  value={healthMonitorTimeout}
+                                  onChange={setHealthMonitorTimeout}
+                                  className="flex-1"
+                                />
+                                <NumberInput
+                                  value={healthMonitorTimeout}
+                                  onChange={setHealthMonitorTimeout}
+                                  min={1}
+                                  max={3599}
+                                  step={1}
+                                  width="xs"
+                                  suffix="Seconds"
+                                />
+                              </HStack>
                             </FormField.Control>
-                            <FormField.HelperText>
-                              Only numbers are allowed, and the value must be between 1–3,599
-                              seconds.
-                            </FormField.HelperText>
                           </FormField>
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
