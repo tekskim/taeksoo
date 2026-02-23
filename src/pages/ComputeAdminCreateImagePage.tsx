@@ -14,6 +14,7 @@ import {
   SectionCard,
   FormField,
   Toggle,
+  Slider,
   WizardSummary,
   Tabs,
   TabList,
@@ -156,8 +157,8 @@ export function ComputeAdminCreateImagePage() {
   const [os, setOs] = useState('');
   const [osVersion, setOsVersion] = useState('');
   const [osAdmin, setOsAdmin] = useState('');
-  const [minDisk, setMinDisk] = useState<number | undefined>(undefined);
-  const [minRam, setMinRam] = useState<number | undefined>(undefined);
+  const [minDisk, setMinDisk] = useState(0);
+  const [minRam, setMinRam] = useState(0);
   const [specAdvancedOpen, setSpecAdvancedOpen] = useState(true);
 
   // Advanced section state
@@ -1053,8 +1054,8 @@ export function ComputeAdminCreateImagePage() {
                     label="Upload type"
                     value={sourceType === 'file' ? 'Upload File' : 'File URL'}
                   />
-                  {sourceType === 'url' && (
-                    <SectionCard.DataRow label="URL" value={sourceUrl || '-'} />
+                  {sourceType === 'url' && sourceUrl && (
+                    <SectionCard.DataRow label="URL" value={sourceUrl} />
                   )}
                 </SectionCard.Content>
               </SectionCard>
@@ -1229,56 +1230,70 @@ export function ComputeAdminCreateImagePage() {
                         <DisclosurePanel>
                           <VStack gap={4} align="stretch" className="pt-3">
                             {/* Min system Disk */}
-                            <div className="flex flex-col gap-2">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Min system disk
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Defines the minimum disk size required to boot an instance from this
-                                image.
-                              </span>
-                              <HStack gap={2} align="center">
+                            <FormField
+                              label="Min system disk"
+                              description="Defines the minimum disk size required to boot an instance from this image."
+                            >
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  min={0}
+                                  max={500}
+                                  step={10}
+                                  value={minDisk}
+                                  onChange={setMinDisk}
+                                  className="flex-1"
+                                />
                                 <NumberInput
                                   value={minDisk}
                                   onChange={setMinDisk}
                                   min={0}
                                   max={500}
-                                  width="sm"
+                                  step={1}
+                                  width="xs"
+                                  suffix="GiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
                               </HStack>
                               <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 0-500 GiB
                               </span>
-                            </div>
+                            </FormField>
 
                             {/* Min RAM */}
-                            <div className="flex flex-col gap-2">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Min RAM
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Defines the minimum amount of RAM required to boot an instance from
-                                this image.
-                              </span>
-                              <HStack gap={2} align="center">
+                            <FormField
+                              label="Min RAM"
+                              description="Defines the minimum amount of RAM required to boot an instance from this image."
+                            >
+                              <HStack
+                                gap={3}
+                                align="center"
+                                className="max-w-[var(--slider-row-max-width)]"
+                              >
+                                <Slider
+                                  min={0}
+                                  max={500}
+                                  step={10}
+                                  value={minRam}
+                                  onChange={setMinRam}
+                                  className="flex-1"
+                                />
                                 <NumberInput
                                   value={minRam}
                                   onChange={setMinRam}
                                   min={0}
                                   max={500}
-                                  width="sm"
+                                  step={1}
+                                  width="xs"
+                                  suffix="GiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
                               </HStack>
                               <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 0-500 GiB
                               </span>
-                            </div>
+                            </FormField>
                           </VStack>
                         </DisclosurePanel>
                       </Disclosure>
@@ -1296,18 +1311,15 @@ export function ComputeAdminCreateImagePage() {
               )}
               {!isV2 && sectionStatus['specification'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow
+                    label="Disk format"
+                    value={diskFormat ? diskFormat.toUpperCase() : '-'}
+                  />
                   <SectionCard.DataRow label="OS" value={os || '-'} />
                   <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
                   <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
-                  <SectionCard.DataRow
-                    label="Min system Disk"
-                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
-                  />
-                  <SectionCard.DataRow
-                    label="Min RAM"
-                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
-                  />
+                  <SectionCard.DataRow label="Min system Disk" value={`${minDisk} GiB`} />
+                  <SectionCard.DataRow label="Min RAM" value={`${minRam} GiB`} />
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -1316,18 +1328,15 @@ export function ComputeAdminCreateImagePage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['specification']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} />
+                  <SectionCard.DataRow
+                    label="Disk format"
+                    value={diskFormat ? diskFormat.toUpperCase() : '-'}
+                  />
                   <SectionCard.DataRow label="OS" value={os || '-'} />
                   <SectionCard.DataRow label="OS Version" value={osVersion || '-'} />
                   <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} />
-                  <SectionCard.DataRow
-                    label="Min system Disk"
-                    value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
-                  />
-                  <SectionCard.DataRow
-                    label="Min RAM"
-                    value={minRam !== undefined ? `${minRam} GiB` : '-'}
-                  />
+                  <SectionCard.DataRow label="Min system Disk" value={`${minDisk} GiB`} />
+                  <SectionCard.DataRow label="Min RAM" value={`${minRam} GiB`} />
                 </SectionCard.Content>
               </SectionCard>
             )}
@@ -1336,7 +1345,7 @@ export function ComputeAdminCreateImagePage() {
             <SectionCard isActive={!isV2 && sectionStatus['advanced'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['advanced']}
-                showDivider={sectionStatus['advanced'] === 'done'}
+                showDivider={false}
                 actions={
                   !isV2 &&
                   sectionStatus['advanced'] === 'done' && (

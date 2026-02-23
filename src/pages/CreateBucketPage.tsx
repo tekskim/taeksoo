@@ -11,7 +11,6 @@ import {
   TopBar,
   TopBarAction,
   Input,
-  NumberInput,
   Select,
   SectionCard,
   Radio,
@@ -174,7 +173,7 @@ function SummarySidebar({
             disabled={!isCreateEnabled}
             className="flex-[0.7]"
           >
-            Create Bucket
+            Create
           </Button>
         </div>
       </div>
@@ -450,50 +449,63 @@ function SettingsSection({
                 </VStack>
               </FormField.Control>
             </FormField>
+          </div>
 
-            {/* Object Locking Options - shown when enabled */}
-            {(isV2 || objectLocking === 'enabled') && (
-              <div className="flex flex-col gap-6 mt-6">
-                {/* Mode */}
-                <FormField>
-                  <FormField.Label>Mode</FormField.Label>
-                  <FormField.Control>
-                    <Select
-                      options={[
-                        { value: 'compliance', label: 'COMPLIANCE / GOVERNANCE' },
-                        { value: 'compliance-only', label: 'COMPLIANCE' },
-                        { value: 'governance', label: 'GOVERNANCE' },
-                      ]}
-                      value={lockingMode}
-                      onChange={onLockingModeChange}
-                      fullWidth
-                    />
-                  </FormField.Control>
-                  <FormField.HelperText>
-                    In COMPLIANCE an object version cannot be overwritten or deleted for the
-                    duration of the period. In GOVERNANCE mode, users cannot overwrite or delete an
-                    object version or alter its lock settings unless they have special permissions.
-                  </FormField.HelperText>
-                </FormField>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                {/* Days */}
-                <FormField>
-                  <FormField.Label>Days</FormField.Label>
-                  <FormField.Control>
-                    <NumberInput
-                      value={retentionDays ? Number(retentionDays) : 0}
-                      onChange={(val) => onRetentionDaysChange(String(val))}
-                      min={0}
-                      width="sm"
-                    />
-                  </FormField.Control>
-                  <FormField.HelperText>
-                    The number of days that you want to specify for the default retention period
-                    that will be applied to new objects placed in this bucket.
-                  </FormField.HelperText>
-                </FormField>
-              </div>
-            )}
+          {/* Versioning */}
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Versioning</FormField.Label>
+              <FormField.Description>
+                Enables versioning for the objects in the bucket.
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <VStack gap={3} align="start">
+                  <Radio
+                    value="disabled"
+                    checked={objectLocking === 'disabled'}
+                    onChange={() => onObjectLockingChange('disabled')}
+                    label="Suspended"
+                  />
+                  <Radio
+                    value="enabled"
+                    checked={objectLocking === 'enabled'}
+                    onChange={() => onObjectLockingChange('enabled')}
+                    label="Enabled"
+                  />
+                </VStack>
+              </FormField.Control>
+            </FormField>
+          </div>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* MFA Delete */}
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>MFA Delete</FormField.Label>
+              <FormField.Description>
+                Enables MFA (multi-factor authentication) Delete, which requires additional
+                authentication for changing the bucket versioning state.
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <VStack gap={3} align="start">
+                  <Radio
+                    value="disabled"
+                    checked={objectLocking === 'disabled'}
+                    onChange={() => onObjectLockingChange('disabled')}
+                    label="Disabled"
+                  />
+                  <Radio
+                    value="enabled"
+                    checked={objectLocking === 'enabled'}
+                    onChange={() => onObjectLockingChange('enabled')}
+                    label="Enabled"
+                  />
+                </VStack>
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider */}
@@ -707,16 +719,11 @@ function PolicySection({
               </VStack>
 
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                <VStack gap={2}>
-                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                  <VStack gap={2}>
                     <span className="block text-label-lg text-[var(--color-text-default)]">
                       Grantee
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Permissions
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
                     <Select
                       options={[
                         { value: 'owner', label: 'Owner' },
@@ -727,6 +734,11 @@ function PolicySection({
                       onChange={onGranteeChange}
                       fullWidth
                     />
+                  </VStack>
+                  <VStack gap={2}>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Permissions
+                    </span>
                     <Select
                       options={
                         grantee === 'owner'
@@ -742,8 +754,8 @@ function PolicySection({
                       onChange={onPermissionsChange}
                       fullWidth
                     />
-                  </div>
-                </VStack>
+                  </VStack>
+                </div>
               </div>
             </VStack>
           </div>

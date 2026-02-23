@@ -17,7 +17,7 @@ import {
   StatusIndicator,
   SearchInput,
   DetailHeader,
-  Chip,
+  Badge,
   PageShell,
   type TableColumn,
   type ContextMenuItem,
@@ -793,7 +793,9 @@ export function PodDetailPage() {
                   {Object.entries(pod.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(pod.labels).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -812,7 +814,9 @@ export function PodDetailPage() {
                   {Object.entries(pod.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        {`${key}: ${val}`}
+                      </Badge>
                     ))}
                   {Object.keys(pod.annotations).length > 1 && (
                     <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">

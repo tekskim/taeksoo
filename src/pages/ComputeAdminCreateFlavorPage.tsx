@@ -10,6 +10,7 @@ import {
   TopBarAction,
   Input,
   NumberInput,
+  Slider,
   SectionCard,
   FormField,
   WizardSummary,
@@ -156,7 +157,7 @@ export function ComputeAdminCreateFlavorPage() {
   const [customMetadataKey, setCustomMetadataKey] = useState('');
   const [expandedMetadata, setExpandedMetadata] = useState<Set<string>>(new Set());
   const [selectedMetadata, setSelectedMetadata] = useState<Array<{ key: string; value: string }>>(
-    isV2 ? [{ key: '', value: '' }] : []
+    []
   );
 
   // Available metadata options (mock data)
@@ -658,14 +659,32 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Number of virtual CPUs for instances using this flavor.
                       </span>
-                      <NumberInput
-                        value={vcpu}
-                        onChange={setVcpu}
-                        min={1}
-                        max={128}
-                        width="sm"
-                        suffix="cores"
-                      />
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={1}
+                          max={128}
+                          step={5}
+                          value={vcpu}
+                          onChange={setVcpu}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={vcpu}
+                          onChange={setVcpu}
+                          min={1}
+                          max={128}
+                          step={1}
+                          width="xs"
+                          suffix="cores"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        1-128 cores
+                      </span>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -681,14 +700,32 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Amount of memory for instances using this flavor.
                       </span>
-                      <NumberInput
-                        value={ram}
-                        onChange={setRam}
-                        min={1}
-                        max={1024}
-                        width="sm"
-                        suffix="GiB"
-                      />
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={1}
+                          max={1024}
+                          step={50}
+                          value={ram}
+                          onChange={setRam}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={ram}
+                          onChange={setRam}
+                          min={1}
+                          max={1024}
+                          step={1}
+                          width="xs"
+                          suffix="GiB"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        1-1,024 GiB
+                      </span>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -704,14 +741,32 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of the root disk. Use 0 for no local disk (boot from volume).
                       </span>
-                      <NumberInput
-                        value={rootDisk}
-                        onChange={setRootDisk}
-                        min={0}
-                        max={10000}
-                        width="sm"
-                        suffix="GiB"
-                      />
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={0}
+                          max={10000}
+                          step={100}
+                          value={rootDisk}
+                          onChange={setRootDisk}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={rootDisk}
+                          onChange={setRootDisk}
+                          min={0}
+                          max={10000}
+                          step={1}
+                          width="xs"
+                          suffix="GiB"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        0-10,000 GiB
+                      </span>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -725,14 +780,32 @@ export function ComputeAdminCreateFlavorPage() {
                         Size of temporary disk. This disk is deleted when the instance is
                         terminated.
                       </span>
-                      <NumberInput
-                        value={ephemeralDisk}
-                        onChange={setEphemeralDisk}
-                        min={0}
-                        max={10000}
-                        width="sm"
-                        suffix="GiB"
-                      />
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={0}
+                          max={10000}
+                          step={100}
+                          value={ephemeralDisk}
+                          onChange={setEphemeralDisk}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={ephemeralDisk}
+                          onChange={setEphemeralDisk}
+                          min={0}
+                          max={10000}
+                          step={1}
+                          width="xs"
+                          suffix="GiB"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        0-10,000 GiB
+                      </span>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -745,14 +818,32 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of swap space. Use 0 for no swap.
                       </span>
-                      <NumberInput
-                        value={swapDisk}
-                        onChange={setSwapDisk}
-                        min={0}
-                        max={10000}
-                        width="sm"
-                        suffix="MiB"
-                      />
+                      <HStack
+                        gap={3}
+                        align="center"
+                        className="max-w-[var(--slider-row-max-width)]"
+                      >
+                        <Slider
+                          min={0}
+                          max={10000}
+                          step={100}
+                          value={swapDisk}
+                          onChange={setSwapDisk}
+                          className="flex-1"
+                        />
+                        <NumberInput
+                          value={swapDisk}
+                          onChange={setSwapDisk}
+                          min={0}
+                          max={10000}
+                          step={1}
+                          width="xs"
+                          suffix="MiB"
+                        />
+                      </HStack>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        0-10,000 MiB
+                      </span>
                     </VStack>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1099,10 +1190,7 @@ export function ComputeAdminCreateFlavorPage() {
               )}
               {!isV2 && sectionStatus['metadata'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Metadata count"
-                    value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`}
-                  />
+                  <SectionCard.DataRow label="Metadata" value={`${selectedMetadata.length}`} />
                   {selectedMetadata.slice(0, 3).map((item, index) => (
                     <SectionCard.DataRow key={index} label={item.key} value={item.value || '-'} />
                   ))}
@@ -1119,10 +1207,7 @@ export function ComputeAdminCreateFlavorPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['metadata']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Metadata count"
-                    value={`${selectedMetadata.length} item${selectedMetadata.length !== 1 ? 's' : ''}`}
-                  />
+                  <SectionCard.DataRow label="Metadata" value={`${selectedMetadata.length}`} />
                   {selectedMetadata.slice(0, 3).map((item, index) => (
                     <SectionCard.DataRow key={index} label={item.key} value={item.value || '-'} />
                   ))}

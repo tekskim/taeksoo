@@ -14,7 +14,7 @@ import {
   Tab,
   TabPanel,
   TabBar,
-  Chip,
+  Badge,
   ContextMenu,
   PageShell,
   fixedColumns,
@@ -766,7 +766,9 @@ export default function IAMPolicyDetailPage() {
                         {/* Action Class */}
                         <div className="flex-1 flex items-center gap-1 flex-wrap px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                           {perm.actionClass.map((action, i) => (
-                            <Chip key={i} value={action} />
+                            <Badge key={i} theme="white" size="sm">
+                              {action}
+                            </Badge>
                           ))}
                         </div>
                       </div>

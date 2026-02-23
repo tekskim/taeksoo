@@ -19,7 +19,7 @@ import {
   Input,
   NumberInput,
   FormField,
-  Chip,
+  Badge,
   Checkbox,
   Table,
   Pagination,
@@ -582,7 +582,9 @@ export function PersistentVolumeClaimDetailPage() {
                     {Object.entries(pvcData.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {`${key}: ${val}`}
+                        </Badge>
                       ))}
                     {labelsCount > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
@@ -603,7 +605,9 @@ export function PersistentVolumeClaimDetailPage() {
                     {Object.entries(pvcData.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                          {`${key}: ${val}`}
+                        </Badge>
                       ))}
                     {annotationsCount > 1 && (
                       <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
