@@ -1544,18 +1544,13 @@ import { EmptyState } from '@/design-system';
 | 정확한 값 입력이 필요한가? | **Slider + NumberInput** | **Slider 단독** |
 | min~max 범위 자체를 정의하는가? | **RangeSlider + NumberInput 2개** | — |
 
-### Slider 행 너비 규칙
+### Slider 트랙 너비
 
-모든 Slider 행(Pattern B, C, D)은 동일한 max-width를 사용합니다.
+Slider / RangeSlider 트랙은 고정 240px입니다. 별도의 max-width 래퍼 없이 Slider 컴포넌트만 배치하면 됩니다.
 
 ```css
---slider-row-max-width: 312px; /* Drawer(360px) 콘텐츠 영역과 동일 */
+--slider-track-width: 220px;
 ```
-
-| 컨텍스트 | Slider 행 너비 | 적용 방법 |
-|---|---|---|
-| Drawer (360px) | `w-full` (패딩 제외 자동 312px) | 추가 제한 불필요 |
-| Create/Settings 페이지 | `max-w-[var(--slider-row-max-width)]` | 명시적 제한 필요 |
 
 ### Pattern A: NumberInput 단독
 
@@ -1595,11 +1590,11 @@ import { EmptyState } from '@/design-system';
   </HStack>
 </FormField>
 
-// Create/Settings 페이지: max-w로 제한
+// Create/Settings 페이지
 <FormField label="Storage capacity" required>
-  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+  <HStack gap={3} align="center">
     <Slider min={1} max={1000} step={10} value={capacity}
-      onChange={setCapacity} className="flex-1" />
+      onChange={setCapacity} />
     <NumberInput min={1} max={1000} step={1} value={capacity}
       onChange={setCapacity} width="xs" suffix="GiB" />
   </HStack>
@@ -1628,11 +1623,9 @@ import { EmptyState } from '@/design-system';
 
 ```tsx
 <FormField label="Temperature">
-  <div className="max-w-[var(--slider-row-max-width)]">
-    <Slider min={0} max={1} step={0.1} value={temperature}
-      onChange={setTemperature} showValue
-      formatValue={(v) => v.toFixed(1)} />
-  </div>
+  <Slider min={0} max={1} step={0.1} value={temperature}
+    onChange={setTemperature} showValue
+    formatValue={(v) => v.toFixed(1)} />
 </FormField>
 ```
 
@@ -1644,12 +1637,11 @@ import { EmptyState } from '@/design-system';
 
 ```tsx
 <FormField label="Password length">
-  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+  <HStack gap={3} align="center">
     <NumberInput min={4} max={minVal} value={minVal}
       onChange={setMinVal} width="xs" />
     <RangeSlider min={4} max={128} value={[minVal, maxVal]}
-      onChange={([min, max]) => { setMinVal(min); setMaxVal(max); }}
-      className="flex-1" />
+      onChange={([min, max]) => { setMinVal(min); setMaxVal(max); }} />
     <NumberInput min={maxVal} max={128} value={maxVal}
       onChange={setMaxVal} width="xs" />
   </HStack>

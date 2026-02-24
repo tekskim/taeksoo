@@ -260,28 +260,22 @@ export function CreateObjectDrawer({
           {aclType === 'individual' && (
             <div className="w-full p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
               <VStack gap={1.5}>
-                <VStack gap={2}>
-                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Grantee
-                  </label>
+                <FormField label="Grantee">
                   <Select
                     value={grantee}
                     onChange={(v) => setGrantee(v as Grantee)}
                     options={GRANTEE_OPTIONS}
                     width="half"
                   />
-                </VStack>
-                <VStack gap={2}>
-                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                    Permissions
-                  </label>
+                </FormField>
+                <FormField label="Permissions">
                   <Select
                     value={permission}
                     onChange={(v) => setPermission(v as Permission)}
                     options={PERMISSION_OPTIONS}
                     width="half"
                   />
-                </VStack>
+                </FormField>
               </VStack>
             </div>
           )}

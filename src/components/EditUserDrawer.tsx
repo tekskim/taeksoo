@@ -140,36 +140,30 @@ export function EditUserDrawer({
         </FormField>
 
         {/* Display Name Section */}
-        <VStack gap={2}>
-          <VStack gap={2}>
-            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Display name
-            </span>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              The user's name displayed in the UI. If not entered, the user name will be displayed.
-            </p>
-          </VStack>
+        <FormField
+          label="Display name"
+          description="The user's name displayed in the UI. If not entered, the user name will be displayed."
+        >
           <Input
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Enter display name"
             fullWidth
           />
-        </VStack>
+        </FormField>
 
         {/* Status Section */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Select the user's status. If 'Disabled', the user will be prevented from signing in.
-          </p>
+        <FormField
+          label="Status"
+          description="Select the user's status. If 'Disabled', the user will be prevented from signing in."
+        >
           <HStack gap={2} align="center">
             <Toggle checked={enabled} onChange={(checked) => setEnabled(checked)} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {enabled ? 'Enabled' : 'Disabled'}
             </span>
           </HStack>
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -11,6 +11,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -293,10 +294,12 @@ export function CreateRouterDrawer({
 
         <VStack gap={6}>
           {/* Router name */}
-          <VStack gap={2}>
-            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Router name
-            </span>
+          <FormField
+            label="Router name"
+            helperText={'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
+            error={hasAttemptedSubmit && !routerName.trim()}
+            errorMessage="Router name is required"
+          >
             <Input
               value={routerName}
               onChange={(e) => setRouterName(e.target.value)}
@@ -304,31 +307,17 @@ export function CreateRouterDrawer({
               fullWidth
               error={hasAttemptedSubmit && !routerName.trim()}
             />
-            {hasAttemptedSubmit && !routerName.trim() && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                Router name is required
-              </span>
-            )}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </span>
-          </VStack>
+          </FormField>
 
           {/* Description */}
-          <VStack gap={2}>
-            <HStack gap={1.5} align="center">
-              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-                Description
-              </span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-            </HStack>
+          <FormField label="Description (Optional)">
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Router for production web servers"
               fullWidth
             />
-          </VStack>
+          </FormField>
 
           {/* Advanced Options Disclosure */}
           <Disclosure open={showAdvanced} onChange={setShowAdvanced}>

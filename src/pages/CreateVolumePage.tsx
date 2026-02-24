@@ -1088,18 +1088,13 @@ export function CreateVolumePage() {
                               minimum required size may apply.
                             </FormField.Description>
                             <FormField.Control>
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   value={volumeCapacity}
                                   onChange={setVolumeCapacity}
                                   min={1}
                                   max={1460}
                                   step={10}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={volumeCapacity}
@@ -1194,18 +1189,13 @@ export function CreateVolumePage() {
                               minimum required size may apply.
                             </FormField.Description>
                             <FormField.Control>
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   value={volumeCapacity}
                                   onChange={setVolumeCapacity}
                                   min={1}
                                   max={1000}
                                   step={10}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={volumeCapacity}

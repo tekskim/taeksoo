@@ -234,45 +234,32 @@ export function CreateVolumeFromSnapshotDrawer({
         </FormField>
 
         {/* Capacity Slider */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Capacity (GiB)
-          </label>
-
-          {/* Slider + NumberInput */}
-          <VStack gap={2} className="w-full">
-            <HStack gap={3} align="center" className="w-full">
-              <Slider
-                min={minCapacity}
-                max={maxCapacity}
-                value={capacity}
-                onChange={handleCapacityChange}
-                step={50}
-                className="flex-1"
-              />
-              <NumberInput
-                value={capacity}
-                onChange={handleCapacityChange}
-                min={minCapacity}
-                max={maxCapacity}
-                step={1}
-                width="xs"
-                suffix="GiB"
-              />
-            </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {minCapacity} - {maxCapacity} GiB
-            </span>
-          </VStack>
-        </VStack>
+        <FormField label="Capacity (GiB)" helperText={`${minCapacity} - ${maxCapacity} GiB`}>
+          <HStack gap={3} align="center" className="w-full">
+            <Slider
+              min={minCapacity}
+              max={maxCapacity}
+              value={capacity}
+              onChange={handleCapacityChange}
+              step={50}
+              className="flex-1"
+            />
+            <NumberInput
+              value={capacity}
+              onChange={handleCapacityChange}
+              min={minCapacity}
+              max={maxCapacity}
+              step={1}
+              width="xs"
+              suffix="GiB"
+            />
+          </HStack>
+        </FormField>
 
         {/* Volume Type Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume type (optional)
-          </label>
+        <FormField label="Volume type (optional)">
           <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -7,6 +7,7 @@ import {
   Table,
   Toggle,
   SelectionIndicator,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -245,16 +246,13 @@ export function EditPortSecurityGroupsDrawer({
         </VStack>
 
         {/* Port Security Toggle Section */}
-        <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Port security
-          </span>
+        <FormField label="Port security">
           <Toggle
             checked={portSecurityEnabled}
             onChange={(e) => setPortSecurityEnabled(e.target.checked)}
             label={portSecurityEnabled ? 'On' : 'Off'}
           />
-        </VStack>
+        </FormField>
 
         {/* Security Groups Section - Only shown when port security is enabled */}
         {portSecurityEnabled && (

@@ -659,19 +659,8 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Number of virtual CPUs for instances using this flavor.
                       </span>
-                      <HStack
-                        gap={3}
-                        align="center"
-                        className="max-w-[var(--slider-row-max-width)]"
-                      >
-                        <Slider
-                          min={1}
-                          max={128}
-                          step={5}
-                          value={vcpu}
-                          onChange={setVcpu}
-                          className="flex-1"
-                        />
+                      <HStack gap={3} align="center">
+                        <Slider min={1} max={128} step={5} value={vcpu} onChange={setVcpu} />
                         <NumberInput
                           value={vcpu}
                           onChange={setVcpu}
@@ -700,19 +689,8 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Amount of memory for instances using this flavor.
                       </span>
-                      <HStack
-                        gap={3}
-                        align="center"
-                        className="max-w-[var(--slider-row-max-width)]"
-                      >
-                        <Slider
-                          min={1}
-                          max={1024}
-                          step={50}
-                          value={ram}
-                          onChange={setRam}
-                          className="flex-1"
-                        />
+                      <HStack gap={3} align="center">
+                        <Slider min={1} max={1024} step={50} value={ram} onChange={setRam} />
                         <NumberInput
                           value={ram}
                           onChange={setRam}
@@ -741,18 +719,13 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of the root disk. Use 0 for no local disk (boot from volume).
                       </span>
-                      <HStack
-                        gap={3}
-                        align="center"
-                        className="max-w-[var(--slider-row-max-width)]"
-                      >
+                      <HStack gap={3} align="center">
                         <Slider
                           min={0}
                           max={10000}
                           step={100}
                           value={rootDisk}
                           onChange={setRootDisk}
-                          className="flex-1"
                         />
                         <NumberInput
                           value={rootDisk}
@@ -780,18 +753,13 @@ export function ComputeAdminCreateFlavorPage() {
                         Size of temporary disk. This disk is deleted when the instance is
                         terminated.
                       </span>
-                      <HStack
-                        gap={3}
-                        align="center"
-                        className="max-w-[var(--slider-row-max-width)]"
-                      >
+                      <HStack gap={3} align="center">
                         <Slider
                           min={0}
                           max={10000}
                           step={100}
                           value={ephemeralDisk}
                           onChange={setEphemeralDisk}
-                          className="flex-1"
                         />
                         <NumberInput
                           value={ephemeralDisk}
@@ -818,18 +786,13 @@ export function ComputeAdminCreateFlavorPage() {
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Size of swap space. Use 0 for no swap.
                       </span>
-                      <HStack
-                        gap={3}
-                        align="center"
-                        className="max-w-[var(--slider-row-max-width)]"
-                      >
+                      <HStack gap={3} align="center">
                         <Slider
                           min={0}
                           max={10000}
                           step={100}
                           value={swapDisk}
                           onChange={setSwapDisk}
-                          className="flex-1"
                         />
                         <NumberInput
                           value={swapDisk}
