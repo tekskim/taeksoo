@@ -559,15 +559,8 @@ export function EditModelSettingsDrawer({
             Adjust how creative or deterministic the model's responses should be.
           </FormField.HelperText>
           <FormField.Control>
-            <div className="flex items-center gap-2 w-full">
-              <Slider
-                min={0}
-                max={1}
-                step={0.1}
-                value={temperature}
-                onChange={setTemperature}
-                className="flex-1"
-              />
+            <div className="flex items-center gap-2">
+              <Slider min={0} max={1} step={0.1} value={temperature} onChange={setTemperature} />
               <span className="text-body-md text-[var(--color-text-subtle)] w-8 text-right">
                 {temperature}
               </span>
@@ -585,14 +578,13 @@ export function EditModelSettingsDrawer({
             Set the maximum number of tokens for the response.
           </FormField.HelperText>
           <FormField.Control>
-            <div className="flex items-center gap-2 w-full">
+            <div className="flex items-center gap-2">
               <Slider
                 min={1000}
                 max={64000}
                 step={1000}
                 value={maxTokens}
                 onChange={setMaxTokens}
-                className="flex-1"
               />
               <span className="text-body-md text-[var(--color-text-subtle)] w-16 text-right">
                 {maxTokens.toLocaleString()}

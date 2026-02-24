@@ -558,17 +558,15 @@ export function CreateAgentPage() {
                             description="Adjust how creative or deterministic the model's responses should be."
                             helperText="Lower values make answers more consistent, while higher values increase variability."
                           >
-                            <div className="max-w-[var(--slider-row-max-width)]">
-                              <Slider
-                                value={temperature}
-                                onChange={setTemperature}
-                                min={0}
-                                max={1}
-                                step={0.1}
-                                showValue
-                                formatValue={(v) => v.toFixed(1)}
-                              />
-                            </div>
+                            <Slider
+                              value={temperature}
+                              onChange={setTemperature}
+                              min={0}
+                              max={1}
+                              step={0.1}
+                              showValue
+                              formatValue={(v) => v.toFixed(1)}
+                            />
                           </FormField>
 
                           {/* Max tokens */}
@@ -578,17 +576,15 @@ export function CreateAgentPage() {
                             description="Adjust how creative or deterministic the model's responses should be."
                             helperText="Max: 64,000"
                           >
-                            <div className="max-w-[var(--slider-row-max-width)]">
-                              <Slider
-                                value={maxTokens}
-                                onChange={setMaxTokens}
-                                min={0}
-                                max={64000}
-                                step={1000}
-                                showValue
-                                formatValue={(v) => v.toLocaleString()}
-                              />
-                            </div>
+                            <Slider
+                              value={maxTokens}
+                              onChange={setMaxTokens}
+                              min={0}
+                              max={64000}
+                              step={1000}
+                              showValue
+                              formatValue={(v) => v.toLocaleString()}
+                            />
                           </FormField>
                         </SectionCard.Content>
                       </SectionCard>

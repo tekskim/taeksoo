@@ -200,11 +200,7 @@ export default function IAMLoginPoliciesPage() {
                         Defines the minimum length required for passwords.
                       </FormField.Description>
                       <FormField.Control>
-                        <HStack
-                          gap={3}
-                          align="center"
-                          className="max-w-[var(--slider-row-max-width)]"
-                        >
+                        <HStack gap={3} align="center">
                           <NumberInput
                             value={minLength}
                             onChange={(val) => {
@@ -224,7 +220,6 @@ export default function IAMLoginPoliciesPage() {
                             min={6}
                             max={128}
                             step={1}
-                            className="flex-1"
                           />
                           <NumberInput
                             value={maxLength}

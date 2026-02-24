@@ -193,20 +193,6 @@ import {
   type TenantInfo as ModifyQuotasTenantInfo,
 } from '@/components/ModifyQuotasDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
-import {
-  EditBasicInfoDrawer,
-  EditModelSettingsDrawer,
-  EditPromptSettingsDrawer,
-  ConnectDataSourceDrawer,
-  ConnectMCPServerDrawer,
-  AgentLogDetailDrawer,
-  CreateMCPTemplateDrawer,
-  TemplateTypeSettingsDrawer,
-  ContainerSettingsDrawer,
-  HTTPSettingsDrawer,
-  ToolAccessControlDrawer,
-  ToolAuthenticationDrawer,
-} from '@/pages/design-system-sections/OverlayDemos';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -534,7 +520,6 @@ export function DrawersPage() {
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
-  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
 
   // Drawer states
 
@@ -545,10 +530,6 @@ export function DrawersPage() {
   // IAM drawer states
 
   // Container drawer states
-
-  // AI Agent drawer states
-
-  // MCP Tools Drawer states
 
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -1571,136 +1552,6 @@ export function DrawersPage() {
                       description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                       category="Search"
                       onOpen={() => openDrawerFn('resource-type-search')}
-                    />
-                  </div>
-                </VStack>
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
-
-          {/* AI Agent Drawers */}
-          <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
-            <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-              <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                <div className="flex items-center gap-3">
-                  {isAIAgentOpen ? (
-                    <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                  ) : (
-                    <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                  )}
-                  <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                    AI Agent{' '}
-                  </Badge>
-                  <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                    Drawers{' '}
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(12 drawers)</span>
-                </div>
-              </div>
-            </Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={4} className="pt-4">
-                {/* Agent Settings */}
-                <VStack gap={2}>
-                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent settings{' '}
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <DrawerCard
-                      title="Edit basic information"
-                      description="Edit agent name, description, status, and tags."
-                      category="Settings"
-                      onOpen={() => openDrawerFn('edit-basic-info')}
-                    />
-                    <DrawerCard
-                      title="Edit model settings"
-                      description="Configure model provider, model, temperature, and max tokens."
-                      category="Settings"
-                      onOpen={() => openDrawerFn('edit-model-settings')}
-                    />
-                    <DrawerCard
-                      title="Edit prompt settings"
-                      description="Set system prompt, tone, and max iteration count."
-                      category="Settings"
-                      onOpen={() => openDrawerFn('edit-prompt-settings')}
-                    />
-                  </div>
-                </VStack>
-                {/* Agent Connections */}
-                <VStack gap={2}>
-                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent connections{' '}
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <DrawerCard
-                      title="Connect data source"
-                      description="Select and connect data sources to the agent."
-                      category="Connection"
-                      onOpen={() => openDrawerFn('connect-data-source')}
-                    />
-                    <DrawerCard
-                      title="Connect MCP server"
-                      description="Select and connect MCP servers to the agent."
-                      category="Connection"
-                      onOpen={() => openDrawerFn('connect-m-c-p-server')}
-                    />
-                  </div>
-                </VStack>
-                {/* Agent Logs */}
-                <VStack gap={2}>
-                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Agent logs{' '}
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <DrawerCard
-                      title="Log detail"
-                      description="Shows a history of the agent's operations and results."
-                      category="Logs"
-                      onOpen={() => openDrawerFn('agent-log-detail')}
-                    />
-                  </div>
-                </VStack>
-                {/* MCP Tools */}
-                <VStack gap={2}>
-                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    MCP Tools{' '}
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <DrawerCard
-                      title="Create MCP template"
-                      description="Create a new MCP server template with configuration settings."
-                      category="Template"
-                      onOpen={() => openDrawerFn('create-m-c-p-template')}
-                    />
-                    <DrawerCard
-                      title="Template type settings"
-                      description="Configure template type between STDIO (Container) and HTTP (Remote)."
-                      category="Template"
-                      onOpen={() => openDrawerFn('template-type-settings')}
-                    />
-                    <DrawerCard
-                      title="Container settings"
-                      description="Configure Docker container settings for STDIO MCP servers."
-                      category="Template"
-                      onOpen={() => openDrawerFn('container-settings')}
-                    />
-                    <DrawerCard
-                      title="HTTP settings"
-                      description="Configure HTTP endpoint settings for remote MCP servers."
-                      category="Template"
-                      onOpen={() => openDrawerFn('h-t-t-p-settings')}
-                    />
-                    <DrawerCard
-                      title="Tool access control"
-                      description="Configure tool visibility and rate limiting for agents."
-                      category="Settings"
-                      onOpen={() => openDrawerFn('tool-access-control')}
-                    />
-                    <DrawerCard
-                      title="Tool authentication"
-                      description="Configure authentication settings for MCP tools."
-                      category="Settings"
-                      onOpen={() => openDrawerFn('tool-authentication')}
                     />
                   </div>
                 </VStack>
@@ -2826,54 +2677,6 @@ export function DrawersPage() {
 
       {/* =============================================
           AI AGENT DRAWERS ============================================= */}
-
-      {/* Edit Basic Information Drawer */}
-      <EditBasicInfoDrawer isOpen={openDrawer === 'edit-basic-info'} onClose={closeDrawer} />
-
-      {/* Edit Model Settings Drawer */}
-      <EditModelSettingsDrawer
-        isOpen={openDrawer === 'edit-model-settings'}
-        onClose={closeDrawer}
-      />
-
-      {/* Edit Prompt Settings Drawer */}
-      <EditPromptSettingsDrawer
-        isOpen={openDrawer === 'edit-prompt-settings'}
-        onClose={closeDrawer}
-      />
-
-      {/* Connect Data Source Drawer */}
-      <ConnectDataSourceDrawer
-        isOpen={openDrawer === 'connect-data-source'}
-        onClose={closeDrawer}
-      />
-
-      {/* Connect MCP Server Drawer */}
-      <ConnectMCPServerDrawer
-        isOpen={openDrawer === 'connect-m-c-p-server'}
-        onClose={closeDrawer}
-      />
-      <AgentLogDetailDrawer isOpen={openDrawer === 'agent-log-detail'} onClose={closeDrawer} />
-
-      {/* MCP Tools Drawers */}
-      <CreateMCPTemplateDrawer
-        isOpen={openDrawer === 'create-m-c-p-template'}
-        onClose={closeDrawer}
-      />
-      <TemplateTypeSettingsDrawer
-        isOpen={openDrawer === 'template-type-settings'}
-        onClose={closeDrawer}
-      />
-      <ContainerSettingsDrawer isOpen={openDrawer === 'container-settings'} onClose={closeDrawer} />
-      <HTTPSettingsDrawer isOpen={openDrawer === 'h-t-t-p-settings'} onClose={closeDrawer} />
-      <ToolAccessControlDrawer
-        isOpen={openDrawer === 'tool-access-control'}
-        onClose={closeDrawer}
-      />
-      <ToolAuthenticationDrawer
-        isOpen={openDrawer === 'tool-authentication'}
-        onClose={closeDrawer}
-      />
     </PageShell>
   );
 }

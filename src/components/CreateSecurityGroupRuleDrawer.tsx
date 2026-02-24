@@ -302,10 +302,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* ICMP Type and Code (only for Custom ICMP) */}
         {protocol === 'custom_icmp' && (
           <>
-            <VStack gap={2} className="w-full">
-              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP type (optional)
-              </label>
+            <FormField label="ICMP type (optional)" helperText="0-255">
               <NumberInput
                 value={icmpType}
                 onChange={(value) => setIcmpType(value ?? 0)}
@@ -313,13 +310,9 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">0-255</p>
-            </VStack>
+            </FormField>
 
-            <VStack gap={2} className="w-full">
-              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                ICMP code (optional)
-              </label>
+            <FormField label="ICMP code (optional)" helperText="0-255">
               <NumberInput
                 value={icmpCode}
                 onChange={(value) => setIcmpCode(value ?? 0)}
@@ -327,46 +320,46 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">0-255</p>
-            </VStack>
+            </FormField>
           </>
         )}
 
         {/* IP Protocol (only for Other Protocol) */}
         {protocol === 'other_protocol' && (
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              IP Protocol
-            </label>
+          <FormField label="IP Protocol" helperText="0–255. (e.g., 6=TCP, 17=UDP, 1=ICMP)">
             <Input
               value={ipProtocol}
               onChange={(e) => setIpProtocol(e.target.value)}
               placeholder=""
               fullWidth
             />
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              0–255. (e.g., 6=TCP, 17=UDP, 1=ICMP)
-            </p>
-          </VStack>
+          </FormField>
         )}
 
         {/* Remote (not shown for All Proto) */}
         {!isAllProto && (
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Remote
-            </label>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Define the source or destination of traffic.
-            </p>
-            <Select
-              options={remoteTypeOptions}
-              value={remoteType}
-              onChange={(value) => setRemoteType(value as RemoteType)}
-              fullWidth
-            />
+          <FormField
+            label="Remote"
+            description="Define the source or destination of traffic."
+            error={hasAttemptedSubmit && !remoteValue.trim()}
+            errorMessage={
+              hasAttemptedSubmit && !remoteValue.trim()
+                ? remoteType === 'cidr'
+                  ? 'CIDR is required'
+                  : 'Security group is required'
+                : undefined
+            }
+          >
+            <FormField.Control>
+              <Select
+                options={remoteTypeOptions}
+                value={remoteType}
+                onChange={(value) => setRemoteType(value as RemoteType)}
+                fullWidth
+              />
+            </FormField.Control>
             {remoteType === 'cidr' ? (
-              <>
+              <FormField.Control>
                 <Input
                   value={remoteValue}
                   onChange={(e) => setRemoteValue(e.target.value)}
@@ -374,14 +367,9 @@ export function CreateSecurityGroupRuleDrawer({
                   fullWidth
                   error={hasAttemptedSubmit && !remoteValue.trim()}
                 />
-                {hasAttemptedSubmit && !remoteValue.trim() && (
-                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                    CIDR is required
-                  </p>
-                )}
-              </>
+              </FormField.Control>
             ) : (
-              <>
+              <FormField.Control>
                 <Select
                   options={securityGroups}
                   value={remoteValue}
@@ -390,14 +378,9 @@ export function CreateSecurityGroupRuleDrawer({
                   fullWidth
                   error={hasAttemptedSubmit && !remoteValue.trim()}
                 />
-                {hasAttemptedSubmit && !remoteValue.trim() && (
-                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                    Security group is required
-                  </p>
-                )}
-              </>
+              </FormField.Control>
             )}
-          </VStack>
+          </FormField>
         )}
       </VStack>
     </Drawer>

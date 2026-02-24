@@ -2359,10 +2359,8 @@ function SliderWithNumberInputDemo() {
   return (
     <VStack gap={3}>
       <Label>Pattern B: Slider + NumberInput</Label>
-      <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
-        <div className="flex-1">
-          <Slider value={value} onChange={setValue} min={0} max={100} step={1} />
-        </div>
+      <div className="flex items-center gap-3">
+        <Slider value={value} onChange={setValue} min={0} max={100} step={1} />
         <NumberInput value={value} onChange={setValue} min={0} max={100} step={1} width="xs" />
       </div>
     </VStack>
@@ -2380,10 +2378,8 @@ function SliderWithCustomRangeDemo() {
     <VStack gap={3}>
       <Label>Pattern B: Storage Capacity (0-1000 GiB)</Label>
       <VStack gap={1}>
-        <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
-          <div className="flex-1">
-            <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
-          </div>
+        <div className="flex items-center gap-3">
+          <Slider value={value} onChange={setValue} min={0} max={1000} step={10} />
           <NumberInput
             value={value}
             onChange={setValue}
@@ -2412,7 +2408,7 @@ function RangeSliderDemo() {
     <VStack gap={3}>
       <Label>Pattern D: RangeSlider + NumberInput 2개</Label>
       <VStack gap={2}>
-        <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
+        <div className="flex items-center gap-3">
           <NumberInput
             value={minLength}
             onChange={(val) => {
@@ -2425,18 +2421,16 @@ function RangeSliderDemo() {
             step={1}
             width="xs"
           />
-          <div className="flex-1">
-            <RangeSlider
-              value={[minLength, maxLength]}
-              onChange={([min, max]) => {
-                setMinLength(min);
-                setMaxLength(max);
-              }}
-              min={6}
-              max={128}
-              step={1}
-            />
-          </div>
+          <RangeSlider
+            value={[minLength, maxLength]}
+            onChange={([min, max]) => {
+              setMinLength(min);
+              setMaxLength(max);
+            }}
+            min={6}
+            max={128}
+            step={1}
+          />
           <NumberInput
             value={maxLength}
             onChange={(val) => {
@@ -8778,33 +8772,22 @@ outline: 2px solid var(--color-border-focus);`}
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr className="border-b border-[var(--color-border-subtle)]">
-                                    <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                                      Drawer (360px)
-                                    </td>
-                                    <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                                      w-full (자동 312px)
-                                    </td>
-                                    <td className="py-2 text-[var(--color-text-muted)]">
-                                      Drawer 패딩이 자동 제한
-                                    </td>
-                                  </tr>
                                   <tr>
                                     <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                                      Create / Settings 페이지
+                                      모든 컨텍스트
                                     </td>
                                     <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                                      max-w-[var(--slider-row-max-width)]
+                                      고정 240px
                                     </td>
                                     <td className="py-2 text-[var(--color-text-muted)]">
-                                      312px — Drawer 콘텐츠 영역과 동일
+                                      Slider 컴포넌트 내부에서 적용
                                     </td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                             <div className="text-body-xs text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                              <code>--slider-row-max-width: 312px</code>
+                              <code>--slider-track-width: 240px</code>
                             </div>
                           </VStack>
                         </VStack>
@@ -8823,9 +8806,7 @@ outline: 2px solid var(--color-border-focus);`}
                     {/* Pattern C: Slider alone */}
                     <VStack gap={3}>
                       <Label>Pattern C: Slider 단독 (showValue)</Label>
-                      <div className="max-w-[var(--slider-row-max-width)]">
-                        <Slider defaultValue={40} showValue />
-                      </div>
+                      <Slider defaultValue={40} showValue />
                     </VStack>
 
                     {/* Pattern B: Slider + NumberInput */}
@@ -8842,17 +8823,13 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-body-xs text-[var(--color-text-subtle)]">
                             Default
                           </span>
-                          <div className="max-w-[var(--slider-row-max-width)]">
-                            <Slider defaultValue={30} showValue />
-                          </div>
+                          <Slider defaultValue={30} showValue />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-body-xs text-[var(--color-text-subtle)]">
                             Disabled
                           </span>
-                          <div className="max-w-[var(--slider-row-max-width)]">
-                            <Slider defaultValue={60} disabled showValue />
-                          </div>
+                          <Slider defaultValue={60} disabled showValue />
                         </VStack>
                       </div>
                     </VStack>

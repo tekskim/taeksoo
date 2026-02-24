@@ -9,6 +9,7 @@ import {
   SelectionIndicator,
   Select,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -267,24 +268,27 @@ export function AttachInterfaceDrawer({
 
           {/* Fixed IP Section */}
           <VStack gap={2} className="shrink-0 w-full">
-            <h3 className="text-label-lg text-[var(--color-text-default)]">Fixed IP</h3>
-            <Select
-              options={[
-                { value: 'subnet-1', label: '192.168.20.0/24 (subnet-1)' },
-                { value: 'subnet-2', label: '10.0.0.0/24 (subnet-2)' },
-              ]}
-              placeholder="Select subnet"
-              fullWidth
-            />
-            <Select
-              options={[
-                { value: 'auto-assign', label: 'Auto-assign' },
-                { value: 'manual', label: 'Manual' },
-              ]}
-              value={fixedIpMode}
-              onChange={(value) => setFixedIpMode(value)}
-              fullWidth
-            />
+            <FormField label="Subnet">
+              <Select
+                options={[
+                  { value: 'subnet-1', label: '192.168.20.0/24 (subnet-1)' },
+                  { value: 'subnet-2', label: '10.0.0.0/24 (subnet-2)' },
+                ]}
+                placeholder="Select subnet"
+                fullWidth
+              />
+            </FormField>
+            <FormField label="Fixed IP mode">
+              <Select
+                options={[
+                  { value: 'auto-assign', label: 'Auto-assign' },
+                  { value: 'manual', label: 'Manual' },
+                ]}
+                value={fixedIpMode}
+                onChange={(value) => setFixedIpMode(value)}
+                fullWidth
+              />
+            </FormField>
           </VStack>
         </VStack>
       </VStack>

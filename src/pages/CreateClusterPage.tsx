@@ -848,18 +848,13 @@ export function CreateClusterPage() {
                         Specify the volume size for the etcd data disk.
                       </FormField.Description>
                       <FormField.Control>
-                        <HStack
-                          gap={3}
-                          align="center"
-                          className="max-w-[var(--slider-row-max-width)]"
-                        >
+                        <HStack gap={3} align="center">
                           <Slider
                             min={10}
                             max={100}
                             step={5}
                             value={etcdVolumeSize}
                             onChange={setEtcdVolumeSize}
-                            className="flex-1"
                           />
                           <NumberInput
                             value={etcdVolumeSize}

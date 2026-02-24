@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Toggle } from '@/design-system';
+import { Drawer, Button, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -100,17 +100,14 @@ export function AdminLockSettingDrawer({
         </VStack>
 
         {/* Lock Status */}
-        <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Lock status
-          </span>
+        <FormField label="Lock status">
           <HStack gap={2} align="center">
             <Toggle checked={locked} onChange={setLocked} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {locked ? 'Locked' : 'Unlocked'}
             </span>
           </HStack>
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );
