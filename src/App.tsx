@@ -316,6 +316,7 @@ import { BordersPage } from '@/pages/design/foundation/BordersPage';
 import { ShadowsPage } from '@/pages/design/foundation/ShadowsPage';
 import { IconsPage } from '@/pages/design/foundation/IconsPage';
 import { AppIconsPage } from '@/pages/design/foundation/AppIconsPage';
+import { UXWritingGuidePage } from '@/pages/design/foundation/UXWritingGuidePage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
 import { InputPage } from '@/pages/design/components/InputPage';
 import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
@@ -332,6 +333,7 @@ import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
 import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndicatorPage';
+import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
 import { LoadingPage } from '@/pages/design/components/LoadingPage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
@@ -954,6 +956,7 @@ function AppRoutes() {
         <Route path="foundation/shadows" element={<ShadowsPage />} />
         <Route path="foundation/icons" element={<IconsPage />} />
         <Route path="foundation/app-icons" element={<AppIconsPage />} />
+        <Route path="foundation/ux-writing" element={<UXWritingGuidePage />} />
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
@@ -971,6 +974,7 @@ function AppRoutes() {
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
         <Route path="components/selection-indicator" element={<SelectionIndicatorPage />} />
+        <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
         <Route path="components/loading" element={<LoadingPage />} />
         <Route path="components/topbar" element={<TopBarPage />} />
