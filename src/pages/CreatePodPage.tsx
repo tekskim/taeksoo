@@ -549,10 +549,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -611,10 +611,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -1752,10 +1752,10 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -1821,10 +1821,10 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2007,7 +2007,7 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2066,7 +2066,7 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2120,10 +2120,10 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2187,10 +2187,10 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   IP
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Hostnames
                                 </span>
                                 <div />
@@ -2380,18 +2380,18 @@ export function CreatePodPage() {
                                       </div>
 
                                       <VStack gap={2}>
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Match Expressions
                                         </span>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Operator
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Value
                                             </span>
                                             <div />
@@ -2740,7 +2740,7 @@ export function CreatePodPage() {
                                   >
                                     <div className="flex gap-2 items-start w-full">
                                       <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Key
                                         </span>
                                         <Input
@@ -2765,7 +2765,7 @@ export function CreatePodPage() {
                                         />
                                       </VStack>
                                       <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Operator
                                         </span>
                                         <Select
@@ -2790,7 +2790,7 @@ export function CreatePodPage() {
                                         />
                                       </VStack>
                                       <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Value
                                         </span>
                                         <Input
@@ -2947,19 +2947,19 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Operator
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Effect
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Toleration Seconds
                                 </span>
                                 <div />
@@ -3869,10 +3869,10 @@ export function CreatePodPage() {
                               <VStack gap={2}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </label>
                                     <div />
@@ -4167,13 +4167,13 @@ export function CreatePodPage() {
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Name
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value Type
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value/Source
                                 </span>
                                 <div />
@@ -4437,13 +4437,13 @@ export function CreatePodPage() {
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
                                           <div />
@@ -4676,13 +4676,13 @@ export function CreatePodPage() {
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
                                           <div />
@@ -5173,10 +5173,10 @@ export function CreatePodPage() {
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                              <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              <span className="block text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </span>
-                                              <span className="block text-label-lg text-[var(--color-text-default)]">
+                                              <span className="block text-label-sm text-[var(--color-text-default)]">
                                                 Value
                                               </span>
                                               <div />
@@ -6221,7 +6221,7 @@ export function CreatePodPage() {
                                           >
                                             <div className="flex gap-2 items-start">
                                               <VStack gap={2} className="flex-1">
-                                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Mount Point{' '}
                                                   <span className="text-[var(--color-state-danger)]">
                                                     *
@@ -6246,7 +6246,7 @@ export function CreatePodPage() {
                                                 />
                                               </VStack>
                                               <VStack gap={2} className="flex-1">
-                                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Sub Path in Volume
                                                 </span>
                                                 <Input
@@ -6268,7 +6268,7 @@ export function CreatePodPage() {
                                                 />
                                               </VStack>
                                               <VStack gap={2}>
-                                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Read Only
                                                 </span>
                                                 <div className="pt-2">

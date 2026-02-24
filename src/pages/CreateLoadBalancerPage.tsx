@@ -2444,7 +2444,7 @@ export default function CreateLoadBalancerPage() {
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={2}>
                                   {allowedCidrs.length > 0 && (
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       CIDR
                                     </span>
                                   )}
@@ -2935,13 +2935,13 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={2}>
                             {externalMembers.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   IP address
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Port
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Weights
                                 </span>
                                 <div />
