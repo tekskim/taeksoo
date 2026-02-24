@@ -27,7 +27,8 @@ import {
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { Label } from './HelperComponents';
-import { IconDots, IconUbuntu, IconRocky, IconGrid } from '@tabler/icons-react';
+import { IconDots } from '@tabler/icons-react';
+import { IconUbuntu, IconRocky, IconGrid } from '@/design-system';
 
 /* ----------------------------------------
    OpenSection Demo Component (Basic Form)

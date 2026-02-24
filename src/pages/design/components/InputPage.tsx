@@ -1,35 +1,479 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Input, Textarea, NumberInput, SearchInput, VStack, HStack } from '@/design-system';
 import { IconSearch, IconMail } from '@tabler/icons-react';
+
+const inputProps: PropDef[] = [
+  {
+    name: 'size',
+    type: "'sm' | 'md' | 'lg'",
+    default: "'md'",
+    required: false,
+    description: 'Input size',
+  },
+  {
+    name: 'variant',
+    type: "'default' | 'search' | 'code'",
+    default: "'default'",
+    required: false,
+    description: 'Input variant',
+  },
+  {
+    name: 'width',
+    type: "'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full' | number",
+    default: "'md'",
+    required: false,
+    description: 'Input width',
+  },
+  {
+    name: 'error',
+    type: 'string | boolean',
+    required: false,
+    description: 'Error state or message',
+  },
+  {
+    name: 'fullWidth',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Full width input',
+  },
+  { name: 'leftElement', type: 'ReactNode', required: false, description: 'Left element (icon)' },
+  {
+    name: 'rightElement',
+    type: 'ReactNode',
+    required: false,
+    description: 'Right element (icon/button)',
+  },
+  {
+    name: 'required',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Required field',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Disabled state',
+  },
+  { name: 'placeholder', type: 'string', required: false, description: 'Placeholder text' },
+];
 
 export function InputPage() {
   return (
     <ComponentPageTemplate
       title="Input"
       description="Text fields, textarea, number input, and search"
-      relatedLinks={[
-        {
-          label: 'Form Field Spacing',
-          path: '/design/components/form-field',
-          description: 'Label and input combinations',
-        },
-        {
-          label: 'Filter Search Input',
-          path: '/design/components/filter-search-input',
-          description: 'Search with filters',
-        },
-        {
-          label: 'Select',
-          path: '/design/components/select',
-          description: 'Dropdown select component',
-        },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview code={`<Input placeholder="Enter text..." width="md" />`}>
+          <Input placeholder="Enter text..." width="md" />
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { Input } from '@/design-system';\n\n<Input placeholder="Enter text..." width="md" />`,
+      }}
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <Label>Text Input - Status</Label>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-start">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Placeholder
+                </span>
+                <Input placeholder="Input placeholder" className="w-full" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Value
+                </span>
+                <Input defaultValue="Input value" className="w-full" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focus
+                </span>
+                <Input
+                  defaultValue="Input focus"
+                  className="w-full border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Read-only
+                </span>
+                <Input defaultValue="Input read-only" readOnly className="w-full" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Disabled
+                </span>
+                <Input defaultValue="Input disabled" disabled className="w-full" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Error
+                </span>
+                <Input defaultValue="Input error" error="Error message" className="w-full" />
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Text Input - Sizes (Height)</Label>
+            <div className="flex gap-4 items-start">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  SM (28px)
+                </span>
+                <Input size="sm" placeholder="Input placeholder" width="md" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  MD (32px)
+                </span>
+                <Input size="md" placeholder="Input placeholder" width="md" />
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Text Input - Width</Label>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-4 items-end">
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    XS (80px)
+                  </span>
+                  <Input placeholder="XS" width="xs" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    SM (160px)
+                  </span>
+                  <Input placeholder="Small" width="sm" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    MD (240px)
+                  </span>
+                  <Input placeholder="Medium" width="md" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    LG (320px)
+                  </span>
+                  <Input placeholder="Large" width="lg" />
+                </VStack>
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    Half (50%)
+                  </span>
+                  <Input placeholder="Half width" width="half" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    Full (100%)
+                  </span>
+                  <Input placeholder="Full width" width="full" />
+                </VStack>
+              </div>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Labels & Validation</Label>
+            <div className="flex flex-wrap gap-4 items-start">
+              <Input label="Label" placeholder="Enter text..." width="md" />
+              <Input
+                label="With helper"
+                placeholder="Email"
+                helperText="We'll never share your email"
+                width="md"
+              />
+              <Input
+                label="With error"
+                placeholder="Username"
+                error="Username is required"
+                width="md"
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>With icons</Label>
+            <div className="flex gap-4">
+              <Input placeholder="Search..." leftElement={<IconSearch size={14} />} width="md" />
+              <Input placeholder="Email" rightElement={<IconMail size={14} />} width="md" />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>With suffix (outside)</Label>
+            <div className="flex gap-4 items-end">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Text suffix
+                </span>
+                <HStack gap={2} align="center">
+                  <Input placeholder="0" width="sm" />
+                  <span className="text-body-md text-[var(--color-text-default)]">Seconds</span>
+                </HStack>
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Unit suffix
+                </span>
+                <HStack gap={2} align="center">
+                  <Input placeholder="100" width="sm" />
+                  <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+                </HStack>
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Percentage
+                </span>
+                <HStack gap={2} align="center">
+                  <Input placeholder="50" width="sm" />
+                  <span className="text-body-md text-[var(--color-text-default)]">%</span>
+                </HStack>
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>With suffix (inside)</Label>
+            <div className="flex gap-4 items-end">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Text suffix
+                </span>
+                <Input
+                  placeholder="0"
+                  aria-describedby="suffix-seconds"
+                  rightElement={
+                    <span
+                      id="suffix-seconds"
+                      className="text-body-sm text-[var(--color-text-muted)]"
+                    >
+                      Seconds
+                    </span>
+                  }
+                  className="w-[160px]"
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Unit suffix
+                </span>
+                <Input
+                  placeholder="100"
+                  aria-describedby="suffix-gib"
+                  rightElement={
+                    <span id="suffix-gib" className="text-body-sm text-[var(--color-text-muted)]">
+                      GiB
+                    </span>
+                  }
+                  className="w-[120px]"
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Percentage
+                </span>
+                <Input
+                  placeholder="50"
+                  aria-describedby="suffix-percent"
+                  rightElement={
+                    <span
+                      id="suffix-percent"
+                      className="text-body-sm text-[var(--color-text-muted)]"
+                    >
+                      %
+                    </span>
+                  }
+                  className="w-[120px]"
+                />
+              </VStack>
+            </div>
+            <div className="text-body-xs text-[var(--color-text-subtle)] mt-1 p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
+              <code>aria-describedby</code>로 suffix를 연결하면 스크린 리더가 &quot;100 GiB&quot;로
+              읽습니다.
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Textarea</Label>
+            <div className="flex gap-4">
+              <Textarea placeholder="Input placeholder" className="w-[var(--search-input-width)]" />
+              <Textarea
+                defaultValue="Input value with multiple lines of text content"
+                className="w-[var(--search-input-width)]"
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Textarea - Code Variant</Label>
+            <Textarea
+              variant="code"
+              placeholder="input user data"
+              defaultValue={`input user data\n\n`}
+              className="w-[var(--search-input-width)]"
+            />
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Number Input - States</Label>
+            <div className="flex gap-4 items-start">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Default
+                </span>
+                <NumberInput defaultValue={1} width="md" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  With Min/Max
+                </span>
+                <NumberInput defaultValue={5} min={0} max={10} width="md" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Disabled
+                </span>
+                <NumberInput defaultValue={1} disabled width="md" />
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Number Input - Width</Label>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-4 items-end">
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    XS (80px)
+                  </span>
+                  <NumberInput defaultValue={1} width="xs" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    SM (160px)
+                  </span>
+                  <NumberInput defaultValue={1} width="sm" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    MD (240px)
+                  </span>
+                  <NumberInput defaultValue={1} width="md" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    LG (320px)
+                  </span>
+                  <NumberInput defaultValue={1} width="lg" />
+                </VStack>
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    Half (50%)
+                  </span>
+                  <NumberInput defaultValue={1} width="half" />
+                </VStack>
+                <VStack gap={1}>
+                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                    Full (100%)
+                  </span>
+                  <NumberInput defaultValue={1} width="full" />
+                </VStack>
+              </div>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>With Label, Helper & Suffix</Label>
+            <VStack gap={2} className="max-w-[400px]">
+              <VStack gap={1}>
+                <span className="text-label-lg font-medium text-[var(--color-text-default)]">
+                  Minimum Ready
+                </span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">
+                  The minimum time a pod must remain in a ready state before it is considered
+                  available.
+                </span>
+              </VStack>
+              <HStack gap={2} align="center">
+                <NumberInput defaultValue={0} min={0} className="w-full" />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Seconds
+                </span>
+              </HStack>
+            </VStack>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Search input</Label>
+            <div className="flex gap-4 items-start">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  SM (28px)
+                </span>
+                <SearchInput
+                  size="sm"
+                  placeholder="Search placeholder"
+                  className="w-[var(--search-input-width)]"
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  MD (32px)
+                </span>
+                <SearchInput
+                  size="md"
+                  placeholder="Search placeholder"
+                  className="w-[var(--search-input-width)]"
+                />
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Search Input - Status</Label>
+            <div className="flex gap-4 items-start">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Placeholder
+                </span>
+                <SearchInput
+                  placeholder="Search placeholder"
+                  className="w-[var(--search-input-width)]"
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Value
+                </span>
+                <SearchInput
+                  defaultValue="Search value"
+                  className="w-[var(--search-input-width)]"
+                />
+              </VStack>
+            </div>
+          </VStack>
+        </VStack>
+      }
+      guidelines={
+        <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -165,11 +609,6 @@ export function InputPage() {
               </VStack>
             </VStack>
           </div>
-        </VStack>
-
-        {/* 가이드라인 */}
-        <VStack gap={3}>
-          <Label>가이드라인</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
               <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
@@ -191,413 +630,38 @@ export function InputPage() {
             </div>
           </div>
         </VStack>
-
-        {/* Design Tokens */}
-        <VStack gap={3}>
-          <Label>Design tokens</Label>
-          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>height: 28/32px</code> · <code>padding: 10×8px</code> · <code>radius: 6px</code> ·{' '}
-            <code>font: 11-12px</code> · <code>border: 1px → 2px focus</code>
-          </div>
-        </VStack>
-
-        {/* Text Input - Status */}
-        <VStack gap={3}>
-          <Label>Text Input - Status</Label>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-start">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Placeholder
-              </span>
-              <Input placeholder="Input placeholder" className="w-full" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Value
-              </span>
-              <Input defaultValue="Input value" className="w-full" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Focus
-              </span>
-              <Input
-                defaultValue="Input focus"
-                className="w-full border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
-              />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Read-only
-              </span>
-              <Input defaultValue="Input read-only" readOnly className="w-full" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Disabled
-              </span>
-              <Input defaultValue="Input disabled" disabled className="w-full" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Error
-              </span>
-              <Input defaultValue="Input error" error="Error message" className="w-full" />
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* Text Input - Sizes (Height) */}
-        <VStack gap={3}>
-          <Label>Text Input - Sizes (Height)</Label>
-          <div className="flex gap-4 items-start">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                SM (28px)
-              </span>
-              <Input size="sm" placeholder="Input placeholder" width="md" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                MD (32px)
-              </span>
-              <Input size="md" placeholder="Input placeholder" width="md" />
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* Text Input - Width */}
-        <VStack gap={3}>
-          <Label>Text Input - Width</Label>
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-4 items-end">
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  XS (80px)
-                </span>
-                <Input placeholder="XS" width="xs" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  SM (160px)
-                </span>
-                <Input placeholder="Small" width="sm" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  MD (240px)
-                </span>
-                <Input placeholder="Medium" width="md" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  LG (320px)
-                </span>
-                <Input placeholder="Large" width="lg" />
-              </VStack>
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  Half (50%)
-                </span>
-                <Input placeholder="Half width" width="half" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  Full (100%)
-                </span>
-                <Input placeholder="Full width" width="full" />
-              </VStack>
-            </div>
-          </div>
-        </VStack>
-
-        {/* With Labels & Helpers */}
-        <VStack gap={3}>
-          <Label>Labels & Validation</Label>
-          <div className="flex flex-wrap gap-4 items-start">
-            <Input label="Label" placeholder="Enter text..." width="md" />
-            <Input
-              label="With helper"
-              placeholder="Email"
-              helperText="We'll never share your email"
-              width="md"
-            />
-            <Input
-              label="With error"
-              placeholder="Username"
-              error="Username is required"
-              width="md"
-            />
-          </div>
-        </VStack>
-
-        {/* With Icons */}
-        <VStack gap={3}>
-          <Label>With icons</Label>
-          <div className="flex gap-4">
-            <Input placeholder="Search..." leftElement={<IconSearch size={14} />} width="md" />
-            <Input placeholder="Email" rightElement={<IconMail size={14} />} width="md" />
-          </div>
-        </VStack>
-
-        {/* With Suffix (Outside) */}
-        <VStack gap={3}>
-          <Label>With suffix (outside)</Label>
-          <div className="flex gap-4 items-end">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Text suffix
-              </span>
-              <HStack gap={2} align="center">
-                <Input placeholder="0" width="sm" />
-                <span className="text-body-md text-[var(--color-text-default)]">Seconds</span>
-              </HStack>
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Unit suffix
-              </span>
-              <HStack gap={2} align="center">
-                <Input placeholder="100" width="sm" />
-                <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
-              </HStack>
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Percentage
-              </span>
-              <HStack gap={2} align="center">
-                <Input placeholder="50" width="sm" />
-                <span className="text-body-md text-[var(--color-text-default)]">%</span>
-              </HStack>
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* With Suffix (Inside) */}
-        <VStack gap={3}>
-          <Label>With suffix (inside)</Label>
-          <div className="flex gap-4 items-end">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Text suffix
-              </span>
-              <Input
-                placeholder="0"
-                aria-describedby="suffix-seconds"
-                rightElement={
-                  <span id="suffix-seconds" className="text-body-sm text-[var(--color-text-muted)]">
-                    Seconds
-                  </span>
-                }
-                className="w-[160px]"
-              />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Unit suffix
-              </span>
-              <Input
-                placeholder="100"
-                aria-describedby="suffix-gib"
-                rightElement={
-                  <span id="suffix-gib" className="text-body-sm text-[var(--color-text-muted)]">
-                    GiB
-                  </span>
-                }
-                className="w-[120px]"
-              />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Percentage
-              </span>
-              <Input
-                placeholder="50"
-                aria-describedby="suffix-percent"
-                rightElement={
-                  <span id="suffix-percent" className="text-body-sm text-[var(--color-text-muted)]">
-                    %
-                  </span>
-                }
-                className="w-[120px]"
-              />
-            </VStack>
-          </div>
-          <div className="text-body-xs text-[var(--color-text-subtle)] mt-1 p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-            <code>aria-describedby</code>로 suffix를 연결하면 스크린 리더가 &quot;100 GiB&quot;로
-            읽습니다.
-          </div>
-        </VStack>
-
-        {/* Textarea */}
-        <VStack gap={3}>
-          <Label>Textarea</Label>
-          <div className="flex gap-4">
-            <Textarea placeholder="Input placeholder" className="w-[var(--search-input-width)]" />
-            <Textarea
-              defaultValue="Input value with multiple lines of text content"
-              className="w-[var(--search-input-width)]"
-            />
-          </div>
-        </VStack>
-
-        {/* Textarea - Code */}
-        <VStack gap={3}>
-          <Label>Textarea - Code Variant</Label>
-          <Textarea
-            variant="code"
-            placeholder="input user data"
-            defaultValue={`input user data\n\n`}
-            className="w-[var(--search-input-width)]"
-          />
-        </VStack>
-
-        {/* NumberInput (Stepper) - States */}
-        <VStack gap={3}>
-          <Label>Number Input - States</Label>
-          <div className="flex gap-4 items-start">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Default
-              </span>
-              <NumberInput defaultValue={1} width="md" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                With Min/Max
-              </span>
-              <NumberInput defaultValue={5} min={0} max={10} width="md" />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Disabled
-              </span>
-              <NumberInput defaultValue={1} disabled width="md" />
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* NumberInput - Width */}
-        <VStack gap={3}>
-          <Label>Number Input - Width</Label>
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-4 items-end">
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  XS (80px)
-                </span>
-                <NumberInput defaultValue={1} width="xs" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  SM (160px)
-                </span>
-                <NumberInput defaultValue={1} width="sm" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  MD (240px)
-                </span>
-                <NumberInput defaultValue={1} width="md" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  LG (320px)
-                </span>
-                <NumberInput defaultValue={1} width="lg" />
-              </VStack>
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  Half (50%)
-                </span>
-                <NumberInput defaultValue={1} width="half" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  Full (100%)
-                </span>
-                <NumberInput defaultValue={1} width="full" />
-              </VStack>
-            </div>
-          </div>
-        </VStack>
-
-        {/* NumberInput with Label & Suffix */}
-        <VStack gap={3}>
-          <Label>With Label, Helper & Suffix</Label>
-          <VStack gap={2} className="max-w-[400px]">
-            <VStack gap={1}>
-              <span className="text-label-lg font-medium text-[var(--color-text-default)]">
-                Minimum Ready
-              </span>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                The minimum time a pod must remain in a ready state before it is considered
-                available.
-              </span>
-            </VStack>
-            <HStack gap={2} align="center">
-              <NumberInput defaultValue={0} min={0} className="w-full" />
-              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                Seconds
-              </span>
-            </HStack>
-          </VStack>
-        </VStack>
-
-        {/* SearchInput */}
-        <VStack gap={3}>
-          <Label>Search input</Label>
-          <div className="flex gap-4 items-start">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                SM (28px)
-              </span>
-              <SearchInput
-                size="sm"
-                placeholder="Search placeholder"
-                className="w-[var(--search-input-width)]"
-              />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                MD (32px)
-              </span>
-              <SearchInput
-                size="md"
-                placeholder="Search placeholder"
-                className="w-[var(--search-input-width)]"
-              />
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* SearchInput - Status */}
-        <VStack gap={3}>
-          <Label>Search Input - Status</Label>
-          <div className="flex gap-4 items-start">
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Placeholder
-              </span>
-              <SearchInput
-                placeholder="Search placeholder"
-                className="w-[var(--search-input-width)]"
-              />
-            </VStack>
-            <VStack gap={1}>
-              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                Value
-              </span>
-              <SearchInput defaultValue="Search value" className="w-[var(--search-input-width)]" />
-            </VStack>
-          </div>
-        </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>height: 28/32px</code> · <code>padding: 10×8px</code> · <code>radius: 6px</code> ·{' '}
+          <code>font: 11-12px</code> · <code>border: 1px → 2px focus</code>
+        </div>
+      }
+      apiReference={inputProps}
+      accessibility={
+        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+          <li>Tab: Move focus to input</li>
+          <li>Use aria-describedby for suffix/helper text</li>
+          <li>Error state: role=&quot;alert&quot; for error messages</li>
+        </ul>
+      }
+      relatedLinks={[
+        {
+          label: 'Form Field Spacing',
+          path: '/design/components/form-field',
+          description: 'Label and input combinations',
+        },
+        {
+          label: 'Filter Search Input',
+          path: '/design/components/filter-search-input',
+          description: 'Search with filters',
+        },
+        {
+          label: 'Select',
+          path: '/design/components/select',
+          description: 'Dropdown select component',
+        },
+      ]}
+    />
   );
 }

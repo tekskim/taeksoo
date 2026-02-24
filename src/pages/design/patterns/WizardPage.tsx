@@ -6,6 +6,7 @@ export function WizardPage() {
     <ComponentPageTemplate
       title="Wizard (Create Flow)"
       description="Multi-step wizard pattern for resource creation with section status management"
+      examples={<WizardPatternSection />}
       relatedLinks={[
         {
           label: 'Multi Tab Create',
@@ -28,8 +29,6 @@ export function WizardPage() {
           description: 'Pattern selection guide',
         },
       ]}
-    >
-      <WizardPatternSection />
-    </ComponentPageTemplate>
+    />
   );
 }

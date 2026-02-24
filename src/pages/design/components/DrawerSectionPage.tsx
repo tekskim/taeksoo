@@ -1,31 +1,56 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import type { PropDef } from '../_shared/PropsTable';
 import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
 import { VStack } from '@/design-system';
+
+const drawerProps: PropDef[] = [
+  { name: 'isOpen', type: 'boolean', required: true, description: 'Open state' },
+  { name: 'onClose', type: '() => void', required: true, description: 'Close handler' },
+  { name: 'title', type: 'string', required: false, description: 'Drawer title' },
+  {
+    name: 'side',
+    type: "'left' | 'right'",
+    default: "'right'",
+    required: false,
+    description: 'Slide direction',
+  },
+  {
+    name: 'width',
+    type: 'string | number',
+    default: '320',
+    required: false,
+    description: 'Drawer width',
+  },
+  {
+    name: 'showCloseButton',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Show close button',
+  },
+  { name: 'footer', type: 'ReactNode', required: false, description: 'Footer content' },
+  { name: 'children', type: 'ReactNode', required: true, description: 'Drawer content' },
+];
 
 export function DrawerSectionPage() {
   return (
     <ComponentPageTemplate
       title="Drawer"
       description="Slide-out panel for forms, details, and secondary content"
-      relatedLinks={[
-        { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
-        {
-          label: 'Popover',
-          path: '/design/components/popover',
-          description: 'Lightweight overlay',
-        },
-        {
-          label: 'Form Field',
-          path: '/design/components/form-field',
-          description: 'Form in drawer',
-        },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={<DrawerDemo />}
+      usage={{
+        code: `import { Drawer, VStack, HStack, Button } from '@/design-system';\n\n<Drawer\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Edit Resource"\n  width={360}\n  footer={\n    <HStack gap={2} className="w-full">\n      <Button variant="secondary" className="flex-1">Cancel</Button>\n      <Button variant="primary" className="flex-1">Save</Button>\n    </HStack>\n  }\n>\n  {/* Content */}\n</Drawer>`,
+      }}
+      examples={
+        <VStack gap={6}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Interactive demo</span>
+            <DrawerDemo />
+          </VStack>
+        </VStack>
+      }
+      guidelines={
+        <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -166,11 +191,7 @@ export function DrawerSectionPage() {
               </VStack>
             </VStack>
           </div>
-        </VStack>
 
-        {/* 가이드라인 */}
-        <VStack gap={3}>
-          <Label>가이드라인</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
               <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
@@ -190,119 +211,29 @@ export function DrawerSectionPage() {
             </div>
           </div>
         </VStack>
-
-        {/* Design Tokens */}
-        <VStack gap={3}>
-          <Label>Design tokens</Label>
-          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>width: 320px (default)</code> · <code>Form: 360px (4col)</code> ·{' '}
-            <code>Selection: 696px (8col)</code> · <code>Large: 1032px (12col)</code> ·{' '}
-            <code>padding-x: 24px</code> · <code>padding-y: 16px</code> ·{' '}
-            <code>animation: 300ms ease-out</code>
-          </div>
-        </VStack>
-
-        {/* Interactive Demo */}
-        <VStack gap={3}>
-          <Label>Interactive demo</Label>
-          <DrawerDemo />
-        </VStack>
-
-        {/* Specifications */}
-        <VStack gap={3}>
-          <Label>Specifications</Label>
-          <div className="overflow-x-auto">
-            <table className="w-full text-[length:var(--font-size-12)]">
-              <thead>
-                <tr className="border-b border-[var(--color-border-default)]">
-                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                    Property
-                  </th>
-                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                    Type
-                  </th>
-                  <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                    Default
-                  </th>
-                  <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">isOpen</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Whether the drawer is open
-                  </td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
-                    onClose
-                  </td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">() =&gt; void</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Callback when drawer should close
-                  </td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">title</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
-                  <td className="py-2 text-[var(--color-text-default)]">Drawer title</td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">width</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">string | number</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">320</td>
-                  <td className="py-2 text-[var(--color-text-default)]">Width of the drawer</td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">side</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                    &apos;left&apos; | &apos;right&apos;
-                  </td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">&apos;right&apos;</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Side from which drawer appears
-                  </td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">footer</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">ReactNode</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">-</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Footer content (typically action buttons)
-                  </td>
-                </tr>
-                <tr className="border-b border-[var(--color-border-subtle)]">
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
-                    showCloseButton
-                  </td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Whether to show close button
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
-                    closeOnBackdropClick
-                  </td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">boolean</td>
-                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">true</td>
-                  <td className="py-2 text-[var(--color-text-default)]">
-                    Whether clicking backdrop closes drawer
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>width: 320px (default)</code> · <code>Form: 360px (4col)</code> ·{' '}
+          <code>Selection: 696px (8col)</code> · <code>Large: 1032px (12col)</code> ·{' '}
+          <code>padding-x: 24px</code> · <code>padding-y: 16px</code> ·{' '}
+          <code>animation: 300ms ease-out</code>
+        </div>
+      }
+      apiReference={drawerProps}
+      relatedLinks={[
+        { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
+        {
+          label: 'Popover',
+          path: '/design/components/popover',
+          description: 'Lightweight overlay',
+        },
+        {
+          label: 'Form Field',
+          path: '/design/components/form-field',
+          description: 'Form in drawer',
+        },
+      ]}
+    />
   );
 }

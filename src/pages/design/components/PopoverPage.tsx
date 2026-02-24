@@ -1,26 +1,211 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Button, Popover, VStack } from '@/design-system';
+
+const popoverProps: PropDef[] = [
+  { name: 'content', type: 'ReactNode', required: true, description: 'Popover content' },
+  { name: 'children', type: 'ReactNode', required: true, description: 'Trigger element' },
+  {
+    name: 'position',
+    type: "'top' | 'bottom' | 'left' | 'right'",
+    default: "'bottom'",
+    required: false,
+    description: 'Position',
+  },
+  {
+    name: 'trigger',
+    type: "'click' | 'hover'",
+    default: "'click'",
+    required: false,
+    description: 'Trigger type',
+  },
+  {
+    name: 'delay',
+    type: 'number',
+    default: '200',
+    required: false,
+    description: 'Show delay (hover)',
+  },
+  {
+    name: 'hideDelay',
+    type: 'number',
+    default: '150',
+    required: false,
+    description: 'Hide delay (hover)',
+  },
+  {
+    name: 'showArrow',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Show arrow',
+  },
+  { name: 'isOpen', type: 'boolean', required: false, description: 'Controlled open state' },
+  {
+    name: 'onOpenChange',
+    type: '(isOpen: boolean) => void',
+    required: false,
+    description: 'Open state handler',
+  },
+  {
+    name: 'closeOnOutsideClick',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Close on outside click',
+  },
+  {
+    name: 'closeOnEscape',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Close on Escape',
+  },
+];
 
 export function PopoverPage() {
   return (
     <ComponentPageTemplate
       title="Popover"
       description="Interactive overlay that can contain complex content"
-      relatedLinks={[
-        { label: 'Tooltip', path: '/design/components/tooltip', description: 'Hover-only info' },
-        {
-          label: 'Context menu',
-          path: '/design/components/context-menu',
-          description: 'Action menu',
-        },
-        { label: 'Drawer', path: '/design/components/drawer', description: 'Complex forms' },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview
+          code={`<Popover
+  content={<div className="p-3"><p className="text-body-md">Click outside or press Escape to close</p></div>}
+  trigger="click"
+>
+  <Button variant="outline" size="sm">Click me</Button>
+</Popover>`}
+        >
+          <Popover
+            content={
+              <div className="p-3">
+                <p className="text-body-md">Click outside or press Escape to close</p>
+              </div>
+            }
+            trigger="click"
+          >
+            <Button variant="outline" size="sm">
+              Click me
+            </Button>
+          </Popover>
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { Popover, Button } from '@/design-system';\n\n<Popover\n  content={<div className="p-3">Interactive content</div>}\n  trigger="click"\n  position="bottom"\n>\n  <Button variant="outline" size="sm">Open Popover</Button>\n</Popover>`,
+      }}
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Hover trigger</span>
+            <div className="flex gap-4 items-center flex-wrap">
+              <Popover
+                content={
+                  <div className="p-3">
+                    <p className="text-body-md">Hover로 표시되는 비인터랙티브 정보 콘텐츠입니다.</p>
+                  </div>
+                }
+                trigger="hover"
+              >
+                <Button variant="outline" size="sm">
+                  Hover me
+                </Button>
+              </Popover>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
+            <div className="flex gap-4 items-center flex-wrap">
+              <Popover
+                content={<div className="p-3 text-body-md">Top popover</div>}
+                position="top"
+                trigger="click"
+              >
+                <Button variant="outline" size="sm">
+                  Top
+                </Button>
+              </Popover>
+              <Popover
+                content={<div className="p-3 text-body-md">Bottom popover</div>}
+                position="bottom"
+                trigger="click"
+              >
+                <Button variant="outline" size="sm">
+                  Bottom
+                </Button>
+              </Popover>
+              <Popover
+                content={<div className="p-3 text-body-md">Left popover</div>}
+                position="left"
+                trigger="click"
+              >
+                <Button variant="outline" size="sm">
+                  Left
+                </Button>
+              </Popover>
+              <Popover
+                content={<div className="p-3 text-body-md">Right popover</div>}
+                position="right"
+                trigger="click"
+              >
+                <Button variant="outline" size="sm">
+                  Right
+                </Button>
+              </Popover>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Interactive content
+            </span>
+            <div className="flex gap-4 items-center flex-wrap">
+              <Popover
+                content={
+                  <div className="p-3 w-[200px]">
+                    <VStack gap={3}>
+                      <p className="text-label-md">Quick actions</p>
+                      <Button variant="secondary" size="sm" fullWidth>
+                        Edit
+                      </Button>
+                      <Button variant="secondary" size="sm" fullWidth>
+                        Duplicate
+                      </Button>
+                      <Button variant="danger" size="sm" fullWidth>
+                        Delete
+                      </Button>
+                    </VStack>
+                  </div>
+                }
+                trigger="click"
+              >
+                <Button variant="outline" size="sm">
+                  Menu popover
+                </Button>
+              </Popover>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Without arrow</span>
+            <div className="flex gap-4 items-center flex-wrap">
+              <Popover
+                content={<div className="p-3 text-body-md">No arrow variant</div>}
+                trigger="click"
+                showArrow={false}
+              >
+                <Button variant="outline" size="sm">
+                  No arrow
+                </Button>
+              </Popover>
+            </div>
+          </VStack>
+        </VStack>
+      }
+      guidelines={
+        <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -97,11 +282,7 @@ export function PopoverPage() {
               </VStack>
             </VStack>
           </div>
-        </VStack>
 
-        {/* 가이드라인 */}
-        <VStack gap={3}>
-          <Label>가이드라인</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
               <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
@@ -123,143 +304,23 @@ export function PopoverPage() {
             </div>
           </div>
         </VStack>
-
-        {/* Tokens */}
-        <VStack gap={3}>
-          <Label>Design tokens</Label>
-          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>padding: 12px</code> · <code>radius: 8px</code> · <code>border: 1px</code> ·{' '}
-            <code>arrow: 6px</code>
-          </div>
-        </VStack>
-
-        {/* Basic Usage */}
-        <VStack gap={3}>
-          <Label>Click trigger (default)</Label>
-          <div className="flex gap-4 items-center flex-wrap">
-            <Popover
-              content={
-                <div className="p-3">
-                  <p className="text-body-md">Click outside or press Escape to close</p>
-                </div>
-              }
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Click me
-              </Button>
-            </Popover>
-          </div>
-        </VStack>
-
-        {/* Hover Trigger */}
-        <VStack gap={3}>
-          <Label>Hover trigger</Label>
-          <div className="flex gap-4 items-center flex-wrap">
-            <Popover
-              content={
-                <div className="p-3">
-                  <p className="text-body-md">Hover로 표시되는 비인터랙티브 정보 콘텐츠입니다.</p>
-                </div>
-              }
-              trigger="hover"
-            >
-              <Button variant="outline" size="sm">
-                Hover me
-              </Button>
-            </Popover>
-          </div>
-        </VStack>
-
-        {/* Positions */}
-        <VStack gap={3}>
-          <Label>Positions</Label>
-          <div className="flex gap-4 items-center flex-wrap">
-            <Popover
-              content={<div className="p-3 text-body-md">Top popover</div>}
-              position="top"
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Top
-              </Button>
-            </Popover>
-            <Popover
-              content={<div className="p-3 text-body-md">Bottom popover</div>}
-              position="bottom"
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Bottom
-              </Button>
-            </Popover>
-            <Popover
-              content={<div className="p-3 text-body-md">Left popover</div>}
-              position="left"
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Left
-              </Button>
-            </Popover>
-            <Popover
-              content={<div className="p-3 text-body-md">Right popover</div>}
-              position="right"
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Right
-              </Button>
-            </Popover>
-          </div>
-        </VStack>
-
-        {/* Interactive Content */}
-        <VStack gap={3}>
-          <Label>Interactive content</Label>
-          <div className="flex gap-4 items-center flex-wrap">
-            <Popover
-              content={
-                <div className="p-3 w-[200px]">
-                  <VStack gap={3}>
-                    <p className="text-label-md">Quick actions</p>
-                    <Button variant="secondary" size="sm" fullWidth>
-                      Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" fullWidth>
-                      Duplicate
-                    </Button>
-                    <Button variant="danger" size="sm" fullWidth>
-                      Delete
-                    </Button>
-                  </VStack>
-                </div>
-              }
-              trigger="click"
-            >
-              <Button variant="outline" size="sm">
-                Menu popover
-              </Button>
-            </Popover>
-          </div>
-        </VStack>
-
-        {/* Without Arrow */}
-        <VStack gap={3}>
-          <Label>Without arrow</Label>
-          <div className="flex gap-4 items-center flex-wrap">
-            <Popover
-              content={<div className="p-3 text-body-md">No arrow variant</div>}
-              trigger="click"
-              showArrow={false}
-            >
-              <Button variant="outline" size="sm">
-                No arrow
-              </Button>
-            </Popover>
-          </div>
-        </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>padding: 12px</code> · <code>radius: 8px</code> · <code>border: 1px</code> ·{' '}
+          <code>arrow: 6px</code>
+        </div>
+      }
+      apiReference={popoverProps}
+      relatedLinks={[
+        { label: 'Tooltip', path: '/design/components/tooltip', description: 'Hover-only info' },
+        {
+          label: 'Context menu',
+          path: '/design/components/context-menu',
+          description: 'Action menu',
+        },
+        { label: 'Drawer', path: '/design/components/drawer', description: 'Complex forms' },
+      ]}
+    />
   );
 }

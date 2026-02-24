@@ -2,6 +2,11 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { VStack } from '@/design-system';
 import { IconArrowRight } from '@tabler/icons-react';
+import { DocSection } from './DocSection';
+import { PropsTable, type PropDef } from './PropsTable';
+import { CodeBlock } from './CodeBlock';
+
+export type { PropDef };
 
 export interface RelatedLink {
   label: string;
@@ -13,35 +18,105 @@ interface ComponentPageTemplateProps {
   title: string;
   description: string;
   category?: string;
-  children: ReactNode;
+  preview?: ReactNode;
+  usage?: { code: string; description?: string };
+  examples?: ReactNode;
+  guidelines?: ReactNode;
+  tokens?: ReactNode;
+  apiReference?: PropDef[];
+  subComponentApis?: { name: string; props: PropDef[] }[];
+  accessibility?: ReactNode;
   relatedLinks?: RelatedLink[];
+  children?: ReactNode;
 }
 
 export function ComponentPageTemplate({
   title,
   description,
+  preview,
+  usage,
+  examples,
+  guidelines,
+  tokens,
+  apiReference,
+  subComponentApis,
+  accessibility,
   children,
   relatedLinks,
 }: ComponentPageTemplateProps) {
   return (
-    <VStack gap={8} align="stretch">
+    <VStack gap={10} align="stretch">
       {/* Page Header */}
       <VStack gap={2} align="start">
         <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
         <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
       </VStack>
 
-      {/* Page Content */}
+      {/* Preview */}
+      {preview && (
+        <DocSection id="preview" title="Preview">
+          {preview}
+        </DocSection>
+      )}
+
+      {/* Usage */}
+      {usage && (
+        <DocSection id="usage" title="Usage" description={usage.description}>
+          <CodeBlock code={usage.code} language="tsx" />
+        </DocSection>
+      )}
+
+      {/* Examples */}
+      {examples && (
+        <DocSection id="examples" title="Examples">
+          {examples}
+        </DocSection>
+      )}
+
+      {/* Legacy children slot */}
       {children}
+
+      {/* Guidelines */}
+      {guidelines && (
+        <DocSection id="guidelines" title="Guidelines">
+          {guidelines}
+        </DocSection>
+      )}
+
+      {/* Design Tokens */}
+      {tokens && (
+        <DocSection id="tokens" title="Design tokens">
+          {tokens}
+        </DocSection>
+      )}
+
+      {/* API Reference */}
+      {(apiReference || subComponentApis) && (
+        <DocSection id="api" title="API Reference">
+          <VStack gap={6} align="stretch">
+            {apiReference && <PropsTable props={apiReference} name={title + 'Props'} />}
+            {subComponentApis?.map((sub) => (
+              <PropsTable key={sub.name} props={sub.props} name={sub.name} />
+            ))}
+          </VStack>
+        </DocSection>
+      )}
+
+      {/* Accessibility */}
+      {accessibility && (
+        <DocSection id="accessibility" title="Accessibility">
+          {accessibility}
+        </DocSection>
+      )}
 
       {/* Related Links */}
       {relatedLinks && relatedLinks.length > 0 && (
         <VStack
           gap={4}
           align="stretch"
-          className="pt-4 border-t border-[var(--color-border-subtle)]"
+          className="p-6 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]"
         >
-          <h3 className="text-heading-h6 text-[var(--color-text-default)]">Related</h3>
+          <h3 className="text-heading-h5 text-[var(--color-text-default)]">Related</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {relatedLinks.map((link) => (
               <Link
