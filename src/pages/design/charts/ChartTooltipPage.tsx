@@ -126,7 +126,7 @@ export function ChartTooltipPage() {
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">
-              Gauge tooltip (Half-Doughnut)
+              Gauge tooltip (Half-Doughnut / Progress Bar)
             </span>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               Custom DOM tooltip with backdrop blur. Follows cursor position. Shows used/available

@@ -1,26 +1,65 @@
+import { type ReactNode, useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { QuotaBarDemo } from '../../design-system-sections/ChartComponents';
-import { ProgressBar, Tooltip, VStack } from '@/design-system';
+import { ProgressBar, VStack } from '@/design-system';
 
-function ProgressTooltipDemo() {
+function statusColor(pct: number) {
+  if (pct >= 100) return '#dc2626';
+  if (pct >= 70) return '#ea580c';
+  return '#22c55e';
+}
+
+function GaugeHoverTooltip({
+  used,
+  max,
+  unit,
+  children,
+}: {
+  used: number;
+  max: number;
+  unit?: string;
+  children: ReactNode;
+}) {
+  const [visible, setVisible] = useState(false);
+  const available = max - used;
+  const pct = Math.round((used / max) * 100);
+  const color = statusColor(pct);
+  const suffix = unit ? ` ${unit}` : '';
   return (
-    <div className="backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 w-fit">
-      <div className="flex items-center gap-2">
-        <span
-          className="inline-block w-2 h-2 rounded-full"
-          style={{ backgroundColor: '#22c55e' }}
-        />
-        <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-          Used: <span className="font-medium">2 / 10</span>
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="inline-block w-2 h-2 rounded-full bg-[var(--color-border-subtle)]" />
-        <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-          Available: <span className="font-medium">8 / 10</span>
-        </span>
-      </div>
+    <div
+      className="relative w-full"
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+    >
+      {children}
+      {visible && (
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 z-50 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 w-fit whitespace-nowrap">
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: color }}
+            />
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
+              Used:{' '}
+              <span className="font-medium">
+                {used}
+                {suffix} ({pct}%)
+              </span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full shrink-0 bg-[var(--color-border-subtle)]" />
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
+              Available:{' '}
+              <span className="font-medium">
+                {available}
+                {suffix} ({100 - pct}%)
+              </span>
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -72,12 +111,12 @@ export function ProgressBarPage() {
       description="Visual indicator for quota usage and progress with status-based colors"
       preview={
         <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-          <Tooltip content="Used: 2 / 10 · Available: 8 / 10">
-            <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
-          </Tooltip>
-          <Tooltip content="Used: 8 / 10 · New: 2 · Available: 0 / 10">
-            <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
-          </Tooltip>
+          <GaugeHoverTooltip used={2} max={10}>
+            <ProgressBar variant="quota" label="Instance" value={2} max={10} />
+          </GaugeHoverTooltip>
+          <GaugeHoverTooltip used={8} max={10}>
+            <ProgressBar variant="quota" label="Instance" value={8} max={10} />
+          </GaugeHoverTooltip>
         </div>
       }
       guidelines={
@@ -93,7 +132,6 @@ export function ProgressBarPage() {
                 <strong>Status 색상</strong>: 사용률에 따라 Safe/Warning/Danger 색상이 자동
                 적용됩니다.
               </li>
-              <li>hover 시 정확한 수치를 tooltip으로 표시합니다.</li>
               <li>Floating card의 Quota 섹션에서 주로 사용합니다.</li>
             </ul>
           </VStack>
@@ -111,24 +149,18 @@ export function ProgressBarPage() {
               Quota Variant - Status Based Colors
             </span>
             <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-              <Tooltip content="Used: 2 / 10 · Available: 8">
-                <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
-              </Tooltip>
-              <Tooltip content="Used: 8 / 10 · New: 2 · Available: 0">
-                <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
-              </Tooltip>
-              <Tooltip content="Used: 5 / 10 · New: 2 · Available: 3">
-                <ProgressBar variant="quota" label="Instance" value={5} newValue={2} max={10} />
-              </Tooltip>
-              <Tooltip content="Used: 8 / 10 · New: 5 · Over limit">
-                <ProgressBar variant="quota" label="Instance" value={8} newValue={5} max={10} />
-              </Tooltip>
-              <Tooltip content="Used: 10 / 10 · Available: 0">
-                <ProgressBar variant="quota" label="Instance" value={10} newValue={0} max={10} />
-              </Tooltip>
-              <Tooltip content="Used: 10 · No limit">
-                <ProgressBar variant="quota" label="Instance" value={10} newValue={0} />
-              </Tooltip>
+              <GaugeHoverTooltip used={2} max={10}>
+                <ProgressBar variant="quota" label="Instance" value={2} max={10} />
+              </GaugeHoverTooltip>
+              <GaugeHoverTooltip used={5} max={10}>
+                <ProgressBar variant="quota" label="Instance" value={5} max={10} />
+              </GaugeHoverTooltip>
+              <GaugeHoverTooltip used={7} max={10}>
+                <ProgressBar variant="quota" label="Instance" value={7} max={10} />
+              </GaugeHoverTooltip>
+              <GaugeHoverTooltip used={10} max={10}>
+                <ProgressBar variant="quota" label="Instance" value={10} max={10} />
+              </GaugeHoverTooltip>
             </div>
           </VStack>
           <VStack gap={3}>
@@ -136,23 +168,16 @@ export function ProgressBarPage() {
               Default Variant - Status Based Colors
             </span>
             <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-              <Tooltip content="Used 30 MB of 100 MB">
+              <GaugeHoverTooltip used={30} max={100} unit="MB">
                 <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
-              </Tooltip>
-              <Tooltip content="Used 60 MB of 100 MB">
+              </GaugeHoverTooltip>
+              <GaugeHoverTooltip used={75} max={100} unit="MB">
                 <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
-              </Tooltip>
-              <Tooltip content="Used 100 MB of 100 MB">
+              </GaugeHoverTooltip>
+              <GaugeHoverTooltip used={100} max={100} unit="MB">
                 <ProgressBar label="100 MB (100%)" value={100} max={100} showValue={false} />
-              </Tooltip>
+              </GaugeHoverTooltip>
             </div>
-          </VStack>
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Tooltip</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              Hover tooltip for quota progress bars. Same style as the gauge chart tooltip.
-            </span>
-            <ProgressTooltipDemo />
           </VStack>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Dashboard only</span>
@@ -161,11 +186,31 @@ export function ProgressBarPage() {
                 COMPUTE QUOTA
               </div>
               <div className="space-y-[22px]">
-                <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
-                <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
-                <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
-                <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
-                <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
+                <GaugeHoverTooltip used={4} max={8} unit="vCPU">
+                  <div className="pointer-events-none">
+                    <QuotaBarDemo label="vCPU" used={4} total={8} unit="vCPU" />
+                  </div>
+                </GaugeHoverTooltip>
+                <GaugeHoverTooltip used={22} max={32} unit="GiB">
+                  <div className="pointer-events-none">
+                    <QuotaBarDemo label="RAM" used={22} total={32} unit="GiB" />
+                  </div>
+                </GaugeHoverTooltip>
+                <GaugeHoverTooltip used={4} max={6} unit="GiB">
+                  <div className="pointer-events-none">
+                    <QuotaBarDemo label="Disk" used={4} total={6} unit="GiB" />
+                  </div>
+                </GaugeHoverTooltip>
+                <GaugeHoverTooltip used={6} max={8} unit="GPU">
+                  <div className="pointer-events-none">
+                    <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
+                  </div>
+                </GaugeHoverTooltip>
+                <GaugeHoverTooltip used={6} max={8} unit="NPU">
+                  <div className="pointer-events-none">
+                    <QuotaBarDemo label="NPU" used={6} total={8} unit="NPU" />
+                  </div>
+                </GaugeHoverTooltip>
               </div>
             </div>
           </VStack>
