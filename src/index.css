@@ -290,6 +290,7 @@ html.theme-transition *::after {
   --z-popover: 1300;
   --z-tooltip: 1400;
   --z-toast: 1500;
+  --z-context-menu: 5000;
 
   /* ========================================
      SEMANTIC TOKENS

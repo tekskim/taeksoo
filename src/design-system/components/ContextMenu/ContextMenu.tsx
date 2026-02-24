@@ -313,7 +313,7 @@ const ContextMenuItemComponent: React.FC<{
             rounded-[var(--context-menu-radius)]
             shadow-[var(--shadow-md)]
             overflow-hidden
-            z-[5001]
+            z-[calc(var(--z-context-menu)+1)]
             max-h-[calc(100vh-16px)]
             overflow-y-auto
           "
@@ -407,7 +407,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
       className="
-        fixed z-[5000]
+        fixed z-[var(--z-context-menu)]
         flex flex-col
         bg-[var(--color-surface-default)]
         border border-[var(--color-border-strong)]
