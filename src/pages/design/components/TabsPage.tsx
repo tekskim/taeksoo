@@ -153,18 +153,6 @@ export function TabsPage() {
                   </TabList>
                 </Tabs>
               </VStack>
-              <VStack gap={2}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  Medium (14px)
-                </span>
-                <Tabs defaultValue="tab1" size="md">
-                  <TabList>
-                    <Tab value="tab1">menu 1</Tab>
-                    <Tab value="tab2">menu 2</Tab>
-                    <Tab value="tab3">menu 3</Tab>
-                  </TabList>
-                </Tabs>
-              </VStack>
             </VStack>
           </VStack>
           <VStack gap={3}>

@@ -107,14 +107,6 @@ export function CheckboxPage() {
           </VStack>
 
           <VStack gap={3}>
-            <Label>Error state</Label>
-            <div className="flex gap-8 items-start">
-              <Checkbox label="Unchecked with error" error errorMessage="This field is required" />
-              <Checkbox label="Checked with error" defaultChecked error />
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
             <Label>With description</Label>
             <Checkbox
               label="Email notifications"

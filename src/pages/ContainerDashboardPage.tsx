@@ -513,7 +513,7 @@ export function ContainerDashboardPage() {
           </Button>
         }
       >
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList className="w-full mb-3">
             <Tab value="events">Events</Tab>
             <Tab value="secrets">Secrets</Tab>
