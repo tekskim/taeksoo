@@ -65,6 +65,7 @@
     "deploy": "gh-pages -d docs -t",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "sync-notion": "node scripts/sync-notion.mjs",
     "visual-compare": "node scripts/visual-compare.mjs",
     "prepublishOnly": "pnpm run build:lib && pnpm run test:run"
   },
@@ -93,6 +94,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.0",
     "@eslint/js": "^9.39.1",
+    "@notionhq/client": "^5.9.0",
     "@rspack/cli": "^1.7.3",
     "@rspack/core": "^1.7.3",
     "@rspack/plugin-react-refresh": "^1.6.0",
@@ -124,6 +126,7 @@
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "lint-staged": "^16.2.7",
+    "notion-to-md": "^3.1.9",
     "pixelmatch": "^7.1.0",
     "playwright": "^1.57.0",
     "pngjs": "^7.0.0",

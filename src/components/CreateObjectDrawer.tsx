@@ -1,17 +1,8 @@
 import { useState } from 'react';
-import {
-  Drawer,
-  Button,
-  Input,
-  Select,
-  Radio,
-  FormField,
-  Table,
-  fixedColumns,
-} from '@/design-system';
-import type { TableColumn } from '@/design-system/components/Table/Table';
+import { Drawer, Button, Input, Select, Radio, FormField, FileListSection } from '@/design-system';
+import type { FileItem } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconUpload, IconTrash, IconX, IconCirclePlus } from '@tabler/icons-react';
+import { IconUpload, IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -145,28 +136,6 @@ export function CreateObjectDrawer({
     onClose();
   };
 
-  const fileColumns: TableColumn<UploadedFile>[] = [
-    { key: 'name', label: 'Name', flex: 1, sortable: true },
-    { key: 'type', label: 'Type', flex: 1, sortable: true },
-    { key: 'size', label: 'Size', flex: 1, sortable: true },
-    { key: 'count', label: 'Count', flex: 1, sortable: true },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: fixedColumns.actions,
-      align: 'center',
-      render: (_, row) => (
-        <button
-          type="button"
-          onClick={() => handleRemoveFile(row.id)}
-          className="text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
-        >
-          <IconTrash size={16} stroke={1.5} />
-        </button>
-      ),
-    },
-  ];
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -207,36 +176,25 @@ export function CreateObjectDrawer({
         </FormField>
 
         {/* Upload Files Section */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Upload Files
-          </label>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              handleUploadClick();
-              if (filesError) setFilesError(null);
-            }}
-            className="w-fit"
-            leftIcon={<IconUpload size={12} stroke={1.5} />}
-          >
-            Upload a File
-          </Button>
-          {filesError && (
-            <span className="text-body-sm text-[var(--color-state-danger)]">{filesError}</span>
+        <FileListSection
+          label="Upload Files"
+          files={files.map(
+            (f): FileItem => ({
+              id: f.id,
+              name: f.name,
+              tags: f.count > 1 ? [f.size, `${f.count} files`] : [f.size],
+            })
           )}
-
-          {/* Files Table */}
-          {files.length > 0 && (
-            <Table<UploadedFile>
-              columns={fileColumns}
-              data={files}
-              rowKey="id"
-              emptyMessage="No files uploaded"
-            />
-          )}
-        </VStack>
+          onRemove={handleRemoveFile}
+          onUpload={() => {
+            handleUploadClick();
+            if (filesError) setFilesError(null);
+          }}
+          uploadLabel="Upload a File"
+          uploadIcon={<IconUpload size={12} stroke={1.5} />}
+          error={filesError}
+          emptyMessage=""
+        />
 
         {/* ACL Section */}
         <VStack gap={3} className="w-full">
