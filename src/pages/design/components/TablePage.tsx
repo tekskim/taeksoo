@@ -1,35 +1,145 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { VStack } from '@/design-system';
+import { Table, StatusIndicator } from '@/design-system';
 import { TableDemo } from '../../design-system-sections/TableDemo';
+
+const tableProps: PropDef[] = [
+  { name: 'columns', type: 'TableColumn[]', required: true, description: 'Column definitions' },
+  { name: 'data', type: 'T[]', required: false, description: 'Table data array' },
+  {
+    name: 'rowKey',
+    type: 'keyof T | ((row: T) => string)',
+    required: true,
+    description: 'Unique row identifier',
+  },
+  {
+    name: 'selectable',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Enable row selection',
+  },
+  {
+    name: 'selectedKeys',
+    type: 'string[]',
+    default: '[]',
+    required: false,
+    description: 'Selected row keys',
+  },
+  {
+    name: 'onSelectionChange',
+    type: '(keys: string[]) => void',
+    required: false,
+    description: 'Selection change handler',
+  },
+  {
+    name: 'stickyHeader',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Sticky header',
+  },
+  {
+    name: 'maxHeight',
+    type: 'string',
+    required: false,
+    description: 'Max table height (enables scroll)',
+  },
+  {
+    name: 'onRowClick',
+    type: '(row: T, index: number) => void',
+    required: false,
+    description: 'Row click handler',
+  },
+  {
+    name: 'emptyMessage',
+    type: 'string',
+    default: "'No data'",
+    required: false,
+    description: 'Empty state message',
+  },
+];
+
+const tableColumnProps: PropDef[] = [
+  { name: 'key', type: 'string', required: true, description: 'Column key (matches data field)' },
+  { name: 'label', type: 'string', required: true, description: 'Column header text' },
+  { name: 'width', type: 'string', required: false, description: 'Fixed column width' },
+  { name: 'minWidth', type: 'string', required: false, description: 'Minimum column width' },
+  { name: 'flex', type: 'number', required: false, description: 'Flex grow factor' },
+  {
+    name: 'align',
+    type: "'left' | 'center' | 'right'",
+    default: "'left'",
+    required: false,
+    description: 'Content alignment',
+  },
+  { name: 'sortable', type: 'boolean', required: false, description: 'Enable column sorting' },
+  {
+    name: 'render',
+    type: '(value, row, index) => ReactNode',
+    required: false,
+    description: 'Custom cell renderer',
+  },
+];
+
+const sampleData = [
+  { id: '1', name: 'worker-node-01', status: 'Running' },
+  { id: '2', name: 'web-server-01', status: 'Running' },
+  { id: '3', name: 'db-master', status: 'Stopped' },
+];
+
+const previewColumns = [
+  {
+    key: 'status',
+    label: 'Status',
+    width: '60px',
+    align: 'center' as const,
+    render: (v: string) => (
+      <StatusIndicator status={v === 'Running' ? 'active' : 'error'} layout="icon-only" />
+    ),
+  },
+  { key: 'name', label: 'Name', flex: 1 },
+  { key: 'id', label: 'ID', flex: 1 },
+];
 
 export function TablePage() {
   return (
     <ComponentPageTemplate
       title="Table"
       description="Data table with sorting, selection, sticky header, text truncation with tooltip, and horizontal scroll"
-      relatedLinks={[
-        {
-          label: 'Pagination',
-          path: '/design/components/pagination',
-          description: 'Table pagination',
-        },
-        {
-          label: 'Status indicator',
-          path: '/design/components/status-indicator',
-          description: 'Status column',
-        },
-        {
-          label: 'Context menu',
-          path: '/design/components/context-menu',
-          description: 'Row actions',
-        },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview
+          code={`<Table
+  columns={[
+    { key: 'status', label: 'Status', width: '60px', align: 'center', render: (v) => <StatusIndicator status={v === 'Running' ? 'active' : 'error'} layout="icon-only" /> },
+    { key: 'name', label: 'Name', flex: 1 },
+    { key: 'id', label: 'ID', flex: 1 },
+  ]}
+  data={sampleData}
+  rowKey="id"
+/>`}
+        >
+          <Table columns={previewColumns} data={sampleData} rowKey="id" />
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { Table } from '@/design-system';
+
+const columns = [
+  { key: 'name', label: 'Name', flex: 1 },
+  { key: 'status', label: 'Status', width: '80px' },
+];
+<Table columns={columns} data={data} rowKey="id" />`,
+      }}
+      examples={
+        <VStack gap={8}>
+          <TableDemo />
+        </VStack>
+      }
+      guidelines={
+        <>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -133,12 +243,7 @@ export function TablePage() {
               </VStack>
             </VStack>
           </div>
-        </VStack>
-
-        {/* 가이드라인 */}
-        <VStack gap={3}>
-          <Label>가이드라인</Label>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
               <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
               <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -157,11 +262,34 @@ export function TablePage() {
               </ul>
             </div>
           </div>
-        </VStack>
-
-        {/* Demo */}
-        <TableDemo />
-      </VStack>
-    </ComponentPageTemplate>
+        </>
+      }
+      apiReference={tableProps}
+      subComponentApis={[{ name: 'TableColumn', props: tableColumnProps }]}
+      accessibility={
+        <p className="text-body-md text-[var(--color-text-muted)]">
+          Table uses semantic <code>table</code>, <code>thead</code>, <code>tbody</code>,{' '}
+          <code>th</code>, <code>td</code>. Sortable columns expose sort direction. Selectable rows
+          use checkbox with proper aria-checked. Keyboard: Tab to navigate, Space to select rows.
+        </p>
+      }
+      relatedLinks={[
+        {
+          label: 'Pagination',
+          path: '/design/components/pagination',
+          description: 'Table pagination',
+        },
+        {
+          label: 'Status indicator',
+          path: '/design/components/status-indicator',
+          description: 'Status column',
+        },
+        {
+          label: 'Context menu',
+          path: '/design/components/context-menu',
+          description: 'Row actions',
+        },
+      ]}
+    />
   );
 }

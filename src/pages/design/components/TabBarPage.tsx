@@ -1,7 +1,73 @@
 import { useRef } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { TabBar, useTabBar, VStack } from '@/design-system';
+
+const tabBarProps: PropDef[] = [
+  { name: 'tabs', type: 'TabBarItem[]', required: true, description: 'Tab items array' },
+  { name: 'activeTab', type: 'string', required: true, description: 'Active tab id' },
+  {
+    name: 'onTabChange',
+    type: '(tabId: string) => void',
+    required: true,
+    description: 'Tab selection handler',
+  },
+  {
+    name: 'onTabClose',
+    type: '(tabId: string) => void',
+    required: false,
+    description: 'Tab close handler',
+  },
+  { name: 'onTabAdd', type: '() => void', required: false, description: 'Add tab handler' },
+  {
+    name: 'onTabReorder',
+    type: '(from: number, to: number) => void',
+    required: false,
+    description: 'Tab reorder handler',
+  },
+  {
+    name: 'showAddButton',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Show add button',
+  },
+  {
+    name: 'showWindowControls',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Show window controls',
+  },
+];
+
+function TabBarPreview() {
+  const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
+    initialTabs: [
+      { id: 'tab-1', label: 'Entry page', closable: true },
+      { id: 'tab-2', label: 'Settings', closable: true },
+      { id: 'tab-3', label: 'Profile', closable: true },
+    ],
+    initialActiveTab: 'tab-1',
+  });
+
+  return (
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden w-full">
+      <TabBar
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={selectTab}
+        onTabClose={closeTab}
+        onTabAdd={addTab}
+      />
+      <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+        Content for: {tabs.find((t) => t.id === activeTab)?.label || 'No tab selected'}
+      </div>
+    </div>
+  );
+}
 
 function TabBarDemo() {
   const tabCounterRef = useRef(4);
@@ -50,27 +116,6 @@ function TabBarDemo() {
 
   return (
     <VStack gap={8}>
-      {/* Tokens */}
-      <VStack gap={3}>
-        <Label>Design tokens</Label>
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> ·{' '}
-          <code>font: 12px</code>
-        </div>
-      </VStack>
-
-      {/* Features */}
-      <VStack gap={3}>
-        <Label>Features</Label>
-        <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-          <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
-          <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
-          <li>탭 추가/닫기 기능</li>
-          <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
-        </ul>
-      </VStack>
-
-      {/* Interactive Demo */}
       <VStack gap={3}>
         <Label>Interactive Demo (3 tabs)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
@@ -89,8 +134,6 @@ function TabBarDemo() {
           Click tabs to switch, click × to close, click + to add new tabs
         </p>
       </VStack>
-
-      {/* Many Tabs Demo */}
       <VStack gap={3}>
         <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
@@ -116,16 +159,29 @@ export function TabBarPage() {
     <ComponentPageTemplate
       title="TabBar"
       description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)"
-      relatedLinks={[
-        { label: 'TopBar', path: '/design/components/topbar', description: 'Application header' },
-        { label: 'Tabs', path: '/design/components/tabs', description: 'Content tabs' },
-        { label: 'PageShell', path: '/design/patterns/layout', description: 'Page layout' },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview
+          code={`const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
+  initialTabs: [{ id: '1', label: 'Tab 1', closable: true }, ...],
+  initialActiveTab: '1',
+});
+<TabBar tabs={tabs} activeTab={activeTab} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addTab} />`}
+        >
+          <TabBarPreview />
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { TabBar, useTabBar } from '@/design-system';
+
+const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
+  initialTabs: [{ id: '1', label: 'Home', closable: false }, { id: '2', label: 'Settings', closable: true }],
+  initialActiveTab: '1',
+});
+<TabBar tabs={tabs} activeTab={activeTab} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addTab} />`,
+      }}
+      examples={<TabBarDemo />}
+      guidelines={
+        <>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={2}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
@@ -150,11 +206,35 @@ export function TabBarPage() {
               </ul>
             </VStack>
           </div>
-        </VStack>
-
-        {/* Demo */}
-        <TabBarDemo />
-      </VStack>
-    </ComponentPageTemplate>
+          <div className="mt-4">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-2">Features</h4>
+            <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+              <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+              <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+              <li>탭 추가/닫기 기능</li>
+              <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+            </ul>
+          </div>
+        </>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> ·{' '}
+          <code>font: 12px</code>
+        </div>
+      }
+      apiReference={tabBarProps}
+      accessibility={
+        <p className="text-body-md text-[var(--color-text-muted)]">
+          TabBar uses role="tablist" and role="tab". Tab buttons are keyboard navigable. Close and
+          add buttons have aria-labels.
+        </p>
+      }
+      relatedLinks={[
+        { label: 'TopBar', path: '/design/components/topbar', description: 'Application header' },
+        { label: 'Tabs', path: '/design/components/tabs', description: 'Content tabs' },
+        { label: 'PageShell', path: '/design/patterns/layout', description: 'Page layout' },
+      ]}
+    />
   );
 }
