@@ -1,31 +1,141 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Button, Badge, Tooltip, VStack } from '@/design-system';
 import { IconTrash, IconStar, IconCopy } from '@tabler/icons-react';
+
+const tooltipProps: PropDef[] = [
+  { name: 'content', type: 'ReactNode', required: true, description: 'Tooltip content' },
+  { name: 'children', type: 'ReactNode', required: true, description: 'Trigger element' },
+  {
+    name: 'position',
+    type: "'top' | 'bottom' | 'left' | 'right'",
+    default: "'top'",
+    required: false,
+    description: 'Tooltip position',
+  },
+  {
+    name: 'delay',
+    type: 'number',
+    default: '200',
+    required: false,
+    description: 'Show delay (ms)',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Disabled state',
+  },
+];
 
 export function TooltipPage() {
   return (
     <ComponentPageTemplate
       title="Tooltip"
       description="Contextual information on hover"
-      relatedLinks={[
-        {
-          label: 'Popover',
-          path: '/design/components/popover',
-          description: 'Interactive overlay',
-        },
-        {
-          label: 'Button',
-          path: '/design/components/button',
-          description: 'Icon button with tooltip',
-        },
-        { label: 'Badge', path: '/design/components/badge', description: 'Status with tooltip' },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview
+          code={`<Tooltip content="Delete this item permanently">
+  <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
+</Tooltip>`}
+        >
+          <Tooltip content="Delete this item permanently">
+            <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
+          </Tooltip>
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { Tooltip, Button } from '@/design-system';\n\n<Tooltip content="Helpful hint text">\n  <Button variant="secondary" size="sm">Hover me</Button>\n</Tooltip>`,
+      }}
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
+            <div className="flex gap-6 items-center justify-center py-8">
+              <Tooltip content="Top tooltip" position="top">
+                <Button variant="secondary" size="sm">
+                  Top
+                </Button>
+              </Tooltip>
+              <Tooltip content="Bottom tooltip" position="bottom">
+                <Button variant="secondary" size="sm">
+                  Bottom
+                </Button>
+              </Tooltip>
+              <Tooltip content="Left tooltip" position="left">
+                <Button variant="secondary" size="sm">
+                  Left
+                </Button>
+              </Tooltip>
+              <Tooltip content="Right tooltip" position="right">
+                <Button variant="secondary" size="sm">
+                  Right
+                </Button>
+              </Tooltip>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Use cases</span>
+            <div className="flex gap-4 items-center">
+              <Tooltip content="Delete this item permanently">
+                <Button
+                  variant="danger"
+                  size="sm"
+                  icon={<IconTrash size={12} />}
+                  aria-label="Delete"
+                />
+              </Tooltip>
+              <Tooltip content="Add to favorites">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon={<IconStar size={12} />}
+                  aria-label="Favorite"
+                />
+              </Tooltip>
+              <Tooltip content="Copy to clipboard">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconCopy size={12} />}
+                  aria-label="Copy"
+                />
+              </Tooltip>
+              <Tooltip content="This action requires admin permissions" position="bottom">
+                <Badge variant="warning" size="sm">
+                  Restricted
+                </Badge>
+              </Tooltip>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Custom delay</span>
+            <div className="flex gap-4 items-center">
+              <Tooltip content="Instant (0ms)" delay={0}>
+                <Button variant="outline" size="sm">
+                  0ms
+                </Button>
+              </Tooltip>
+              <Tooltip content="Default (200ms)" delay={200}>
+                <Button variant="outline" size="sm">
+                  200ms
+                </Button>
+              </Tooltip>
+              <Tooltip content="Slow (500ms)" delay={500}>
+                <Button variant="outline" size="sm">
+                  500ms
+                </Button>
+              </Tooltip>
+            </div>
+          </VStack>
+        </VStack>
+      }
+      guidelines={
+        <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -99,101 +209,27 @@ export function TooltipPage() {
             </VStack>
           </div>
         </VStack>
-
-        {/* Tokens */}
-        <VStack gap={3}>
-          <Label>Design tokens</Label>
-          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>padding: 6×4px</code> · <code>radius: 4px</code> · <code>font-size: 11px</code> ·{' '}
-            <code>min-width: 60px</code> · <code>max-width: 240px</code> · <code>arrow: 4px</code>
-          </div>
-        </VStack>
-
-        {/* Positions */}
-        <VStack gap={3}>
-          <Label>Positions</Label>
-          <div className="flex gap-6 items-center justify-center py-8">
-            <Tooltip content="Top tooltip" position="top">
-              <Button variant="secondary" size="sm">
-                Top
-              </Button>
-            </Tooltip>
-            <Tooltip content="Bottom tooltip" position="bottom">
-              <Button variant="secondary" size="sm">
-                Bottom
-              </Button>
-            </Tooltip>
-            <Tooltip content="Left tooltip" position="left">
-              <Button variant="secondary" size="sm">
-                Left
-              </Button>
-            </Tooltip>
-            <Tooltip content="Right tooltip" position="right">
-              <Button variant="secondary" size="sm">
-                Right
-              </Button>
-            </Tooltip>
-          </div>
-        </VStack>
-
-        {/* Examples */}
-        <VStack gap={3}>
-          <Label>Use cases</Label>
-          <div className="flex gap-4 items-center">
-            <Tooltip content="Delete this item permanently">
-              <Button
-                variant="danger"
-                size="sm"
-                icon={<IconTrash size={12} />}
-                aria-label="Delete"
-              />
-            </Tooltip>
-            <Tooltip content="Add to favorites">
-              <Button
-                variant="ghost"
-                size="sm"
-                icon={<IconStar size={12} />}
-                aria-label="Favorite"
-              />
-            </Tooltip>
-            <Tooltip content="Copy to clipboard">
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconCopy size={12} />}
-                aria-label="Copy"
-              />
-            </Tooltip>
-            <Tooltip content="This action requires admin permissions" position="bottom">
-              <Badge variant="warning" size="sm">
-                Restricted
-              </Badge>
-            </Tooltip>
-          </div>
-        </VStack>
-
-        {/* With Delay */}
-        <VStack gap={3}>
-          <Label>Custom delay</Label>
-          <div className="flex gap-4 items-center">
-            <Tooltip content="Instant (0ms)" delay={0}>
-              <Button variant="outline" size="sm">
-                0ms
-              </Button>
-            </Tooltip>
-            <Tooltip content="Default (200ms)" delay={200}>
-              <Button variant="outline" size="sm">
-                200ms
-              </Button>
-            </Tooltip>
-            <Tooltip content="Slow (500ms)" delay={500}>
-              <Button variant="outline" size="sm">
-                500ms
-              </Button>
-            </Tooltip>
-          </div>
-        </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>padding: 6×4px</code> · <code>radius: 4px</code> · <code>font-size: 11px</code> ·{' '}
+          <code>min-width: 60px</code> · <code>max-width: 240px</code> · <code>arrow: 4px</code>
+        </div>
+      }
+      apiReference={tooltipProps}
+      relatedLinks={[
+        {
+          label: 'Popover',
+          path: '/design/components/popover',
+          description: 'Interactive overlay',
+        },
+        {
+          label: 'Button',
+          path: '/design/components/button',
+          description: 'Icon button with tooltip',
+        },
+        { label: 'Badge', path: '/design/components/badge', description: 'Status with tooltip' },
+      ]}
+    />
   );
 }

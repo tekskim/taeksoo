@@ -1,27 +1,234 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import type { PropDef } from '../_shared/PropsTable';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Button, ContextMenu, VStack } from '@/design-system';
 import { IconChevronRight } from '@tabler/icons-react';
+
+const contextMenuProps: PropDef[] = [
+  { name: 'items', type: 'ContextMenuItem[]', required: true, description: 'Menu items array' },
+  { name: 'children', type: 'ReactElement', required: true, description: 'Trigger element' },
+  {
+    name: 'trigger',
+    type: "'click' | 'contextmenu'",
+    default: "'contextmenu'",
+    required: false,
+    description: 'Trigger type',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: 'Disabled state',
+  },
+  {
+    name: 'align',
+    type: "'left' | 'right'",
+    default: "'left'",
+    required: false,
+    description: 'Dropdown alignment',
+  },
+];
 
 export function ContextMenuPage() {
   return (
     <ComponentPageTemplate
       title="Context menu"
       description="Popup menu triggered by right-click or click with submenu support"
-      relatedLinks={[
-        {
-          label: 'Popover',
-          path: '/design/components/popover',
-          description: 'Interactive overlay',
-        },
-        { label: 'Menu', path: '/design/components/menu', description: 'Navigation menu' },
-        { label: 'Table', path: '/design/components/table', description: 'Row actions' },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* 사용 정책 */}
-        <VStack gap={3}>
-          <Label>사용 정책</Label>
+      preview={
+        <ComponentPreview
+          code={`<ContextMenu
+  trigger="click"
+  items={[
+    { id: 'edit', label: 'Edit', onClick: () => {} },
+    { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
+    { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+  ]}
+>
+  <Button variant="outline" size="sm">Click for Menu</Button>
+</ContextMenu>`}
+        >
+          <ContextMenu
+            trigger="click"
+            items={[
+              { id: 'view', label: 'View details', onClick: () => {} },
+              { id: 'edit', label: 'Edit', onClick: () => {} },
+              { id: 'share', label: 'Share', onClick: () => {}, divider: true },
+              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+            ]}
+          >
+            <Button variant="outline" size="sm">
+              Click for Menu
+            </Button>
+          </ContextMenu>
+        </ComponentPreview>
+      }
+      usage={{
+        code: `import { ContextMenu, Button } from '@/design-system';\n\n<ContextMenu\n  items={[\n    { id: 'edit', label: 'Edit', onClick: handleEdit },\n    { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: handleDelete },\n  ]}\n  trigger="click"\n>\n  <Button variant="outline" size="sm">More Actions</Button>\n</ContextMenu>`,
+      }}
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Static preview</span>
+            <div className="flex gap-6 items-start">
+              <VStack gap={2}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Basic</span>
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                    Edit
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                    Duplicate
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                    Copy
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
+                    Delete
+                  </div>
+                </div>
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">With Submenu</span>
+                <div className="flex gap-1 items-start">
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between bg-[var(--context-menu-hover-bg)]">
+                      <span>New</span>
+                      <IconChevronRight
+                        size={12}
+                        stroke={1}
+                        className="ml-6 text-[var(--color-text-default)]"
+                      />
+                    </div>
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                      Open
+                    </div>
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                      Save
+                    </div>
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between">
+                      <span>Export</span>
+                      <IconChevronRight
+                        size={12}
+                        stroke={1}
+                        className="ml-6 text-[var(--color-text-default)]"
+                      />
+                    </div>
+                  </div>
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden self-start">
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                      File
+                    </div>
+                    <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                      Folder
+                    </div>
+                  </div>
+                </div>
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Danger Status</span>
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                    Default item
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                    Another item
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
+                    Warning action
+                  </div>
+                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
+                    Delete
+                  </div>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Right Click Trigger
+            </span>
+            <ContextMenu
+              trigger="contextmenu"
+              items={[
+                { id: 'edit', label: 'Edit', onClick: () => {} },
+                { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
+                { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+                { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+              ]}
+            >
+              <div className="w-[200px] h-[100px] flex items-center justify-center bg-[var(--color-surface-subtle)] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
+                Right-click here
+              </div>
+            </ContextMenu>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">With submenu</span>
+            <ContextMenu
+              trigger="click"
+              items={[
+                {
+                  id: 'new',
+                  label: 'New',
+                  submenu: [
+                    { id: 'new-file', label: 'File', onClick: () => {} },
+                    { id: 'new-folder', label: 'Folder', onClick: () => {} },
+                  ],
+                },
+                { id: 'open', label: 'Open', onClick: () => {} },
+                { id: 'save', label: 'Save', onClick: () => {}, divider: true },
+                {
+                  id: 'export',
+                  label: 'Export',
+                  submenu: [
+                    { id: 'export-pdf', label: 'PDF', onClick: () => {} },
+                    { id: 'export-csv', label: 'CSV', onClick: () => {} },
+                    { id: 'export-json', label: 'JSON', onClick: () => {} },
+                  ],
+                },
+              ]}
+            >
+              <Button variant="outline" size="sm">
+                Menu with Submenu
+              </Button>
+            </ContextMenu>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Status variants</span>
+            <ContextMenu
+              trigger="click"
+              items={[
+                { id: 'item1', label: 'Default item', onClick: () => {} },
+                { id: 'item2', label: 'Another item', onClick: () => {}, divider: true },
+                {
+                  id: 'danger1',
+                  label: 'Warning action',
+                  status: 'danger',
+                  onClick: () => {},
+                },
+                {
+                  id: 'danger2',
+                  label: 'Delete',
+                  status: 'danger',
+                  onClick: () => {},
+                },
+              ]}
+            >
+              <Button variant="outline" size="sm">
+                Show status variants
+              </Button>
+            </ContextMenu>
+          </VStack>
+        </VStack>
+      }
+      guidelines={
+        <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
               <VStack gap={2}>
@@ -93,11 +300,7 @@ export function ContextMenuPage() {
               </VStack>
             </VStack>
           </div>
-        </VStack>
 
-        {/* 가이드라인 */}
-        <VStack gap={3}>
-          <Label>가이드라인</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
               <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
@@ -125,196 +328,23 @@ export function ContextMenuPage() {
             </div>
           </div>
         </VStack>
-
-        {/* Tokens */}
-        <VStack gap={3}>
-          <Label>Design tokens</Label>
-          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> ·{' '}
-            <code>shadow: md</code>
-          </div>
-        </VStack>
-
-        {/* Static Preview */}
-        <VStack gap={3}>
-          <Label>Static preview</Label>
-          <div className="flex gap-6 items-start">
-            {/* Basic Menu */}
-            <VStack gap={2}>
-              <span className="text-body-xs text-[var(--color-text-subtle)]">Basic</span>
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                  Edit
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                  Duplicate
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
-                  Copy
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
-                  Delete
-                </div>
-              </div>
-            </VStack>
-
-            {/* With Submenu */}
-            <VStack gap={2}>
-              <span className="text-body-xs text-[var(--color-text-subtle)]">With Submenu</span>
-              <div className="flex gap-1 items-start">
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between bg-[var(--context-menu-hover-bg)]">
-                    <span>New</span>
-                    <IconChevronRight
-                      size={12}
-                      stroke={1}
-                      className="ml-6 text-[var(--color-text-default)]"
-                    />
-                  </div>
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                    Open
-                  </div>
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
-                    Save
-                  </div>
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between">
-                    <span>Export</span>
-                    <IconChevronRight
-                      size={12}
-                      stroke={1}
-                      className="ml-6 text-[var(--color-text-default)]"
-                    />
-                  </div>
-                </div>
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden self-start">
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                    File
-                  </div>
-                  <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                    Folder
-                  </div>
-                </div>
-              </div>
-            </VStack>
-
-            {/* Status Variants */}
-            <VStack gap={2}>
-              <span className="text-body-xs text-[var(--color-text-subtle)]">Danger Status</span>
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
-                  Default item
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
-                  Another item
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
-                  Warning action
-                </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
-                  Delete
-                </div>
-              </div>
-            </VStack>
-          </div>
-        </VStack>
-
-        {/* Right Click Trigger */}
-        <VStack gap={3}>
-          <Label>Right Click Trigger</Label>
-          <ContextMenu
-            trigger="contextmenu"
-            items={[
-              { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-              { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
-            ]}
-          >
-            <div className="w-[200px] h-[100px] flex items-center justify-center bg-[var(--color-surface-subtle)] border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-              Right-click here
-            </div>
-          </ContextMenu>
-        </VStack>
-
-        {/* Click Trigger */}
-        <VStack gap={3}>
-          <Label>Click trigger</Label>
-          <ContextMenu
-            trigger="click"
-            items={[
-              { id: 'view', label: 'View details', onClick: () => {} },
-              { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'share', label: 'Share', onClick: () => {}, divider: true },
-              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
-            ]}
-          >
-            <Button variant="outline" size="sm">
-              Click for Menu
-            </Button>
-          </ContextMenu>
-        </VStack>
-
-        {/* With Submenu */}
-        <VStack gap={3}>
-          <Label>With submenu</Label>
-          <ContextMenu
-            trigger="click"
-            items={[
-              {
-                id: 'new',
-                label: 'New',
-                submenu: [
-                  { id: 'new-file', label: 'File', onClick: () => {} },
-                  { id: 'new-folder', label: 'Folder', onClick: () => {} },
-                ],
-              },
-              { id: 'open', label: 'Open', onClick: () => {} },
-              { id: 'save', label: 'Save', onClick: () => {}, divider: true },
-              {
-                id: 'export',
-                label: 'Export',
-                submenu: [
-                  { id: 'export-pdf', label: 'PDF', onClick: () => {} },
-                  { id: 'export-csv', label: 'CSV', onClick: () => {} },
-                  { id: 'export-json', label: 'JSON', onClick: () => {} },
-                ],
-              },
-            ]}
-          >
-            <Button variant="outline" size="sm">
-              Menu with Submenu
-            </Button>
-          </ContextMenu>
-        </VStack>
-
-        {/* Status Variants */}
-        <VStack gap={3}>
-          <Label>Status variants</Label>
-          <ContextMenu
-            trigger="click"
-            items={[
-              { id: 'item1', label: 'Default item', onClick: () => {} },
-              { id: 'item2', label: 'Another item', onClick: () => {}, divider: true },
-              {
-                id: 'danger1',
-                label: 'Warning action',
-                status: 'danger',
-                onClick: () => {},
-              },
-              {
-                id: 'danger2',
-                label: 'Delete',
-                status: 'danger',
-                onClick: () => {},
-              },
-            ]}
-          >
-            <Button variant="outline" size="sm">
-              Show status variants
-            </Button>
-          </ContextMenu>
-        </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      tokens={
+        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> ·{' '}
+          <code>shadow: md</code>
+        </div>
+      }
+      apiReference={contextMenuProps}
+      relatedLinks={[
+        {
+          label: 'Popover',
+          path: '/design/components/popover',
+          description: 'Interactive overlay',
+        },
+        { label: 'Menu', path: '/design/components/menu', description: 'Navigation menu' },
+        { label: 'Table', path: '/design/components/table', description: 'Row actions' },
+      ]}
+    />
   );
 }
