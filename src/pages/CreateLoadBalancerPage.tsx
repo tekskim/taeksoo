@@ -1448,99 +1448,80 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Load Balancer Name */}
                     <div className="py-6">
-                      <FormField required error={!!lbNameError}>
-                        <FormField.Label>Load balancer name</FormField.Label>
-                        <FormField.Control>
-                          <VStack gap={2}>
-                            <Input
-                              placeholder="Enter Load balancer name"
-                              value={loadBalancerName || '-'}
-                              onChange={(e) => {
-                                setLoadBalancerName(e.target.value);
-                                setLbNameError(null);
-                              }}
-                              fullWidth
-                              error={!!lbNameError}
-                            />
-                            {lbNameError && (
-                              <span className="text-body-sm text-[var(--color-state-danger)]">
-                                {lbNameError}
-                              </span>
-                            )}
-                          </VStack>
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_), and the
-                          length must be between 2-128 characters.
-                        </FormField.HelperText>
+                      <FormField
+                        label="Load balancer name"
+                        helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+                        required
+                        error={!!lbNameError}
+                        errorMessage={lbNameError || undefined}
+                      >
+                        <Input
+                          placeholder="Enter Load balancer name"
+                          value={loadBalancerName || '-'}
+                          onChange={(e) => {
+                            setLoadBalancerName(e.target.value);
+                            setLbNameError(null);
+                          }}
+                          fullWidth
+                          error={!!lbNameError}
+                        />
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Description */}
                     <div className="py-6">
-                      <FormField>
-                        <FormField.Label>Load balancer description</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            placeholder="Enter description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            fullWidth
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                          maximum 255 characters.
-                        </FormField.HelperText>
+                      <FormField
+                        label="Load balancer description"
+                        helperText="You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters."
+                      >
+                        <Input
+                          placeholder="Enter description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Provider */}
                     <div className="py-6">
-                      <FormField required error={!!providerError}>
-                        <FormField.Label>Provider</FormField.Label>
-                        <FormField.Description>
-                          Choose the provider to use for the load balancer.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <VStack gap={2}>
-                            <VStack gap={3}>
-                              <HStack gap={1.5} align="center">
-                                <Radio
-                                  value="ovn"
-                                  checked={provider === 'ovn'}
-                                  onChange={() => handleProviderChange('ovn')}
-                                  label="OVN"
-                                />
-                                <Tooltip content="Distributed load balancer with OVN-based architecture">
-                                  <IconInfoCircle
-                                    size={14}
-                                    className="text-[var(--color-text-subtle)]"
-                                  />
-                                </Tooltip>
-                              </HStack>
-                              <HStack gap={1.5} align="center">
-                                <Radio
-                                  value="amphora"
-                                  checked={provider === 'amphora'}
-                                  onChange={() => handleProviderChange('amphora')}
-                                  label="Amphora"
-                                />
-                                <Tooltip content="Load balancer using dedicated Amphora VMs">
-                                  <IconInfoCircle
-                                    size={14}
-                                    className="text-[var(--color-text-subtle)]"
-                                  />
-                                </Tooltip>
-                              </HStack>
-                            </VStack>
-                            {providerError && (
-                              <span className="text-body-sm text-[var(--color-state-danger)]">
-                                {providerError}
-                              </span>
-                            )}
-                          </VStack>
-                        </FormField.Control>
+                      <FormField
+                        label="Provider"
+                        description="Choose the provider to use for the load balancer."
+                        required
+                        error={!!providerError}
+                        errorMessage={providerError || undefined}
+                      >
+                        <VStack gap={3}>
+                          <HStack gap={1.5} align="center">
+                            <Radio
+                              value="ovn"
+                              checked={provider === 'ovn'}
+                              onChange={() => handleProviderChange('ovn')}
+                              label="OVN"
+                            />
+                            <Tooltip content="Distributed load balancer with OVN-based architecture">
+                              <IconInfoCircle
+                                size={14}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </Tooltip>
+                          </HStack>
+                          <HStack gap={1.5} align="center">
+                            <Radio
+                              value="amphora"
+                              checked={provider === 'amphora'}
+                              onChange={() => handleProviderChange('amphora')}
+                              label="Amphora"
+                            />
+                            <Tooltip content="Load balancer using dedicated Amphora VMs">
+                              <IconInfoCircle
+                                size={14}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </Tooltip>
+                          </HStack>
+                        </VStack>
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -2297,20 +2278,21 @@ export default function CreateLoadBalancerPage() {
                               checked={connectionLimitType === 'unlimited'}
                               onChange={() => setConnectionLimitType('unlimited')}
                             />
-                            <HStack gap={3} align="center">
-                              <Radio
-                                label="Limited"
-                                checked={connectionLimitType === 'limited'}
-                                onChange={() => setConnectionLimitType('limited')}
-                              />
-                              <NumberInput
-                                value={connectionLimitValue}
-                                onChange={setConnectionLimitValue}
-                                disabled={connectionLimitType === 'unlimited'}
-                                min={1}
-                                width="sm"
-                              />
-                            </HStack>
+                            <Radio
+                              label="Limited"
+                              checked={connectionLimitType === 'limited'}
+                              onChange={() => setConnectionLimitType('limited')}
+                            />
+                            {connectionLimitType === 'limited' && (
+                              <div className="pl-[calc(var(--radio-size)+var(--radio-gap))]">
+                                <NumberInput
+                                  value={connectionLimitValue}
+                                  onChange={setConnectionLimitValue}
+                                  min={1}
+                                  width="sm"
+                                />
+                              </div>
+                            )}
                           </VStack>
                         </FormField.Control>
                       </FormField>
@@ -2350,7 +2332,7 @@ export default function CreateLoadBalancerPage() {
                               <FormField.Description>
                                 Defines custom header values to be forwarded to backend servers.
                               </FormField.Description>
-                              <FormField.Control>
+                              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                                 <VStack gap={3} align="start">
                                   <HStack gap={2} align="center">
                                     <Checkbox
@@ -2757,18 +2739,22 @@ export default function CreateLoadBalancerPage() {
                                           <Radio value="http_cookie" label="HTTP Cookie" />
                                         )}
                                         {poolProtocol === 'HTTP' && (
-                                          <VStack gap={2} align="start">
-                                            <Radio value="app_cookie" label="App cookie" />
+                                          <Radio value="app_cookie" label="App cookie" />
+                                        )}
+                                        {sessionPersistence === 'app_cookie' && (
+                                          <VStack
+                                            gap={2}
+                                            className="pl-[calc(var(--radio-size)+var(--radio-gap))] w-full"
+                                          >
                                             <Input
                                               placeholder="Enter cookie name"
                                               value={cookieName}
                                               onChange={(e) => setCookieName(e.target.value)}
-                                              disabled={sessionPersistence !== 'app_cookie'}
-                                              className="w-[var(--layout-sidebar-width)]"
+                                              fullWidth
                                             />
                                             <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               You can use letters, numbers, and special
-                                              characters(+.-_!#$%&'*^|~).
+                                              characters(+.-_!#$%&apos;*^|~).
                                             </span>
                                           </VStack>
                                         )}

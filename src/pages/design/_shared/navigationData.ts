@@ -36,6 +36,7 @@ import {
   IconBorderAll,
   IconAppWindow,
   IconApps,
+  IconPencil,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -86,6 +87,12 @@ const foundationItems: NavItem[] = [
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple, path: '/design/foundation/shadows' },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
   { id: 'app-icons', label: 'App icons', icon: IconApps, path: '/design/foundation/app-icons' },
+  {
+    id: 'ux-writing-guide',
+    label: 'UX Writing Guide',
+    icon: IconPencil,
+    path: '/design/foundation/ux-writing',
+  },
 ];
 
 const formControlItems: NavItem[] = [
@@ -137,6 +144,12 @@ const dataDisplayItems: NavItem[] = [
     label: 'SelectionIndicator',
     icon: IconSquareCheck,
     path: '/design/components/selection-indicator',
+  },
+  {
+    id: 'file-list-card',
+    label: 'FileListCard',
+    icon: IconList,
+    path: '/design/components/file-list-card',
   },
 ];
 
