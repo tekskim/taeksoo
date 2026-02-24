@@ -7,26 +7,7 @@ export function BordersPage() {
     <ComponentPageTemplate
       title="Borders"
       description="Border tokens for colors, widths, and styles"
-      relatedLinks={[
-        {
-          label: 'Spacing & Radius',
-          path: '/design/foundation/spacing',
-          description: 'Consistent spacing scale',
-        },
-        {
-          label: 'Typography',
-          path: '/design/foundation/typography',
-          description: 'Mona Sans typography system',
-        },
-        {
-          label: 'Semantic colors',
-          path: '/design/foundation/semantic-colors',
-          description: 'Purpose-driven color tokens',
-        },
-      ]}
-    >
-      <VStack gap={8}>
-        {/* Border Colors */}
+      preview={
         <VStack gap={4}>
           <Label>Border colors</Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -53,82 +34,83 @@ export function BordersPage() {
             ))}
           </div>
         </VStack>
+      }
+      examples={
+        <VStack gap={8}>
+          <VStack gap={4}>
+            <Label>Border widths</Label>
+            <div className="grid grid-cols-4 gap-4">
+              {[
+                { name: '0', value: '0px' },
+                { name: '1', value: '1px' },
+                { name: '2', value: '2px' },
+                { name: '4', value: '4px' },
+              ].map(({ name, value }) => (
+                <div key={name} className="flex flex-col gap-2 items-center">
+                  <div
+                    className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
+                    style={{ border: `${value} solid var(--color-border-strong)` }}
+                  />
+                  <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                    {value}
+                  </code>
+                </div>
+              ))}
+            </div>
+          </VStack>
 
-        {/* Border Widths */}
-        <VStack gap={4}>
-          <Label>Border widths</Label>
-          <div className="grid grid-cols-4 gap-4">
-            {[
-              { name: '0', value: '0px' },
-              { name: '1', value: '1px' },
-              { name: '2', value: '2px' },
-              { name: '4', value: '4px' },
-            ].map(({ name, value }) => (
-              <div key={name} className="flex flex-col gap-2 items-center">
-                <div
-                  className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
-                  style={{ border: `${value} solid var(--color-border-strong)` }}
-                />
-                <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
-                  {value}
+          {/* Border Styles */}
+          <VStack gap={4}>
+            <Label>Border styles</Label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {['solid', 'dashed', 'dotted', 'none'].map((style) => (
+                <div key={style} className="flex flex-col gap-2 items-center">
+                  <div
+                    className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
+                    style={{ border: `2px ${style} var(--color-border-strong)` }}
+                  />
+                  <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                    {style}
+                  </code>
+                </div>
+              ))}
+            </div>
+          </VStack>
+
+          {/* Border Usage Examples */}
+          <VStack gap={4}>
+            <Label>Usage examples</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
+                  Card with default border
+                </p>
+                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                  border border-[var(--color-border-default)]
                 </code>
               </div>
-            ))}
-          </div>
-        </VStack>
-
-        {/* Border Styles */}
-        <VStack gap={4}>
-          <Label>Border styles</Label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {['solid', 'dashed', 'dotted', 'none'].map((style) => (
-              <div key={style} className="flex flex-col gap-2 items-center">
-                <div
-                  className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
-                  style={{ border: `2px ${style} var(--color-border-strong)` }}
-                />
-                <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
-                  {style}
+              <div className="p-4 rounded-[var(--radius-lg)] border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-default)]">
+                <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
+                  Card with strong border
+                </p>
+                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                  border-2 border-[var(--color-border-strong)]
                 </code>
               </div>
-            ))}
-          </div>
+              <div className="p-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
+                  Dashed border (dropzone)
+                </p>
+                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                  border border-dashed
+                </code>
+              </div>
+            </div>
+          </VStack>
         </VStack>
-
-        {/* Border Usage Examples */}
-        <VStack gap={4}>
-          <Label>Usage examples</Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-              <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
-                Card with default border
-              </p>
-              <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
-                border border-[var(--color-border-default)]
-              </code>
-            </div>
-            <div className="p-4 rounded-[var(--radius-lg)] border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-default)]">
-              <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
-                Card with strong border
-              </p>
-              <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
-                border-2 border-[var(--color-border-strong)]
-              </code>
-            </div>
-            <div className="p-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-              <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
-                Dashed border (dropzone)
-              </p>
-              <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
-                border border-dashed
-              </code>
-            </div>
-          </div>
-        </VStack>
-
-        {/* CSS Variables Reference */}
+      }
+      tokens={
         <VStack gap={3}>
-          <Label>CSS Variables</Label>
           <pre className="text-[length:var(--font-size-11)] p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] overflow-x-auto text-[var(--color-text-muted)]">
             {`/* Border Colors */
 --color-border-default   /* 기본 보더 (slate-200 / #333) */
@@ -142,7 +124,24 @@ border-color: var(--color-border-strong);
 outline: 2px solid var(--color-border-focus);`}
           </pre>
         </VStack>
-      </VStack>
-    </ComponentPageTemplate>
+      }
+      relatedLinks={[
+        {
+          label: 'Spacing & Radius',
+          path: '/design/foundation/spacing',
+          description: 'Consistent spacing scale',
+        },
+        {
+          label: 'Typography',
+          path: '/design/foundation/typography',
+          description: 'Mona Sans typography system',
+        },
+        {
+          label: 'Semantic colors',
+          path: '/design/foundation/semantic-colors',
+          description: 'Purpose-driven color tokens',
+        },
+      ]}
+    />
   );
 }
