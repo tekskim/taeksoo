@@ -4,6 +4,7 @@ import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
   Breadcrumb,
+  FormField,
   NumberInput,
   Slider,
   HStack,
@@ -1622,64 +1623,64 @@ function ImageSection({
 
           <div className="py-6">
             {/* System disk Section */}
-            <VStack gap={3}>
-              <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
+            <FormField>
+              <FormField.Label>System disk</FormField.Label>
+              <FormField.Description>
                 Configure whether to create a system disk for booting.
-              </span>
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <Toggle
+                  checked={createSystemDisk}
+                  onChange={setCreateSystemDisk}
+                  label="Create a new system disk"
+                />
+              </FormField.Control>
+            </FormField>
 
-              {/* Toggle */}
-              <Toggle
-                checked={createSystemDisk}
-                onChange={setCreateSystemDisk}
-                label="Create a new system disk"
-              />
-
-              {/* Storage Type Row - Bordered Container */}
-              {(isV2 || createSystemDisk) && (
-                <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
-                  <HStack gap={6} align="start" className="flex-wrap">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                      <Select
-                        options={storageTypeOptions}
-                        value={storageType}
-                        onChange={onStorageTypeChange}
-                      />
-                    </HStack>
-                    <VStack gap={2}>
-                      <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                      <HStack gap={3} align="center">
-                        <Slider
-                          min={10}
-                          max={1000}
-                          step={10}
-                          value={storageSize}
-                          onChange={onStorageSizeChange}
-                        />
-                        <NumberInput
-                          value={storageSize}
-                          onChange={onStorageSizeChange}
-                          min={10}
-                          max={1000}
-                          step={1}
-                          width="xs"
-                          suffix="GiB"
-                        />
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        10-1,000 GiB
-                      </span>
-                    </VStack>
-                    <Checkbox
-                      label="Deleted with the instance"
-                      checked={deleteWithInstance}
-                      onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
+            {/* Storage Type Row - Bordered Container */}
+            {(isV2 || createSystemDisk) && (
+              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+                <HStack gap={6} align="start" className="flex-wrap">
+                  <HStack gap={1.5} align="center">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
+                    <Select
+                      options={storageTypeOptions}
+                      value={storageType}
+                      onChange={onStorageTypeChange}
                     />
                   </HStack>
-                </div>
-              )}
-            </VStack>
+                  <VStack gap={2}>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
+                    <HStack gap={3} align="center">
+                      <Slider
+                        min={10}
+                        max={1000}
+                        step={10}
+                        value={storageSize}
+                        onChange={onStorageSizeChange}
+                      />
+                      <NumberInput
+                        value={storageSize}
+                        onChange={onStorageSizeChange}
+                        min={10}
+                        max={1000}
+                        step={1}
+                        width="xs"
+                        suffix="GiB"
+                      />
+                    </HStack>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      10-1,000 GiB
+                    </span>
+                  </VStack>
+                  <Checkbox
+                    label="Deleted with the instance"
+                    checked={deleteWithInstance}
+                    onChange={() => onDeleteWithInstanceChange(!deleteWithInstance)}
+                  />
+                </HStack>
+              </div>
+            )}
           </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />

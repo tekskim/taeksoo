@@ -770,7 +770,7 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
-          <VStack gap={3} align="start">
+          <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
             <Radio
               checked={strategy === 'rolling-update'}
               onChange={() => onStrategyChange('rolling-update')}
@@ -787,7 +787,7 @@ function ScalingPolicySection({
           <FormField>
             <FormField.Label>Pod Management Policy</FormField.Label>
             <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <VStack gap={3} align="start">
+              <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                 <Radio
                   checked={podManagementPolicy === 'ordered-ready'}
                   onChange={() => onPodManagementPolicyChange('ordered-ready')}

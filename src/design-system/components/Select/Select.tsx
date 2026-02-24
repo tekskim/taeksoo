@@ -295,7 +295,7 @@ export function Select({
   );
 
   const dropdownClasses = twMerge(
-    'fixed z-[1300]',
+    'fixed z-[var(--z-popover)]',
     'bg-[var(--select-menu-bg)]',
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',

@@ -259,7 +259,7 @@ export function CreateSubnetDrawer({
               {/* DHCP */}
               <FormField>
                 <FormField.Label>DHCP</FormField.Label>
-                <FormField.Control>
+                <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                   <Toggle
                     checked={dhcpEnabled}
                     onChange={(e) => setDhcpEnabled(e.target.checked)}

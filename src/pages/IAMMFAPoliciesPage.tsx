@@ -281,7 +281,7 @@ export default function IAMMFAPoliciesPage() {
                           For security, always keep this disabled. Enabling it may expose the system
                           to replay attacks.
                         </FormField.Description>
-                        <FormField.Control>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                           <Toggle
                             checked={reusableToken}
                             onChange={(e) => setReusableToken(e.target.checked)}

@@ -433,7 +433,7 @@ function SettingsSection({
                 Locking works only in versioned buckets.
               </FormField.Description>
               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <VStack gap={3} align="start">
+                <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                   <Radio
                     value="disabled"
                     checked={objectLocking === 'disabled'}
@@ -461,7 +461,7 @@ function SettingsSection({
                 Enables versioning for the objects in the bucket.
               </FormField.Description>
               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <VStack gap={3} align="start">
+                <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                   <Radio
                     value="disabled"
                     checked={objectLocking === 'disabled'}
@@ -490,7 +490,7 @@ function SettingsSection({
                 authentication for changing the bucket versioning state.
               </FormField.Description>
               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <VStack gap={3} align="start">
+                <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                   <Radio
                     value="disabled"
                     checked={objectLocking === 'disabled'}
