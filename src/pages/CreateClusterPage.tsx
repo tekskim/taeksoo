@@ -1,7 +1,14 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconX, IconCirclePlus, IconInfoCircle, IconEye, IconEyeOff } from '@tabler/icons-react';
+import {
+  IconX,
+  IconCirclePlus,
+  IconInfoCircle,
+  IconHelpCircle,
+  IconEye,
+  IconEyeOff,
+} from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -26,7 +33,6 @@ import {
   Tabs,
   TabList,
   Tab,
-  TabPanel,
   PageShell,
   WizardSummary,
 } from '@/design-system';
@@ -191,13 +197,13 @@ export function CreateClusterPage() {
   // Control Planes
   const [cpImage, setCpImage] = useState('ubuntu-24.04-tk-base');
   const [cpFlavor, setCpFlavor] = useState('th-tiny');
-  const [cpNodeCount, setCpNodeCount] = useState('3');
+  const [cpNodeCount, setCpNodeCount] = useState(3);
   const [etcdDiskType, setEtcdDiskType] = useState<'external' | 'local'>('external');
+  const [etcdVolumeType, setEtcdVolumeType] = useState('ceph');
   const [etcdVolumeSize, setEtcdVolumeSize] = useState(10);
   const [cpFlavorFilter, setCpFlavorFilter] = useState('vcpu');
 
   // Authentication
-  const [authMethod, setAuthMethod] = useState<'keypair' | 'password'>('keypair');
   const [selectedKeyPair, setSelectedKeyPair] = useState<string>('');
   const [keyPairSearch, setKeyPairSearch] = useState('');
   const [keyPairPage, setKeyPairPage] = useState(1);
@@ -210,8 +216,18 @@ export function CreateClusterPage() {
   // Worker Nodes
   const [nodeImage, setNodeImage] = useState('ubuntu-24.04-tk-base');
   const [nodeFlavor, setNodeFlavor] = useState('th-tiny');
-  const [nodeCount, setNodeCount] = useState('1');
+  const [nodeCount, setNodeCount] = useState(1);
   const [nodeFlavorFilter, setNodeFlavorFilter] = useState('vcpu');
+
+  // Worker Nodes Authentication
+  const [workerSelectedKeyPair, setWorkerSelectedKeyPair] = useState<string>('');
+  const [workerKeyPairSearch, setWorkerKeyPairSearch] = useState('');
+  const [workerKeyPairPage, setWorkerKeyPairPage] = useState(1);
+  const [workerLoginName, setWorkerLoginName] = useState('');
+  const [workerPassword, setWorkerPassword] = useState('');
+  const [workerConfirmPassword, setWorkerConfirmPassword] = useState('');
+  const [workerShowPassword, setWorkerShowPassword] = useState(false);
+  const [workerShowConfirmPassword, setWorkerShowConfirmPassword] = useState(false);
 
   // Labels & Annotations
   const [labels, setLabels] = useState<Label[]>(isV2 ? [{ id: '0', key: '', value: '' }] : []);
@@ -522,7 +538,10 @@ export function CreateClusterPage() {
                     <HStack gap={1} align="center">
                       External Network
                       <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip content="Displays the list of External Networks created in the user domain for enabling external access for the cluster.">
+                      <Tooltip
+                        content="Displays the list of External Networks created in the user domain for enabling external access for the cluster."
+                        position="right"
+                      >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </HStack>
@@ -576,7 +595,10 @@ export function CreateClusterPage() {
                     <HStack gap={1} align="center">
                       Tenant Network
                       <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External Network.">
+                      <Tooltip
+                        content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External Network."
+                        position="right"
+                      >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </HStack>
@@ -625,7 +647,10 @@ export function CreateClusterPage() {
                     <HStack gap={1} align="center">
                       Subnet
                       <span className="text-[var(--color-state-danger)]">*</span>
-                      <Tooltip content="Displays the subnets within the selected Tenant Network. Only subnets connected to a router open to External Gateway for the selected External Network are shown.">
+                      <Tooltip
+                        content="Displays the subnets within the selected Tenant Network. Only subnets connected to a router open to External Gateway for the selected External Network are shown."
+                        position="right"
+                      >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </HStack>
@@ -670,7 +695,7 @@ export function CreateClusterPage() {
                 </FormField>
 
                 {/* Control Planes */}
-                <div className="border-t border-[var(--color-border-subtle)] pt-6">
+                <div>
                   <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                     Control Planes
                   </h6>
@@ -714,7 +739,7 @@ export function CreateClusterPage() {
                             </TabList>
                           </Tabs>
                           <SearchInput
-                            placeholder="Find Flavor with filters"
+                            placeholder="Search flavors by attributes"
                             className="w-[var(--search-input-width)]"
                           />
                           <Pagination
@@ -747,27 +772,6 @@ export function CreateClusterPage() {
                       </FormField.Control>
                     </FormField>
 
-                    {/* Node Count */}
-                    <FormField required>
-                      <FormField.Label>Node Count</FormField.Label>
-                      <FormField.Description>
-                        Select the number of nodes to create.
-                      </FormField.Description>
-                      <FormField.Control>
-                        <Select
-                          options={[
-                            { value: '1', label: '1' },
-                            { value: '3', label: '3' },
-                            { value: '5', label: '5' },
-                            { value: '7', label: '7' },
-                          ]}
-                          value={cpNodeCount}
-                          onChange={setCpNodeCount}
-                          fullWidth
-                        />
-                      </FormField.Control>
-                    </FormField>
-
                     {/* etcd Disk */}
                     <FormField required>
                       <FormField.Label>etcd Disk</FormField.Label>
@@ -779,9 +783,61 @@ export function CreateClusterPage() {
                           value={etcdDiskType}
                           onChange={(value) => setEtcdDiskType(value as 'external' | 'local')}
                         >
-                          <Radio value="external" label="External (recommended)" />
-                          <Radio value="local" label="Local" />
+                          <Radio
+                            value="external"
+                            label={
+                              <HStack gap={1} align="center">
+                                External (recommended)
+                                <Tooltip
+                                  content="External disks use independent storage resources."
+                                  position="right"
+                                >
+                                  <IconHelpCircle
+                                    size={14}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
+                              </HStack>
+                            }
+                          />
+                          <Radio
+                            value="local"
+                            label={
+                              <HStack gap={1} align="center">
+                                Local
+                                <Tooltip
+                                  content="Local disks use the node's internal storage."
+                                  position="right"
+                                >
+                                  <IconHelpCircle
+                                    size={14}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </Tooltip>
+                              </HStack>
+                            }
+                          />
                         </RadioGroup>
+                      </FormField.Control>
+                    </FormField>
+
+                    {/* etcd Volume type */}
+                    <FormField required>
+                      <FormField.Label>etcd Volume type</FormField.Label>
+                      <FormField.Description>
+                        Specify the volume type for the etcd data disk
+                      </FormField.Description>
+                      <FormField.Control>
+                        <Select
+                          options={[
+                            { value: 'ceph', label: 'ceph' },
+                            { value: 'local', label: 'local' },
+                            { value: 'nfs', label: 'nfs' },
+                          ]}
+                          value={etcdVolumeType}
+                          onChange={setEtcdVolumeType}
+                          fullWidth
+                        />
                       </FormField.Control>
                     </FormField>
 
@@ -827,124 +883,149 @@ export function CreateClusterPage() {
                         either the Key Pair method or the Password method.
                       </FormField.Description>
                       <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                        <Tabs
-                          value={authMethod}
-                          onChange={(v) => setAuthMethod(v as 'keypair' | 'password')}
-                          variant="underline"
-                          size="sm"
-                        >
+                        <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
                           <TabList>
                             <Tab value="keypair">Key Pair</Tab>
                             <Tab value="password">Password</Tab>
                           </TabList>
-
-                          <TabPanel value="keypair" className="pt-0">
-                            <VStack gap={3} className="pt-4">
-                              <SearchInput
-                                placeholder="Search key pairs by attributes"
-                                value={keyPairSearch}
-                                onChange={(e) => setKeyPairSearch(e.target.value)}
-                                className="w-[var(--search-input-width)]"
-                              />
-                              <Pagination
-                                currentPage={keyPairPage}
-                                totalPages={5}
-                                onPageChange={setKeyPairPage}
-                                totalItems={115}
-                                selectedCount={selectedKeyPair ? 1 : 0}
-                              />
-                              <VStack gap={2}>
-                                <Table
-                                  columns={keyPairColumns}
-                                  data={filteredKeyPairs}
-                                  rowKey="id"
-                                />
-                                <SelectionIndicator
-                                  selectedItems={
-                                    selectedKeyPair
-                                      ? [
-                                          {
-                                            id: selectedKeyPair,
-                                            label:
-                                              mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
-                                                ?.name || selectedKeyPair,
-                                          },
-                                        ]
-                                      : []
-                                  }
-                                  emptyText="No key pair selected"
-                                  onRemove={() => setSelectedKeyPair('')}
-                                />
-                              </VStack>
-                            </VStack>
-                          </TabPanel>
-
-                          <TabPanel value="password" className="pt-0">
-                            <VStack gap={6} className="pt-4">
-                              <FormField>
-                                <FormField.Label>Login Name</FormField.Label>
-                                <FormField.Control>
-                                  <Input
-                                    placeholder="Enter login name"
-                                    value={loginName}
-                                    onChange={(e) => setLoginName(e.target.value)}
-                                  />
-                                </FormField.Control>
-                              </FormField>
-                              <FormField>
-                                <FormField.Label>Password</FormField.Label>
-                                <FormField.Control>
-                                  <Input
-                                    type={showPassword ? 'text' : 'password'}
-                                    placeholder="Enter password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    rightElement={
-                                      <button
-                                        type="button"
-                                        className="flex items-center"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        tabIndex={-1}
-                                      >
-                                        {showPassword ? (
-                                          <IconEyeOff size={14} />
-                                        ) : (
-                                          <IconEye size={14} />
-                                        )}
-                                      </button>
-                                    }
-                                  />
-                                </FormField.Control>
-                              </FormField>
-                              <FormField>
-                                <FormField.Label>Confirm Password</FormField.Label>
-                                <FormField.Control>
-                                  <Input
-                                    type={showConfirmPassword ? 'text' : 'password'}
-                                    placeholder="Enter password again"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    rightElement={
-                                      <button
-                                        type="button"
-                                        className="flex items-center"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        tabIndex={-1}
-                                      >
-                                        {showConfirmPassword ? (
-                                          <IconEyeOff size={14} />
-                                        ) : (
-                                          <IconEye size={14} />
-                                        )}
-                                      </button>
-                                    }
-                                  />
-                                </FormField.Control>
-                              </FormField>
-                            </VStack>
-                          </TabPanel>
                         </Tabs>
+
+                        {/* Key Pair section */}
+                        <VStack gap={3} className="pt-4">
+                          <SearchInput
+                            placeholder="Search key pairs by attributes"
+                            value={keyPairSearch}
+                            onChange={(e) => setKeyPairSearch(e.target.value)}
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Pagination
+                            currentPage={keyPairPage}
+                            totalPages={5}
+                            onPageChange={setKeyPairPage}
+                            totalItems={115}
+                            selectedCount={selectedKeyPair ? 1 : 0}
+                          />
+                          <VStack gap={2}>
+                            <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                            <SelectionIndicator
+                              selectedItems={
+                                selectedKeyPair
+                                  ? [
+                                      {
+                                        id: selectedKeyPair,
+                                        label:
+                                          mockKeyPairs.find((kp) => kp.id === selectedKeyPair)
+                                            ?.name || selectedKeyPair,
+                                      },
+                                    ]
+                                  : []
+                              }
+                              emptyText="No item Selected"
+                              onRemove={() => setSelectedKeyPair('')}
+                            />
+                          </VStack>
+                        </VStack>
+
+                        {/* Password section */}
+                        <VStack gap={6} className="pt-6">
+                          <FormField>
+                            <FormField.Label>Login Name</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                placeholder="Enter login name"
+                                value={loginName}
+                                onChange={(e) => setLoginName(e.target.value)}
+                                fullWidth
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Password</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                fullWidth
+                                rightElement={
+                                  <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    tabIndex={-1}
+                                  >
+                                    {showPassword ? (
+                                      <IconEyeOff size={14} />
+                                    ) : (
+                                      <IconEye size={14} />
+                                    )}
+                                  </button>
+                                }
+                              />
+                            </FormField.Control>
+                          </FormField>
+                          <FormField>
+                            <FormField.Label>Confirm Password</FormField.Label>
+                            <FormField.Control>
+                              <Input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="Enter password again"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                fullWidth
+                                rightElement={
+                                  <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    tabIndex={-1}
+                                  >
+                                    {showConfirmPassword ? (
+                                      <IconEyeOff size={14} />
+                                    ) : (
+                                      <IconEye size={14} />
+                                    )}
+                                  </button>
+                                }
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </VStack>
                       </FormField.Control>
+                    </FormField>
+
+                    {/* Node Count */}
+                    <FormField required>
+                      <FormField.Label>Node Count</FormField.Label>
+                      <FormField.Description>
+                        Select the number of nodes to create.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <HStack
+                          gap={4}
+                          align="center"
+                          className="max-w-[var(--slider-row-max-width)]"
+                        >
+                          <Slider
+                            min={1}
+                            max={7}
+                            step={2}
+                            value={cpNodeCount}
+                            onChange={setCpNodeCount}
+                            className="flex-1"
+                          />
+                          <NumberInput
+                            value={cpNodeCount}
+                            onChange={setCpNodeCount}
+                            min={1}
+                            max={7}
+                            step={2}
+                            width="xs"
+                          />
+                        </HStack>
+                      </FormField.Control>
+                      <FormField.HelperText>1-7 nodes (odd numbers)</FormField.HelperText>
                     </FormField>
                   </VStack>
                 </div>
@@ -996,7 +1077,7 @@ export function CreateClusterPage() {
                         </TabList>
                       </Tabs>
                       <SearchInput
-                        placeholder="Find Flavor with filters"
+                        placeholder="Search flavors by attributes"
                         className="w-[var(--search-input-width)]"
                       />
                       <Pagination
@@ -1029,6 +1110,128 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
+                {/* Authentication */}
+                <FormField required>
+                  <FormField.Label>Authentication</FormField.Label>
+                  <FormField.Description>
+                    Select the authentication method for accessing your instance. You can choose
+                    either the Key Pair method or the Password method.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="keypair">Key Pair</Tab>
+                        <Tab value="password">Password</Tab>
+                      </TabList>
+                    </Tabs>
+
+                    {/* Key Pair section */}
+                    <VStack gap={3} className="pt-4">
+                      <SearchInput
+                        placeholder="Search key pairs by attributes"
+                        value={workerKeyPairSearch}
+                        onChange={(e) => setWorkerKeyPairSearch(e.target.value)}
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Pagination
+                        currentPage={workerKeyPairPage}
+                        totalPages={5}
+                        onPageChange={setWorkerKeyPairPage}
+                        totalItems={115}
+                        selectedCount={workerSelectedKeyPair ? 1 : 0}
+                      />
+                      <VStack gap={2}>
+                        <Table columns={keyPairColumns} data={filteredKeyPairs} rowKey="id" />
+                        <SelectionIndicator
+                          selectedItems={
+                            workerSelectedKeyPair
+                              ? [
+                                  {
+                                    id: workerSelectedKeyPair,
+                                    label:
+                                      mockKeyPairs.find((kp) => kp.id === workerSelectedKeyPair)
+                                        ?.name || workerSelectedKeyPair,
+                                  },
+                                ]
+                              : []
+                          }
+                          emptyText="No item Selected"
+                          onRemove={() => setWorkerSelectedKeyPair('')}
+                        />
+                      </VStack>
+                    </VStack>
+
+                    {/* Password section */}
+                    <VStack gap={6} className="pt-6">
+                      <FormField>
+                        <FormField.Label>Login Name</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter login name"
+                            value={workerLoginName}
+                            onChange={(e) => setWorkerLoginName(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                      </FormField>
+                      <FormField>
+                        <FormField.Label>Password</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            type={workerShowPassword ? 'text' : 'password'}
+                            placeholder="Enter password"
+                            value={workerPassword}
+                            onChange={(e) => setWorkerPassword(e.target.value)}
+                            fullWidth
+                            rightElement={
+                              <button
+                                type="button"
+                                className="flex items-center"
+                                onClick={() => setWorkerShowPassword(!workerShowPassword)}
+                                tabIndex={-1}
+                              >
+                                {workerShowPassword ? (
+                                  <IconEyeOff size={14} />
+                                ) : (
+                                  <IconEye size={14} />
+                                )}
+                              </button>
+                            }
+                          />
+                        </FormField.Control>
+                      </FormField>
+                      <FormField>
+                        <FormField.Label>Confirm Password</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            type={workerShowConfirmPassword ? 'text' : 'password'}
+                            placeholder="Enter password again"
+                            value={workerConfirmPassword}
+                            onChange={(e) => setWorkerConfirmPassword(e.target.value)}
+                            fullWidth
+                            rightElement={
+                              <button
+                                type="button"
+                                className="flex items-center"
+                                onClick={() =>
+                                  setWorkerShowConfirmPassword(!workerShowConfirmPassword)
+                                }
+                                tabIndex={-1}
+                              >
+                                {workerShowConfirmPassword ? (
+                                  <IconEyeOff size={14} />
+                                ) : (
+                                  <IconEye size={14} />
+                                )}
+                              </button>
+                            }
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </VStack>
+                  </FormField.Control>
+                </FormField>
+
                 {/* Node Count */}
                 <FormField required>
                   <FormField.Label>Node Count</FormField.Label>
@@ -1036,19 +1239,26 @@ export function CreateClusterPage() {
                     Select the number of worker nodes to create.
                   </FormField.Description>
                   <FormField.Control>
-                    <Select
-                      options={[
-                        { value: '1', label: '1' },
-                        { value: '2', label: '2' },
-                        { value: '3', label: '3' },
-                        { value: '5', label: '5' },
-                        { value: '10', label: '10' },
-                      ]}
-                      value={nodeCount}
-                      onChange={setNodeCount}
-                      fullWidth
-                    />
+                    <HStack gap={4} align="center" className="max-w-[var(--slider-row-max-width)]">
+                      <Slider
+                        min={1}
+                        max={10}
+                        step={1}
+                        value={nodeCount}
+                        onChange={setNodeCount}
+                        className="flex-1"
+                      />
+                      <NumberInput
+                        value={nodeCount}
+                        onChange={setNodeCount}
+                        min={1}
+                        max={10}
+                        step={1}
+                        width="xs"
+                      />
+                    </HStack>
                   </FormField.Control>
+                  <FormField.HelperText>1-10 nodes</FormField.HelperText>
                 </FormField>
               </VStack>
             </SectionCard.Content>

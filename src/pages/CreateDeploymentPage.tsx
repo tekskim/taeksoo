@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   NumberInput,
+  Slider,
   Disclosure,
   FormField,
   SectionCard,
@@ -25,6 +26,7 @@ import {
   Chip,
   StatusIndicator,
   PageShell,
+  Tooltip,
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -40,6 +42,7 @@ import {
   IconX,
   IconPlus,
   IconChevronRight,
+  IconHelpCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -536,14 +539,25 @@ function BasicInfoSection({
             label="Replicas"
             required
             description="Select the number of pod replicas to create."
+            helperText="1-100 replicas"
           >
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              width="sm"
-            />
+            <HStack gap={4} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={1}
+                max={100}
+                step={1}
+                value={replicas}
+                onChange={onReplicasChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={replicas}
+                onChange={onReplicasChange}
+                min={1}
+                max={100}
+                width="xs"
+              />
+            </HStack>
           </FormField>
 
           {/* Description (Collapsible) */}
@@ -778,12 +792,38 @@ function ScalingPolicySection({
             <Radio
               checked={strategy === 'rolling-update'}
               onChange={() => onStrategyChange('rolling-update')}
-              label="Rolling update"
+              label={
+                <HStack gap={1} align="center">
+                  <span>Rolling update</span>
+                  <Tooltip
+                    content="Gradually replaces old pods with new ones, ensuring availability during the update."
+                    position="right"
+                  >
+                    <IconHelpCircle
+                      size={14}
+                      className="text-[var(--color-text-subtle)] cursor-help"
+                    />
+                  </Tooltip>
+                </HStack>
+              }
             />
             <Radio
               checked={strategy === 'on-delete'}
               onChange={() => onStrategyChange('on-delete')}
-              label="On delete"
+              label={
+                <HStack gap={1} align="center">
+                  <span>On delete</span>
+                  <Tooltip
+                    content="New pods are only created when existing pods are manually deleted."
+                    position="right"
+                  >
+                    <IconHelpCircle
+                      size={14}
+                      className="text-[var(--color-text-subtle)] cursor-help"
+                    />
+                  </Tooltip>
+                </HStack>
+              }
             />
           </VStack>
 
