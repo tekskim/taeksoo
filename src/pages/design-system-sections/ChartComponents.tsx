@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import { Tooltip, MonitoringToolbar } from '@/design-system';
 import {
@@ -555,13 +556,6 @@ export function LineChart({
   );
 }
 
-// Full Screen Chart Data Interface
-interface FullScreenChartData {
-  title: string;
-  series: LineChartSeries[];
-  yAxisFormatter: (value: number) => string;
-}
-
 // ChartWithFullScreen Wrapper Component
 export function ChartWithFullScreen({
   title,
@@ -574,25 +568,36 @@ export function ChartWithFullScreen({
   yAxisFormatter?: (value: number) => string;
   height?: string;
 }) {
-  const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isFullScreen = searchParams.get('fullscreen') === 'true';
+  const fullScreenContainerRef = useRef<HTMLDivElement>(null);
+  const [containerReady, setContainerReady] = useState(false);
 
-  // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && fullScreenChart) {
-        setFullScreenChart(null);
+      if (event.key === 'Escape' && isFullScreen) {
+        setSearchParams({}, { replace: true });
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [fullScreenChart]);
+  }, [isFullScreen, setSearchParams]);
+
+  useEffect(() => {
+    if (isFullScreen && fullScreenContainerRef.current) {
+      const timer = setTimeout(() => setContainerReady(true), 50);
+      return () => clearTimeout(timer);
+    } else {
+      setContainerReady(false);
+    }
+  }, [isFullScreen]);
 
   const handleEnterFullScreen = () => {
-    setFullScreenChart({ title, series, yAxisFormatter });
+    setSearchParams({ fullscreen: 'true' }, { replace: true });
   };
 
   const handleExitFullScreen = () => {
-    setFullScreenChart(null);
+    setSearchParams({}, { replace: true });
   };
 
   return (
@@ -607,18 +612,20 @@ export function ChartWithFullScreen({
       />
 
       {/* Full Screen Overlay & Chart */}
-      {fullScreenChart && (
+      {isFullScreen && (
         <>
           <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
-          <div className="fullScreenFloating">
-            <LineChart
-              title={fullScreenChart.title}
-              series={fullScreenChart.series}
-              yAxisFormatter={fullScreenChart.yAxisFormatter}
-              isFullScreen={true}
-              onExitFullScreen={handleExitFullScreen}
-              timeControls={<MonitoringToolbar timeRangeOptions={timeOptions} />}
-            />
+          <div className="fullScreenFloating" ref={fullScreenContainerRef}>
+            {containerReady && (
+              <LineChart
+                title={title}
+                series={series}
+                yAxisFormatter={yAxisFormatter}
+                isFullScreen={true}
+                onExitFullScreen={handleExitFullScreen}
+                timeControls={<MonitoringToolbar timeRangeOptions={timeOptions} />}
+              />
+            )}
           </div>
         </>
       )}
@@ -915,7 +922,21 @@ export function DoughnutChartDemo({
 
   const getOption = () => ({
     tooltip: {
-      show: false,
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value}%</span>`;
+      },
     },
     animation: false,
     series: [
@@ -924,7 +945,6 @@ export function DoughnutChartDemo({
         radius: ['68%', '80%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
-        silent: true,
         itemStyle: {
           borderRadius: 0,
           borderWidth: 0,
@@ -936,11 +956,11 @@ export function DoughnutChartDemo({
           show: false,
         },
         emphasis: {
-          disabled: true,
+          scale: false,
         },
         data: [
-          { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } },
+          { value: value, name: 'Used', itemStyle: { color: mainColor } },
+          { value: 100 - value, name: 'Available', itemStyle: { color: bgColor } },
         ],
       },
     ],
@@ -1036,17 +1056,14 @@ export function HalfDoughnutChartDemo({
     const dy = my - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // Check if within the arc ring
     if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
 
-    // Check if within the arc angle range (210° to -30°, which is 210° to 330° in standard coords)
-    // Convert to angle: atan2 gives -PI to PI, we need to convert
-    let angle = Math.atan2(-dy, dx) * (180 / Math.PI); // Negate dy because canvas Y is inverted
+    // Gauge sweeps clockwise from 210° (bottom-left) to 330° (bottom-right)
+    // covering the upper arc through 0° (right). The gap is 210°→330° through 270° (bottom).
+    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
     if (angle < 0) angle += 360;
 
-    // The gauge goes from 210° (start) to 330° (-30° = 330°) clockwise
-    // In standard math coords: 210° is bottom-left, 330° is bottom-right
-    return angle >= 150 && angle <= 330; // Approximate visible arc range
+    return angle <= 210 || angle >= 330;
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -1112,7 +1129,7 @@ export function HalfDoughnutChartDemo({
   return (
     <div
       ref={containerRef}
-      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative"
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 relative w-fit"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -1144,18 +1161,27 @@ export function HalfDoughnutChartDemo({
           className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
-          <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block w-2 h-2 rounded-full"
+              style={{ backgroundColor: color }}
+            />
             <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Used: {used}
-              {unit} ({value}%)
+              Used:{' '}
+              <span className="font-medium">
+                {used}
+                {unit} ({value}%)
+              </span>
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-[var(--color-border-subtle)]" />
             <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Available: {available.toFixed(1)}
-              {unit} ({availablePercent}%)
+              Available:{' '}
+              <span className="font-medium">
+                {available.toFixed(1)}
+                {unit} ({availablePercent}%)
+              </span>
             </span>
           </div>
         </div>
@@ -1190,7 +1216,21 @@ export function SingleValueDoughnutDemo({
 
   const getOption = () => ({
     tooltip: {
-      show: false,
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value}%</span>`;
+      },
     },
     animationDuration: 1000,
     animationEasing: 'cubicOut' as const,
@@ -1200,7 +1240,6 @@ export function SingleValueDoughnutDemo({
         radius: ['68%', '80%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
-        silent: true,
         itemStyle: {
           borderRadius: 0,
           borderWidth: 0,
@@ -1212,11 +1251,11 @@ export function SingleValueDoughnutDemo({
           show: false,
         },
         emphasis: {
-          disabled: true,
+          scale: false,
         },
         data: [
-          { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } },
+          { value: value, name: 'Used', itemStyle: { color: mainColor } },
+          { value: 100 - value, name: 'Available', itemStyle: { color: bgColor } },
         ],
       },
     ],

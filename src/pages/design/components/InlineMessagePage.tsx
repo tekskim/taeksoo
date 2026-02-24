@@ -65,16 +65,12 @@ export function InlineMessagePage() {
             </VStack>
           </VStack>
           <VStack gap={3}>
-            <Label>Without icon</Label>
-            <InlineMessage variant="info" hideIcon>
-              This message has no icon.
-            </InlineMessage>
-          </VStack>
-          <VStack gap={3}>
             <Label>Long content</Label>
             <InlineMessage variant="warning">
               This is a longer message that demonstrates how the component handles multi-line
-              content. The text will wrap naturally and the icon stays aligned to the top.
+              content. The text will wrap naturally and the icon stays aligned to the top. When the
+              message exceeds the available width, it breaks into a second row while maintaining
+              consistent padding and icon alignment across all lines.
             </InlineMessage>
           </VStack>
         </VStack>
