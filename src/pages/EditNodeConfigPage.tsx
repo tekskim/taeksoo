@@ -330,7 +330,7 @@ export function EditNodeConfigPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20 overflow-auto overscroll-contain sidebar-scroll"
+      contentClassName="pt-3 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
