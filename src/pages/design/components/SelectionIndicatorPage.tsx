@@ -111,11 +111,7 @@ export function SelectionIndicatorPage() {
           </VStack>
           <VStack gap={3}>
             <Label>Error State</Label>
-            <SelectionIndicator error errorMessage="Please select a start source." />
-          </VStack>
-          <VStack gap={3}>
-            <Label>Error State (uses emptyText as fallback)</Label>
-            <SelectionIndicator error emptyText="Selection is required" />
+            <SelectionIndicator error errorMessage="Selection is required" />
           </VStack>
         </VStack>
       }

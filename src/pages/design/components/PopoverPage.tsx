@@ -1,7 +1,78 @@
+import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import { Button, Popover, VStack } from '@/design-system';
+import { Button, VStack } from '@/design-system';
+
+function StaticPopover({
+  content,
+  position = 'bottom',
+  showArrow = true,
+  children,
+}: {
+  content: ReactNode;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  showArrow?: boolean;
+  children: ReactNode;
+}) {
+  const popoverBox = (
+    <div className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--popover-radius)] shadow-sm">
+      {content}
+      {showArrow && position === 'top' && (
+        <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2">
+          <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-[var(--color-border-default)]" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-surface-default)]" />
+        </div>
+      )}
+      {showArrow && position === 'bottom' && (
+        <div className="absolute -top-[7px] left-1/2 -translate-x-1/2">
+          <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
+        </div>
+      )}
+      {showArrow && position === 'left' && (
+        <div className="absolute -right-[7px] top-1/2 -translate-y-1/2">
+          <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[7px] border-l-[var(--color-border-default)]" />
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[6px] border-l-[var(--color-surface-default)]" />
+        </div>
+      )}
+      {showArrow && position === 'right' && (
+        <div className="absolute -left-[7px] top-1/2 -translate-y-1/2">
+          <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-r-[7px] border-r-[var(--color-border-default)]" />
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px] border-r-[var(--color-surface-default)]" />
+        </div>
+      )}
+    </div>
+  );
+
+  if (position === 'top')
+    return (
+      <div className="flex flex-col items-center gap-2">
+        {popoverBox}
+        {children}
+      </div>
+    );
+  if (position === 'bottom')
+    return (
+      <div className="flex flex-col items-center gap-2">
+        {children}
+        {popoverBox}
+      </div>
+    );
+  if (position === 'left')
+    return (
+      <div className="flex items-center gap-2">
+        {popoverBox}
+        {children}
+      </div>
+    );
+  return (
+    <div className="flex items-center gap-2">
+      {children}
+      {popoverBox}
+    </div>
+  );
+}
 
 const popoverProps: PropDef[] = [
   { name: 'content', type: 'ReactNode', required: true, description: 'Popover content' },
@@ -78,18 +149,20 @@ export function PopoverPage() {
   <Button variant="outline" size="sm">Click me</Button>
 </Popover>`}
         >
-          <Popover
-            content={
-              <div className="p-3">
-                <p className="text-body-md">Click outside or press Escape to close</p>
-              </div>
-            }
-            trigger="click"
-          >
-            <Button variant="outline" size="sm">
-              Click me
-            </Button>
-          </Popover>
+          <div className="flex items-center justify-center py-4">
+            <StaticPopover
+              content={
+                <div className="p-3">
+                  <p className="text-body-md">Click outside or press Escape to close</p>
+                </div>
+              }
+              position="bottom"
+            >
+              <Button variant="outline" size="sm">
+                Click me
+              </Button>
+            </StaticPopover>
+          </div>
         </ComponentPreview>
       }
       usage={{
@@ -99,61 +172,57 @@ export function PopoverPage() {
         <VStack gap={8}>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Hover trigger</span>
-            <div className="flex gap-4 items-center flex-wrap">
-              <Popover
+            <div className="flex gap-4 items-start flex-wrap py-2">
+              <StaticPopover
                 content={
                   <div className="p-3">
                     <p className="text-body-md">Hover로 표시되는 비인터랙티브 정보 콘텐츠입니다.</p>
                   </div>
                 }
-                trigger="hover"
+                position="bottom"
               >
                 <Button variant="outline" size="sm">
                   Hover me
                 </Button>
-              </Popover>
+              </StaticPopover>
             </div>
           </VStack>
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
-            <div className="flex gap-4 items-center flex-wrap">
-              <Popover
+            <div className="flex gap-10 items-center justify-center py-4 flex-wrap">
+              <StaticPopover
                 content={<div className="p-3 text-body-md">Top popover</div>}
                 position="top"
-                trigger="click"
               >
                 <Button variant="outline" size="sm">
                   Top
                 </Button>
-              </Popover>
-              <Popover
+              </StaticPopover>
+              <StaticPopover
                 content={<div className="p-3 text-body-md">Bottom popover</div>}
                 position="bottom"
-                trigger="click"
               >
                 <Button variant="outline" size="sm">
                   Bottom
                 </Button>
-              </Popover>
-              <Popover
+              </StaticPopover>
+              <StaticPopover
                 content={<div className="p-3 text-body-md">Left popover</div>}
                 position="left"
-                trigger="click"
               >
                 <Button variant="outline" size="sm">
                   Left
                 </Button>
-              </Popover>
-              <Popover
+              </StaticPopover>
+              <StaticPopover
                 content={<div className="p-3 text-body-md">Right popover</div>}
                 position="right"
-                trigger="click"
               >
                 <Button variant="outline" size="sm">
                   Right
                 </Button>
-              </Popover>
+              </StaticPopover>
             </div>
           </VStack>
 
@@ -161,8 +230,8 @@ export function PopoverPage() {
             <span className="text-label-md text-[var(--color-text-default)]">
               Interactive content
             </span>
-            <div className="flex gap-4 items-center flex-wrap">
-              <Popover
+            <div className="flex gap-4 items-start flex-wrap py-2">
+              <StaticPopover
                 content={
                   <div className="p-3 w-[200px]">
                     <VStack gap={3}>
@@ -179,27 +248,27 @@ export function PopoverPage() {
                     </VStack>
                   </div>
                 }
-                trigger="click"
+                position="bottom"
               >
                 <Button variant="outline" size="sm">
                   Menu popover
                 </Button>
-              </Popover>
+              </StaticPopover>
             </div>
           </VStack>
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Without arrow</span>
-            <div className="flex gap-4 items-center flex-wrap">
-              <Popover
+            <div className="flex gap-4 items-start flex-wrap py-2">
+              <StaticPopover
                 content={<div className="p-3 text-body-md">No arrow variant</div>}
-                trigger="click"
+                position="bottom"
                 showArrow={false}
               >
                 <Button variant="outline" size="sm">
                   No arrow
                 </Button>
-              </Popover>
+              </StaticPopover>
             </div>
           </VStack>
         </VStack>

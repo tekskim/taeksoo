@@ -177,7 +177,7 @@ export function DesignSystemLayout() {
       {/* Main Content */}
       <main
         ref={mainRef}
-        className="absolute top-0 bottom-0 right-0 left-[var(--layout-sidebar-width)] overflow-y-auto"
+        className="absolute top-0 bottom-0 right-0 left-[var(--layout-sidebar-width)] overflow-y-auto sidebar-scroll"
       >
         <div className="py-12 px-8 overflow-x-auto">
           <div className="min-w-[var(--layout-content-min-width)]">
