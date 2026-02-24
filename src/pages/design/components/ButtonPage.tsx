@@ -670,6 +670,7 @@ export function ButtonPage() {
           description: 'Label and input combinations',
         },
       ]}
+      notionPageId="button"
     />
   );
 }

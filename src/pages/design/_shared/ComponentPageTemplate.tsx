@@ -5,6 +5,7 @@ import { IconArrowRight } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
 import { PropsTable, type PropDef } from './PropsTable';
 import { CodeBlock } from './CodeBlock';
+import { NotionDesignNotes } from './NotionDesignNotes';
 
 export type { PropDef };
 
@@ -28,6 +29,8 @@ interface ComponentPageTemplateProps {
   accessibility?: ReactNode;
   relatedLinks?: RelatedLink[];
   children?: ReactNode;
+  /** Notion 페이지 slug 또는 ID — Design Notes 섹션을 Notion에서 로드 */
+  notionPageId?: string;
 }
 
 export function ComponentPageTemplate({
@@ -43,6 +46,7 @@ export function ComponentPageTemplate({
   accessibility,
   children,
   relatedLinks,
+  notionPageId,
 }: ComponentPageTemplateProps) {
   return (
     <VStack gap={10} align="stretch">
@@ -82,6 +86,9 @@ export function ComponentPageTemplate({
           {guidelines}
         </DocSection>
       )}
+
+      {/* Design Notes (from Notion) */}
+      {notionPageId && <NotionDesignNotes notionPageId={notionPageId} />}
 
       {/* Design Tokens */}
       {tokens && (
