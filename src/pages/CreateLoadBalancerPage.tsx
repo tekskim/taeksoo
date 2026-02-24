@@ -3181,18 +3181,13 @@ export default function CreateLoadBalancerPage() {
                               Specifies the interval in seconds between health checks.
                             </FormField.Description>
                             <FormField.Control>
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   min={1}
                                   max={3600}
                                   step={50}
                                   value={healthMonitorInterval}
                                   onChange={setHealthMonitorInterval}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={healthMonitorInterval}
@@ -3217,18 +3212,13 @@ export default function CreateLoadBalancerPage() {
                               Specifies the timeout in seconds for health check responses.
                             </FormField.Description>
                             <FormField.Control>
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   min={1}
                                   max={3599}
                                   step={50}
                                   value={healthMonitorTimeout}
                                   onChange={setHealthMonitorTimeout}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={healthMonitorTimeout}

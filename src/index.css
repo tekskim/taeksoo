@@ -338,7 +338,7 @@ html.theme-transition *::after {
   --search-input-width: 280px;
   --wizard-summary-width: 312px;
   --detail-panel-width: 280px;
-  --slider-row-max-width: 312px;
+
   --modal-width-sm: 400px;
   --modal-width-md: 480px;
   --modal-width-lg: 640px;
@@ -698,6 +698,7 @@ html.theme-transition *::after {
   --slider-thumb-border-width: 3px;
   --slider-thumb-shadow: var(--shadow-sm);
 
+  --slider-track-width: 220px;
   --slider-gap: var(--spacing-3);
   --slider-value-font-size: var(--font-size-12);
 

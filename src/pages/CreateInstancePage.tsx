@@ -1615,14 +1615,13 @@ function ImageSection({
                 </VStack>
                 <VStack gap={2}>
                   <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                  <HStack gap={3} align="center" className="max-w-[var(--slider-row-max-width)]">
+                  <HStack gap={3} align="center">
                     <Slider
                       min={1}
                       max={1000}
                       step={10}
                       value={storageSize}
                       onChange={setStorageSize}
-                      className="flex-1"
                     />
                     <NumberInput
                       value={storageSize}

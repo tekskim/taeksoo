@@ -1010,14 +1010,14 @@ function AppRoutes() {
         <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />
         <Route path="charts/doughnut" element={<DoughnutChartPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
-        {/* Existing standalone pages */}
-        <Route path="drawers" element={<DrawersPage />} />
-        <Route path="modals" element={<ModalsPage />} />
-        <Route path="gradients" element={<GradientShowcasePage />} />
-        <Route path="colors" element={<ColorPalettePage />} />
-        <Route path="metallic" element={<MetallicPalettePage />} />
-        <Route path="comparison" element={<ProductionComparisonPage />} />
       </Route>
+      {/* Standalone design showcase pages (outside DesignSystemLayout) */}
+      <Route path="/design/drawers" element={<DrawersPage />} />
+      <Route path="/design/modals" element={<ModalsPage />} />
+      <Route path="/design/gradients" element={<GradientShowcasePage />} />
+      <Route path="/design/colors" element={<ColorPalettePage />} />
+      <Route path="/design/metallic" element={<MetallicPalettePage />} />
+      <Route path="/design/comparison" element={<ProductionComparisonPage />} />
       {/* Legacy route */}
       <Route path="/design-system" element={<DesignSystemPage />} />
 

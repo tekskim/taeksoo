@@ -240,7 +240,7 @@ export function RangeSlider({
       <div
         ref={trackRef}
         className={twMerge(
-          'relative flex-1 h-[var(--slider-track-height)]',
+          'relative w-[var(--slider-track-width)] h-[var(--slider-track-height)]',
           'bg-[var(--slider-track-bg)]',
           'rounded-[var(--slider-track-radius)]',
           !disabled && 'cursor-pointer'
