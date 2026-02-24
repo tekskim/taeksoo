@@ -2,7 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { TopBar, TopBarAction, Breadcrumb, VStack } from '@/design-system';
-import { IconBell } from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 const topBarProps: PropDef[] = [
   { name: 'breadcrumb', type: 'ReactNode', required: false, description: 'Breadcrumb content' },
@@ -96,6 +96,42 @@ export function TopBarPage() {
                     aria-label="Notifications"
                     badge
                   />
+                }
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Container App (Home)
+            </span>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Minimal breadcrumb with utility action buttons. No back/forward navigation. Button
+              size: 28px, icon size: 16px, gap: 4px.
+            </p>
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+              <TopBar
+                showSidebarToggle
+                onSidebarToggle={() => {}}
+                breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+                actions={
+                  <>
+                    <TopBarAction
+                      icon={<IconTerminal2 size={16} stroke={1.5} />}
+                      aria-label="Terminal"
+                    />
+                    <TopBarAction icon={<IconFile size={16} stroke={1.5} />} aria-label="Files" />
+                    <TopBarAction icon={<IconCopy size={16} stroke={1.5} />} aria-label="Copy" />
+                    <TopBarAction
+                      icon={<IconSearch size={16} stroke={1.5} />}
+                      aria-label="Search"
+                    />
+                    <TopBarAction
+                      icon={<IconBell size={16} stroke={1.5} />}
+                      aria-label="Notifications"
+                      badge
+                    />
+                  </>
                 }
               />
             </div>

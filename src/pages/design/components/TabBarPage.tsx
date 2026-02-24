@@ -46,7 +46,7 @@ const tabBarProps: PropDef[] = [
 function TabBarPreview() {
   const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Entry page', closable: true },
+      { id: 'tab-1', label: 'Entry page', closable: false },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -61,6 +61,7 @@ function TabBarPreview() {
         onTabChange={selectTab}
         onTabClose={closeTab}
         onTabAdd={addTab}
+        showWindowControls={false}
       />
       <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
         Content for: {tabs.find((t) => t.id === activeTab)?.label || 'No tab selected'}

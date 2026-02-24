@@ -1,8 +1,65 @@
+import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import { Button, Badge, Tooltip, VStack } from '@/design-system';
-import { IconTrash, IconStar, IconCopy } from '@tabler/icons-react';
+import { Button, VStack } from '@/design-system';
+import { IconTrash } from '@tabler/icons-react';
+
+function StaticTooltip({
+  content,
+  position = 'top',
+  children,
+}: {
+  content: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  children: ReactNode;
+}) {
+  const tooltip = (
+    <div className="relative inline-flex items-center justify-center px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-[length:var(--tooltip-font-size)] rounded-[var(--tooltip-radius)] w-max max-w-[var(--tooltip-max-width)]">
+      {content}
+      {position === 'top' && (
+        <div className="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[var(--color-text-default)]" />
+      )}
+      {position === 'bottom' && (
+        <div className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-[var(--color-text-default)]" />
+      )}
+      {position === 'left' && (
+        <div className="absolute -right-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[4px] border-l-[var(--color-text-default)]" />
+      )}
+      {position === 'right' && (
+        <div className="absolute -left-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[4px] border-r-[var(--color-text-default)]" />
+      )}
+    </div>
+  );
+
+  if (position === 'top')
+    return (
+      <div className="flex flex-col items-center gap-1.5">
+        {tooltip}
+        {children}
+      </div>
+    );
+  if (position === 'bottom')
+    return (
+      <div className="flex flex-col items-center gap-1.5">
+        {children}
+        {tooltip}
+      </div>
+    );
+  if (position === 'left')
+    return (
+      <div className="flex items-center gap-1.5">
+        {tooltip}
+        {children}
+      </div>
+    );
+  return (
+    <div className="flex items-center gap-1.5">
+      {children}
+      {tooltip}
+    </div>
+  );
+}
 
 const tooltipProps: PropDef[] = [
   { name: 'content', type: 'ReactNode', required: true, description: 'Tooltip content' },
@@ -41,9 +98,16 @@ export function TooltipPage() {
   <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
 </Tooltip>`}
         >
-          <Tooltip content="Delete this item permanently">
-            <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
-          </Tooltip>
+          <div className="flex items-center justify-center py-4">
+            <StaticTooltip content="Delete this item permanently" position="top">
+              <Button
+                variant="danger"
+                size="sm"
+                icon={<IconTrash size={12} />}
+                aria-label="Delete"
+              />
+            </StaticTooltip>
+          </div>
         </ComponentPreview>
       }
       usage={{
@@ -53,83 +117,27 @@ export function TooltipPage() {
         <VStack gap={8}>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
-            <div className="flex gap-6 items-center justify-center py-8">
-              <Tooltip content="Top tooltip" position="top">
+            <div className="flex gap-10 items-center justify-center py-6">
+              <StaticTooltip content="Top tooltip" position="top">
                 <Button variant="secondary" size="sm">
                   Top
                 </Button>
-              </Tooltip>
-              <Tooltip content="Bottom tooltip" position="bottom">
+              </StaticTooltip>
+              <StaticTooltip content="Bottom tooltip" position="bottom">
                 <Button variant="secondary" size="sm">
                   Bottom
                 </Button>
-              </Tooltip>
-              <Tooltip content="Left tooltip" position="left">
+              </StaticTooltip>
+              <StaticTooltip content="Left tooltip" position="left">
                 <Button variant="secondary" size="sm">
                   Left
                 </Button>
-              </Tooltip>
-              <Tooltip content="Right tooltip" position="right">
+              </StaticTooltip>
+              <StaticTooltip content="Right tooltip" position="right">
                 <Button variant="secondary" size="sm">
                   Right
                 </Button>
-              </Tooltip>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Use cases</span>
-            <div className="flex gap-4 items-center">
-              <Tooltip content="Delete this item permanently">
-                <Button
-                  variant="danger"
-                  size="sm"
-                  icon={<IconTrash size={12} />}
-                  aria-label="Delete"
-                />
-              </Tooltip>
-              <Tooltip content="Add to favorites">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  icon={<IconStar size={12} />}
-                  aria-label="Favorite"
-                />
-              </Tooltip>
-              <Tooltip content="Copy to clipboard">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconCopy size={12} />}
-                  aria-label="Copy"
-                />
-              </Tooltip>
-              <Tooltip content="This action requires admin permissions" position="bottom">
-                <Badge variant="warning" size="sm">
-                  Restricted
-                </Badge>
-              </Tooltip>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Custom delay</span>
-            <div className="flex gap-4 items-center">
-              <Tooltip content="Instant (0ms)" delay={0}>
-                <Button variant="outline" size="sm">
-                  0ms
-                </Button>
-              </Tooltip>
-              <Tooltip content="Default (200ms)" delay={200}>
-                <Button variant="outline" size="sm">
-                  200ms
-                </Button>
-              </Tooltip>
-              <Tooltip content="Slow (500ms)" delay={500}>
-                <Button variant="outline" size="sm">
-                  500ms
-                </Button>
-              </Tooltip>
+              </StaticTooltip>
             </div>
           </VStack>
         </VStack>

@@ -105,15 +105,28 @@ export function BadgePage() {
           <VStack gap={3}>
             <Label>Layout (with Icons)</Label>
             <div className="flex gap-3 items-center">
-              <Badge size="sm" theme="blue">
-                Text only
-              </Badge>
-              <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>
-                Left icon
-              </Badge>
-              <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>
-                Right icon
-              </Badge>
+              <VStack gap={1} align="center">
+                <Badge size="sm" theme="blue">
+                  Text only
+                </Badge>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">All apps</span>
+              </VStack>
+              <VStack gap={1} align="center">
+                <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>
+                  Left icon
+                </Badge>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  AI Platform only
+                </span>
+              </VStack>
+              <VStack gap={1} align="center">
+                <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>
+                  Right icon
+                </Badge>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  AI Platform only
+                </span>
+              </VStack>
             </div>
           </VStack>
         </VStack>
