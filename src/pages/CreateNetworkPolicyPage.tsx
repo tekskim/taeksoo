@@ -398,10 +398,10 @@ function TrafficRulesSection({
                             <VStack gap={2}>
                               {activeRule.targets.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Rule type
                                   </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     CIDR
                                   </span>
                                   <div />
@@ -464,10 +464,10 @@ function TrafficRulesSection({
                             <VStack gap={2}>
                               {activeRule.allowedPorts.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Port
                                   </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Protocol
                                   </span>
                                   <div />
@@ -793,13 +793,13 @@ export function CreateNetworkPolicyPage() {
                     <VStack gap={2}>
                       {selectorRules.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Operator
                           </span>
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Value
                           </span>
                           <div />
@@ -904,10 +904,10 @@ export function CreateNetworkPolicyPage() {
                       <VStack gap={2}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
                             <div />
@@ -972,10 +972,10 @@ export function CreateNetworkPolicyPage() {
                       <VStack gap={2}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
                             <div />

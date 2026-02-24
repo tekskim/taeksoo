@@ -362,6 +362,7 @@ import { CommonPatternsPage } from '@/pages/design/patterns/CommonPatternsPage';
 import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
+import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
@@ -1007,6 +1008,7 @@ function AppRoutes() {
         <Route path="patterns/wizard" element={<WizardPage />} />
         <Route path="patterns/multi-tab-create" element={<MultiTabCreatePage />} />
         <Route path="patterns/layout" element={<LayoutPage />} />
+        <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
