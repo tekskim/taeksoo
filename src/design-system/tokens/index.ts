@@ -149,6 +149,7 @@ export const primitive = {
     popover: 1300,
     tooltip: 1400,
     toast: 1500,
+    contextMenu: 5000,
   },
 } as const;
 

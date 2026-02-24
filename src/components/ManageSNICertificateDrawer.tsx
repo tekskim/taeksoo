@@ -6,6 +6,7 @@ import {
   Pagination,
   Table,
   Toggle,
+  FormField,
   StatusIndicator,
   SelectionIndicator,
 } from '@/design-system';
@@ -206,21 +207,20 @@ export function ManageSNICertificateDrawer({
         </h2>
 
         {/* SNI Toggle Section */}
-        <VStack gap={3}>
-          <VStack gap={2}>
-            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">SNI</h3>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Add more certificates here to host multiple, different HTTPS websites on this single
-              listener.
-            </p>
-          </VStack>
-          <HStack gap={2} align="center">
-            <Toggle checked={sniEnabled} onChange={setSniEnabled} />
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {sniEnabled ? 'On' : 'Off'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>SNI</FormField.Label>
+          <FormField.Description>
+            Add more certificates here to host multiple, different HTTPS websites on this single
+            listener.
+          </FormField.Description>
+          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+            <Toggle
+              checked={sniEnabled}
+              onChange={(e) => setSniEnabled(e.target.checked)}
+              label={sniEnabled ? 'On' : 'Off'}
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* SNI Certificates Section */}
         <VStack gap={3} className="w-full pb-5">

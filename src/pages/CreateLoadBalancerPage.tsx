@@ -1852,7 +1852,7 @@ export default function CreateLoadBalancerPage() {
                           Set the administrative state of the load balancer. 'UP' enables traffic
                           handling, while 'DOWN' disables it.
                         </FormField.Description>
-                        <FormField.Control>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                           <Toggle
                             checked={adminStateUp}
                             onChange={(e) => setAdminStateUp(e.target.checked)}
@@ -2024,7 +2024,7 @@ export default function CreateLoadBalancerPage() {
                               Defines how SSL information is parsed from incoming HTTPS requests.
                             </FormField.Description>
                             <FormField.Control>
-                              <VStack gap={3} align="start">
+                              <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                                 <Radio
                                   label="One-way authentication"
                                   checked={sslParsingMethod === 'one-way'}
@@ -2272,7 +2272,7 @@ export default function CreateLoadBalancerPage() {
                           handle.
                         </FormField.Description>
                         <FormField.Control>
-                          <VStack gap={3} align="start">
+                          <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                             <Radio
                               label="Unlimited"
                               checked={connectionLimitType === 'unlimited'}
@@ -2732,7 +2732,10 @@ export default function CreateLoadBalancerPage() {
                                         )
                                       }
                                     >
-                                      <VStack gap={3} align="start">
+                                      <VStack
+                                        className="gap-[var(--radio-group-item-gap)]"
+                                        align="start"
+                                      >
                                         <Radio value="none" label="None" />
                                         <Radio value="source_ip" label="Source IP" />
                                         {poolProtocol === 'HTTP' && (

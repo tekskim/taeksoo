@@ -490,24 +490,21 @@ export function ComputeAdminCreateFlavorPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Public section */}
-                    <VStack gap={3} className="py-6">
-                      <VStack gap={2}>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                            Public
-                          </span>
-                          <span className="text-[var(--color-state-danger)]">*</span>
-                        </div>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                    <div className="py-6">
+                      <FormField required>
+                        <FormField.Label>Public</FormField.Label>
+                        <FormField.Description>
                           Indicates whether the flavor is available to other tenants.
-                        </span>
-                      </VStack>
-                      <Toggle
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                        label={isPublic ? 'On' : 'Off'}
-                      />
-                    </VStack>
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <Toggle
+                            checked={isPublic}
+                            onChange={(e) => setIsPublic(e.target.checked)}
+                            label={isPublic ? 'On' : 'Off'}
+                          />
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     {/* Tenant section - shown when Public is Off */}
                     {(isV2 || !isPublic) && (

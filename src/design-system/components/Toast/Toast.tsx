@@ -403,7 +403,7 @@ export function ToastContainer({
   return (
     <div
       className={twMerge(
-        'fixed z-50',
+        'fixed z-[var(--z-toast)]',
         'flex flex-col gap-[var(--primitive-spacing-2)]',
         positionStyles[position],
         isBottom && 'flex-col-reverse',

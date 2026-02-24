@@ -101,14 +101,14 @@ export function Drawer({
   const widthValue = typeof width === 'number' ? `${width}px` : width;
 
   const backdropClasses = twMerge(
-    'fixed inset-0 z-50',
+    'fixed inset-0 z-[var(--z-modal)]',
     'bg-black/60',
     'transition-opacity duration-300 ease-out',
     isAnimating ? 'opacity-100' : 'opacity-0'
   );
 
   const drawerClasses = twMerge(
-    'fixed top-0 bottom-0 z-50',
+    'fixed top-0 bottom-0 z-[var(--z-modal)]',
     'bg-[var(--color-surface-default)]',
     'flex flex-col',
     'shadow-2xl',

@@ -339,7 +339,7 @@ export function Popover({
             aria-modal={trigger === 'click'}
             onMouseEnter={handlePopoverMouseEnter}
             onMouseLeave={handlePopoverMouseLeave}
-            className="fixed z-[var(--z-popover,1050)] transition-opacity duration-[var(--duration-fast)]"
+            className="fixed z-[var(--z-popover)] transition-opacity duration-[var(--duration-fast)]"
             style={{
               left: coords.x,
               top: coords.y,

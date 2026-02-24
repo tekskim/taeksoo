@@ -1072,20 +1072,20 @@ function ImageSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* System disk Section */}
-          <VStack gap={3} className="py-6">
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>System disk</FormField.Label>
+              <FormField.Description>
                 Configure whether to create a system disk for booting.
-              </span>
-            </VStack>
-
-            {/* Toggle */}
-            <Toggle
-              checked={createSystemDisk}
-              onChange={setCreateSystemDisk}
-              label="Create a new system disk"
-            />
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <Toggle
+                  checked={createSystemDisk}
+                  onChange={setCreateSystemDisk}
+                  label="Create a new system disk"
+                />
+              </FormField.Control>
+            </FormField>
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
@@ -1118,7 +1118,7 @@ function ImageSection({
                 </HStack>
               </div>
             )}
-          </VStack>
+          </div>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

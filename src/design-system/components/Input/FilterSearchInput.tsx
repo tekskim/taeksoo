@@ -111,7 +111,7 @@ function FilterDropdown({
   // Show options if a select-type filter is selected
   if (selectedFilter && selectedFilter.type === 'select' && selectedFilter.options) {
     return (
-      <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
+      <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-[var(--z-dropdown)] overflow-hidden">
         <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
           {selectedFilter.label}
         </div>
@@ -142,7 +142,7 @@ function FilterDropdown({
 
   // Show filter list
   return (
-    <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
+    <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-[var(--z-dropdown)] overflow-hidden">
       <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
         Filter by
       </div>

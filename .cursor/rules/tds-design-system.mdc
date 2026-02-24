@@ -640,6 +640,7 @@ const menuItems = [
 | Input/Select/NumberInput | Label ↔ Input: 8px, Input ↔ HelperText: 8px |
 | FormField | Label ↔ Input: 8px, Label ↔ Description: 4px, Description ↔ Input: 8px, Input ↔ HelperText: 8px |
 | Radio/CheckboxGroup | Label ↔ Options: 12px, Label ↔ Description: 4px, Description ↔ Options: 12px |
+| Toggle | Label ↔ Toggle: 12px, Label ↔ Description: 4px, Description ↔ Toggle: 12px |
 
 ### Typography
 

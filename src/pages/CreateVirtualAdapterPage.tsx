@@ -835,8 +835,8 @@ export default function CreateVirtualAdapterPage() {
                           <FormField.Description>
                             Choose whether to auto-allocate a MAC address or enter one manually.
                           </FormField.Description>
-                          <FormField.Control>
-                            <VStack gap={3} align="stretch">
+                          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                            <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                               <RadioGroup
                                 value={macAddressMode}
                                 onChange={(value) => setMacAddressMode(value as 'auto' | 'manual')}
@@ -844,13 +844,15 @@ export default function CreateVirtualAdapterPage() {
                                 <Radio value="auto" label="Auto-allocate" />
                                 <Radio value="manual" label="Manual" />
                               </RadioGroup>
-                              {(isV2 || macAddressMode === 'manual') && (
-                                <Input
-                                  placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
-                                  value={manualMacAddress}
-                                  onChange={(e) => setManualMacAddress(e.target.value)}
-                                  fullWidth
-                                />
+                              {macAddressMode === 'manual' && (
+                                <div className="pl-[calc(var(--radio-size)+var(--radio-gap))] w-full">
+                                  <Input
+                                    placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
+                                    value={manualMacAddress}
+                                    onChange={(e) => setManualMacAddress(e.target.value)}
+                                    fullWidth
+                                  />
+                                </div>
                               )}
                             </VStack>
                           </FormField.Control>

@@ -355,17 +355,15 @@ export default function CreateNetworkPage() {
                       <Disclosure open={descriptionOpen} onChange={setDescriptionOpen}>
                         <Disclosure.Trigger>Description (optional)</Disclosure.Trigger>
                         <Disclosure.Panel>
-                          <FormField className="mt-4">
-                            <FormField.Control>
-                              <Textarea
-                                placeholder="e.g. Internal network for production DB servers of the payment service"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                rows={3}
-                                fullWidth
-                              />
-                            </FormField.Control>
-                          </FormField>
+                          <div className="mt-4">
+                            <Textarea
+                              placeholder="e.g. Internal network for production DB servers of the payment service"
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
+                              rows={3}
+                              fullWidth
+                            />
+                          </div>
                         </Disclosure.Panel>
                       </Disclosure>
                     </div>

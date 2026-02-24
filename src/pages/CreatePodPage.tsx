@@ -711,7 +711,7 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
-          <VStack gap={3}>
+          <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
             <Radio
               checked={strategy === 'rolling-update'}
               onChange={() => onStrategyChange('rolling-update')}

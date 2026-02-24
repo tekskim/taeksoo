@@ -541,15 +541,8 @@ function BasicInfoSection({
             description="Select the number of pod replicas to create."
             helperText="1-100 replicas"
           >
-            <HStack gap={4} align="center" className="max-w-[var(--slider-row-max-width)]">
-              <Slider
-                min={1}
-                max={100}
-                step={1}
-                value={replicas}
-                onChange={onReplicasChange}
-                className="flex-1"
-              />
+            <HStack gap={4} align="center">
+              <Slider min={1} max={100} step={1} value={replicas} onChange={onReplicasChange} />
               <NumberInput
                 value={replicas}
                 onChange={onReplicasChange}
@@ -788,45 +781,49 @@ function ScalingPolicySection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
-          <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">Update policy</span>
-            <Radio
-              checked={strategy === 'rolling-update'}
-              onChange={() => onStrategyChange('rolling-update')}
-              label={
-                <HStack gap={1} align="center">
-                  <span>Rolling update</span>
-                  <Tooltip
-                    content="Gradually replaces old pods with new ones, ensuring availability during the update."
-                    position="right"
-                  >
-                    <IconHelpCircle
-                      size={14}
-                      className="text-[var(--color-text-subtle)] cursor-help"
-                    />
-                  </Tooltip>
-                </HStack>
-              }
-            />
-            <Radio
-              checked={strategy === 'on-delete'}
-              onChange={() => onStrategyChange('on-delete')}
-              label={
-                <HStack gap={1} align="center">
-                  <span>On delete</span>
-                  <Tooltip
-                    content="New pods are only created when existing pods are manually deleted."
-                    position="right"
-                  >
-                    <IconHelpCircle
-                      size={14}
-                      className="text-[var(--color-text-subtle)] cursor-help"
-                    />
-                  </Tooltip>
-                </HStack>
-              }
-            />
-          </VStack>
+          <FormField>
+            <FormField.Label>Update policy</FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
+                <Radio
+                  checked={strategy === 'rolling-update'}
+                  onChange={() => onStrategyChange('rolling-update')}
+                  label={
+                    <HStack gap={1} align="center">
+                      <span>Rolling update</span>
+                      <Tooltip
+                        content="Gradually replaces old pods with new ones, ensuring availability during the update."
+                        position="right"
+                      >
+                        <IconHelpCircle
+                          size={14}
+                          className="text-[var(--color-text-subtle)] cursor-help"
+                        />
+                      </Tooltip>
+                    </HStack>
+                  }
+                />
+                <Radio
+                  checked={strategy === 'on-delete'}
+                  onChange={() => onStrategyChange('on-delete')}
+                  label={
+                    <HStack gap={1} align="center">
+                      <span>On delete</span>
+                      <Tooltip
+                        content="New pods are only created when existing pods are manually deleted."
+                        position="right"
+                      >
+                        <IconHelpCircle
+                          size={14}
+                          className="text-[var(--color-text-subtle)] cursor-help"
+                        />
+                      </Tooltip>
+                    </HStack>
+                  }
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Max Surge */}
           <VStack gap={3}>
