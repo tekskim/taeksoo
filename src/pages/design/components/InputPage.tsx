@@ -144,47 +144,19 @@ export function InputPage() {
 
           <VStack gap={3}>
             <Label>Text Input - Width</Label>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-4 items-end">
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    XS (80px)
-                  </span>
-                  <Input placeholder="XS" width="xs" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    SM (160px)
-                  </span>
-                  <Input placeholder="Small" width="sm" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    MD (240px)
-                  </span>
-                  <Input placeholder="Medium" width="md" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    LG (320px)
-                  </span>
-                  <Input placeholder="Large" width="lg" />
-                </VStack>
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    Half (50%)
-                  </span>
-                  <Input placeholder="Half width" width="half" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    Full (100%)
-                  </span>
-                  <Input placeholder="Full width" width="full" />
-                </VStack>
-              </div>
+            <div className="flex gap-4 items-end">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  XS (80px)
+                </span>
+                <Input placeholder="XS" width="xs" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  SM (160px)
+                </span>
+                <Input placeholder="Small" width="sm" />
+              </VStack>
             </div>
           </VStack>
 
@@ -356,47 +328,19 @@ export function InputPage() {
 
           <VStack gap={3}>
             <Label>Number Input - Width</Label>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-4 items-end">
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    XS (80px)
-                  </span>
-                  <NumberInput defaultValue={1} width="xs" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    SM (160px)
-                  </span>
-                  <NumberInput defaultValue={1} width="sm" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    MD (240px)
-                  </span>
-                  <NumberInput defaultValue={1} width="md" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    LG (320px)
-                  </span>
-                  <NumberInput defaultValue={1} width="lg" />
-                </VStack>
-              </div>
-              <div className="flex flex-col gap-3 w-full">
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    Half (50%)
-                  </span>
-                  <NumberInput defaultValue={1} width="half" />
-                </VStack>
-                <VStack gap={1}>
-                  <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                    Full (100%)
-                  </span>
-                  <NumberInput defaultValue={1} width="full" />
-                </VStack>
-              </div>
+            <div className="flex gap-4 items-end">
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  XS (80px)
+                </span>
+                <NumberInput defaultValue={1} width="xs" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  SM (160px)
+                </span>
+                <NumberInput defaultValue={1} width="sm" />
+              </VStack>
             </div>
           </VStack>
 

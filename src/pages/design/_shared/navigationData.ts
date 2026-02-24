@@ -293,6 +293,12 @@ const graphItems: NavItem[] = [
     icon: IconChartDonut,
     path: '/design/charts/doughnut',
   },
+  {
+    id: 'chart-tooltip',
+    label: 'Chart tooltip',
+    icon: IconMessage2,
+    path: '/design/charts/tooltip',
+  },
 ];
 
 export const navGroups: NavGroup[] = [

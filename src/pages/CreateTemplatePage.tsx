@@ -1928,33 +1928,40 @@ function NetworkSection({
                   key={vlan.id}
                   className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
                 >
-                  <HStack gap={4} align="center">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">
+                  <HStack gap={4} align="center" className="flex-1 min-w-0">
+                    <HStack gap={1.5} align="center" className="flex-1 min-w-0">
+                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
                         Network
                       </span>
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
                         value={vlan.network}
                         onChange={() => {}}
+                        fullWidth
                       />
                     </HStack>
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Subnet</span>
+                    <HStack gap={1.5} align="center" className="flex-1 min-w-0">
+                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+                        Subnet
+                      </span>
                       <Select
                         options={[{ value: 'subnet', label: 'subnet' }]}
                         value={vlan.subnet}
                         onChange={() => {}}
+                        fullWidth
                       />
                     </HStack>
-                    <Select
-                      options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
-                      value={vlan.autoAssign}
-                      onChange={() => {}}
-                    />
+                    <div className="flex-1 min-w-0">
+                      <Select
+                        options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
+                        value={vlan.autoAssign}
+                        onChange={() => {}}
+                        fullWidth
+                      />
+                    </div>
                   </HStack>
                   <button
-                    className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
+                    className="shrink-0 p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                     onClick={() => removeVirtualLAN(vlan.id)}
                   >
                     <IconX size={12} className="text-[var(--color-text-subtle)]" />

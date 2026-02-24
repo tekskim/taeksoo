@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import { Button, VStack } from '@/design-system';
+import { Button, Tooltip, VStack } from '@/design-system';
 import { IconTrash } from '@tabler/icons-react';
 
 function StaticTooltip({
@@ -98,16 +98,9 @@ export function TooltipPage() {
   <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
 </Tooltip>`}
         >
-          <div className="flex items-center justify-center py-4">
-            <StaticTooltip content="Delete this item permanently" position="top">
-              <Button
-                variant="danger"
-                size="sm"
-                icon={<IconTrash size={12} />}
-                aria-label="Delete"
-              />
-            </StaticTooltip>
-          </div>
+          <Tooltip content="Delete this item permanently">
+            <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
+          </Tooltip>
         </ComponentPreview>
       }
       usage={{

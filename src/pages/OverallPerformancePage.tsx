@@ -515,7 +515,21 @@ function SingleValueDoughnutCard({
 
   const getOption = () => ({
     tooltip: {
-      show: false,
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value}%</span>`;
+      },
     },
     animation: false,
     series: [
@@ -524,7 +538,6 @@ function SingleValueDoughnutCard({
         radius: ['68%', '80%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
-        silent: true,
         itemStyle: {
           borderRadius: 0,
           borderWidth: 0,
@@ -536,11 +549,11 @@ function SingleValueDoughnutCard({
           show: false,
         },
         emphasis: {
-          disabled: true,
+          scale: false,
         },
         data: [
-          { value: value, itemStyle: { color: mainColor } },
-          { value: 100 - value, itemStyle: { color: bgColor } },
+          { value: value, name: 'Used', itemStyle: { color: mainColor } },
+          { value: 100 - value, name: 'Available', itemStyle: { color: bgColor } },
         ],
       },
     ],

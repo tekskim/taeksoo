@@ -367,6 +367,7 @@ import { AreaChartPage } from '@/pages/design/charts/AreaChartPage';
 import { PieChartPage } from '@/pages/design/charts/PieChartPage';
 import { HalfDoughnutChartPage } from '@/pages/design/charts/HalfDoughnutChartPage';
 import { DoughnutChartPage } from '@/pages/design/charts/DoughnutChartPage';
+import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
@@ -378,6 +379,7 @@ import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
 import { IconographyPage } from '@/pages/IconographyPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
+import { FormPatternsPage } from '@/pages/FormPatternsPage';
 
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
@@ -1009,6 +1011,7 @@ function AppRoutes() {
         <Route path="charts/pie-chart" element={<PieChartPage />} />
         <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />
         <Route path="charts/doughnut" element={<DoughnutChartPage />} />
+        <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
       </Route>
       {/* Standalone design showcase pages (outside DesignSystemLayout) */}
@@ -1031,6 +1034,7 @@ function AppRoutes() {
       <Route path="/iconography" element={<IconographyPage />} />
       <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
+      <Route path="/form-patterns" element={<FormPatternsPage />} />
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import { Button, VStack } from '@/design-system';
+import { Badge, Button, HStack, Popover, VStack } from '@/design-system';
 
 function StaticPopover({
   content,
@@ -16,7 +16,7 @@ function StaticPopover({
   children: ReactNode;
 }) {
   const popoverBox = (
-    <div className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--popover-radius)] shadow-sm">
+    <div className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg">
       {content}
       {showArrow && position === 'top' && (
         <div className="absolute -bottom-[7px] left-1/2 -translate-x-1/2">
@@ -143,26 +143,48 @@ export function PopoverPage() {
       preview={
         <ComponentPreview
           code={`<Popover
-  content={<div className="p-3"><p className="text-body-md">Click outside or press Escape to close</p></div>}
+  content={
+    <div className="p-3">
+      <VStack gap={2}>
+        <p className="text-body-md">Popover content</p>
+        <HStack gap={1.5}>
+          <Badge theme="blue" type="subtle" size="sm">Info</Badge>
+          <Badge theme="green" type="subtle" size="sm">Active</Badge>
+          <Badge theme="gray" type="subtle" size="sm">v2.1</Badge>
+        </HStack>
+      </VStack>
+    </div>
+  }
   trigger="click"
 >
   <Button variant="outline" size="sm">Click me</Button>
 </Popover>`}
         >
-          <div className="flex items-center justify-center py-4">
-            <StaticPopover
-              content={
-                <div className="p-3">
-                  <p className="text-body-md">Click outside or press Escape to close</p>
-                </div>
-              }
-              position="bottom"
-            >
-              <Button variant="outline" size="sm">
-                Click me
-              </Button>
-            </StaticPopover>
-          </div>
+          <Popover
+            content={
+              <div className="p-3">
+                <VStack gap={2}>
+                  <p className="text-body-md text-[var(--color-text-default)]">Popover content</p>
+                  <HStack gap={1.5}>
+                    <Badge theme="blue" type="subtle" size="sm">
+                      Info
+                    </Badge>
+                    <Badge theme="green" type="subtle" size="sm">
+                      Active
+                    </Badge>
+                    <Badge theme="gray" type="subtle" size="sm">
+                      v2.1
+                    </Badge>
+                  </HStack>
+                </VStack>
+              </div>
+            }
+            trigger="click"
+          >
+            <Button variant="outline" size="sm">
+              Click me
+            </Button>
+          </Popover>
         </ComponentPreview>
       }
       usage={{
@@ -221,52 +243,6 @@ export function PopoverPage() {
               >
                 <Button variant="outline" size="sm">
                   Right
-                </Button>
-              </StaticPopover>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">
-              Interactive content
-            </span>
-            <div className="flex gap-4 items-start flex-wrap py-2">
-              <StaticPopover
-                content={
-                  <div className="p-3 w-[200px]">
-                    <VStack gap={3}>
-                      <p className="text-label-md">Quick actions</p>
-                      <Button variant="secondary" size="sm" fullWidth>
-                        Edit
-                      </Button>
-                      <Button variant="secondary" size="sm" fullWidth>
-                        Duplicate
-                      </Button>
-                      <Button variant="danger" size="sm" fullWidth>
-                        Delete
-                      </Button>
-                    </VStack>
-                  </div>
-                }
-                position="bottom"
-              >
-                <Button variant="outline" size="sm">
-                  Menu popover
-                </Button>
-              </StaticPopover>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Without arrow</span>
-            <div className="flex gap-4 items-start flex-wrap py-2">
-              <StaticPopover
-                content={<div className="p-3 text-body-md">No arrow variant</div>}
-                position="bottom"
-                showArrow={false}
-              >
-                <Button variant="outline" size="sm">
-                  No arrow
                 </Button>
               </StaticPopover>
             </div>
