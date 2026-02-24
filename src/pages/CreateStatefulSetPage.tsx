@@ -23,6 +23,7 @@ import {
   Table,
   Pagination,
   SearchInput,
+  Slider,
   Chip,
   StatusIndicator,
   PageShell,
@@ -2450,19 +2451,37 @@ export function CreateStatefulSetPage() {
                                             <span className="block text-label-lg text-[var(--color-text-default)]">
                                               Weight
                                             </span>
-                                            <Input
-                                              placeholder="1-100"
-                                              value={term.weight}
-                                              onChange={(e) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: e.target.value,
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              fullWidth
-                                            />
+                                            <HStack gap={3} align="center">
+                                              <Slider
+                                                min={1}
+                                                max={100}
+                                                step={1}
+                                                value={Number(term.weight) || 1}
+                                                onChange={(val) => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    weight: String(val),
+                                                  };
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                              />
+                                              <NumberInput
+                                                min={1}
+                                                max={100}
+                                                step={1}
+                                                value={Number(term.weight) || 1}
+                                                onChange={(val) => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    weight: String(val),
+                                                  };
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                                width="xs"
+                                              />
+                                            </HStack>
                                           </VStack>
                                         )}
                                       </div>
@@ -2685,19 +2704,37 @@ export function CreateStatefulSetPage() {
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
-                                          <Input
-                                            placeholder="1-100"
-                                            value={term.weight}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                weight: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
+                                          <HStack gap={3} align="center">
+                                            <Slider
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                            />
+                                            <NumberInput
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              width="xs"
+                                            />
+                                          </HStack>
                                         </VStack>
                                       )}
                                     </div>
