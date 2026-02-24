@@ -1234,18 +1234,13 @@ export function ComputeAdminCreateImagePage() {
                               label="Min system disk"
                               description="Defines the minimum disk size required to boot an instance from this image."
                             >
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   min={0}
                                   max={500}
                                   step={10}
                                   value={minDisk}
                                   onChange={setMinDisk}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={minDisk}
@@ -1267,18 +1262,13 @@ export function ComputeAdminCreateImagePage() {
                               label="Min RAM"
                               description="Defines the minimum amount of RAM required to boot an instance from this image."
                             >
-                              <HStack
-                                gap={3}
-                                align="center"
-                                className="max-w-[var(--slider-row-max-width)]"
-                              >
+                              <HStack gap={3} align="center">
                                 <Slider
                                   min={0}
                                   max={500}
                                   step={10}
                                   value={minRam}
                                   onChange={setMinRam}
-                                  className="flex-1"
                                 />
                                 <NumberInput
                                   value={minRam}

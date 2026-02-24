@@ -9,6 +9,7 @@ import {
   NumberInput,
   Input,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -97,13 +98,11 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
       align="end"
       className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
     >
-      <VStack gap={1}>
-        <span className="text-label-md text-[var(--color-text-default)]">IP address</span>
+      <FormField label="IP address">
         <Input value={member.ipAddress} disabled width="sm" />
-      </VStack>
+      </FormField>
 
-      <VStack gap={1}>
-        <span className="text-label-md text-[var(--color-text-default)]">Port</span>
+      <FormField label="Port">
         <NumberInput
           value={member.port}
           onChange={(value) => onPortChange(value ?? 80)}
@@ -111,10 +110,9 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
           max={65535}
           width="sm"
         />
-      </VStack>
+      </FormField>
 
-      <VStack gap={1}>
-        <span className="text-label-md text-[var(--color-text-default)]">Weight</span>
+      <FormField label="Weight">
         <NumberInput
           value={member.weight}
           onChange={(value) => onWeightChange(value ?? 1)}
@@ -122,7 +120,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
           max={256}
           width="sm"
         />
-      </VStack>
+      </FormField>
 
       <button
         type="button"
@@ -369,20 +367,16 @@ export function ManageMembersDrawer({
                     align="end"
                     className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
                   >
-                    <VStack gap={1} className="flex-1 min-w-0">
-                      <span className="text-label-md text-[var(--color-text-default)]">
-                        IP address
-                      </span>
+                    <FormField label="IP address" className="flex-1 min-w-0">
                       <Input
                         value={member.ipAddress}
                         onChange={(e) => handleIpAddressChange(member.id, e.target.value)}
                         placeholder="Enter IP address"
                         fullWidth
                       />
-                    </VStack>
+                    </FormField>
 
-                    <VStack gap={1}>
-                      <span className="text-label-md text-[var(--color-text-default)]">Port</span>
+                    <FormField label="Port">
                       <NumberInput
                         value={member.port}
                         onChange={(value) => handlePortChange(member.id, value ?? 80)}
@@ -390,10 +384,9 @@ export function ManageMembersDrawer({
                         max={65535}
                         width="sm"
                       />
-                    </VStack>
+                    </FormField>
 
-                    <VStack gap={1}>
-                      <span className="text-label-md text-[var(--color-text-default)]">Weight</span>
+                    <FormField label="Weight">
                       <NumberInput
                         value={member.weight}
                         onChange={(value) => handleWeightChange(member.id, value ?? 1)}
@@ -401,7 +394,7 @@ export function ManageMembersDrawer({
                         max={256}
                         width="sm"
                       />
-                    </VStack>
+                    </FormField>
 
                     <button
                       type="button"

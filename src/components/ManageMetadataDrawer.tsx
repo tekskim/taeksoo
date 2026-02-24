@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Input, SearchInput, InlineMessage } from '@/design-system';
+import { Drawer, Button, Input, SearchInput, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import {
   IconCirclePlus,
@@ -201,7 +201,11 @@ export function ManageMetadataDrawer({
               />
 
               {/* Custom metadata input row */}
-              <div className="flex flex-col gap-1">
+              <FormField
+                label="Custom metadata key"
+                error={!!customKeyError}
+                errorMessage={customKeyError}
+              >
                 <div className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
                   <div className="flex-1 px-3 py-2">
                     <Input
@@ -225,8 +229,7 @@ export function ManageMetadataDrawer({
                     </button>
                   </div>
                 </div>
-                {customKeyError && <InlineMessage variant="error">{customKeyError}</InlineMessage>}
-              </div>
+              </FormField>
 
               {/* Metadata List */}
               <div

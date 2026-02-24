@@ -9,6 +9,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -223,17 +224,14 @@ export function ExternalGatewaySettingDrawer({
         </VStack>
 
         {/* External Gateway Toggle Section */}
-        <VStack gap={3}>
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            External gateway
-          </h3>
+        <FormField label="External gateway">
           <HStack gap={2} align="center">
             <Toggle checked={gatewayEnabled} onChange={setGatewayEnabled} />
             <span className="text-body-md text-[var(--color-text-default)]">
               {gatewayEnabled ? 'Open' : 'Closed'}
             </span>
           </HStack>
-        </VStack>
+        </FormField>
 
         {/* Network Selection Section */}
         <VStack gap={3} className="w-full pb-5">
