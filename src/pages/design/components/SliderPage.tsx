@@ -45,6 +45,19 @@ const sliderProps: PropDef[] = [
   },
 ];
 
+function SliderPreview() {
+  const [value, setValue] = useState(40);
+
+  return (
+    <div className="flex items-center gap-3 max-w-[var(--slider-row-max-width)]">
+      <div className="flex-1">
+        <Slider value={value} onChange={setValue} min={0} max={100} step={1} />
+      </div>
+      <NumberInput value={value} onChange={setValue} min={0} max={100} step={1} width="xs" />
+    </div>
+  );
+}
+
 function SliderWithNumberInputDemo() {
   const [value, setValue] = useState(50);
 
@@ -148,24 +161,17 @@ export function SliderPage() {
       title="Slider"
       description="Draggable slider for selecting values within a range"
       preview={
-        <ComponentPreview code={`<Slider defaultValue={40} showValue />`}>
-          <div className="max-w-[var(--slider-row-max-width)]">
-            <Slider defaultValue={40} showValue />
-          </div>
+        <ComponentPreview
+          code={`<div className="flex items-center gap-3">\n  <Slider value={value} onChange={setValue} min={0} max={100} />\n  <NumberInput value={value} onChange={setValue} min={0} max={100} width="xs" />\n</div>`}
+        >
+          <SliderPreview />
         </ComponentPreview>
       }
       usage={{
-        code: `import { Slider } from '@/design-system';\n\n<Slider defaultValue={40} showValue />`,
+        code: `import { Slider, NumberInput } from '@/design-system';\n\nconst [value, setValue] = useState(50);\n\n<div className="flex items-center gap-3">\n  <Slider value={value} onChange={setValue} min={0} max={100} />\n  <NumberInput value={value} onChange={setValue} min={0} max={100} />\n</div>`,
       }}
       examples={
         <VStack gap={8}>
-          <VStack gap={3}>
-            <Label>Pattern C: Slider 단독 (showValue)</Label>
-            <div className="max-w-[var(--slider-row-max-width)]">
-              <Slider defaultValue={40} showValue />
-            </div>
-          </VStack>
-
           <SliderWithNumberInputDemo />
 
           <SliderWithCustomRangeDemo />
@@ -238,7 +244,7 @@ export function SliderPage() {
                         Slider + NumberInput
                       </td>
                       <td className="py-2 font-medium text-[var(--color-text-default)]">
-                        Slider 단독
+                        Slider + NumberInput
                       </td>
                     </tr>
                     <tr>
@@ -255,7 +261,7 @@ export function SliderPage() {
               </div>
             </VStack>
             <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">4가지 패턴</h4>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">3가지 패턴</h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-body-sm border-collapse">
                   <thead>
@@ -294,18 +300,9 @@ export function SliderPage() {
                         스토리지(GiB), vCPU, 메모리, 디스크
                       </td>
                     </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        C. Slider 단독
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        대략적 값, 감각적 조절이 자연스러운 값
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">AI Temperature, Top-p</td>
-                    </tr>
                     <tr>
                       <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        D. RangeSlider + NumberInput ×2
+                        C. RangeSlider + NumberInput ×2
                       </td>
                       <td className="py-2 pr-4 text-[var(--color-text-muted)]">
                         min~max 범위 자체를 사용자가 정의

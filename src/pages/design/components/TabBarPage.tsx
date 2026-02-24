@@ -54,7 +54,7 @@ function TabBarPreview() {
   });
 
   return (
-    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden w-full max-w-md">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden w-full">
       <TabBar
         tabs={tabs}
         activeTab={activeTab}

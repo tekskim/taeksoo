@@ -12,8 +12,8 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
   const [showCode, setShowCode] = useState(false);
 
   return (
-    <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
+    <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] rounded-t-[var(--primitive-radius-lg)]">
         <span className="text-body-xs text-[var(--color-text-subtle)] font-medium uppercase tracking-wider">
           Preview
         </span>
@@ -37,7 +37,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
       </div>
 
       {!showCode && (
-        <div className="p-6 flex items-center justify-center bg-[var(--color-surface-default)]">
+        <div className="p-6 bg-[var(--color-surface-default)] rounded-b-[var(--primitive-radius-lg)]">
           {children}
         </div>
       )}
