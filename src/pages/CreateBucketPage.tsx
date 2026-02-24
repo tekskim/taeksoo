@@ -427,12 +427,7 @@ function SettingsSection({
           <div className="py-6">
             <FormField>
               <FormField.Label>Object Locking</FormField.Label>
-              <FormField.Description>
-                Store objects using a write-once-read-many (WORM) model to prevent objects from
-                being deleted or overwritten for a fixed amount of time or indefinitely. Object
-                Locking works only in versioned buckets.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <FormField.Control>
                 <VStack gap={3} align="start">
                   <Radio
                     value="disabled"
@@ -448,6 +443,11 @@ function SettingsSection({
                   />
                 </VStack>
               </FormField.Control>
+              <FormField.HelperText>
+                Store objects using a write-once-read-many (WORM) model to prevent objects from
+                being deleted or overwritten for a fixed amount of time or indefinitely. Object
+                Locking works only in versioned buckets.
+              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -457,10 +457,7 @@ function SettingsSection({
           <div className="py-6">
             <FormField>
               <FormField.Label>Versioning</FormField.Label>
-              <FormField.Description>
-                Enables versioning for the objects in the bucket.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <FormField.Control>
                 <VStack gap={3} align="start">
                   <Radio
                     value="disabled"
@@ -476,6 +473,9 @@ function SettingsSection({
                   />
                 </VStack>
               </FormField.Control>
+              <FormField.HelperText>
+                Enables versioning for the objects in the bucket.
+              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -485,11 +485,7 @@ function SettingsSection({
           <div className="py-6">
             <FormField>
               <FormField.Label>MFA Delete</FormField.Label>
-              <FormField.Description>
-                Enables MFA (multi-factor authentication) Delete, which requires additional
-                authentication for changing the bucket versioning state.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <FormField.Control>
                 <VStack gap={3} align="start">
                   <Radio
                     value="disabled"
@@ -505,6 +501,10 @@ function SettingsSection({
                   />
                 </VStack>
               </FormField.Control>
+              <FormField.HelperText>
+                Enables MFA (multi-factor authentication) Delete, which requires additional
+                authentication for changing the bucket versioning state.
+              </FormField.HelperText>
             </FormField>
           </div>
 

@@ -997,18 +997,13 @@ export function CreateClusterPage() {
                         Select the number of nodes to create.
                       </FormField.Description>
                       <FormField.Control>
-                        <HStack
-                          gap={4}
-                          align="center"
-                          className="max-w-[var(--slider-row-max-width)]"
-                        >
+                        <HStack gap={3} align="center">
                           <Slider
                             min={1}
                             max={7}
                             step={2}
                             value={cpNodeCount}
                             onChange={setCpNodeCount}
-                            className="flex-1"
                           />
                           <NumberInput
                             value={cpNodeCount}
@@ -1234,15 +1229,8 @@ export function CreateClusterPage() {
                     Select the number of worker nodes to create.
                   </FormField.Description>
                   <FormField.Control>
-                    <HStack gap={4} align="center" className="max-w-[var(--slider-row-max-width)]">
-                      <Slider
-                        min={1}
-                        max={10}
-                        step={1}
-                        value={nodeCount}
-                        onChange={setNodeCount}
-                        className="flex-1"
-                      />
+                    <HStack gap={3} align="center">
+                      <Slider min={1} max={10} step={1} value={nodeCount} onChange={setNodeCount} />
                       <NumberInput
                         value={nodeCount}
                         onChange={setNodeCount}

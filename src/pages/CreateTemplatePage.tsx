@@ -1913,72 +1913,71 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={2} align="stretch">
-              <VStack gap={1} align="start">
-                <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  Each selected network requires at least one Virtual LAN configuration. Each VLAN
-                  represents a virtual network card (NIC) attached to the selected network.
-                </span>
-              </VStack>
-
-              {/* Virtual LAN Rows */}
-              {virtualLANs.map((vlan) => (
-                <div
-                  key={vlan.id}
-                  className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
-                >
-                  <HStack gap={4} align="center" className="flex-1 min-w-0">
-                    <HStack gap={1.5} align="center" className="flex-1 min-w-0">
-                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
+            <VStack gap={2}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Each selected network requires at least one Virtual LAN configuration. Each VLAN
+                represents a virtual network card (NIC) attached to the selected network.
+              </span>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {virtualLANs.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
                         Network
                       </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Subnet
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        IP Assignment
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {virtualLANs.map((vlan) => (
+                    <div
+                      key={vlan.id}
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                    >
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
                         value={vlan.network}
                         onChange={() => {}}
                         fullWidth
                       />
-                    </HStack>
-                    <HStack gap={1.5} align="center" className="flex-1 min-w-0">
-                      <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                        Subnet
-                      </span>
                       <Select
                         options={[{ value: 'subnet', label: 'subnet' }]}
                         value={vlan.subnet}
                         onChange={() => {}}
                         fullWidth
                       />
-                    </HStack>
-                    <div className="flex-1 min-w-0">
                       <Select
                         options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
                         value={vlan.autoAssign}
                         onChange={() => {}}
                         fullWidth
                       />
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => removeVirtualLAN(vlan.id)}
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
                     </div>
-                  </HStack>
-                  <button
-                    className="shrink-0 p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                    onClick={() => removeVirtualLAN(vlan.id)}
-                  >
-                    <IconX size={12} className="text-[var(--color-text-subtle)]" />
-                  </button>
-                </div>
-              ))}
-
-              {/* Add Virtual LAN Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={addVirtualLAN}
-                className="w-fit"
-              >
-                Add virtual LAN
-              </Button>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addVirtualLAN}
+                    >
+                      Add virtual LAN
+                    </Button>
+                  </div>
+                </VStack>
+              </div>
             </VStack>
           </div>
 

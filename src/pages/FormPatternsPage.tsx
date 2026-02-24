@@ -28,7 +28,7 @@ function PatternSection({
           <span className="text-body-xs text-[var(--color-text-disabled)] mt-0.5">{source}</span>
         </VStack>
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-5 flex flex-col gap-4">{children}</div>
     </div>
   );
 }
@@ -38,6 +38,8 @@ const OPERATOR_OPTIONS = [
   { value: 'NotIn', label: 'NotIn' },
   { value: 'Exists', label: 'Exists' },
   { value: 'DoesNotExist', label: 'DoesNotExist' },
+  { value: 'Gt', label: 'Gt' },
+  { value: 'Lt', label: 'Lt' },
 ];
 
 const ENV_TYPE_OPTIONS = [
@@ -57,13 +59,23 @@ export function FormPatternsPage() {
     { key: 'kubernetes.io/os', operator: 'In', value: 'linux' },
   ]);
   const [ports, setPorts] = useState([
-    { id: '1', name: 'http', port: '80', protocol: 'TCP', targetPort: '8080' },
+    {
+      id: '1',
+      name: 'http',
+      listeningPort: '80',
+      protocol: 'TCP',
+      targetPort: '8080',
+      nodePort: '30080',
+    },
   ]);
-  const [envVars] = useState([
+  const [dataEntries, setDataEntries] = useState([
+    { key: 'config.yaml', value: 'server:\\n  port: 8080' },
+  ]);
+  const [envVars, setEnvVars] = useState([
     { name: 'DATABASE_URL', type: 'value', value: 'postgresql://localhost:5432' },
   ]);
   const [nameservers, setNameservers] = useState(['8.8.8.8', '8.8.4.4']);
-  const [hostAliases] = useState([{ ip: '127.0.0.1', hostname: 'foo.local' }]);
+  const [hostAliases, setHostAliases] = useState([{ ip: '127.0.0.1', hostname: 'foo.local' }]);
   const [virtualLANs, setVirtualLANs] = useState([
     { id: 'vlan1', network: 'network', subnet: 'subnet', autoAssign: 'Auto-assign' },
   ]);
@@ -199,33 +211,65 @@ export function FormPatternsPage() {
               source="CreateConfigMapPage, CreateSecretPage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                <VStack gap={2}>
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div />
-                  </div>
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
-                    <Input placeholder="input key" value="config.yaml" fullWidth readOnly />
-                    <Input
-                      placeholder="input value"
-                      value="server:\n  port: 8080"
-                      fullWidth
-                      readOnly
-                    />
-                    <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </div>
+                <VStack gap={3}>
+                  {dataEntries.length > 0 && (
+                    <VStack gap={2} className="w-full">
+                      <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                        <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                          Key
+                        </span>
+                        <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                          Value
+                        </span>
+                        <div />
+                      </div>
+                      {dataEntries.map((entry, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                        >
+                          <Input
+                            placeholder="Enter key"
+                            value={entry.key}
+                            onChange={(e) => {
+                              const n = [...dataEntries];
+                              n[index].key = e.target.value;
+                              setDataEntries(n);
+                            }}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="Enter value"
+                            value={entry.value}
+                            onChange={(e) => {
+                              const n = [...dataEntries];
+                              n[index].value = e.target.value;
+                              setDataEntries(n);
+                            }}
+                            fullWidth
+                          />
+                          <button
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            onClick={() =>
+                              setDataEntries(dataEntries.filter((_, i) => i !== index))
+                            }
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+                    </VStack>
+                  )}
                   <HStack gap={2}>
                     <Button
                       variant="outline"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={() => setDataEntries([...dataEntries, { key: '', value: '' }])}
                       className="bg-[var(--color-surface-default)]"
                     >
                       Add Data Entry
@@ -252,25 +296,27 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
-                  <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Operator
-                    </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div />
-                  </div>
+                  {expressions.length > 0 && (
+                    <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Operator
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div />
+                    </div>
+                  )}
                   {expressions.map((expr, i) => (
                     <div
                       key={i}
                       className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
-                        placeholder="input key"
+                        placeholder="e.g. kubernetes.io/os"
                         value={expr.key}
                         onChange={(e) => {
                           const n = [...expressions];
@@ -290,7 +336,7 @@ export function FormPatternsPage() {
                         fullWidth
                       />
                       <Input
-                        placeholder="input value"
+                        placeholder="e.g. linux"
                         value={expr.value}
                         onChange={(e) => {
                           const n = [...expressions];
@@ -332,39 +378,95 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
-                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Port Name
+                      Port Name <span className="text-[#ea580c]">*</span>
                     </span>
                     <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Listening Port
+                      Listening Port <span className="text-[#ea580c]">*</span>
                     </span>
                     <span className="block text-label-lg text-[var(--color-text-default)]">
                       Protocol
                     </span>
                     <span className="block text-label-lg text-[var(--color-text-default)]">
-                      Target Port
+                      Target Port <span className="text-[#ea580c]">*</span>
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                      Node Port
                     </span>
                     <div />
                   </div>
                   {ports.map((port) => (
                     <div
                       key={port.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <Input placeholder="port name" value={port.name} fullWidth readOnly />
-                      <Input placeholder="80" value={port.port} fullWidth readOnly />
+                      <Input
+                        placeholder="e.g. myport"
+                        value={port.name}
+                        onChange={(e) => {
+                          setPorts(
+                            ports.map((p) =>
+                              p.id === port.id ? { ...p, name: e.target.value } : p
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="e.g. 8080"
+                        value={port.listeningPort}
+                        onChange={(e) => {
+                          setPorts(
+                            ports.map((p) =>
+                              p.id === port.id ? { ...p, listeningPort: e.target.value } : p
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
                       <Select
                         options={[
                           { value: 'TCP', label: 'TCP' },
                           { value: 'UDP', label: 'UDP' },
+                          { value: 'SCTP', label: 'SCTP' },
                         ]}
                         value={port.protocol}
-                        onChange={() => {}}
+                        onChange={(value) => {
+                          setPorts(
+                            ports.map((p) => (p.id === port.id ? { ...p, protocol: value } : p))
+                          );
+                        }}
                         fullWidth
                       />
-                      <Input placeholder="8080" value={port.targetPort} fullWidth readOnly />
-                      <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                      <Input
+                        placeholder="e.g. 80 or http"
+                        value={port.targetPort}
+                        onChange={(e) => {
+                          setPorts(
+                            ports.map((p) =>
+                              p.id === port.id ? { ...p, targetPort: e.target.value } : p
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="e.g. 30000"
+                        value={port.nodePort || ''}
+                        onChange={(e) => {
+                          setPorts(
+                            ports.map((p) =>
+                              p.id === port.id ? { ...p, nodePort: e.target.value } : p
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => setPorts(ports.filter((p) => p.id !== port.id))}
+                      >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
@@ -380,9 +482,10 @@ export function FormPatternsPage() {
                           {
                             id: String(ports.length + 1),
                             name: '',
-                            port: '',
+                            listeningPort: '',
                             protocol: 'TCP',
                             targetPort: '',
+                            nodePort: '',
                           },
                         ])
                       }
@@ -420,15 +523,40 @@ export function FormPatternsPage() {
                       key={i}
                       className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <Input placeholder="input variable name" value={ev.name} fullWidth readOnly />
+                      <Input
+                        placeholder="input variable name"
+                        value={ev.name}
+                        onChange={(e) => {
+                          const n = [...envVars];
+                          n[i].name = e.target.value;
+                          setEnvVars(n);
+                        }}
+                        fullWidth
+                      />
                       <Select
                         options={ENV_TYPE_OPTIONS}
                         value={ev.type}
-                        onChange={() => {}}
+                        onChange={(v) => {
+                          const n = [...envVars];
+                          n[i].type = v;
+                          setEnvVars(n);
+                        }}
                         fullWidth
                       />
-                      <Input placeholder="input value" value={ev.value} fullWidth readOnly />
-                      <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                      <Input
+                        placeholder="input value"
+                        value={ev.value}
+                        onChange={(e) => {
+                          const n = [...envVars];
+                          n[i].value = e.target.value;
+                          setEnvVars(n);
+                        }}
+                        fullWidth
+                      />
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => setEnvVars(envVars.filter((_, idx) => idx !== i))}
+                      >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
@@ -438,6 +566,9 @@ export function FormPatternsPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={() =>
+                        setEnvVars([...envVars, { name: '', type: 'value', value: '' }])
+                      }
                     >
                       Add Variable
                     </Button>
@@ -528,14 +659,30 @@ export function FormPatternsPage() {
                       key={i}
                       className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                     >
-                      <Input placeholder="e.g. 127.0.0.1" value={alias.ip} fullWidth readOnly />
+                      <Input
+                        placeholder="e.g. 127.0.0.1"
+                        value={alias.ip}
+                        onChange={(e) => {
+                          const n = [...hostAliases];
+                          n[i].ip = e.target.value;
+                          setHostAliases(n);
+                        }}
+                        fullWidth
+                      />
                       <Input
                         placeholder="e.g. foo.company.com"
                         value={alias.hostname}
+                        onChange={(e) => {
+                          const n = [...hostAliases];
+                          n[i].hostname = e.target.value;
+                          setHostAliases(n);
+                        }}
                         fullWidth
-                        readOnly
                       />
-                      <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => setHostAliases(hostAliases.filter((_, idx) => idx !== i))}
+                      >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
@@ -545,8 +692,9 @@ export function FormPatternsPage() {
                       variant="secondary"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={() => setHostAliases([...hostAliases, { ip: '', hostname: '' }])}
                     >
-                      Add Host Alias
+                      Add Alias
                     </Button>
                   </div>
                 </VStack>
@@ -560,81 +708,93 @@ export function FormPatternsPage() {
               description="Inline label + Select pairs (Network, Subnet, Auto-assign) with add/remove."
               source="CreateTemplatePage, ComputeAdminCreateTemplatePage"
             >
-              <VStack gap={2} align="stretch">
-                <VStack gap={1} align="start">
-                  <span className="text-label-lg text-[var(--color-text-default)]">
-                    Virtual LAN
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">
-                    Each selected network requires at least one Virtual LAN configuration. Each VLAN
-                    represents a virtual network card (NIC) attached to the selected network.
-                  </span>
-                </VStack>
-                {virtualLANs.map((vlan) => (
-                  <div
-                    key={vlan.id}
-                    className="flex items-center gap-4 px-4 py-2 bg-white border border-[var(--color-border-default)] rounded-[6px]"
-                  >
-                    <HStack gap={4} align="center" className="flex-1 min-w-0">
-                      <HStack gap={1.5} align="center" className="flex-1 min-w-0">
-                        <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                          Network
-                        </span>
-                        <Select
-                          options={[{ value: 'network', label: 'network' }]}
-                          value={vlan.network}
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </HStack>
-                      <HStack gap={1.5} align="center" className="flex-1 min-w-0">
-                        <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                          Subnet
-                        </span>
-                        <Select
-                          options={[{ value: 'subnet', label: 'subnet' }]}
-                          value={vlan.subnet}
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </HStack>
-                      <div className="flex-1 min-w-0">
-                        <Select
-                          options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
-                          value={vlan.autoAssign}
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </div>
-                    </HStack>
-                    <button
-                      className="shrink-0 p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                      onClick={() => setVirtualLANs(virtualLANs.filter((v) => v.id !== vlan.id))}
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2}>
+                  {virtualLANs.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Network
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        Subnet
+                      </span>
+                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                        IP Assignment
+                      </span>
+                      <div />
+                    </div>
+                  )}
+                  {virtualLANs.map((vlan) => (
+                    <div
+                      key={vlan.id}
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                     >
-                      <IconX size={12} className="text-[var(--color-text-subtle)]" />
-                    </button>
+                      <Select
+                        options={[{ value: 'network', label: 'network' }]}
+                        value={vlan.network}
+                        onChange={(v) => {
+                          setVirtualLANs(
+                            virtualLANs.map((item) =>
+                              item.id === vlan.id ? { ...item, network: v } : item
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <Select
+                        options={[{ value: 'subnet', label: 'subnet' }]}
+                        value={vlan.subnet}
+                        onChange={(v) => {
+                          setVirtualLANs(
+                            virtualLANs.map((item) =>
+                              item.id === vlan.id ? { ...item, subnet: v } : item
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <Select
+                        options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
+                        value={vlan.autoAssign}
+                        onChange={(v) => {
+                          setVirtualLANs(
+                            virtualLANs.map((item) =>
+                              item.id === vlan.id ? { ...item, autoAssign: v } : item
+                            )
+                          );
+                        }}
+                        fullWidth
+                      />
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => setVirtualLANs(virtualLANs.filter((v) => v.id !== vlan.id))}
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={() =>
+                        setVirtualLANs([
+                          ...virtualLANs,
+                          {
+                            id: `vlan${Date.now()}`,
+                            network: 'network',
+                            subnet: 'subnet',
+                            autoAssign: 'Auto-assign',
+                          },
+                        ])
+                      }
+                    >
+                      Add virtual LAN
+                    </Button>
                   </div>
-                ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={() =>
-                    setVirtualLANs([
-                      ...virtualLANs,
-                      {
-                        id: `vlan${Date.now()}`,
-                        network: 'network',
-                        subnet: 'subnet',
-                        autoAssign: 'Auto-assign',
-                      },
-                    ])
-                  }
-                  className="w-fit"
-                >
-                  Add virtual LAN
-                </Button>
-              </VStack>
+                </VStack>
+              </div>
             </PatternSection>
           </div>
         </VStack>

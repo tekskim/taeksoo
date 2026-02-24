@@ -2508,7 +2508,7 @@ function NetworkSection({
                         Subnet
                       </span>
                       <span className="block text-label-lg text-[var(--color-text-default)]">
-                        IP assignment
+                        IP Assignment
                       </span>
                       <div />
                     </div>
@@ -2537,10 +2537,10 @@ function NetworkSection({
                         fullWidth
                       />
                       <button
-                        className="p-1 hover:bg-[var(--color-surface-hover)] rounded flex items-center justify-center"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                         onClick={() => removeVirtualLAN(vlan.id)}
                       >
-                        <IconX size={12} className="text-[var(--color-text-subtle)]" />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   ))}
