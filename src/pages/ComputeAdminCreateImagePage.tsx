@@ -776,22 +776,22 @@ export function ComputeAdminCreateImagePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* Protected */}
-                    <VStack gap={3} className="py-6">
-                      <VStack gap={2}>
-                        <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
-                          Protected
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Protected</FormField.Label>
+                        <FormField.Description>
                           Protected images cannot be deleted, preventing accidental removal.
-                        </span>
-                      </VStack>
-                      <HStack gap={2} align="center">
-                        <Toggle checked={isProtected} onChange={setIsProtected} />
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {isProtected ? 'Yes' : 'No'}
-                        </span>
-                      </HStack>
-                    </VStack>
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <HStack gap={2} align="center">
+                            <Toggle checked={isProtected} onChange={setIsProtected} />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {isProtected ? 'Yes' : 'No'}
+                            </span>
+                          </HStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -1361,23 +1361,23 @@ export function ComputeAdminCreateImagePage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                     {/* QEMU Guest Agent */}
-                    <VStack gap={3} className="py-6">
-                      <VStack gap={2}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          QEMU guest agent
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>QEMU guest agent</FormField.Label>
+                        <FormField.Description>
                           Enables communication and status retrieval between the hypervisor and the
                           instance.
-                        </span>
-                      </VStack>
-                      <HStack gap={2} align="center">
-                        <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
-                        <span className="text-body-md text-[var(--color-text-default)]">
-                          {qemuGuestAgent ? 'On' : 'Off'}
-                        </span>
-                      </HStack>
-                    </VStack>
+                        </FormField.Description>
+                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                          <HStack gap={2} align="center">
+                            <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {qemuGuestAgent ? 'On' : 'Off'}
+                            </span>
+                          </HStack>
+                        </FormField.Control>
+                      </FormField>
+                    </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 

@@ -545,7 +545,7 @@ export function InstanceTemplateDetailPage() {
                   </FormField>
                   <FormField>
                     <FormField.Label>Favorite</FormField.Label>
-                    <FormField.Control>
+                    <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                       <Toggle
                         checked={formData.favorite}
                         onChange={(checked) => updateFormData('favorite', checked)}

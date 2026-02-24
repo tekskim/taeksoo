@@ -683,7 +683,7 @@ export function CreateClusterPage() {
                     Select the type of nodes to use for your cluster. Instance is used for VM-based
                     clusters and BareMetal is used for physical server clusters.
                   </FormField.Description>
-                  <FormField.Control>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                     <RadioGroup
                       value={nodeType}
                       onChange={(value) => setNodeType(value as 'instance' | 'baremetal')}

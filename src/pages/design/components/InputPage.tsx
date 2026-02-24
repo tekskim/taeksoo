@@ -378,16 +378,6 @@ export function InputPage() {
                   className="w-[var(--search-input-width)]"
                 />
               </VStack>
-              <VStack gap={1}>
-                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                  MD (32px)
-                </span>
-                <SearchInput
-                  size="md"
-                  placeholder="Search placeholder"
-                  className="w-[var(--search-input-width)]"
-                />
-              </VStack>
             </div>
           </VStack>
 

@@ -98,7 +98,7 @@ function MetricTooltip({ content }: { content: string }) {
           whitespace-nowrap
           opacity-0 invisible group-hover:opacity-100 group-hover:visible
           transition-opacity duration-[var(--duration-fast)]
-          z-50 pointer-events-none
+          z-[var(--z-tooltip)] pointer-events-none
         "
         role="tooltip"
       >
