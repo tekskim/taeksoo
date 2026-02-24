@@ -74,6 +74,9 @@ export function FormPatternsPage() {
   const [envVars, setEnvVars] = useState([
     { name: 'DATABASE_URL', type: 'value', value: 'postgresql://localhost:5432' },
   ]);
+  const [envVarGroups, setEnvVarGroups] = useState([
+    [{ name: 'API_KEY', type: 'value', value: 'sk-1234567890' }],
+  ]);
   const [nameservers, setNameservers] = useState(['8.8.8.8', '8.8.4.4']);
   const [hostAliases, setHostAliases] = useState([{ ip: '127.0.0.1', hostname: 'foo.local' }]);
   const [virtualLANs, setVirtualLANs] = useState([
@@ -147,10 +150,10 @@ export function FormPatternsPage() {
                 <VStack gap={2}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
                       <div />
@@ -298,13 +301,13 @@ export function FormPatternsPage() {
                 <VStack gap={2}>
                   {expressions.length > 0 && (
                     <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Operator
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
                       <div />
@@ -379,19 +382,19 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
                   <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Port Name <span className="text-[#ea580c]">*</span>
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Listening Port <span className="text-[#ea580c]">*</span>
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Protocol
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Target Port <span className="text-[#ea580c]">*</span>
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Node Port
                     </span>
                     <div />
@@ -507,13 +510,13 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
                   <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Name
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value Type
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value/Source
                     </span>
                     <div />
@@ -575,6 +578,105 @@ export function FormPatternsPage() {
                   </div>
                 </VStack>
               </div>
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                <VStack gap={2} className="w-full">
+                  {envVarGroups.map((group, gi) => (
+                    <div
+                      key={gi}
+                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    >
+                      <VStack gap={1}>
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Name
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value Type
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value/Source
+                          </span>
+                          <button
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            onClick={() =>
+                              setEnvVarGroups(envVarGroups.filter((_, idx) => idx !== gi))
+                            }
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                        {group.map((ev, i) => (
+                          <div
+                            key={i}
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="input variable name"
+                              value={ev.name}
+                              onChange={(e) => {
+                                const n = envVarGroups.map((g, idx) =>
+                                  idx === gi
+                                    ? g.map((r, ri) =>
+                                        ri === i ? { ...r, name: e.target.value } : r
+                                      )
+                                    : g
+                                );
+                                setEnvVarGroups(n);
+                              }}
+                              fullWidth
+                            />
+                            <Select
+                              options={ENV_TYPE_OPTIONS}
+                              value={ev.type}
+                              onChange={(v) => {
+                                const n = envVarGroups.map((g, idx) =>
+                                  idx === gi
+                                    ? g.map((r, ri) => (ri === i ? { ...r, type: v } : r))
+                                    : g
+                                );
+                                setEnvVarGroups(n);
+                              }}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="input value"
+                              value={ev.value}
+                              onChange={(e) => {
+                                const n = envVarGroups.map((g, idx) =>
+                                  idx === gi
+                                    ? g.map((r, ri) =>
+                                        ri === i ? { ...r, value: e.target.value } : r
+                                      )
+                                    : g
+                                );
+                                setEnvVarGroups(n);
+                              }}
+                              fullWidth
+                            />
+                            <div />
+                          </div>
+                        ))}
+                      </VStack>
+                    </div>
+                  ))}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={() =>
+                        setEnvVarGroups([...envVarGroups, [{ name: '', type: 'value', value: '' }]])
+                      }
+                    >
+                      Add Variable
+                    </Button>
+                  </div>
+                </VStack>
+              </div>
             </PatternSection>
 
             {/* 6 — from CreatePodPage, CreatePersistentVolumePage, CreateStorageClassPage */}
@@ -587,7 +689,7 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                 <VStack gap={2}>
                   <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -637,7 +739,7 @@ export function FormPatternsPage() {
                 <VStack gap={2}>
                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                     <VStack gap={1}>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         IP Address
                       </span>
                       <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -645,7 +747,7 @@ export function FormPatternsPage() {
                       </p>
                     </VStack>
                     <VStack gap={1}>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Hostname
                       </span>
                       <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -712,13 +814,13 @@ export function FormPatternsPage() {
                 <VStack gap={2}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Network
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Subnet
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         IP Assignment
                       </span>
                       <div />

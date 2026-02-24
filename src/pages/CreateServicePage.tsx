@@ -635,20 +635,20 @@ export function CreateServicePage() {
                               : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
                           }`}
                         >
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Port Name <span className="text-[#ea580c]">*</span>
                           </span>
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Listening Port <span className="text-[#ea580c]">*</span>
                           </span>
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Protocol
                           </span>
-                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
                             Target Port <span className="text-[#ea580c]">*</span>
                           </span>
                           {showNodePort && (
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Node Port
                             </span>
                           )}
@@ -833,10 +833,10 @@ export function CreateServicePage() {
                       <VStack gap={2}>
                         {selectors.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
                             <div />
@@ -982,10 +982,10 @@ export function CreateServicePage() {
                       <VStack gap={2}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
                             <div />
@@ -1052,10 +1052,10 @@ export function CreateServicePage() {
                       <VStack gap={2}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
-                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
                             <div />

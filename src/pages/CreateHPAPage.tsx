@@ -748,13 +748,13 @@ export default function CreateHPAPage() {
                                 <VStack gap={2}>
                                   {metric.selectors.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </label>
-                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Operator
                                       </label>
-                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Value
                                       </label>
                                       <div />
