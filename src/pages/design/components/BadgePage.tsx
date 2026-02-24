@@ -45,11 +45,13 @@ export function BadgePage() {
       description="Status indicators and labels with various styles"
       preview={
         <ComponentPreview
-          code={`<Badge theme="blue">Label</Badge>
+          code={`<Badge theme="blue" type="subtle">Label</Badge>
 <Badge theme="green" type="subtle">Completed</Badge>`}
         >
           <div className="flex gap-2">
-            <Badge theme="blue">Label</Badge>
+            <Badge theme="blue" type="subtle">
+              Label
+            </Badge>
             <Badge theme="green" type="subtle">
               Completed
             </Badge>
@@ -59,7 +61,7 @@ export function BadgePage() {
       usage={{
         code: `import { Badge } from '@/design-system';
 
-<Badge theme="blue">Label</Badge>
+<Badge theme="blue" type="subtle">Label</Badge>
 <Badge theme="green" type="subtle" size="sm">Completed</Badge>`,
       }}
       examples={
@@ -67,9 +69,15 @@ export function BadgePage() {
           <VStack gap={3}>
             <Label>Sizes</Label>
             <div className="flex gap-3 items-center">
-              <Badge size="sm">Small</Badge>
-              <Badge size="md">Medium</Badge>
-              <Badge size="lg">Large</Badge>
+              <Badge size="sm" theme="white">
+                Small
+              </Badge>
+              <Badge size="md" theme="white">
+                Medium
+              </Badge>
+              <Badge size="lg" theme="white">
+                Large
+              </Badge>
             </div>
           </VStack>
           <VStack gap={3}>
@@ -106,13 +114,13 @@ export function BadgePage() {
             <Label>Layout (with Icons)</Label>
             <div className="flex gap-3 items-center">
               <VStack gap={1} align="center">
-                <Badge size="sm" theme="blue">
+                <Badge size="sm" theme="blue" type="subtle">
                   Text only
                 </Badge>
                 <span className="text-body-sm text-[var(--color-text-subtle)]">All apps</span>
               </VStack>
               <VStack gap={1} align="center">
-                <Badge size="sm" theme="blue" leftIcon={<IconCheck size={10} />}>
+                <Badge size="sm" theme="blue" type="subtle" leftIcon={<IconCheck size={10} />}>
                   Left icon
                 </Badge>
                 <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -120,7 +128,12 @@ export function BadgePage() {
                 </span>
               </VStack>
               <VStack gap={1} align="center">
-                <Badge size="sm" theme="blue" rightIcon={<IconArrowRight size={10} />}>
+                <Badge
+                  size="sm"
+                  theme="blue"
+                  type="subtle"
+                  rightIcon={<IconArrowRight size={10} />}
+                >
                   Right icon
                 </Badge>
                 <span className="text-body-sm text-[var(--color-text-subtle)]">

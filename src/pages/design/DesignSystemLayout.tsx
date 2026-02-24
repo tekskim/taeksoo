@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { VStack } from '@/design-system';
+import { VStack, Button } from '@/design-system';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
 import { navGroups, allNavItems } from './_shared/navigationData';
@@ -196,9 +196,9 @@ export function DesignSystemLayout() {
                   <div className="flex items-center gap-3">
                     <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
                     <Link to="/">
-                      <button className="px-4 py-2 border border-[var(--color-border-default)] rounded-[var(--radius-button)] text-[length:var(--font-size-12)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)] transition-colors">
+                      <Button variant="secondary" size="sm">
                         Entry page →
-                      </button>
+                      </Button>
                     </Link>
                   </div>
                 </div>

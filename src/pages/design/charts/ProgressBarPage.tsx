@@ -1,7 +1,29 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { QuotaBarDemo } from '../../design-system-sections/ChartComponents';
-import { ProgressBar, VStack } from '@/design-system';
+import { ProgressBar, Tooltip, VStack } from '@/design-system';
+
+function ProgressTooltipDemo() {
+  return (
+    <div className="backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 w-fit">
+      <div className="flex items-center gap-2">
+        <span
+          className="inline-block w-2 h-2 rounded-full"
+          style={{ backgroundColor: '#22c55e' }}
+        />
+        <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+          Used: <span className="font-medium">2 / 10</span>
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="inline-block w-2 h-2 rounded-full bg-[var(--color-border-subtle)]" />
+        <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+          Available: <span className="font-medium">8 / 10</span>
+        </span>
+      </div>
+    </div>
+  );
+}
 
 const progressBarProps: PropDef[] = [
   { name: 'value', type: 'number', required: true, description: 'Current value (used)' },
@@ -50,8 +72,12 @@ export function ProgressBarPage() {
       description="Visual indicator for quota usage and progress with status-based colors"
       preview={
         <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-          <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
-          <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
+          <Tooltip content="Used: 2 / 10 · Available: 8 / 10">
+            <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
+          </Tooltip>
+          <Tooltip content="Used: 8 / 10 · New: 2 · Available: 0 / 10">
+            <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
+          </Tooltip>
         </div>
       }
       guidelines={
@@ -85,12 +111,24 @@ export function ProgressBarPage() {
               Quota Variant - Status Based Colors
             </span>
             <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-              <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
-              <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
-              <ProgressBar variant="quota" label="Instance" value={5} newValue={2} max={10} />
-              <ProgressBar variant="quota" label="Instance" value={8} newValue={5} max={10} />
-              <ProgressBar variant="quota" label="Instance" value={10} newValue={0} max={10} />
-              <ProgressBar variant="quota" label="Instance" value={10} newValue={0} />
+              <Tooltip content="Used: 2 / 10 · Available: 8">
+                <ProgressBar variant="quota" label="Instance" value={2} newValue={0} max={10} />
+              </Tooltip>
+              <Tooltip content="Used: 8 / 10 · New: 2 · Available: 0">
+                <ProgressBar variant="quota" label="Instance" value={8} newValue={2} max={10} />
+              </Tooltip>
+              <Tooltip content="Used: 5 / 10 · New: 2 · Available: 3">
+                <ProgressBar variant="quota" label="Instance" value={5} newValue={2} max={10} />
+              </Tooltip>
+              <Tooltip content="Used: 8 / 10 · New: 5 · Over limit">
+                <ProgressBar variant="quota" label="Instance" value={8} newValue={5} max={10} />
+              </Tooltip>
+              <Tooltip content="Used: 10 / 10 · Available: 0">
+                <ProgressBar variant="quota" label="Instance" value={10} newValue={0} max={10} />
+              </Tooltip>
+              <Tooltip content="Used: 10 · No limit">
+                <ProgressBar variant="quota" label="Instance" value={10} newValue={0} />
+              </Tooltip>
             </div>
           </VStack>
           <VStack gap={3}>
@@ -98,10 +136,23 @@ export function ProgressBarPage() {
               Default Variant - Status Based Colors
             </span>
             <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-              <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
-              <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
-              <ProgressBar label="100 MB (100%)" value={100} max={100} showValue={false} />
+              <Tooltip content="Used 30 MB of 100 MB">
+                <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
+              </Tooltip>
+              <Tooltip content="Used 60 MB of 100 MB">
+                <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
+              </Tooltip>
+              <Tooltip content="Used 100 MB of 100 MB">
+                <ProgressBar label="100 MB (100%)" value={100} max={100} showValue={false} />
+              </Tooltip>
             </div>
+          </VStack>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Tooltip</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              Hover tooltip for quota progress bars. Same style as the gauge chart tooltip.
+            </span>
+            <ProgressTooltipDemo />
           </VStack>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Dashboard only</span>
