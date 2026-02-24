@@ -23,6 +23,7 @@ import {
   Table,
   Pagination,
   SearchInput,
+  Slider,
   Chip,
   StatusIndicator,
   PageShell,
@@ -611,10 +612,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -674,10 +675,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -1821,10 +1822,10 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -1891,10 +1892,10 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2077,7 +2078,7 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Nameservers
                                 </span>
                                 <div />
@@ -2136,7 +2137,7 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Search Domains
                                 </span>
                                 <div />
@@ -2190,10 +2191,10 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Name
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div className="w-5" />
@@ -2257,10 +2258,10 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   IP Address
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Hostname
                                 </span>
                                 <div className="w-5" />
@@ -2414,36 +2415,54 @@ export function CreateJobPage() {
                                             <span className="block text-label-lg text-[var(--color-text-default)]">
                                               Weight
                                             </span>
-                                            <Input
-                                              placeholder="1-100"
-                                              value={term.weight}
-                                              onChange={(e) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: e.target.value,
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              fullWidth
-                                            />
+                                            <HStack gap={3} align="center">
+                                              <Slider
+                                                min={1}
+                                                max={100}
+                                                step={1}
+                                                value={Number(term.weight) || 1}
+                                                onChange={(val) => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    weight: String(val),
+                                                  };
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                              />
+                                              <NumberInput
+                                                min={1}
+                                                max={100}
+                                                step={1}
+                                                value={Number(term.weight) || 1}
+                                                onChange={(val) => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    weight: String(val),
+                                                  };
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                                width="xs"
+                                              />
+                                            </HStack>
                                           </VStack>
                                         )}
                                       </div>
 
                                       <VStack gap={2}>
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Match Expressions
                                         </span>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Operator
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Value
                                             </span>
                                             <div />
@@ -2649,36 +2668,54 @@ export function CreateJobPage() {
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
-                                          <Input
-                                            placeholder="1-100"
-                                            value={term.weight}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                weight: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
+                                          <HStack gap={3} align="center">
+                                            <Slider
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                            />
+                                            <NumberInput
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              width="xs"
+                                            />
+                                          </HStack>
                                         </VStack>
                                       )}
                                     </div>
 
                                     <VStack gap={2}>
-                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
                                         Match Expressions
                                       </span>
                                       {term.matchExpressions.length > 0 && (
                                         <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Key
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Operator
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
                                           <div />
@@ -3017,13 +3054,13 @@ export function CreateJobPage() {
                               <VStack gap={2}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Operator
                                     </span>
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                     <div className="w-5" />
@@ -3226,19 +3263,19 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Operator
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Effect
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Toleration Seconds
                                 </span>
                                 <div />
@@ -4342,10 +4379,10 @@ export function CreateJobPage() {
                               <VStack gap={2}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </label>
                                     <div />
@@ -4573,13 +4610,13 @@ export function CreateJobPage() {
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Variable Name
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div className="w-5" />
@@ -4843,13 +4880,13 @@ export function CreateJobPage() {
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </label>
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
                                           <div />
@@ -5085,13 +5122,13 @@ export function CreateJobPage() {
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </label>
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
                                           <div />
@@ -5585,10 +5622,10 @@ export function CreateJobPage() {
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                              <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
-                                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                              <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Value
                                               </label>
                                               <div />
@@ -6621,16 +6658,16 @@ export function CreateJobPage() {
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Mount Point{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Sub Path in Volume
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
                                           <div />

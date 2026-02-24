@@ -271,6 +271,12 @@ const layoutItems: NavItem[] = [
   },
   { id: 'shell', label: 'Shell', icon: IconTerminal2, path: '/design/components/shell' },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
+  {
+    id: 'dynamic-form-fields',
+    label: 'Dynamic Form Fields',
+    icon: IconForms,
+    path: '/design/patterns/dynamic-form-fields',
+  },
 ];
 
 const graphItems: NavItem[] = [

@@ -541,7 +541,7 @@ function BasicInfoSection({
             description="Select the number of pod replicas to create."
             helperText="1-100 replicas"
           >
-            <HStack gap={4} align="center">
+            <HStack gap={3} align="center">
               <Slider min={1} max={100} step={1} value={replicas} onChange={onReplicasChange} />
               <NumberInput
                 value={replicas}
@@ -605,7 +605,7 @@ function LabelsAnnotationsSection({
         <VStack gap={6}>
           {/* Labels */}
           <VStack gap={3}>
-            <VStack gap={1.5}>
+            <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
@@ -617,10 +617,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -668,7 +668,7 @@ function LabelsAnnotationsSection({
 
           {/* Annotations */}
           <VStack gap={3}>
-            <VStack gap={1.5}>
+            <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
@@ -680,10 +680,10 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
-                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div />
@@ -826,7 +826,7 @@ function ScalingPolicySection({
           </FormField>
 
           {/* Max Surge */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Max Surge</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -845,7 +845,7 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Max Unavailable */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Max Unavailable
@@ -871,7 +871,7 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Minimum Ready */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Minimum Ready</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -897,7 +897,7 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Revision History Limit */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Revision History Limit
@@ -924,7 +924,7 @@ function ScalingPolicySection({
           </VStack>
 
           {/* Progress Deadline */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Progress Deadline
@@ -1964,7 +1964,7 @@ export function CreateDeploymentPage() {
                     <VStack gap={6}>
                       {/* Labels */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
+                        <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
                           </span>
@@ -1978,10 +1978,10 @@ export function CreateDeploymentPage() {
                           <VStack gap={2}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2033,7 +2033,7 @@ export function CreateDeploymentPage() {
 
                       {/* Annotations */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
+                        <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
                           </span>
@@ -2048,10 +2048,10 @@ export function CreateDeploymentPage() {
                           <VStack gap={2}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div />
@@ -2116,35 +2116,35 @@ export function CreateDeploymentPage() {
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
                       </h6>
-                      <VStack gap={1} className="w-full">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Termination Grace Period
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          The period allowed after receiving a termination request before the pod is
-                          forcibly terminated.
-                        </span>
-                        <VStack gap={2}>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              width="xs"
-                              value={
-                                terminationGracePeriod
-                                  ? parseInt(terminationGracePeriod)
-                                  : undefined
-                              }
-                              onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
-                              min={0}
-                              max={600}
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                              Seconds
-                            </span>
-                          </HStack>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            0-600
+                      <VStack gap={2} className="w-full">
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Termination Grace Period
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            The period allowed after receiving a termination request before the pod
+                            is forcibly terminated.
                           </span>
                         </VStack>
+                        <HStack gap={3} align="center">
+                          <Slider
+                            min={0}
+                            max={600}
+                            step={10}
+                            value={terminationGracePeriod ? parseInt(terminationGracePeriod) : 0}
+                            onChange={(val) => setTerminationGracePeriod(val.toString())}
+                          />
+                          <NumberInput
+                            width="xs"
+                            value={
+                              terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
+                            }
+                            onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
+                            min={0}
+                            max={600}
+                            suffix="Seconds"
+                          />
+                        </HStack>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -2238,7 +2238,7 @@ export function CreateDeploymentPage() {
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2297,7 +2297,7 @@ export function CreateDeploymentPage() {
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2356,7 +2356,7 @@ export function CreateDeploymentPage() {
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2364,7 +2364,7 @@ export function CreateDeploymentPage() {
                                   </p>
                                 </VStack>
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2433,7 +2433,7 @@ export function CreateDeploymentPage() {
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2441,7 +2441,7 @@ export function CreateDeploymentPage() {
                                   </p>
                                 </VStack>
                                 <VStack gap={1}>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Hostname
                                   </span>
                                   <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2559,7 +2559,7 @@ export function CreateDeploymentPage() {
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                           <VStack gap={3}>
-                            <VStack gap={1.5}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Matching scheduling rules
                               </span>
@@ -2569,96 +2569,86 @@ export function CreateDeploymentPage() {
                               </p>
                             </VStack>
 
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                              <VStack gap={3}>
-                                {nodeAffinityTerms.map((term, termIndex) => (
-                                  <div
-                                    key={termIndex}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                  >
-                                    <VStack gap={6}>
-                                      <div className="flex items-start justify-between w-full">
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Rule {termIndex + 1}
-                                        </span>
-                                        <button
-                                          onClick={() => {
-                                            setNodeAffinityTerms(
-                                              nodeAffinityTerms.filter((_, i) => i !== termIndex)
-                                            );
-                                          }}
-                                          className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={16}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-
-                                      <VStack gap={3} className="w-full">
-                                        <VStack gap={2} className="w-full">
-                                          <VStack gap={1}>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                                              Priority
-                                            </span>
-                                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                                              Specify the priority value applied to node scheduling.
-                                            </p>
-                                          </VStack>
-                                          <Select
-                                            options={[
-                                              { value: 'required', label: 'Required' },
-                                              { value: 'preferred', label: 'Preferred' },
-                                            ]}
-                                            value={term.priority}
-                                            onChange={(val) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                priority: val,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        {term.priority === 'preferred' && (
-                                          <VStack gap={2} className="w-full">
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                                              Weight
-                                            </span>
-                                            <Input
-                                              placeholder="1-100"
-                                              value={term.weight}
-                                              onChange={(e) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: e.target.value,
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              fullWidth
-                                            />
-                                          </VStack>
-                                        )}
-                                      </VStack>
-
-                                      <VStack gap={2}>
+                            <VStack gap={3}>
+                              {nodeAffinityTerms.map((term, termIndex) => (
+                                <div
+                                  key={termIndex}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                >
+                                  <VStack gap={3} className="w-full">
+                                    <VStack gap={2} className="w-full">
+                                      <VStack gap={1}>
                                         <span className="block text-label-lg text-[var(--color-text-default)]">
-                                          Match Expressions
+                                          Priority
                                         </span>
+                                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                                          Specify the priority value applied to node scheduling.
+                                        </p>
+                                      </VStack>
+                                      <Select
+                                        options={[
+                                          { value: 'required', label: 'Required' },
+                                          { value: 'preferred', label: 'Preferred' },
+                                        ]}
+                                        value={term.priority}
+                                        onChange={(val) => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex] = {
+                                            ...newTerms[termIndex],
+                                            priority: val,
+                                          };
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2} className="w-full">
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Weight
+                                      </span>
+                                      <HStack gap={3} align="center">
+                                        <Slider
+                                          min={1}
+                                          max={100}
+                                          step={1}
+                                          value={Number(term.weight) || 1}
+                                          onChange={(val) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex] = {
+                                              ...newTerms[termIndex],
+                                              weight: String(val),
+                                            };
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                        />
+                                        <NumberInput
+                                          min={1}
+                                          max={100}
+                                          step={1}
+                                          value={Number(term.weight) || 1}
+                                          onChange={(val) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex] = {
+                                              ...newTerms[termIndex],
+                                              weight: String(val),
+                                            };
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          width="xs"
+                                        />
+                                      </HStack>
+                                    </VStack>
+                                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                      <VStack gap={2}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Operator
                                             </span>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Value
                                             </span>
                                             <div />
@@ -2667,7 +2657,7 @@ export function CreateDeploymentPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2753,53 +2743,30 @@ export function CreateDeploymentPage() {
                                               setNodeAffinityTerms(newTerms);
                                             }}
                                           >
-                                            Add Expression
+                                            Add Rule
                                           </Button>
                                         </div>
                                       </VStack>
-                                    </VStack>
-                                  </div>
-                                ))}
-
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={() => {
-                                      setNodeAffinityTerms([
-                                        ...nodeAffinityTerms,
-                                        {
-                                          priority: 'required',
-                                          weight: '',
-                                          matchExpressions: [
-                                            { key: '', operator: 'In', value: '' },
-                                          ],
-                                        },
-                                      ]);
-                                    }}
-                                  >
-                                    Add Rule
-                                  </Button>
+                                    </div>
+                                    <div className="w-fit">
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      >
+                                        Add Node Selector
+                                      </Button>
+                                    </div>
+                                  </VStack>
                                 </div>
-                              </VStack>
-                            </div>
-
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              >
-                                Add Node Selector
-                              </Button>
-                            </div>
+                              ))}
+                            </VStack>
                           </VStack>
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
                         <VStack gap={3}>
-                          <VStack gap={1.5}>
+                          <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Node Affinity Rules
                             </span>
@@ -2869,36 +2836,54 @@ export function CreateDeploymentPage() {
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
-                                          <Input
-                                            placeholder="1-100"
-                                            value={term.weight}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                weight: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
+                                          <HStack gap={3} align="center">
+                                            <Slider
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                            />
+                                            <NumberInput
+                                              min={1}
+                                              max={100}
+                                              step={1}
+                                              value={Number(term.weight) || 1}
+                                              onChange={(val) => {
+                                                const newTerms = [...nodeAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  weight: String(val),
+                                                };
+                                                setNodeAffinityTerms(newTerms);
+                                              }}
+                                              width="xs"
+                                            />
+                                          </HStack>
                                         </VStack>
                                       )}
                                     </VStack>
 
                                     <VStack gap={2}>
-                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
                                         Match Expressions
                                       </span>
                                       {term.matchExpressions.length > 0 && (
                                         <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Key
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Operator
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
                                           <div />
@@ -3048,7 +3033,7 @@ export function CreateDeploymentPage() {
                         >
                           <VStack gap={6}>
                             {/* Type Section */}
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <div className="flex items-start justify-between w-full">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3089,7 +3074,7 @@ export function CreateDeploymentPage() {
                             </VStack>
 
                             {/* Priority Section */}
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Priority
@@ -3237,13 +3222,13 @@ export function CreateDeploymentPage() {
                               <VStack gap={2}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Operator
                                     </span>
-                                    <span className="block text-label-lg text-[var(--color-text-default)]">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                     <div className="w-5" />
@@ -3359,7 +3344,7 @@ export function CreateDeploymentPage() {
                             </div>
 
                             {/* Topology Key Section */}
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Topology Key
@@ -3399,6 +3384,43 @@ export function CreateDeploymentPage() {
                                 placeholder="e.g. failure-domain.beta.kubernetes.io/zone"
                                 fullWidth
                               />
+                            </VStack>
+
+                            <VStack gap={2} className="w-full">
+                              <span className="block text-label-lg text-[var(--color-text-default)]">
+                                Weight
+                              </span>
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={1}
+                                  max={100}
+                                  step={1}
+                                  value={Number(term.weight) || 1}
+                                  onChange={(val) => {
+                                    const newTerms = [...podAffinityTerms];
+                                    newTerms[termIndex] = {
+                                      ...newTerms[termIndex],
+                                      weight: String(val),
+                                    };
+                                    setPodAffinityTerms(newTerms);
+                                  }}
+                                />
+                                <NumberInput
+                                  min={1}
+                                  max={100}
+                                  step={1}
+                                  value={Number(term.weight) || 1}
+                                  onChange={(val) => {
+                                    const newTerms = [...podAffinityTerms];
+                                    newTerms[termIndex] = {
+                                      ...newTerms[termIndex],
+                                      weight: String(val),
+                                    };
+                                    setPodAffinityTerms(newTerms);
+                                  }}
+                                  width="xs"
+                                />
+                              </HStack>
                             </VStack>
                           </VStack>
                         </div>
@@ -3446,19 +3468,19 @@ export function CreateDeploymentPage() {
                           <VStack gap={2}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Operator
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Effect
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Toleration Seconds
                                 </span>
                                 <div />
@@ -3585,13 +3607,12 @@ export function CreateDeploymentPage() {
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           Specify the filesystem group used by the pod.
                         </span>
-                        <div className="max-w-[160px]">
-                          <NumberInput
-                            value={Number(podFilesystemGroup) || 0}
-                            onChange={(val) => setPodFilesystemGroup(String(val))}
-                            min={0}
-                          />
-                        </div>
+                        <NumberInput
+                          value={Number(podFilesystemGroup) || 0}
+                          onChange={(val) => setPodFilesystemGroup(String(val))}
+                          min={0}
+                          width="xs"
+                        />
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -3610,12 +3631,12 @@ export function CreateDeploymentPage() {
                           <VStack gap={2}>
                             {/* Header with type title and close button */}
                             <div className="flex items-start justify-between w-full">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
+                              <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                                 {volume.type === 'configmap' && 'ConfigMap'}
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
                                 {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
-                              </span>
+                              </h6>
                               <button
                                 onClick={() => removeVolume(index)}
                                 className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -3632,7 +3653,7 @@ export function CreateDeploymentPage() {
                             {volume.type === 'configmap' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3646,7 +3667,7 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       ConfigMap{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3701,7 +3722,7 @@ export function CreateDeploymentPage() {
                             {volume.type === 'secret' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3715,7 +3736,7 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Secret{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3768,7 +3789,7 @@ export function CreateDeploymentPage() {
                             {volume.type === 'pvc' && (
                               <>
                                 <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3782,7 +3803,7 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Persistent Volume Claim{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3818,7 +3839,7 @@ export function CreateDeploymentPage() {
                               <>
                                 <div className="w-full">
                                   <VStack gap={6}>
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Persistent Volume Claim Name{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -3857,7 +3878,7 @@ export function CreateDeploymentPage() {
 
                                     {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
                                       <VStack gap={6}>
-                                        <VStack gap={3} className="w-[calc(50%+1px)]">
+                                        <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3877,7 +3898,7 @@ export function CreateDeploymentPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={3} className="w-[calc(50%+1px)]">
+                                        <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Capacity{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3896,14 +3917,14 @@ export function CreateDeploymentPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            width="sm"
+                                            width="xs"
                                           />
                                         </VStack>
                                       </VStack>
                                     )}
 
                                     {(isV2 || (volume as CreatePVCVolume).useExistingPV) && (
-                                      <VStack gap={3}>
+                                      <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Persistent Volume{' '}
                                           <span className="text-[var(--color-state-danger)]">
@@ -3925,7 +3946,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     )}
 
-                                    <VStack gap={1.5}>
+                                    <VStack gap={3}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -3977,22 +3998,20 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   </VStack>
                                 </div>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2}>
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Volume Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Input
-                                      placeholder="Input  name"
-                                      value={volume.volumeName}
-                                      onChange={(e) =>
-                                        updateVolume(index, { volumeName: e.target.value })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                </div>
+                                <VStack gap={2} className="py-3 w-full">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Volume Name{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <Input
+                                    placeholder="Input name"
+                                    value={volume.volumeName}
+                                    onChange={(e) =>
+                                      updateVolume(index, { volumeName: e.target.value })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as CreatePVCVolume).readOnly}
@@ -4050,7 +4069,7 @@ export function CreateDeploymentPage() {
                               />
                             </button>
                             <VStack gap={6}>
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
@@ -4082,7 +4101,7 @@ export function CreateDeploymentPage() {
 
                               {(isV2 || !template.useExistingPV) && (
                                 <VStack gap={3}>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -4102,7 +4121,7 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Capacity{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -4117,7 +4136,7 @@ export function CreateDeploymentPage() {
                                         })
                                       }
                                       suffix="GiB"
-                                      width="sm"
+                                      width="xs"
                                     />
                                   </VStack>
                                 </VStack>
@@ -4266,7 +4285,7 @@ export function CreateDeploymentPage() {
                         </span>
                         <div className="flex gap-6 w-full">
                           {type !== 'exec' ? (
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Check Port
@@ -4295,7 +4314,7 @@ export function CreateDeploymentPage() {
                               />
                             </VStack>
                           ) : (
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Command to run
@@ -4316,7 +4335,7 @@ export function CreateDeploymentPage() {
                               />
                             </VStack>
                           )}
-                          <VStack gap={3} className="flex-1">
+                          <VStack gap={2} className="flex-1">
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Check Interval
@@ -4344,7 +4363,7 @@ export function CreateDeploymentPage() {
                         {showRequestPath ? (
                           <>
                             <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Request Path
@@ -4364,7 +4383,7 @@ export function CreateDeploymentPage() {
                                   }
                                 />
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Initial Delay
@@ -4390,7 +4409,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             </div>
                             <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Timeout
@@ -4414,7 +4433,7 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Success Threshold
@@ -4435,7 +4454,7 @@ export function CreateDeploymentPage() {
                                 />
                               </VStack>
                             </div>
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Failure Threshold
@@ -4459,7 +4478,7 @@ export function CreateDeploymentPage() {
                         ) : (
                           <>
                             <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Initial Delay
@@ -4483,7 +4502,7 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Timeout
@@ -4509,7 +4528,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             </div>
                             <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Success Threshold
@@ -4529,7 +4548,7 @@ export function CreateDeploymentPage() {
                                   width="sm"
                                 />
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Failure Threshold
@@ -4561,10 +4580,10 @@ export function CreateDeploymentPage() {
                               <VStack gap={2}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </label>
                                     <div />
@@ -4680,7 +4699,7 @@ export function CreateDeploymentPage() {
                             />
                           </VStack>
 
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <RadioGroup
                               value={config.containerType || 'standard'}
                               onChange={(val) =>
@@ -4702,7 +4721,7 @@ export function CreateDeploymentPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content>
                         <VStack gap={6}>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Container Image{' '}
@@ -4726,7 +4745,7 @@ export function CreateDeploymentPage() {
                               />
                             </div>
                           </VStack>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
@@ -4753,7 +4772,7 @@ export function CreateDeploymentPage() {
                               />
                             </div>
                           </VStack>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Secrets
@@ -4792,13 +4811,13 @@ export function CreateDeploymentPage() {
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Variable Name
                                 </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                                 <div className="w-5" />
@@ -4903,7 +4922,7 @@ export function CreateDeploymentPage() {
                     <SectionCard>
                       <SectionCard.Header title="Service account name" />
                       <SectionCard.Content>
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
@@ -4971,7 +4990,7 @@ export function CreateDeploymentPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
@@ -5062,13 +5081,13 @@ export function CreateDeploymentPage() {
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </label>
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
                                           <div />
@@ -5214,7 +5233,7 @@ export function CreateDeploymentPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   HTTP Get
                                 </span>
@@ -5304,13 +5323,13 @@ export function CreateDeploymentPage() {
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </label>
-                                          <label className="text-label-lg text-[var(--color-text-default)]">
+                                          <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
                                           <div />
@@ -5430,7 +5449,7 @@ export function CreateDeploymentPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={2} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5491,7 +5510,7 @@ export function CreateDeploymentPage() {
                                   <div className="flex gap-6 w-full">
                                     {(config.readinessProbe?.type === 'httpGet' ||
                                       config.readinessProbe?.type === 'tcpSocket') && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
@@ -5527,7 +5546,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     )}
                                     {config.readinessProbe?.type === 'exec' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
@@ -5552,7 +5571,7 @@ export function CreateDeploymentPage() {
                                         />
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
@@ -5586,7 +5605,7 @@ export function CreateDeploymentPage() {
                                   {/* Row 2: Request Path (httpGet only) + Initial Delay */}
                                   <div className="flex gap-6 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Request Path
@@ -5610,7 +5629,7 @@ export function CreateDeploymentPage() {
                                         />
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
@@ -5642,7 +5661,7 @@ export function CreateDeploymentPage() {
                                       </HStack>
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -5678,7 +5697,7 @@ export function CreateDeploymentPage() {
                                   {/* Row 3: Timeout + Success Threshold (httpGet) or Success + Failure (others) */}
                                   <div className="flex gap-6 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -5710,7 +5729,7 @@ export function CreateDeploymentPage() {
                                         </HStack>
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
@@ -5737,7 +5756,7 @@ export function CreateDeploymentPage() {
                                       />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -5767,7 +5786,7 @@ export function CreateDeploymentPage() {
                                   </div>
                                   {/* Row 4: Failure Threshold (httpGet only) */}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
@@ -5804,10 +5823,10 @@ export function CreateDeploymentPage() {
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                              <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
-                                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                              <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Value
                                               </label>
                                               <div />
@@ -5921,7 +5940,7 @@ export function CreateDeploymentPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={2} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5983,7 +6002,7 @@ export function CreateDeploymentPage() {
                                     <div className="flex gap-6 w-full">
                                       {(config.livenessProbe?.type === 'httpGet' ||
                                         config.livenessProbe?.type === 'tcpSocket') && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
@@ -6019,7 +6038,7 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                       )}
                                       {config.livenessProbe?.type === 'exec' && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
@@ -6044,7 +6063,7 @@ export function CreateDeploymentPage() {
                                           />
                                         </VStack>
                                       )}
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
@@ -6077,7 +6096,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
@@ -6108,7 +6127,7 @@ export function CreateDeploymentPage() {
                                           </span>
                                         </HStack>
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -6142,7 +6161,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
@@ -6168,7 +6187,7 @@ export function CreateDeploymentPage() {
                                           width="sm"
                                         />
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -6205,7 +6224,7 @@ export function CreateDeploymentPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Startup Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={2} className="w-[calc(50%-12px)]">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -6267,7 +6286,7 @@ export function CreateDeploymentPage() {
                                     <div className="flex gap-6 w-full">
                                       {(config.startupProbe?.type === 'httpGet' ||
                                         config.startupProbe?.type === 'tcpSocket') && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
@@ -6303,7 +6322,7 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                       )}
                                       {config.startupProbe?.type === 'exec' && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
@@ -6328,7 +6347,7 @@ export function CreateDeploymentPage() {
                                           />
                                         </VStack>
                                       )}
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
@@ -6361,7 +6380,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
@@ -6392,7 +6411,7 @@ export function CreateDeploymentPage() {
                                           </span>
                                         </HStack>
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -6426,7 +6445,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
@@ -6452,7 +6471,7 @@ export function CreateDeploymentPage() {
                                           width="sm"
                                         />
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -6494,7 +6513,7 @@ export function CreateDeploymentPage() {
                         <VStack gap={6}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Reservation
@@ -6518,7 +6537,7 @@ export function CreateDeploymentPage() {
                                 </span>
                               </HStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Limit
@@ -6545,7 +6564,7 @@ export function CreateDeploymentPage() {
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Reservation
@@ -6569,7 +6588,7 @@ export function CreateDeploymentPage() {
                                 </span>
                               </HStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Limit
@@ -6605,7 +6624,7 @@ export function CreateDeploymentPage() {
                         <VStack gap={6}>
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
                               </span>
@@ -6638,7 +6657,7 @@ export function CreateDeploymentPage() {
                                 </HStack>
                               </VStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privilege Escalation
                               </span>
@@ -6674,7 +6693,7 @@ export function CreateDeploymentPage() {
                           </div>
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
                               </span>
@@ -6707,7 +6726,7 @@ export function CreateDeploymentPage() {
                                 </HStack>
                               </VStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Read-Only Root Filesystem
                               </span>
@@ -6840,16 +6859,16 @@ export function CreateDeploymentPage() {
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Mount Point{' '}
                                             <span className="text-[var(--color-state-danger)]">
                                               *
                                             </span>
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Sub Path in Volume
                                           </span>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
                                           <div />

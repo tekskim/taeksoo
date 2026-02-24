@@ -2502,14 +2502,14 @@ function NetworkSection({
                 <VStack gap={2}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Network
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Subnet
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
-                        IP assignment
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        IP Assignment
                       </span>
                       <div />
                     </div>
@@ -2538,10 +2538,10 @@ function NetworkSection({
                         fullWidth
                       />
                       <button
-                        className="p-1 hover:bg-[var(--color-surface-hover)] rounded flex items-center justify-center"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                         onClick={() => removeVirtualLAN(vlan.id)}
                       >
-                        <IconX size={12} className="text-[var(--color-text-subtle)]" />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   ))}
@@ -2993,10 +2993,10 @@ function AdvancedSection({
                 <VStack gap={2}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
                       <div />

@@ -564,10 +564,10 @@ function LabelsAnnotationsSection({
                 <VStack gap={2}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
                       <div />
@@ -625,10 +625,10 @@ function LabelsAnnotationsSection({
                 <VStack gap={2}>
                   {annotations.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
-                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
                       <div />
