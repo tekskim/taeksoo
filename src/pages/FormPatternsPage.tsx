@@ -147,7 +147,7 @@ export function FormPatternsPage() {
               source="CreateDeploymentPage, CreateServicePage, CreateConfigMapPage, CreateSecretPage, CreateIngressPage, +20 more"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -156,7 +156,7 @@ export function FormPatternsPage() {
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
-                      <div />
+                      <div className="w-5" />
                     </div>
                   )}
                   {labels.map((label, index) => (
@@ -224,7 +224,7 @@ export function FormPatternsPage() {
                         <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                           Value
                         </span>
-                        <div />
+                        <div className="w-5" />
                       </div>
                       {dataEntries.map((entry, index) => (
                         <div
@@ -298,7 +298,7 @@ export function FormPatternsPage() {
               source="CreateDeploymentPage, CreatePodPage, CreateStatefulSetPage, CreateNetworkPolicyPage, CreatePodDisruptionBudgetPage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   {expressions.length > 0 && (
                     <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -310,7 +310,7 @@ export function FormPatternsPage() {
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
                       </span>
-                      <div />
+                      <div className="w-5" />
                     </div>
                   )}
                   {expressions.map((expr, i) => (
@@ -380,7 +380,7 @@ export function FormPatternsPage() {
               source="CreateServicePage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Port Name <span className="text-[#ea580c]">*</span>
@@ -397,7 +397,7 @@ export function FormPatternsPage() {
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Node Port
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                   {ports.map((port) => (
                     <div
@@ -508,7 +508,7 @@ export function FormPatternsPage() {
               source="CreatePodPage, CreateDeploymentPage, CreateStatefulSetPage, CreateDaemonSetPage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Name
@@ -519,7 +519,7 @@ export function FormPatternsPage() {
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value/Source
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                   {envVars.map((ev, i) => (
                     <div
@@ -579,7 +579,7 @@ export function FormPatternsPage() {
                 </VStack>
               </div>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2} className="w-full">
+                <VStack gap={1} className="w-full">
                   {envVarGroups.map((group, gi) => (
                     <div
                       key={gi}
@@ -687,12 +687,12 @@ export function FormPatternsPage() {
               source="CreatePodPage (Nameservers, Search Domains), CreatePersistentVolumePage (Mount Options), CreateStorageClassPage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                   {nameservers.map((ns, i) => (
                     <div key={i} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
@@ -736,7 +736,7 @@ export function FormPatternsPage() {
               source="CreateDeploymentPage, CreatePodPage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                     <VStack gap={1}>
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -811,7 +811,7 @@ export function FormPatternsPage() {
               source="CreateTemplatePage, ComputeAdminCreateTemplatePage"
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={2}>
+                <VStack gap={1}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -823,7 +823,7 @@ export function FormPatternsPage() {
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         IP Assignment
                       </span>
-                      <div />
+                      <div className="w-5" />
                     </div>
                   )}
                   {virtualLANs.map((vlan) => (
