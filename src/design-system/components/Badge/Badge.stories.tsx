@@ -65,11 +65,11 @@ import { Badge } from '@thaki/tds';
     },
     theme: {
       control: 'select',
-      options: ['blue', 'red', 'green', 'yellow', 'gray'],
+      options: ['white', 'blue', 'red', 'green', 'yellow', 'gray'],
       description: '배지 색상 테마',
       table: {
-        type: { summary: '"blue" | "red" | "green" | "yellow" | "gray"' },
-        defaultValue: { summary: '"blue"' },
+        type: { summary: '"white" | "blue" | "red" | "green" | "yellow" | "gray"' },
+        defaultValue: { summary: '"white"' },
       },
     },
     type: {
@@ -113,7 +113,7 @@ import { Badge } from '@thaki/tds';
   },
   args: {
     children: 'Badge',
-    theme: 'blue',
+    theme: 'white',
     type: 'solid',
     size: 'md',
   },
@@ -133,6 +133,7 @@ export const Default: Story = {
 export const ThemesSolid: Story = {
   render: () => (
     <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
+      <Badge theme="white">White</Badge>
       <Badge theme="blue">Blue</Badge>
       <Badge theme="red">Red</Badge>
       <Badge theme="green">Green</Badge>
@@ -146,6 +147,9 @@ export const ThemesSolid: Story = {
 export const ThemesSubtle: Story = {
   render: () => (
     <div className="flex flex-wrap gap-[var(--primitive-spacing-2)]">
+      <Badge theme="white" type="subtle">
+        White
+      </Badge>
       <Badge theme="blue" type="subtle">
         Blue
       </Badge>

@@ -8,7 +8,8 @@ import { IconCheck, IconArrowRight } from '@tabler/icons-react';
 const badgeProps: PropDef[] = [
   {
     name: 'theme',
-    type: "'blue' | 'red' | 'green' | 'yellow' | 'gray' | 'white'",
+    type: "'white' | 'blue' | 'red' | 'green' | 'yellow' | 'gray'",
+    default: "'white'",
     required: false,
     description: 'Color theme',
   },
@@ -45,10 +46,12 @@ export function BadgePage() {
       description="Status indicators and labels with various styles"
       preview={
         <ComponentPreview
-          code={`<Badge theme="blue" type="subtle">Label</Badge>
+          code={`<Badge>Default</Badge>
+<Badge theme="blue" type="subtle">Label</Badge>
 <Badge theme="green" type="subtle">Completed</Badge>`}
         >
           <div className="flex gap-2">
+            <Badge>Default</Badge>
             <Badge theme="blue" type="subtle">
               Label
             </Badge>
@@ -61,6 +64,7 @@ export function BadgePage() {
       usage={{
         code: `import { Badge } from '@/design-system';
 
+<Badge>Default</Badge>
 <Badge theme="blue" type="subtle">Label</Badge>
 <Badge theme="green" type="subtle" size="sm">Completed</Badge>`,
       }}
@@ -85,9 +89,37 @@ export function BadgePage() {
             <div className="flex gap-6">
               <VStack gap={2}>
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Solid
+                </span>
+                <div className="flex gap-2">
+                  <Badge size="sm" theme="white">
+                    White
+                  </Badge>
+                  <Badge size="sm" theme="blue">
+                    Blue
+                  </Badge>
+                  <Badge size="sm" theme="green">
+                    Green
+                  </Badge>
+                  <Badge size="sm" theme="red">
+                    Red
+                  </Badge>
+                  <Badge size="sm" theme="yellow">
+                    Yellow
+                  </Badge>
+                  <Badge size="sm" theme="gray">
+                    Gray
+                  </Badge>
+                </div>
+              </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                   Subtle
                 </span>
                 <div className="flex gap-2">
+                  <Badge size="sm" type="subtle" theme="white">
+                    White
+                  </Badge>
                   <Badge size="sm" type="subtle" theme="blue">
                     Blue
                   </Badge>
@@ -102,9 +134,6 @@ export function BadgePage() {
                   </Badge>
                   <Badge size="sm" type="subtle" theme="gray">
                     Gray
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="white">
-                    White
                   </Badge>
                 </div>
               </VStack>

@@ -176,6 +176,77 @@ export function DetailHeaderPage() {
                 <li>
                   <strong>날짜</strong>: Created at, Updated at 등 시간 정보를 표시합니다.
                 </li>
+                <li>
+                  <strong>권장 갯수</strong>: 4~6개 권장. 최대 12개까지 자동 멀티 행 배치 지원.
+                </li>
+              </ul>
+            </VStack>
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                InfoGrid 배치 규칙 (갯수별 자동 레이아웃)
+              </h4>
+              <p className="text-body-sm text-[var(--color-text-muted)]">
+                InfoCard 갯수에 따라 행 배치가 자동으로 결정됩니다. 한 행에 최대 4개까지 배치되며,
+                5개 이상일 경우 멀티 행으로 분배됩니다.
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        갯수
+                      </th>
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        레이아웃
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { count: '1~4', layout: 'N', desc: '단일 행에 모두 배치' },
+                      { count: '5', layout: '3 / 2', desc: '첫 행 3개, 두 번째 행 2개' },
+                      { count: '6', layout: '4 / 2', desc: '첫 행 4개, 두 번째 행 2개' },
+                      { count: '7', layout: '4 / 3', desc: '첫 행 4개, 두 번째 행 3개' },
+                      { count: '8', layout: '4 / 4', desc: '두 행 균등 배치' },
+                      { count: '9', layout: '4 / 3 / 2', desc: '3행 분배' },
+                      { count: '10', layout: '4 / 4 / 2', desc: '3행 분배' },
+                      { count: '11', layout: '4 / 4 / 3', desc: '3행 분배' },
+                      { count: '12', layout: '4 / 4 / 4', desc: '3행 균등 배치 (최대)' },
+                    ].map(({ count, layout, desc }) => (
+                      <tr key={count} className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                          {count}
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          {layout}
+                        </td>
+                        <td className="py-2 text-[var(--color-text-muted)]">{desc}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                InfoCard 배치 순서
+              </h4>
+              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>
+                  <strong>1번째</strong>: Status (StatusIndicator) — 리소스 상태를 가장 먼저 파악
+                </li>
+                <li>
+                  <strong>2번째</strong>: ID (copyable) — 리소스 식별자
+                </li>
+                <li>
+                  <strong>3~4번째</strong>: 핵심 속성 (Host, Image, Network 등)
+                </li>
+                <li>
+                  <strong>마지막</strong>: 시간 정보 (Created at, Updated at)
+                </li>
               </ul>
             </VStack>
           </VStack>

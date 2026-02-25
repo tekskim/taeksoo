@@ -8,8 +8,6 @@ import {
   IconBox,
   IconUsers,
   IconArrowLeft,
-  IconRobot,
-  IconCloud,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -208,19 +206,6 @@ const sections: CreatePageSection[] = [
       { label: 'Create Policy', path: '/iam/policies/create-v2' },
       { label: 'Create System Administrator', path: '/iam/system-administrators/create-v2' },
     ],
-  },
-  {
-    title: 'AI Agent',
-    icon: <IconRobot size={16} stroke={1.5} />,
-    links: [
-      { label: 'Create Agent', path: '/agent/create-v2' },
-      { label: 'Create MCP Template', path: '/mcp-tools/create-v2' },
-    ],
-  },
-  {
-    title: 'Cloud Builder',
-    icon: <IconCloud size={16} stroke={1.5} />,
-    links: [{ label: 'Cloud Builder Create', path: '/cloudbuilder/servers/create-v2' }],
   },
 ];
 
