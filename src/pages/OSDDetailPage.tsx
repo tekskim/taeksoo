@@ -9,6 +9,7 @@ import {
   TopBarAction,
   Breadcrumb,
   Badge,
+  BadgeList,
   Tabs,
   TabList,
   Tab,
@@ -841,26 +842,6 @@ const mockDeviceHealthList: DeviceHealth[] = [
 ];
 
 /* ----------------------------------------
-   Daemons Cell Component
-   ---------------------------------------- */
-
-interface DaemonsCellProps {
-  daemons: string[];
-}
-
-function DaemonsCell({ daemons }: DaemonsCellProps) {
-  return (
-    <div className="flex gap-0.5 flex-wrap">
-      {daemons.map((daemon, index) => (
-        <Badge key={index} theme="white" size="sm">
-          {daemon}
-        </Badge>
-      ))}
-    </div>
-  );
-}
-
-/* ----------------------------------------
    OSD Detail Page
    ---------------------------------------- */
 
@@ -941,7 +922,13 @@ export function OSDDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.daemons,
       sortable: false,
-      render: (_, row) => <DaemonsCell daemons={row.daemons} />,
+      render: (_, row) => (
+        <BadgeList
+          items={row.daemons}
+          maxVisible={2}
+          popoverTitle={`All Daemons (${row.daemons.length})`}
+        />
+      ),
     },
   ];
 
