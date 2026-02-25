@@ -144,7 +144,7 @@ export function InputPage() {
 
           <VStack gap={3}>
             <Label>Text Input - Width</Label>
-            <div className="flex gap-4 items-end">
+            <div className="flex flex-wrap gap-4 items-end">
               <VStack gap={1}>
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                   XS (80px)
@@ -157,7 +157,31 @@ export function InputPage() {
                 </span>
                 <Input placeholder="Small" width="sm" />
               </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  MD (240px)
+                </span>
+                <Input placeholder="Medium" width="md" />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  LG (360px)
+                </span>
+                <Input placeholder="Large" width="lg" />
+              </VStack>
             </div>
+            <VStack gap={1} className="w-1/2">
+              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                Half (50%)
+              </span>
+              <Input placeholder="Half width" width="half" />
+            </VStack>
+            <VStack gap={1} className="w-full">
+              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                Full (100%)
+              </span>
+              <Input placeholder="Full width" width="full" />
+            </VStack>
           </VStack>
 
           <VStack gap={3}>
@@ -328,7 +352,7 @@ export function InputPage() {
 
           <VStack gap={3}>
             <Label>Number Input - Width</Label>
-            <div className="flex gap-4 items-end">
+            <div className="flex flex-wrap gap-4 items-end">
               <VStack gap={1}>
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                   XS (80px)

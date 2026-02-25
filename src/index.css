@@ -338,6 +338,7 @@ html.theme-transition *::after {
   /* Common widths */
   --search-input-width: 280px;
   --wizard-summary-width: 312px;
+  --slider-row-max-width: 312px;
   --detail-panel-width: 280px;
 
   --modal-width-sm: 400px;
@@ -566,7 +567,7 @@ html.theme-transition *::after {
   --card-padding-sm: var(--spacing-3);
   --card-padding-md: var(--spacing-4);
   --card-padding-lg: var(--spacing-6);
-  --card-padding-bottom: var(--spacing-6);
+  --card-padding-bottom: var(--spacing-3);
   --card-radius: var(--radius-card);
   --card-gap: var(--spacing-3);
 

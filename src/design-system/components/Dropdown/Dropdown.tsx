@@ -318,7 +318,7 @@ export const DropdownSelect = forwardRef<HTMLButtonElement, DropdownSelectProps>
     const widthStyles = {
       sm: 'w-[160px]',
       md: 'w-[240px]',
-      lg: 'w-[320px]',
+      lg: 'w-[360px]',
     };
 
     const getWidthClass = () => {

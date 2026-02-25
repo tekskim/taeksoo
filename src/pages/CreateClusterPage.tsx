@@ -448,7 +448,7 @@ export function CreateClusterPage() {
         {/* Left Column - Form */}
         <div className="flex-1 flex flex-col gap-[16px]">
           {/* Basic Information */}
-          <SectionCard>
+          <SectionCard className="pb-6">
             <SectionCard.Header title="Basic information" />
             <SectionCard.Content className="pt-3">
               <VStack gap={8}>
@@ -528,7 +528,7 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Networking */}
-          <SectionCard>
+          <SectionCard className="pb-6">
             <SectionCard.Header title="Networking" />
             <SectionCard.Content className="pt-3">
               <VStack gap={8}>
@@ -672,7 +672,7 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Node Configuration */}
-          <SectionCard>
+          <SectionCard className="pb-6">
             <SectionCard.Header title="Node configuration" />
             <SectionCard.Content className="pt-3">
               <VStack gap={8}>
@@ -1024,7 +1024,7 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Worker Nodes */}
-          <SectionCard>
+          <SectionCard className="pb-6">
             <SectionCard.Header title="Worker Nodes" />
             <SectionCard.Content className="pt-3">
               <VStack gap={8}>
@@ -1248,7 +1248,7 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Labels & Annotations */}
-          <SectionCard>
+          <SectionCard className="pb-6">
             <SectionCard.Header title="Labels & Annotations" />
             <SectionCard.Content className="pt-3">
               <VStack gap={8}>
@@ -1262,7 +1262,7 @@ export function CreateClusterPage() {
                   </VStack>
 
                   {/* Bordered container for labels */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={2}>
                       {labels.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -1331,7 +1331,7 @@ export function CreateClusterPage() {
                   </VStack>
 
                   {/* Bordered container for annotations */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={2}>
                       {annotations.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

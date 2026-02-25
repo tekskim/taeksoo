@@ -16,7 +16,6 @@ import {
   Radio,
   RadioGroup,
   Checkbox,
-  FormField,
   Tabs,
   TabList,
   Tab,
@@ -500,7 +499,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -594,7 +593,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -607,7 +606,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -668,7 +667,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -771,7 +770,7 @@ function ScalingPolicySection({
   onSuspendChange,
 }: ScalingPolicySectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Scaling and Upgrade Policy" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -883,7 +882,7 @@ function ScalingPolicySection({
                   onChange={onStartingDeadlineSecondsChange}
                   min={0}
                   size="sm"
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -1946,7 +1945,7 @@ export function CreateCronJobPage() {
             {activeTab === 'pod' && (
               <>
                 {/* Labels & Annotations */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Labels & Annotations" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -1961,7 +1960,7 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -2029,7 +2028,7 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -2093,7 +2092,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Scaling and Upgrade Policy */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -2115,7 +2114,7 @@ export function CreateCronJobPage() {
                             }
                             onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
                             size="sm"
-                            width="sm"
+                            width="xs"
                           />
                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                             Seconds
@@ -2127,7 +2126,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Networking */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -2214,7 +2213,7 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2273,7 +2272,7 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2327,7 +2326,7 @@ export function CreateCronJobPage() {
                           Resolver Options
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2394,7 +2393,7 @@ export function CreateCronJobPage() {
                           Host Aliases
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2457,7 +2456,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Node Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Node scheduling" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -2525,12 +2524,12 @@ export function CreateCronJobPage() {
                               </p>
                             </VStack>
 
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={6}>
                                 {nodeAffinityTerms.map((term, termIndex) => (
                                   <div
                                     key={termIndex}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                   >
                                     <VStack gap={6}>
                                       <div className="flex items-start justify-between w-full">
@@ -2778,12 +2777,12 @@ export function CreateCronJobPage() {
                             </p>
                           </VStack>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={6}>
                               {nodeAffinityTerms.map((term, termIndex) => (
                                 <div
                                   key={termIndex}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
                                   <VStack gap={6}>
                                     <div className="flex items-start justify-between w-full">
@@ -3019,7 +3018,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Pod Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -3215,12 +3214,12 @@ export function CreateCronJobPage() {
                             )}
 
                             {/* Match Expressions / Rules Section */}
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={2}>
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                   >
                                     <div className="flex gap-2 items-start w-full">
                                       <VStack gap={2} className="flex-1">
@@ -3417,7 +3416,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Resources */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Resources" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -3427,7 +3426,7 @@ export function CreateCronJobPage() {
                           Tolerations
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
@@ -3559,7 +3558,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Security Context */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Security context" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -3584,7 +3583,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Storage */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Storage" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={2}>
@@ -4016,7 +4015,7 @@ export function CreateCronJobPage() {
                 </SectionCard>
 
                 {/* Volume Claim Templates */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Volume claim templates" />
                   <SectionCard.Content className="pt-3">
                     <div className="w-full">
@@ -4024,7 +4023,7 @@ export function CreateCronJobPage() {
                         {volumeClaimTemplates.map((template, index) => (
                           <div
                             key={index}
-                            className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                            className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                           >
                             <button
                               onClick={() => removeVolumeClaimTemplate(index)}
@@ -4262,24 +4261,30 @@ export function CreateCronJobPage() {
                                   Specify the port used to send health check requests.
                                 </span>
                               </VStack>
-                              <Input
-                                placeholder="e.g. 80"
-                                fullWidth
+                              <NumberInput
                                 value={
-                                  type === 'httpGet'
-                                    ? probe?.httpGet?.port || ''
-                                    : probe?.tcpSocket?.port || ''
+                                  parseInt(
+                                    type === 'httpGet'
+                                      ? probe?.httpGet?.port || ''
+                                      : probe?.tcpSocket?.port || ''
+                                  ) || undefined
                                 }
-                                onChange={(e) =>
+                                onChange={(val) =>
                                   type === 'httpGet'
                                     ? updateProbe(probeKey, {
-                                        httpGet: { ...probe?.httpGet, port: e.target.value },
+                                        httpGet: { ...probe?.httpGet, port: String(val ?? '') },
                                       })
                                     : updateProbe(probeKey, {
-                                        tcpSocket: { ...probe?.tcpSocket, port: e.target.value },
+                                        tcpSocket: { ...probe?.tcpSocket, port: String(val ?? '') },
                                       })
                                 }
+                                min={1}
+                                max={65535}
+                                width="sm"
                               />
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                1-65535
+                              </span>
                             </VStack>
                           ) : (
                             <VStack gap={3} className="flex-1">
@@ -4320,7 +4325,7 @@ export function CreateCronJobPage() {
                                 }
                                 min={1}
                                 size="sm"
-                                width="sm"
+                                width="xs"
                               />
                               <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                 Seconds
@@ -4330,28 +4335,28 @@ export function CreateCronJobPage() {
                         </div>
                         {showRequestPath ? (
                           <>
-                            <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
-                                <VStack gap={1}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Request Path
-                                  </span>
-                                  <span className="text-body-md text-[var(--color-text-subtle)]">
-                                    Specify the request path used for HTTP health checks.
-                                  </span>
-                                </VStack>
-                                <Input
-                                  placeholder="e.g./healthz"
-                                  fullWidth
-                                  value={probe?.httpGet?.path || ''}
-                                  onChange={(e) =>
-                                    updateProbe(probeKey, {
-                                      httpGet: { ...probe?.httpGet, path: e.target.value },
-                                    })
-                                  }
-                                />
+                            <VStack gap={2} className="w-full">
+                              <VStack gap={1}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Request Path
+                                </span>
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
+                                  Specify the request path used for HTTP health checks.
+                                </span>
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                              <Input
+                                placeholder="e.g./healthz"
+                                fullWidth
+                                value={probe?.httpGet?.path || ''}
+                                onChange={(e) =>
+                                  updateProbe(probeKey, {
+                                    httpGet: { ...probe?.httpGet, path: e.target.value },
+                                  })
+                                }
+                              />
+                            </VStack>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Initial Delay
@@ -4368,16 +4373,14 @@ export function CreateCronJobPage() {
                                     }
                                     min={0}
                                     size="sm"
-                                    width="sm"
+                                    width="xs"
                                   />
                                   <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                     Seconds
                                   </span>
                                 </HStack>
                               </VStack>
-                            </div>
-                            <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Timeout
@@ -4394,14 +4397,16 @@ export function CreateCronJobPage() {
                                     }
                                     min={1}
                                     size="sm"
-                                    width="sm"
+                                    width="xs"
                                   />
                                   <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                     Seconds
                                   </span>
                                 </HStack>
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                            </div>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Success Threshold
@@ -4418,30 +4423,30 @@ export function CreateCronJobPage() {
                                   }
                                   min={1}
                                   size="sm"
-                                  width="sm"
+                                  width="xs"
+                                />
+                              </VStack>
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Failure Threshold
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the minimum number of consecutive failed checks to
+                                    consider the status unhealthy.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.failureThreshold || '3') || 3}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, { failureThreshold: String(val) })
+                                  }
+                                  min={1}
+                                  size="sm"
+                                  width="xs"
                                 />
                               </VStack>
                             </div>
-                            <VStack gap={3}>
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Failure Threshold
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the minimum number of consecutive failed checks to
-                                  consider the status unhealthy.
-                                </span>
-                              </VStack>
-                              <NumberInput
-                                value={parseInt(probe?.failureThreshold || '3') || 3}
-                                onChange={(val) =>
-                                  updateProbe(probeKey, { failureThreshold: String(val) })
-                                }
-                                min={1}
-                                size="sm"
-                                width="sm"
-                              />
-                            </VStack>
                           </>
                         ) : (
                           <>
@@ -4463,7 +4468,7 @@ export function CreateCronJobPage() {
                                     }
                                     min={0}
                                     size="sm"
-                                    width="sm"
+                                    width="xs"
                                   />
                                   <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                     Seconds
@@ -4487,7 +4492,7 @@ export function CreateCronJobPage() {
                                     }
                                     min={1}
                                     size="sm"
-                                    width="sm"
+                                    width="xs"
                                   />
                                   <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                     Seconds
@@ -4513,7 +4518,7 @@ export function CreateCronJobPage() {
                                   }
                                   min={1}
                                   size="sm"
-                                  width="sm"
+                                  width="xs"
                                 />
                               </VStack>
                               <VStack gap={3} className="flex-1">
@@ -4533,7 +4538,7 @@ export function CreateCronJobPage() {
                                   }
                                   min={1}
                                   size="sm"
-                                  width="sm"
+                                  width="xs"
                                 />
                               </VStack>
                             </div>
@@ -4544,7 +4549,7 @@ export function CreateCronJobPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Request Headers
                             </span>
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={2}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -4647,7 +4652,7 @@ export function CreateCronJobPage() {
                 return (
                   <>
                     {/* 1. Basic Information Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4685,7 +4690,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 2. Image Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4772,10 +4777,10 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 3. Environment Variables Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content className="pt-3">
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
@@ -4887,7 +4892,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 5. Service Account Name Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Service account name" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={3}>
@@ -4915,7 +4920,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 7. Lifecycle Hooks Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Lifecycle hooks" />
                       <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
@@ -4958,92 +4963,108 @@ export function CreateCronJobPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
-                              <VStack gap={6}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  HTTP Get
-                                </span>
-                                <VStack gap={2}>
+                              <VStack gap={8}>
+                                <VStack gap={3}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Host IP
+                                    HTTP Get
                                   </span>
-                                  <Input
-                                    placeholder="e.g. 172.17.0.2"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.postStart?.httpGet?.host || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('postStart', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.postStart?.httpGet,
-                                          host: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Path
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. /health"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.postStart?.httpGet?.path || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('postStart', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.postStart?.httpGet,
-                                          path: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Port <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. 3000"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.postStart?.httpGet?.port || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('postStart', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.postStart?.httpGet,
-                                          port: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Scheme
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'HTTP', label: 'HTTP' },
-                                      { value: 'HTTPS', label: 'HTTPS' },
-                                    ]}
-                                    value={
-                                      config.lifecycleHooks?.postStart?.httpGet?.scheme || 'HTTP'
-                                    }
-                                    onChange={(val) =>
-                                      updateLifecycleHook('postStart', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.postStart?.httpGet,
-                                          scheme: val,
-                                        },
-                                      })
-                                    }
-                                    fullWidth
-                                  />
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                    <VStack gap={3}>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Host IP
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 172.17.0.2"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.host || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                host: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Path
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. /health"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.path || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                path: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Port{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 3000"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.port || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                port: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Scheme
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'HTTP', label: 'HTTP' },
+                                            { value: 'HTTPS', label: 'HTTPS' },
+                                          ]}
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.scheme ||
+                                            'HTTP'
+                                          }
+                                          onChange={(val) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                scheme: val,
+                                              },
+                                            })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                    </VStack>
+                                  </div>
                                 </VStack>
                                 <VStack gap={6}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                     <VStack gap={2}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
@@ -5201,92 +5222,108 @@ export function CreateCronJobPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
-                              <VStack gap={6}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  HTTP Get
-                                </span>
-                                <VStack gap={2}>
+                              <VStack gap={8}>
+                                <VStack gap={3}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Host IP
+                                    HTTP Get
                                   </span>
-                                  <Input
-                                    placeholder="e.g. 172.17.0.2"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.preStop?.httpGet?.host || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('preStop', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.preStop?.httpGet,
-                                          host: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Path
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. /shutdown"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.preStop?.httpGet?.path || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('preStop', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.preStop?.httpGet,
-                                          path: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Port <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. 3000"
-                                    fullWidth
-                                    value={config.lifecycleHooks?.preStop?.httpGet?.port || ''}
-                                    onChange={(e) =>
-                                      updateLifecycleHook('preStop', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.preStop?.httpGet,
-                                          port: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Scheme
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'HTTP', label: 'HTTP' },
-                                      { value: 'HTTPS', label: 'HTTPS' },
-                                    ]}
-                                    value={
-                                      config.lifecycleHooks?.preStop?.httpGet?.scheme || 'HTTP'
-                                    }
-                                    onChange={(val) =>
-                                      updateLifecycleHook('preStop', {
-                                        httpGet: {
-                                          ...config.lifecycleHooks?.preStop?.httpGet,
-                                          scheme: val,
-                                        },
-                                      })
-                                    }
-                                    fullWidth
-                                  />
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                    <VStack gap={3}>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Host IP
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 172.17.0.2"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.host || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                host: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Path
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. /shutdown"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.path || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                path: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Port{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 3000"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.port || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                port: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Scheme
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'HTTP', label: 'HTTP' },
+                                            { value: 'HTTPS', label: 'HTTPS' },
+                                          ]}
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.scheme ||
+                                            'HTTP'
+                                          }
+                                          onChange={(val) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                scheme: val,
+                                              },
+                                            })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                    </VStack>
+                                  </div>
                                 </VStack>
                                 <VStack gap={6}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                     <VStack gap={2}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
@@ -5408,16 +5445,16 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 8. Health Check Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Health check" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
                           {/* Readiness Check */}
                           <VStack gap={6}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
+                            <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={3}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5487,30 +5524,36 @@ export function CreateCronJobPage() {
                                             Specify the port used to send health check requests.
                                           </span>
                                         </VStack>
-                                        <Input
-                                          placeholder="e.g. 80"
-                                          fullWidth
+                                        <NumberInput
                                           value={
-                                            config.readinessProbe?.type === 'httpGet'
-                                              ? config.readinessProbe?.httpGet?.port || ''
-                                              : config.readinessProbe?.tcpSocket?.port || ''
+                                            parseInt(
+                                              config.readinessProbe?.type === 'httpGet'
+                                                ? config.readinessProbe?.httpGet?.port || ''
+                                                : config.readinessProbe?.tcpSocket?.port || ''
+                                            ) || undefined
                                           }
-                                          onChange={(e) =>
+                                          onChange={(val) =>
                                             config.readinessProbe?.type === 'httpGet'
                                               ? updateProbe('readinessProbe', {
                                                   httpGet: {
                                                     ...config.readinessProbe?.httpGet,
-                                                    port: e.target.value,
+                                                    port: String(val ?? ''),
                                                   },
                                                 })
                                               : updateProbe('readinessProbe', {
                                                   tcpSocket: {
                                                     ...config.readinessProbe?.tcpSocket,
-                                                    port: e.target.value,
+                                                    port: String(val ?? ''),
                                                   },
                                                 })
                                           }
+                                          min={1}
+                                          max={65535}
+                                          width="sm"
                                         />
+                                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                          1-65535
+                                        </span>
                                       </VStack>
                                     )}
                                     {config.readinessProbe?.type === 'exec' && (
@@ -5562,7 +5605,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                         <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
@@ -5621,7 +5664,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={0}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                         <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                           Seconds
@@ -5653,7 +5696,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -5689,7 +5732,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -5720,7 +5763,7 @@ export function CreateCronJobPage() {
                                         }
                                         min={1}
                                         size="sm"
-                                        width="sm"
+                                        width="xs"
                                       />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
@@ -5747,7 +5790,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                       </VStack>
                                     )}
@@ -5777,7 +5820,7 @@ export function CreateCronJobPage() {
                                         }
                                         min={1}
                                         size="sm"
-                                        width="sm"
+                                        width="xs"
                                       />
                                     </VStack>
                                   )}
@@ -5786,7 +5829,7 @@ export function CreateCronJobPage() {
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
-                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                         <VStack gap={2}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
@@ -5905,10 +5948,10 @@ export function CreateCronJobPage() {
 
                           {/* Liveness Check */}
                           <VStack gap={6}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
+                            <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={3}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5980,30 +6023,36 @@ export function CreateCronJobPage() {
                                               Specify the port used to send health check requests.
                                             </span>
                                           </VStack>
-                                          <Input
-                                            placeholder="e.g. 80"
-                                            fullWidth
+                                          <NumberInput
                                             value={
-                                              config.livenessProbe?.type === 'httpGet'
-                                                ? config.livenessProbe?.httpGet?.port || ''
-                                                : config.livenessProbe?.tcpSocket?.port || ''
+                                              parseInt(
+                                                config.livenessProbe?.type === 'httpGet'
+                                                  ? config.livenessProbe?.httpGet?.port || ''
+                                                  : config.livenessProbe?.tcpSocket?.port || ''
+                                              ) || undefined
                                             }
-                                            onChange={(e) =>
+                                            onChange={(val) =>
                                               config.livenessProbe?.type === 'httpGet'
                                                 ? updateProbe('livenessProbe', {
                                                     httpGet: {
                                                       ...config.livenessProbe?.httpGet,
-                                                      port: e.target.value,
+                                                      port: String(val ?? ''),
                                                     },
                                                   })
                                                 : updateProbe('livenessProbe', {
                                                     tcpSocket: {
                                                       ...config.livenessProbe?.tcpSocket,
-                                                      port: e.target.value,
+                                                      port: String(val ?? ''),
                                                     },
                                                   })
                                             }
+                                            min={1}
+                                            max={65535}
+                                            width="sm"
                                           />
+                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                            1-65535
+                                          </span>
                                         </VStack>
                                       )}
                                       {config.livenessProbe?.type === 'exec' && (
@@ -6055,7 +6104,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6089,7 +6138,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={0}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6120,7 +6169,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6153,7 +6202,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -6179,7 +6228,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                       </VStack>
                                     </div>
@@ -6190,10 +6239,10 @@ export function CreateCronJobPage() {
 
                           {/* Startup Check */}
                           <VStack gap={6}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
+                            <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Startup Check
                             </span>
-                            <VStack gap={3} className="w-[calc(50%-12px)]">
+                            <VStack gap={3}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -6265,30 +6314,36 @@ export function CreateCronJobPage() {
                                               Specify the port used to send health check requests.
                                             </span>
                                           </VStack>
-                                          <Input
-                                            placeholder="e.g. 80"
-                                            fullWidth
+                                          <NumberInput
                                             value={
-                                              config.startupProbe?.type === 'httpGet'
-                                                ? config.startupProbe?.httpGet?.port || ''
-                                                : config.startupProbe?.tcpSocket?.port || ''
+                                              parseInt(
+                                                config.startupProbe?.type === 'httpGet'
+                                                  ? config.startupProbe?.httpGet?.port || ''
+                                                  : config.startupProbe?.tcpSocket?.port || ''
+                                              ) || undefined
                                             }
-                                            onChange={(e) =>
+                                            onChange={(val) =>
                                               config.startupProbe?.type === 'httpGet'
                                                 ? updateProbe('startupProbe', {
                                                     httpGet: {
                                                       ...config.startupProbe?.httpGet,
-                                                      port: e.target.value,
+                                                      port: String(val ?? ''),
                                                     },
                                                   })
                                                 : updateProbe('startupProbe', {
                                                     tcpSocket: {
                                                       ...config.startupProbe?.tcpSocket,
-                                                      port: e.target.value,
+                                                      port: String(val ?? ''),
                                                     },
                                                   })
                                             }
+                                            min={1}
+                                            max={65535}
+                                            width="sm"
                                           />
+                                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                            1-65535
+                                          </span>
                                         </VStack>
                                       )}
                                       {config.startupProbe?.type === 'exec' && (
@@ -6340,7 +6395,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6374,7 +6429,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={0}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6405,7 +6460,7 @@ export function CreateCronJobPage() {
                                             }
                                             min={1}
                                             size="sm"
-                                            width="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                             Seconds
@@ -6438,7 +6493,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                       </VStack>
                                       <VStack gap={3} className="flex-1">
@@ -6464,7 +6519,7 @@ export function CreateCronJobPage() {
                                           }
                                           min={1}
                                           size="sm"
-                                          width="sm"
+                                          width="xs"
                                         />
                                       </VStack>
                                     </div>
@@ -6477,7 +6532,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 9. Resources Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Resources" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6493,14 +6548,17 @@ export function CreateCronJobPage() {
                                 </span>
                               </VStack>
                               <HStack gap={2} align="center">
-                                <Input
-                                  placeholder="1000"
-                                  value={config.cpuRequest || ''}
-                                  onChange={(e) =>
+                                <NumberInput
+                                  value={
+                                    config.cpuRequest ? parseInt(config.cpuRequest) : undefined
+                                  }
+                                  onChange={(val) =>
                                     updateContainerConfig(containerId, {
-                                      cpuRequest: e.target.value,
+                                      cpuRequest: val?.toString() || '',
                                     })
                                   }
+                                  min={0}
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                   mCPUs
@@ -6517,14 +6575,15 @@ export function CreateCronJobPage() {
                                 </span>
                               </VStack>
                               <HStack gap={2} align="center">
-                                <Input
-                                  placeholder="1000"
-                                  value={config.cpuLimit || ''}
-                                  onChange={(e) =>
+                                <NumberInput
+                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
+                                  onChange={(val) =>
                                     updateContainerConfig(containerId, {
-                                      cpuLimit: e.target.value,
+                                      cpuLimit: val?.toString() || '',
                                     })
                                   }
+                                  min={0}
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                   mCPUs
@@ -6544,14 +6603,19 @@ export function CreateCronJobPage() {
                                 </span>
                               </VStack>
                               <HStack gap={2} align="center">
-                                <Input
-                                  placeholder="128"
-                                  value={config.memoryRequest || ''}
-                                  onChange={(e) =>
+                                <NumberInput
+                                  value={
+                                    config.memoryRequest
+                                      ? parseInt(config.memoryRequest)
+                                      : undefined
+                                  }
+                                  onChange={(val) =>
                                     updateContainerConfig(containerId, {
-                                      memoryRequest: e.target.value,
+                                      memoryRequest: val?.toString() || '',
                                     })
                                   }
+                                  min={0}
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                   MiB
@@ -6568,14 +6632,17 @@ export function CreateCronJobPage() {
                                 </span>
                               </VStack>
                               <HStack gap={2} align="center">
-                                <Input
-                                  placeholder="128"
-                                  value={config.memoryLimit || ''}
-                                  onChange={(e) =>
+                                <NumberInput
+                                  value={
+                                    config.memoryLimit ? parseInt(config.memoryLimit) : undefined
+                                  }
+                                  onChange={(val) =>
                                     updateContainerConfig(containerId, {
-                                      memoryLimit: e.target.value,
+                                      memoryLimit: val?.toString() || '',
                                     })
                                   }
+                                  min={0}
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                   MiB
@@ -6588,7 +6655,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 10. Security Context Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Security context" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6730,8 +6797,8 @@ export function CreateCronJobPage() {
                               </VStack>
                             </VStack>
                           </div>
-                          {/* Row 3: Run as User ID (half width) */}
-                          <VStack gap={2} className="w-[calc(50%-12px)]">
+                          {/* Row 3: Run as User ID */}
+                          <VStack gap={2} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Run as User ID
                             </span>
@@ -6798,7 +6865,7 @@ export function CreateCronJobPage() {
                     </SectionCard>
 
                     {/* 11. Storage Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Storage" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6970,7 +7037,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           )}
                           {/* Select Volume dropdown */}
-                          <div className="w-[calc(50%-12px)]">
+                          <div className="w-full">
                             <Select
                               options={[
                                 { value: '', label: 'Select volume' },
