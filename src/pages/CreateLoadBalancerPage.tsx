@@ -2442,7 +2442,7 @@ export default function CreateLoadBalancerPage() {
                               </VStack>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                <VStack gap={2}>
+                                <VStack gap={1}>
                                   {allowedCidrs.length > 0 && (
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       CIDR
@@ -2935,7 +2935,7 @@ export default function CreateLoadBalancerPage() {
                         </VStack>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {externalMembers.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2947,7 +2947,7 @@ export default function CreateLoadBalancerPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Weights
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {externalMembers.map((extMember) => (

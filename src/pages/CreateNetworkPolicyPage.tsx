@@ -395,7 +395,7 @@ function TrafficRulesSection({
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={2}>
+                            <VStack gap={1}>
                               {activeRule.targets.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -404,7 +404,7 @@ function TrafficRulesSection({
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     CIDR
                                   </span>
-                                  <div />
+                                  <div className="w-5" />
                                 </div>
                               )}
 
@@ -461,7 +461,7 @@ function TrafficRulesSection({
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={2}>
+                            <VStack gap={1}>
                               {activeRule.allowedPorts.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -470,7 +470,7 @@ function TrafficRulesSection({
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Protocol
                                   </span>
-                                  <div />
+                                  <div className="w-5" />
                                 </div>
                               )}
 
@@ -790,7 +790,7 @@ export function CreateNetworkPolicyPage() {
                 <VStack gap={8}>
                   {/* Selector Rules */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={2}>
+                    <VStack gap={1}>
                       {selectorRules.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -802,7 +802,7 @@ export function CreateNetworkPolicyPage() {
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Value
                           </span>
-                          <div />
+                          <div className="w-5" />
                         </div>
                       )}
 
@@ -901,7 +901,7 @@ export function CreateNetworkPolicyPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -910,7 +910,7 @@ export function CreateNetworkPolicyPage() {
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {labels.map((label) => (
@@ -969,7 +969,7 @@ export function CreateNetworkPolicyPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -978,7 +978,7 @@ export function CreateNetworkPolicyPage() {
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {annotations.map((annotation) => (

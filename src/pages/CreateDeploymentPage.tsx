@@ -608,7 +608,7 @@ function LabelsAnnotationsSection({
 
             {/* Labels container */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={1}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -617,7 +617,7 @@ function LabelsAnnotationsSection({
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                 )}
                 {labels.map((label, index) => (
@@ -671,7 +671,7 @@ function LabelsAnnotationsSection({
 
             {/* Annotations container */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={1}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -680,7 +680,7 @@ function LabelsAnnotationsSection({
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                 )}
                 {annotations.map((annotation, index) => (
@@ -1045,7 +1045,7 @@ function EnvVarTypeSection({
     <VStack gap={3}>
       <span className="text-label-lg text-[var(--color-text-default)]">{title}</span>
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-        <VStack gap={2} className="w-full">
+        <VStack gap={1} className="w-full">
           {rows.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1054,7 +1054,7 @@ function EnvVarTypeSection({
               <span className="block text-label-sm text-[var(--color-text-default)]">
                 {columns[1]}
               </span>
-              <div />
+              <div className="w-5" />
             </div>
           )}
           {rows.map((row) => (
@@ -2131,7 +2131,7 @@ export function CreateDeploymentPage() {
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2140,7 +2140,7 @@ export function CreateDeploymentPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {podLabels.map((label, index) => (
@@ -2201,7 +2201,7 @@ export function CreateDeploymentPage() {
 
                         {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2210,7 +2210,7 @@ export function CreateDeploymentPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {podAnnotations.map((annotation, index) => (
@@ -2390,7 +2390,7 @@ export function CreateDeploymentPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
@@ -2401,7 +2401,7 @@ export function CreateDeploymentPage() {
                                     Specify the DNS nameserver addresses used by the pod.
                                   </p>
                                 </VStack>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {nameservers.map((ns, index) => (
@@ -2449,7 +2449,7 @@ export function CreateDeploymentPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
@@ -2460,7 +2460,7 @@ export function CreateDeploymentPage() {
                                     Specify the search domains used for DNS resolution.
                                   </p>
                                 </VStack>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {searchDomains.map((sd, index) => (
@@ -2508,7 +2508,7 @@ export function CreateDeploymentPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
@@ -2585,7 +2585,7 @@ export function CreateDeploymentPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={1}>
@@ -2795,7 +2795,7 @@ export function CreateDeploymentPage() {
                                       </HStack>
                                     </VStack>
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                      <VStack gap={2}>
+                                      <VStack gap={1}>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2807,7 +2807,7 @@ export function CreateDeploymentPage() {
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Value
                                             </span>
-                                            <div />
+                                            <div className="w-5" />
                                           </div>
                                         )}
                                         {term.matchExpressions.map((expr, exprIndex) => (
@@ -3042,7 +3042,7 @@ export function CreateDeploymentPage() {
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {term.matchExpressions.map((expr, exprIndex) => (
@@ -3375,7 +3375,7 @@ export function CreateDeploymentPage() {
 
                             {/* Match Expressions / Rules Section */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={2}>
+                              <VStack gap={1}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3621,7 +3621,7 @@ export function CreateDeploymentPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3639,7 +3639,7 @@ export function CreateDeploymentPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Toleration Seconds
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {tolerations.map((toleration, index) => (
@@ -4433,117 +4433,85 @@ export function CreateDeploymentPage() {
                   const showHeaders = options?.showHeaders ?? false;
                   return (
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={8}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                      <VStack gap={6}>
+                        <span className="text-label-lg text-[var(--color-text-default)] italic">
                           {label}
                         </span>
-                        <div className="flex gap-6 w-full">
-                          {type !== 'exec' ? (
-                            <VStack gap={2} className="flex-1">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Check Port
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the port used to send health check requests.
-                                </span>
-                              </VStack>
-                              <NumberInput
-                                value={
-                                  parseInt(
-                                    type === 'httpGet'
-                                      ? probe?.httpGet?.port || ''
-                                      : probe?.tcpSocket?.port || ''
-                                  ) || undefined
-                                }
-                                onChange={(val) =>
-                                  type === 'httpGet'
-                                    ? updateProbe(probeKey, {
-                                        httpGet: { ...probe?.httpGet, port: String(val) },
-                                      })
-                                    : updateProbe(probeKey, {
-                                        tcpSocket: { ...probe?.tcpSocket, port: String(val) },
-                                      })
-                                }
-                                min={1}
-                                max={65535}
-                                size="sm"
-                                width="xs"
-                              />
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                1-65535
-                              </span>
-                            </VStack>
-                          ) : (
-                            <VStack gap={2} className="flex-1">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Command to run
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the command to execute when the container starts.
-                                </span>
-                              </VStack>
-                              <Input
-                                placeholder="e.g. cat /tmp/health"
-                                fullWidth
-                                value={probe?.exec?.command || ''}
-                                onChange={(e) =>
-                                  updateProbe(probeKey, {
-                                    exec: { ...probe?.exec, command: e.target.value },
-                                  })
-                                }
-                              />
-                            </VStack>
-                          )}
-                          <VStack gap={2} className="flex-1">
-                            <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Check Interval
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Specify the interval between health check requests.
-                              </span>
-                            </VStack>
-                            <HStack gap={2} align="center">
-                              <NumberInput
-                                value={parseInt(probe?.periodSeconds || '10') || 10}
-                                onChange={(val) =>
-                                  updateProbe(probeKey, { periodSeconds: String(val) })
-                                }
-                                min={1}
-                                size="sm"
-                                width="xs"
-                              />
-                              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                Seconds
-                              </span>
-                            </HStack>
-                          </VStack>
-                        </div>
                         {showRequestPath ? (
                           <>
-                            <VStack gap={2} className="w-full">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Request Path
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the request path used for HTTP health checks.
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Port
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the port used to send health check requests.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.httpGet?.port || '') || undefined}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, {
+                                      httpGet: { ...probe?.httpGet, port: String(val) },
+                                    })
+                                  }
+                                  min={1}
+                                  max={65535}
+                                  size="sm"
+                                  width="xs"
+                                />
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  1-65535
                                 </span>
                               </VStack>
-                              <Input
-                                placeholder="e.g./healthz"
-                                fullWidth
-                                value={probe?.httpGet?.path || ''}
-                                onChange={(e) =>
-                                  updateProbe(probeKey, {
-                                    httpGet: { ...probe?.httpGet, path: e.target.value },
-                                  })
-                                }
-                              />
-                            </VStack>
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Request Path
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the request path used for HTTP health checks.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="e.g./healthz"
+                                  fullWidth
+                                  value={probe?.httpGet?.path || ''}
+                                  onChange={(e) =>
+                                    updateProbe(probeKey, {
+                                      httpGet: { ...probe?.httpGet, path: e.target.value },
+                                    })
+                                  }
+                                />
+                              </VStack>
+                            </div>
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                             <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Interval
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the interval between health check requests.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.periodSeconds || '10') || 10}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { periodSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4568,6 +4536,8 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4592,8 +4562,6 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                            </div>
-                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4614,6 +4582,8 @@ export function CreateDeploymentPage() {
                                   width="xs"
                                 />
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4634,11 +4604,89 @@ export function CreateDeploymentPage() {
                                   width="xs"
                                 />
                               </VStack>
+                              <div className="flex-1" />
                             </div>
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                           </>
                         ) : (
                           <>
+                            {type !== 'exec' ? (
+                              <div className="flex gap-6 w-full">
+                                <VStack gap={2} className="flex-1">
+                                  <VStack gap={1}>
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
+                                      Check Port
+                                    </span>
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                      Specify the port used to send health check requests.
+                                    </span>
+                                  </VStack>
+                                  <NumberInput
+                                    value={parseInt(probe?.tcpSocket?.port || '') || undefined}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, {
+                                        tcpSocket: { ...probe?.tcpSocket, port: String(val) },
+                                      })
+                                    }
+                                    min={1}
+                                    max={65535}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    1-65535
+                                  </span>
+                                </VStack>
+                                <div className="flex-1" />
+                              </div>
+                            ) : (
+                              <VStack gap={2} className="w-full">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Command to run
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the command to execute when the container starts.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="e.g. cat /tmp/health"
+                                  fullWidth
+                                  value={probe?.exec?.command || ''}
+                                  onChange={(e) =>
+                                    updateProbe(probeKey, {
+                                      exec: { ...probe?.exec, command: e.target.value },
+                                    })
+                                  }
+                                />
+                              </VStack>
+                            )}
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                             <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Interval
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the interval between health check requests.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.periodSeconds || '10') || 10}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { periodSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4663,6 +4711,8 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4687,8 +4737,6 @@ export function CreateDeploymentPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                            </div>
-                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4709,6 +4757,8 @@ export function CreateDeploymentPage() {
                                   width="xs"
                                 />
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4729,6 +4779,7 @@ export function CreateDeploymentPage() {
                                   width="xs"
                                 />
                               </VStack>
+                              <div className="flex-1" />
                             </div>
                           </>
                         )}
@@ -4738,7 +4789,7 @@ export function CreateDeploymentPage() {
                               Request Headers
                             </span>
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={2}>
+                              <VStack gap={1}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
@@ -4747,7 +4798,7 @@ export function CreateDeploymentPage() {
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </label>
-                                    <div />
+                                    <div className="w-5" />
                                   </div>
                                 )}
                                 {(probe?.httpGet?.httpHeaders || []).map(
@@ -4995,7 +5046,7 @@ export function CreateDeploymentPage() {
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2} className="w-full">
+                          <VStack gap={1} className="w-full">
                             {(config.envVars || []).map((envVar, index) => {
                               const hasFourCols =
                                 envVar.type === 'resource' ||
@@ -5185,7 +5236,7 @@ export function CreateDeploymentPage() {
                                           }}
                                         />
                                       )}
-                                      <div />
+                                      <div className="w-5" />
                                     </div>
                                   </VStack>
                                 </div>
@@ -5289,7 +5340,7 @@ export function CreateDeploymentPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5386,7 +5437,7 @@ export function CreateDeploymentPage() {
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={2}>
+                                    <VStack gap={1}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
@@ -5400,7 +5451,7 @@ export function CreateDeploymentPage() {
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(
@@ -5548,7 +5599,7 @@ export function CreateDeploymentPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5645,7 +5696,7 @@ export function CreateDeploymentPage() {
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={2}>
+                                    <VStack gap={1}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5658,7 +5709,7 @@ export function CreateDeploymentPage() {
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(
@@ -5771,7 +5822,7 @@ export function CreateDeploymentPage() {
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
                           {/* Readiness Check */}
-                          <VStack gap={8}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
@@ -5790,6 +5841,10 @@ export function CreateDeploymentPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -5815,6 +5870,12 @@ export function CreateDeploymentPage() {
                                   'readinessProbe',
                                   'httpGet',
                                   'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'readinessProbe',
+                                  'httpGet',
+                                  'HTTPS request returns a successful status',
                                   { showRequestPath: true, showHeaders: true }
                                 )}
                                 {renderV2ProbeBlock(
@@ -6152,7 +6213,7 @@ export function CreateDeploymentPage() {
                                         Request Headers
                                       </span>
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                        <VStack gap={2}>
+                                        <VStack gap={1}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -6162,7 +6223,7 @@ export function CreateDeploymentPage() {
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Value
                                               </label>
-                                              <div />
+                                              <div className="w-5" />
                                             </div>
                                           )}
                                           {(config.readinessProbe?.httpGet?.httpHeaders || []).map(
@@ -6269,7 +6330,7 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Liveness Check */}
-                          <VStack gap={8}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
@@ -6288,6 +6349,10 @@ export function CreateDeploymentPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -6312,7 +6377,14 @@ export function CreateDeploymentPage() {
                                 {renderV2ProbeBlock(
                                   'livenessProbe',
                                   'httpGet',
-                                  'HTTP request returns a successful status (200-399)'
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
+                                  'httpGet',
+                                  'HTTPS request returns a successful status',
+                                  { showRequestPath: true, showHeaders: true }
                                 )}
                                 {renderV2ProbeBlock(
                                   'livenessProbe',
@@ -6560,7 +6632,7 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Startup Check */}
-                          <VStack gap={8}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Startup Check
                             </span>
@@ -6579,6 +6651,10 @@ export function CreateDeploymentPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -6603,7 +6679,14 @@ export function CreateDeploymentPage() {
                                 {renderV2ProbeBlock(
                                   'startupProbe',
                                   'httpGet',
-                                  'HTTP request returns a successful status (200-399)'
+                                  'HTTP request returns a successful status (200-399)',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
+                                  'httpGet',
+                                  'HTTPS request returns a successful status',
+                                  { showRequestPath: true, showHeaders: true }
                                 )}
                                 {renderV2ProbeBlock(
                                   'startupProbe',
@@ -7230,7 +7313,7 @@ export function CreateDeploymentPage() {
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(selectedVol.mounts || []).map(

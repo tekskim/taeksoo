@@ -1263,7 +1263,7 @@ export function CreateClusterPage() {
 
                   {/* Bordered container for labels */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={2}>
+                    <VStack gap={1}>
                       {labels.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1272,7 +1272,7 @@ export function CreateClusterPage() {
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Value
                           </span>
-                          <div />
+                          <div className="w-5" />
                         </div>
                       )}
                       {labels.map((label) => (
@@ -1332,7 +1332,7 @@ export function CreateClusterPage() {
 
                   {/* Bordered container for annotations */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={2}>
+                    <VStack gap={1}>
                       {annotations.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1341,7 +1341,7 @@ export function CreateClusterPage() {
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Value
                           </span>
-                          <div />
+                          <div className="w-5" />
                         </div>
                       )}
                       {annotations.map((annotation) => (

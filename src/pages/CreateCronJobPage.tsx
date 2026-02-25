@@ -27,6 +27,7 @@ import {
   StatusIndicator,
   PageShell,
   WizardSectionStatusIcon,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -41,6 +42,7 @@ import {
   IconX,
   IconPlus,
   IconChevronRight,
+  IconHelpCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -607,7 +609,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={1}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -616,7 +618,7 @@ function LabelsAnnotationsSection({
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                 )}
                 {labels.map((label, index) => (
@@ -668,7 +670,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={1}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -677,7 +679,7 @@ function LabelsAnnotationsSection({
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
-                    <div />
+                    <div className="w-5" />
                   </div>
                 )}
                 {annotations.map((annotation, index) => (
@@ -1951,7 +1953,7 @@ export function CreateCronJobPage() {
                     <VStack gap={8}>
                       {/* Labels */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
+                        <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
                           </span>
@@ -1960,8 +1962,9 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
+                        {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1970,7 +1973,7 @@ export function CreateCronJobPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {podLabels.map((label, index) => (
@@ -2002,6 +2005,7 @@ export function CreateCronJobPage() {
                                 </button>
                               </div>
                             ))}
+
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -2018,7 +2022,7 @@ export function CreateCronJobPage() {
 
                       {/* Annotations */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
+                        <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
                           </span>
@@ -2028,8 +2032,9 @@ export function CreateCronJobPage() {
                           </p>
                         </VStack>
 
+                        {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2038,7 +2043,7 @@ export function CreateCronJobPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {podAnnotations.map((annotation, index) => (
@@ -2074,6 +2079,7 @@ export function CreateCronJobPage() {
                                 </button>
                               </div>
                             ))}
+
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -2096,29 +2102,37 @@ export function CreateCronJobPage() {
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
-                      <span className="text-label-lg text-[var(--color-text-default)]">
+                      <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
-                      </span>
-                      <VStack gap={1} className="w-full">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Termination Grace Period
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          The period allowed after receiving a termination request before the pod is
-                          forcibly terminated.
-                        </span>
-                        <HStack gap={2} align="center">
+                      </h6>
+                      <VStack gap={2} className="w-full">
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Termination Grace Period
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            The period allowed after receiving a termination request before the pod
+                            is forcibly terminated.
+                          </span>
+                        </VStack>
+                        <HStack gap={3} align="center">
+                          <Slider
+                            min={0}
+                            max={600}
+                            step={10}
+                            value={terminationGracePeriod ? parseInt(terminationGracePeriod) : 0}
+                            onChange={(val) => setTerminationGracePeriod(val.toString())}
+                          />
                           <NumberInput
+                            width="xs"
                             value={
                               terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
                             }
                             onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
-                            size="sm"
-                            width="xs"
+                            min={0}
+                            max={600}
+                            suffix="Seconds"
                           />
-                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                            Seconds
-                          </span>
                         </HStack>
                       </VStack>
                     </VStack>
@@ -2128,15 +2142,15 @@ export function CreateCronJobPage() {
                 {/* Networking */}
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={8}>
                       {/* Network Settings */}
-                      <VStack gap={6}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                      <VStack gap={8}>
+                        <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
-                        </span>
-                        <VStack gap={6} className="w-full">
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
+                        </h6>
+                        <VStack gap={8} className="w-full">
+                          <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
                             </span>
@@ -2153,7 +2167,7 @@ export function CreateCronJobPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
+                          <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               DNS Policy
                             </span>
@@ -2171,7 +2185,7 @@ export function CreateCronJobPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
+                          <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Hostname
                             </span>
@@ -2185,7 +2199,7 @@ export function CreateCronJobPage() {
                               onChange={(e) => setHostname(e.target.value)}
                             />
                           </VStack>
-                          <VStack gap={1} className="w-[calc(50%-12px)]">
+                          <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Subdomain
                             </span>
@@ -2204,23 +2218,23 @@ export function CreateCronJobPage() {
 
                       {/* Nameservers */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Nameservers
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the DNS nameserver addresses used by the pod.
-                          </p>
-                        </VStack>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Nameservers
+                        </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Nameservers
-                                </span>
-                                <div />
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Nameserver
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the DNS nameserver addresses used by the pod.
+                                  </p>
+                                </VStack>
+                                <div className="w-5" />
                               </div>
                             )}
                             {nameservers.map((ns, index) => (
@@ -2263,23 +2277,23 @@ export function CreateCronJobPage() {
 
                       {/* Search Domains */}
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Search Domains
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the search domains used for DNS resolution.
-                          </p>
-                        </VStack>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Search Domains
+                        </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Search Domains
-                                </span>
-                                <div />
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Search Domain
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the search domains used for DNS resolution.
+                                  </p>
+                                </VStack>
+                                <div className="w-5" />
                               </div>
                             )}
                             {searchDomains.map((sd, index) => (
@@ -2327,15 +2341,25 @@ export function CreateCronJobPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Name
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Name
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the name of the DNS resolver option.
+                                  </p>
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Value
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    The value of the DNS resolver option.
+                                  </p>
+                                </VStack>
                                 <div className="w-5" />
                               </div>
                             )}
@@ -2394,15 +2418,25 @@ export function CreateCronJobPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  IP Address
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Hostname
-                                </span>
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    IP Address
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the IP address used for the host alias.
+                                  </p>
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Hostname
+                                  </span>
+                                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the hostname mapped to the IP address.
+                                  </p>
+                                </VStack>
                                 <div className="w-5" />
                               </div>
                             )}
@@ -2470,11 +2504,11 @@ export function CreateCronJobPage() {
                       </RadioGroup>
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Specific node(s)
                             </span>
-                            <VStack gap={1} className="w-full max-w-[606px]">
+                            <VStack gap={1} className="w-full">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Node
                               </span>
@@ -2494,7 +2528,7 @@ export function CreateCronJobPage() {
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'specific' && (
-                        <VStack gap={1} className="w-full max-w-[606px]">
+                        <VStack gap={1} className="w-full">
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Node
                           </span>
@@ -2514,7 +2548,7 @@ export function CreateCronJobPage() {
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                           <VStack gap={3}>
-                            <VStack gap={1.5}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Matching scheduling rules
                               </span>
@@ -2524,102 +2558,79 @@ export function CreateCronJobPage() {
                               </p>
                             </VStack>
 
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={6}>
-                                {nodeAffinityTerms.map((term, termIndex) => (
-                                  <div
-                                    key={termIndex}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                                  >
-                                    <VStack gap={6}>
-                                      <div className="flex items-start justify-between w-full">
-                                        <span className="text-label-lg text-[var(--color-text-default)]">
-                                          Rule {termIndex + 1}
+                            <VStack gap={3}>
+                              {nodeAffinityTerms.map((term, termIndex) => (
+                                <div
+                                  key={termIndex}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                >
+                                  <VStack gap={8} className="w-full">
+                                    <VStack gap={2} className="w-full">
+                                      <VStack gap={1}>
+                                        <span className="block text-label-lg text-[var(--color-text-default)]">
+                                          Priority
                                         </span>
-                                        <button
-                                          onClick={() => {
-                                            setNodeAffinityTerms(
-                                              nodeAffinityTerms.filter((_, i) => i !== termIndex)
-                                            );
+                                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                                          Specify the priority value applied to node scheduling.
+                                        </p>
+                                      </VStack>
+                                      <Select
+                                        options={[
+                                          { value: 'required', label: 'Required' },
+                                          { value: 'preferred', label: 'Preferred' },
+                                        ]}
+                                        value={term.priority}
+                                        onChange={(val) => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex] = {
+                                            ...newTerms[termIndex],
+                                            priority: val,
+                                          };
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2} className="w-full">
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Weight
+                                      </span>
+                                      <HStack gap={3} align="center">
+                                        <Slider
+                                          min={1}
+                                          max={100}
+                                          step={1}
+                                          value={Number(term.weight) || 1}
+                                          onChange={(val) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex] = {
+                                              ...newTerms[termIndex],
+                                              weight: String(val),
+                                            };
+                                            setNodeAffinityTerms(newTerms);
                                           }}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={16}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-
-                                      <div className="grid grid-cols-2 gap-3">
-                                        <VStack gap={2}>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
-                                            Priority
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'required', label: 'Required' },
-                                              { value: 'preferred', label: 'Preferred' },
-                                            ]}
-                                            value={term.priority}
-                                            onChange={(val) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                priority: val,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        {(isV2 || term.priority === 'preferred') && (
-                                          <VStack gap={2}>
-                                            <span className="block text-label-lg text-[var(--color-text-default)]">
-                                              Weight
-                                            </span>
-                                            <HStack gap={3} align="center">
-                                              <Slider
-                                                min={1}
-                                                max={100}
-                                                step={1}
-                                                value={Number(term.weight) || 1}
-                                                onChange={(val) => {
-                                                  const newTerms = [...nodeAffinityTerms];
-                                                  newTerms[termIndex] = {
-                                                    ...newTerms[termIndex],
-                                                    weight: String(val),
-                                                  };
-                                                  setNodeAffinityTerms(newTerms);
-                                                }}
-                                              />
-                                              <NumberInput
-                                                min={1}
-                                                max={100}
-                                                step={1}
-                                                value={Number(term.weight) || 1}
-                                                onChange={(val) => {
-                                                  const newTerms = [...nodeAffinityTerms];
-                                                  newTerms[termIndex] = {
-                                                    ...newTerms[termIndex],
-                                                    weight: String(val),
-                                                  };
-                                                  setNodeAffinityTerms(newTerms);
-                                                }}
-                                                width="xs"
-                                              />
-                                            </HStack>
-                                          </VStack>
-                                        )}
-                                      </div>
-
-                                      <VStack gap={2}>
-                                        <span className="block text-label-sm text-[var(--color-text-default)]">
-                                          Match Expressions
-                                        </span>
+                                        />
+                                        <NumberInput
+                                          min={1}
+                                          max={100}
+                                          step={1}
+                                          value={Number(term.weight) || 1}
+                                          onChange={(val) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex] = {
+                                              ...newTerms[termIndex],
+                                              weight: String(val),
+                                            };
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          width="xs"
+                                        />
+                                      </HStack>
+                                    </VStack>
+                                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                      <VStack gap={1}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2629,13 +2640,13 @@ export function CreateCronJobPage() {
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Value
                                             </span>
-                                            <div />
+                                            <div className="w-5" />
                                           </div>
                                         )}
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2721,53 +2732,30 @@ export function CreateCronJobPage() {
                                               setNodeAffinityTerms(newTerms);
                                             }}
                                           >
-                                            Add Expression
+                                            Add Rule
                                           </Button>
                                         </div>
                                       </VStack>
-                                    </VStack>
-                                  </div>
-                                ))}
-
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={() => {
-                                      setNodeAffinityTerms([
-                                        ...nodeAffinityTerms,
-                                        {
-                                          priority: 'required',
-                                          weight: '',
-                                          matchExpressions: [
-                                            { key: '', operator: 'In', value: '' },
-                                          ],
-                                        },
-                                      ]);
-                                    }}
-                                  >
-                                    Add Rule
-                                  </Button>
+                                    </div>
+                                    <div className="w-fit">
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      >
+                                        Add Node Selector
+                                      </Button>
+                                    </div>
+                                  </VStack>
                                 </div>
-                              </VStack>
-                            </div>
-
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              >
-                                Add Node Selector
-                              </Button>
-                            </div>
+                              ))}
+                            </VStack>
                           </VStack>
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
                         <VStack gap={3}>
-                          <VStack gap={1.5}>
+                          <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Node Affinity Rules
                             </span>
@@ -2778,13 +2766,13 @@ export function CreateCronJobPage() {
                           </VStack>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={6}>
+                            <VStack gap={3}>
                               {nodeAffinityTerms.map((term, termIndex) => (
                                 <div
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     <div className="flex items-start justify-between w-full">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Rule {termIndex + 1}
@@ -2795,7 +2783,7 @@ export function CreateCronJobPage() {
                                             nodeAffinityTerms.filter((_, i) => i !== termIndex)
                                           );
                                         }}
-                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
                                           size={16}
@@ -2805,11 +2793,16 @@ export function CreateCronJobPage() {
                                       </button>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-3">
-                                      <VStack gap={2}>
-                                        <span className="block text-label-lg text-[var(--color-text-default)]">
-                                          Priority
-                                        </span>
+                                    <VStack gap={8} className="w-full">
+                                      <VStack gap={2} className="w-full">
+                                        <VStack gap={1}>
+                                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                                            Priority
+                                          </span>
+                                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                                            Specify the priority value applied to node scheduling.
+                                          </p>
+                                        </VStack>
                                         <Select
                                           options={[
                                             { value: 'required', label: 'Required' },
@@ -2828,7 +2821,7 @@ export function CreateCronJobPage() {
                                         />
                                       </VStack>
                                       {term.priority === 'preferred' && (
-                                        <VStack gap={2}>
+                                        <VStack gap={2} className="w-full">
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
@@ -2865,7 +2858,7 @@ export function CreateCronJobPage() {
                                           </HStack>
                                         </VStack>
                                       )}
-                                    </div>
+                                    </VStack>
 
                                     <VStack gap={2}>
                                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2882,7 +2875,7 @@ export function CreateCronJobPage() {
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </span>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {term.matchExpressions.map((expr, exprIndex) => (
@@ -3020,16 +3013,16 @@ export function CreateCronJobPage() {
                 {/* Pod Scheduling */}
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Pod scheduling" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={8}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
                         >
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             {/* Type Section */}
-                            <VStack gap={6}>
+                            <VStack gap={2}>
                               <div className="flex items-start justify-between w-full">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3045,7 +3038,7 @@ export function CreateCronJobPage() {
                                       podAffinityTerms.filter((_, i) => i !== termIndex)
                                     );
                                   }}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
                                     size={16}
@@ -3070,7 +3063,7 @@ export function CreateCronJobPage() {
                             </VStack>
 
                             {/* Priority Section */}
-                            <VStack gap={6}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Priority
@@ -3115,7 +3108,7 @@ export function CreateCronJobPage() {
 
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
-                              <VStack gap={6}>
+                              <VStack gap={3}>
                                 {/* Search Input */}
                                 <SearchInput
                                   placeholder="Search namespaces by attributes"
@@ -3215,108 +3208,105 @@ export function CreateCronJobPage() {
 
                             {/* Match Expressions / Rules Section */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={2}>
+                              <VStack gap={1}>
+                                {term.matchExpressions.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                                      Key
+                                    </span>
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                                      Operator
+                                    </span>
+                                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                                      Value
+                                    </span>
+                                    <div className="w-5" />
+                                  </div>
+                                )}
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                   >
-                                    <div className="flex gap-2 items-start w-full">
-                                      <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-sm text-[var(--color-text-default)]">
-                                          Key
-                                        </span>
-                                        <Input
-                                          placeholder="Input key"
-                                          value={expr.key}
-                                          onChange={(e) => {
-                                            const newTerms = [...podAffinityTerms];
-                                            const newExpressions = [
-                                              ...newTerms[termIndex].matchExpressions,
-                                            ];
-                                            newExpressions[exprIndex] = {
-                                              ...newExpressions[exprIndex],
-                                              key: e.target.value,
-                                            };
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              matchExpressions: newExpressions,
-                                            };
-                                            setPodAffinityTerms(newTerms);
-                                          }}
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-sm text-[var(--color-text-default)]">
-                                          Operator
-                                        </span>
-                                        <Select
-                                          options={OPERATOR_OPTIONS}
-                                          value={expr.operator}
-                                          onChange={(val) => {
-                                            const newTerms = [...podAffinityTerms];
-                                            const newExpressions = [
-                                              ...newTerms[termIndex].matchExpressions,
-                                            ];
-                                            newExpressions[exprIndex] = {
-                                              ...newExpressions[exprIndex],
-                                              operator: val,
-                                            };
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              matchExpressions: newExpressions,
-                                            };
-                                            setPodAffinityTerms(newTerms);
-                                          }}
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2} className="flex-1">
-                                        <span className="block text-label-sm text-[var(--color-text-default)]">
-                                          Value
-                                        </span>
-                                        <Input
-                                          placeholder="input value"
-                                          value={expr.value}
-                                          onChange={(e) => {
-                                            const newTerms = [...podAffinityTerms];
-                                            const newExpressions = [
-                                              ...newTerms[termIndex].matchExpressions,
-                                            ];
-                                            newExpressions[exprIndex] = {
-                                              ...newExpressions[exprIndex],
-                                              value: e.target.value,
-                                            };
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              matchExpressions: newExpressions,
-                                            };
-                                            setPodAffinityTerms(newTerms);
-                                          }}
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <button
-                                        onClick={() => {
-                                          const newTerms = [...podAffinityTerms];
-                                          newTerms[termIndex] = {
-                                            ...newTerms[termIndex],
-                                            matchExpressions: newTerms[
-                                              termIndex
-                                            ].matchExpressions.filter((_, i) => i !== exprIndex),
-                                          };
-                                          setPodAffinityTerms(newTerms);
-                                        }}
-                                        className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
+                                    <Input
+                                      placeholder="Input key"
+                                      value={expr.key}
+                                      onChange={(e) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        const newExpressions = [
+                                          ...newTerms[termIndex].matchExpressions,
+                                        ];
+                                        newExpressions[exprIndex] = {
+                                          ...newExpressions[exprIndex],
+                                          key: e.target.value,
+                                        };
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          matchExpressions: newExpressions,
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                    <Select
+                                      options={OPERATOR_OPTIONS}
+                                      value={expr.operator}
+                                      onChange={(val) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        const newExpressions = [
+                                          ...newTerms[termIndex].matchExpressions,
+                                        ];
+                                        newExpressions[exprIndex] = {
+                                          ...newExpressions[exprIndex],
+                                          operator: val,
+                                        };
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          matchExpressions: newExpressions,
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder="input value"
+                                      value={expr.value}
+                                      onChange={(e) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        const newExpressions = [
+                                          ...newTerms[termIndex].matchExpressions,
+                                        ];
+                                        newExpressions[exprIndex] = {
+                                          ...newExpressions[exprIndex],
+                                          value: e.target.value,
+                                        };
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          matchExpressions: newExpressions,
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => {
+                                        const newTerms = [...podAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          matchExpressions: newTerms[
+                                            termIndex
+                                          ].matchExpressions.filter((_, i) => i !== exprIndex),
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
                                   </div>
                                 ))}
                                 <div className="w-fit">
@@ -3343,7 +3333,7 @@ export function CreateCronJobPage() {
                             </div>
 
                             {/* Topology Key Section */}
-                            <VStack gap={6}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Topology Key
@@ -3384,6 +3374,43 @@ export function CreateCronJobPage() {
                                 fullWidth
                               />
                             </VStack>
+
+                            <VStack gap={2} className="w-full">
+                              <span className="block text-label-lg text-[var(--color-text-default)]">
+                                Weight
+                              </span>
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={1}
+                                  max={100}
+                                  step={1}
+                                  value={Number(term.weight) || 1}
+                                  onChange={(val) => {
+                                    const newTerms = [...podAffinityTerms];
+                                    newTerms[termIndex] = {
+                                      ...newTerms[termIndex],
+                                      weight: String(val),
+                                    };
+                                    setPodAffinityTerms(newTerms);
+                                  }}
+                                />
+                                <NumberInput
+                                  min={1}
+                                  max={100}
+                                  step={1}
+                                  value={Number(term.weight) || 1}
+                                  onChange={(val) => {
+                                    const newTerms = [...podAffinityTerms];
+                                    newTerms[termIndex] = {
+                                      ...newTerms[termIndex],
+                                      weight: String(val),
+                                    };
+                                    setPodAffinityTerms(newTerms);
+                                  }}
+                                  width="xs"
+                                />
+                              </HStack>
+                            </VStack>
                           </VStack>
                         </div>
                       ))}
@@ -3418,7 +3445,7 @@ export function CreateCronJobPage() {
                 {/* Resources */}
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Resources" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={8}>
                       {/* Tolerations */}
                       <VStack gap={3}>
@@ -3427,7 +3454,7 @@ export function CreateCronJobPage() {
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
+                          <VStack gap={1}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3445,7 +3472,7 @@ export function CreateCronJobPage() {
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Toleration Seconds
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                             )}
                             {tolerations.map((toleration, index) => (
@@ -3569,14 +3596,12 @@ export function CreateCronJobPage() {
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           Specify the filesystem group used by the pod.
                         </span>
-                        <div className="max-w-[160px]">
-                          <NumberInput
-                            value={Number(podFilesystemGroup) || 0}
-                            onChange={(val) => setPodFilesystemGroup(String(val))}
-                            min={0}
-                            fullWidth
-                          />
-                        </div>
+                        <NumberInput
+                          value={Number(podFilesystemGroup) || 0}
+                          onChange={(val) => setPodFilesystemGroup(String(val))}
+                          min={0}
+                          width="xs"
+                        />
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -3592,18 +3617,18 @@ export function CreateCronJobPage() {
                           key={index}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                         >
-                          <VStack gap={2}>
+                          <VStack gap={8}>
                             {/* Header with type title and close button */}
                             <div className="flex items-start justify-between w-full">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
+                              <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                                 {volume.type === 'configmap' && 'ConfigMap'}
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
                                 {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
-                              </span>
+                              </h6>
                               <button
                                 onClick={() => removeVolume(index)}
-                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                               >
                                 <IconX
                                   size={16}
@@ -3616,8 +3641,8 @@ export function CreateCronJobPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                <VStack gap={8} className="w-full">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3631,7 +3656,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       ConfigMap{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3685,8 +3710,8 @@ export function CreateCronJobPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                <VStack gap={8} className="w-full">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3700,7 +3725,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Secret{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3752,8 +3777,8 @@ export function CreateCronJobPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                <VStack gap={8} className="w-full">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3767,7 +3792,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Persistent Volume Claim{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -3802,8 +3827,8 @@ export function CreateCronJobPage() {
                             {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
-                                  <VStack gap={6}>
-                                    <VStack gap={6}>
+                                  <VStack gap={8}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Persistent Volume Claim Name{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -3841,8 +3866,8 @@ export function CreateCronJobPage() {
                                     </RadioGroup>
 
                                     {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
-                                      <VStack gap={6}>
-                                        <VStack gap={3} className="w-[calc(50%+1px)]">
+                                      <VStack gap={8}>
+                                        <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3862,7 +3887,7 @@ export function CreateCronJobPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={3}>
+                                        <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Capacity{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3870,7 +3895,6 @@ export function CreateCronJobPage() {
                                             </span>
                                           </span>
                                           <NumberInput
-                                            placeholder=""
                                             value={
                                               (volume as CreatePVCVolume).capacity
                                                 ? parseInt((volume as CreatePVCVolume).capacity)
@@ -3882,14 +3906,14 @@ export function CreateCronJobPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            width="sm"
+                                            width="xs"
                                           />
                                         </VStack>
                                       </VStack>
                                     )}
 
                                     {(isV2 || (volume as CreatePVCVolume).useExistingPV) && (
-                                      <VStack gap={3}>
+                                      <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Persistent Volume{' '}
                                           <span className="text-[var(--color-state-danger)]">
@@ -3911,7 +3935,7 @@ export function CreateCronJobPage() {
                                       </VStack>
                                     )}
 
-                                    <VStack gap={1.5}>
+                                    <VStack gap={3}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -3963,22 +3987,20 @@ export function CreateCronJobPage() {
                                     </VStack>
                                   </VStack>
                                 </div>
-                                <div className="flex gap-2 items-start py-3 w-full">
-                                  <VStack gap={2}>
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Volume Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Input
-                                      placeholder="Input  name"
-                                      value={volume.volumeName}
-                                      onChange={(e) =>
-                                        updateVolume(index, { volumeName: e.target.value })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                </div>
+                                <VStack gap={2} className="w-full">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Volume Name{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <Input
+                                    placeholder="Input name"
+                                    value={volume.volumeName}
+                                    onChange={(e) =>
+                                      updateVolume(index, { volumeName: e.target.value })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
                                 <HStack gap={2} align="center">
                                   <Checkbox
                                     checked={(volume as CreatePVCVolume).readOnly}
@@ -3996,20 +4018,18 @@ export function CreateCronJobPage() {
                         </div>
                       ))}
 
-                      <div className="w-[calc(50%-12px)]">
-                        <Select
-                          options={[
-                            { value: 'configmap', label: 'ConfigMap' },
-                            { value: 'secret', label: 'Secret' },
-                            { value: 'pvc', label: 'Persistent volume claim' },
-                            { value: 'create-pvc', label: 'Create persistent volume claim' },
-                          ]}
-                          value=""
-                          onChange={(val) => addVolume(val)}
-                          placeholder="Add volume"
-                          fullWidth
-                        />
-                      </div>
+                      <Select
+                        options={[
+                          { value: 'configmap', label: 'ConfigMap' },
+                          { value: 'secret', label: 'Secret' },
+                          { value: 'pvc', label: 'Persistent volume claim' },
+                          { value: 'create-pvc', label: 'Create persistent volume claim' },
+                        ]}
+                        value=""
+                        onChange={(val) => addVolume(val)}
+                        placeholder="Add volume"
+                        fullWidth
+                      />
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
@@ -4035,8 +4055,8 @@ export function CreateCronJobPage() {
                                 stroke={1.5}
                               />
                             </button>
-                            <VStack gap={6}>
-                              <VStack gap={1}>
+                            <VStack gap={8}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
@@ -4067,8 +4087,8 @@ export function CreateCronJobPage() {
                               </RadioGroup>
 
                               {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={6}>
-                                  <VStack gap={2} className="w-[calc(50%+1px)]">
+                                <VStack gap={8}>
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -4088,7 +4108,7 @@ export function CreateCronJobPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={1} className="w-[calc(50%+1px)]">
+                                  <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Capacity{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
@@ -4103,7 +4123,7 @@ export function CreateCronJobPage() {
                                         })
                                       }
                                       suffix="GiB"
-                                      fullWidth
+                                      width="xs"
                                     />
                                   </VStack>
                                 </VStack>
@@ -4137,7 +4157,7 @@ export function CreateCronJobPage() {
                                   Access Modes{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
-                                <VStack gap={1.5}>
+                                <VStack gap={2}>
                                   <Checkbox
                                     label="Single node read-write"
                                     checked={template.accessModes?.readWriteOnce}
@@ -4247,115 +4267,84 @@ export function CreateCronJobPage() {
                   return (
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                        <span className="text-label-lg text-[var(--color-text-default)] italic">
                           {label}
                         </span>
-                        <div className="flex gap-6 w-full">
-                          {type !== 'exec' ? (
-                            <VStack gap={3} className="flex-1">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Check Port
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the port used to send health check requests.
-                                </span>
-                              </VStack>
-                              <NumberInput
-                                value={
-                                  parseInt(
-                                    type === 'httpGet'
-                                      ? probe?.httpGet?.port || ''
-                                      : probe?.tcpSocket?.port || ''
-                                  ) || undefined
-                                }
-                                onChange={(val) =>
-                                  type === 'httpGet'
-                                    ? updateProbe(probeKey, {
-                                        httpGet: { ...probe?.httpGet, port: String(val ?? '') },
-                                      })
-                                    : updateProbe(probeKey, {
-                                        tcpSocket: { ...probe?.tcpSocket, port: String(val ?? '') },
-                                      })
-                                }
-                                min={1}
-                                max={65535}
-                                width="sm"
-                              />
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                1-65535
-                              </span>
-                            </VStack>
-                          ) : (
-                            <VStack gap={3} className="flex-1">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Command to run
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the command to execute when the container starts.
-                                </span>
-                              </VStack>
-                              <Input
-                                placeholder="e.g. cat /tmp/health"
-                                fullWidth
-                                value={probe?.exec?.command || ''}
-                                onChange={(e) =>
-                                  updateProbe(probeKey, {
-                                    exec: { ...probe?.exec, command: e.target.value },
-                                  })
-                                }
-                              />
-                            </VStack>
-                          )}
-                          <VStack gap={3} className="flex-1">
-                            <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Check Interval
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Specify the interval between health check requests.
-                              </span>
-                            </VStack>
-                            <HStack gap={2} align="center">
-                              <NumberInput
-                                value={parseInt(probe?.periodSeconds || '10') || 10}
-                                onChange={(val) =>
-                                  updateProbe(probeKey, { periodSeconds: String(val) })
-                                }
-                                min={1}
-                                size="sm"
-                                width="xs"
-                              />
-                              <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                Seconds
-                              </span>
-                            </HStack>
-                          </VStack>
-                        </div>
                         {showRequestPath ? (
                           <>
-                            <VStack gap={2} className="w-full">
-                              <VStack gap={1}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Request Path
-                                </span>
-                                <span className="text-body-md text-[var(--color-text-subtle)]">
-                                  Specify the request path used for HTTP health checks.
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Port
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the port used to send health check requests.
+                                  </span>
+                                </VStack>
+                                <NumberInput
+                                  value={parseInt(probe?.httpGet?.port || '') || undefined}
+                                  onChange={(val) =>
+                                    updateProbe(probeKey, {
+                                      httpGet: { ...probe?.httpGet, port: String(val) },
+                                    })
+                                  }
+                                  min={1}
+                                  max={65535}
+                                  size="sm"
+                                  width="xs"
+                                />
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  1-65535
                                 </span>
                               </VStack>
-                              <Input
-                                placeholder="e.g./healthz"
-                                fullWidth
-                                value={probe?.httpGet?.path || ''}
-                                onChange={(e) =>
-                                  updateProbe(probeKey, {
-                                    httpGet: { ...probe?.httpGet, path: e.target.value },
-                                  })
-                                }
-                              />
-                            </VStack>
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Request Path
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the request path used for HTTP health checks.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="e.g./healthz"
+                                  fullWidth
+                                  value={probe?.httpGet?.path || ''}
+                                  onChange={(e) =>
+                                    updateProbe(probeKey, {
+                                      httpGet: { ...probe?.httpGet, path: e.target.value },
+                                    })
+                                  }
+                                />
+                              </VStack>
+                            </div>
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                             <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Interval
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the interval between health check requests.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.periodSeconds || '10') || 10}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { periodSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4380,6 +4369,8 @@ export function CreateCronJobPage() {
                                   </span>
                                 </HStack>
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4404,8 +4395,6 @@ export function CreateCronJobPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                            </div>
-                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4426,6 +4415,8 @@ export function CreateCronJobPage() {
                                   width="xs"
                                 />
                               </VStack>
+                            </div>
+                            <div className="flex gap-6 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4446,12 +4437,90 @@ export function CreateCronJobPage() {
                                   width="xs"
                                 />
                               </VStack>
+                              <div className="flex-1" />
                             </div>
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                           </>
                         ) : (
                           <>
+                            {type !== 'exec' ? (
+                              <div className="flex gap-6 w-full">
+                                <VStack gap={2} className="flex-1">
+                                  <VStack gap={1}>
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
+                                      Check Port
+                                    </span>
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                      Specify the port used to send health check requests.
+                                    </span>
+                                  </VStack>
+                                  <NumberInput
+                                    value={parseInt(probe?.tcpSocket?.port || '') || undefined}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, {
+                                        tcpSocket: { ...probe?.tcpSocket, port: String(val) },
+                                      })
+                                    }
+                                    min={1}
+                                    max={65535}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                    1-65535
+                                  </span>
+                                </VStack>
+                                <div className="flex-1" />
+                              </div>
+                            ) : (
+                              <VStack gap={2} className="w-full">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Command to run
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the command to execute when the container starts.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="e.g. cat /tmp/health"
+                                  fullWidth
+                                  value={probe?.exec?.command || ''}
+                                  onChange={(e) =>
+                                    updateProbe(probeKey, {
+                                      exec: { ...probe?.exec, command: e.target.value },
+                                    })
+                                  }
+                                />
+                              </VStack>
+                            )}
+                            <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                             <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
+                                <VStack gap={1}>
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Check Interval
+                                  </span>
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    Specify the interval between health check requests.
+                                  </span>
+                                </VStack>
+                                <HStack gap={2} align="center">
+                                  <NumberInput
+                                    value={parseInt(probe?.periodSeconds || '10') || 10}
+                                    onChange={(val) =>
+                                      updateProbe(probeKey, { periodSeconds: String(val) })
+                                    }
+                                    min={1}
+                                    size="sm"
+                                    width="xs"
+                                  />
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                                    Seconds
+                                  </span>
+                                </HStack>
+                              </VStack>
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Initial Delay
@@ -4475,7 +4544,9 @@ export function CreateCronJobPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                            </div>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Timeout
@@ -4499,9 +4570,7 @@ export function CreateCronJobPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-                            </div>
-                            <div className="flex gap-6 w-full">
-                              <VStack gap={3} className="flex-1">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Success Threshold
@@ -4521,7 +4590,9 @@ export function CreateCronJobPage() {
                                   width="xs"
                                 />
                               </VStack>
-                              <VStack gap={3} className="flex-1">
+                            </div>
+                            <div className="flex gap-6 w-full">
+                              <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Failure Threshold
@@ -4541,6 +4612,7 @@ export function CreateCronJobPage() {
                                   width="xs"
                                 />
                               </VStack>
+                              <div className="flex-1" />
                             </div>
                           </>
                         )}
@@ -4550,7 +4622,7 @@ export function CreateCronJobPage() {
                               Request Headers
                             </span>
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={2}>
+                              <VStack gap={1}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
@@ -4559,7 +4631,7 @@ export function CreateCronJobPage() {
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </label>
-                                    <div />
+                                    <div className="w-5" />
                                   </div>
                                 )}
                                 {(probe?.httpGet?.httpHeaders || []).map(
@@ -4672,7 +4744,7 @@ export function CreateCronJobPage() {
                             />
                           </VStack>
 
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <RadioGroup
                               value={config.containerType || 'standard'}
                               onChange={(val) =>
@@ -4681,8 +4753,40 @@ export function CreateCronJobPage() {
                                 })
                               }
                             >
-                              <Radio value="init" label="Init container" />
-                              <Radio value="standard" label="Standard container" />
+                              <Radio
+                                value="init"
+                                label={
+                                  <HStack gap={1} align="center">
+                                    <span>Init container</span>
+                                    <Tooltip
+                                      content="Runs before app containers start. Used for setup tasks like fetching configs or waiting for dependencies."
+                                      position="right"
+                                    >
+                                      <IconHelpCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                }
+                              />
+                              <Radio
+                                value="standard"
+                                label={
+                                  <HStack gap={1} align="center">
+                                    <span>Standard container</span>
+                                    <Tooltip
+                                      content="The main application container that runs for the lifetime of the pod."
+                                      position="right"
+                                    >
+                                      <IconHelpCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                }
+                              />
                             </RadioGroup>
                           </VStack>
                         </VStack>
@@ -4694,7 +4798,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Container Image{' '}
@@ -4705,20 +4809,18 @@ export function CreateCronJobPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Input
-                                placeholder="nginx:latest"
-                                fullWidth
-                                value={config.image || ''}
-                                onChange={(e) =>
-                                  updateContainerConfig(containerId, {
-                                    image: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
+                            <Input
+                              placeholder="nginx:latest"
+                              fullWidth
+                              value={config.image || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  image: e.target.value,
+                                })
+                              }
+                            />
                           </VStack>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
@@ -4728,24 +4830,22 @@ export function CreateCronJobPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Select
-                                options={[
-                                  { value: 'Always', label: 'Always' },
-                                  { value: 'IfNotPresent', label: 'If not present' },
-                                  { value: 'Never', label: 'Never' },
-                                ]}
-                                value={config.imagePullPolicy || 'IfNotPresent'}
-                                onChange={(val) =>
-                                  updateContainerConfig(containerId, {
-                                    imagePullPolicy: val,
-                                  })
-                                }
-                                fullWidth
-                              />
-                            </div>
+                            <Select
+                              options={[
+                                { value: 'Always', label: 'Always' },
+                                { value: 'IfNotPresent', label: 'If not present' },
+                                { value: 'Never', label: 'Never' },
+                              ]}
+                              value={config.imagePullPolicy || 'IfNotPresent'}
+                              onChange={(val) =>
+                                updateContainerConfig(containerId, {
+                                  imagePullPolicy: val,
+                                })
+                              }
+                              fullWidth
+                            />
                           </VStack>
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Secrets
@@ -4755,22 +4855,20 @@ export function CreateCronJobPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Select
-                                options={[
-                                  { value: '', label: 'Select a secret...' },
-                                  { value: 'docker-registry', label: 'docker-registry' },
-                                  { value: 'gcr-secret', label: 'gcr-secret' },
-                                ]}
-                                value={config.pullSecrets || ''}
-                                onChange={(val) =>
-                                  updateContainerConfig(containerId, {
-                                    pullSecrets: val,
-                                  })
-                                }
-                                fullWidth
-                              />
-                            </div>
+                            <Select
+                              options={[
+                                { value: '', label: 'Select a secret...' },
+                                { value: 'docker-registry', label: 'docker-registry' },
+                                { value: 'gcr-secret', label: 'gcr-secret' },
+                              ]}
+                              value={config.pullSecrets || ''}
+                              onChange={(val) =>
+                                updateContainerConfig(containerId, {
+                                  pullSecrets: val,
+                                })
+                              }
+                              fullWidth
+                            />
                           </VStack>
                         </VStack>
                       </SectionCard.Content>
@@ -4781,95 +4879,202 @@ export function CreateCronJobPage() {
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={2}>
-                            {(config.envVars || []).length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Type
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Variable Name
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div className="w-5" />
-                              </div>
-                            )}
-                            {(config.envVars || []).map((envVar, index) => (
-                              <div
-                                key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
-                              >
-                                <Select
-                                  options={[
-                                    { value: 'value', label: 'Key/Value Pair' },
-                                    { value: 'configmap', label: 'ConfigMap' },
-                                    { value: 'secret', label: 'Secret' },
-                                  ]}
-                                  value={envVar.type || 'value'}
-                                  onChange={(val) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      type: val as 'value' | 'configmap' | 'secret',
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="input variable name"
-                                  fullWidth
-                                  value={envVar.name}
-                                  onChange={(e) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      name: e.target.value,
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                />
-                                <Input
-                                  placeholder="input value"
-                                  fullWidth
-                                  value={envVar.value}
-                                  onChange={(e) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      value: e.target.value,
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                />
-                                <button
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  onClick={() => {
-                                    const newEnvVars = (config.envVars || []).filter(
-                                      (_, i) => i !== index
-                                    );
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
+                          <VStack gap={1} className="w-full">
+                            {(config.envVars || []).map((envVar, index) => {
+                              const hasFourCols =
+                                envVar.type === 'resource' ||
+                                envVar.type === 'configmap-key' ||
+                                envVar.type === 'secret-key';
+                              const gridCols = hasFourCols
+                                ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                : 'grid-cols-[1fr_1fr_1fr_20px]';
+                              const valueColumnLabel: Record<string, string> = {
+                                value: 'Value',
+                                resource: 'Container Name',
+                                'configmap-key': 'ConfigMap',
+                                'secret-key': 'Secret',
+                                'pod-field': 'Key',
+                                secret: 'Secret',
+                                configmap: 'ConfigMap',
+                              };
+                              const fourthColumnLabel: Record<string, string> = {
+                                resource: 'Key',
+                                'configmap-key': 'Key',
+                                'secret-key': 'Key',
+                              };
+                              return (
+                                <div
+                                  key={index}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
+                                  <VStack gap={1}>
+                                    <div className={`grid ${gridCols} gap-2 w-full items-center`}>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        Type
+                                      </span>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        {envVar.type === 'secret' || envVar.type === 'configmap'
+                                          ? 'Prefix'
+                                          : 'Variable Name'}
+                                      </span>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        {valueColumnLabel[envVar.type || 'value'] || 'Value'}
+                                      </span>
+                                      {hasFourCols && (
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          {fourthColumnLabel[envVar.type] || ''}
+                                        </span>
+                                      )}
+                                      <button
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        onClick={() => {
+                                          const newEnvVars = (config.envVars || []).filter(
+                                            (_, i) => i !== index
+                                          );
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                    <div className={`grid ${gridCols} gap-2 w-full items-center`}>
+                                      <Select
+                                        options={[
+                                          { value: 'value', label: 'Key/Value Pair' },
+                                          { value: 'resource', label: 'Resource' },
+                                          { value: 'configmap-key', label: 'ConfigMap Key' },
+                                          { value: 'secret-key', label: 'Secret Key' },
+                                          { value: 'pod-field', label: 'Pod Field' },
+                                          { value: 'secret', label: 'Secret' },
+                                          { value: 'configmap', label: 'ConfigMap' },
+                                        ]}
+                                        value={envVar.type || 'value'}
+                                        onChange={(val) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            type: val as
+                                              | 'value'
+                                              | 'resource'
+                                              | 'configmap-key'
+                                              | 'secret-key'
+                                              | 'pod-field'
+                                              | 'secret'
+                                              | 'configmap',
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input variable name"
+                                        fullWidth
+                                        value={envVar.name}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <Input
+                                        placeholder={
+                                          envVar.type === 'resource'
+                                            ? 'input container name'
+                                            : envVar.type === 'configmap-key'
+                                              ? 'select configmap'
+                                              : envVar.type === 'secret-key'
+                                                ? 'select secret'
+                                                : 'input value'
+                                        }
+                                        fullWidth
+                                        value={envVar.value}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            value: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      {envVar.type === 'resource' && (
+                                        <Select
+                                          options={[
+                                            { value: 'limits.cpu', label: 'limits.cpu' },
+                                            { value: 'limits.memory', label: 'limits.memory' },
+                                            { value: 'requests.cpu', label: 'requests.cpu' },
+                                            { value: 'requests.memory', label: 'requests.memory' },
+                                          ]}
+                                          value={envVar.configMapName || ''}
+                                          onChange={(val) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              configMapName: val,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                          placeholder="Select resource"
+                                          fullWidth
+                                        />
+                                      )}
+                                      {envVar.type === 'configmap-key' && (
+                                        <Input
+                                          placeholder="input key"
+                                          fullWidth
+                                          value={envVar.configMapKey || ''}
+                                          onChange={(e) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              configMapKey: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                        />
+                                      )}
+                                      {envVar.type === 'secret-key' && (
+                                        <Input
+                                          placeholder="input key"
+                                          fullWidth
+                                          value={envVar.secretKey || ''}
+                                          onChange={(e) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              secretKey: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                        />
+                                      )}
+                                      <div className="w-5" />
+                                    </div>
+                                  </VStack>
+                                </div>
+                              );
+                            })}
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -4895,7 +5100,7 @@ export function CreateCronJobPage() {
                     <SectionCard className="pb-6">
                       <SectionCard.Header title="Service account name" />
                       <SectionCard.Content className="pt-3">
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
@@ -4925,7 +5130,7 @@ export function CreateCronJobPage() {
                       <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Post Start
@@ -4968,7 +5173,7 @@ export function CreateCronJobPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5060,12 +5265,12 @@ export function CreateCronJobPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={6}>
+                                <VStack gap={3}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={2}>
+                                    <VStack gap={1}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
@@ -5079,7 +5284,7 @@ export function CreateCronJobPage() {
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(
@@ -5184,7 +5389,7 @@ export function CreateCronJobPage() {
                           </VStack>
 
                           {/* Pre Stop */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
@@ -5227,7 +5432,7 @@ export function CreateCronJobPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5319,12 +5524,12 @@ export function CreateCronJobPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={6}>
+                                <VStack gap={3}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={2}>
+                                    <VStack gap={1}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5337,7 +5542,7 @@ export function CreateCronJobPage() {
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Value
                                           </label>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(
@@ -5450,11 +5655,11 @@ export function CreateCronJobPage() {
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
                           {/* Readiness Check */}
-                          <VStack gap={6}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5469,6 +5674,10 @@ export function CreateCronJobPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -5510,12 +5719,12 @@ export function CreateCronJobPage() {
                             )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                <VStack gap={6}>
+                                <VStack gap={8}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
                                   <div className="flex gap-6 w-full">
                                     {(config.readinessProbe?.type === 'httpGet' ||
                                       config.readinessProbe?.type === 'tcpSocket') && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Port
@@ -5537,19 +5746,20 @@ export function CreateCronJobPage() {
                                               ? updateProbe('readinessProbe', {
                                                   httpGet: {
                                                     ...config.readinessProbe?.httpGet,
-                                                    port: String(val ?? ''),
+                                                    port: String(val),
                                                   },
                                                 })
                                               : updateProbe('readinessProbe', {
                                                   tcpSocket: {
                                                     ...config.readinessProbe?.tcpSocket,
-                                                    port: String(val ?? ''),
+                                                    port: String(val),
                                                   },
                                                 })
                                           }
                                           min={1}
                                           max={65535}
-                                          width="sm"
+                                          size="sm"
+                                          width="xs"
                                         />
                                         <span className="text-body-sm text-[var(--color-text-subtle)]">
                                           1-65535
@@ -5557,7 +5767,7 @@ export function CreateCronJobPage() {
                                       </VStack>
                                     )}
                                     {config.readinessProbe?.type === 'exec' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Command to run
@@ -5582,7 +5792,7 @@ export function CreateCronJobPage() {
                                         />
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Check Interval
@@ -5616,7 +5826,7 @@ export function CreateCronJobPage() {
                                   {/* Row 2: Request Path (httpGet only) + Initial Delay */}
                                   <div className="flex gap-6 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Request Path
@@ -5640,7 +5850,7 @@ export function CreateCronJobPage() {
                                         />
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Initial Delay
@@ -5672,7 +5882,7 @@ export function CreateCronJobPage() {
                                       </HStack>
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -5708,7 +5918,7 @@ export function CreateCronJobPage() {
                                   {/* Row 3: Timeout + Success Threshold (httpGet) or Success + Failure (others) */}
                                   <div className="flex gap-6 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -5740,7 +5950,7 @@ export function CreateCronJobPage() {
                                         </HStack>
                                       </VStack>
                                     )}
-                                    <VStack gap={3} className="flex-1">
+                                    <VStack gap={2} className="flex-1">
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Success Threshold
@@ -5767,7 +5977,7 @@ export function CreateCronJobPage() {
                                       />
                                     </VStack>
                                     {config.readinessProbe?.type !== 'httpGet' && (
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -5797,7 +6007,7 @@ export function CreateCronJobPage() {
                                   </div>
                                   {/* Row 4: Failure Threshold (httpGet only) */}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={6}>
+                                    <VStack gap={2}>
                                       <VStack gap={1}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Failure Threshold
@@ -5825,12 +6035,12 @@ export function CreateCronJobPage() {
                                     </VStack>
                                   )}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={6}>
+                                    <VStack gap={3}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                        <VStack gap={2}>
+                                        <VStack gap={1}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5840,7 +6050,7 @@ export function CreateCronJobPage() {
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Value
                                               </label>
-                                              <div />
+                                              <div className="w-5" />
                                             </div>
                                           )}
                                           {(config.readinessProbe?.httpGet?.httpHeaders || []).map(
@@ -5947,11 +6157,11 @@ export function CreateCronJobPage() {
                           </VStack>
 
                           {/* Liveness Check */}
-                          <VStack gap={6}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -5966,6 +6176,10 @@ export function CreateCronJobPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -5995,6 +6209,12 @@ export function CreateCronJobPage() {
                                 )}
                                 {renderV2ProbeBlock(
                                   'livenessProbe',
+                                  'httpGet',
+                                  'HTTPS request returns a successful status',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'livenessProbe',
                                   'tcpSocket',
                                   'TCP Connection opens successfully'
                                 )}
@@ -6009,12 +6229,12 @@ export function CreateCronJobPage() {
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.livenessProbe?.type === 'httpGet' ||
                                         config.livenessProbe?.type === 'tcpSocket') && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
@@ -6036,19 +6256,20 @@ export function CreateCronJobPage() {
                                                 ? updateProbe('livenessProbe', {
                                                     httpGet: {
                                                       ...config.livenessProbe?.httpGet,
-                                                      port: String(val ?? ''),
+                                                      port: String(val),
                                                     },
                                                   })
                                                 : updateProbe('livenessProbe', {
                                                     tcpSocket: {
                                                       ...config.livenessProbe?.tcpSocket,
-                                                      port: String(val ?? ''),
+                                                      port: String(val),
                                                     },
                                                   })
                                             }
                                             min={1}
                                             max={65535}
-                                            width="sm"
+                                            size="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-sm text-[var(--color-text-subtle)]">
                                             1-65535
@@ -6056,7 +6277,7 @@ export function CreateCronJobPage() {
                                         </VStack>
                                       )}
                                       {config.livenessProbe?.type === 'exec' && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
@@ -6081,7 +6302,7 @@ export function CreateCronJobPage() {
                                           />
                                         </VStack>
                                       )}
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
@@ -6114,7 +6335,7 @@ export function CreateCronJobPage() {
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
@@ -6145,7 +6366,7 @@ export function CreateCronJobPage() {
                                           </span>
                                         </HStack>
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -6179,7 +6400,7 @@ export function CreateCronJobPage() {
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
@@ -6205,7 +6426,7 @@ export function CreateCronJobPage() {
                                           width="xs"
                                         />
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -6238,11 +6459,11 @@ export function CreateCronJobPage() {
                           </VStack>
 
                           {/* Startup Check */}
-                          <VStack gap={6}>
+                          <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
                               Startup Check
                             </span>
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Type
@@ -6257,6 +6478,10 @@ export function CreateCronJobPage() {
                                   {
                                     value: 'httpGet',
                                     label: 'HTTP request returns a successful status (200-399)',
+                                  },
+                                  {
+                                    value: 'httpsGet',
+                                    label: 'HTTPS request returns a successful status',
                                   },
                                   {
                                     value: 'tcpSocket',
@@ -6286,6 +6511,12 @@ export function CreateCronJobPage() {
                                 )}
                                 {renderV2ProbeBlock(
                                   'startupProbe',
+                                  'httpGet',
+                                  'HTTPS request returns a successful status',
+                                  { showRequestPath: true, showHeaders: true }
+                                )}
+                                {renderV2ProbeBlock(
+                                  'startupProbe',
                                   'tcpSocket',
                                   'TCP Connection opens successfully'
                                 )}
@@ -6300,12 +6531,12 @@ export function CreateCronJobPage() {
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.startupProbe?.type === 'httpGet' ||
                                         config.startupProbe?.type === 'tcpSocket') && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Check Port
@@ -6327,19 +6558,20 @@ export function CreateCronJobPage() {
                                                 ? updateProbe('startupProbe', {
                                                     httpGet: {
                                                       ...config.startupProbe?.httpGet,
-                                                      port: String(val ?? ''),
+                                                      port: String(val),
                                                     },
                                                   })
                                                 : updateProbe('startupProbe', {
                                                     tcpSocket: {
                                                       ...config.startupProbe?.tcpSocket,
-                                                      port: String(val ?? ''),
+                                                      port: String(val),
                                                     },
                                                   })
                                             }
                                             min={1}
                                             max={65535}
-                                            width="sm"
+                                            size="sm"
+                                            width="xs"
                                           />
                                           <span className="text-body-sm text-[var(--color-text-subtle)]">
                                             1-65535
@@ -6347,7 +6579,7 @@ export function CreateCronJobPage() {
                                         </VStack>
                                       )}
                                       {config.startupProbe?.type === 'exec' && (
-                                        <VStack gap={3} className="flex-1">
+                                        <VStack gap={2} className="flex-1">
                                           <VStack gap={1}>
                                             <span className="text-label-lg text-[var(--color-text-default)]">
                                               Command to run
@@ -6372,7 +6604,7 @@ export function CreateCronJobPage() {
                                           />
                                         </VStack>
                                       )}
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Check Interval
@@ -6405,7 +6637,7 @@ export function CreateCronJobPage() {
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Initial Delay
@@ -6436,7 +6668,7 @@ export function CreateCronJobPage() {
                                           </span>
                                         </HStack>
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Timeout
@@ -6470,7 +6702,7 @@ export function CreateCronJobPage() {
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
                                     <div className="flex gap-6 w-full">
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Success Threshold
@@ -6496,7 +6728,7 @@ export function CreateCronJobPage() {
                                           width="xs"
                                         />
                                       </VStack>
-                                      <VStack gap={3} className="flex-1">
+                                      <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Failure Threshold
@@ -6538,7 +6770,7 @@ export function CreateCronJobPage() {
                         <VStack gap={8}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Reservation
@@ -6565,7 +6797,7 @@ export function CreateCronJobPage() {
                                 </span>
                               </HStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   CPU Limit
@@ -6593,7 +6825,7 @@ export function CreateCronJobPage() {
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Reservation
@@ -6622,7 +6854,7 @@ export function CreateCronJobPage() {
                                 </span>
                               </HStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Memory Limit
@@ -6661,7 +6893,7 @@ export function CreateCronJobPage() {
                         <VStack gap={8}>
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
                               </span>
@@ -6694,7 +6926,7 @@ export function CreateCronJobPage() {
                                 </HStack>
                               </VStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privilege Escalation
                               </span>
@@ -6730,7 +6962,7 @@ export function CreateCronJobPage() {
                           </div>
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
                           <div className="flex gap-6 w-full">
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
                               </span>
@@ -6763,7 +6995,7 @@ export function CreateCronJobPage() {
                                 </HStack>
                               </VStack>
                             </VStack>
-                            <VStack gap={3} className="flex-1">
+                            <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Read-Only Root Filesystem
                               </span>
@@ -6871,7 +7103,7 @@ export function CreateCronJobPage() {
                         <VStack gap={8}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
-                            <VStack gap={6}>
+                            <VStack gap={3}>
                               {config.selectedVolumes.map(
                                 (
                                   selectedVol: {
@@ -6887,7 +7119,7 @@ export function CreateCronJobPage() {
                                 ) => (
                                   <div
                                     key={volIndex}
-                                    className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                   >
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
@@ -6908,7 +7140,7 @@ export function CreateCronJobPage() {
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
-                                          <div />
+                                          <div className="w-5" />
                                         </div>
                                       )}
                                       {(selectedVol.mounts || []).map(
