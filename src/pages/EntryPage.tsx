@@ -126,7 +126,7 @@ const appCards: AppCard[] = [
     icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
-    available: true,
+    available: false,
   },
   {
     id: 'ai-agent',
@@ -135,7 +135,7 @@ const appCards: AppCard[] = [
     icon: <img src={AIAgentIcon} alt="AI Agent" className="w-16 h-16" />,
     path: '/agent',
     color: 'from-emerald-500 to-teal-500',
-    available: true,
+    available: false,
   },
 ];
 
@@ -156,7 +156,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       onClick={onClick}
       disabled={!isAvailable}
       className={`
-        group relative overflow-hidden w-full min-h-[200px] rounded-2xl bg-[var(--color-surface-default)]
+        group relative overflow-hidden w-full rounded-2xl bg-[var(--color-surface-default)]
         border border-[var(--color-border-default)]
         transition-all duration-300 ease-out text-left ${
           isAvailable
@@ -173,7 +173,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       />
 
       {/* Content */}
-      <div className="relative h-full p-6 flex flex-col">
+      <div className="relative h-full p-5 flex flex-col">
         {/* Icon */}
         <div
           className={`
@@ -183,12 +183,9 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
           {card.icon}
         </div>
 
-        {/* Title & Description */}
-        <div className="mt-auto">
-          <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-1">{card.title}</h3>
-          <p className="text-body-md text-[var(--color-text-subtle)] line-clamp-2">
-            {card.description}
-          </p>
+        {/* Title */}
+        <div className="mt-6">
+          <h4 className="text-heading-h6 text-[var(--color-text-default)]">{card.title}</h4>
         </div>
 
         {/* Coming Soon Badge */}
@@ -263,20 +260,9 @@ export function EntryPage() {
 
       {/* Main Content */}
       <main>
-        <div className="max-w-7xl mx-auto px-8 py-16">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Thaki Design system SSoT{' '}
-            </h1>
-            <p className="text-body-lg text-[var(--color-text-subtle)] mx-auto leading-relaxed">
-              Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은
-              '단일 기준'입니다.
-            </p>
-          </div>
-
+        <div className="max-w-7xl mx-auto px-8 pt-12 pb-16">
           {/* App Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {appCards.map((card) => (
               <AppCardComponent key={card.id} card={card} onClick={() => handleCardClick(card)} />
             ))}
@@ -284,11 +270,11 @@ export function EntryPage() {
 
           {/* Developer Resources */}
           <div className="mt-12 pt-8 border-t border-[var(--color-border-default)]">
-            <div className="text-center mb-6">
-              <p className="text-body-md text-[var(--color-text-subtle)] mb-4">
-                Developer Resources{' '}
-              </p>
-              <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
+            <div className="mb-6">
+              <h4 className="text-heading-h7 !font-normal text-[var(--color-text-muted)] mb-4">
+                Developer Resources
+              </h4>
+              <div className="flex items-center gap-2 mt-4 flex-wrap">
                 <Button variant="muted" size="md" onClick={() => navigate('/design/drawers')}>
                   Drawers{' '}
                 </Button>

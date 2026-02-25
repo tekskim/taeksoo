@@ -126,7 +126,7 @@ export const Badge = memo(function Badge({
     theme && theme in themeAliasMap
       ? themeAliasMap[theme as BadgeThemeAlias]
       : (theme as BadgeTheme | undefined);
-  const resolvedTheme = normalizedTheme ?? (variant ? variantToTheme[variant] : 'blue');
+  const resolvedTheme = normalizedTheme ?? (variant ? variantToTheme[variant] : 'white');
   // Legacy variants use subtle type by default
   const resolvedType = variant && !theme ? 'subtle' : type;
 
