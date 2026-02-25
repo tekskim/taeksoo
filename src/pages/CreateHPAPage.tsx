@@ -744,7 +744,7 @@ export default function CreateHPAPage() {
                               <label className="text-label-lg text-[var(--color-text-default)]">
                                 Metric Selector
                               </label>
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                 <VStack gap={2}>
                                   {metric.selectors.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -862,7 +862,7 @@ export default function CreateHPAPage() {
                       Specify the labels used to identify and categorize the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {labels.length > 0 && (
                             <VStack gap={2} className="w-full">
@@ -929,7 +929,7 @@ export default function CreateHPAPage() {
                       Specify the annotations used to provide additional metadata for the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {annotations.length > 0 && (
                             <VStack gap={2} className="w-full">

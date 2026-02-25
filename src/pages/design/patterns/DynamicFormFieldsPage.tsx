@@ -16,7 +16,7 @@ function DynamicFieldTableDemo() {
   ]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={2}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -89,12 +89,12 @@ function RepeatableFieldGroupDemo() {
   ]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={2} className="w-full">
         {groups.map((group, gi) => (
           <div
             key={gi}
-            className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+            className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
           >
             <VStack gap={1}>
               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
@@ -175,7 +175,7 @@ function RepeatableFieldGroupDemo() {
   );
 }
 
-const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={2}>
     {/* Column headers */}
     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
