@@ -198,8 +198,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Namespace */}
           <FormField required>
             <FormField.Label>Namespace</FormField.Label>
@@ -301,7 +301,7 @@ function BudgetSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Budget" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <div className="flex gap-3">
           {/* Min. available Pods */}
           <FormField className="flex-1">
@@ -390,8 +390,8 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
         title="Selector"
         description="Selector keys and values are intended to match labels and values on existing pods."
       />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Selector Rules Container */}
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3">
             <VStack gap={3}>
@@ -551,8 +551,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>

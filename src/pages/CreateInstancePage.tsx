@@ -49,6 +49,7 @@ import {
   IconEdit,
   IconExternalLink,
   IconCirclePlus,
+  IconX,
   IconStar,
   IconStarFilled,
   IconUpload,
@@ -938,7 +939,9 @@ function ImageSection({
   const [storageType, setStorageType] = useState('_DEFAULT_');
   const [storageSize, setStorageSize] = useState(30);
   const [deleteWithInstance, setDeleteWithInstance] = useState(true);
-  const [_dataDisks, setDataDisks] = useState<{ id: string; type: string; size: number }[]>([]);
+  const [dataDisks, setDataDisks] = useState<
+    { id: string; type: string; size: number; deleteWithInstance: boolean }[]
+  >([{ id: 'dd-default', type: '_DEFAULT_', size: 10, deleteWithInstance: true }]);
   const itemsPerPage = 5;
 
   // Validation error
@@ -986,7 +989,22 @@ function ImageSection({
 
   // Add data disk
   const handleAddDataDisk = () => {
-    setDataDisks((prev) => [...prev, { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10 }]);
+    setDataDisks((prev) => [
+      ...prev,
+      { id: `dd-${Date.now()}`, type: '_DEFAULT_', size: 10, deleteWithInstance: true },
+    ]);
+  };
+
+  const handleRemoveDataDisk = (id: string) => {
+    setDataDisks((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const handleUpdateDataDisk = (
+    id: string,
+    field: 'type' | 'size' | 'deleteWithInstance',
+    value: string | number | boolean
+  ) => {
+    setDataDisks((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
   };
 
   // Handle image selection with error clearing
@@ -1602,9 +1620,13 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {(isV2 || createSystemDisk) && (
-              <HStack gap={4} align="end" className="flex-wrap">
+              <HStack
+                gap={6}
+                align="start"
+                className="flex-wrap mt-3 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3"
+              >
                 <VStack gap={2}>
-                  <label className="text-label-md text-[var(--color-text-default)]">Type</label>
+                  <label className="text-label-sm text-[var(--color-text-default)]">Type</label>
                   <Select
                     options={storageTypeOptions}
                     value={storageType}
@@ -1612,7 +1634,7 @@ function ImageSection({
                   />
                 </VStack>
                 <VStack gap={2}>
-                  <label className="text-label-md text-[var(--color-text-default)]">Size</label>
+                  <label className="text-label-sm text-[var(--color-text-default)]">Size</label>
                   <HStack gap={3} align="center">
                     <Slider
                       min={1}
@@ -1633,7 +1655,7 @@ function ImageSection({
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)]">1-1,000 GiB</span>
                 </VStack>
-                <div className="self-end pb-2">
+                <div className="pt-[31px]">
                   <Checkbox
                     label="Deleted with the instance"
                     checked={deleteWithInstance}
@@ -1656,14 +1678,86 @@ function ImageSection({
               </span>
             </VStack>
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} />}
-              onClick={handleAddDataDisk}
-            >
-              Add Data disk
-            </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={2} className="w-full">
+                {dataDisks.map((disk) => (
+                  <div
+                    key={disk.id}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3 w-full"
+                  >
+                    <HStack gap={6} align="start" className="flex-wrap">
+                      <VStack gap={2}>
+                        <label className="text-label-sm text-[var(--color-text-default)]">
+                          Type
+                        </label>
+                        <Select
+                          options={storageTypeOptions}
+                          value={disk.type}
+                          onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
+                        />
+                      </VStack>
+                      <VStack gap={2}>
+                        <label className="text-label-sm text-[var(--color-text-default)]">
+                          Size
+                        </label>
+                        <HStack gap={3} align="center">
+                          <Slider
+                            min={1}
+                            max={1000}
+                            step={10}
+                            value={disk.size}
+                            onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v)}
+                          />
+                          <NumberInput
+                            value={disk.size}
+                            onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v)}
+                            min={1}
+                            max={1000}
+                            step={1}
+                            width="xs"
+                            suffix="GiB"
+                          />
+                        </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          1-1,000 GiB
+                        </span>
+                      </VStack>
+                      <div className="pt-[31px]">
+                        <Checkbox
+                          label="Deleted with the instance"
+                          checked={disk.deleteWithInstance}
+                          onChange={(e) =>
+                            handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
+                          }
+                        />
+                      </div>
+                      <div className="ml-auto">
+                        <button
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          onClick={() => handleRemoveDataDisk(disk.id)}
+                        >
+                          <IconX
+                            size={16}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </div>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={handleAddDataDisk}
+                  >
+                    Add Data disk
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
