@@ -566,8 +566,9 @@ html.theme-transition *::after {
   --card-padding-sm: var(--spacing-3);
   --card-padding-md: var(--spacing-4);
   --card-padding-lg: var(--spacing-6);
+  --card-padding-bottom: var(--spacing-6);
   --card-radius: var(--radius-card);
-  --card-gap: var(--spacing-4);
+  --card-gap: var(--spacing-3);
 
   /* ----------------------------------------
      Component - Modal
@@ -983,6 +984,23 @@ html.theme-transition *::after {
      Component - Action Icon (Table Actions)
      ---------------------------------------- */
   --action-icon-color: #64748b;
+
+  /* ----------------------------------------
+     Component - Chart Colors
+     ---------------------------------------- */
+  --chart-color-1: var(--component-chart-color-1);
+  --chart-color-2: var(--component-chart-color-2);
+  --chart-color-3: var(--component-chart-color-3);
+  --chart-color-4: var(--component-chart-color-4);
+  --chart-color-5: var(--component-chart-color-5);
+  --chart-color-6: var(--component-chart-color-6);
+  --chart-color-7: var(--component-chart-color-7);
+  --chart-color-8: var(--component-chart-color-8);
+  --chart-color-9: var(--component-chart-color-9);
+  --chart-color-10: var(--component-chart-color-10);
+  --chart-color-neutral: var(--component-chart-color-neutral);
+  --chart-color-grid: var(--component-chart-color-grid);
+  --chart-color-text: var(--component-chart-color-text);
 }
 
 /* Override Tailwind's default gray/zinc to use our values */

@@ -10,23 +10,26 @@ import {
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 
 /* ----------------------------------------
-   Chart Color Palette (from storage-dashboard)
+   Chart Color Palette
+   Uses CSS tokens: --chart-color-1 … --chart-color-10
    ---------------------------------------- */
 
+function getCSSVar(name: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 export const chartColors = {
-  // Primary 5-color palette (Tailwind 400 shades)
   cyan400: '#22d3ee',
   emerald400: '#34d399',
   amber400: '#fbbf24',
   violet400: '#a78bfa',
   fuchsia400: '#e879f9',
-  // Additional colors
-  rose400: '#fb7185',
-  blue400: '#60a5fa',
-  green400: '#4ade80',
-  yellow400: '#facc15',
+  pink400: '#f472b6',
   red400: '#f87171',
-  // Neutral
+  blue400: '#60a5fa',
+  teal400: '#2dd4bf',
+  orange400: '#fb923c',
+  indigo400: '#818cf8',
   slate400: '#94a3b8',
   slate100: '#f1f5f9',
   slate800: '#1e293b',
@@ -38,6 +41,15 @@ export const primaryChartColors = [
   chartColors.amber400,
   chartColors.violet400,
   chartColors.fuchsia400,
+];
+
+export const extendedChartColors = [
+  ...primaryChartColors,
+  chartColors.pink400,
+  chartColors.red400,
+  chartColors.blue400,
+  chartColors.teal400,
+  chartColors.orange400,
 ];
 
 /* ----------------------------------------
@@ -767,19 +779,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
    Pie chart Demo (ECharts - from storage-dashboard)
    ---------------------------------------- */
 
-// Extended color palette for pie charts with many segments
-const extendedChartColors = [
-  chartColors.cyan400, // cyan
-  chartColors.emerald400, // emerald/green
-  chartColors.amber400, // amber/yellow
-  chartColors.violet400, // violet/purple
-  chartColors.fuchsia400, // fuchsia/pink
-  chartColors.red400, // red/coral
-  chartColors.slate400, // slate/gray
-  '#60a5fa', // blue-400
-  '#f472b6', // pink-400
-  '#4ade80', // green-400
-];
+// Extended color palette for pie charts with many segments (re-uses top-level export)
 
 interface PieChartData {
   name: string;

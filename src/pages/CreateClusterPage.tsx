@@ -446,7 +446,7 @@ export function CreateClusterPage() {
       {/* Main Content Grid */}
       <div className="flex gap-6">
         {/* Left Column - Form */}
-        <div className="flex-1 flex flex-col gap-[32px]">
+        <div className="flex-1 flex flex-col gap-[16px]">
           {/* Basic Information */}
           <SectionCard>
             <SectionCard.Header title="Basic information" />

@@ -801,7 +801,7 @@ export function CreateSecretPage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
           {/* Form Content */}
-          <VStack gap={8} className="flex-1">
+          <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
               isV2={isV2}
