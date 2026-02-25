@@ -745,7 +745,7 @@ export default function CreateHPAPage() {
                                 Metric Selector
                               </label>
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                <VStack gap={2}>
+                                <VStack gap={1}>
                                   {metric.selectors.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-label-sm text-[var(--color-text-default)]">
@@ -757,7 +757,7 @@ export default function CreateHPAPage() {
                                       <label className="text-label-sm text-[var(--color-text-default)]">
                                         Value
                                       </label>
-                                      <div />
+                                      <div className="w-5" />
                                     </div>
                                   )}
                                   {metric.selectors.map((selector) => (
@@ -874,7 +874,7 @@ export default function CreateHPAPage() {
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                               {labels.map((label) => (
                                 <div
@@ -941,7 +941,7 @@ export default function CreateHPAPage() {
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Value
                                 </span>
-                                <div />
+                                <div className="w-5" />
                               </div>
                               {annotations.map((annotation) => (
                                 <div

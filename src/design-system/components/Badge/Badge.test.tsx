@@ -17,10 +17,10 @@ describe('Badge', () => {
   });
 
   describe('Themes', () => {
-    it('applies blue theme by default', () => {
-      render(<Badge>Blue</Badge>);
-      const badge = screen.getByText('Blue');
-      expect(badge).toHaveClass('bg-[var(--color-state-info)]');
+    it('applies white theme by default', () => {
+      render(<Badge>White</Badge>);
+      const badge = screen.getByText('White');
+      expect(badge).toHaveClass('bg-white');
     });
 
     it('applies red theme', () => {

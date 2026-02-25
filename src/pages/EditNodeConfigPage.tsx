@@ -384,7 +384,7 @@ export function EditNodeConfigPage() {
               <SectionCard.Content>
                 <VStack gap={3}>
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={2}>
+                    <VStack gap={1}>
                       {taints.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -396,7 +396,7 @@ export function EditNodeConfigPage() {
                           <span className="block text-label-lg text-[var(--color-text-default)]">
                             Effect
                           </span>
-                          <div />
+                          <div className="w-5" />
                         </div>
                       )}
                       {taints.map((taint, index) => (
@@ -475,7 +475,7 @@ export function EditNodeConfigPage() {
                             <span className="block text-label-lg text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {labels.map((label, index) => (
@@ -542,7 +542,7 @@ export function EditNodeConfigPage() {
                             <span className="block text-label-lg text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {annotations.map((annotation, index) => (
