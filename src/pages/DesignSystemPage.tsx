@@ -6319,7 +6319,7 @@ outline: 2px solid var(--color-border-focus);`}
                           </span>
                           <Button
                             size="sm"
-                            variant="secondary"
+                            variant="muted"
                             leftIcon={<IconPlayerPlay size={12} />}
                             disabled
                           >
@@ -6327,7 +6327,7 @@ outline: 2px solid var(--color-border-focus);`}
                           </Button>
                           <Button
                             size="sm"
-                            variant="secondary"
+                            variant="muted"
                             leftIcon={<IconPlus size={12} />}
                             disabled
                           >
@@ -6335,7 +6335,7 @@ outline: 2px solid var(--color-border-focus);`}
                           </Button>
                           <Button
                             size="sm"
-                            variant="secondary"
+                            variant="muted"
                             leftIcon={<IconEdit size={12} />}
                             disabled
                           >
@@ -6343,7 +6343,7 @@ outline: 2px solid var(--color-border-focus);`}
                           </Button>
                           <Button
                             size="sm"
-                            variant="secondary"
+                            variant="muted"
                             leftIcon={<IconTrash size={12} />}
                             disabled
                           >
@@ -6354,20 +6354,16 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">
                             With selection
                           </span>
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            leftIcon={<IconPlayerPlay size={12} />}
-                          >
+                          <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />}>
                             Start
                           </Button>
-                          <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />}>
+                          <Button size="sm" variant="muted" leftIcon={<IconPlus size={12} />}>
                             Create
                           </Button>
-                          <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>
+                          <Button size="sm" variant="muted" leftIcon={<IconEdit size={12} />}>
                             Edit
                           </Button>
-                          <Button size="sm" variant="secondary" leftIcon={<IconTrash size={12} />}>
+                          <Button size="sm" variant="muted" leftIcon={<IconTrash size={12} />}>
                             Delete
                           </Button>
                         </div>

@@ -270,27 +270,29 @@ export function ButtonPage() {
             </div>
             <div className="mt-4">
               <Label>Icon + Text (Action Buttons)</Label>
+              <p className="text-body-sm text-[var(--color-text-subtle)] mt-1">
+                Toolbar bulk action에는{' '}
+                <code className="text-body-sm font-mono text-[var(--color-text-muted)]">
+                  variant=&quot;muted&quot;
+                </code>
+                를 사용합니다. 선택 없음 시 disabled, 선택 시 enabled으로 전환됩니다.
+              </p>
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">
                   No selection
                 </span>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  leftIcon={<IconPlayerPlay size={12} />}
-                  disabled
-                >
+                <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />} disabled>
                   Start
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />} disabled>
+                <Button size="sm" variant="muted" leftIcon={<IconPlus size={12} />} disabled>
                   Create
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />} disabled>
+                <Button size="sm" variant="muted" leftIcon={<IconEdit size={12} />} disabled>
                   Edit
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconTrash size={12} />} disabled>
+                <Button size="sm" variant="muted" leftIcon={<IconTrash size={12} />} disabled>
                   Delete
                 </Button>
               </div>
@@ -298,16 +300,16 @@ export function ButtonPage() {
                 <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">
                   With selection
                 </span>
-                <Button size="sm" variant="secondary" leftIcon={<IconPlayerPlay size={12} />}>
+                <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />}>
                   Start
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconPlus size={12} />}>
+                <Button size="sm" variant="muted" leftIcon={<IconPlus size={12} />}>
                   Create
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconEdit size={12} />}>
+                <Button size="sm" variant="muted" leftIcon={<IconEdit size={12} />}>
                   Edit
                 </Button>
-                <Button size="sm" variant="secondary" leftIcon={<IconTrash size={12} />}>
+                <Button size="sm" variant="muted" leftIcon={<IconTrash size={12} />}>
                   Delete
                 </Button>
               </div>
@@ -455,7 +457,10 @@ export function ButtonPage() {
                           Muted
                         </td>
                         <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          Toolbar 내 Bulk 액션 등 배경에 녹아드는 버튼.
+                          <strong>Toolbar bulk action 전용.</strong> 선택 전/후 상태 전환에 최적화된
+                          variant. 선택 없음(disabled) → 선택 있음(enabled) 시 텍스트와 보더가 함께
+                          강해지며 자연스러운 활성화 느낌을 제공. 다른 용도에는 secondary 또는 ghost
+                          사용 권장.
                         </td>
                         <td className="py-2 text-[var(--color-text-muted)]">
                           Start, Stop, Delete (toolbar)
@@ -501,6 +506,80 @@ export function ButtonPage() {
                         </td>
                         <td className="py-2 text-[var(--color-text-muted)]">
                           View all, Learn more
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </VStack>
+              <VStack gap={2}>
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  Muted Variant — 상태 전환
+                </h4>
+                <p className="text-body-sm text-[var(--color-text-muted)]">
+                  Muted variant는 ListToolbar의 bulk action 버튼 전용으로 설계되었습니다. 테이블에서
+                  항목이 선택되지 않았을 때는 disabled 상태로 &ldquo;대기 중인 도구&rdquo;를
+                  표현하고, 항목이 선택되면 텍스트와 보더가 함께 강해지며 자연스럽게 활성화됩니다.
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-body-sm border-collapse">
+                    <thead>
+                      <tr className="border-b border-[var(--color-border-default)]">
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          상태
+                        </th>
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          텍스트
+                        </th>
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          보더
+                        </th>
+                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                          배경
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                          Disabled (선택 없음)
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          text-disabled
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          border-default
+                        </td>
+                        <td className="py-2 font-mono text-[var(--color-text-muted)]">
+                          surface-default
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                          Enabled (선택 있음)
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          text-muted
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          border-strong
+                        </td>
+                        <td className="py-2 font-mono text-[var(--color-text-muted)]">
+                          surface-default
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                          Hover
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          text-default
+                        </td>
+                        <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                          border-strong
+                        </td>
+                        <td className="py-2 font-mono text-[var(--color-text-muted)]">
+                          surface-subtle
                         </td>
                       </tr>
                     </tbody>
