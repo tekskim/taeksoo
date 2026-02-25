@@ -57,7 +57,7 @@ const buttonVariants = cva(
         ],
         muted: [
           'bg-[var(--color-surface-default)] text-[var(--color-text-muted)]',
-          'border border-[var(--color-border-default)]',
+          'border border-[var(--color-border-strong)]',
           'hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] hover:border-[var(--color-border-strong)]',
           'active:bg-[var(--color-surface-default)]',
           'disabled:bg-[var(--color-surface-default)] disabled:text-[var(--color-text-disabled)] disabled:border-[var(--color-border-default)]',
