@@ -627,7 +627,7 @@ export function FigmaComponentsPage() {
       </div>
 
       <SubTitle>Open (Dropdown) — Static</SubTitle>
-      <div className="relative w-[240px]">
+      <div className="relative w-[240px] mb-[120px]">
         <Select options={sampleSelectOptions} value="option1" onChange={() => {}} fullWidth />
         <div className="absolute top-full left-0 w-full mt-1 bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] z-10 overflow-hidden">
           {sampleSelectOptions.map((opt, idx) => {
