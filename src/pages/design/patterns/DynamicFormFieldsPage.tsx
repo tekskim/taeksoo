@@ -17,7 +17,7 @@ function DynamicFieldTableDemo() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-      <VStack gap={2}>
+      <VStack gap={1}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
             <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
@@ -90,7 +90,7 @@ function RepeatableFieldGroupDemo() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-      <VStack gap={2} className="w-full">
+      <VStack gap={1} className="w-full">
         {groups.map((group, gi) => (
           <div
             key={gi}
@@ -175,8 +175,105 @@ function RepeatableFieldGroupDemo() {
   );
 }
 
+function DescriptionHeaderDemo() {
+  const [rows, setRows] = useState([{ name: 'ndots', value: '5' }]);
+
+  return (
+    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+      <VStack gap={1}>
+        {rows.length > 0 && (
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+            <VStack gap={1}>
+              <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Specify the option name.
+              </p>
+            </VStack>
+            <VStack gap={1}>
+              <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                The value for this option.
+              </p>
+            </VStack>
+            <div className="w-5" />
+          </div>
+        )}
+        {rows.map((row, i) => (
+          <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+            <Input
+              placeholder="e.g. ndots"
+              value={row.name}
+              onChange={(e) => {
+                const n = [...rows];
+                n[i].name = e.target.value;
+                setRows(n);
+              }}
+              fullWidth
+            />
+            <Input
+              placeholder="e.g. 5"
+              value={row.value}
+              onChange={(e) => {
+                const n = [...rows];
+                n[i].value = e.target.value;
+                setRows(n);
+              }}
+              fullWidth
+            />
+            <button
+              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              onClick={() => setRows(rows.filter((_, idx) => idx !== i))}
+            >
+              <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
+          </div>
+        ))}
+        <div className="w-fit">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+            onClick={() => setRows([...rows, { name: '', value: '' }])}
+          >
+            Add Option
+          </Button>
+        </div>
+      </VStack>
+    </div>
+  );
+}
+
+const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+  <VStack gap={1}>
+    {/* Column headers with description */}
+    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+      <VStack gap={1}>
+        <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">Specify the option name.</p>
+      </VStack>
+      <VStack gap={1}>
+        <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">The value for this option.</p>
+      </VStack>
+      <div className="w-5" />
+    </div>
+    {/* Rows */}
+    {rows.map((row, i) => (
+      <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+        <Input placeholder="e.g. ndots" value={row.name} onChange={...} fullWidth />
+        <Input placeholder="e.g. 5" value={row.value} onChange={...} fullWidth />
+        <button onClick={() => removeRow(i)}><IconX size={16} /></button>
+      </div>
+    ))}
+    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+      onClick={() => addRow()}>
+      Add Option
+    </Button>
+  </VStack>
+</div>`;
+
 const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-  <VStack gap={2}>
+  <VStack gap={1}>
     {/* Column headers */}
     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
       <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
@@ -203,7 +300,7 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
 </div>`;
 
 const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle)] border ... rounded-[6px] p-3 w-full">
-  <VStack gap={2} className="w-full">
+  <VStack gap={1} className="w-full">
     {groups.map((group, gi) => (
       <div key={gi} className="bg-[var(--color-surface-default)] border ... rounded-[6px] p-3 w-full">
         <VStack gap={1}>
@@ -267,6 +364,30 @@ export function DynamicFormFieldsPage() {
             <VStack gap={1}>
               <HStack gap={2} align="center">
                 <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  With Description Headers
+                </h4>
+                <Badge variant="info" size="sm">
+                  List
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Column headers include a description line below the label. Wrap each header in a
+                VStack with gap-1 containing the label (text-label-sm) and description
+                (text-body-sm, subtle). Use when columns need additional context to clarify expected
+                input.
+              </p>
+            </VStack>
+            <ComponentPreview code={descriptionHeaderCode}>
+              <DescriptionHeaderDemo />
+            </ComponentPreview>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
                   Repeatable Field Group
                 </h4>
                 <Badge variant="info" size="sm">
@@ -317,6 +438,17 @@ export function DynamicFormFieldsPage() {
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                    With Description Headers (List)
+                  </td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                    Columns need extra context via description text below headers
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    Resolver Options, Host Aliases with IP format hints
+                  </td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
                     Repeatable Field Group (Card)
                   </td>
                   <td className="py-2 pr-4 text-[var(--color-text-muted)]">
@@ -336,6 +468,13 @@ export function DynamicFormFieldsPage() {
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Dynamic Field Table (List):</strong> bg-subtle container → column headers
                 (text-label-sm) → input rows (grid-aligned) → Add button
+              </p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+              <p className="text-body-sm text-[var(--color-text-default)]">
+                <strong>With Description Headers (List):</strong> bg-subtle container → column
+                headers (VStack gap-1: text-label-sm label + text-body-sm description) → input rows
+                (grid-aligned) → Add button
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
@@ -368,7 +507,7 @@ export function DynamicFormFieldsPage() {
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Header → rows gap (List)
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">8px (gap-2)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">4px (gap-1)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
@@ -389,6 +528,12 @@ export function DynamicFormFieldsPage() {
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Column header</td>
                   <td className="py-2 text-[var(--color-text-muted)]">text-label-sm</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">Header description</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    text-body-sm text-subtle, gap-1 from label
+                  </td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Border radius</td>

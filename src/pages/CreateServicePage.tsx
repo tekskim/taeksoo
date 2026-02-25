@@ -625,7 +625,7 @@ export function CreateServicePage() {
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={2}>
+                    <VStack gap={1}>
                       {/* Header row */}
                       {ports.length > 0 && (
                         <div
@@ -652,7 +652,7 @@ export function CreateServicePage() {
                               Node Port
                             </span>
                           )}
-                          <div />
+                          <div className="w-5" />
                         </div>
                       )}
 
@@ -764,7 +764,7 @@ export function CreateServicePage() {
                       External IPs
                     </label>
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {externalIPs.map((ip) => (
                           <div key={ip.id} className="flex gap-2 items-center">
                             <div className="w-[calc(50%-12px)]">
@@ -830,7 +830,7 @@ export function CreateServicePage() {
                     </div>
                   ) : (
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {selectors.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -839,7 +839,7 @@ export function CreateServicePage() {
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {selectors.map((selector, index) => (
@@ -979,7 +979,7 @@ export function CreateServicePage() {
 
                     {/* Bordered container for labels */}
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -988,7 +988,7 @@ export function CreateServicePage() {
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {labels.map((label, index) => (
@@ -1049,7 +1049,7 @@ export function CreateServicePage() {
 
                     {/* Bordered container for annotations */}
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={2}>
+                      <VStack gap={1}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1058,7 +1058,7 @@ export function CreateServicePage() {
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Value
                             </span>
-                            <div />
+                            <div className="w-5" />
                           </div>
                         )}
                         {annotations.map((annotation, index) => (

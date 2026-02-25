@@ -35,7 +35,7 @@ function LabelsSection() {
         <VStack gap={8}>
           <FormField label="Labels">
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={1}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
