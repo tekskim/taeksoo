@@ -27,21 +27,10 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   ChartWithFullScreen,
   getAreaGradient,
+  chartColors as baseChartColors,
 } from '@/pages/design-system-sections/ChartComponents';
 
-/* ----------------------------------------
-   Chart Colors
-   ---------------------------------------- */
-
-const chartColors = {
-  cyan400: '#22d3ee',
-  emerald400: '#34d399',
-  orange400: '#f97316',
-  red400: '#f87171',
-  slate100: '#f1f5f9',
-  slate400: '#94a3b8',
-  slate800: '#1e293b',
-};
+const chartColors = { ...baseChartColors, orange400: '#f97316' };
 
 /* ----------------------------------------
    Mock Data

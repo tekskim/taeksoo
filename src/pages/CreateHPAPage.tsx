@@ -493,7 +493,7 @@ export default function CreateHPAPage() {
         {/* Form Content with Summary */}
         <HStack gap={6} className="w-full items-start">
           {/* Form Sections */}
-          <VStack gap={8} className="flex-1">
+          <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
             <SectionCard>
               <SectionCard.Header title="Basic information" />

@@ -360,6 +360,7 @@ import { CsvDownloadPage } from '@/pages/design/components/CsvDownloadPage';
 import { ShellPage } from '@/pages/design/components/ShellPage';
 import { CommonPatternsPage } from '@/pages/design/patterns/CommonPatternsPage';
 import { WizardPage } from '@/pages/design/patterns/WizardPage';
+import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
@@ -1006,6 +1007,7 @@ function AppRoutes() {
         <Route path="components/*" element={<DesignOverviewPage />} />
         <Route path="patterns/common" element={<CommonPatternsPage />} />
         <Route path="patterns/wizard" element={<WizardPage />} />
+        <Route path="patterns/open-form" element={<OpenFormPage />} />
         <Route path="patterns/multi-tab-create" element={<MultiTabCreatePage />} />
         <Route path="patterns/layout" element={<LayoutPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />

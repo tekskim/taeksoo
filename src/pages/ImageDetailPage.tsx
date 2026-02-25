@@ -25,17 +25,12 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
-
-/* ----------------------------------------
-   Chart Colors
-   ---------------------------------------- */
+import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
 
 const chartColors = {
+  ...baseChartColors,
   emerald500: '#10b981',
   amber500: '#f59e0b',
-  slate400: '#94a3b8',
-  slate100: '#f1f5f9',
-  slate800: '#1e293b',
 };
 
 /* ----------------------------------------

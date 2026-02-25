@@ -31,29 +31,7 @@ import {
   IconTerminal2,
 } from '@tabler/icons-react';
 import ReactECharts from 'echarts-for-react';
-
-/* ----------------------------------------
-   Chart Colors (from design system)
-   ---------------------------------------- */
-
-const chartColors = {
-  // Primary 5-color palette (Tailwind 400 shades)
-  cyan400: '#22d3ee',
-  emerald400: '#34d399',
-  amber400: '#fbbf24',
-  violet400: '#a78bfa',
-  pink400: '#f472b6',
-  // Additional colors for more series
-  red400: '#f87171',
-  blue400: '#60a5fa',
-  teal400: '#2dd4bf',
-  orange400: '#fb923c',
-  indigo400: '#818cf8',
-  // Utility colors
-  slate400: '#94a3b8',
-  slate100: '#f1f5f9',
-  slate800: '#1e293b',
-};
+import { chartColors, extendedChartColors } from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Time Labels Generator
@@ -362,22 +340,6 @@ const slowOsdOpsData: SlowOsdOpsRow[] = [
   { id: '2', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
   { id: '3', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
   { id: '4', osdId: 'bzfv0rv1-cephadm-cl01', slowOps: '0.00' },
-];
-
-// Extended chart colors for pie charts
-const extendedChartColors = [
-  chartColors.cyan400,
-  chartColors.emerald400,
-  chartColors.amber400,
-  chartColors.violet400,
-  chartColors.pink400,
-  chartColors.red400,
-  chartColors.blue400,
-  chartColors.teal400,
-  chartColors.orange400,
-  chartColors.indigo400,
-  '#94a3b8', // slate400
-  '#a1a1aa', // zinc400
 ];
 
 /* ----------------------------------------

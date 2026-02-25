@@ -1759,7 +1759,7 @@ export function CreateJobPage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} className="w-full items-start">
           {/* Form Content */}
-          <VStack gap={8} className="flex-1">
+          <VStack gap={4} className="flex-1">
             {/* Job Tab */}
             {activeTab === 'job' && (
               <>

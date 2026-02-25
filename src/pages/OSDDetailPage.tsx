@@ -37,18 +37,7 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
-
-/* ----------------------------------------
-   Chart Colors
-   ---------------------------------------- */
-
-const chartColors = {
-  cyan400: '#22d3ee',
-  emerald400: '#34d399',
-  slate400: '#94a3b8',
-  slate100: '#f1f5f9',
-  slate800: '#1e293b',
-};
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Monitoring Time Controls Component
