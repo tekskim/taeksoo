@@ -11,6 +11,7 @@ import {
   TopBarAction,
   Breadcrumb,
   Badge,
+  BadgeList,
   ProgressBar,
   PageShell,
   PageHeader,
@@ -145,26 +146,6 @@ function IDCell({ id }: IDCellProps) {
 }
 
 /* ----------------------------------------
-   Status Cell Component
-   ---------------------------------------- */
-
-interface StatusCellProps {
-  status: OSD['status'];
-}
-
-function StatusCell({ status }: StatusCellProps) {
-  return (
-    <div className="flex gap-0.5">
-      {status.map((s, index) => (
-        <Badge key={index} variant={s === 'in' || s === 'up' ? 'success' : 'default'} size="sm">
-          {s}
-        </Badge>
-      ))}
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Device Class Cell Component
    ---------------------------------------- */
 
@@ -173,11 +154,7 @@ interface DeviceClassCellProps {
 }
 
 function DeviceClassCell({ deviceClass }: DeviceClassCellProps) {
-  return (
-    <Badge variant="info" size="sm">
-      {deviceClass.toUpperCase()}
-    </Badge>
-  );
+  return <Badge size="sm">{deviceClass.toUpperCase()}</Badge>;
 }
 
 /* ----------------------------------------
@@ -271,7 +248,7 @@ export function OSDsPage() {
       flex: 1,
       minWidth: columnMinWidths.type,
       sortable: false,
-      render: (_, row) => <StatusCell status={row.status} />,
+      render: (_, row) => <BadgeList items={row.status} maxVisible={2} />,
     },
     {
       key: 'deviceClass',
