@@ -317,6 +317,9 @@ import { ShadowsPage } from '@/pages/design/foundation/ShadowsPage';
 import { IconsPage } from '@/pages/design/foundation/IconsPage';
 import { AppIconsPage } from '@/pages/design/foundation/AppIconsPage';
 import { UXWritingGuidePage } from '@/pages/design/foundation/UXWritingGuidePage';
+import { AccessibilityPage } from '@/pages/design/foundation/AccessibilityPage';
+import { ThemingPage } from '@/pages/design/foundation/ThemingPage';
+import { ContributingPage } from '@/pages/design/foundation/ContributingPage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
 import { InputPage } from '@/pages/design/components/InputPage';
 import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
@@ -364,6 +367,7 @@ import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
+import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
@@ -384,6 +388,12 @@ import { IconographyPage } from '@/pages/IconographyPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
+
+// Pages - Figma Capture
+import { FigmaLayout } from '@/pages/figma/FigmaLayout';
+import { FigmaFoundationPage } from '@/pages/figma/FigmaFoundationPage';
+import { FigmaComponentsPage } from '@/pages/figma/FigmaComponentsPage';
+import { FigmaGuidePage } from '@/pages/figma/FigmaGuidePage';
 
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
@@ -959,6 +969,9 @@ function AppRoutes() {
         <Route path="foundation/icons" element={<IconsPage />} />
         <Route path="foundation/app-icons" element={<AppIconsPage />} />
         <Route path="foundation/ux-writing" element={<UXWritingGuidePage />} />
+        <Route path="foundation/accessibility" element={<AccessibilityPage />} />
+        <Route path="foundation/theming" element={<ThemingPage />} />
+        <Route path="foundation/contributing" element={<ContributingPage />} />
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
@@ -1011,6 +1024,7 @@ function AppRoutes() {
         <Route path="patterns/multi-tab-create" element={<MultiTabCreatePage />} />
         <Route path="patterns/layout" element={<LayoutPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
+        <Route path="patterns/form-validation" element={<FormValidationPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
@@ -1021,6 +1035,9 @@ function AppRoutes() {
         <Route path="charts/doughnut" element={<DoughnutChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
+        <Route path="figma/guide" element={<FigmaGuidePage />} />
+        <Route path="figma/foundation" element={<FigmaFoundationPage />} />
+        <Route path="figma/components" element={<FigmaComponentsPage />} />
       </Route>
       {/* Standalone design showcase pages (outside DesignSystemLayout) */}
       <Route path="/design/drawers" element={<DrawersPage />} />
@@ -1043,6 +1060,12 @@ function AppRoutes() {
       <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
       <Route path="/form-patterns" element={<FormPatternsPage />} />
+
+      {/* Figma Capture Routes */}
+      <Route path="/figma" element={<FigmaLayout />}>
+        <Route path="foundation" element={<FigmaFoundationPage />} />
+        <Route path="components" element={<FigmaComponentsPage />} />
+      </Route>
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />
