@@ -40,6 +40,15 @@ import {
   IconArrowsMinimize,
 } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
+import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
+
+const chartColors = {
+  ...baseChartColors,
+  blue500: '#3b82f6',
+  emerald500: '#10b981',
+  red500: '#dc2626',
+  green500: '#00a63e',
+};
 
 /* ----------------------------------------
    Custom Identify Icon (now using Siren from lucide-react)
@@ -53,24 +62,6 @@ interface IdentifyIconProps {
 function IdentifyIcon({ size = 16, className }: IdentifyIconProps) {
   return <Siren size={size} className={className} strokeWidth={1.5} />;
 }
-
-/* ----------------------------------------
-   Chart Colors
-   ---------------------------------------- */
-
-const chartColors = {
-  blue500: '#3b82f6',
-  cyan400: '#22d3ee',
-  emerald400: '#34d399',
-  emerald500: '#10b981',
-  amber400: '#fbbf24',
-  violet400: '#a78bfa',
-  red500: '#dc2626',
-  green500: '#00a63e',
-  slate400: '#94a3b8',
-  slate100: '#f1f5f9',
-  slate800: '#1e293b',
-};
 
 /* ----------------------------------------
    Monitoring Time Controls Component

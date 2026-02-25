@@ -37,10 +37,71 @@ export function PieChartPage() {
         </div>
       }
       tokens={
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>radius: 90px</code> · <code>label-threshold: 15%</code> ·{' '}
-          <code>legend: external</code> · <code>legend-scroll: 60px</code>
-        </div>
+        <VStack gap={4}>
+          <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            <code>radius: 90px</code> · <code>label-threshold: 15%</code> ·{' '}
+            <code>legend: external</code> · <code>legend-scroll: 60px</code>
+          </div>
+
+          <VStack gap={2}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Primary 5-color palette
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { name: 'cyan400', hex: '#22d3ee', label: '1st series' },
+                { name: 'emerald400', hex: '#34d399', label: '2nd series' },
+                { name: 'amber400', hex: '#fbbf24', label: '3rd series' },
+                { name: 'violet400', hex: '#a78bfa', label: '4th series' },
+                { name: 'fuchsia400', hex: '#e879f9', label: '5th series' },
+              ].map((c) => (
+                <div
+                  key={c.name}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)]"
+                >
+                  <div
+                    className="w-3 h-3 rounded-full shrink-0"
+                    style={{ backgroundColor: c.hex }}
+                  />
+                  <span className="text-body-sm text-[var(--color-text-default)]">{c.name}</span>
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">{c.hex}</span>
+                </div>
+              ))}
+            </div>
+          </VStack>
+
+          <VStack gap={2}>
+            <span className="text-label-md text-[var(--color-text-default)]">Extended palette</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { name: 'pink400', hex: '#f472b6' },
+                { name: 'red400', hex: '#f87171' },
+                { name: 'blue400', hex: '#60a5fa' },
+                { name: 'teal400', hex: '#2dd4bf' },
+                { name: 'orange400', hex: '#fb923c' },
+                { name: 'indigo400', hex: '#818cf8' },
+              ].map((c) => (
+                <div
+                  key={c.name}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)]"
+                >
+                  <div
+                    className="w-3 h-3 rounded-full shrink-0"
+                    style={{ backgroundColor: c.hex }}
+                  />
+                  <span className="text-body-sm text-[var(--color-text-default)]">{c.name}</span>
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">{c.hex}</span>
+                </div>
+              ))}
+            </div>
+          </VStack>
+
+          <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+            CSS tokens: <code>--chart-color-1</code> … <code>--chart-color-10</code> · Import:{' '}
+            <code>{'chartColors, primaryChartColors, extendedChartColors'}</code> from{' '}
+            <code>ChartComponents</code>
+          </div>
+        </VStack>
       }
       examples={
         <VStack gap={8}>

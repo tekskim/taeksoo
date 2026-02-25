@@ -497,8 +497,8 @@ export default function CreateHPAPage() {
             {/* Basic Information Section */}
             <SectionCard>
               <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Namespace */}
                   <FormField required>
                     <FormField.Label>Namespace</FormField.Label>

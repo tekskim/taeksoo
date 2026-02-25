@@ -19,31 +19,7 @@ import {
   IconArrowsMinimize,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
-
-/* ----------------------------------------
-   Chart Colors (from design system)
-   ---------------------------------------- */
-const chartColors = {
-  cyan400: '#22d3ee',
-  emerald400: '#34d399',
-  amber400: '#fbbf24',
-  violet400: '#a78bfa',
-  fuchsia400: '#e879f9',
-  blue400: '#60a5fa',
-  green400: '#4ade80',
-  pink400: '#f472b6',
-  rose400: '#fb7185',
-  teal400: '#2dd4bf',
-  orange400: '#fb923c',
-  red400: '#f87171',
-  indigo400: '#818cf8',
-  lime400: '#a3e635',
-  sky400: '#38bdf8',
-  yellow400: '#facc15',
-  slate400: '#94a3b8',
-  slate100: '#f1f5f9',
-  slate800: '#1e293b',
-};
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Line Chart Component (Design system Style)

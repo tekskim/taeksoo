@@ -84,6 +84,45 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --semantic-color-state-danger-bg: #fef2f2; /* red50 */
 ```
 
+### Chart Color Palette
+
+Primary 5-color palette (used for line/area chart series):
+
+| # | Token | Name | Hex | Usage |
+|---|---|---|---|---|
+| 1 | `--chart-color-1` | cyan400 | `#22d3ee` | 1st series |
+| 2 | `--chart-color-2` | emerald400 | `#34d399` | 2nd series |
+| 3 | `--chart-color-3` | amber400 | `#fbbf24` | 3rd series |
+| 4 | `--chart-color-4` | violet400 | `#a78bfa` | 4th series |
+| 5 | `--chart-color-5` | fuchsia400 | `#e879f9` | 5th series |
+
+Extended palette (for pages needing more than 5 series):
+
+| # | Token | Name | Hex |
+|---|---|---|---|
+| 6 | `--chart-color-6` | pink400 | `#f472b6` |
+| 7 | `--chart-color-7` | red400 | `#f87171` |
+| 8 | `--chart-color-8` | blue400 | `#60a5fa` |
+| 9 | `--chart-color-9` | teal400 | `#2dd4bf` |
+| 10 | `--chart-color-10` | orange400 | `#fb923c` |
+
+Utility colors:
+
+| Token | Name | Hex | Usage |
+|---|---|---|---|
+| `--chart-color-neutral` | slate400 | `#94a3b8` | Grid lines, neutral series |
+| `--chart-color-grid` | slate100 | `#f1f5f9` | Grid background |
+| `--chart-color-text` | slate800 | `#1e293b` | Axis text, labels |
+
+```tsx
+// Import canonical chart colors (never redefine locally)
+import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/design-system-sections/ChartComponents';
+
+// primaryChartColors — first 5 colors (array)
+// extendedChartColors — all 10 colors (array)
+// chartColors — keyed object (chartColors.cyan400, chartColors.emerald400, etc.)
+```
+
 ### Spacing (px 단위)
 
 > **Note**: Spacing과 Radius는 px 단위로 정의되어 브라우저 font-size 설정에 관계없이 일관된 크기를 보장합니다.
@@ -243,12 +282,20 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 ### Card
 
 ```css
---card-padding-sm: 0.75rem;  /* 12px */
---card-padding-md: 1rem;     /* 16px */
---card-padding-lg: 1.5rem;   /* 24px */
---card-radius: 0.5rem;       /* 8px */
---card-gap: 1rem;            /* 16px */
+--card-padding-sm: 0.75rem;      /* 12px */
+--card-padding-md: 1rem;         /* 16px */
+--card-padding-lg: 1.5rem;       /* 24px */
+--card-padding-bottom: 1.5rem;   /* 24px */
+--card-radius: 0.5rem;           /* 8px */
+--card-gap: 0.75rem;             /* 12px */
 ```
+
+**SectionCard specific:**
+- Top padding: `pt-3` (12px)
+- Bottom padding: `pb-6` (24px)
+- Horizontal padding: `px-4` (16px)
+- Internal gap (Header ↔ Content): `gap-3` (12px)
+- Header divider → content total: 24px (gap-3 12px + Content pt-3 12px)
 
 ### Modal
 
@@ -1048,6 +1095,7 @@ const shellPanel = useShellPanel();
 | Border Radius | `rounded-[4px]`, `rounded-[6px]`, `rounded-[8px]` | `rounded-[var(--primitive-radius-sm)]`, `rounded-[var(--primitive-radius-md)]`, `rounded-[var(--primitive-radius-lg)]` |
 | 색상 | `#2563eb`, `bg-blue-500` | `var(--color-action-primary)`, `var(--color-state-*)` |
 | Fallback 색상 | `var(--color-xxx, #ffffff)` | `var(--color-xxx)` (fallback 제거) |
+| 차트 색상 | 로컬 `const chartColors = { ... }` 재정의 | `import { chartColors } from '@/pages/design-system-sections/ChartComponents'` |
 
 ## 아이콘
 
