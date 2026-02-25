@@ -196,7 +196,7 @@ function BasicInfoSection({
   onDescriptionChange,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -299,7 +299,7 @@ function BudgetSection({
   onMaxUnavailablePodsChange,
 }: BudgetSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Budget" showDivider />
       <SectionCard.Content className="pt-3">
         <div className="flex gap-3">
@@ -385,7 +385,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
   );
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header
         title="Selector"
         description="Selector keys and values are intended to match labels and values on existing pods."
@@ -549,7 +549,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>

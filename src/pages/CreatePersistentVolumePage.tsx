@@ -199,7 +199,7 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -380,7 +380,7 @@ function StorageConfigSection({
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -631,7 +631,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>

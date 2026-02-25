@@ -495,7 +495,7 @@ export default function CreateHPAPage() {
           {/* Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Basic information" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -548,7 +548,7 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Target Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Target" />
               <SectionCard.Content>
                 <VStack gap={6}>
@@ -589,7 +589,7 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Behavior Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Behavior" />
               <SectionCard.Content>
                 <VStack gap={6}>
@@ -621,7 +621,7 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Metrics Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Metrics" />
               <SectionCard.Content>
                 <VStack gap={2}>
@@ -851,7 +851,7 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
               <SectionCard.Content>
                 <VStack gap={6}>

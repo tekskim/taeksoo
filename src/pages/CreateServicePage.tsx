@@ -554,7 +554,7 @@ export function CreateServicePage() {
           {/* Form Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Basic information" showDivider />
               <SectionCard.Content>
                 <VStack gap={4}>
@@ -620,7 +620,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Service Ports Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Service ports" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -734,7 +734,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* IP Addresses Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="IP Addresses" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -805,7 +805,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Selectors Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header
                 title="Selectors"
                 description="Selector keys and values are intended to match labels and values on existing pods."
@@ -927,7 +927,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Session Affinity Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Session affinity" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -964,7 +964,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>

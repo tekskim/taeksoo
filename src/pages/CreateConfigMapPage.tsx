@@ -207,7 +207,7 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -283,7 +283,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Data" showDivider />
       <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -384,7 +384,7 @@ function BinaryDataSection({
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Binary data" showDivider />
       <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -483,7 +483,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>

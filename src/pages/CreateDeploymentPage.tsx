@@ -60,12 +60,6 @@ const NAMESPACE_OPTIONS = [
   { value: 'production', label: 'production' },
 ];
 
-// Unit options
-const UNIT_OPTIONS = [
-  { value: '%', label: '%' },
-  { value: 'pods', label: 'Pods' },
-];
-
 // Mock namespace data for selection table
 interface NamespaceData {
   id: string;
@@ -501,7 +495,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -599,7 +593,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -738,6 +732,11 @@ function LabelsAnnotationsSection({
    ScalingPolicySection Component
    ---------------------------------------- */
 
+const UNIT_OPTIONS = [
+  { value: '%', label: '%' },
+  { value: 'pods', label: 'Pods' },
+];
+
 interface ScalingPolicySectionProps {
   strategy: 'rolling-update' | 'on-delete';
   onStrategyChange: (value: 'rolling-update' | 'on-delete') => void;
@@ -776,7 +775,7 @@ function ScalingPolicySection({
   onProgressDeadlineChange,
 }: ScalingPolicySectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Scaling and Upgrade Policy" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -833,12 +832,26 @@ function ScalingPolicySection({
                 The maximum number of additional pods that can be created during an update.
               </p>
             </VStack>
-            <HStack gap={2}>
-              <NumberInput value={maxSurge} onChange={onMaxSurgeChange} min={0} width="xs" />
+            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={0}
+                max={100}
+                step={5}
+                value={maxSurge}
+                onChange={onMaxSurgeChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={maxSurge}
+                onChange={onMaxSurgeChange}
+                min={0}
+                max={100}
+                width="xs"
+              />
               <Select
                 options={UNIT_OPTIONS}
                 value={maxSurgeUnit}
-                onChange={(value) => onMaxSurgeUnitChange(value)}
+                onChange={(v) => onMaxSurgeUnitChange(v)}
                 className="w-[80px]"
               />
             </HStack>
@@ -854,17 +867,26 @@ function ScalingPolicySection({
                 The maximum number of pods that can be unavailable during an update.
               </p>
             </VStack>
-            <HStack gap={2}>
+            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={0}
+                max={100}
+                step={5}
+                value={maxUnavailable}
+                onChange={onMaxUnavailableChange}
+                className="flex-1"
+              />
               <NumberInput
                 value={maxUnavailable}
                 onChange={onMaxUnavailableChange}
                 min={0}
+                max={100}
                 width="xs"
               />
               <Select
                 options={UNIT_OPTIONS}
                 value={maxUnavailableUnit}
-                onChange={(value) => onMaxUnavailableUnitChange(value)}
+                onChange={(v) => onMaxUnavailableUnitChange(v)}
                 className="w-[80px]"
               />
             </HStack>
@@ -879,21 +901,25 @@ function ScalingPolicySection({
                 available.
               </p>
             </VStack>
-            <VStack gap={2}>
-              <HStack gap={2} align="center">
-                <NumberInput
-                  value={minReady}
-                  onChange={onMinReadyChange}
-                  min={0}
-                  max={300}
-                  width="xs"
-                />
-                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                  Seconds
-                </span>
-              </HStack>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">0-300</span>
-            </VStack>
+            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={0}
+                max={300}
+                step={10}
+                value={minReady}
+                onChange={onMinReadyChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={minReady}
+                onChange={onMinReadyChange}
+                min={0}
+                max={300}
+                width="xs"
+                suffix="Seconds"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0–300</span>
           </VStack>
 
           {/* Revision History Limit */}
@@ -906,21 +932,25 @@ function ScalingPolicySection({
                 The maximum number of revision histories to retain for the Deployment.
               </p>
             </VStack>
-            <VStack gap={2}>
-              <HStack gap={2} align="center">
-                <NumberInput
-                  value={revisionHistoryLimit}
-                  onChange={onRevisionHistoryLimitChange}
-                  min={1}
-                  max={100}
-                  width="xs"
-                />
-                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                  Revisions
-                </span>
-              </HStack>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">1-100</span>
-            </VStack>
+            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={1}
+                max={100}
+                step={1}
+                value={revisionHistoryLimit}
+                onChange={onRevisionHistoryLimitChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={revisionHistoryLimit}
+                onChange={onRevisionHistoryLimitChange}
+                min={1}
+                max={100}
+                width="xs"
+                suffix="Revisions"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">1–100</span>
           </VStack>
 
           {/* Progress Deadline */}
@@ -934,25 +964,134 @@ function ScalingPolicySection({
                 failed.
               </p>
             </VStack>
-            <VStack gap={2}>
-              <HStack gap={2} align="center">
-                <NumberInput
-                  value={progressDeadline}
-                  onChange={onProgressDeadlineChange}
-                  min={60}
-                  max={3600}
-                  width="xs"
-                />
-                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                  Seconds
-                </span>
-              </HStack>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">60-3600</span>
-            </VStack>
+            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+              <Slider
+                min={60}
+                max={3600}
+                step={60}
+                value={progressDeadline}
+                onChange={onProgressDeadlineChange}
+                className="flex-1"
+              />
+              <NumberInput
+                value={progressDeadline}
+                onChange={onProgressDeadlineChange}
+                min={60}
+                max={3600}
+                width="xs"
+                suffix="Seconds"
+              />
+            </HStack>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">60–3600</span>
           </VStack>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   EnvVarTypeSection Component
+   ---------------------------------------- */
+
+const ENV_VAR_TYPE_LABELS: Record<string, string> = {
+  value: 'Key/Value Pair',
+  resource: 'Resource',
+  'configmap-key': 'ConfigMap Key',
+  'secret-key': 'Secret Key',
+  'pod-field': 'Pod Field',
+  secret: 'Secret',
+  configmap: 'ConfigMap',
+};
+
+function EnvVarTypeSection({
+  title,
+  type,
+  columns,
+  placeholders,
+  config,
+  containerId,
+  updateContainerConfig,
+}: {
+  title: string;
+  type: string;
+  columns: [string, string];
+  placeholders: [string, string];
+  config: { envVars?: { name: string; value: string; type: string }[] };
+  containerId: string;
+  updateContainerConfig: (id: string, updates: Record<string, unknown>) => void;
+}) {
+  const rows = (config.envVars || [])
+    .map((ev, i) => ({ ...ev, _idx: i }))
+    .filter((ev) => ev.type === type);
+
+  const addRow = () => {
+    const newEnvVars = [...(config.envVars || []), { name: '', value: '', type }];
+    updateContainerConfig(containerId, { envVars: newEnvVars });
+  };
+
+  const removeRow = (originalIndex: number) => {
+    const newEnvVars = (config.envVars || []).filter((_, i) => i !== originalIndex);
+    updateContainerConfig(containerId, { envVars: newEnvVars });
+  };
+
+  const updateRow = (originalIndex: number, field: 'name' | 'value', val: string) => {
+    const newEnvVars = [...(config.envVars || [])];
+    newEnvVars[originalIndex] = { ...newEnvVars[originalIndex], [field]: val };
+    updateContainerConfig(containerId, { envVars: newEnvVars });
+  };
+
+  return (
+    <VStack gap={3}>
+      <span className="text-label-lg text-[var(--color-text-default)]">{title}</span>
+      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+        <VStack gap={2} className="w-full">
+          {rows.length > 0 && (
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                {columns[0]}
+              </span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">
+                {columns[1]}
+              </span>
+              <div />
+            </div>
+          )}
+          {rows.map((row) => (
+            <div key={row._idx} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+              <Input
+                placeholder={placeholders[0]}
+                fullWidth
+                value={row.name}
+                onChange={(e) => updateRow(row._idx, 'name', e.target.value)}
+              />
+              <Input
+                placeholder={placeholders[1]}
+                fullWidth
+                value={row.value}
+                onChange={(e) => updateRow(row._idx, 'value', e.target.value)}
+              />
+              <button
+                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => removeRow(row._idx)}
+              >
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </div>
+          ))}
+          <div className="w-fit">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+              onClick={addRow}
+            >
+              Add Variable
+            </Button>
+          </div>
+        </VStack>
+      </div>
+    </VStack>
   );
 }
 
@@ -1053,7 +1192,14 @@ export function CreateDeploymentPage() {
     envVars: {
       name: string;
       value: string;
-      type: 'value' | 'configmap' | 'secret';
+      type:
+        | 'value'
+        | 'resource'
+        | 'configmap-key'
+        | 'secret-key'
+        | 'pod-field'
+        | 'secret'
+        | 'configmap';
       configMapName?: string;
       configMapKey?: string;
       secretName?: string;
@@ -1150,7 +1296,17 @@ export function CreateDeploymentPage() {
       // Ports
       ports: [],
       // Environment Variables
-      envVars: isV2 ? [{ name: '', value: '', type: 'value' as const }] : [],
+      envVars: isV2
+        ? [
+            { name: '', value: '', type: 'value' as const },
+            { name: '', value: '', type: 'resource' as const },
+            { name: '', value: '', type: 'configmap-key' as const },
+            { name: '', value: '', type: 'secret-key' as const },
+            { name: '', value: '', type: 'pod-field' as const },
+            { name: '', value: '', type: 'secret' as const },
+            { name: '', value: '', type: 'configmap' as const },
+          ]
+        : [],
       // Service Account
       serviceAccountName: '',
       // Lifecycle Hooks
@@ -1852,7 +2008,7 @@ export function CreateDeploymentPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6}>
+      <VStack gap={8}>
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -1958,7 +2114,7 @@ export function CreateDeploymentPage() {
             {activeTab === 'pod' && (
               <>
                 {/* Labels & Annotations */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Labels & Annotations" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -2109,7 +2265,7 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Scaling and Upgrade Policy */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -2151,16 +2307,16 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Networking */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
                   <SectionCard.Content>
-                    <VStack gap={6}>
+                    <VStack gap={8}>
                       {/* Network Settings */}
-                      <VStack gap={6}>
+                      <VStack gap={8}>
                         <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
                         </h6>
-                        <VStack gap={6} className="w-full">
+                        <VStack gap={8} className="w-full">
                           <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
@@ -2501,7 +2657,7 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Node Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Node scheduling" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -2515,7 +2671,7 @@ export function CreateDeploymentPage() {
                       </RadioGroup>
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Specific node(s)
                             </span>
@@ -2575,7 +2731,7 @@ export function CreateDeploymentPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <VStack gap={3} className="w-full">
+                                  <VStack gap={8} className="w-full">
                                     <VStack gap={2} className="w-full">
                                       <VStack gap={1}>
                                         <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -2783,7 +2939,7 @@ export function CreateDeploymentPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     <div className="flex items-start justify-between w-full">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Rule {termIndex + 1}
@@ -2804,7 +2960,7 @@ export function CreateDeploymentPage() {
                                       </button>
                                     </div>
 
-                                    <VStack gap={3} className="w-full">
+                                    <VStack gap={8} className="w-full">
                                       <VStack gap={2} className="w-full">
                                         <VStack gap={1}>
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -3022,16 +3178,16 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Pod Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content>
-                    <VStack gap={6}>
+                    <VStack gap={8}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
                         >
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             {/* Type Section */}
                             <VStack gap={2}>
                               <div className="flex items-start justify-between w-full">
@@ -3454,10 +3610,10 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Resources */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Resources" />
                   <SectionCard.Content>
-                    <VStack gap={6}>
+                    <VStack gap={8}>
                       {/* Tolerations */}
                       <VStack gap={3}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3596,7 +3752,7 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Security Context */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Security context" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -3619,7 +3775,7 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Storage */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Storage" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={2}>
@@ -3628,7 +3784,7 @@ export function CreateDeploymentPage() {
                           key={index}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                         >
-                          <VStack gap={2}>
+                          <VStack gap={8}>
                             {/* Header with type title and close button */}
                             <div className="flex items-start justify-between w-full">
                               <h6 className="text-heading-h6 text-[var(--color-text-default)]">
@@ -3652,7 +3808,7 @@ export function CreateDeploymentPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
+                                <VStack gap={8} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3721,7 +3877,7 @@ export function CreateDeploymentPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
+                                <VStack gap={8} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3788,7 +3944,7 @@ export function CreateDeploymentPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <VStack gap={6} className="py-3 w-full">
+                                <VStack gap={8} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3838,7 +3994,7 @@ export function CreateDeploymentPage() {
                             {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Persistent Volume Claim Name{' '}
@@ -3877,7 +4033,7 @@ export function CreateDeploymentPage() {
                                     </RadioGroup>
 
                                     {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
-                                      <VStack gap={6}>
+                                      <VStack gap={8}>
                                         <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
@@ -3998,7 +4154,7 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   </VStack>
                                 </div>
-                                <VStack gap={2} className="py-3 w-full">
+                                <VStack gap={2} className="w-full">
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     Volume Name{' '}
                                     <span className="text-[var(--color-state-danger)]">*</span>
@@ -4029,26 +4185,24 @@ export function CreateDeploymentPage() {
                         </div>
                       ))}
 
-                      <div className="w-[calc(50%-12px)]">
-                        <Select
-                          options={[
-                            { value: 'configmap', label: 'ConfigMap' },
-                            { value: 'secret', label: 'Secret' },
-                            { value: 'pvc', label: 'Persistent volume claim' },
-                            { value: 'create-pvc', label: 'Create persistent volume claim' },
-                          ]}
-                          value=""
-                          onChange={(val) => addVolume(val)}
-                          placeholder="Add volume"
-                          fullWidth
-                        />
-                      </div>
+                      <Select
+                        options={[
+                          { value: 'configmap', label: 'ConfigMap' },
+                          { value: 'secret', label: 'Secret' },
+                          { value: 'pvc', label: 'Persistent volume claim' },
+                          { value: 'create-pvc', label: 'Create persistent volume claim' },
+                        ]}
+                        value=""
+                        onChange={(val) => addVolume(val)}
+                        placeholder="Add volume"
+                        fullWidth
+                      />
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
 
                 {/* Volume Claim Templates */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Volume claim templates" />
                   <SectionCard.Content className="pt-3">
                     <div className="w-full">
@@ -4068,7 +4222,7 @@ export function CreateDeploymentPage() {
                                 stroke={1.5}
                               />
                             </button>
-                            <VStack gap={6}>
+                            <VStack gap={8}>
                               <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
@@ -4100,7 +4254,7 @@ export function CreateDeploymentPage() {
                               </RadioGroup>
 
                               {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={3}>
+                                <VStack gap={8}>
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
@@ -4279,7 +4433,7 @@ export function CreateDeploymentPage() {
                   const showHeaders = options?.showHeaders ?? false;
                   return (
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={6}>
+                      <VStack gap={8}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           {label}
                         </span>
@@ -4679,7 +4833,7 @@ export function CreateDeploymentPage() {
                 return (
                   <>
                     {/* 1. Basic Information Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4708,8 +4862,40 @@ export function CreateDeploymentPage() {
                                 })
                               }
                             >
-                              <Radio value="init" label="Init container" />
-                              <Radio value="standard" label="Standard container" />
+                              <Radio
+                                value="init"
+                                label={
+                                  <HStack gap={1} align="center">
+                                    <span>Init container</span>
+                                    <Tooltip
+                                      content="Runs before app containers start. Used for setup tasks like fetching configs or waiting for dependencies."
+                                      position="right"
+                                    >
+                                      <IconHelpCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                }
+                              />
+                              <Radio
+                                value="standard"
+                                label={
+                                  <HStack gap={1} align="center">
+                                    <span>Standard container</span>
+                                    <Tooltip
+                                      content="The main application container that runs for the lifetime of the pod."
+                                      position="right"
+                                    >
+                                      <IconHelpCircle
+                                        size={14}
+                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                      />
+                                    </Tooltip>
+                                  </HStack>
+                                }
+                              />
                             </RadioGroup>
                           </VStack>
                         </VStack>
@@ -4717,7 +4903,7 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 2. Image Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4732,18 +4918,16 @@ export function CreateDeploymentPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Input
-                                placeholder="nginx:latest"
-                                fullWidth
-                                value={config.image || ''}
-                                onChange={(e) =>
-                                  updateContainerConfig(containerId, {
-                                    image: e.target.value,
-                                  })
-                                }
-                              />
-                            </div>
+                            <Input
+                              placeholder="nginx:latest"
+                              fullWidth
+                              value={config.image || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  image: e.target.value,
+                                })
+                              }
+                            />
                           </VStack>
                           <VStack gap={2}>
                             <VStack gap={1}>
@@ -4755,22 +4939,20 @@ export function CreateDeploymentPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Select
-                                options={[
-                                  { value: 'Always', label: 'Always' },
-                                  { value: 'IfNotPresent', label: 'If not present' },
-                                  { value: 'Never', label: 'Never' },
-                                ]}
-                                value={config.imagePullPolicy || 'IfNotPresent'}
-                                onChange={(val) =>
-                                  updateContainerConfig(containerId, {
-                                    imagePullPolicy: val,
-                                  })
-                                }
-                                fullWidth
-                              />
-                            </div>
+                            <Select
+                              options={[
+                                { value: 'Always', label: 'Always' },
+                                { value: 'IfNotPresent', label: 'If not present' },
+                                { value: 'Never', label: 'Never' },
+                              ]}
+                              value={config.imagePullPolicy || 'IfNotPresent'}
+                              onChange={(val) =>
+                                updateContainerConfig(containerId, {
+                                  imagePullPolicy: val,
+                                })
+                              }
+                              fullWidth
+                            />
                           </VStack>
                           <VStack gap={2}>
                             <VStack gap={1}>
@@ -4782,121 +4964,226 @@ export function CreateDeploymentPage() {
                                 pod is forcibly terminated.
                               </span>
                             </VStack>
-                            <div className="w-[calc(50%-12px)]">
-                              <Select
-                                options={[
-                                  { value: '', label: 'Select a secret...' },
-                                  { value: 'docker-registry', label: 'docker-registry' },
-                                  { value: 'gcr-secret', label: 'gcr-secret' },
-                                ]}
-                                value={config.pullSecrets || ''}
-                                onChange={(val) =>
-                                  updateContainerConfig(containerId, {
-                                    pullSecrets: val,
-                                  })
-                                }
-                                fullWidth
-                              />
-                            </div>
+                            <Select
+                              options={[
+                                { value: '', label: 'Select a secret...' },
+                                { value: 'docker-registry', label: 'docker-registry' },
+                                { value: 'gcr-secret', label: 'gcr-secret' },
+                              ]}
+                              value={config.pullSecrets || ''}
+                              onChange={(val) =>
+                                updateContainerConfig(containerId, {
+                                  pullSecrets: val,
+                                })
+                              }
+                              fullWidth
+                            />
                           </VStack>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>
 
                     {/* 3. Environment Variables Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {(config.envVars || []).length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Type
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Variable Name
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div className="w-5" />
-                              </div>
-                            )}
-                            {(config.envVars || []).map((envVar, index) => (
-                              <div
-                                key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
-                              >
-                                <Select
-                                  options={[
-                                    { value: 'value', label: 'Key/Value Pair' },
-                                    { value: 'configmap', label: 'ConfigMap' },
-                                    { value: 'secret', label: 'Secret' },
-                                  ]}
-                                  value={envVar.type || 'value'}
-                                  onChange={(val) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      type: val as 'value' | 'configmap' | 'secret',
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="input variable name"
-                                  fullWidth
-                                  value={envVar.name}
-                                  onChange={(e) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      name: e.target.value,
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                />
-                                <Input
-                                  placeholder="input value"
-                                  fullWidth
-                                  value={envVar.value}
-                                  onChange={(e) => {
-                                    const newEnvVars = [...(config.envVars || [])];
-                                    newEnvVars[index] = {
-                                      ...newEnvVars[index],
-                                      value: e.target.value,
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
-                                />
-                                <button
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  onClick={() => {
-                                    const newEnvVars = (config.envVars || []).filter(
-                                      (_, i) => i !== index
-                                    );
-                                    updateContainerConfig(containerId, {
-                                      envVars: newEnvVars,
-                                    });
-                                  }}
+                          <VStack gap={2} className="w-full">
+                            {(config.envVars || []).map((envVar, index) => {
+                              const hasFourCols =
+                                envVar.type === 'resource' ||
+                                envVar.type === 'configmap-key' ||
+                                envVar.type === 'secret-key';
+                              const gridCols = hasFourCols
+                                ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                : 'grid-cols-[1fr_1fr_1fr_20px]';
+                              const valueColumnLabel: Record<string, string> = {
+                                value: 'Value',
+                                resource: 'Container Name',
+                                'configmap-key': 'ConfigMap',
+                                'secret-key': 'Secret',
+                                'pod-field': 'Key',
+                                secret: 'Secret',
+                                configmap: 'ConfigMap',
+                              };
+                              const fourthColumnLabel: Record<string, string> = {
+                                resource: 'Key',
+                                'configmap-key': 'Key',
+                                'secret-key': 'Key',
+                              };
+                              return (
+                                <div
+                                  key={index}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
+                                  <VStack gap={1}>
+                                    <div className={`grid ${gridCols} gap-2 w-full items-center`}>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        Type
+                                      </span>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        {envVar.type === 'secret' || envVar.type === 'configmap'
+                                          ? 'Prefix'
+                                          : 'Variable Name'}
+                                      </span>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        {valueColumnLabel[envVar.type || 'value'] || 'Value'}
+                                      </span>
+                                      {hasFourCols && (
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          {fourthColumnLabel[envVar.type] || ''}
+                                        </span>
+                                      )}
+                                      <button
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        onClick={() => {
+                                          const newEnvVars = (config.envVars || []).filter(
+                                            (_, i) => i !== index
+                                          );
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                    <div className={`grid ${gridCols} gap-2 w-full items-center`}>
+                                      <Select
+                                        options={[
+                                          { value: 'value', label: 'Key/Value Pair' },
+                                          { value: 'resource', label: 'Resource' },
+                                          { value: 'configmap-key', label: 'ConfigMap Key' },
+                                          { value: 'secret-key', label: 'Secret Key' },
+                                          { value: 'pod-field', label: 'Pod Field' },
+                                          { value: 'secret', label: 'Secret' },
+                                          { value: 'configmap', label: 'ConfigMap' },
+                                        ]}
+                                        value={envVar.type || 'value'}
+                                        onChange={(val) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            type: val as
+                                              | 'value'
+                                              | 'resource'
+                                              | 'configmap-key'
+                                              | 'secret-key'
+                                              | 'pod-field'
+                                              | 'secret'
+                                              | 'configmap',
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input variable name"
+                                        fullWidth
+                                        value={envVar.name}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <Input
+                                        placeholder={
+                                          envVar.type === 'resource'
+                                            ? 'input container name'
+                                            : envVar.type === 'configmap-key'
+                                              ? 'select configmap'
+                                              : envVar.type === 'secret-key'
+                                                ? 'select secret'
+                                                : 'input value'
+                                        }
+                                        fullWidth
+                                        value={envVar.value}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            value: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      {envVar.type === 'resource' && (
+                                        <Select
+                                          options={[
+                                            { value: 'limits.cpu', label: 'limits.cpu' },
+                                            { value: 'limits.memory', label: 'limits.memory' },
+                                            { value: 'requests.cpu', label: 'requests.cpu' },
+                                            { value: 'requests.memory', label: 'requests.memory' },
+                                          ]}
+                                          value={envVar.configMapName || ''}
+                                          onChange={(val) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              configMapName: val,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                          placeholder="Select resource"
+                                          fullWidth
+                                        />
+                                      )}
+                                      {envVar.type === 'configmap-key' && (
+                                        <Input
+                                          placeholder="input key"
+                                          fullWidth
+                                          value={envVar.configMapKey || ''}
+                                          onChange={(e) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              configMapKey: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                        />
+                                      )}
+                                      {envVar.type === 'secret-key' && (
+                                        <Input
+                                          placeholder="input key"
+                                          fullWidth
+                                          value={envVar.secretKey || ''}
+                                          onChange={(e) => {
+                                            const newEnvVars = [...(config.envVars || [])];
+                                            newEnvVars[index] = {
+                                              ...newEnvVars[index],
+                                              secretKey: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                        />
+                                      )}
+                                      <div />
+                                    </div>
+                                  </VStack>
+                                </div>
+                              );
+                            })}
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -4919,7 +5206,7 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 5. Service Account Name Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Service account name" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={2}>
@@ -4947,12 +5234,12 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 7. Lifecycle Hooks Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Lifecycle hooks" />
                       <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Post Start
@@ -5195,7 +5482,7 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Pre Stop */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <VStack gap={2}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
@@ -5440,12 +5727,12 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 8. Health Check Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Health check" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
                           {/* Readiness Check */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Readiness Check
                             </span>
@@ -5505,7 +5792,7 @@ export function CreateDeploymentPage() {
                             )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                <VStack gap={6}>
+                                <VStack gap={8}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
                                   <div className="flex gap-6 w-full">
                                     {(config.readinessProbe?.type === 'httpGet' ||
@@ -5936,7 +6223,7 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Liveness Check */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Liveness Check
                             </span>
@@ -5997,7 +6284,7 @@ export function CreateDeploymentPage() {
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.livenessProbe?.type === 'httpGet' ||
@@ -6220,7 +6507,7 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Startup Check */}
-                          <VStack gap={6}>
+                          <VStack gap={8}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Startup Check
                             </span>
@@ -6281,7 +6568,7 @@ export function CreateDeploymentPage() {
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={6}>
+                                  <VStack gap={8}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.startupProbe?.type === 'httpGet' ||
@@ -6507,7 +6794,7 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 9. Resources Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Resources" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6618,7 +6905,7 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 10. Security Context Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Security context" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6828,7 +7115,7 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 11. Storage Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Storage" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
