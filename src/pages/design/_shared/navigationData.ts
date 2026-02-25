@@ -38,6 +38,12 @@ import {
   IconApps,
   IconPencil,
   IconLayoutList,
+  IconAccessible,
+  IconBrush,
+  IconChecklist,
+  IconUsers,
+  IconBook,
+  IconComponents,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -93,6 +99,24 @@ const foundationItems: NavItem[] = [
     label: 'UX Writing Guide',
     icon: IconPencil,
     path: '/design/foundation/ux-writing',
+  },
+  {
+    id: 'accessibility',
+    label: 'Accessibility',
+    icon: IconAccessible,
+    path: '/design/foundation/accessibility',
+  },
+  {
+    id: 'theming',
+    label: 'Theming',
+    icon: IconBrush,
+    path: '/design/foundation/theming',
+  },
+  {
+    id: 'contributing',
+    label: 'Contributing',
+    icon: IconUsers,
+    path: '/design/foundation/contributing',
   },
 ];
 
@@ -284,6 +308,12 @@ const layoutItems: NavItem[] = [
     icon: IconForms,
     path: '/design/patterns/dynamic-form-fields',
   },
+  {
+    id: 'form-validation',
+    label: 'Form Validation',
+    icon: IconChecklist,
+    path: '/design/patterns/form-validation',
+  },
 ];
 
 const graphItems: NavItem[] = [
@@ -327,6 +357,27 @@ const graphItems: NavItem[] = [
   },
 ];
 
+const figmaItems: NavItem[] = [
+  {
+    id: 'figma-guide',
+    label: 'Migration Guide',
+    icon: IconBook,
+    path: '/design/figma/guide',
+  },
+  {
+    id: 'figma-foundation',
+    label: 'Foundation Capture',
+    icon: IconPalette,
+    path: '/design/figma/foundation',
+  },
+  {
+    id: 'figma-components',
+    label: 'Components Capture',
+    icon: IconComponents,
+    path: '/design/figma/components',
+  },
+];
+
 export const navGroups: NavGroup[] = [
   { title: 'Foundation', items: foundationItems },
   { title: 'Form Controls', items: formControlItems },
@@ -336,6 +387,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Overlay', items: overlayItems },
   { title: 'Layout', items: layoutItems },
   { title: 'Graphs', items: graphItems },
+  { title: 'Figma Migration', items: figmaItems },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
