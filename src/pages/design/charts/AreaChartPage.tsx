@@ -43,18 +43,18 @@ export function AreaChartPage() {
             <span className="text-label-md text-[var(--color-text-default)]">
               Primary 5-color palette
             </span>
-            <div className="flex flex-wrap gap-2">
+            <VStack gap={1}>
               {[
-                { name: 'cyan400', hex: '#22d3ee', label: '1st series' },
-                { name: 'emerald400', hex: '#34d399', label: '2nd series' },
-                { name: 'amber400', hex: '#fbbf24', label: '3rd series' },
-                { name: 'violet400', hex: '#a78bfa', label: '4th series' },
-                { name: 'fuchsia400', hex: '#e879f9', label: '5th series' },
+                { seq: 1, name: 'cyan400', hex: '#22d3ee', label: '1st series' },
+                { seq: 2, name: 'emerald400', hex: '#34d399', label: '2nd series' },
+                { seq: 3, name: 'amber400', hex: '#fbbf24', label: '3rd series' },
+                { seq: 4, name: 'violet400', hex: '#a78bfa', label: '4th series' },
+                { seq: 5, name: 'fuchsia400', hex: '#e879f9', label: '5th series' },
               ].map((c) => (
-                <div
-                  key={c.name}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)]"
-                >
+                <div key={c.name} className="flex items-center gap-1.5 px-2 py-1">
+                  <span className="text-body-xs text-[var(--color-text-subtle)] w-3 text-right shrink-0">
+                    {c.seq}
+                  </span>
                   <div
                     className="w-3 h-3 rounded-full shrink-0"
                     style={{ backgroundColor: c.hex }}
@@ -63,24 +63,24 @@ export function AreaChartPage() {
                   <span className="text-body-xs text-[var(--color-text-subtle)]">{c.hex}</span>
                 </div>
               ))}
-            </div>
+            </VStack>
           </VStack>
 
           <VStack gap={2}>
             <span className="text-label-md text-[var(--color-text-default)]">Extended palette</span>
-            <div className="flex flex-wrap gap-2">
+            <VStack gap={1}>
               {[
-                { name: 'pink400', hex: '#f472b6' },
-                { name: 'red400', hex: '#f87171' },
-                { name: 'blue400', hex: '#60a5fa' },
-                { name: 'teal400', hex: '#2dd4bf' },
-                { name: 'orange400', hex: '#fb923c' },
-                { name: 'indigo400', hex: '#818cf8' },
+                { seq: 6, name: 'pink400', hex: '#f472b6' },
+                { seq: 7, name: 'red400', hex: '#f87171' },
+                { seq: 8, name: 'blue400', hex: '#60a5fa' },
+                { seq: 9, name: 'teal400', hex: '#2dd4bf' },
+                { seq: 10, name: 'orange400', hex: '#fb923c' },
+                { seq: 11, name: 'indigo400', hex: '#818cf8' },
               ].map((c) => (
-                <div
-                  key={c.name}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)]"
-                >
+                <div key={c.name} className="flex items-center gap-1.5 px-2 py-1">
+                  <span className="text-body-xs text-[var(--color-text-subtle)] w-3 text-right shrink-0">
+                    {c.seq}
+                  </span>
                   <div
                     className="w-3 h-3 rounded-full shrink-0"
                     style={{ backgroundColor: c.hex }}
@@ -89,7 +89,7 @@ export function AreaChartPage() {
                   <span className="text-body-xs text-[var(--color-text-subtle)]">{c.hex}</span>
                 </div>
               ))}
-            </div>
+            </VStack>
           </VStack>
 
           <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
