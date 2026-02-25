@@ -42,6 +42,7 @@ import {
   IconBrush,
   IconChecklist,
   IconUsers,
+  IconFileOff,
   IconBook,
   IconComponents,
 } from '@tabler/icons-react';
@@ -186,6 +187,12 @@ const feedbackItems: NavItem[] = [
     path: '/design/components/inline-message',
   },
   { id: 'loading', label: 'Loading', icon: IconLoader2, path: '/design/components/loading' },
+  {
+    id: 'empty-state',
+    label: 'EmptyState / ErrorState',
+    icon: IconFileOff,
+    path: '/design/components/empty-state',
+  },
 ];
 
 const navigationItems: NavItem[] = [
