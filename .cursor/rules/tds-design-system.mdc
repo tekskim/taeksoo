@@ -297,6 +297,46 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 - Internal gap (Header ↔ Content): `gap-3` (12px)
 - Header divider → content total: 24px (gap-3 12px + Content pt-3 12px)
 
+### DetailHeader
+
+```css
+--detail-header-padding: 16px 12px;  /* px-4 pt-3 pb-4 */
+--detail-header-radius: 8px;         /* rounded-lg */
+--detail-header-title: 16px semibold; /* text-heading-h5 */
+--detail-header-title-mb: 12px;      /* mb-3 */
+--detail-header-actions-gap: 4px;    /* gap-1 */
+--detail-header-actions-mb: 12px;    /* mb-3 */
+--info-grid-gap: 12px;               /* gap-3 */
+--info-card-padding: 16px 12px;      /* px-4 py-3 */
+--info-card-radius: 8px;             /* rounded-lg */
+--info-card-gap: 6px;                /* gap-1.5 */
+--info-card-label: 11px medium;      /* text-label-sm */
+--info-card-value: 12px regular;     /* text-body-md */
+```
+
+**InfoGrid 레이아웃 정책 (행당 최대 4개):**
+
+| InfoCard 갯수 | 행 배치 |
+|---|---|
+| 1~4 | 한 줄 |
+| 5 | 3 / 2 |
+| 6 | 4 / 2 |
+| 7 | 4 / 3 |
+| 8 | 4 / 4 |
+| 9 | 4 / 3 / 2 |
+| 10 | 4 / 4 / 2 |
+| 11 | 4 / 4 / 3 |
+| 12 | 4 / 4 / 4 |
+| 12+ | 4개씩 채워나감 |
+
+**InfoCard 배치 규칙:**
+- 권장 갯수: **4~6개** (가장 보편적인 사용 범위)
+- **Status**: 항상 첫 번째 카드에 배치. `status` prop으로 StatusIndicator 표시
+- **ID**: `copyable` 속성으로 클립보드 복사 기능 제공. 두 번째 카드에 배치 권장
+- **날짜**: Created at, Updated at 등 시간 정보. 마지막 카드에 배치 권장
+- **tooltip**: `tooltip` prop으로 라벨 옆 도움말 아이콘 표시 가능
+- ReactNode `value`: Badge, Chip 등 커스텀 값 표시 가능 (Labels, Annotations 등)
+
 ### Modal
 
 | Size | Width |
@@ -411,7 +451,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 - **HStack**: 수평 스택 (`gap`, `align`, `justify`)
 - **Container**: 컨테이너 (`maxWidth`, `padding`)
 - **SectionCard**: 섹션 카드 (Header, Content, DataRow)
-- **DetailHeader**: 상세 페이지 헤더
+- **DetailHeader**: 상세 페이지 헤더 (Title, Actions, InfoGrid, InfoCard)
 
 ### Navigation
 - **Tabs**: 탭 네비게이션 (`variant="underline|boxed"`)
@@ -778,6 +818,61 @@ const menuItems = [
 <FormField label="Name" helperText="Help text">
   <Input fullWidth />
 </FormField>
+```
+
+## DetailHeader 사용법
+
+```tsx
+// 기본 — 상세 페이지 헤더 (Title + Actions + InfoGrid)
+<DetailHeader>
+  <DetailHeader.Title>{resourceName}</DetailHeader.Title>
+
+  <DetailHeader.Actions>
+    <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+    <ContextMenu items={menuItems} trigger="click">
+      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+        More Actions
+      </Button>
+    </ContextMenu>
+  </DetailHeader.Actions>
+
+  <DetailHeader.InfoGrid>
+    <DetailHeader.InfoCard label="Status" status="active" />
+    <DetailHeader.InfoCard label="ID" value={resource.id} copyable />
+    <DetailHeader.InfoCard label="Host" value={resource.host} />
+    <DetailHeader.InfoCard label="Created at" value={resource.createdAt} />
+  </DetailHeader.InfoGrid>
+</DetailHeader>
+
+// Tooltip이 있는 InfoCard
+<DetailHeader.InfoCard label="IOPS" value="3000" tooltip="Input/Output Operations Per Second" />
+
+// ReactNode value (Labels, Annotations 등)
+<DetailHeader.InfoCard
+  label={`Labels (${labelCount})`}
+  value={
+    <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+      <Badge theme="white" size="sm">{firstLabel}</Badge>
+      {labelCount > 1 && (
+        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+          (+{labelCount - 1})
+        </span>
+      )}
+    </div>
+  }
+/>
+
+// 5개 이상 — 자동으로 멀티 행 레이아웃
+<DetailHeader.InfoGrid>
+  <DetailHeader.InfoCard label="Status" status="active" />
+  <DetailHeader.InfoCard label="ID" value={id} copyable />
+  <DetailHeader.InfoCard label="Namespace" value="default" />
+  <DetailHeader.InfoCard label="Node" value="worker-01" />
+  <DetailHeader.InfoCard label="IP" value="10.0.0.1" />
+  <DetailHeader.InfoCard label="Created at" value="2026-02-25" />
+</DetailHeader.InfoGrid>
+{/* 6개 → 4 / 2 행 배치 */}
 ```
 
 ## SectionCard 사용법
@@ -1697,13 +1792,360 @@ Slider / RangeSlider 트랙은 고정 240px입니다. 별도의 max-width 래퍼
 </FormField>
 ```
 
+## 동적 폼 패턴 카탈로그
+
+동적으로 행을 추가/삭제하는 폼 패턴 8가지입니다. 모든 패턴은 `FormPatternsPage.tsx`에 구현 예시가 있습니다.
+
+### Pattern 1: Key-Value 쌍
+
+**사용 시점**: Labels, Annotations, 환경 변수 등 키-값 쌍을 동적으로 관리
+
+```tsx
+// State
+const [labels, setLabels] = useState<{ key: string; value: string }[]>([]);
+
+// Layout: grid-cols-[1fr_1fr_20px]
+<div className="grid grid-cols-[1fr_1fr_20px] gap-2 items-center">
+  {/* Header */}
+  <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
+  <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
+  <div />
+  {/* Rows */}
+  {labels.map((item, i) => (
+    <>
+      <Input value={item.key} onChange={...} fullWidth />
+      <Input value={item.value} onChange={...} fullWidth />
+      <button onClick={() => removeLabel(i)}><IconX size={14} /></button>
+    </>
+  ))}
+</div>
+<Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+  Add Label
+</Button>
+```
+
+### Pattern 2: Key-Value + 파일 읽기
+
+**사용 시점**: ConfigMap, Secret 등 파일에서 데이터를 불러올 수 있는 경우
+
+Pattern 1과 동일 구조 + Footer에 "Read from File" 버튼 추가:
+
+```tsx
+<HStack gap={2}>
+  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+    Add Data Entry
+  </Button>
+  <Button variant="outline" size="sm" leftIcon={<IconUpload size={12} />}>
+    Read from File
+  </Button>
+</HStack>
+```
+
+### Pattern 3: Key-Operator-Value
+
+**사용 시점**: Node Selector, Pod Affinity 등 연산자를 포함하는 표현식
+
+```tsx
+// State
+const [expressions, setExpressions] = useState<{ key: string; operator: string; value: string }[]>([]);
+
+// Layout: grid-cols-[1fr_140px_1fr_20px]
+// Header: Key | Operator | Value | (remove)
+// Row: Input | Select(In/NotIn/Exists/DoesNotExist/Gt/Lt) | Input | IconX
+```
+
+### Pattern 4: Multi-Column Ports
+
+**사용 시점**: Container Port, Service Port 등 4-5개 컬럼이 필요한 경우
+
+```tsx
+// State
+const [ports, setPorts] = useState<{ id: string; name: string; listeningPort: string; protocol: string; targetPort: string; nodePort: string }[]>([]);
+
+// Layout: grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]
+// Columns: Port Name* | Listening Port* | Protocol | Target Port* | Node Port | Remove
+// Row: Input | Input | Select(TCP/UDP/SCTP) | Input | Input | IconX
+```
+
+### Pattern 5: Environment Variables
+
+**사용 시점**: Container 환경 변수 (Value Type에 따라 입력 방식 변경)
+
+```tsx
+// State
+const [envVars, setEnvVars] = useState<{ name: string; type: string; value: string }[]>([]);
+
+// Layout: grid-cols-[1fr_1fr_1fr_20px]
+// Columns: Name | Value Type | Value/Source | Remove
+// Row: Input | Select(Key/Value Pair, ConfigMap, Secret) | Input | IconX
+```
+
+### Pattern 6: Single-Value List
+
+**사용 시점**: Nameservers, Mount Options, Search Domains 등 단일 값 목록
+
+```tsx
+// State
+const [nameservers, setNameservers] = useState<string[]>([]);
+
+// Layout: grid-cols-[1fr_20px]
+// Row: Input | IconX
+```
+
+### Pattern 7: Host Aliases (컬럼 설명 포함)
+
+**사용 시점**: /etc/hosts 항목 등 컬럼별 설명이 필요한 경우
+
+```tsx
+// Header에 설명 포함
+<VStack gap={0.5}>
+  <span className="text-label-sm">IP Address</span>
+  <span className="text-body-xs text-[var(--color-text-subtle)]">IPv4 or IPv6 address</span>
+</VStack>
+
+// Layout: grid-cols-[1fr_1fr_auto]
+// Row: Input (ip) | Input (hostname) | IconX
+```
+
+### Pattern 8: VLAN Inline Row
+
+**사용 시점**: Virtual LAN, Network Interface 등 모든 필드가 Select인 경우
+
+```tsx
+// State
+const [vlans, setVlans] = useState<{ id: string; network: string; subnet: string; autoAssign: string }[]>([]);
+
+// Layout: grid-cols-[1fr_1fr_1fr_20px]
+// Columns: Network | Subnet | IP Assignment | Remove
+// Row: Select | Select | Select | IconX
+```
+
+### 동적 폼 공통 규칙
+
+| 항목 | 규칙 |
+|---|---|
+| 행 추가 버튼 | `Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}` |
+| 행 삭제 버튼 | `IconX size={14}`, ghost style, 20px 컬럼 |
+| Grid gap | `gap-2` (8px) |
+| Header 텍스트 | `text-label-sm text-[var(--color-text-subtle)]` |
+| 필수 컬럼 표시 | Header에 `*` 추가 |
+| 고유 키 | 배열 객체에 `id` 필드 사용 (`crypto.randomUUID()`) |
+
+## 폼 검증 (Validation) 패턴
+
+TDS는 외부 폼 라이브러리(React Hook Form, Formik 등)를 사용하지 않습니다. 커스텀 상태 관리 기반의 검증 패턴을 따릅니다.
+
+### 필드 레벨 에러 상태
+
+각 필드에 대해 개별 에러 상태를 관리합니다.
+
+```tsx
+// 필드별 에러 state
+const [nameError, setNameError] = useState<string | null>(null);
+const [azError, setAzError] = useState<string | null>(null);
+
+// 검증 함수
+const validateBasicInfo = () => {
+  let hasError = false;
+  if (!name.trim()) {
+    setNameError('Please enter a name.');
+    hasError = true;
+  } else {
+    setNameError(null);
+  }
+  if (!az) {
+    setAzError('Please select an availability zone.');
+    hasError = true;
+  } else {
+    setAzError(null);
+  }
+  return !hasError;
+};
+
+// FormField에 에러 전달
+<FormField label="Name" error={!!nameError} required>
+  <Input value={name} onChange={(e) => { setName(e.target.value); setNameError(null); }} fullWidth />
+  {nameError && <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>}
+</FormField>
+```
+
+### 섹션 레벨 검증 (Wizard)
+
+위자드에서 다음 섹션으로 이동 전 현재 섹션을 검증합니다.
+
+```tsx
+const goToNextSection = (currentSection: SectionStep) => {
+  let isValid = true;
+  if (currentSection === 'basic-info') isValid = validateBasicInfo();
+  else if (currentSection === 'source') isValid = validateSource();
+  else if (currentSection === 'configuration') isValid = validateConfiguration();
+  if (!isValid) return; // 검증 실패 시 이동하지 않음
+
+  setSectionStatus((prev) => ({
+    ...prev,
+    [currentSection]: 'done',
+    [nextSection]: 'active',
+  }));
+};
+```
+
+### Drawer 폼 검증 (hasAttemptedSubmit)
+
+Drawer 폼에서는 최초 Submit 시도 이후에만 에러를 표시합니다.
+
+```tsx
+const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+const [nameError, setNameError] = useState<string | null>(null);
+
+// Drawer 열릴 때 초기화
+useEffect(() => {
+  if (isOpen) {
+    setHasAttemptedSubmit(false);
+    setNameError(null);
+  }
+}, [isOpen]);
+
+// Submit 핸들러
+const handleSubmit = async () => {
+  setHasAttemptedSubmit(true);
+  if (!name.trim()) {
+    setNameError('Name is required');
+    return;
+  }
+  setNameError(null);
+  await onSubmit(name);
+  onClose();
+};
+
+// 에러는 hasAttemptedSubmit 이후에만 표시
+<FormField error={hasAttemptedSubmit && !!nameError}>
+  <Input error={hasAttemptedSubmit && !!nameError} />
+  <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
+</FormField>
+```
+
+### 검증 전략 요약
+
+| 검증 시점 | 패턴 | 사용 위치 |
+|---|---|---|
+| Next 버튼 클릭 | `validateSection()` 호출 → 실패 시 return | 위자드 Create 페이지 |
+| Submit 버튼 클릭 | `hasAttemptedSubmit` 플래그 후 검증 | Drawer 폼 |
+| 값 변경 시 | `setError(null)` (에러 해제만) | 모든 폼 |
+| 실시간 검증 | 사용하지 않음 (Submit 시점에 일괄 검증) | — |
+
+## 위자드 (Multi-step Form) 패턴
+
+### 섹션 상태 (WizardSectionState)
+
+```ts
+type WizardSectionState = 'pre' | 'active' | 'done' | 'skipped' | 'writing';
+```
+
+| 상태 | 의미 | UI |
+|---|---|---|
+| `pre` | 아직 도달하지 않음 | 축소, 비활성 |
+| `active` | 현재 열린 섹션 | `SectionCard isActive`, 폼 필드 표시 |
+| `done` | 완료됨 | 축소, 요약 + Edit 버튼 |
+| `skipped` | 건너뜀 | 축소, "Skipped" + Edit 버튼 |
+| `writing` | 다른 섹션 편집 중 (작성 중단) | 축소, "작성 중" 표시 |
+
+### 상태 관리
+
+```tsx
+const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
+  'basic-info': 'active',
+  source: 'pre',
+  configuration: 'pre',
+});
+```
+
+### 네비게이션 흐름
+
+```
+[basic-info: active] → Next → [basic-info: done, source: active]
+                     → Next → [source: done, configuration: active]
+                              → Next → [configuration: done] → Create 활성화
+```
+
+### Edit 모드
+
+```tsx
+const editSection = (section: SectionStep) => {
+  setSectionStatus((prev) => {
+    const newStatus = { ...prev };
+    // 현재 active → writing
+    SECTION_ORDER.forEach((s) => {
+      if (newStatus[s] === 'active') newStatus[s] = 'writing';
+    });
+    // 편집 대상 → active
+    newStatus[section] = 'active';
+    return newStatus;
+  });
+};
+```
+
+**Edit 흐름:**
+1. `done` 섹션의 Edit 클릭
+2. 현재 `active` → `writing`
+3. 클릭한 섹션 → `active`
+4. Edit 완료 (Done) → `active` → `done`, 최상위 `writing` → `active`
+
+### V2 모드 (모든 섹션 동시 열림)
+
+```tsx
+// V2: 위자드 없이 모든 섹션이 동시에 active
+const isV2 = true;
+const initialStatus = {
+  'basic-info': 'active',
+  source: 'active',
+  configuration: 'active',
+};
+```
+
+### Create 버튼 활성화 조건
+
+```tsx
+// 모든 필수 섹션이 done이거나 V2 모드일 때 활성화
+const canCreate = isV2 || REQUIRED_SECTIONS.every(
+  (s) => sectionStatus[s] === 'done'
+);
+```
+
+## 접근성 (a11y) 규칙
+
+자세한 접근성 가이드는 `/ACCESSIBILITY.md`를 참조하세요. 여기서는 코딩 시 반드시 따라야 할 핵심 규칙만 정리합니다.
+
+### 필수 규칙
+
+1. **FormField 필수**: 모든 폼 컨트롤은 `FormField`로 감싸서 label ↔ input 연결
+2. **icon-only 버튼**: 반드시 `aria-label` 제공
+3. **InfoCircle 아이콘**: 반드시 `<Tooltip>`으로 감쌈
+4. **에러 메시지**: `FormField.ErrorMessage` 사용 (`role="alert"` 자동 적용)
+5. **색상 단독 사용 금지**: 색상 + 텍스트/아이콘으로 정보 전달
+
+### 키보드 지원 필수 컴포넌트
+
+| 컴포넌트 | 필수 키 |
+|---|---|
+| Select | Arrow, Enter, Space, Escape, Tab |
+| NumberInput | ArrowUp/Down |
+| Slider | Arrow, Home, End |
+| Modal/Drawer | Escape |
+| Popover | Enter, Space, Escape |
+| Disclosure | Enter, Space |
+
 ## 참고
 
 - 디자인 시스템 페이지: `/design`
 - Storybook: `http://localhost:6006`
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
+- 접근성 가이드: `/ACCESSIBILITY.md`
+- 테마 가이드: `/THEMING.md`
+- 기여 가이드: `/CONTRIBUTING.md`
 - 페이지 패턴 스토리: Storybook > Patterns > Page Patterns
 
-## 버전- **Current Version**: 1.1.1
-- **Last Updated**: 2026-02-23
+## 버전
+
+- **Current Version**: 1.1.1
+- **Last Updated**: 2026-02-25
 - **Changelog**: `/CHANGELOG.md`
