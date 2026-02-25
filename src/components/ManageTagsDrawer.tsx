@@ -148,7 +148,7 @@ export function ManageTagsDrawer({
           </VStack>
 
           {/* Tag Container */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={2}>
               {tags.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

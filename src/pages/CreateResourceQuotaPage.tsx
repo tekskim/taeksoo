@@ -317,7 +317,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
     <SectionCard className="pb-6">
       <SectionCard.Header title="Resource quotas" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
           <VStack gap={3}>
             {/* Quota Items */}
             {quotaItems.length > 0 && (
@@ -438,7 +438,7 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={2}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -499,7 +499,7 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={2}>
                   {annotations.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

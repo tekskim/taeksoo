@@ -1723,7 +1723,7 @@ function ImageSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={2} className="w-full">
                 {dataDisks.map((disk) => (
                   <div

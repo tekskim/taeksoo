@@ -270,7 +270,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
     <SectionCard className="pb-6">
       <SectionCard.Header title="Parameters" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
           <VStack gap={3}>
             {/* Header row */}
             {parameters.length > 0 && (
@@ -428,7 +428,7 @@ function CustomizeSection({
           <FormField>
             <FormField.Label>Mount Options</FormField.Label>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={3}>
                   {/* Header row */}
                   {mountOptions.length > 0 && (
