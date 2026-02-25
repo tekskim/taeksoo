@@ -285,14 +285,14 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 --card-padding-sm: 0.75rem;      /* 12px */
 --card-padding-md: 1rem;         /* 16px */
 --card-padding-lg: 1.5rem;       /* 24px */
---card-padding-bottom: 1.5rem;   /* 24px */
+--card-padding-bottom: 0.75rem;  /* 12px */
 --card-radius: 0.5rem;           /* 8px */
 --card-gap: 0.75rem;             /* 12px */
 ```
 
 **SectionCard specific:**
 - Top padding: `pt-3` (12px)
-- Bottom padding: `pb-6` (24px)
+- Bottom padding: `pb-3` (12px) — use `pb-6` (24px) only in Open Form pattern via className override
 - Horizontal padding: `px-4` (16px)
 - Internal gap (Header ↔ Content): `gap-3` (12px)
 - Header divider → content total: 24px (gap-3 12px + Content pt-3 12px)

@@ -554,7 +554,7 @@ export function CreateServicePage() {
           {/* Form Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Basic information" showDivider />
               <SectionCard.Content>
                 <VStack gap={4}>
@@ -620,11 +620,11 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Service Ports Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Service ports" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={2}>
                       {/* Header row */}
                       {ports.length > 0 && (
@@ -734,7 +734,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* IP Addresses Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="IP Addresses" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -763,7 +763,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       External IPs
                     </label>
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={2}>
                         {externalIPs.map((ip) => (
                           <div key={ip.id} className="flex gap-2 items-center">
@@ -805,7 +805,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Selectors Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header
                 title="Selectors"
                 description="Selector keys and values are intended to match labels and values on existing pods."
@@ -813,7 +813,7 @@ export function CreateServicePage() {
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
                   {selectors.length === 0 ? (
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <HStack gap={2}>
                         <Button
                           variant="secondary"
@@ -829,7 +829,7 @@ export function CreateServicePage() {
                       </HStack>
                     </div>
                   ) : (
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={2}>
                         {selectors.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -927,7 +927,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Session Affinity Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Session affinity" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -964,7 +964,7 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -978,7 +978,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for labels */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={2}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -1048,7 +1048,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for annotations */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={2}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

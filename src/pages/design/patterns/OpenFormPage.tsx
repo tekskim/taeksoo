@@ -29,12 +29,12 @@ function LabelsSection() {
   const [labels, setLabels] = useState([{ key: 'app', value: 'my-service' }]);
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
           <FormField label="Labels">
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -99,7 +99,7 @@ function LabelsSection() {
 function OpenFormPreview() {
   return (
     <VStack gap={4} className="w-full">
-      <SectionCard>
+      <SectionCard className="pb-6">
         <SectionCard.Header title="Basic information" />
         <SectionCard.Content className="pt-3">
           <VStack gap={8}>
@@ -120,7 +120,7 @@ function OpenFormPreview() {
         </SectionCard.Content>
       </SectionCard>
 
-      <SectionCard>
+      <SectionCard className="pb-6">
         <SectionCard.Header title="Configuration" />
         <SectionCard.Content className="pt-3">
           <VStack gap={8}>
@@ -140,8 +140,8 @@ function OpenFormPreview() {
 }
 
 const previewCode = `<VStack gap={4} className="flex-1">
-  {/* Section 1 */}
-  <SectionCard>
+  {/* Section 1 — pb-6 overrides default 12px → 24px for Open Form */}
+  <SectionCard className="pb-6">
     <SectionCard.Header title="Basic information" />
     <SectionCard.Content className="pt-3">
       <VStack gap={8}>
@@ -156,7 +156,7 @@ const previewCode = `<VStack gap={4} className="flex-1">
   </SectionCard>
 
   {/* Section 2 */}
-  <SectionCard>
+  <SectionCard className="pb-6">
     <SectionCard.Header title="Configuration" />
     <SectionCard.Content className="pt-3">
       <VStack gap={8}>
@@ -168,7 +168,7 @@ const previewCode = `<VStack gap={4} className="flex-1">
   </SectionCard>
 
   {/* Section 3 */}
-  <SectionCard>
+  <SectionCard className="pb-6">
     <SectionCard.Header title="Labels & Annotations" />
     <SectionCard.Content className="pt-3">
       <VStack gap={8}>
@@ -393,6 +393,11 @@ export function OpenFormPage() {
               <ul className="text-body-sm text-[var(--color-text-default)] list-disc list-inside space-y-1">
                 <li>
                   Wrap all SectionCards in <code className="text-body-sm">VStack gap={'{4}'}</code>
+                </li>
+                <li>
+                  Add <code className="text-body-sm">className=&quot;pb-6&quot;</code> to every{' '}
+                  <code className="text-body-sm">SectionCard</code> (24px bottom padding for Open
+                  Form only)
                 </li>
                 <li>
                   Add <code className="text-body-sm">className=&quot;pt-3&quot;</code> to every{' '}

@@ -1919,7 +1919,7 @@ function NetworkSection({
                 Each selected network requires at least one Virtual LAN configuration. Each VLAN
                 represents a virtual network card (NIC) attached to the selected network.
               </span>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={2}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -2407,7 +2407,7 @@ function AdvancedSection({
                 </p>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={2}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
