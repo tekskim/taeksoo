@@ -217,8 +217,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Name */}
           <FormField
             label="Name"
@@ -283,8 +283,8 @@ function VolumeClaimSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Volume claim" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Source */}
           <FormField>
             <FormField.Label>Source</FormField.Label>
@@ -804,7 +804,7 @@ export function CreatePersistentVolumeClaimPage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
           {/* Form Content */}
-          <VStack gap={4} className="flex-1">
+          <VStack gap={8} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
               pvcName={pvcName}

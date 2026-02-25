@@ -233,8 +233,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Secret Type */}
           <FormField required>
             <FormField.Label>Secret Type</FormField.Label>
@@ -354,7 +354,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
   return (
     <SectionCard>
       <SectionCard.Header title="Data" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <VStack gap={3}>
           {/* Data Entries */}
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -455,8 +455,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <VStack gap={3}>
             <VStack gap={1}>
@@ -801,7 +801,7 @@ export function CreateSecretPage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
           {/* Form Content */}
-          <VStack gap={4} className="flex-1">
+          <VStack gap={8} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
               isV2={isV2}

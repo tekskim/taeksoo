@@ -633,8 +633,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>

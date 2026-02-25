@@ -316,7 +316,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
   return (
     <SectionCard>
       <SectionCard.Header title="Resource quotas" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
             {/* Quota Items */}

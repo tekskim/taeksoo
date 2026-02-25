@@ -446,12 +446,12 @@ export function CreateClusterPage() {
       {/* Main Content Grid */}
       <div className="flex gap-6">
         {/* Left Column - Form */}
-        <div className="flex-1 flex flex-col gap-[24px]">
+        <div className="flex-1 flex flex-col gap-[32px]">
           {/* Basic Information */}
           <SectionCard>
             <SectionCard.Header title="Basic information" />
             <SectionCard.Content className="pt-3">
-              <VStack gap={6}>
+              <VStack gap={8}>
                 {/* Name */}
                 <FormField required>
                   <FormField.Label>Name</FormField.Label>
@@ -531,7 +531,7 @@ export function CreateClusterPage() {
           <SectionCard>
             <SectionCard.Header title="Networking" />
             <SectionCard.Content className="pt-3">
-              <VStack gap={6}>
+              <VStack gap={8}>
                 {/* External Network */}
                 <FormField>
                   <FormField.Label>
@@ -675,7 +675,7 @@ export function CreateClusterPage() {
           <SectionCard>
             <SectionCard.Header title="Node configuration" />
             <SectionCard.Content className="pt-3">
-              <VStack gap={6}>
+              <VStack gap={8}>
                 {/* Node Type */}
                 <FormField required>
                   <FormField.Label>Node Type</FormField.Label>
@@ -1027,7 +1027,7 @@ export function CreateClusterPage() {
           <SectionCard>
             <SectionCard.Header title="Worker Nodes" />
             <SectionCard.Content className="pt-3">
-              <VStack gap={6}>
+              <VStack gap={8}>
                 {/* Image */}
                 <FormField required>
                   <FormField.Label>Image</FormField.Label>
@@ -1251,7 +1251,7 @@ export function CreateClusterPage() {
           <SectionCard>
             <SectionCard.Header title="Labels & Annotations" />
             <SectionCard.Content className="pt-3">
-              <VStack gap={6}>
+              <VStack gap={8}>
                 {/* Labels */}
                 <VStack gap={3}>
                   <VStack gap={1.5}>

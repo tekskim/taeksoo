@@ -209,8 +209,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Input
@@ -285,7 +285,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
   return (
     <SectionCard>
       <SectionCard.Header title="Data" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
             {/* Data Entries */}
@@ -386,7 +386,7 @@ function BinaryDataSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Binary data" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
             {/* Binary Data Entries */}
@@ -485,8 +485,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <VStack gap={3}>
             <VStack gap={1}>
@@ -828,7 +828,7 @@ export function CreateConfigMapPage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
           {/* Form Content */}
-          <VStack gap={4} className="flex-1">
+          <VStack gap={8} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
               configMapName={configMapName}
