@@ -196,8 +196,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Name */}
           <FormField required error={!!storageClassNameError}>
             <FormField.Label>Name</FormField.Label>
@@ -269,7 +269,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
   return (
     <SectionCard>
       <SectionCard.Header title="Parameters" showDivider />
-      <SectionCard.Content>
+      <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
             {/* Header row */}
@@ -365,8 +365,8 @@ function CustomizeSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Customize" showDivider />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Reclaim Policy */}
           <FormField>
             <FormField.Label>Reclaim Policy</FormField.Label>

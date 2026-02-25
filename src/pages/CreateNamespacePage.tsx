@@ -297,8 +297,8 @@ export function CreateNamespacePage() {
             {/* Basic Information Section */}
             <SectionCard>
               <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Namespace Name */}
                   <FormField label="Namespace Name" required>
                     <Input
@@ -330,8 +330,8 @@ export function CreateNamespacePage() {
             {/* Pod Security Admission Section */}
             <SectionCard>
               <SectionCard.Header title="Pod security admission" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Enforce */}
                   <VStack gap={2}>
                     <Checkbox
@@ -422,8 +422,8 @@ export function CreateNamespacePage() {
             {/* Labels & Annotations Section */}
             <SectionCard>
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Labels */}
                   <VStack gap={3}>
                     <VStack gap={1}>

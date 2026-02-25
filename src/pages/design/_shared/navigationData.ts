@@ -37,6 +37,7 @@ import {
   IconAppWindow,
   IconApps,
   IconPencil,
+  IconLayoutList,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -250,6 +251,12 @@ const layoutItems: NavItem[] = [
     label: 'Wizard (Create Flow)',
     icon: IconListNumbers,
     path: '/design/patterns/wizard',
+  },
+  {
+    id: 'open-form',
+    label: 'Open Form (Create Flow)',
+    icon: IconLayoutList,
+    path: '/design/patterns/open-form',
   },
   {
     id: 'multi-tab-create',

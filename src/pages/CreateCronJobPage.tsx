@@ -502,8 +502,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Select
@@ -596,8 +596,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <VStack gap={3}>
             <VStack gap={1.5}>
@@ -773,8 +773,8 @@ function ScalingPolicySection({
   return (
     <SectionCard>
       <SectionCard.Header title="Scaling and Upgrade Policy" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Completions */}
           <FormField>
             <FormField.Label>Completions</FormField.Label>
@@ -1948,8 +1948,8 @@ export function CreateCronJobPage() {
                 {/* Labels & Annotations */}
                 <SectionCard>
                   <SectionCard.Header title="Labels & Annotations" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       {/* Labels */}
                       <VStack gap={3}>
                         <VStack gap={1.5}>
@@ -2095,8 +2095,8 @@ export function CreateCronJobPage() {
                 {/* Scaling and Upgrade Policy */}
                 <SectionCard>
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       <span className="text-label-lg text-[var(--color-text-default)]">
                         Pod Policy
                       </span>
@@ -2129,8 +2129,8 @@ export function CreateCronJobPage() {
                 {/* Networking */}
                 <SectionCard>
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       {/* Network Settings */}
                       <VStack gap={6}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -2459,7 +2459,7 @@ export function CreateCronJobPage() {
                 {/* Node Scheduling */}
                 <SectionCard>
                   <SectionCard.Header title="Node scheduling" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
                       <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
                         <Radio value="any" label="Run pods on any available node" />
@@ -3021,8 +3021,8 @@ export function CreateCronJobPage() {
                 {/* Pod Scheduling */}
                 <SectionCard>
                   <SectionCard.Header title="Pod scheduling" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
@@ -3419,8 +3419,8 @@ export function CreateCronJobPage() {
                 {/* Resources */}
                 <SectionCard>
                   <SectionCard.Header title="Resources" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       {/* Tolerations */}
                       <VStack gap={3}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3561,7 +3561,7 @@ export function CreateCronJobPage() {
                 {/* Security Context */}
                 <SectionCard>
                   <SectionCard.Header title="Security context" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
                       <VStack gap={1}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3586,7 +3586,7 @@ export function CreateCronJobPage() {
                 {/* Storage */}
                 <SectionCard>
                   <SectionCard.Header title="Storage" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={2}>
                       {volumes.map((volume, index) => (
                         <div
@@ -4018,7 +4018,7 @@ export function CreateCronJobPage() {
                 {/* Volume Claim Templates */}
                 <SectionCard>
                   <SectionCard.Header title="Volume claim templates" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <div className="w-full">
                       <VStack gap={3}>
                         {volumeClaimTemplates.map((template, index) => (
@@ -4649,8 +4649,8 @@ export function CreateCronJobPage() {
                     {/* 1. Basic Information Section */}
                     <SectionCard>
                       <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           <VStack gap={2} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Container Name
@@ -4687,8 +4687,8 @@ export function CreateCronJobPage() {
                     {/* 2. Image Section */}
                     <SectionCard>
                       <SectionCard.Header title="Image" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           <VStack gap={3}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4774,7 +4774,7 @@ export function CreateCronJobPage() {
                     {/* 3. Environment Variables Section */}
                     <SectionCard>
                       <SectionCard.Header title="Environment variables" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
@@ -4889,7 +4889,7 @@ export function CreateCronJobPage() {
                     {/* 5. Service Account Name Section */}
                     <SectionCard>
                       <SectionCard.Header title="Service account name" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <VStack gap={3}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4917,7 +4917,7 @@ export function CreateCronJobPage() {
                     {/* 7. Lifecycle Hooks Section */}
                     <SectionCard>
                       <SectionCard.Header title="Lifecycle hooks" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
                           <VStack gap={6}>
@@ -5410,8 +5410,8 @@ export function CreateCronJobPage() {
                     {/* 8. Health Check Section */}
                     <SectionCard>
                       <SectionCard.Header title="Health check" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Readiness Check */}
                           <VStack gap={6}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -6479,8 +6479,8 @@ export function CreateCronJobPage() {
                     {/* 9. Resources Section */}
                     <SectionCard>
                       <SectionCard.Header title="Resources" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
@@ -6590,8 +6590,8 @@ export function CreateCronJobPage() {
                     {/* 10. Security Context Section */}
                     <SectionCard>
                       <SectionCard.Header title="Security context" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={3} className="flex-1">
@@ -6800,8 +6800,8 @@ export function CreateCronJobPage() {
                     {/* 11. Storage Section */}
                     <SectionCard>
                       <SectionCard.Header title="Storage" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
                             <VStack gap={6}>

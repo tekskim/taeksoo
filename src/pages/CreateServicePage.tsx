@@ -552,7 +552,7 @@ export function CreateServicePage() {
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
           {/* Form Content */}
-          <VStack gap={3} className="flex-1">
+          <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
             <SectionCard>
               <SectionCard.Header title="Basic information" showDivider />
@@ -622,8 +622,8 @@ export function CreateServicePage() {
             {/* Service Ports Section */}
             <SectionCard>
               <SectionCard.Header title="Service ports" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                     <VStack gap={2}>
                       {/* Header row */}
@@ -736,8 +736,8 @@ export function CreateServicePage() {
             {/* IP Addresses Section */}
             <SectionCard>
               <SectionCard.Header title="IP Addresses" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Cluster IP */}
                   <FormField label="Cluster IP" className="w-[calc(50%-12px)]">
                     <Input
@@ -810,8 +810,8 @@ export function CreateServicePage() {
                 title="Selectors"
                 description="Selector keys and values are intended to match labels and values on existing pods."
               />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {selectors.length === 0 ? (
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                       <HStack gap={2}>
@@ -929,8 +929,8 @@ export function CreateServicePage() {
             {/* Session Affinity Section */}
             <SectionCard>
               <SectionCard.Header title="Session affinity" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   <VStack gap={3}>
                     <RadioGroup
                       value={sessionAffinity}
@@ -966,8 +966,8 @@ export function CreateServicePage() {
             {/* Labels & Annotations Section */}
             <SectionCard>
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Labels */}
                   <VStack gap={3}>
                     <VStack gap={1.5}>

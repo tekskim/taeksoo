@@ -503,8 +503,8 @@ function BasicInfoSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Basic information" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Select
@@ -601,8 +601,8 @@ function LabelsAnnotationsSection({
   return (
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Labels */}
           <VStack gap={3}>
             <VStack gap={1}>
@@ -778,8 +778,8 @@ function ScalingPolicySection({
   return (
     <SectionCard>
       <SectionCard.Header title="Scaling and Upgrade Policy" />
-      <SectionCard.Content>
-        <VStack gap={6}>
+      <SectionCard.Content className="pt-3">
+        <VStack gap={8}>
           {/* Strategy Selection */}
           <FormField>
             <FormField.Label>Update policy</FormField.Label>
@@ -1960,8 +1960,8 @@ export function CreateDeploymentPage() {
                 {/* Labels & Annotations */}
                 <SectionCard>
                   <SectionCard.Header title="Labels & Annotations" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       {/* Labels */}
                       <VStack gap={3}>
                         <VStack gap={1}>
@@ -2111,8 +2111,8 @@ export function CreateDeploymentPage() {
                 {/* Scaling and Upgrade Policy */}
                 <SectionCard>
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
-                  <SectionCard.Content>
-                    <VStack gap={6}>
+                  <SectionCard.Content className="pt-3">
+                    <VStack gap={8}>
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
                       </h6>
@@ -2503,7 +2503,7 @@ export function CreateDeploymentPage() {
                 {/* Node Scheduling */}
                 <SectionCard>
                   <SectionCard.Header title="Node scheduling" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
                       <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
                         <Radio value="any" label="Run pods on any available node" />
@@ -3598,7 +3598,7 @@ export function CreateDeploymentPage() {
                 {/* Security Context */}
                 <SectionCard>
                   <SectionCard.Header title="Security context" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
                       <VStack gap={1}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3621,7 +3621,7 @@ export function CreateDeploymentPage() {
                 {/* Storage */}
                 <SectionCard>
                   <SectionCard.Header title="Storage" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={2}>
                       {volumes.map((volume, index) => (
                         <div
@@ -4050,7 +4050,7 @@ export function CreateDeploymentPage() {
                 {/* Volume Claim Templates */}
                 <SectionCard>
                   <SectionCard.Header title="Volume claim templates" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <div className="w-full">
                       <VStack gap={3}>
                         {volumeClaimTemplates.map((template, index) => (
@@ -4681,8 +4681,8 @@ export function CreateDeploymentPage() {
                     {/* 1. Basic Information Section */}
                     <SectionCard>
                       <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           <VStack gap={2} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Container Name
@@ -4719,8 +4719,8 @@ export function CreateDeploymentPage() {
                     {/* 2. Image Section */}
                     <SectionCard>
                       <SectionCard.Header title="Image" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4806,7 +4806,7 @@ export function CreateDeploymentPage() {
                     {/* 3. Environment Variables Section */}
                     <SectionCard>
                       <SectionCard.Header title="Environment variables" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                           <VStack gap={2}>
                             {(config.envVars || []).length > 0 && (
@@ -4921,7 +4921,7 @@ export function CreateDeploymentPage() {
                     {/* 5. Service Account Name Section */}
                     <SectionCard>
                       <SectionCard.Header title="Service account name" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4949,7 +4949,7 @@ export function CreateDeploymentPage() {
                     {/* 7. Lifecycle Hooks Section */}
                     <SectionCard>
                       <SectionCard.Header title="Lifecycle hooks" />
-                      <SectionCard.Content>
+                      <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
                           <VStack gap={6}>
@@ -5442,8 +5442,8 @@ export function CreateDeploymentPage() {
                     {/* 8. Health Check Section */}
                     <SectionCard>
                       <SectionCard.Header title="Health check" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Readiness Check */}
                           <VStack gap={6}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -6509,8 +6509,8 @@ export function CreateDeploymentPage() {
                     {/* 9. Resources Section */}
                     <SectionCard>
                       <SectionCard.Header title="Resources" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
@@ -6620,8 +6620,8 @@ export function CreateDeploymentPage() {
                     {/* 10. Security Context Section */}
                     <SectionCard>
                       <SectionCard.Header title="Security context" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
@@ -6830,8 +6830,8 @@ export function CreateDeploymentPage() {
                     {/* 11. Storage Section */}
                     <SectionCard>
                       <SectionCard.Header title="Storage" />
-                      <SectionCard.Content>
-                        <VStack gap={6}>
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
                             <VStack gap={3}>
