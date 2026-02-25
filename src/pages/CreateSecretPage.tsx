@@ -231,7 +231,7 @@ function BasicInfoSection({
   const [descriptionExpanded, setDescriptionExpanded] = useState(true);
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -352,7 +352,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Data" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={3}>
@@ -453,7 +453,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>

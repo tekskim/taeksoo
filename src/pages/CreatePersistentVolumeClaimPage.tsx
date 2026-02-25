@@ -215,7 +215,7 @@ function BasicInfoSection({
   onDescriptionChange,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -281,7 +281,7 @@ function VolumeClaimSection({
   onStorageUnitChange,
 }: VolumeClaimSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Volume claim" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -392,7 +392,7 @@ interface StorageConfigSectionProps {
 
 function StorageConfigSection({ accessModes, onAccessModesChange }: StorageConfigSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -457,7 +457,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>

@@ -205,26 +205,26 @@ describe('ComponentName a11y', () => {
                 {[
                   {
                     type: 'MAJOR',
-                    badge: 'danger' as const,
+                    theme: 'white' as const,
                     when: 'Breaking changes',
                     ex: 'Component removal, prop rename/delete, token rename/delete',
                   },
                   {
                     type: 'MINOR',
-                    badge: 'info' as const,
+                    theme: 'blue' as const,
                     when: 'New features (backward compatible)',
                     ex: 'New component, new prop, new variant, new token',
                   },
                   {
                     type: 'PATCH',
-                    badge: 'success' as const,
+                    theme: 'green' as const,
                     when: 'Bug fixes (no API change)',
                     ex: 'Style fix, docs, type fix, performance',
                   },
                 ].map((r) => (
                   <tr key={r.type} className="border-b border-[var(--color-border-subtle)]">
                     <td className="py-2 px-3">
-                      <Badge variant={r.badge} size="sm">
+                      <Badge theme={r.theme} type="subtle" size="sm">
                         {r.type}
                       </Badge>
                     </td>

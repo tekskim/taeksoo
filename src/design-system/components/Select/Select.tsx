@@ -36,7 +36,7 @@ export interface SelectProps {
   fullWidth?: boolean;
   /** Size variant (height) */
   size?: 'sm' | 'md';
-  /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  /** Width variant: xs (80px), sm (160px), md (240px), lg (360px), half (50%), full (100%), or number for custom pixel width */
   width?: 'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full' | number;
   /** Additional CSS classes */
   className?: string;
@@ -244,12 +244,12 @@ export function Select({
     }
   }, [isOpen]);
 
-  // Width-based styles: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%)
+  // Width-based styles: xs (80px), sm (160px), md (240px), lg (360px), half (50%), full (100%)
   const widthStyles = {
     xs: 'w-[80px]',
     sm: 'w-[160px]',
     md: 'w-[240px]',
-    lg: 'w-[320px]',
+    lg: 'w-[360px]',
     half: 'w-1/2',
     full: 'w-full',
   };

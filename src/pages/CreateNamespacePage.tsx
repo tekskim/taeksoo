@@ -295,7 +295,7 @@ export function CreateNamespacePage() {
           {/* Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Basic information" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -328,7 +328,7 @@ export function CreateNamespacePage() {
             </SectionCard>
 
             {/* Pod Security Admission Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Pod security admission" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -420,7 +420,7 @@ export function CreateNamespacePage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>

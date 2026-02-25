@@ -27,7 +27,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   error?: string | boolean;
   /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
-  /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  /** Width variant: xs (80px), sm (160px), md (240px), lg (360px), half (50%), full (100%), or number for custom pixel width */
   width?: InputWidth | number;
   /** Left icon/element */
   leftElement?: ReactNode;
@@ -167,7 +167,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       xs: 'w-[80px]',
       sm: 'w-[160px]',
       md: 'w-[240px]',
-      lg: 'w-[320px]',
+      lg: 'w-[360px]',
       half: 'w-1/2',
       full: 'w-full',
     };

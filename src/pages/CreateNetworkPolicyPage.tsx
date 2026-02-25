@@ -327,7 +327,7 @@ function TrafficRulesSection({
   const activeRule = rules[activeRuleIndex];
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title={title} />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -718,7 +718,7 @@ export function CreateNetworkPolicyPage() {
           {/* Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Basic information" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>
@@ -781,7 +781,7 @@ export function CreateNetworkPolicyPage() {
             />
 
             {/* Selector Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header
                 title="Selector"
                 description="Selector keys and values are intended to match labels and values on existing pods."
@@ -885,7 +885,7 @@ export function CreateNetworkPolicyPage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard>
+            <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
               <SectionCard.Content className="pt-3">
                 <VStack gap={8}>

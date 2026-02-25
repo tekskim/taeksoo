@@ -194,7 +194,7 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -267,7 +267,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Parameters" showDivider />
       <SectionCard.Content className="pt-3">
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -363,7 +363,7 @@ function CustomizeSection({
   };
 
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>

@@ -500,7 +500,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -594,7 +594,7 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -755,7 +755,7 @@ function ScalingPolicySection({
   onActiveDeadlineChange,
 }: ScalingPolicySectionProps) {
   return (
-    <SectionCard>
+    <SectionCard className="pb-6">
       <SectionCard.Header title="Scaling and Upgrade Policy" />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
@@ -1802,7 +1802,7 @@ export function CreateJobPage() {
             {activeTab === 'pod' && (
               <>
                 {/* Labels & Annotations */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Labels & Annotations" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -1953,7 +1953,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Scaling and Upgrade Policy */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -1987,7 +1987,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Networking */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -2317,7 +2317,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Node Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Node scheduling" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -2854,7 +2854,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Pod Scheduling */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -3249,7 +3249,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Resources */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Resources" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
@@ -3391,7 +3391,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Security Context */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Security context" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={4}>
@@ -3416,7 +3416,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Storage */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Storage" />
                   <SectionCard.Content className="pt-3">
                     <VStack gap={2}>
@@ -3847,7 +3847,7 @@ export function CreateJobPage() {
                 </SectionCard>
 
                 {/* Volume Claim Templates */}
-                <SectionCard>
+                <SectionCard className="pb-6">
                   <SectionCard.Header title="Volume claim templates" />
                   <SectionCard.Content className="pt-3">
                     <div className="w-full">
@@ -4478,7 +4478,7 @@ export function CreateJobPage() {
                 return (
                   <>
                     {/* 1. Basic Information Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4516,7 +4516,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 2. Image Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Image" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -4603,7 +4603,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 3. Environment Variables Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content className="pt-3">
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -4718,7 +4718,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 5. Service Account Name Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Service account name" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={3}>
@@ -4746,7 +4746,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 7. Lifecycle Hooks Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Lifecycle hooks" />
                       <SectionCard.Content className="pt-3">
                         <div className="grid grid-cols-2 gap-6">
@@ -5239,7 +5239,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 8. Health Check Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Health check" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6306,7 +6306,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 9. Resources Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Resources" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6417,7 +6417,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 10. Security Context Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Security context" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
@@ -6627,7 +6627,7 @@ export function CreateJobPage() {
                     </SectionCard>
 
                     {/* 11. Storage Section */}
-                    <SectionCard>
+                    <SectionCard className="pb-6">
                       <SectionCard.Header title="Storage" />
                       <SectionCard.Content className="pt-3">
                         <VStack gap={8}>
