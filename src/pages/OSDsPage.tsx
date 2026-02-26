@@ -246,7 +246,7 @@ export function OSDsPage() {
       key: 'status',
       label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.type,
+      minWidth: '120px',
       sortable: false,
       render: (_, row) => <BadgeList items={row.status} maxVisible={2} />,
     },
