@@ -81,19 +81,17 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
         )}
 
         {/* Lock Status */}
-        <FormField>
-          <FormField.Label>Lock status</FormField.Label>
-          <FormField.Description>
-            When locked, the instance cannot be modified or deleted.
-          </FormField.Description>
-          <FormField.Control>
-            <HStack gap={2} align="center">
-              <Toggle checked={isLocked} onChange={setIsLocked} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {isLocked ? 'Locked' : 'Unlocked'}
-              </span>
-            </HStack>
-          </FormField.Control>
+        <FormField
+          label="Lock status"
+          description="When locked, the instance cannot be modified or deleted."
+          spacing="loose"
+        >
+          <HStack gap={2} align="center">
+            <Toggle checked={isLocked} onChange={setIsLocked} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {isLocked ? 'Locked' : 'Unlocked'}
+            </span>
+          </HStack>
         </FormField>
       </VStack>
     </Drawer>

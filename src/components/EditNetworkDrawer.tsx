@@ -170,43 +170,37 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {isAdvancedExpanded && (
           <>
             {/* Admin state */}
-            <FormField>
-              <FormField.Label>Admin state</FormField.Label>
-              <FormField.Description>
-                Setting it to "Down" disables all related network or control operations, regardless
-                of runtime status.
-              </FormField.Description>
-              <FormField.Control>
-                <HStack gap={2} className="items-center">
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {adminStateUp ? 'Up' : 'Down'}
-                  </span>
-                </HStack>
-              </FormField.Control>
+            <FormField
+              label="Admin state"
+              description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
+              spacing="loose"
+            >
+              <HStack gap={2} className="items-center">
+                <Toggle
+                  checked={adminStateUp}
+                  onChange={(e) => setAdminStateUp(e.target.checked)}
+                />
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                  {adminStateUp ? 'Up' : 'Down'}
+                </span>
+              </HStack>
             </FormField>
 
             {/* Port security */}
-            <FormField>
-              <FormField.Label>Port security</FormField.Label>
-              <FormField.Description>
-                Enhances security by allowing only permitted devices to access this network. It is
-                recommended to keep this enabled in most cases.
-              </FormField.Description>
-              <FormField.Control>
-                <HStack gap={2} className="items-center">
-                  <Toggle
-                    checked={portSecurityEnabled}
-                    onChange={(e) => setPortSecurityEnabled(e.target.checked)}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {portSecurityEnabled ? 'On' : 'Off'}
-                  </span>
-                </HStack>
-              </FormField.Control>
+            <FormField
+              label="Port security"
+              description="Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases."
+              spacing="loose"
+            >
+              <HStack gap={2} className="items-center">
+                <Toggle
+                  checked={portSecurityEnabled}
+                  onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+                />
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                  {portSecurityEnabled ? 'On' : 'Off'}
+                </span>
+              </HStack>
             </FormField>
           </>
         )}

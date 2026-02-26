@@ -233,19 +233,13 @@ export function CreateSecurityGroupRuleDrawer({
         </VStack>
 
         {/* Direction Radio */}
-        <FormField>
-          <FormField.Label>Direction</FormField.Label>
-          <FormField.Control>
-            <RadioGroup
-              value={direction}
-              onChange={(value) => setDirection(value as RuleDirection)}
-            >
-              <VStack gap={2}>
-                <Radio value="ingress" label="Ingress" />
-                <Radio value="egress" label="Egress" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField label="Direction" spacing="loose">
+          <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
+            <VStack gap={2}>
+              <Radio value="ingress" label="Ingress" />
+              <Radio value="egress" label="Egress" />
+            </VStack>
+          </RadioGroup>
         </FormField>
 
         {/* Protocol Select */}

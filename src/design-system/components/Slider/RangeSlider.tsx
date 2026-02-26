@@ -20,6 +20,8 @@ export interface RangeSliderProps extends Omit<HTMLAttributes<HTMLDivElement>, '
   onChange?: (value: [number, number]) => void;
   /** Disabled state */
   disabled?: boolean;
+  /** Stretch track to fill available width */
+  fullWidth?: boolean;
   /** Aria label */
   'aria-label'?: string;
 }
@@ -36,6 +38,7 @@ export function RangeSlider({
   defaultValue = [25, 75],
   onChange,
   disabled = false,
+  fullWidth = false,
   className = '',
   'aria-label': ariaLabel = 'Range Slider',
   ...props
@@ -231,6 +234,7 @@ export function RangeSlider({
     <div
       className={twMerge(
         'flex items-center gap-[var(--slider-gap)]',
+        fullWidth && 'flex-1 min-w-0',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
@@ -240,7 +244,8 @@ export function RangeSlider({
       <div
         ref={trackRef}
         className={twMerge(
-          'relative w-[var(--slider-track-width)] h-[var(--slider-track-height)]',
+          'relative h-[var(--slider-track-height)]',
+          fullWidth ? 'w-full' : 'w-[var(--slider-track-width)]',
           'bg-[var(--slider-track-bg)]',
           'rounded-[var(--slider-track-radius)]',
           !disabled && 'cursor-pointer'

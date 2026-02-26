@@ -387,35 +387,34 @@ function PasswordSection({
 
   return (
     <div className="flex flex-col py-6">
-      <FormField required>
-        <FormField.Label>Password</FormField.Label>
-        <FormField.Description>
-          Choose how to set the initial password for the user account.
-        </FormField.Description>
-        <FormField.Control>
-          <VStack gap={2}>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                value="temporary"
-                checked={passwordOption === 'temporary'}
-                onChange={() => onPasswordOptionChange('temporary')}
-              />
-              <span className="text-body-md text-[var(--color-text-default)]">
-                Issue a temporary password (email sent automatically)
-              </span>
-            </label>
-            <label className="flex items-center gap-1.5 cursor-pointer">
-              <Radio
-                value="manual"
-                checked={passwordOption === 'manual'}
-                onChange={() => onPasswordOptionChange('manual')}
-              />
-              <span className="text-body-md text-[var(--color-text-default)]">
-                Set password manually (no email sent)
-              </span>
-            </label>
-          </VStack>
-        </FormField.Control>
+      <FormField
+        label="Password"
+        description="Choose how to set the initial password for the user account."
+        spacing="loose"
+        required
+      >
+        <VStack gap={2}>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <Radio
+              value="temporary"
+              checked={passwordOption === 'temporary'}
+              onChange={() => onPasswordOptionChange('temporary')}
+            />
+            <span className="text-body-md text-[var(--color-text-default)]">
+              Issue a temporary password (email sent automatically)
+            </span>
+          </label>
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <Radio
+              value="manual"
+              checked={passwordOption === 'manual'}
+              onChange={() => onPasswordOptionChange('manual')}
+            />
+            <span className="text-body-md text-[var(--color-text-default)]">
+              Set password manually (no email sent)
+            </span>
+          </label>
+        </VStack>
       </FormField>
 
       {/* Password inputs - shown when manual is selected */}

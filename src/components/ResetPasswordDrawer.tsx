@@ -163,33 +163,32 @@ export function ResetPasswordDrawer({
         {/* Password Section */}
         <VStack gap={2}>
           {/* Section Header */}
-          <FormField required>
-            <FormField.Label>Password</FormField.Label>
-            <FormField.Description>
-              Choose how to set a password for the user account.
-            </FormField.Description>
-            <FormField.Control>
-              <VStack gap={3}>
-                <label className="flex items-center gap-1.5 cursor-pointer">
-                  <Radio
-                    checked={resetOption === 'temporary'}
-                    onChange={() => setResetOption('temporary')}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    Issue a temporary password (email sent automatically)
-                  </span>
-                </label>
-                <label className="flex items-center gap-1.5 cursor-pointer">
-                  <Radio
-                    checked={resetOption === 'manual'}
-                    onChange={() => setResetOption('manual')}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    Set password manually (no email sent)
-                  </span>
-                </label>
-              </VStack>
-            </FormField.Control>
+          <FormField
+            label="Password"
+            description="Choose how to set a password for the user account."
+            spacing="loose"
+            required
+          >
+            <VStack gap={2}>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Radio
+                  checked={resetOption === 'temporary'}
+                  onChange={() => setResetOption('temporary')}
+                />
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                  Issue a temporary password (email sent automatically)
+                </span>
+              </label>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <Radio
+                  checked={resetOption === 'manual'}
+                  onChange={() => setResetOption('manual')}
+                />
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                  Set password manually (no email sent)
+                </span>
+              </label>
+            </VStack>
           </FormField>
 
           {/* Manual Password Fields - only shown when manual option is selected */}

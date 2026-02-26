@@ -111,48 +111,49 @@ export function CreateAllowedAddressPairDrawer({
 
         {/* MAC Address Radio Group */}
         <FormField
+          label="MAC address"
+          spacing="loose"
           required
           error={macAddressType === 'manual' && hasAttemptedSubmit && !macAddress.trim()}
         >
-          <FormField.Label>MAC address</FormField.Label>
-          <FormField.Control>
-            <RadioGroup
-              value={macAddressType}
-              onChange={(value) => setMacAddressType(value as MacAddressType)}
-            >
-              <VStack gap={2}>
-                <HStack gap={2} className="items-center">
-                  <Radio value="from_port" label="From port" />
-                  <Tooltip content="Use the MAC address assigned to this port automatically.">
-                    <IconHelp
-                      size={12}
-                      stroke={1.5}
-                      className="text-[var(--color-text-subtle)] cursor-help"
-                    />
-                  </Tooltip>
-                </HStack>
-                <Radio value="manual" label="Manual" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
-          {/* Manual MAC Address Input */}
-          {macAddressType === 'manual' && (
-            <>
-              <FormField.Control>
-                <Input
-                  value={macAddress}
-                  onChange={(e) => setMacAddress(e.target.value)}
-                  placeholder="e.g. fa:16:3e:ab:cd:ef"
-                  fullWidth
-                  error={hasAttemptedSubmit && !macAddress.trim()}
-                />
-              </FormField.Control>
-              {hasAttemptedSubmit && !macAddress.trim() && (
-                <FormField.ErrorMessage>MAC address is required</FormField.ErrorMessage>
-              )}
-            </>
-          )}
+          <RadioGroup
+            value={macAddressType}
+            onChange={(value) => setMacAddressType(value as MacAddressType)}
+          >
+            <VStack gap={2}>
+              <HStack gap={2} className="items-center">
+                <Radio value="from_port" label="From port" />
+                <Tooltip content="Use the MAC address assigned to this port automatically.">
+                  <IconHelp
+                    size={12}
+                    stroke={1.5}
+                    className="text-[var(--color-text-subtle)] cursor-help"
+                  />
+                </Tooltip>
+              </HStack>
+              <Radio value="manual" label="Manual" />
+            </VStack>
+          </RadioGroup>
         </FormField>
+        {/* Manual MAC Address Input */}
+        {macAddressType === 'manual' && (
+          <FormField
+            label="MAC address value"
+            required
+            error={hasAttemptedSubmit && !macAddress.trim()}
+            errorMessage={
+              hasAttemptedSubmit && !macAddress.trim() ? 'MAC address is required' : undefined
+            }
+          >
+            <Input
+              value={macAddress}
+              onChange={(e) => setMacAddress(e.target.value)}
+              placeholder="e.g. fa:16:3e:ab:cd:ef"
+              fullWidth
+              error={hasAttemptedSubmit && !macAddress.trim()}
+            />
+          </FormField>
+        )}
       </VStack>
     </Drawer>
   );

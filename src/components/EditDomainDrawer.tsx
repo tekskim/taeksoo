@@ -178,20 +178,17 @@ export function EditDomainDrawer({
         </FormField>
 
         {/* Status field */}
-        <FormField>
-          <FormField.Label>Status</FormField.Label>
-          <FormField.Description>
-            Select the domain&apos;s status. If &apos;disabled&apos;, users in this domain will not
-            be able to sign in.
-          </FormField.Description>
-          <FormField.Control>
-            <HStack gap={2} align="center">
-              <Toggle checked={enabled} onChange={setEnabled} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {enabled ? 'Enabled' : 'Disabled'}
-              </span>
-            </HStack>
-          </FormField.Control>
+        <FormField
+          label="Status"
+          description="Select the domain's status. If 'disabled', users in this domain will not be able to sign in."
+          spacing="loose"
+        >
+          <HStack gap={2} align="center">
+            <Toggle checked={enabled} onChange={setEnabled} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {enabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </HStack>
         </FormField>
       </VStack>
     </Drawer>

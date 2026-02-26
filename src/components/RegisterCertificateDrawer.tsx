@@ -293,19 +293,16 @@ export function RegisterCertificateDrawer({
         </VStack>
 
         {/* Type Radio */}
-        <FormField>
-          <FormField.Label>Type</FormField.Label>
-          <FormField.Control>
-            <RadioGroup
-              value={certificateType}
-              onChange={(value) => setCertificateType(value as CertificateType)}
-            >
-              <VStack gap={2}>
-                <Radio value="server" label="Server certificate" />
-                <Radio value="ca" label="CA certificate" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField label="Type" spacing="loose">
+          <RadioGroup
+            value={certificateType}
+            onChange={(value) => setCertificateType(value as CertificateType)}
+          >
+            <VStack gap={2}>
+              <Radio value="server" label="Server certificate" />
+              <Radio value="ca" label="CA certificate" />
+            </VStack>
+          </RadioGroup>
         </FormField>
 
         {/* Certificate Name Input */}

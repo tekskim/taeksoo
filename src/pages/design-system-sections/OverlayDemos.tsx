@@ -402,74 +402,64 @@ export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onCl
         <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit basic Information</h2>
 
         {/* Agent Name */}
-        <FormField required>
-          <FormField.Label>Agent name</FormField.Label>
-          <FormField.Control>
-            <Input
-              value={agentName}
-              onChange={(e) => setAgentName(e.target.value)}
-              placeholder="Enter a name for this agent"
-              fullWidth
-            />
-          </FormField.Control>
+        <FormField label="Agent name" required>
+          <Input
+            value={agentName}
+            onChange={(e) => setAgentName(e.target.value)}
+            placeholder="Enter a name for this agent"
+            fullWidth
+          />
         </FormField>
 
         {/* Description */}
-        <FormField>
-          <FormField.Label>Description</FormField.Label>
-          <FormField.Control>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add an description"
-              fullWidth
-              rows={3}
-            />
-          </FormField.Control>
+        <FormField label="Description">
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Add an description"
+            fullWidth
+            rows={3}
+          />
         </FormField>
 
         {/* Status */}
-        <FormField required>
-          <FormField.Label>Status</FormField.Label>
-          <FormField.HelperText>
-            Choose whether the agent will be active immediately or remain inactive.
-          </FormField.HelperText>
-          <FormField.Control>
-            <RadioGroup value={status} onChange={setStatus}>
-              <VStack gap={3}>
-                <Radio value="inactive" label="Inactive" />
-                <Radio value="active" label="Active" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField
+          label="Status"
+          description="Choose whether the agent will be active immediately or remain inactive."
+          spacing="loose"
+          required
+        >
+          <RadioGroup value={status} onChange={setStatus}>
+            <VStack gap={2}>
+              <Radio value="inactive" label="Inactive" />
+              <Radio value="active" label="Active" />
+            </VStack>
+          </RadioGroup>
         </FormField>
 
         {/* Tag */}
-        <FormField>
-          <FormField.Label>Tag</FormField.Label>
-          <FormField.HelperText>
-            Tags help categorize and identify your resources.
-          </FormField.HelperText>
-          <FormField.Control>
-            <Input
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
-              placeholder="Enter tags"
-              fullWidth
-            />
-          </FormField.Control>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">Up to 10 tags allowed.</p>
-          {tags.length > 0 && (
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-2 py-2 w-full">
-              <div className="flex gap-1 flex-wrap">
-                {tags.map((tag, index) => (
-                  <Chip key={index} label={tag} onRemove={() => handleRemoveTag(index)} />
-                ))}
-              </div>
-            </div>
-          )}
+        <FormField
+          label="Tag"
+          description="Tags help categorize and identify your resources."
+          helperText="Up to 10 tags allowed."
+        >
+          <Input
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+            placeholder="Enter tags"
+            fullWidth
+          />
         </FormField>
+        {tags.length > 0 && (
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-2 py-2 w-full -mt-4">
+            <div className="flex gap-1 flex-wrap">
+              {tags.map((tag, index) => (
+                <Chip key={index} label={tag} onRemove={() => handleRemoveTag(index)} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Warning Message */}
         <InlineMessage variant="warning">
@@ -528,70 +518,56 @@ export function EditModelSettingsDrawer({
         <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit model settings</h2>
 
         {/* Model Provider */}
-        <FormField required>
-          <FormField.Label>Model provider</FormField.Label>
-          <FormField.HelperText>Select the LLM provider for this agent.</FormField.HelperText>
-          <FormField.Control>
-            <Select
-              options={providerOptions}
-              value={modelProvider}
-              onChange={setModelProvider}
-              fullWidth
-            />
-          </FormField.Control>
+        <FormField
+          label="Model provider"
+          description="Select the LLM provider for this agent."
+          required
+        >
+          <Select
+            options={providerOptions}
+            value={modelProvider}
+            onChange={setModelProvider}
+            fullWidth
+          />
         </FormField>
 
         {/* Model */}
-        <FormField required>
-          <FormField.Label>Model</FormField.Label>
-          <FormField.HelperText>
-            Choose the model version offered by the selected provider.
-          </FormField.HelperText>
-          <FormField.Control>
-            <Select options={modelOptions} value={model} onChange={setModel} fullWidth />
-          </FormField.Control>
+        <FormField
+          label="Model"
+          description="Choose the model version offered by the selected provider."
+          required
+        >
+          <Select options={modelOptions} value={model} onChange={setModel} fullWidth />
         </FormField>
 
         {/* Temperature */}
-        <FormField required>
-          <FormField.Label>Temperature</FormField.Label>
-          <FormField.HelperText>
-            Adjust how creative or deterministic the model's responses should be.
-          </FormField.HelperText>
-          <FormField.Control>
-            <div className="flex items-center gap-2">
-              <Slider min={0} max={1} step={0.1} value={temperature} onChange={setTemperature} />
-              <span className="text-body-md text-[var(--color-text-subtle)] w-8 text-right">
-                {temperature}
-              </span>
-            </div>
-          </FormField.Control>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">
-            Lower values make answers more consistent, while higher values increase variability.
-          </p>
+        <FormField
+          label="Temperature"
+          description="Adjust how creative or deterministic the model's responses should be."
+          helperText="Lower values make answers more consistent, while higher values increase variability."
+          required
+        >
+          <div className="flex items-center gap-2">
+            <Slider min={0} max={1} step={0.1} value={temperature} onChange={setTemperature} />
+            <span className="text-body-md text-[var(--color-text-subtle)] w-8 text-right">
+              {temperature}
+            </span>
+          </div>
         </FormField>
 
         {/* Max Tokens */}
-        <FormField required>
-          <FormField.Label>Max tokens</FormField.Label>
-          <FormField.HelperText>
-            Set the maximum number of tokens for the response.
-          </FormField.HelperText>
-          <FormField.Control>
-            <div className="flex items-center gap-2">
-              <Slider
-                min={1000}
-                max={64000}
-                step={1000}
-                value={maxTokens}
-                onChange={setMaxTokens}
-              />
-              <span className="text-body-md text-[var(--color-text-subtle)] w-16 text-right">
-                {maxTokens.toLocaleString()}
-              </span>
-            </div>
-          </FormField.Control>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">Max: 64,000</p>
+        <FormField
+          label="Max tokens"
+          description="Set the maximum number of tokens for the response."
+          helperText="Max: 64,000"
+          required
+        >
+          <div className="flex items-center gap-2">
+            <Slider min={1000} max={64000} step={1000} value={maxTokens} onChange={setMaxTokens} />
+            <span className="text-body-md text-[var(--color-text-subtle)] w-16 text-right">
+              {maxTokens.toLocaleString()}
+            </span>
+          </div>
         </FormField>
 
         {/* Warning Message */}
@@ -638,57 +614,45 @@ export function EditPromptSettingsDrawer({
         <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit prompt settings</h2>
 
         {/* System Prompt */}
-        <FormField>
-          <FormField.Label>System prompt</FormField.Label>
-          <FormField.HelperText>
-            Defines the agent's core behavior and response rules.
-          </FormField.HelperText>
-          <FormField.Control>
-            <Textarea
-              value={systemPrompt}
-              onChange={(e) => setSystemPrompt(e.target.value)}
-              placeholder="Enter a prompt or task for your agent"
-              fullWidth
-              rows={3}
-            />
-          </FormField.Control>
+        <FormField
+          label="System prompt"
+          description="Defines the agent's core behavior and response rules."
+        >
+          <Textarea
+            value={systemPrompt}
+            onChange={(e) => setSystemPrompt(e.target.value)}
+            placeholder="Enter a prompt or task for your agent"
+            fullWidth
+            rows={3}
+          />
         </FormField>
 
         {/* Tone */}
-        <FormField required>
-          <FormField.Label>Tone</FormField.Label>
-          <FormField.HelperText>
-            Select the response style the agent should use.
-          </FormField.HelperText>
-          <FormField.Control>
-            <RadioGroup value={tone} onChange={setTone}>
-              <VStack gap={3}>
-                <Radio value="default" label="Default" />
-                <Radio value="professional" label="Professional" />
-                <Radio value="casual" label="Casual" />
-                <Radio value="technical" label="Technical" />
-                <Radio value="creative" label="Creative" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField
+          label="Tone"
+          description="Select the response style the agent should use."
+          spacing="loose"
+          required
+        >
+          <RadioGroup value={tone} onChange={setTone}>
+            <VStack gap={2}>
+              <Radio value="default" label="Default" />
+              <Radio value="professional" label="Professional" />
+              <Radio value="casual" label="Casual" />
+              <Radio value="technical" label="Technical" />
+              <Radio value="creative" label="Creative" />
+            </VStack>
+          </RadioGroup>
         </FormField>
 
         {/* Max Iteration */}
-        <FormField required>
-          <FormField.Label>Max iteration</FormField.Label>
-          <FormField.HelperText>
-            Limits how many reasoning cycles the agent can run.
-          </FormField.HelperText>
-          <FormField.Control>
-            <NumberInput
-              value={maxIteration}
-              onChange={setMaxIteration}
-              min={1}
-              max={10}
-              step={1}
-            />
-          </FormField.Control>
-          <p className="text-body-sm text-[var(--color-text-subtle)]">Max: 10</p>
+        <FormField
+          label="Max iteration"
+          description="Limits how many reasoning cycles the agent can run."
+          helperText="Max: 10"
+          required
+        >
+          <NumberInput value={maxIteration} onChange={setMaxIteration} min={1} max={10} step={1} />
         </FormField>
 
         {/* Warning Message */}

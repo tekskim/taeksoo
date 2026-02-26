@@ -224,7 +224,7 @@ export function ExternalGatewaySettingDrawer({
         </VStack>
 
         {/* External Gateway Toggle Section */}
-        <FormField label="External gateway">
+        <FormField label="External gateway" spacing="loose">
           <HStack gap={2} align="center">
             <Toggle checked={gatewayEnabled} onChange={setGatewayEnabled} />
             <span className="text-body-md text-[var(--color-text-default)]">

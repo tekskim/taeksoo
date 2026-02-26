@@ -156,6 +156,7 @@ export function EditUserDrawer({
         <FormField
           label="Status"
           description="Select the user's status. If 'Disabled', the user will be prevented from signing in."
+          spacing="loose"
         >
           <HStack gap={2} align="center">
             <Toggle checked={enabled} onChange={(checked) => setEnabled(checked)} />

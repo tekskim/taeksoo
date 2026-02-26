@@ -208,34 +208,31 @@ export function CreateServerGroupDrawer({
         </FormField>
 
         {/* Policy Radio */}
-        <FormField>
-          <FormField.Label>Create type</FormField.Label>
-          <FormField.Control>
-            <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
-              <VStack gap={2}>
-                <PolicyRadioOption
-                  value="anti-affinity"
-                  label="Anti-affinity"
-                  tooltip={policyDescriptions['anti-affinity']}
-                />
-                <PolicyRadioOption
-                  value="affinity"
-                  label="Affinity"
-                  tooltip={policyDescriptions['affinity']}
-                />
-                <PolicyRadioOption
-                  value="soft-anti-affinity"
-                  label="Soft anti-affinity"
-                  tooltip={policyDescriptions['soft-anti-affinity']}
-                />
-                <PolicyRadioOption
-                  value="soft-affinity"
-                  label="Soft affinity"
-                  tooltip={policyDescriptions['soft-affinity']}
-                />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField label="Create type" spacing="loose">
+          <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
+            <VStack gap={2}>
+              <PolicyRadioOption
+                value="anti-affinity"
+                label="Anti-affinity"
+                tooltip={policyDescriptions['anti-affinity']}
+              />
+              <PolicyRadioOption
+                value="affinity"
+                label="Affinity"
+                tooltip={policyDescriptions['affinity']}
+              />
+              <PolicyRadioOption
+                value="soft-anti-affinity"
+                label="Soft anti-affinity"
+                tooltip={policyDescriptions['soft-anti-affinity']}
+              />
+              <PolicyRadioOption
+                value="soft-affinity"
+                label="Soft affinity"
+                tooltip={policyDescriptions['soft-affinity']}
+              />
+            </VStack>
+          </RadioGroup>
         </FormField>
       </VStack>
     </Drawer>
