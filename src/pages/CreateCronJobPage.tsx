@@ -21,13 +21,13 @@ import {
   Tab,
   Table,
   Pagination,
-  SearchInput,
   Slider,
   Chip,
   StatusIndicator,
   PageShell,
   WizardSectionStatusIcon,
   Tooltip,
+  FilterSearchInput,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -481,8 +481,6 @@ interface BasicInfoSectionProps {
   onNameChange: (value: string) => void;
   nameError: string | null;
   onNameErrorChange: (error: string | null) => void;
-  replicas: number;
-  onReplicasChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
 }
@@ -494,8 +492,6 @@ function BasicInfoSection({
   onNameChange,
   nameError,
   onNameErrorChange,
-  replicas,
-  onReplicasChange,
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
@@ -534,19 +530,9 @@ function BasicInfoSection({
             />
           </FormField>
 
-          {/* Replicas */}
-          <FormField
-            label="Replicas"
-            required
-            description="Select the number of pod replicas to create."
-          >
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              width="sm"
-            />
+          {/* Schedule */}
+          <FormField label="Schedule" required>
+            <Input placeholder="Enter schedule" value="" onChange={() => {}} fullWidth />
           </FormField>
 
           {/* Description (Collapsible) */}
@@ -785,7 +771,7 @@ function ScalingPolicySection({
                   value={completions}
                   onChange={onCompletionsChange}
                   min={0}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -803,7 +789,7 @@ function ScalingPolicySection({
                   value={parallelism}
                   onChange={onParallelismChange}
                   min={0}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -821,7 +807,7 @@ function ScalingPolicySection({
                   value={backOffLimit}
                   onChange={onBackOffLimitChange}
                   min={0}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -839,7 +825,7 @@ function ScalingPolicySection({
                   value={activeDeadline}
                   onChange={onActiveDeadlineChange}
                   min={0}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -856,7 +842,7 @@ function ScalingPolicySection({
                 value={successfulJobHistoryLimit}
                 onChange={onSuccessfulJobHistoryLimitChange}
                 min={0}
-                width="sm"
+                width="xs"
               />
             </FormField.Control>
           </FormField>
@@ -869,7 +855,7 @@ function ScalingPolicySection({
                 value={failedJobHistoryLimit}
                 onChange={onFailedJobHistoryLimitChange}
                 min={0}
-                width="sm"
+                width="xs"
               />
             </FormField.Control>
           </FormField>
@@ -958,7 +944,6 @@ export function CreateCronJobPage() {
   // Basic information state
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
-  const [replicas, setReplicas] = useState(1);
   const [description, setDescription] = useState('');
 
   // Labels & Annotations state
@@ -1138,7 +1123,15 @@ export function CreateCronJobPage() {
       // Ports
       ports: [],
       // Environment Variables
-      envVars: isV2 ? [{ name: '', value: '', type: 'value' as const }] : [],
+      envVars: [
+        { name: '', value: '', type: 'value' as const },
+        { name: '', value: '', type: 'resource' as const },
+        { name: '', value: '', type: 'configmap-key' as const },
+        { name: '', value: '', type: 'secret-key' as const },
+        { name: '', value: '', type: 'pod-field' as const },
+        { name: '', value: '', type: 'secret' as const },
+        { name: '', value: '', type: 'configmap' as const },
+      ],
       // Service Account
       serviceAccountName: '',
       // Lifecycle Hooks
@@ -1174,6 +1167,13 @@ export function CreateCronJobPage() {
       volumeMounts: [],
       // Storage
       selectedVolume: '',
+      selectedVolumes: [
+        {
+          volumeName: 'vol-00001',
+          volumeType: 'csi',
+          mounts: [{ mountPath: '', subPath: '', readOnly: false }],
+        },
+      ],
     },
   });
 
@@ -1184,7 +1184,7 @@ export function CreateCronJobPage() {
   );
 
   // Scaling and Upgrade Policy state
-  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('');
+  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('30');
 
   // Node Scheduling state
   const [nodeScheduling, setNodeScheduling] = useState<string>('any');
@@ -1219,32 +1219,50 @@ export function CreateCronJobPage() {
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>(
-    isV2
-      ? [
-          { type: 'configmap' as const, volumeName: '', configMapName: '', optional: false },
-          {
-            type: 'secret' as const,
-            volumeName: '',
-            secretName: '',
-            optional: false,
-            defaultMode: '',
-          },
-          { type: 'pvc' as const, volumeName: '', pvcName: '', readOnly: false },
-          {
-            type: 'create-pvc' as const,
-            volumeName: '',
-            pvcName: '',
-            useExistingPV: false,
-            storageClass: '',
-            capacity: '',
-            persistentVolume: '',
-            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-            readOnly: false,
-          },
-        ]
-      : []
-  );
+  const [volumes, setVolumes] = useState<Volume[]>([
+    {
+      type: 'pvc' as const,
+      volumeName: 'vol-00002',
+      pvcName: 'pvc-web-data',
+      readOnly: false,
+    },
+    { type: 'pvc' as const, volumeName: 'vol-00003', pvcName: 'pvc-logs', readOnly: false },
+    {
+      type: 'configmap' as const,
+      volumeName: 'vol-00004',
+      configMapName: 'app-config',
+      optional: false,
+    },
+    {
+      type: 'secret' as const,
+      volumeName: 'vol-00005',
+      secretName: 'app-secret',
+      optional: false,
+      defaultMode: '',
+    },
+    {
+      type: 'create-pvc' as const,
+      volumeName: 'vol-00006',
+      pvcName: '',
+      useExistingPV: false,
+      storageClass: '',
+      capacity: '',
+      persistentVolume: '',
+      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+      readOnly: false,
+    },
+    {
+      type: 'create-pvc' as const,
+      volumeName: 'vol-00007',
+      pvcName: '',
+      useExistingPV: true,
+      storageClass: '',
+      capacity: '',
+      persistentVolume: '',
+      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+      readOnly: false,
+    },
+  ]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state
@@ -1727,7 +1745,15 @@ export function CreateCronJobPage() {
         // Ports
         ports: [],
         // Environment Variables
-        envVars: [],
+        envVars: [
+          { name: '', value: '', type: 'value' as const },
+          { name: '', value: '', type: 'resource' as const },
+          { name: '', value: '', type: 'configmap-key' as const },
+          { name: '', value: '', type: 'secret-key' as const },
+          { name: '', value: '', type: 'pod-field' as const },
+          { name: '', value: '', type: 'secret' as const },
+          { name: '', value: '', type: 'configmap' as const },
+        ],
         // Service Account
         serviceAccountName: '',
         // Lifecycle Hooks
@@ -1763,6 +1789,13 @@ export function CreateCronJobPage() {
         volumeMounts: [],
         // Storage
         selectedVolume: '',
+        selectedVolumes: [
+          {
+            volumeName: 'vol-00001',
+            volumeType: 'csi',
+            mounts: [{ mountPath: '', subPath: '', readOnly: false }],
+          },
+        ],
       },
     }));
   }, [containerTabs]);
@@ -1838,7 +1871,7 @@ export function CreateCronJobPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-3 px-8 pb-60"
     >
       <VStack gap={6}>
         {/* Page Header */}
@@ -1905,8 +1938,6 @@ export function CreateCronJobPage() {
                   onNameChange={setName}
                   nameError={nameError}
                   onNameErrorChange={setNameError}
-                  replicas={replicas}
-                  onReplicasChange={setReplicas}
                   description={description}
                   onDescriptionChange={setDescription}
                 />
@@ -2101,7 +2132,7 @@ export function CreateCronJobPage() {
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                    <VStack gap={6}>
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
                       </h6>
@@ -2134,6 +2165,7 @@ export function CreateCronJobPage() {
                             suffix="Seconds"
                           />
                         </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">0-600</span>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -2142,14 +2174,14 @@ export function CreateCronJobPage() {
                 {/* Networking */}
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
                       {/* Network Settings */}
-                      <VStack gap={8}>
+                      <VStack gap={6}>
                         <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
                         </h6>
-                        <VStack gap={8} className="w-full">
+                        <VStack gap={6} className="w-full">
                           <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
@@ -3109,9 +3141,32 @@ export function CreateCronJobPage() {
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
                               <VStack gap={3}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Select namespaces
+                                </span>
                                 {/* Search Input */}
-                                <SearchInput
+                                <FilterSearchInput
+                                  filters={[
+                                    {
+                                      id: 'name',
+                                      label: 'Name',
+                                      type: 'text',
+                                      placeholder: 'Enter name...',
+                                    },
+                                    {
+                                      id: 'status',
+                                      label: 'Status',
+                                      type: 'select',
+                                      options: [
+                                        { value: 'active', label: 'Active' },
+                                        { value: 'terminating', label: 'Terminating' },
+                                      ],
+                                    },
+                                  ]}
+                                  appliedFilters={[]}
+                                  onFiltersChange={() => {}}
                                   placeholder="Search namespaces by attributes"
+                                  size="sm"
                                   className="w-[var(--search-input-width)]"
                                 />
 
@@ -3175,7 +3230,7 @@ export function CreateCronJobPage() {
                                 />
 
                                 {/* Selected Namespace Chips */}
-                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center">
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center -mt-1">
                                   {term.selectedNamespaces.length > 0 ? (
                                     term.selectedNamespaces.map((nsId) => {
                                       const ns = MOCK_NAMESPACES.find((n) => n.id === nsId);
@@ -3689,7 +3744,7 @@ export function CreateCronJobPage() {
                                 <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
-                                    <VStack gap={2} className="pt-2">
+                                    <VStack gap={2} className="pt-6">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Default Mode
                                       </span>
@@ -3756,7 +3811,7 @@ export function CreateCronJobPage() {
                                 <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
-                                    <VStack gap={2} className="pt-2">
+                                    <VStack gap={2} className="pt-6">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Default Mode
                                       </span>
@@ -3828,44 +3883,48 @@ export function CreateCronJobPage() {
                               <>
                                 <div className="w-full">
                                   <VStack gap={8}>
-                                    <VStack gap={2}>
-                                      <span className="text-label-lg text-[var(--color-text-default)]">
-                                        Persistent Volume Claim Name{' '}
-                                        <span className="text-[var(--color-state-danger)]">*</span>
-                                      </span>
-                                      <Input
-                                        placeholder=""
-                                        value={(volume as CreatePVCVolume).pvcName}
-                                        onChange={(e) =>
-                                          updateVolume(index, { pvcName: e.target.value })
+                                    <VStack gap={3}>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Persistent Volume Claim Name{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder=""
+                                          value={(volume as CreatePVCVolume).pvcName}
+                                          onChange={(e) =>
+                                            updateVolume(index, { pvcName: e.target.value })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+
+                                      <RadioGroup
+                                        value={
+                                          (volume as CreatePVCVolume).useExistingPV
+                                            ? 'existing'
+                                            : 'new'
                                         }
-                                        fullWidth
-                                      />
+                                        onChange={(val) =>
+                                          updateVolume(index, {
+                                            useExistingPV: val === 'existing',
+                                          })
+                                        }
+                                      >
+                                        <Radio
+                                          value="new"
+                                          label="Use a Storage Class to provision a new Persistent Volume"
+                                        />
+                                        <Radio
+                                          value="existing"
+                                          label="Use an existing Persistent Volume"
+                                        />
+                                      </RadioGroup>
                                     </VStack>
 
-                                    <RadioGroup
-                                      value={
-                                        (volume as CreatePVCVolume).useExistingPV
-                                          ? 'existing'
-                                          : 'new'
-                                      }
-                                      onChange={(val) =>
-                                        updateVolume(index, {
-                                          useExistingPV: val === 'existing',
-                                        })
-                                      }
-                                    >
-                                      <Radio
-                                        value="new"
-                                        label="Use a Storage Class to provision a new Persistent Volume"
-                                      />
-                                      <Radio
-                                        value="existing"
-                                        label="Use an existing Persistent Volume"
-                                      />
-                                    </RadioGroup>
-
-                                    {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
+                                    {!(volume as CreatePVCVolume).useExistingPV && (
                                       <VStack gap={8}>
                                         <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3912,7 +3971,7 @@ export function CreateCronJobPage() {
                                       </VStack>
                                     )}
 
-                                    {(isV2 || (volume as CreatePVCVolume).useExistingPV) && (
+                                    {(volume as CreatePVCVolume).useExistingPV && (
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Persistent Volume{' '}
@@ -3940,7 +3999,7 @@ export function CreateCronJobPage() {
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
                                       </span>
-                                      <VStack gap={1}>
+                                      <VStack gap={2}>
                                         <Checkbox
                                           label="Single node read-write"
                                           checked={
@@ -4031,187 +4090,6 @@ export function CreateCronJobPage() {
                         fullWidth
                       />
                     </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
-
-                {/* Volume Claim Templates */}
-                <SectionCard className="pb-6">
-                  <SectionCard.Header title="Volume claim templates" />
-                  <SectionCard.Content className="pt-3">
-                    <div className="w-full">
-                      <VStack gap={3}>
-                        {volumeClaimTemplates.map((template, index) => (
-                          <div
-                            key={index}
-                            className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                          >
-                            <button
-                              onClick={() => removeVolumeClaimTemplate(index)}
-                              className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                            <VStack gap={8}>
-                              <VStack gap={2}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Persistent Volume Claim Name{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <Input
-                                  placeholder="pvc-name"
-                                  value={template.name}
-                                  onChange={(e) =>
-                                    updateVolumeClaimTemplate(index, { name: e.target.value })
-                                  }
-                                  fullWidth
-                                />
-                              </VStack>
-
-                              <RadioGroup
-                                value={template.useExistingPV ? 'existing' : 'new'}
-                                onChange={(val) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    useExistingPV: val === 'existing',
-                                  })
-                                }
-                              >
-                                <Radio
-                                  value="new"
-                                  label="Use storage class and create a new persistent volume"
-                                />
-                                <Radio value="existing" label="Use existing Persistent Volume" />
-                              </RadioGroup>
-
-                              {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={8}>
-                                  <VStack gap={2} className="w-full">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Storage Class{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Select
-                                      options={[
-                                        { value: 'standard', label: 'standard' },
-                                        { value: 'fast', label: 'fast' },
-                                      ]}
-                                      value={template.storageClass}
-                                      onChange={(val) =>
-                                        updateVolumeClaimTemplate(index, {
-                                          storageClass: val,
-                                        })
-                                      }
-                                      placeholder="Select storage class"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="w-full">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Capacity{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <NumberInput
-                                      value={
-                                        template.capacity ? parseInt(template.capacity) : undefined
-                                      }
-                                      onChange={(val) =>
-                                        updateVolumeClaimTemplate(index, {
-                                          capacity: val?.toString() || '',
-                                        })
-                                      }
-                                      suffix="GiB"
-                                      width="xs"
-                                    />
-                                  </VStack>
-                                </VStack>
-                              )}
-
-                              {(isV2 || template.useExistingPV) && (
-                                <VStack gap={1}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Persistent Volume{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'pv-1', label: 'pv-1' },
-                                      { value: 'pv-2', label: 'pv-2' },
-                                    ]}
-                                    value={template.persistentVolume}
-                                    onChange={(val) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        persistentVolume: val,
-                                      })
-                                    }
-                                    placeholder="Select persistent volume"
-                                    fullWidth
-                                  />
-                                </VStack>
-                              )}
-
-                              <VStack gap={3}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Access Modes{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <VStack gap={2}>
-                                  <Checkbox
-                                    label="Single node read-write"
-                                    checked={template.accessModes?.readWriteOnce}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readWriteOnce: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                  <Checkbox
-                                    label="Many nodes read-only"
-                                    checked={template.accessModes?.readOnlyMany}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readOnlyMany: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                  <Checkbox
-                                    label="Many nodes read-write"
-                                    checked={template.accessModes?.readWriteMany}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readWriteMany: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                              </VStack>
-                            </VStack>
-                          </div>
-                        ))}
-
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addVolumeClaimTemplate}
-                          >
-                            Add Volume Claim Template
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
                   </SectionCard.Content>
                 </SectionCard>
               </>
@@ -4867,6 +4745,82 @@ export function CreateCronJobPage() {
                                   pullSecrets: val,
                                 })
                               }
+                              fullWidth
+                            />
+                          </VStack>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* 2b. Command Section */}
+                    <SectionCard className="pb-6">
+                      <SectionCard.Header title="Command" />
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Command
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /bin/sh"
+                              fullWidth
+                              value={config.command || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  command: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Arguments
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
+                              fullWidth
+                              value={config.args || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  args: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                WorkingDir
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /myapp"
+                              fullWidth
+                              value={config.workingDir || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  workingDir: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Stdin
+                              </span>
+                            </VStack>
+                            <Select
+                              options={[
+                                { value: 'yes', label: 'Yes' },
+                                { value: 'no', label: 'No' },
+                              ]}
+                              value="no"
+                              onChange={() => {}}
                               fullWidth
                             />
                           </VStack>
@@ -6779,7 +6733,18 @@ export function CreateCronJobPage() {
                                   Specify the minimum CPU amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={4000}
+                                  step={50}
+                                  value={config.cpuRequest ? parseInt(config.cpuRequest) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      cpuRequest: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.cpuRequest ? parseInt(config.cpuRequest) : undefined
@@ -6790,11 +6755,10 @@ export function CreateCronJobPage() {
                                     })
                                   }
                                   min={0}
+                                  max={4000}
                                   width="xs"
+                                  suffix="mCPUs"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  mCPUs
-                                </span>
                               </HStack>
                             </VStack>
                             <VStack gap={2} className="flex-1">
@@ -6806,7 +6770,18 @@ export function CreateCronJobPage() {
                                   Specify the maximum CPU amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={4000}
+                                  step={50}
+                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      cpuLimit: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
                                   onChange={(val) =>
@@ -6815,11 +6790,10 @@ export function CreateCronJobPage() {
                                     })
                                   }
                                   min={0}
+                                  max={4000}
                                   width="xs"
+                                  suffix="mCPUs"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  mCPUs
-                                </span>
                               </HStack>
                             </VStack>
                           </div>
@@ -6834,7 +6808,18 @@ export function CreateCronJobPage() {
                                   Specify the minimum memory amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={8192}
+                                  step={100}
+                                  value={config.memoryRequest ? parseInt(config.memoryRequest) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      memoryRequest: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.memoryRequest
@@ -6847,11 +6832,10 @@ export function CreateCronJobPage() {
                                     })
                                   }
                                   min={0}
+                                  max={8192}
                                   width="xs"
+                                  suffix="MiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  MiB
-                                </span>
                               </HStack>
                             </VStack>
                             <VStack gap={2} className="flex-1">
@@ -6863,7 +6847,18 @@ export function CreateCronJobPage() {
                                   Specify the maximum memory amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={8192}
+                                  step={100}
+                                  value={config.memoryLimit ? parseInt(config.memoryLimit) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      memoryLimit: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.memoryLimit ? parseInt(config.memoryLimit) : undefined
@@ -6874,11 +6869,10 @@ export function CreateCronJobPage() {
                                     })
                                   }
                                   min={0}
+                                  max={8192}
                                   width="xs"
+                                  suffix="MiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  MiB
-                                </span>
                               </HStack>
                             </VStack>
                           </div>
@@ -7123,20 +7117,41 @@ export function CreateCronJobPage() {
                                   >
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
-                                        {selectedVol.volumeName} ({selectedVol.volumeType})
+                                        {selectedVol.volumeName} (
+                                        {{
+                                          csi: 'CSI',
+                                          pvc: 'Persistent Volume Claim',
+                                          'create-pvc': 'Persistent Volume Claim',
+                                          configmap: 'ConfigMap',
+                                          secret: 'Secret',
+                                          emptyDir: 'Empty Dir',
+                                          hostPath: 'Host Path',
+                                        }[selectedVol.volumeType] || selectedVol.volumeType}
+                                        )
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full">
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Mount Point{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
+                                        <div className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full">
+                                          <VStack gap={0.5}>
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                                              Mount Point{' '}
+                                              <span className="text-[var(--color-state-danger)]">
+                                                *
+                                              </span>
                                             </span>
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Sub Path in Volume
-                                          </span>
+                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                              Specify the path inside the container where the volume
+                                              will be mounted.
+                                            </span>
+                                          </VStack>
+                                          <VStack gap={0.5}>
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                                              Sub Path in Volume
+                                            </span>
+                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                              Specify the sub-path within the volume to use.
+                                            </span>
+                                          </VStack>
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
@@ -7154,7 +7169,7 @@ export function CreateCronJobPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""
@@ -7190,7 +7205,7 @@ export function CreateCronJobPage() {
                                                 });
                                               }}
                                             />
-                                            <div className="flex items-center justify-center">
+                                            <div className="flex items-center">
                                               <Checkbox
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
@@ -7271,13 +7286,11 @@ export function CreateCronJobPage() {
                           {/* Select Volume dropdown */}
                           <div className="w-full">
                             <Select
-                              options={[
-                                { value: '', label: 'Select volume' },
-                                ...volumes.map((v) => ({
-                                  value: v.volumeName,
-                                  label: v.volumeName,
-                                })),
-                              ]}
+                              options={volumes.map((v) => ({
+                                value: v.volumeName,
+                                label: v.volumeName,
+                              }))}
+                              placeholder="Select volume"
                               value=""
                               onChange={(val) => {
                                 if (val) {
