@@ -9,6 +9,7 @@ import {
   NumberInput,
   Input,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -240,10 +241,10 @@ export function ManageMembersDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={onClose} className="w-[152px]">
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px]">
             Save
           </Button>
         </HStack>
@@ -251,12 +252,7 @@ export function ManageMembersDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Pool Info */}
-        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
-            Pool name
-          </p>
-          <p className="text-body-md text-[var(--color-text-default)] leading-4">{pool.name}</p>
-        </div>
+        <InfoBox label="Pool name" value={pool.name} />
 
         {/* Available Instances Section */}
         <VStack gap={3} className="w-full">

@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Select,
+  Slider,
+  FormField,
+  NumberInput,
+  InfoBox,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -35,21 +44,6 @@ export interface CreateVolumeFromVolumeSnapshotDrawerProps {
     capacity: number,
     volumeType: string
   ) => void;
-}
-
-/* ----------------------------------------
-   InfoBox Component
-   ---------------------------------------- */
-
-function InfoBox({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
-        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
-      </VStack>
-    </div>
-  );
 }
 
 /* ----------------------------------------
@@ -194,14 +188,14 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
           {/* Buttons */}
           <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} className="w-full">
-            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+            <Button variant="secondary" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 h-8"
+              className="flex-1"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

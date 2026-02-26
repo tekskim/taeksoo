@@ -6,6 +6,7 @@ import {
   Pagination,
   Table,
   SelectionIndicator,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -163,14 +164,14 @@ export function ManagePoliciesDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -189,15 +190,7 @@ export function ManagePoliciesDrawer({
             </p>
           </VStack>
 
-          {/* Role Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Role</span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {roleName}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="Role" value={roleName} />
         </VStack>
 
         {/* Policies Section */}

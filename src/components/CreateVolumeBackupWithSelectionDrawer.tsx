@@ -281,14 +281,14 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full pt-[24px]">
-            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+            <Button variant="secondary" onClick={handleClose} className="w-[152px]">
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="w-[152px] h-8"
+              className="w-[152px]"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

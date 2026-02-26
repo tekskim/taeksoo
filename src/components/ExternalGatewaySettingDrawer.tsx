@@ -10,6 +10,7 @@ import {
   SelectionIndicator,
   Table,
   FormField,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -210,17 +211,7 @@ export function ExternalGatewaySettingDrawer({
             </p>
           </VStack>
 
-          {/* Router Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Router
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {router.name}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="Router" value={router.name} />
         </VStack>
 
         {/* External Gateway Toggle Section */}

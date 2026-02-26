@@ -285,14 +285,14 @@ export function CreateFolderDrawer({
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
@@ -335,7 +335,7 @@ export function CreateFolderDrawer({
 
         {/* Folder Location Tree */}
         <VStack gap={3} className="w-full">
-          <div className="w-full p-[13px] bg-white border border-[var(--color-border-default)] rounded-[10px]">
+          <div className="w-full p-[13px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)]">
             <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Folder location

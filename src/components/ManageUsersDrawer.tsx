@@ -7,6 +7,7 @@ import {
   Table,
   StatusIndicator,
   SelectionIndicator,
+  InfoBox,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
@@ -257,14 +258,14 @@ export function ManageUsersDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -284,17 +285,7 @@ export function ManageUsersDrawer({
             </p>
           </VStack>
 
-          {/* User Group Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                User group
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {userGroupName}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="User group" value={userGroupName} />
         </VStack>
 
         {/* Users Section */}

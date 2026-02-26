@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
@@ -94,14 +94,14 @@ export function ManageTagsDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSave}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -121,10 +121,7 @@ export function ManageTagsDrawer({
           </VStack>
 
           {/* Instance Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance name</div>
-            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
-          </div>
+          <InfoBox label="Instance name" value={instance.name} />
         </VStack>
 
         {/* Tags Section */}
@@ -149,11 +146,13 @@ export function ManageTagsDrawer({
 
           {/* Tag Container */}
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={2}>
+            <VStack gap={1}>
               {tags.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Value
+                  </span>
                   <div />
                 </div>
               )}
@@ -179,7 +178,7 @@ export function ManageTagsDrawer({
                     onClick={() => handleRemoveTag(tag.id)}
                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    <IconX size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                   </button>
                 </div>
               ))}
