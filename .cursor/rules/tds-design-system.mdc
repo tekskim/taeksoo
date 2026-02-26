@@ -1159,6 +1159,85 @@ const shellPanel = useShellPanel();
 | SectionCard Edit | `secondary` | `sm` | `12` |
 | Drawer/Modal Footer | `secondary`/`primary`/`danger` | `md` | `12` |
 
+## 테이블 뱃지 오버플로우 정책 (BadgeList)
+
+테이블 셀에 배열 데이터를 뱃지로 렌더링할 때 반드시 `BadgeList` 컴포넌트를 사용합니다.
+
+### 규칙 1: 배열 데이터는 반드시 `BadgeList` 사용
+
+- 뱃지가 2개 이상 될 수 있는 컬럼은 직접 `Badge`를 map하지 않고 `BadgeList`를 사용
+- `flex-wrap`으로 직접 나열하는 패턴 금지 (행 높이 일관성 깨짐)
+- 커스텀 Cell 컴포넌트 (`StatusCell`, `DaemonsCell` 등) 대신 `BadgeList` 사용
+
+### 규칙 2: `maxVisible` 기본값 = 2
+
+- 뱃지 2개까지 표시, 나머지는 `+N` 트리거로 Popover에 표시
+- 컬럼이 좁은 경우 (minWidth < 140px) `maxVisible=1` 사용
+
+### 규칙 3: 긴 텍스트 뱃지는 `maxBadgeWidth`로 truncation
+
+- 개별 뱃지 텍스트가 길 수 있는 컬럼 (labels, tags, annotations 등)은 `maxBadgeWidth` prop 사용
+- 뱃지에 `max-width` + `truncate` (text-overflow: ellipsis) 적용
+- 잘린 텍스트는 해당 뱃지의 `title` 속성으로 브라우저 네이티브 툴팁 제공
+- `+N` Popover 내에서는 전체 텍스트를 wrap하여 표시
+
+**권장 `maxBadgeWidth` 값:**
+
+| `maxVisible` | 컬럼 `minWidth` | `maxBadgeWidth` | 사용 예 |
+|---|---|---|---|
+| 2 | 180px | `"72px"` | Tags (중간 길이) |
+| 1 | 180px | `"140px"` | Labels (긴 텍스트) |
+| 2 | 160px | 생략 | OSDs, Status (짧은 값) |
+
+### 규칙 4: 컬럼 `minWidth`는 뱃지 수용 가능한 크기로 설정
+
+- `maxVisible=2` 사용 시 → `minWidth: 160px` 이상
+- `maxVisible=1` 사용 시 → `minWidth: 100px` 이상
+
+### 사용 예시
+
+```tsx
+import { BadgeList } from '@/design-system';
+
+// 짧은 값 (osds, status, daemons) — maxBadgeWidth 불필요
+<BadgeList
+  items={row.osds}
+  maxVisible={2}
+  popoverTitle={`All OSDs (${row.osds.length})`}
+/>
+
+// 긴 값 (labels, tags) — maxBadgeWidth로 truncation
+<BadgeList
+  items={row.labels}
+  maxVisible={2}
+  maxBadgeWidth="72px"
+  popoverTitle={`All Labels (${row.labels.length})`}
+/>
+
+// 매우 긴 값 (annotations) — maxVisible=1 + 넓은 maxBadgeWidth
+<BadgeList
+  items={row.annotations}
+  maxVisible={1}
+  maxBadgeWidth="140px"
+  popoverTitle={`All Annotations (${row.annotations.length})`}
+/>
+```
+
+### 금지 패턴
+
+```tsx
+// ❌ 금지 - 직접 Badge map + flex-wrap
+<div className="flex flex-wrap gap-1">
+  {items.map((item, i) => <Badge key={i}>{item}</Badge>)}
+</div>
+
+// ❌ 금지 - 커스텀 Cell 컴포넌트
+function DaemonsCell({ daemons }) { ... }
+
+// ✅ 권장 - BadgeList 사용
+<BadgeList items={items} maxVisible={2} />
+```
+
 ## 일반 규칙
 
 1. **필수 필드 표시**: `<span className="text-[var(--color-state-danger)]">*</span>`

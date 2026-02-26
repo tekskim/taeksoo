@@ -269,10 +269,10 @@ export function EntryPage() {
           </div>
 
           {/* Developer Resources */}
-          <div className="mt-12 pt-8 border-t border-[var(--color-border-default)]">
+          <div className="mt-12">
             <div className="mb-6">
               <h4 className="text-heading-h7 !font-normal text-[var(--color-text-muted)] mb-4">
-                Developer Resources
+                Resources
               </h4>
               <div className="flex items-center gap-2 mt-4 flex-wrap">
                 <Button variant="muted" size="md" onClick={() => navigate('/design/drawers')}>
