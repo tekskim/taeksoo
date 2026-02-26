@@ -526,16 +526,20 @@ function TrafficRulesSection({
                                   key={target.id}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={8}>
-                                    {/* Rule type + CIDR row (always shown) */}
+                                  <VStack gap={3}>
+                                    {/* Rule type + CIDR row */}
                                     <VStack gap={1}>
                                       <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                                         <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Rule type
                                         </span>
-                                        <span className="block text-label-sm text-[var(--color-text-default)]">
-                                          CIDR
-                                        </span>
+                                        {target.ruleType === 'ip-block' ? (
+                                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                                            CIDR
+                                          </span>
+                                        ) : (
+                                          <div />
+                                        )}
                                         <button
                                           onClick={() => removeTarget(target.id)}
                                           className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -556,21 +560,24 @@ function TrafficRulesSection({
                                           }
                                           fullWidth
                                         />
-                                        <Input
-                                          placeholder="e.g. 1.1.1.0/24"
-                                          value={target.cidr}
-                                          onChange={(e) =>
-                                            updateTarget(target.id, 'cidr', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
+                                        {target.ruleType === 'ip-block' ? (
+                                          <Input
+                                            placeholder="e.g. 1.1.1.0/24"
+                                            value={target.cidr}
+                                            onChange={(e) =>
+                                              updateTarget(target.id, 'cidr', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        ) : (
+                                          <div />
+                                        )}
                                         <div />
                                       </div>
                                     </VStack>
 
-                                    {/* Namespace Label Selectors (shown for namespace/pod types) */}
-                                    {(target.ruleType === 'namespace-label-selector' ||
-                                      target.ruleType === 'namespace-pod-label-selector') && (
+                                    {/* Namespace Label Selectors (namespace-label-selector only) */}
+                                    {target.ruleType === 'namespace-label-selector' && (
                                       <>
                                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                           <VStack gap={1}>
@@ -670,7 +677,7 @@ function TrafficRulesSection({
 
                                         {/* Matching Pods */}
                                         <VStack gap={2} className="w-full">
-                                          <span className="text-label-lg text-[var(--color-text-default)]">
+                                          <span className="text-label-sm text-[var(--color-text-default)]">
                                             Matching Pods
                                           </span>
                                           <div className="flex items-center gap-2">
@@ -702,6 +709,179 @@ function TrafficRulesSection({
                                             columns={MATCHING_PODS_COLUMNS}
                                             data={MOCK_MATCHING_PODS}
                                             rowKey="id"
+                                            rowHeight="40px"
+                                          />
+                                        </VStack>
+                                      </>
+                                    )}
+
+                                    {/* Combined Namespace + Pod Selectors (namespace-pod-label-selector) */}
+                                    {target.ruleType === 'namespace-pod-label-selector' && (
+                                      <>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                          <VStack gap={1}>
+                                            <div className="grid grid-cols-[80px_1fr_1fr_1fr] gap-2 w-full">
+                                              <div />
+                                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                Key
+                                              </span>
+                                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                Operator
+                                              </span>
+                                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                Values
+                                              </span>
+                                            </div>
+                                            {(target.namespaceSelectors || []).map((sel, idx) => (
+                                              <div
+                                                key={sel.id}
+                                                className="grid grid-cols-[80px_1fr_1fr_1fr] gap-2 w-full items-center"
+                                              >
+                                                {idx === 0 ? (
+                                                  <span className="text-label-sm text-[var(--color-text-default)] font-medium">
+                                                    Namespace
+                                                  </span>
+                                                ) : (
+                                                  <div />
+                                                )}
+                                                <Input
+                                                  placeholder="input key"
+                                                  value={sel.key}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'key',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Select
+                                                  options={OPERATOR_OPTIONS}
+                                                  value={sel.operator}
+                                                  onChange={(value) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'operator',
+                                                      value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Input
+                                                  placeholder="input values"
+                                                  value={sel.values}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'values',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                              </div>
+                                            ))}
+                                            {(target.podSelectors || []).map((sel, idx) => (
+                                              <div
+                                                key={sel.id}
+                                                className="grid grid-cols-[80px_1fr_1fr_1fr] gap-2 w-full items-center"
+                                              >
+                                                {idx === 0 ? (
+                                                  <span className="text-label-sm text-[var(--color-text-default)] font-medium">
+                                                    Pod
+                                                  </span>
+                                                ) : (
+                                                  <div />
+                                                )}
+                                                <Input
+                                                  placeholder="input key"
+                                                  value={sel.key}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'key',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Select
+                                                  options={OPERATOR_OPTIONS}
+                                                  value={sel.operator}
+                                                  onChange={(value) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'operator',
+                                                      value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Input
+                                                  placeholder="input values"
+                                                  value={sel.values}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'values',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                              </div>
+                                            ))}
+                                          </VStack>
+                                        </div>
+
+                                        {/* Matching Pods */}
+                                        <VStack gap={2} className="w-full">
+                                          <span className="text-label-sm text-[var(--color-text-default)]">
+                                            Matching Pods
+                                          </span>
+                                          <div className="flex items-center gap-2">
+                                            <button
+                                              className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                              disabled
+                                            >
+                                              <span className="text-[var(--color-text-default)]">
+                                                ‹
+                                              </span>
+                                            </button>
+                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                              1
+                                            </span>
+                                            <button
+                                              className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                              disabled
+                                            >
+                                              <span className="text-[var(--color-text-default)]">
+                                                ›
+                                              </span>
+                                            </button>
+                                            <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                              {MOCK_MATCHING_PODS.length} items
+                                            </span>
+                                          </div>
+                                          <Table
+                                            columns={MATCHING_PODS_COLUMNS}
+                                            data={MOCK_MATCHING_PODS}
+                                            rowKey="id"
+                                            rowHeight="40px"
                                           />
                                         </VStack>
                                       </>
@@ -808,7 +988,7 @@ function TrafficRulesSection({
 
                                         {target.ruleType === 'pod-label-selector' && (
                                           <VStack gap={2} className="w-full">
-                                            <span className="text-label-lg text-[var(--color-text-default)]">
+                                            <span className="text-label-sm text-[var(--color-text-default)]">
                                               Matching Pods
                                             </span>
                                             <div className="flex items-center gap-2">
@@ -840,6 +1020,7 @@ function TrafficRulesSection({
                                               columns={MATCHING_PODS_COLUMNS}
                                               data={MOCK_MATCHING_PODS}
                                               rowKey="id"
+                                              rowHeight="40px"
                                             />
                                           </VStack>
                                         )}
