@@ -240,12 +240,9 @@ export function PoolsPage() {
       render: (_, row) => {
         const fullText = row.pgStatus.join(' ');
         return (
-          <div
-            className="line-clamp-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)]"
-            title={fullText}
-          >
+          <span className="truncate" title={fullText}>
             {fullText}
-          </div>
+          </span>
         );
       },
     },
