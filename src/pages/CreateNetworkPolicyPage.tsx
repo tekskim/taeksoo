@@ -526,7 +526,7 @@ function TrafficRulesSection({
                                   key={target.id}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={3}>
+                                  <VStack gap={8}>
                                     {/* Rule type + CIDR row (always shown) */}
                                     <VStack gap={1}>
                                       <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
@@ -653,7 +653,7 @@ function TrafficRulesSection({
                                                 </button>
                                               </div>
                                             ))}
-                                            <div className="w-fit">
+                                            <div className="w-fit mt-1">
                                               <Button
                                                 variant="secondary"
                                                 size="sm"
@@ -791,7 +791,7 @@ function TrafficRulesSection({
                                                 </button>
                                               </div>
                                             ))}
-                                            <div className="w-fit">
+                                            <div className="w-fit mt-1">
                                               <Button
                                                 variant="secondary"
                                                 size="sm"
@@ -882,7 +882,7 @@ function TrafficRulesSection({
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -897,7 +897,7 @@ function TrafficRulesSection({
                                   </VStack>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -965,7 +965,7 @@ function TrafficRulesSection({
                                   </VStack>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -1365,7 +1365,7 @@ export function CreateNetworkPolicyPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -1465,7 +1465,7 @@ export function CreateNetworkPolicyPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1537,7 +1537,7 @@ export function CreateNetworkPolicyPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"

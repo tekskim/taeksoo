@@ -68,7 +68,7 @@ function DynamicFieldTableDemo() {
             </button>
           </div>
         ))}
-        <div className="w-fit">
+        <div className="w-fit mt-1">
           <Button
             variant="secondary"
             size="sm"
@@ -160,7 +160,7 @@ function RepeatableFieldGroupDemo() {
             </VStack>
           </div>
         ))}
-        <div className="w-fit">
+        <div className="w-fit mt-1">
           <Button
             variant="secondary"
             size="sm"
@@ -229,7 +229,7 @@ function WithLabelDescriptionDemo() {
               </button>
             </div>
           ))}
-          <div className="w-fit">
+          <div className="w-fit mt-1">
             <Button
               variant="secondary"
               size="sm"
@@ -294,7 +294,7 @@ function WithLabelDemo() {
               </button>
             </div>
           ))}
-          <div className="w-fit">
+          <div className="w-fit mt-1">
             <Button
               variant="secondary"
               size="sm"
@@ -363,7 +363,7 @@ function DescriptionHeaderDemo() {
             </button>
           </div>
         ))}
-        <div className="w-fit">
+        <div className="w-fit mt-1">
           <Button
             variant="secondary"
             size="sm"
@@ -399,10 +399,12 @@ const withLabelCode = `<VStack gap={3}>
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
         </div>
       ))}
-      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
-        onClick={() => addItem()}>
-        Add Label
-      </Button>
+      <div className="w-fit mt-1">
+        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+          onClick={() => addItem()}>
+          Add Label
+        </Button>
+      </div>
     </VStack>
   </div>
 </VStack>`;
@@ -433,10 +435,12 @@ const withLabelDescriptionCode = `<VStack gap={3}>
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
         </div>
       ))}
-      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
-        onClick={() => addItem()}>
-        Add Label
-      </Button>
+      <div className="w-fit mt-1">
+        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+          onClick={() => addItem()}>
+          Add Label
+        </Button>
+      </div>
     </VStack>
   </div>
 </VStack>`;
@@ -463,10 +467,12 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
         <button onClick={() => removeRow(i)}><IconX size={16} /></button>
       </div>
     ))}
-    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
-      onClick={() => addRow()}>
-      Add Option
-    </Button>
+    <div className="w-fit mt-1">
+      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+        onClick={() => addRow()}>
+        Add Option
+      </Button>
+    </div>
   </VStack>
 </div>`;
 
@@ -490,10 +496,12 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
         </button>
       </div>
     ))}
-    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
-      onClick={() => addRow()}>
-      Add Variable
-    </Button>
+    <div className="w-fit mt-1">
+      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+        onClick={() => addRow()}>
+        Add Variable
+      </Button>
+    </div>
   </VStack>
 </div>`;
 
@@ -519,7 +527,9 @@ const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle
         </VStack>
       </div>
     ))}
-    <Button variant="secondary" size="sm" onClick={() => addGroup()}>Add Variable</Button>
+    <div className="w-fit mt-1">
+      <Button variant="secondary" size="sm" onClick={() => addGroup()}>Add Variable</Button>
+    </div>
   </VStack>
 </div>`;
 
@@ -731,20 +741,20 @@ export function DynamicFormFieldsPage() {
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Dynamic Field Table (List):</strong> bg-subtle container → column headers
-                (text-label-sm) → input rows (grid-aligned) → Add button
+                (text-label-sm) → input rows (grid-aligned, gap-1) → Add button (mt-1)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>With Label &amp; Description (List):</strong> VStack gap-3 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
-                headers + input rows + Add button
+                headers + input rows (gap-1) + Add button (mt-1)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>With Label (List):</strong> VStack gap-3 → label (text-label-lg) → bg-subtle
-                container → column headers + input rows + Add button
+                container → column headers + input rows (gap-1) + Add button (mt-1)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
@@ -752,13 +762,13 @@ export function DynamicFormFieldsPage() {
                 <strong>With Description Headers (List):</strong> VStack gap-3 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
                 headers (VStack gap-1: text-label-sm label + text-body-sm description) → input rows
-                (grid-aligned) → Add button
+                (grid-aligned) → Add button (mt-1)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Repeatable Field Group (Card):</strong> bg-subtle outer container → white
-                inner cards (each with headers + close button + input rows) → Add button
+                inner cards (each with headers + close button + input rows) → Add button (mt-1)
               </p>
             </div>
           </VStack>
@@ -812,6 +822,12 @@ export function DynamicFormFieldsPage() {
                     Header → rows gap (Card)
                   </td>
                   <td className="py-2 text-[var(--color-text-muted)]">4px (gap-1)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Rows → Add button gap
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">8px (gap-1 + mt-1)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Column gap</td>
