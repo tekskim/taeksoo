@@ -285,18 +285,31 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
    BudgetSection Component
    ---------------------------------------- */
 
+const BUDGET_UNIT_OPTIONS = [
+  { value: 'pods', label: 'Pods' },
+  { value: 'percent', label: '%' },
+];
+
 interface BudgetSectionProps {
   minAvailablePods: number;
   onMinAvailablePodsChange: (value: number) => void;
+  minAvailableUnit: string;
+  onMinAvailableUnitChange: (value: string) => void;
   maxUnavailablePods: number;
   onMaxUnavailablePodsChange: (value: number) => void;
+  maxUnavailableUnit: string;
+  onMaxUnavailableUnitChange: (value: string) => void;
 }
 
 function BudgetSection({
   minAvailablePods,
   onMinAvailablePodsChange,
+  minAvailableUnit,
+  onMinAvailableUnitChange,
   maxUnavailablePods,
   onMaxUnavailablePodsChange,
+  maxUnavailableUnit,
+  onMaxUnavailableUnitChange,
 }: BudgetSectionProps) {
   return (
     <SectionCard className="pb-6">
@@ -312,9 +325,15 @@ function BudgetSection({
                   value={minAvailablePods}
                   onChange={onMinAvailablePodsChange}
                   min={0}
-                  width="sm"
+                  max={minAvailableUnit === 'percent' ? 100 : undefined}
+                  width="xs"
                 />
-                <span className="text-body-md text-[var(--color-text-muted)]">Pods</span>
+                <Select
+                  options={BUDGET_UNIT_OPTIONS}
+                  value={minAvailableUnit}
+                  onChange={onMinAvailableUnitChange}
+                  width="xs"
+                />
               </HStack>
             </FormField.Control>
           </FormField>
@@ -328,9 +347,15 @@ function BudgetSection({
                   value={maxUnavailablePods}
                   onChange={onMaxUnavailablePodsChange}
                   min={0}
-                  width="sm"
+                  max={maxUnavailableUnit === 'percent' ? 100 : undefined}
+                  width="xs"
                 />
-                <span className="text-body-md text-[var(--color-text-muted)]">Pods</span>
+                <Select
+                  options={BUDGET_UNIT_OPTIONS}
+                  value={maxUnavailableUnit}
+                  onChange={onMaxUnavailableUnitChange}
+                  width="xs"
+                />
               </HStack>
             </FormField.Control>
           </FormField>
@@ -392,84 +417,73 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
       />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
-          {/* Selector Rules Container */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3">
-            <VStack gap={3}>
-              {/* Column Headers and Selector Rules - only show when there are rules */}
-              {selectorRules.length > 0 && (
-                <VStack gap={2} className="w-full">
-                  {/* Column Headers */}
-                  <div className="flex gap-2 w-full">
-                    <div className="flex-1">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-label-lg text-[var(--color-text-default)]">
-                        Operator
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Value</span>
-                    </div>
-                    <div className="w-5" />
+          {/* Selector Rules */}
+          <VStack gap={3}>
+            <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={1}>
+                {selectorRules.length > 0 && (
+                  <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Operator
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
                   </div>
-
-                  {/* Selector Rules */}
-                  {selectorRules.map((rule) => (
-                    <div key={rule.id} className="flex gap-2 items-center w-full">
-                      <div className="flex-1">
-                        <Input
-                          placeholder="input key"
-                          value={rule.key}
-                          onChange={(e) => updateRule(rule.id, 'key', e.target.value)}
-                          fullWidth
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <Select
-                          options={OPERATOR_OPTIONS}
-                          value={rule.operator}
-                          onChange={(value) => updateRule(rule.id, 'operator', value)}
-                          fullWidth
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <Input
-                          placeholder="input value"
-                          value={rule.value}
-                          onChange={(e) => updateRule(rule.id, 'value', e.target.value)}
-                          fullWidth
-                        />
-                      </div>
-                      <button
-                        onClick={() => removeRule(rule.id)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors w-[23px]"
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
-                  ))}
-                </VStack>
-              )}
-
-              {/* Add Rule Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                onClick={addRule}
-                className="bg-white w-fit"
-              >
-                Add Rule
-              </Button>
-            </VStack>
-          </div>
+                )}
+                {selectorRules.map((rule) => (
+                  <div
+                    key={rule.id}
+                    className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="input key"
+                      value={rule.key}
+                      onChange={(e) => updateRule(rule.id, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Select
+                      options={OPERATOR_OPTIONS}
+                      value={rule.operator}
+                      onChange={(value) => updateRule(rule.id, 'operator', value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="input value"
+                      value={rule.value}
+                      onChange={(e) => updateRule(rule.id, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeRule(rule.id)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={addRule}
+                  >
+                    Add Rule
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
 
           {/* Matching Pods Section */}
           <VStack gap={2} className="w-full">
-            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-              Matching Pods
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Matching Pods</span>
 
             {/* Pagination */}
             <div className="flex items-center gap-2">
@@ -696,7 +710,9 @@ export function CreatePodDisruptionBudgetPage() {
 
   // Budget state
   const [minAvailablePods, setMinAvailablePods] = useState(0);
+  const [minAvailableUnit, setMinAvailableUnit] = useState('pods');
   const [maxUnavailablePods, setMaxUnavailablePods] = useState(0);
+  const [maxUnavailableUnit, setMaxUnavailableUnit] = useState('pods');
 
   // Selector state
   const [selectorRules, setSelectorRules] = useState<SelectorRule[]>(
@@ -900,8 +916,12 @@ export function CreatePodDisruptionBudgetPage() {
             <BudgetSection
               minAvailablePods={minAvailablePods}
               onMinAvailablePodsChange={setMinAvailablePods}
+              minAvailableUnit={minAvailableUnit}
+              onMinAvailableUnitChange={setMinAvailableUnit}
               maxUnavailablePods={maxUnavailablePods}
               onMaxUnavailablePodsChange={setMaxUnavailablePods}
+              maxUnavailableUnit={maxUnavailableUnit}
+              onMaxUnavailableUnitChange={setMaxUnavailableUnit}
             />
 
             {/* Selector Section */}

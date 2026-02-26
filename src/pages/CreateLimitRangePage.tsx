@@ -11,7 +11,9 @@ import {
   TopBar,
   PageShell,
   Input,
+  NumberInput,
   Select,
+  Slider,
   SectionCard,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -270,15 +272,23 @@ function ContainerResourceLimitSection({
                 Specify the minimum CPU amount reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={2} align="center">
-                  <Input
-                    placeholder="1000"
-                    value={resourceLimit.cpuReservation}
-                    onChange={(e) => updateField('cpuReservation', e.target.value)}
+                <HStack gap={3} align="center">
+                  <Slider
+                    min={0}
+                    max={4000}
+                    step={50}
+                    value={parseInt(resourceLimit.cpuReservation) || 0}
+                    onChange={(val) => updateField('cpuReservation', val.toString())}
                   />
-                  <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                    mCPUs
-                  </span>
+                  <NumberInput
+                    value={resourceLimit.cpuReservation}
+                    onChange={(val) => updateField('cpuReservation', val)}
+                    min={0}
+                    max={4000}
+                    step={1}
+                    width="xs"
+                    suffix="mCPUs"
+                  />
                 </HStack>
               </FormField.Control>
             </FormField>
@@ -290,15 +300,23 @@ function ContainerResourceLimitSection({
                 Specify the maximum CPU amount the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={2} align="center">
-                  <Input
-                    placeholder="1000"
-                    value={resourceLimit.cpuLimit}
-                    onChange={(e) => updateField('cpuLimit', e.target.value)}
+                <HStack gap={3} align="center">
+                  <Slider
+                    min={0}
+                    max={4000}
+                    step={50}
+                    value={parseInt(resourceLimit.cpuLimit) || 0}
+                    onChange={(val) => updateField('cpuLimit', val.toString())}
                   />
-                  <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                    mCPUs
-                  </span>
+                  <NumberInput
+                    value={resourceLimit.cpuLimit}
+                    onChange={(val) => updateField('cpuLimit', val)}
+                    min={0}
+                    max={4000}
+                    step={1}
+                    width="xs"
+                    suffix="mCPUs"
+                  />
                 </HStack>
               </FormField.Control>
             </FormField>
@@ -310,15 +328,23 @@ function ContainerResourceLimitSection({
                 Specify the minimum memory capacity reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={2} align="center">
-                  <Input
-                    placeholder="128"
-                    value={resourceLimit.memoryReservation}
-                    onChange={(e) => updateField('memoryReservation', e.target.value)}
+                <HStack gap={3} align="center">
+                  <Slider
+                    min={0}
+                    max={256}
+                    step={5}
+                    value={parseInt(resourceLimit.memoryReservation) || 0}
+                    onChange={(val) => updateField('memoryReservation', val.toString())}
                   />
-                  <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                    GiB
-                  </span>
+                  <NumberInput
+                    value={resourceLimit.memoryReservation}
+                    onChange={(val) => updateField('memoryReservation', val)}
+                    min={0}
+                    max={256}
+                    step={1}
+                    width="xs"
+                    suffix="GiB"
+                  />
                 </HStack>
               </FormField.Control>
             </FormField>
@@ -330,15 +356,23 @@ function ContainerResourceLimitSection({
                 Specify the maximum memory capacity the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={2} align="center">
-                  <Input
-                    placeholder="128"
-                    value={resourceLimit.memoryLimit}
-                    onChange={(e) => updateField('memoryLimit', e.target.value)}
+                <HStack gap={3} align="center">
+                  <Slider
+                    min={0}
+                    max={256}
+                    step={5}
+                    value={parseInt(resourceLimit.memoryLimit) || 0}
+                    onChange={(val) => updateField('memoryLimit', val.toString())}
                   />
-                  <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                    GiB
-                  </span>
+                  <NumberInput
+                    value={resourceLimit.memoryLimit}
+                    onChange={(val) => updateField('memoryLimit', val)}
+                    min={0}
+                    max={256}
+                    step={1}
+                    width="xs"
+                    suffix="GiB"
+                  />
                 </HStack>
               </FormField.Control>
             </FormField>
@@ -378,7 +412,7 @@ function LabelsAnnotationsSection({
     <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={8}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>

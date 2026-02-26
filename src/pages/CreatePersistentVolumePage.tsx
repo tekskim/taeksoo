@@ -11,6 +11,7 @@ import {
   PageShell,
   Input,
   NumberInput,
+  Slider,
   Select,
   Checkbox,
   SectionCard,
@@ -224,15 +225,17 @@ function BasicInfoSection({
           <FormField required>
             <FormField.Label>Capacity</FormField.Label>
             <FormField.Control>
-              <HStack gap={2} align="center">
+              <HStack gap={3} align="center">
+                <Slider min={1} max={1000} step={10} value={capacity} onChange={onCapacityChange} />
                 <NumberInput
                   value={capacity}
                   onChange={onCapacityChange}
                   min={1}
+                  max={1000}
                   step={1}
-                  width="sm"
+                  width="xs"
+                  suffix="GiB"
                 />
-                <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
               </HStack>
             </FormField.Control>
           </FormField>
@@ -432,19 +435,19 @@ function StorageConfigSection({
             <FormField.Label>Mount Options</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={3}>
+                <VStack gap={1}>
                   {mountOptions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_23px] gap-2 w-full">
-                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                    <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Option
-                      </label>
+                      </span>
                       <div className="w-5" />
                     </div>
                   )}
                   {mountOptions.map((option, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_23px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="input key"
@@ -454,9 +457,9 @@ function StorageConfigSection({
                       />
                       <button
                         onClick={() => removeMountOption(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                       >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={14} />
                       </button>
                     </div>
                   ))}
@@ -464,7 +467,7 @@ function StorageConfigSection({
                     <Button
                       variant="secondary"
                       size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      leftIcon={<IconCirclePlus size={12} />}
                       onClick={addMountOption}
                     >
                       Add Option
@@ -480,116 +483,98 @@ function StorageConfigSection({
             <FormField.Label>Node Selectors</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={3}>
+                <VStack gap={1} className="w-full">
                   {nodeSelectors.map((selector, selectorIndex) => (
                     <div
                       key={selectorIndex}
                       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                     >
-                      <HStack gap={2} align="start" className="w-full">
-                        <div className="flex-1">
-                          <VStack gap={2}>
-                            {/* Header row */}
-                            <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Key
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Operator
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Value
-                              </span>
-                              <div className="w-5" />
-                            </div>
-                            {/* Rule rows */}
-                            {selector.rules.map((rule, ruleIndex) => (
-                              <div
-                                key={ruleIndex}
-                                className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
-                              >
-                                <Input
-                                  placeholder="input key"
-                                  value={rule.key}
-                                  onChange={(e) =>
-                                    updateNodeSelectorRule(
-                                      selectorIndex,
-                                      ruleIndex,
-                                      'key',
-                                      e.target.value
-                                    )
-                                  }
-                                  fullWidth
-                                />
-                                <Select
-                                  options={OPERATOR_OPTIONS}
-                                  value={rule.operator}
-                                  onChange={(value) =>
-                                    updateNodeSelectorRule(
-                                      selectorIndex,
-                                      ruleIndex,
-                                      'operator',
-                                      value
-                                    )
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="input value"
-                                  value={rule.value}
-                                  onChange={(e) =>
-                                    updateNodeSelectorRule(
-                                      selectorIndex,
-                                      ruleIndex,
-                                      'value',
-                                      e.target.value
-                                    )
-                                  }
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                            {/* Add Rule button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={() => addNodeSelectorRule(selectorIndex)}
-                              >
-                                Add Rule
-                              </Button>
-                            </div>
-                          </VStack>
+                      <VStack gap={1}>
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Operator
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
                         </div>
-                        <button
-                          onClick={() => removeNodeSelector(selectorIndex)}
-                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 self-start"
-                        >
-                          <IconX
-                            size={16}
-                            className="text-[var(--color-text-muted)]"
-                            stroke={1.5}
-                          />
-                        </button>
-                      </HStack>
+                        {selector.rules.map((rule, ruleIndex) => (
+                          <div
+                            key={ruleIndex}
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="input key"
+                              value={rule.key}
+                              onChange={(e) =>
+                                updateNodeSelectorRule(
+                                  selectorIndex,
+                                  ruleIndex,
+                                  'key',
+                                  e.target.value
+                                )
+                              }
+                              fullWidth
+                            />
+                            <Select
+                              options={OPERATOR_OPTIONS}
+                              value={rule.operator}
+                              onChange={(value) =>
+                                updateNodeSelectorRule(selectorIndex, ruleIndex, 'operator', value)
+                              }
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="input value"
+                              value={rule.value}
+                              onChange={(e) =>
+                                updateNodeSelectorRule(
+                                  selectorIndex,
+                                  ruleIndex,
+                                  'value',
+                                  e.target.value
+                                )
+                              }
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
+                              className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                            >
+                              <IconX size={14} />
+                            </button>
+                          </div>
+                        ))}
+                        <HStack justify="between" className="w-full">
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} />}
+                              onClick={() => addNodeSelectorRule(selectorIndex)}
+                            >
+                              Add Rule
+                            </Button>
+                          </div>
+                          <button
+                            onClick={() => removeNodeSelector(selectorIndex)}
+                            className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                          >
+                            <IconX size={14} />
+                          </button>
+                        </HStack>
+                      </VStack>
                     </div>
                   ))}
                   <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      leftIcon={<IconCirclePlus size={12} />}
                       onClick={addNodeSelector}
                     >
                       Add Node Selector
@@ -674,9 +659,9 @@ function LabelsAnnotationsSection({
                       />
                       <button
                         onClick={() => onRemoveLabel(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                       >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={14} />
                       </button>
                     </div>
                   ))}
@@ -684,7 +669,7 @@ function LabelsAnnotationsSection({
                     <Button
                       variant="secondary"
                       size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      leftIcon={<IconCirclePlus size={12} />}
                       onClick={onAddLabel}
                     >
                       Add Label
@@ -703,22 +688,22 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={3}>
+                <VStack gap={1}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full">
-                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
-                      </label>
-                      <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
                         Value
-                      </label>
+                      </span>
                       <div className="w-5" />
                     </div>
                   )}
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -734,9 +719,9 @@ function LabelsAnnotationsSection({
                       />
                       <button
                         onClick={() => onRemoveAnnotation(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                       >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={14} />
                       </button>
                     </div>
                   ))}
@@ -744,7 +729,7 @@ function LabelsAnnotationsSection({
                     <Button
                       variant="secondary"
                       size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      leftIcon={<IconCirclePlus size={12} />}
                       onClick={onAddAnnotation}
                     >
                       Add Annotation

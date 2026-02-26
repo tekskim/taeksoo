@@ -16,6 +16,8 @@ import {
   Radio,
   RadioGroup,
   SectionCard,
+  Slider,
+  Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -51,6 +53,15 @@ const SECTION_ORDER: SectionStep[] = [
   'volume-claim',
   'storage-config',
   'labels-annotations',
+];
+
+// Namespace options
+const NAMESPACE_OPTIONS = [
+  { value: 'default', label: 'default' },
+  { value: 'kube-system', label: 'kube-system' },
+  { value: 'kube-public', label: 'kube-public' },
+  { value: 'monitoring', label: 'monitoring' },
+  { value: 'production', label: 'production' },
 ];
 
 // Storage class options for Volume Claim
@@ -198,27 +209,43 @@ function SummarySidebar({
    ---------------------------------------- */
 
 interface BasicInfoSectionProps {
+  namespace: string;
+  onNamespaceChange: (value: string) => void;
   pvcName: string;
   onNamespaceNameChange: (value: string) => void;
   pvcNameError: string | null;
   onNamespaceNameErrorChange: (error: string | null) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isV2: boolean;
 }
 
 function BasicInfoSection({
+  namespace,
+  onNamespaceChange,
   pvcName,
   onNamespaceNameChange,
   pvcNameError,
   onNamespaceNameErrorChange,
   description,
   onDescriptionChange,
+  isV2,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-6">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
+          {/* Namespace */}
+          <FormField label="Namespace" required>
+            <Select
+              options={NAMESPACE_OPTIONS}
+              value={namespace}
+              onChange={onNamespaceChange}
+              fullWidth
+            />
+          </FormField>
+
           {/* Name */}
           <FormField
             label="Name"
@@ -239,14 +266,19 @@ function BasicInfoSection({
           </FormField>
 
           {/* Description */}
-          <FormField label="Description">
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-          </FormField>
+          <Disclosure defaultOpen>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel>
+              <div className="pt-2">
+                <Input
+                  placeholder="Enter a description (optional)"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </div>
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -323,19 +355,30 @@ function VolumeClaimSection({
           <FormField required>
             <FormField.Label>Request Storage</FormField.Label>
             <FormField.Control>
-              <HStack gap={2} align="center">
-                <NumberInput
-                  value={requestStorage}
-                  onChange={(value) => onRequestStorageChange(value)}
+              <HStack gap={3} align="center">
+                <Slider
                   min={1}
-                  width="sm"
+                  max={1000}
+                  step={10}
+                  value={Number(requestStorage) || 1}
+                  onChange={(val) => onRequestStorageChange(String(val))}
                 />
-                <Select
-                  options={STORAGE_UNIT_OPTIONS}
-                  value={storageUnit}
-                  onChange={(value) => onStorageUnitChange(value)}
-                  width="xs"
-                />
+                <HStack gap={1} align="center">
+                  <NumberInput
+                    value={requestStorage}
+                    onChange={(value) => onRequestStorageChange(value)}
+                    min={1}
+                    max={1000}
+                    step={1}
+                    width="xs"
+                  />
+                  <Select
+                    options={STORAGE_UNIT_OPTIONS}
+                    value={storageUnit}
+                    onChange={(value) => onStorageUnitChange(value)}
+                    width="xs"
+                  />
+                </HStack>
               </HStack>
             </FormField.Control>
           </FormField>
@@ -460,124 +503,128 @@ function LabelsAnnotationsSection({
     <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={8}>
           {/* Labels */}
-          <FormField>
-            <FormField.Label>Labels</FormField.Label>
-            <FormField.Description>
-              Specify the labels used to identify and categorize the resource.
-            </FormField.Description>
-            <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
-                  {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
-                        Key
-                      </span>
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
-                        Value
-                      </span>
-                      <div className="w-5" />
-                    </div>
-                  )}
-                  {labels.map((label, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                    >
-                      <Input
-                        placeholder="Key"
-                        value={label.key}
-                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                        fullWidth
-                      />
-                      <Input
-                        placeholder="Value"
-                        value={label.value}
-                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => onRemoveLabel(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
-                  ))}
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                      onClick={onAddLabel}
-                    >
-                      Add Label
-                    </Button>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the labels used to identify and categorize the resource.
+              </p>
+            </VStack>
+
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={1}>
+                {labels.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
                   </div>
-                </VStack>
-              </div>
-            </FormField.Control>
-          </FormField>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={onAddLabel}
+                  >
+                    Add Label
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
 
           {/* Annotations */}
-          <FormField>
-            <FormField.Label>Annotations</FormField.Label>
-            <FormField.Description>
-              Specify the annotations used to provide additional metadata for the resource.
-            </FormField.Description>
-            <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={6}>
-                  {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                      <label className="text-label-sm text-[var(--color-text-default)]">Key</label>
-                      <label className="text-label-sm text-[var(--color-text-default)]">
-                        Value
-                      </label>
-                      <div></div>
-                    </div>
-                  )}
-                  {annotations.map((annotation, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
-                    >
-                      <Input
-                        placeholder="Key"
-                        value={annotation.key}
-                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                        fullWidth
-                      />
-                      <Input
-                        placeholder="Value"
-                        value={annotation.value}
-                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => onRemoveAnnotation(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
-                  ))}
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                      onClick={onAddAnnotation}
-                    >
-                      Add Annotation
-                    </Button>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the annotations used to provide additional metadata for the resource.
+              </p>
+            </VStack>
+
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={1}>
+                {annotations.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
                   </div>
-                </VStack>
-              </div>
-            </FormField.Control>
-          </FormField>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -594,6 +641,7 @@ export function CreatePersistentVolumeClaimPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Basic information state
+  const [namespace, setNamespace] = useState('default');
   const [pvcName, setNamespaceName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -807,12 +855,15 @@ export function CreatePersistentVolumeClaimPage() {
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
             <BasicInfoSection
+              namespace={namespace}
+              onNamespaceChange={setNamespace}
               pvcName={pvcName}
               onNamespaceNameChange={setNamespaceName}
               pvcNameError={pvcNameError}
               onNamespaceNameErrorChange={setNamespaceNameError}
               description={description}
               onDescriptionChange={setDescription}
+              isV2={isV2}
             />
 
             {/* Volume Claim Section */}

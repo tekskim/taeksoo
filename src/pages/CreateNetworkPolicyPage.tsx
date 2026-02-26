@@ -70,8 +70,9 @@ const NAMESPACE_OPTIONS = [
 // Rule type options
 const RULE_TYPE_OPTIONS = [
   { value: 'ip-block', label: 'IP Block' },
-  { value: 'namespace-selector', label: 'Namespace Selector' },
-  { value: 'pod-selector', label: 'Pod Selector' },
+  { value: 'namespace-label-selector', label: 'Namespace Label Selector' },
+  { value: 'pod-label-selector', label: 'Pod Label Selector' },
+  { value: 'namespace-pod-label-selector', label: 'Namespace/Pod Label Selector' },
 ];
 
 // Protocol options
@@ -134,11 +135,20 @@ interface MatchingPod {
   createdAt: string;
 }
 
-// Mock matching pods data
 const MOCK_MATCHING_PODS: MatchingPod[] = [
-  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2025' },
-  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2025' },
-  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025' },
+  { id: '1', name: 'default', createdAt: '2025-07-25 09:12:20' },
+];
+
+const MATCHING_PODS_COLUMNS = [
+  {
+    key: 'name' as const,
+    label: 'Name',
+    sortable: true,
+    render: (value: string) => (
+      <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
+    ),
+  },
+  { key: 'createdAt' as const, label: 'Created At', sortable: true },
 ];
 
 /* ----------------------------------------
@@ -283,8 +293,123 @@ function TrafficRulesSection({
     const newRules = [...rules];
     newRules[activeRuleIndex] = {
       ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) => {
+        if (t.id !== targetId) return t;
+        const updated = { ...t, [field]: value };
+        if (field === 'ruleType') {
+          const defaultSelector: LabelSelector = {
+            id: `ls-${Date.now()}`,
+            key: '',
+            operator: 'in',
+            values: '',
+          };
+          if (
+            (value === 'namespace-label-selector' || value === 'namespace-pod-label-selector') &&
+            !(t.namespaceSelectors || []).length
+          ) {
+            updated.namespaceSelectors = [{ ...defaultSelector, id: `ls-ns-${Date.now()}` }];
+          }
+          if (
+            (value === 'pod-label-selector' || value === 'namespace-pod-label-selector') &&
+            !(t.podSelectors || []).length
+          ) {
+            updated.podSelectors = [{ ...defaultSelector, id: `ls-pod-${Date.now()}` }];
+          }
+        }
+        return updated;
+      }),
+    };
+    onRulesChange(newRules);
+  };
+
+  const addException = (targetId: string) => {
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
       targets: newRules[activeRuleIndex].targets.map((t) =>
-        t.id === targetId ? { ...t, [field]: value } : t
+        t.id === targetId ? { ...t, exceptions: [...t.exceptions, ''] } : t
+      ),
+    };
+    onRulesChange(newRules);
+  };
+
+  const removeException = (targetId: string, exIndex: number) => {
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) =>
+        t.id === targetId ? { ...t, exceptions: t.exceptions.filter((_, i) => i !== exIndex) } : t
+      ),
+    };
+    onRulesChange(newRules);
+  };
+
+  const updateException = (targetId: string, exIndex: number, value: string) => {
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) =>
+        t.id === targetId
+          ? { ...t, exceptions: t.exceptions.map((ex, i) => (i === exIndex ? value : ex)) }
+          : t
+      ),
+    };
+    onRulesChange(newRules);
+  };
+
+  const addLabelSelector = (targetId: string, field: 'namespaceSelectors' | 'podSelectors') => {
+    const newSelector: LabelSelector = {
+      id: `ls-${Date.now()}`,
+      key: '',
+      operator: 'in',
+      values: '',
+    };
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) =>
+        t.id === targetId ? { ...t, [field]: [...(t[field] || []), newSelector] } : t
+      ),
+    };
+    onRulesChange(newRules);
+  };
+
+  const removeLabelSelector = (
+    targetId: string,
+    field: 'namespaceSelectors' | 'podSelectors',
+    selectorId: string
+  ) => {
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) =>
+        t.id === targetId
+          ? { ...t, [field]: (t[field] || []).filter((s: LabelSelector) => s.id !== selectorId) }
+          : t
+      ),
+    };
+    onRulesChange(newRules);
+  };
+
+  const updateLabelSelector = (
+    targetId: string,
+    field: 'namespaceSelectors' | 'podSelectors',
+    selectorId: string,
+    prop: keyof LabelSelector,
+    value: string
+  ) => {
+    const newRules = [...rules];
+    newRules[activeRuleIndex] = {
+      ...newRules[activeRuleIndex],
+      targets: newRules[activeRuleIndex].targets.map((t) =>
+        t.id === targetId
+          ? {
+              ...t,
+              [field]: (t[field] || []).map((s: LabelSelector) =>
+                s.id === selectorId ? { ...s, [prop]: value } : s
+              ),
+            }
+          : t
       ),
     };
     onRulesChange(newRules);
@@ -395,51 +520,383 @@ function TrafficRulesSection({
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1}>
-                              {activeRule.targets.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Rule type
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    CIDR
-                                  </span>
-                                  <div className="w-5" />
-                                </div>
-                              )}
-
+                            <VStack gap={1} className="w-full">
                               {activeRule.targets.map((target) => (
                                 <div
                                   key={target.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <Select
-                                    options={RULE_TYPE_OPTIONS}
-                                    value={target.ruleType}
-                                    onChange={(value) => updateTarget(target.id, 'ruleType', value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="e.g. 1.1.1.0/24"
-                                    value={target.cidr}
-                                    onChange={(e) =>
-                                      updateTarget(target.id, 'cidr', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeTarget(target.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
+                                  <VStack gap={3}>
+                                    {/* Rule type + CIDR row (always shown) */}
+                                    <VStack gap={1}>
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Rule type
+                                        </span>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          CIDR
+                                        </span>
+                                        <button
+                                          onClick={() => removeTarget(target.id)}
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                        <Select
+                                          options={RULE_TYPE_OPTIONS}
+                                          value={target.ruleType}
+                                          onChange={(value) =>
+                                            updateTarget(target.id, 'ruleType', value)
+                                          }
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. 1.1.1.0/24"
+                                          value={target.cidr}
+                                          onChange={(e) =>
+                                            updateTarget(target.id, 'cidr', e.target.value)
+                                          }
+                                          fullWidth
+                                        />
+                                        <div />
+                                      </div>
+                                    </VStack>
+
+                                    {/* Namespace Label Selectors (shown for namespace/pod types) */}
+                                    {(target.ruleType === 'namespace-label-selector' ||
+                                      target.ruleType === 'namespace-pod-label-selector') && (
+                                      <>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                          <VStack gap={1}>
+                                            {(target.namespaceSelectors || []).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Key
+                                                </span>
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Operator
+                                                </span>
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Values
+                                                </span>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(target.namespaceSelectors || []).map((sel) => (
+                                              <div
+                                                key={sel.id}
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                              >
+                                                <Input
+                                                  placeholder="input key"
+                                                  value={sel.key}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'key',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Select
+                                                  options={OPERATOR_OPTIONS}
+                                                  value={sel.operator}
+                                                  onChange={(value) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'operator',
+                                                      value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Input
+                                                  placeholder="input values"
+                                                  value={sel.values}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id,
+                                                      'values',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <button
+                                                  onClick={() =>
+                                                    removeLabelSelector(
+                                                      target.id,
+                                                      'namespaceSelectors',
+                                                      sel.id
+                                                    )
+                                                  }
+                                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                >
+                                                  <IconX
+                                                    size={16}
+                                                    className="text-[var(--color-text-muted)]"
+                                                    stroke={1.5}
+                                                  />
+                                                </button>
+                                              </div>
+                                            ))}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() =>
+                                                  addLabelSelector(target.id, 'namespaceSelectors')
+                                                }
+                                              >
+                                                Add rule
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+
+                                        {/* Matching Pods */}
+                                        <VStack gap={2} className="w-full">
+                                          <span className="text-label-lg text-[var(--color-text-default)]">
+                                            Matching Pods
+                                          </span>
+                                          <div className="flex items-center gap-2">
+                                            <button
+                                              className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                              disabled
+                                            >
+                                              <span className="text-[var(--color-text-default)]">
+                                                ‹
+                                              </span>
+                                            </button>
+                                            <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                              1
+                                            </span>
+                                            <button
+                                              className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                              disabled
+                                            >
+                                              <span className="text-[var(--color-text-default)]">
+                                                ›
+                                              </span>
+                                            </button>
+                                            <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                              {MOCK_MATCHING_PODS.length} items
+                                            </span>
+                                          </div>
+                                          <Table
+                                            columns={MATCHING_PODS_COLUMNS}
+                                            data={MOCK_MATCHING_PODS}
+                                            rowKey="id"
+                                          />
+                                        </VStack>
+                                      </>
+                                    )}
+
+                                    {/* Pod Label Selectors (shown for pod type only) */}
+                                    {target.ruleType === 'pod-label-selector' && (
+                                      <>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                          <VStack gap={1}>
+                                            {(target.podSelectors || []).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Key
+                                                </span>
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Operator
+                                                </span>
+                                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                                  Values
+                                                </span>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(target.podSelectors || []).map((sel) => (
+                                              <div
+                                                key={sel.id}
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                              >
+                                                <Input
+                                                  placeholder="input key"
+                                                  value={sel.key}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'key',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Select
+                                                  options={OPERATOR_OPTIONS}
+                                                  value={sel.operator}
+                                                  onChange={(value) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'operator',
+                                                      value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <Input
+                                                  placeholder="input values"
+                                                  value={sel.values}
+                                                  onChange={(e) =>
+                                                    updateLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id,
+                                                      'values',
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  fullWidth
+                                                />
+                                                <button
+                                                  onClick={() =>
+                                                    removeLabelSelector(
+                                                      target.id,
+                                                      'podSelectors',
+                                                      sel.id
+                                                    )
+                                                  }
+                                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                >
+                                                  <IconX
+                                                    size={16}
+                                                    className="text-[var(--color-text-muted)]"
+                                                    stroke={1.5}
+                                                  />
+                                                </button>
+                                              </div>
+                                            ))}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() =>
+                                                  addLabelSelector(target.id, 'podSelectors')
+                                                }
+                                              >
+                                                Add pod selector
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+
+                                        {target.ruleType === 'pod-label-selector' && (
+                                          <VStack gap={2} className="w-full">
+                                            <span className="text-label-lg text-[var(--color-text-default)]">
+                                              Matching Pods
+                                            </span>
+                                            <div className="flex items-center gap-2">
+                                              <button
+                                                className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                                disabled
+                                              >
+                                                <span className="text-[var(--color-text-default)]">
+                                                  ‹
+                                                </span>
+                                              </button>
+                                              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+                                                1
+                                              </span>
+                                              <button
+                                                className="w-6 h-6 flex items-center justify-center disabled:opacity-30"
+                                                disabled
+                                              >
+                                                <span className="text-[var(--color-text-default)]">
+                                                  ›
+                                                </span>
+                                              </button>
+                                              <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                                {MOCK_MATCHING_PODS.length} items
+                                              </span>
+                                            </div>
+                                            <Table
+                                              columns={MATCHING_PODS_COLUMNS}
+                                              data={MOCK_MATCHING_PODS}
+                                              rowKey="id"
+                                            />
+                                          </VStack>
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Exceptions list (shown for IP block) */}
+                                    {target.ruleType === 'ip-block' && (
+                                      <VStack gap={1}>
+                                        {target.exceptions.length > 0 && (
+                                          <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                                              Exception CIDR
+                                            </span>
+                                            <div />
+                                          </div>
+                                        )}
+                                        {target.exceptions.map((ex, exIdx) => (
+                                          <div
+                                            key={exIdx}
+                                            className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                          >
+                                            <Input
+                                              placeholder="e.g. 1.1.1.1/32"
+                                              value={ex}
+                                              onChange={(e) =>
+                                                updateException(target.id, exIdx, e.target.value)
+                                              }
+                                              fullWidth
+                                            />
+                                            <button
+                                              onClick={() => removeException(target.id, exIdx)}
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        ))}
+                                        <div className="w-fit">
+                                          <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                            onClick={() => addException(target.id)}
+                                          >
+                                            Add exception
+                                          </Button>
+                                        </div>
+                                      </VStack>
+                                    )}
+                                  </VStack>
                                 </div>
                               ))}
-
                               <div className="w-fit">
                                 <Button
                                   variant="secondary"
@@ -447,7 +904,7 @@ function TrafficRulesSection({
                                   leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                   onClick={addTarget}
                                 >
-                                  Add allowed traffic target
+                                  Add allowed traffic source
                                 </Button>
                               </div>
                             </VStack>
@@ -457,57 +914,57 @@ function TrafficRulesSection({
                         {/* Allowed Ports Section */}
                         <VStack gap={3}>
                           <label className="text-label-lg text-[var(--color-text-default)]">
-                            allowedPorts
+                            Allowed Ports
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1}>
-                              {activeRule.allowedPorts.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Port
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Protocol
-                                  </span>
-                                  <div className="w-5" />
-                                </div>
-                              )}
-
+                            <VStack gap={1} className="w-full">
                               {activeRule.allowedPorts.map((port) => (
                                 <div
                                   key={port.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <Input
-                                    placeholder="e.g. 8080"
-                                    value={port.port}
-                                    onChange={(e) =>
-                                      updateAllowedPort(port.id, 'port', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Select
-                                    options={PROTOCOL_OPTIONS}
-                                    value={port.protocol}
-                                    onChange={(value) =>
-                                      updateAllowedPort(port.id, 'protocol', value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAllowedPort(port.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
+                                  <VStack gap={1}>
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        Port
+                                      </span>
+                                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                                        Protocol
+                                      </span>
+                                      <button
+                                        onClick={() => removeAllowedPort(port.id)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                      <Input
+                                        placeholder="e.g. 8080"
+                                        value={port.port}
+                                        onChange={(e) =>
+                                          updateAllowedPort(port.id, 'port', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={PROTOCOL_OPTIONS}
+                                        value={port.protocol}
+                                        onChange={(value) =>
+                                          updateAllowedPort(port.id, 'protocol', value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <div />
+                                    </div>
+                                  </VStack>
                                 </div>
                               ))}
-
                               <div className="w-fit">
                                 <Button
                                   variant="secondary"
@@ -563,24 +1020,90 @@ export function CreateNetworkPolicyPage() {
   const [description, setDescription] = useState('');
 
   // Ingress Rules state
-  const [ingressEnabled, setIngressEnabled] = useState(isV2);
+  const [ingressEnabled, setIngressEnabled] = useState(true);
   const [ingressRules, setIngressRules] = useState<TrafficRule[]>([
     {
       id: 'ingress-rule-1',
       name: 'Rule 1',
-      targets: isV2 ? [{ id: 'target-i1', ruleType: 'ipBlock', cidr: '' }] : [],
-      allowedPorts: isV2 ? [{ id: 'port-i1', port: '', protocol: 'TCP' }] : [],
+      targets: [
+        {
+          id: 'target-i1',
+          ruleType: 'ip-block',
+          cidr: '',
+          exceptions: [''],
+          namespaceSelectors: [],
+          podSelectors: [],
+        },
+        {
+          id: 'target-i2',
+          ruleType: 'namespace-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [{ id: 'ls-i2-ns', key: '', operator: 'in', values: '' }],
+          podSelectors: [],
+        },
+        {
+          id: 'target-i3',
+          ruleType: 'pod-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [],
+          podSelectors: [{ id: 'ls-i3-pod', key: '', operator: 'in', values: '' }],
+        },
+        {
+          id: 'target-i4',
+          ruleType: 'namespace-pod-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [{ id: 'ls-i4-ns', key: '', operator: 'in', values: '' }],
+          podSelectors: [{ id: 'ls-i4-pod', key: '', operator: 'in', values: '' }],
+        },
+      ],
+      allowedPorts: [{ id: 'port-i1', port: '', protocol: 'TCP' }],
     },
   ]);
 
   // Egress Rules state
-  const [egressEnabled, setEgressEnabled] = useState(isV2);
+  const [egressEnabled, setEgressEnabled] = useState(true);
   const [egressRules, setEgressRules] = useState<TrafficRule[]>([
     {
       id: 'egress-rule-1',
       name: 'Rule 1',
-      targets: isV2 ? [{ id: 'target-e1', ruleType: 'ipBlock', cidr: '' }] : [],
-      allowedPorts: isV2 ? [{ id: 'port-e1', port: '', protocol: 'TCP' }] : [],
+      targets: [
+        {
+          id: 'target-e1',
+          ruleType: 'ip-block',
+          cidr: '',
+          exceptions: [''],
+          namespaceSelectors: [],
+          podSelectors: [],
+        },
+        {
+          id: 'target-e2',
+          ruleType: 'namespace-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [{ id: 'ls-e2-ns', key: '', operator: 'in', values: '' }],
+          podSelectors: [],
+        },
+        {
+          id: 'target-e3',
+          ruleType: 'pod-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [],
+          podSelectors: [{ id: 'ls-e3-pod', key: '', operator: 'in', values: '' }],
+        },
+        {
+          id: 'target-e4',
+          ruleType: 'namespace-pod-label-selector',
+          cidr: '',
+          exceptions: [],
+          namespaceSelectors: [{ id: 'ls-e4-ns', key: '', operator: 'in', values: '' }],
+          podSelectors: [{ id: 'ls-e4-pod', key: '', operator: 'in', values: '' }],
+        },
+      ],
+      allowedPorts: [{ id: 'port-e1', port: '', protocol: 'TCP' }],
     },
   ]);
 
