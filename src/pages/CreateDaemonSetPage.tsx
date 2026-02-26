@@ -21,13 +21,13 @@ import {
   Tab,
   Table,
   Pagination,
-  SearchInput,
   Slider,
   Chip,
   StatusIndicator,
   PageShell,
   WizardSectionStatusIcon,
   Tooltip,
+  FilterSearchInput,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -42,7 +42,7 @@ import {
   IconX,
   IconPlus,
   IconChevronRight,
-  IconHelpCircle,
+  IconInfoCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -481,8 +481,6 @@ interface BasicInfoSectionProps {
   onNameChange: (value: string) => void;
   nameError: string | null;
   onNameErrorChange: (error: string | null) => void;
-  replicas: number;
-  onReplicasChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
 }
@@ -494,8 +492,6 @@ function BasicInfoSection({
   onNameChange,
   nameError,
   onNameErrorChange,
-  replicas,
-  onReplicasChange,
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
@@ -531,21 +527,6 @@ function BasicInfoSection({
               }}
               error={!!nameError}
               fullWidth
-            />
-          </FormField>
-
-          {/* Replicas */}
-          <FormField
-            label="Replicas"
-            required
-            description="Select the number of pod replicas to create."
-          >
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              width="sm"
             />
           </FormField>
 
@@ -610,7 +591,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for labels */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={1}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -673,7 +654,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for annotations */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={1}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -741,6 +722,8 @@ interface ScalingPolicySectionProps {
   onMaxUnavailableChange: (value: number) => void;
   maxUnavailableUnit: string;
   onMaxUnavailableUnitChange: (value: string) => void;
+  minReady: number;
+  onMinReadyChange: (value: number) => void;
   revisionHistoryLimit: number;
   onRevisionHistoryLimitChange: (value: number) => void;
 }
@@ -752,6 +735,8 @@ function ScalingPolicySection({
   onMaxUnavailableChange,
   maxUnavailableUnit,
   onMaxUnavailableUnitChange,
+  minReady,
+  onMinReadyChange,
   revisionHistoryLimit,
   onRevisionHistoryLimitChange,
 }: ScalingPolicySectionProps) {
@@ -761,25 +746,47 @@ function ScalingPolicySection({
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
           {/* Strategy Selection */}
-          <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
-            <Radio
-              checked={strategy === 'rolling-update'}
-              onChange={() => onStrategyChange('rolling-update')}
-              label="Rolling update"
-            />
-            <Radio
-              checked={strategy === 'on-delete'}
-              onChange={() => onStrategyChange('on-delete')}
-              label="On delete"
-            />
-          </VStack>
+          <FormField>
+            <FormField.Label>Update policy</FormField.Label>
+            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+              <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
+                <Radio
+                  checked={strategy === 'rolling-update'}
+                  onChange={() => onStrategyChange('rolling-update')}
+                  label={
+                    <HStack gap={1} align="center">
+                      <span>Rolling update</span>
+                      <Tooltip
+                        content="Gradually replaces old pods with new ones, ensuring availability during the update."
+                        position="right"
+                      >
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  }
+                />
+                <Radio
+                  checked={strategy === 'on-delete'}
+                  onChange={() => onStrategyChange('on-delete')}
+                  label={
+                    <HStack gap={1} align="center">
+                      <span>On delete</span>
+                      <Tooltip
+                        content="New pods are only created when existing pods are manually deleted."
+                        position="right"
+                      >
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+                      </Tooltip>
+                    </HStack>
+                  }
+                />
+              </VStack>
+            </FormField.Control>
+          </FormField>
 
           {/* Max Unavailable */}
           <FormField>
             <FormField.Label>Max Unavailable</FormField.Label>
-            <FormField.Description>
-              The maximum number of pods that can be unavailable during an update.
-            </FormField.Description>
             <FormField.Control>
               <HStack gap={2}>
                 <NumberInput
@@ -798,18 +805,36 @@ function ScalingPolicySection({
             </FormField.Control>
           </FormField>
 
+          {/* Minimum Ready */}
+          <FormField>
+            <FormField.Label>Minimum ready</FormField.Label>
+            <FormField.Control>
+              <HStack gap={2} align="center">
+                <NumberInput
+                  value={minReady}
+                  onChange={onMinReadyChange}
+                  min={0}
+                  max={300}
+                  width="sm"
+                />
+                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                  Seconds
+                </span>
+              </HStack>
+            </FormField.Control>
+            <FormField.HelperText>0-300</FormField.HelperText>
+          </FormField>
+
           {/* Revision History Limit */}
           <FormField>
             <FormField.Label>Revision History Limit</FormField.Label>
-            <FormField.Description>
-              The maximum number of revision histories to retain for the DaemonSet.
-            </FormField.Description>
             <FormField.Control>
               <HStack gap={2} align="center">
                 <NumberInput
                   value={revisionHistoryLimit}
                   onChange={onRevisionHistoryLimitChange}
                   min={0}
+                  max={100}
                   width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
@@ -817,6 +842,7 @@ function ScalingPolicySection({
                 </span>
               </HStack>
             </FormField.Control>
+            <FormField.HelperText>0-100</FormField.HelperText>
           </FormField>
         </VStack>
       </SectionCard.Content>
@@ -841,7 +867,6 @@ export function CreateDaemonSetPage() {
   // Basic information state
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
-  const [replicas, setReplicas] = useState(1);
   const [description, setDescription] = useState('');
 
   // Labels & Annotations state
@@ -854,6 +879,7 @@ export function CreateDaemonSetPage() {
   const [strategy, setStrategy] = useState<'rolling-update' | 'on-delete'>('rolling-update');
   const [maxUnavailable, setMaxUnavailable] = useState(1);
   const [maxUnavailableUnit, setMaxUnavailableUnit] = useState('pods');
+  const [minReady, setMinReady] = useState(0);
   const [revisionHistoryLimit, setRevisionHistoryLimit] = useState(10);
 
   // No section status state needed - all sections are always visible
@@ -1014,7 +1040,15 @@ export function CreateDaemonSetPage() {
       // Ports
       ports: [],
       // Environment Variables
-      envVars: isV2 ? [{ name: '', value: '', type: 'value' as const }] : [],
+      envVars: [
+        { name: '', value: '', type: 'value' as const },
+        { name: '', value: '', type: 'resource' as const },
+        { name: '', value: '', type: 'configmap-key' as const },
+        { name: '', value: '', type: 'secret-key' as const },
+        { name: '', value: '', type: 'pod-field' as const },
+        { name: '', value: '', type: 'secret' as const },
+        { name: '', value: '', type: 'configmap' as const },
+      ],
       // Service Account
       serviceAccountName: '',
       // Lifecycle Hooks
@@ -1050,6 +1084,13 @@ export function CreateDaemonSetPage() {
       volumeMounts: [],
       // Storage
       selectedVolume: '',
+      selectedVolumes: [
+        {
+          volumeName: 'vol-00001',
+          volumeType: 'csi',
+          mounts: [{ mountPath: '', subPath: '', readOnly: false }],
+        },
+      ],
     },
   });
 
@@ -1060,7 +1101,7 @@ export function CreateDaemonSetPage() {
   );
 
   // Scaling and Upgrade Policy state
-  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('');
+  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('30');
 
   // Node Scheduling state
   const [nodeScheduling, setNodeScheduling] = useState<string>('any');
@@ -1095,32 +1136,21 @@ export function CreateDaemonSetPage() {
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>(
-    isV2
-      ? [
-          { type: 'configmap' as const, volumeName: '', configMapName: '', optional: false },
-          {
-            type: 'secret' as const,
-            volumeName: '',
-            secretName: '',
-            optional: false,
-            defaultMode: '',
-          },
-          { type: 'pvc' as const, volumeName: '', pvcName: '', readOnly: false },
-          {
-            type: 'create-pvc' as const,
-            volumeName: '',
-            pvcName: '',
-            useExistingPV: false,
-            storageClass: '',
-            capacity: '',
-            persistentVolume: '',
-            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-            readOnly: false,
-          },
-        ]
-      : []
-  );
+  const [volumes, setVolumes] = useState<Volume[]>([
+    {
+      type: 'configmap' as const,
+      volumeName: 'vol-00001',
+      configMapName: 'app-config',
+      optional: false,
+    },
+    {
+      type: 'secret' as const,
+      volumeName: 'vol-00002',
+      secretName: 'app-secret',
+      optional: false,
+      defaultMode: '',
+    },
+  ]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state
@@ -1593,7 +1623,15 @@ export function CreateDaemonSetPage() {
         // Ports
         ports: [],
         // Environment Variables
-        envVars: [],
+        envVars: [
+          { name: '', value: '', type: 'value' as const },
+          { name: '', value: '', type: 'resource' as const },
+          { name: '', value: '', type: 'configmap-key' as const },
+          { name: '', value: '', type: 'secret-key' as const },
+          { name: '', value: '', type: 'pod-field' as const },
+          { name: '', value: '', type: 'secret' as const },
+          { name: '', value: '', type: 'configmap' as const },
+        ],
         // Service Account
         serviceAccountName: '',
         // Lifecycle Hooks
@@ -1629,6 +1667,13 @@ export function CreateDaemonSetPage() {
         volumeMounts: [],
         // Storage
         selectedVolume: '',
+        selectedVolumes: [
+          {
+            volumeName: 'vol-00001',
+            volumeType: 'csi',
+            mounts: [{ mountPath: '', subPath: '', readOnly: false }],
+          },
+        ],
       },
     }));
   }, [containerTabs]);
@@ -1704,7 +1749,7 @@ export function CreateDaemonSetPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-3 px-8 pb-60"
     >
       <VStack gap={6}>
         {/* Page Header */}
@@ -1772,8 +1817,6 @@ export function CreateDaemonSetPage() {
                   onNameChange={setName}
                   nameError={nameError}
                   onNameErrorChange={setNameError}
-                  replicas={replicas}
-                  onReplicasChange={setReplicas}
                   description={description}
                   onDescriptionChange={setDescription}
                 />
@@ -1794,6 +1837,8 @@ export function CreateDaemonSetPage() {
                   onMaxUnavailableChange={setMaxUnavailable}
                   maxUnavailableUnit={maxUnavailableUnit}
                   onMaxUnavailableUnitChange={setMaxUnavailableUnit}
+                  minReady={minReady}
+                  onMinReadyChange={setMinReady}
                   revisionHistoryLimit={revisionHistoryLimit}
                   onRevisionHistoryLimitChange={setRevisionHistoryLimit}
                 />
@@ -1879,15 +1924,13 @@ export function CreateDaemonSetPage() {
 
                       {/* Annotations */}
                       <VStack gap={3}>
-                        <VStack gap={1}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Annotations
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the annotations used to provide additional metadata for the
-                            resource.
-                          </p>
-                        </VStack>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Annotations
+                        </span>
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          Specify the annotations used to provide additional metadata for the
+                          resource.
+                        </p>
 
                         {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
@@ -1958,7 +2001,7 @@ export function CreateDaemonSetPage() {
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
                   <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                    <VStack gap={6}>
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
                       </h6>
@@ -1991,6 +2034,7 @@ export function CreateDaemonSetPage() {
                             suffix="Seconds"
                           />
                         </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">0-600</span>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -1999,14 +2043,14 @@ export function CreateDaemonSetPage() {
                 {/* Networking */}
                 <SectionCard className="pb-6">
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content>
+                  <SectionCard.Content className="pt-3">
                     <VStack gap={8}>
                       {/* Network Settings */}
-                      <VStack gap={8}>
+                      <VStack gap={6}>
                         <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
                         </h6>
-                        <VStack gap={8} className="w-full">
+                        <VStack gap={6} className="w-full">
                           <VStack gap={1} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Network Mode
@@ -2966,9 +3010,32 @@ export function CreateDaemonSetPage() {
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
                               <VStack gap={3}>
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Select namespaces
+                                </span>
                                 {/* Search Input */}
-                                <SearchInput
+                                <FilterSearchInput
+                                  filters={[
+                                    {
+                                      id: 'name',
+                                      label: 'Name',
+                                      type: 'text',
+                                      placeholder: 'Enter name...',
+                                    },
+                                    {
+                                      id: 'status',
+                                      label: 'Status',
+                                      type: 'select',
+                                      options: [
+                                        { value: 'active', label: 'Active' },
+                                        { value: 'terminating', label: 'Terminating' },
+                                      ],
+                                    },
+                                  ]}
+                                  appliedFilters={[]}
+                                  onFiltersChange={() => {}}
                                   placeholder="Search namespaces by attributes"
+                                  size="sm"
                                   className="w-[var(--search-input-width)]"
                                 />
 
@@ -3032,7 +3099,7 @@ export function CreateDaemonSetPage() {
                                 />
 
                                 {/* Selected Namespace Chips */}
-                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center">
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center -mt-1">
                                   {term.selectedNamespaces.length > 0 ? (
                                     term.selectedNamespaces.map((nsId) => {
                                       const ns = MOCK_NAMESPACES.find((n) => n.id === nsId);
@@ -3546,7 +3613,7 @@ export function CreateDaemonSetPage() {
                                 <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
-                                    <VStack gap={2} className="pt-2">
+                                    <VStack gap={2} className="pt-6">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Default Mode
                                       </span>
@@ -3613,7 +3680,7 @@ export function CreateDaemonSetPage() {
                                 <Disclosure defaultOpen={isV2}>
                                   <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                                   <Disclosure.Panel>
-                                    <VStack gap={2} className="pt-2">
+                                    <VStack gap={2} className="pt-6">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Default Mode
                                       </span>
@@ -3685,44 +3752,48 @@ export function CreateDaemonSetPage() {
                               <>
                                 <div className="w-full">
                                   <VStack gap={8}>
-                                    <VStack gap={2}>
-                                      <span className="text-label-lg text-[var(--color-text-default)]">
-                                        Persistent Volume Claim Name{' '}
-                                        <span className="text-[var(--color-state-danger)]">*</span>
-                                      </span>
-                                      <Input
-                                        placeholder=""
-                                        value={(volume as CreatePVCVolume).pvcName}
-                                        onChange={(e) =>
-                                          updateVolume(index, { pvcName: e.target.value })
+                                    <VStack gap={3}>
+                                      <VStack gap={2}>
+                                        <span className="text-label-lg text-[var(--color-text-default)]">
+                                          Persistent Volume Claim Name{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder=""
+                                          value={(volume as CreatePVCVolume).pvcName}
+                                          onChange={(e) =>
+                                            updateVolume(index, { pvcName: e.target.value })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+
+                                      <RadioGroup
+                                        value={
+                                          (volume as CreatePVCVolume).useExistingPV
+                                            ? 'existing'
+                                            : 'new'
                                         }
-                                        fullWidth
-                                      />
+                                        onChange={(val) =>
+                                          updateVolume(index, {
+                                            useExistingPV: val === 'existing',
+                                          })
+                                        }
+                                      >
+                                        <Radio
+                                          value="new"
+                                          label="Use a Storage Class to provision a new Persistent Volume"
+                                        />
+                                        <Radio
+                                          value="existing"
+                                          label="Use an existing Persistent Volume"
+                                        />
+                                      </RadioGroup>
                                     </VStack>
 
-                                    <RadioGroup
-                                      value={
-                                        (volume as CreatePVCVolume).useExistingPV
-                                          ? 'existing'
-                                          : 'new'
-                                      }
-                                      onChange={(val) =>
-                                        updateVolume(index, {
-                                          useExistingPV: val === 'existing',
-                                        })
-                                      }
-                                    >
-                                      <Radio
-                                        value="new"
-                                        label="Use a Storage Class to provision a new Persistent Volume"
-                                      />
-                                      <Radio
-                                        value="existing"
-                                        label="Use an existing Persistent Volume"
-                                      />
-                                    </RadioGroup>
-
-                                    {(isV2 || !(volume as CreatePVCVolume).useExistingPV) && (
+                                    {!(volume as CreatePVCVolume).useExistingPV && (
                                       <VStack gap={8}>
                                         <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3769,7 +3840,7 @@ export function CreateDaemonSetPage() {
                                       </VStack>
                                     )}
 
-                                    {(isV2 || (volume as CreatePVCVolume).useExistingPV) && (
+                                    {(volume as CreatePVCVolume).useExistingPV && (
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
                                           Persistent Volume{' '}
@@ -3797,7 +3868,7 @@ export function CreateDaemonSetPage() {
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
                                       </span>
-                                      <VStack gap={1}>
+                                      <VStack gap={2}>
                                         <Checkbox
                                           label="Single node read-write"
                                           checked={
@@ -3879,8 +3950,6 @@ export function CreateDaemonSetPage() {
                         options={[
                           { value: 'configmap', label: 'ConfigMap' },
                           { value: 'secret', label: 'Secret' },
-                          { value: 'pvc', label: 'Persistent volume claim' },
-                          { value: 'create-pvc', label: 'Create persistent volume claim' },
                         ]}
                         value=""
                         onChange={(val) => addVolume(val)}
@@ -3888,187 +3957,6 @@ export function CreateDaemonSetPage() {
                         fullWidth
                       />
                     </VStack>
-                  </SectionCard.Content>
-                </SectionCard>
-
-                {/* Volume Claim Templates */}
-                <SectionCard className="pb-6">
-                  <SectionCard.Header title="Volume claim templates" />
-                  <SectionCard.Content className="pt-3">
-                    <div className="w-full">
-                      <VStack gap={3}>
-                        {volumeClaimTemplates.map((template, index) => (
-                          <div
-                            key={index}
-                            className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                          >
-                            <button
-                              onClick={() => removeVolumeClaimTemplate(index)}
-                              className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                            <VStack gap={8}>
-                              <VStack gap={2}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Persistent Volume Claim Name{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <Input
-                                  placeholder="pvc-name"
-                                  value={template.name}
-                                  onChange={(e) =>
-                                    updateVolumeClaimTemplate(index, { name: e.target.value })
-                                  }
-                                  fullWidth
-                                />
-                              </VStack>
-
-                              <RadioGroup
-                                value={template.useExistingPV ? 'existing' : 'new'}
-                                onChange={(val) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    useExistingPV: val === 'existing',
-                                  })
-                                }
-                              >
-                                <Radio
-                                  value="new"
-                                  label="Use storage class and create a new persistent volume"
-                                />
-                                <Radio value="existing" label="Use existing Persistent Volume" />
-                              </RadioGroup>
-
-                              {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={8}>
-                                  <VStack gap={2} className="w-full">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Storage Class{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <Select
-                                      options={[
-                                        { value: 'standard', label: 'standard' },
-                                        { value: 'fast', label: 'fast' },
-                                      ]}
-                                      value={template.storageClass}
-                                      onChange={(val) =>
-                                        updateVolumeClaimTemplate(index, {
-                                          storageClass: val,
-                                        })
-                                      }
-                                      placeholder="Select storage class"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="w-full">
-                                    <span className="text-label-lg text-[var(--color-text-default)]">
-                                      Capacity{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <NumberInput
-                                      value={
-                                        template.capacity ? parseInt(template.capacity) : undefined
-                                      }
-                                      onChange={(val) =>
-                                        updateVolumeClaimTemplate(index, {
-                                          capacity: val?.toString() || '',
-                                        })
-                                      }
-                                      suffix="GiB"
-                                      width="xs"
-                                    />
-                                  </VStack>
-                                </VStack>
-                              )}
-
-                              {(isV2 || template.useExistingPV) && (
-                                <VStack gap={1}>
-                                  <span className="text-label-lg text-[var(--color-text-default)]">
-                                    Persistent Volume{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'pv-1', label: 'pv-1' },
-                                      { value: 'pv-2', label: 'pv-2' },
-                                    ]}
-                                    value={template.persistentVolume}
-                                    onChange={(val) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        persistentVolume: val,
-                                      })
-                                    }
-                                    placeholder="Select persistent volume"
-                                    fullWidth
-                                  />
-                                </VStack>
-                              )}
-
-                              <VStack gap={3}>
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Access Modes{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <VStack gap={2}>
-                                  <Checkbox
-                                    label="Single node read-write"
-                                    checked={template.accessModes?.readWriteOnce}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readWriteOnce: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                  <Checkbox
-                                    label="Many nodes read-only"
-                                    checked={template.accessModes?.readOnlyMany}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readOnlyMany: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                  <Checkbox
-                                    label="Many nodes read-write"
-                                    checked={template.accessModes?.readWriteMany}
-                                    onChange={(e) =>
-                                      updateVolumeClaimTemplate(index, {
-                                        accessModes: {
-                                          ...template.accessModes,
-                                          readWriteMany: e.target.checked,
-                                        },
-                                      })
-                                    }
-                                  />
-                                </VStack>
-                              </VStack>
-                            </VStack>
-                          </div>
-                        ))}
-
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addVolumeClaimTemplate}
-                          >
-                            Add Volume Claim Template
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
                   </SectionCard.Content>
                 </SectionCard>
               </>
@@ -4619,9 +4507,9 @@ export function CreateDaemonSetPage() {
                                       content="Runs before app containers start. Used for setup tasks like fetching configs or waiting for dependencies."
                                       position="right"
                                     >
-                                      <IconHelpCircle
+                                      <IconInfoCircle
                                         size={14}
-                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                        className="text-[var(--color-text-subtle)]"
                                       />
                                     </Tooltip>
                                   </HStack>
@@ -4636,9 +4524,9 @@ export function CreateDaemonSetPage() {
                                       content="The main application container that runs for the lifetime of the pod."
                                       position="right"
                                     >
-                                      <IconHelpCircle
+                                      <IconInfoCircle
                                         size={14}
-                                        className="text-[var(--color-text-subtle)] cursor-help"
+                                        className="text-[var(--color-text-subtle)]"
                                       />
                                     </Tooltip>
                                   </HStack>
@@ -4724,6 +4612,98 @@ export function CreateDaemonSetPage() {
                                   pullSecrets: val,
                                 })
                               }
+                              fullWidth
+                            />
+                          </VStack>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* 2b. Command Section */}
+                    <SectionCard className="pb-6">
+                      <SectionCard.Header title="Command" />
+                      <SectionCard.Content className="pt-3">
+                        <VStack gap={8}>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Command
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /bin/sh"
+                              fullWidth
+                              value={config.command || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  command: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Arguments
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
+                              fullWidth
+                              value={config.args || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  args: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                WorkingDir
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <Input
+                              placeholder="e.g. /myapp"
+                              fullWidth
+                              value={config.workingDir || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  workingDir: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Stdin
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
+                            </VStack>
+                            <Select
+                              options={[
+                                { value: 'yes', label: 'Yes' },
+                                { value: 'no', label: 'No' },
+                              ]}
+                              value="no"
+                              onChange={() => {}}
                               fullWidth
                             />
                           </VStack>
@@ -6636,7 +6616,18 @@ export function CreateDaemonSetPage() {
                                   Specify the minimum CPU amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={4000}
+                                  step={50}
+                                  value={config.cpuRequest ? parseInt(config.cpuRequest) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      cpuRequest: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.cpuRequest ? parseInt(config.cpuRequest) : undefined
@@ -6647,11 +6638,10 @@ export function CreateDaemonSetPage() {
                                     })
                                   }
                                   min={0}
+                                  max={4000}
                                   width="xs"
+                                  suffix="mCPUs"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  mCPUs
-                                </span>
                               </HStack>
                             </VStack>
                             <VStack gap={2} className="flex-1">
@@ -6663,7 +6653,18 @@ export function CreateDaemonSetPage() {
                                   Specify the maximum CPU amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={4000}
+                                  step={50}
+                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      cpuLimit: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
                                   onChange={(val) =>
@@ -6672,11 +6673,10 @@ export function CreateDaemonSetPage() {
                                     })
                                   }
                                   min={0}
+                                  max={4000}
                                   width="xs"
+                                  suffix="mCPUs"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  mCPUs
-                                </span>
                               </HStack>
                             </VStack>
                           </div>
@@ -6691,7 +6691,18 @@ export function CreateDaemonSetPage() {
                                   Specify the minimum memory amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={8192}
+                                  step={100}
+                                  value={config.memoryRequest ? parseInt(config.memoryRequest) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      memoryRequest: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.memoryRequest
@@ -6704,11 +6715,10 @@ export function CreateDaemonSetPage() {
                                     })
                                   }
                                   min={0}
+                                  max={8192}
                                   width="xs"
+                                  suffix="MiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  MiB
-                                </span>
                               </HStack>
                             </VStack>
                             <VStack gap={2} className="flex-1">
@@ -6720,7 +6730,18 @@ export function CreateDaemonSetPage() {
                                   Specify the maximum memory amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={2} align="center">
+                              <HStack gap={3} align="center">
+                                <Slider
+                                  min={0}
+                                  max={8192}
+                                  step={100}
+                                  value={config.memoryLimit ? parseInt(config.memoryLimit) : 0}
+                                  onChange={(val) =>
+                                    updateContainerConfig(containerId, {
+                                      memoryLimit: val.toString(),
+                                    })
+                                  }
+                                />
                                 <NumberInput
                                   value={
                                     config.memoryLimit ? parseInt(config.memoryLimit) : undefined
@@ -6731,11 +6752,10 @@ export function CreateDaemonSetPage() {
                                     })
                                   }
                                   min={0}
+                                  max={8192}
                                   width="xs"
+                                  suffix="MiB"
                                 />
-                                <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
-                                  MiB
-                                </span>
                               </HStack>
                             </VStack>
                           </div>
@@ -6980,20 +7000,41 @@ export function CreateDaemonSetPage() {
                                   >
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
-                                        {selectedVol.volumeName} ({selectedVol.volumeType})
+                                        {selectedVol.volumeName} (
+                                        {{
+                                          csi: 'CSI',
+                                          pvc: 'Persistent Volume Claim',
+                                          'create-pvc': 'Persistent Volume Claim',
+                                          configmap: 'ConfigMap',
+                                          secret: 'Secret',
+                                          emptyDir: 'Empty Dir',
+                                          hostPath: 'Host Path',
+                                        }[selectedVol.volumeType] || selectedVol.volumeType}
+                                        )
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full">
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Mount Point{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
+                                        <div className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full">
+                                          <VStack gap={0.5}>
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                                              Mount Point{' '}
+                                              <span className="text-[var(--color-state-danger)]">
+                                                *
+                                              </span>
                                             </span>
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Sub Path in Volume
-                                          </span>
+                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                              Specify the path inside the container where the volume
+                                              will be mounted.
+                                            </span>
+                                          </VStack>
+                                          <VStack gap={0.5}>
+                                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                                              Sub Path in Volume
+                                            </span>
+                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                              Specify the sub-path within the volume to use.
+                                            </span>
+                                          </VStack>
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Read Only
                                           </span>
@@ -7011,7 +7052,7 @@ export function CreateDaemonSetPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""
@@ -7047,7 +7088,7 @@ export function CreateDaemonSetPage() {
                                                 });
                                               }}
                                             />
-                                            <div className="flex items-center justify-center">
+                                            <div className="flex items-center">
                                               <Checkbox
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
@@ -7128,13 +7169,11 @@ export function CreateDaemonSetPage() {
                           {/* Select Volume dropdown */}
                           <div className="w-full">
                             <Select
-                              options={[
-                                { value: '', label: 'Select volume' },
-                                ...volumes.map((v) => ({
-                                  value: v.volumeName,
-                                  label: v.volumeName,
-                                })),
-                              ]}
+                              options={volumes.map((v) => ({
+                                value: v.volumeName,
+                                label: v.volumeName,
+                              }))}
+                              placeholder="Select volume"
                               value=""
                               onChange={(val) => {
                                 if (val) {
