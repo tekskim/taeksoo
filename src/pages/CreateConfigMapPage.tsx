@@ -286,71 +286,74 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
     <SectionCard className="pb-6">
       <SectionCard.Header title="Data" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-          <VStack gap={3}>
-            {/* Data Entries */}
-            {dataEntries.length > 0 && (
-              <VStack gap={2} className="w-full">
-                {/* Header row */}
-                <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                    Key
-                  </span>
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                    Value
-                  </span>
-                  <div className="w-5" />
-                </div>
-                {dataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeDataEntry(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+        <VStack gap={3}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={3}>
+              {/* Data Entries */}
+              {dataEntries.length > 0 && (
+                <VStack gap={2} className="w-full">
+                  {/* Header row */}
+                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      Key
+                    </span>
+                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      Value
+                    </span>
+                    <div className="w-5" />
                   </div>
-                ))}
-              </VStack>
-            )}
+                  {dataEntries.map((entry, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeDataEntry(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                </VStack>
+              )}
 
-            <HStack gap={2}>
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                onClick={addDataEntry}
-                className="bg-[var(--color-surface-default)]"
-              >
-                Add Data Entry
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconFile size={12} stroke={1.5} />}
-                onClick={() => {
-                  // TODO: Implement file reading functionality
-                  console.log('Read from file clicked');
-                }}
-                className="bg-[var(--color-surface-default)]"
-              >
-                Read from File
-              </Button>
-            </HStack>
-          </VStack>
-        </div>
+              <HStack gap={2}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={addDataEntry}
+                  className="bg-[var(--color-surface-default)]"
+                >
+                  Add Data Entry
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconFile size={12} stroke={1.5} />}
+                  onClick={() => {
+                    // TODO: Implement file reading functionality
+                    console.log('Read from file clicked');
+                  }}
+                  className="bg-[var(--color-surface-default)]"
+                >
+                  Read from File
+                </Button>
+              </HStack>
+            </VStack>
+          </div>
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -387,71 +390,74 @@ function BinaryDataSection({
     <SectionCard className="pb-6">
       <SectionCard.Header title="Binary data" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-          <VStack gap={3}>
-            {/* Binary Data Entries */}
-            {binaryDataEntries.length > 0 && (
-              <VStack gap={2} className="w-full">
-                {/* Header row */}
-                <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                    Key
-                  </span>
-                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                    Value
-                  </span>
-                  <div className="w-5" />
-                </div>
-                {binaryDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
-                    <Input
-                      placeholder="Enter key"
-                      value={entry.key}
-                      onChange={(e) => updateBinaryDataEntry(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="Enter value"
-                      value={entry.value}
-                      onChange={(e) => updateBinaryDataEntry(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeBinaryDataEntry(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+        <VStack gap={3}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Binary data</span>
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={3}>
+              {/* Binary Data Entries */}
+              {binaryDataEntries.length > 0 && (
+                <VStack gap={2} className="w-full">
+                  {/* Header row */}
+                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      Key
+                    </span>
+                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      Value
+                    </span>
+                    <div className="w-5" />
                   </div>
-                ))}
-              </VStack>
-            )}
+                  {binaryDataEntries.map((entry, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateBinaryDataEntry(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateBinaryDataEntry(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeBinaryDataEntry(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                </VStack>
+              )}
 
-            <HStack gap={2}>
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                onClick={addBinaryDataEntry}
-                className="bg-[var(--color-surface-default)]"
-              >
-                Add Data Entry
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconFile size={12} stroke={1.5} />}
-                onClick={() => {
-                  // TODO: Implement file reading functionality
-                  console.log('Read from file clicked');
-                }}
-                className="bg-[var(--color-surface-default)]"
-              >
-                Read from File
-              </Button>
-            </HStack>
-          </VStack>
-        </div>
+              <HStack gap={2}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={addBinaryDataEntry}
+                  className="bg-[var(--color-surface-default)]"
+                >
+                  Add Data Entry
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconFile size={12} stroke={1.5} />}
+                  onClick={() => {
+                    // TODO: Implement file reading functionality
+                    console.log('Read from file clicked');
+                  }}
+                  className="bg-[var(--color-surface-default)]"
+                >
+                  Read from File
+                </Button>
+              </HStack>
+            </VStack>
+          </div>
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );

@@ -175,6 +175,141 @@ function RepeatableFieldGroupDemo() {
   );
 }
 
+function WithLabelDescriptionDemo() {
+  const [labels, setLabels] = useState([
+    { key: 'app', value: 'nginx' },
+    { key: 'env', value: 'production' },
+  ]);
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={1}>
+        <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+        <p className="text-body-md text-[var(--color-text-subtle)]">
+          Specify the labels used to identify and categorize the resource.
+        </p>
+      </VStack>
+
+      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+        <VStack gap={1}>
+          {labels.length > 0 && (
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+              <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+              <div className="w-5" />
+            </div>
+          )}
+          {labels.map((label, i) => (
+            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+              <Input
+                placeholder="label key"
+                value={label.key}
+                onChange={(e) => {
+                  const n = [...labels];
+                  n[i] = { ...n[i], key: e.target.value };
+                  setLabels(n);
+                }}
+                fullWidth
+              />
+              <Input
+                placeholder="label value"
+                value={label.value}
+                onChange={(e) => {
+                  const n = [...labels];
+                  n[i] = { ...n[i], value: e.target.value };
+                  setLabels(n);
+                }}
+                fullWidth
+              />
+              <button
+                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => setLabels(labels.filter((_, idx) => idx !== i))}
+              >
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </div>
+          ))}
+          <div className="w-fit">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+              onClick={() => setLabels([...labels, { key: '', value: '' }])}
+            >
+              Add Label
+            </Button>
+          </div>
+        </VStack>
+      </div>
+    </VStack>
+  );
+}
+
+function WithLabelDemo() {
+  const [labels, setLabels] = useState([
+    { key: 'app', value: 'nginx' },
+    { key: 'env', value: 'production' },
+  ]);
+
+  return (
+    <VStack gap={3}>
+      <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+
+      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+        <VStack gap={1}>
+          {labels.length > 0 && (
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+              <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+              <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+              <div className="w-5" />
+            </div>
+          )}
+          {labels.map((label, i) => (
+            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+              <Input
+                placeholder="label key"
+                value={label.key}
+                onChange={(e) => {
+                  const n = [...labels];
+                  n[i] = { ...n[i], key: e.target.value };
+                  setLabels(n);
+                }}
+                fullWidth
+              />
+              <Input
+                placeholder="label value"
+                value={label.value}
+                onChange={(e) => {
+                  const n = [...labels];
+                  n[i] = { ...n[i], value: e.target.value };
+                  setLabels(n);
+                }}
+                fullWidth
+              />
+              <button
+                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => setLabels(labels.filter((_, idx) => idx !== i))}
+              >
+                <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </div>
+          ))}
+          <div className="w-fit">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+              onClick={() => setLabels([...labels, { key: '', value: '' }])}
+            >
+              Add Label
+            </Button>
+          </div>
+        </VStack>
+      </div>
+    </VStack>
+  );
+}
+
 function DescriptionHeaderDemo() {
   const [rows, setRows] = useState([{ name: 'ndots', value: '5' }]);
 
@@ -183,13 +318,13 @@ function DescriptionHeaderDemo() {
       <VStack gap={1}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-            <VStack gap={1}>
+            <VStack gap={0.5}>
               <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
               <p className="text-body-sm text-[var(--color-text-subtle)]">
                 Specify the option name.
               </p>
             </VStack>
-            <VStack gap={1}>
+            <VStack gap={0.5}>
               <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
               <p className="text-body-sm text-[var(--color-text-subtle)]">
                 The value for this option.
@@ -242,6 +377,69 @@ function DescriptionHeaderDemo() {
     </div>
   );
 }
+
+const withLabelCode = `<VStack gap={3}>
+  {/* Label */}
+  <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+
+  {/* Key-Value Table */}
+  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <VStack gap={1}>
+      {/* Column headers */}
+      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+        <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+        <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+        <div className="w-5" />
+      </div>
+      {/* Rows */}
+      {items.map((item, i) => (
+        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+          <Input placeholder="label key" value={item.key} onChange={...} fullWidth />
+          <Input placeholder="label value" value={item.value} onChange={...} fullWidth />
+          <button onClick={() => removeItem(i)}><IconX size={16} /></button>
+        </div>
+      ))}
+      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+        onClick={() => addItem()}>
+        Add Label
+      </Button>
+    </VStack>
+  </div>
+</VStack>`;
+
+const withLabelDescriptionCode = `<VStack gap={3}>
+  {/* Label + Description */}
+  <VStack gap={1}>
+    <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+    <p className="text-body-md text-[var(--color-text-subtle)]">
+      Specify the labels used to identify and categorize the resource.
+    </p>
+  </VStack>
+
+  {/* Key-Value Table */}
+  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <VStack gap={1}>
+      {/* Column headers */}
+      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+        <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+        <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+        <div className="w-5" />
+      </div>
+      {/* Rows */}
+      {items.map((item, i) => (
+        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+          <Input placeholder="label key" value={item.key} onChange={...} fullWidth />
+          <Input placeholder="label value" value={item.value} onChange={...} fullWidth />
+          <button onClick={() => removeItem(i)}><IconX size={16} /></button>
+        </div>
+      ))}
+      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
+        onClick={() => addItem()}>
+        Add Label
+      </Button>
+    </VStack>
+  </div>
+</VStack>`;
 
 const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={1}>
@@ -364,6 +562,50 @@ export function DynamicFormFieldsPage() {
             <VStack gap={1}>
               <HStack gap={2} align="center">
                 <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  With Label &amp; Description
+                </h4>
+                <Badge variant="info" size="sm">
+                  List
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                A label (text-label-lg) and description (text-body-md, subtle) placed above the
+                bordered table container. Use when the dynamic field group needs a section-level
+                title and contextual explanation, such as Labels or Annotations.
+              </p>
+            </VStack>
+            <ComponentPreview code={withLabelDescriptionCode}>
+              <WithLabelDescriptionDemo />
+            </ComponentPreview>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">With Label</h4>
+                <Badge variant="info" size="sm">
+                  List
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                A label (text-label-lg) placed above the bordered table container without a
+                description. Use when the field group title is self-explanatory and no additional
+                context is needed.
+              </p>
+            </VStack>
+            <ComponentPreview code={withLabelCode}>
+              <WithLabelDemo />
+            </ComponentPreview>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
                   With Description Headers
                 </h4>
                 <Badge variant="info" size="sm">
@@ -438,13 +680,35 @@ export function DynamicFormFieldsPage() {
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                    With Label &amp; Description (List)
+                  </td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                    The field group needs a section-level title and contextual description
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    Labels, Annotations, Selectors
+                  </td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                    With Label (List)
+                  </td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                    The field group title is self-explanatory with no additional context needed
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    Labels, Selectors, Tolerations
+                  </td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
                     With Description Headers (List)
                   </td>
                   <td className="py-2 pr-4 text-[var(--color-text-muted)]">
                     Columns need extra context via description text below headers
                   </td>
                   <td className="py-2 text-[var(--color-text-muted)]">
-                    Resolver Options, Host Aliases with IP format hints
+                    DNS Options, Host Aliases with IP format hints
                   </td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
@@ -472,7 +736,21 @@ export function DynamicFormFieldsPage() {
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
-                <strong>With Description Headers (List):</strong> bg-subtle container → column
+                <strong>With Label &amp; Description (List):</strong> VStack gap-3 → label
+                (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
+                headers + input rows + Add button
+              </p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+              <p className="text-body-sm text-[var(--color-text-default)]">
+                <strong>With Label (List):</strong> VStack gap-3 → label (text-label-lg) → bg-subtle
+                container → column headers + input rows + Add button
+              </p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+              <p className="text-body-sm text-[var(--color-text-default)]">
+                <strong>With Description Headers (List):</strong> VStack gap-3 → label
+                (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
                 headers (VStack gap-1: text-label-sm label + text-body-sm description) → input rows
                 (grid-aligned) → Add button
               </p>
@@ -499,6 +777,26 @@ export function DynamicFormFieldsPage() {
                 </tr>
               </thead>
               <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">Label → table gap</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">12px (gap-3)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Label → description gap
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">4px (gap-1)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">Section label</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">text-label-lg</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Section description
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">text-body-md text-subtle</td>
+                </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Container padding</td>
                   <td className="py-2 text-[var(--color-text-muted)]">12px (p-3)</td>
