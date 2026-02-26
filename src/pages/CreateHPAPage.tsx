@@ -95,6 +95,19 @@ const TYPE_OPTIONS = [
   { value: 'Value', label: 'Value' },
 ];
 
+// Scaling Policy Type options
+const SCALING_POLICY_TYPE_OPTIONS = [
+  { value: 'Pods', label: 'Pods' },
+  { value: 'Percent', label: 'Percent' },
+];
+
+// Select Policy options
+const SELECT_POLICY_OPTIONS = [
+  { value: 'Max', label: 'Max' },
+  { value: 'Min', label: 'Min' },
+  { value: 'Disabled', label: 'Disabled' },
+];
+
 // Operator options
 const OPERATOR_OPTIONS = [
   { value: 'In', label: 'in list' },
@@ -102,6 +115,13 @@ const OPERATOR_OPTIONS = [
   { value: 'Exists', label: 'exists' },
   { value: 'DoesNotExist', label: 'does not exist' },
 ];
+
+interface ScalingPolicy {
+  id: string;
+  type: string;
+  value: number;
+  periodSeconds: number;
+}
 
 interface Label {
   id: string;
@@ -254,15 +274,25 @@ export default function CreateHPAPage() {
   const [maxReplicas, setMaxReplicas] = useState(10);
 
   // Behavior state
-  const [scaleDownBehavior, setScaleDownBehavior] = useState(false);
-  const [scaleUpBehavior, setScaleUpBehavior] = useState(false);
+  const [scaleDownBehavior, setScaleDownBehavior] = useState(true);
+  const [scaleDownPolicies, setScaleDownPolicies] = useState<ScalingPolicy[]>([
+    { id: 'initial-sd-policy', type: '', value: 0, periodSeconds: 0 },
+  ]);
+  const [scaleDownSelectPolicy, setScaleDownSelectPolicy] = useState('Max');
+  const [scaleDownStabilization, setScaleDownStabilization] = useState(300);
+  const [scaleUpBehavior, setScaleUpBehavior] = useState(true);
+  const [scaleUpPolicies, setScaleUpPolicies] = useState<ScalingPolicy[]>([
+    { id: 'initial-su-policy', type: '', value: 0, periodSeconds: 0 },
+  ]);
+  const [scaleUpSelectPolicy, setScaleUpSelectPolicy] = useState('Max');
+  const [scaleUpStabilization, setScaleUpStabilization] = useState(300);
 
   // Metrics state
   const [metrics, setMetrics] = useState<Metric[]>(
     isV2
       ? [
           {
-            id: Date.now().toString(),
+            id: 'metric-resource',
             source: 'Resource',
             resourceName: 'CPU',
             type: 'AverageUtilization',
@@ -271,10 +301,10 @@ export default function CreateHPAPage() {
             referentApiVersion: '',
             referentKind: '',
             referentName: '',
-            selectors: [{ id: Date.now().toString(), key: '', operator: 'In', value: '' }],
+            selectors: [{ id: 'sel-resource', key: '', operator: 'In', value: '' }],
           },
           {
-            id: (Date.now() + 2).toString(),
+            id: 'metric-external',
             source: 'External',
             resourceName: '',
             type: 'AverageUtilization',
@@ -283,7 +313,31 @@ export default function CreateHPAPage() {
             referentApiVersion: '',
             referentKind: '',
             referentName: '',
-            selectors: [{ id: (Date.now() + 3).toString(), key: '', operator: 'In', value: '' }],
+            selectors: [{ id: 'sel-external', key: '', operator: 'In', value: '' }],
+          },
+          {
+            id: 'metric-pods',
+            source: 'Pods',
+            resourceName: '',
+            type: 'AverageUtilization',
+            quantity: 1,
+            metricName: '',
+            referentApiVersion: '',
+            referentKind: '',
+            referentName: '',
+            selectors: [{ id: 'sel-pods', key: '', operator: 'In', value: '' }],
+          },
+          {
+            id: 'metric-object',
+            source: 'Object',
+            resourceName: '',
+            type: 'AverageUtilization',
+            quantity: 1,
+            metricName: '',
+            referentApiVersion: '',
+            referentKind: '',
+            referentName: '',
+            selectors: [{ id: 'sel-object', key: '', operator: 'In', value: '' }],
           },
         ]
       : []
@@ -307,6 +361,43 @@ export default function CreateHPAPage() {
       'labels-annotations': 'pre',
     };
   };
+
+  // Scaling policy handlers
+  const addScaleDownPolicy = useCallback(() => {
+    setScaleDownPolicies((prev) => [
+      ...prev,
+      { id: Date.now().toString(), type: '', value: 0, periodSeconds: 0 },
+    ]);
+  }, []);
+
+  const removeScaleDownPolicy = useCallback((id: string) => {
+    setScaleDownPolicies((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const updateScaleDownPolicy = useCallback(
+    (id: string, field: keyof ScalingPolicy, value: string | number) => {
+      setScaleDownPolicies((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
+    },
+    []
+  );
+
+  const addScaleUpPolicy = useCallback(() => {
+    setScaleUpPolicies((prev) => [
+      ...prev,
+      { id: Date.now().toString(), type: '', value: 0, periodSeconds: 0 },
+    ]);
+  }, []);
+
+  const removeScaleUpPolicy = useCallback((id: string) => {
+    setScaleUpPolicies((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const updateScaleUpPolicy = useCallback(
+    (id: string, field: keyof ScalingPolicy, value: string | number) => {
+      setScaleUpPolicies((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
+    },
+    []
+  );
 
   // Metrics handlers
   const addMetric = useCallback(() => {
@@ -550,7 +641,7 @@ export default function CreateHPAPage() {
             {/* Target Section */}
             <SectionCard className="pb-6">
               <SectionCard.Header title="Target" />
-              <SectionCard.Content>
+              <SectionCard.Content className="pt-3">
                 <VStack gap={6}>
                   {/* Target Reference */}
                   <FormField required>
@@ -572,7 +663,7 @@ export default function CreateHPAPage() {
                         value={minReplicas}
                         onChange={setMinReplicas}
                         min={1}
-                        width="sm"
+                        width="xs"
                       />
                     </FormField>
                     <FormField label="Maximum Replicas" required>
@@ -580,7 +671,7 @@ export default function CreateHPAPage() {
                         value={maxReplicas}
                         onChange={setMaxReplicas}
                         min={1}
-                        width="sm"
+                        width="xs"
                       />
                     </FormField>
                   </VStack>
@@ -591,8 +682,8 @@ export default function CreateHPAPage() {
             {/* Behavior Section */}
             <SectionCard className="pb-6">
               <SectionCard.Header title="Behavior" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Scale down behavior */}
                   <VStack gap={3}>
                     <label className="text-label-lg text-[var(--color-text-default)]">
@@ -603,6 +694,103 @@ export default function CreateHPAPage() {
                       onChange={setScaleDownBehavior}
                       label="Configure scale down behavior"
                     />
+
+                    {scaleDownBehavior && (
+                      <VStack gap={8} className="mt-1">
+                        {/* Policy table */}
+                        <VStack gap={3}>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                            <VStack gap={1}>
+                              {scaleDownPolicies.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Type <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Value{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Period seconds{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <div className="w-5" />
+                                </div>
+                              )}
+                              {scaleDownPolicies.map((policy) => (
+                                <div
+                                  key={policy.id}
+                                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                >
+                                  <Select
+                                    options={SCALING_POLICY_TYPE_OPTIONS}
+                                    value={policy.type}
+                                    onChange={(val) =>
+                                      updateScaleDownPolicy(policy.id, 'type', val)
+                                    }
+                                    placeholder="Select type"
+                                    fullWidth
+                                  />
+                                  <NumberInput
+                                    value={policy.value}
+                                    onChange={(val) =>
+                                      updateScaleDownPolicy(policy.id, 'value', val)
+                                    }
+                                    min={0}
+                                    width="full"
+                                  />
+                                  <NumberInput
+                                    value={policy.periodSeconds}
+                                    onChange={(val) =>
+                                      updateScaleDownPolicy(policy.id, 'periodSeconds', val)
+                                    }
+                                    min={0}
+                                    width="full"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => removeScaleDownPolicy(policy.id)}
+                                    className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                  >
+                                    <IconX size={14} />
+                                  </button>
+                                </div>
+                              ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} />}
+                                  onClick={addScaleDownPolicy}
+                                >
+                                  Add Policy
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
+                        </VStack>
+
+                        {/* Select Policy & Stabilization */}
+                        <div className="grid grid-cols-2 gap-6 w-full">
+                          <FormField label="Select Policy">
+                            <Select
+                              options={SELECT_POLICY_OPTIONS}
+                              value={scaleDownSelectPolicy}
+                              onChange={setScaleDownSelectPolicy}
+                              fullWidth
+                            />
+                          </FormField>
+                          <FormField label="Stabilization window seconds">
+                            <NumberInput
+                              value={scaleDownStabilization}
+                              onChange={setScaleDownStabilization}
+                              min={0}
+                              width="full"
+                            />
+                          </FormField>
+                        </div>
+                      </VStack>
+                    )}
                   </VStack>
 
                   {/* Scale up behavior */}
@@ -615,6 +803,99 @@ export default function CreateHPAPage() {
                       onChange={setScaleUpBehavior}
                       label="Configure scale up behavior"
                     />
+
+                    {scaleUpBehavior && (
+                      <VStack gap={8} className="mt-1">
+                        {/* Policy table */}
+                        <VStack gap={3}>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                            <VStack gap={1}>
+                              {scaleUpPolicies.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Type <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Value{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                                    Period seconds{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <div className="w-5" />
+                                </div>
+                              )}
+                              {scaleUpPolicies.map((policy) => (
+                                <div
+                                  key={policy.id}
+                                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                >
+                                  <Select
+                                    options={SCALING_POLICY_TYPE_OPTIONS}
+                                    value={policy.type}
+                                    onChange={(val) => updateScaleUpPolicy(policy.id, 'type', val)}
+                                    placeholder="Select type"
+                                    fullWidth
+                                  />
+                                  <NumberInput
+                                    value={policy.value}
+                                    onChange={(val) => updateScaleUpPolicy(policy.id, 'value', val)}
+                                    min={0}
+                                    width="full"
+                                  />
+                                  <NumberInput
+                                    value={policy.periodSeconds}
+                                    onChange={(val) =>
+                                      updateScaleUpPolicy(policy.id, 'periodSeconds', val)
+                                    }
+                                    min={0}
+                                    width="full"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => removeScaleUpPolicy(policy.id)}
+                                    className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                  >
+                                    <IconX size={14} />
+                                  </button>
+                                </div>
+                              ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} />}
+                                  onClick={addScaleUpPolicy}
+                                >
+                                  Add Policy
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
+                        </VStack>
+
+                        {/* Select Policy & Stabilization */}
+                        <div className="grid grid-cols-2 gap-6 w-full">
+                          <FormField label="Select Policy">
+                            <Select
+                              options={SELECT_POLICY_OPTIONS}
+                              value={scaleUpSelectPolicy}
+                              onChange={setScaleUpSelectPolicy}
+                              fullWidth
+                            />
+                          </FormField>
+                          <FormField label="Stabilization window seconds">
+                            <NumberInput
+                              value={scaleUpStabilization}
+                              onChange={setScaleUpStabilization}
+                              min={0}
+                              width="full"
+                            />
+                          </FormField>
+                        </div>
+                      </VStack>
+                    )}
                   </VStack>
                 </VStack>
               </SectionCard.Content>
@@ -634,7 +915,9 @@ export default function CreateHPAPage() {
                       <VStack gap={6}>
                         <HStack justify="between" align="start" className="w-full">
                           <VStack gap={2} className="items-start">
-                            {metric.source === 'External' && (
+                            {(metric.source === 'External' ||
+                              metric.source === 'Pods' ||
+                              metric.source === 'Object') && (
                               <div className="w-fit">
                                 <InlineMessage variant="warning">
                                   In order to use external metrics with HPA, you need to deploy the
@@ -676,7 +959,7 @@ export default function CreateHPAPage() {
                         </FormField>
 
                         {/* Resource Name (for Resource source) */}
-                        {(isV2 || metric.source === 'Resource') && (
+                        {metric.source === 'Resource' && (
                           <FormField label="Resource Name">
                             <Select
                               options={RESOURCE_NAME_OPTIONS}
@@ -687,42 +970,86 @@ export default function CreateHPAPage() {
                           </FormField>
                         )}
 
-                        {/* Type and Quantity */}
-                        <HStack gap={3} className="w-full">
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Type
-                            </label>
-                            <Select
-                              options={TYPE_OPTIONS}
-                              value={metric.type}
-                              onChange={(value) => updateMetric(metric.id, 'type', value)}
-                              fullWidth
-                            />
-                          </VStack>
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Quantity <span className="text-[var(--color-state-danger)]">*</span>
-                            </label>
-                            <HStack gap={2} align="center" className="w-full">
+                        {/* Type */}
+                        <VStack gap={2}>
+                          <label className="text-label-lg text-[var(--color-text-default)]">
+                            Type
+                          </label>
+                          <Select
+                            options={TYPE_OPTIONS}
+                            value={metric.type}
+                            onChange={(value) => updateMetric(metric.id, 'type', value)}
+                            fullWidth
+                          />
+                        </VStack>
+
+                        {/* Quantity */}
+                        <VStack gap={2}>
+                          <label className="text-label-lg text-[var(--color-text-default)]">
+                            Quantity <span className="text-[var(--color-state-danger)]">*</span>
+                          </label>
+                          <NumberInput
+                            value={metric.quantity}
+                            onChange={(val) => updateMetric(metric.id, 'quantity', val)}
+                            min={0}
+                            step={1}
+                            width="xs"
+                            suffix={metric.type === 'AverageUtilization' ? '%' : undefined}
+                          />
+                        </VStack>
+
+                        {/* Object referent fields */}
+                        {metric.source === 'Object' && (
+                          <>
+                            <VStack gap={2}>
+                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                Referent API Version{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </label>
                               <Input
-                                value={metric.quantity.toString()}
+                                placeholder="e.g. apps/v1"
+                                value={metric.referentApiVersion}
                                 onChange={(e) =>
-                                  updateMetric(metric.id, 'quantity', parseInt(e.target.value) || 0)
+                                  updateMetric(metric.id, 'referentApiVersion', e.target.value)
                                 }
                                 fullWidth
                               />
-                              {(isV2 || metric.type === 'AverageUtilization') && (
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  %
-                                </span>
-                              )}
-                            </HStack>
-                          </VStack>
-                        </HStack>
+                            </VStack>
 
-                        {/* External metrics specific fields */}
-                        {(isV2 || metric.source === 'External') && (
+                            <VStack gap={2}>
+                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                Referent Kind{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </label>
+                              <Input
+                                placeholder="e.g. Deployment"
+                                value={metric.referentKind}
+                                onChange={(e) =>
+                                  updateMetric(metric.id, 'referentKind', e.target.value)
+                                }
+                                fullWidth
+                              />
+                            </VStack>
+
+                            <VStack gap={2}>
+                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                Referent Name{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </label>
+                              <Input
+                                placeholder="e.g. my-deployment"
+                                value={metric.referentName}
+                                onChange={(e) =>
+                                  updateMetric(metric.id, 'referentName', e.target.value)
+                                }
+                                fullWidth
+                              />
+                            </VStack>
+                          </>
+                        )}
+
+                        {/* Non-Resource metrics fields */}
+                        {metric.source !== 'Resource' && (
                           <>
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">
@@ -853,8 +1180,8 @@ export default function CreateHPAPage() {
             {/* Labels & Annotations Section */}
             <SectionCard className="pb-6">
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content>
-                <VStack gap={6}>
+              <SectionCard.Content className="pt-3">
+                <VStack gap={8}>
                   {/* Labels */}
                   <FormField>
                     <FormField.Label>Labels</FormField.Label>
