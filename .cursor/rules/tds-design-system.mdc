@@ -722,12 +722,13 @@ const menuItems = [
 
 ### Spacing
 
-| 컴포넌트 | 간격 |
-|---------|------|
-| Input/Select/NumberInput | Label ↔ Input: 8px, Input ↔ HelperText: 8px |
-| FormField | Label ↔ Input: 8px, Label ↔ Description: 4px, Description ↔ Input: 8px, Input ↔ HelperText: 8px |
-| Radio/CheckboxGroup | Label ↔ Options: 12px, Label ↔ Description: 4px, Description ↔ Options: 12px |
-| Toggle | Label ↔ Toggle: 12px, Label ↔ Description: 4px, Description ↔ Toggle: 12px |
+| 컴포넌트 | 간격 | `spacing` prop |
+|---------|------|--------|
+| Input/Select/NumberInput | Label ↔ Input: 8px, Input ↔ HelperText: 8px | `default` |
+| FormField | Label ↔ Input: 8px, Label ↔ Description: 4px, Description ↔ Input: 8px, Input ↔ HelperText: 8px | `default` |
+| Checkbox (단독) | Label ↔ Checkbox: 12px, Label ↔ Description: 4px, Description ↔ Checkbox: 12px | `loose` |
+| Radio/CheckboxGroup | Label ↔ Options: 12px, Label ↔ Description: 4px, Description ↔ Options: 12px | `loose` |
+| Toggle | Label ↔ Toggle: 12px, Label ↔ Description: 4px, Description ↔ Toggle: 12px | `loose` |
 
 ### Typography
 
@@ -735,6 +736,22 @@ const menuItems = [
 |------|------|--------|
 | Description | 라벨 하단 | `text-body-md` (12px/18px) |
 | HelperText | Input 하단 | `text-body-sm` (11px/16px) |
+
+### `spacing="loose"` 규칙
+
+Checkbox(단독), Radio/CheckboxGroup, Toggle을 `FormField`로 감쌀 때는 **반드시** `spacing="loose"`를 사용합니다.
+
+```tsx
+// Checkbox (단독) — spacing="loose" 필수
+<FormField label="Favorite" spacing="loose">
+  <Checkbox label="Mark as Favorite" checked={isFavorite} onChange={...} />
+</FormField>
+
+// Toggle — spacing="loose" 필수
+<FormField label="Enable notifications" spacing="loose">
+  <Toggle checked={enabled} onChange={...} />
+</FormField>
+```
 
 ### FormField with Description 패턴
 
@@ -1621,6 +1638,65 @@ Next 버튼
 | `text-[11px]` (helper) | `text-body-sm` |
 | `text-[12px]` (description) | `text-body-md` |
 | `pt-2 pb-6` (첫 필드) | `py-6` (모든 필드 동일) |
+
+### Field Block 패턴
+
+Open Section Card 내부에서 **라벨 + 설명 + 복합 콘텐츠** (탭, 테이블, 검색, 페이지네이션 등)를 묶는 패턴입니다. `FormField`와 달리 복잡한 UI 구조를 포함할 때 사용합니다.
+
+#### Field Block vs FormField
+
+| 구분 | FormField | Field Block |
+|---|---|---|
+| 라벨 크기 | `text-label-sm` (11px) | `text-label-lg` (13px) |
+| 내부 간격 | `8px` (input-label-gap) | **12px** (`gap-3`) |
+| 탭 상단 간격 | — | **16px** (`gap-3` + `mt-1`) |
+| 콘텐츠 | 단일 Input/Select/Toggle | 탭, 테이블, 검색, 필터, 동적 행 등 복합 UI |
+| 래퍼 | `<FormField>` 컴포넌트 | `<VStack gap={3}>` |
+
+#### 간격 구조
+
+```
+VStack gap={3} (12px)
+ ├─ VStack gap={1} (4px)     ← Label/Description 그룹
+ │   ├─ span.text-label-lg   ← 라벨
+ │   └─ span.text-body-md    ← 설명 (optional)
+ ├─ Tabs (mt-1 → 12+4=16px)  ← 탭은 상단 4px 추가 마진
+ ├─ SearchInput               ← 12px gap
+ └─ Table                     ← 12px gap
+```
+
+> **탭 간격 규칙**: 탭(Tabs)은 설명 텍스트와 시각적 분리가 필요하므로 `mt-1` (4px)을 추가하여 총 16px 간격을 확보합니다.
+
+#### 코드 패턴
+
+```tsx
+<div className="py-6">
+  <VStack gap={3}>
+    <VStack gap={1}>
+      <span className="text-label-lg text-[var(--color-text-default)]">
+        Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+      </span>
+      <span className="text-body-md text-[var(--color-text-subtle)]">
+        Select a template to launch the instance.
+      </span>
+    </VStack>
+
+    {/* 탭: mt-1로 16px 간격 확보 */}
+    <div className="mt-1">
+      <Tabs value={tab} onChange={setTab} variant="underline" size="sm">
+        <TabList>...</TabList>
+      </Tabs>
+    </div>
+    <SearchInput ... />
+    <Table columns={columns} data={data} />
+  </VStack>
+</div>
+```
+
+#### 사용 시점
+
+- Open Section Card 내부에서 단순 Input/Select가 아닌 **복합 UI**를 포함하는 필드
+- 탭 + 테이블, 검색 + 필터 + 테이블, 동적 Key-Value 그리드 등
 
 ## 사이드바 너비 참조
 

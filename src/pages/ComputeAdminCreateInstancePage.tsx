@@ -5,7 +5,6 @@ import {
   Button,
   Breadcrumb,
   NumberInput,
-  Slider,
   ProgressBar,
   STATUS_THRESHOLDS,
   HStack,
@@ -1475,172 +1474,180 @@ function ImageSection({
                 </div>
               </VStack>
             ) : (
-              <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="image">Image</Tab>
-                  <Tab value="snapshot">Instance snapshot</Tab>
-                  <Tab value="volume">Bootable volume</Tab>
-                </TabList>
+              <div className="mt-1">
+                <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="image">Image</Tab>
+                    <Tab value="snapshot">Instance snapshot</Tab>
+                    <Tab value="volume">Bootable volume</Tab>
+                  </TabList>
 
-                <TabPanel value="image" className="pt-3">
-                  <VStack gap={3} className="w-full">
-                    <Tabs
-                      variant="boxed"
-                      size="sm"
-                      value={osFilter}
-                      onChange={(value) => {
-                        setOsFilter(value as typeof osFilter);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <TabList>
-                        <Tab value="other">
-                          <HStack gap={1} align="center">
-                            <IconDots size={14} />
-                            <span>Others</span>
-                          </HStack>
-                        </Tab>
-                        <Tab value="ubuntu">
-                          <HStack gap={1} align="center">
-                            <IconUbuntu size={14} />
-                            <span>Ubuntu</span>
-                          </HStack>
-                        </Tab>
-                        <Tab value="windows">
-                          <HStack gap={1} align="center">
-                            <IconGrid size={14} />
-                            <span>Windows</span>
-                          </HStack>
-                        </Tab>
-                        <Tab value="rocky">
-                          <HStack gap={1} align="center">
-                            <IconRocky size={14} />
-                            <span>Rocky</span>
-                          </HStack>
-                        </Tab>
-                      </TabList>
-                    </Tabs>
-                    <SearchInput
-                      placeholder="Search image by attributes"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onClear={() => {
-                        setSearchQuery('');
-                        setCurrentPage(1);
-                      }}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalImagePages}
-                      totalItems={filteredImages.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedImageId ? 1 : 0}
-                    />
-                    <VStack gap={2}>
-                      <Table
-                        columns={imageColumns}
-                        data={paginatedImages}
-                        rowKey="id"
-                        onRowClick={(row) => handleImageSelect(row.id)}
+                  <TabPanel value="image" className="pt-3">
+                    <VStack gap={3} className="w-full">
+                      <Tabs
+                        variant="boxed"
+                        size="sm"
+                        value={osFilter}
+                        onChange={(value) => {
+                          setOsFilter(value as typeof osFilter);
+                          setCurrentPage(1);
+                        }}
+                      >
+                        <TabList>
+                          <Tab value="other">
+                            <HStack gap={1} align="center">
+                              <IconDots size={14} />
+                              <span>Others</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="ubuntu">
+                            <HStack gap={1} align="center">
+                              <IconUbuntu size={14} />
+                              <span>Ubuntu</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="windows">
+                            <HStack gap={1} align="center">
+                              <IconGrid size={14} />
+                              <span>Windows</span>
+                            </HStack>
+                          </Tab>
+                          <Tab value="rocky">
+                            <HStack gap={1} align="center">
+                              <IconRocky size={14} />
+                              <span>Rocky</span>
+                            </HStack>
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                      <SearchInput
+                        placeholder="Search image by attributes"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
                       />
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                        }
-                        onRemove={() => onSelectImage('')}
-                        error={!!sourceError}
-                        errorMessage={sourceError}
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalImagePages}
+                        totalItems={filteredImages.length}
+                        onPageChange={setCurrentPage}
+                        selectedCount={selectedImageId ? 1 : 0}
                       />
+                      <VStack gap={2}>
+                        <Table
+                          columns={imageColumns}
+                          data={paginatedImages}
+                          rowKey="id"
+                          onRowClick={(row) => handleImageSelect(row.id)}
+                        />
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedImage
+                              ? [{ id: selectedImage.id, label: selectedImage.name }]
+                              : []
+                          }
+                          onRemove={() => onSelectImage('')}
+                          error={!!sourceError}
+                          errorMessage={sourceError}
+                        />
+                      </VStack>
                     </VStack>
-                  </VStack>
-                </TabPanel>
+                  </TabPanel>
 
-                <TabPanel value="snapshot" className="pt-3">
-                  <VStack gap={3} className="w-full">
-                    <SearchInput
-                      placeholder="Search snapshot by attributes"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onClear={() => {
-                        setSearchQuery('');
-                        setCurrentPage(1);
-                      }}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
-                      totalItems={filteredSnapshots.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedImageId ? 1 : 0}
-                    />
-                    <VStack gap={2}>
-                      <Table
-                        columns={snapshotColumns}
-                        data={filteredSnapshots.slice(
-                          (currentPage - 1) * itemsPerPage,
-                          currentPage * itemsPerPage
-                        )}
-                        rowKey="id"
-                        onRowClick={(row) => handleImageSelect(row.id)}
+                  <TabPanel value="snapshot" className="pt-3">
+                    <VStack gap={3} className="w-full">
+                      <SearchInput
+                        placeholder="Search snapshot by attributes"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
                       />
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                        }
-                        onRemove={() => onSelectImage('')}
-                        error={!!sourceError}
-                        errorMessage={sourceError}
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredSnapshots.length / itemsPerPage) || 1}
+                        totalItems={filteredSnapshots.length}
+                        onPageChange={setCurrentPage}
+                        selectedCount={selectedImageId ? 1 : 0}
                       />
+                      <VStack gap={2}>
+                        <Table
+                          columns={snapshotColumns}
+                          data={filteredSnapshots.slice(
+                            (currentPage - 1) * itemsPerPage,
+                            currentPage * itemsPerPage
+                          )}
+                          rowKey="id"
+                          onRowClick={(row) => handleImageSelect(row.id)}
+                        />
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedImage
+                              ? [{ id: selectedImage.id, label: selectedImage.name }]
+                              : []
+                          }
+                          onRemove={() => onSelectImage('')}
+                          error={!!sourceError}
+                          errorMessage={sourceError}
+                        />
+                      </VStack>
                     </VStack>
-                  </VStack>
-                </TabPanel>
+                  </TabPanel>
 
-                <TabPanel value="volume" className="pt-3">
-                  <VStack gap={3} className="w-full">
-                    <SearchInput
-                      placeholder="Search volume by attributes"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onClear={() => {
-                        setSearchQuery('');
-                        setCurrentPage(1);
-                      }}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.ceil(filteredVolumes.length / itemsPerPage) || 1}
-                      totalItems={filteredVolumes.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedImageId ? 1 : 0}
-                    />
-                    <VStack gap={2}>
-                      <Table
-                        columns={volumeColumns}
-                        data={filteredVolumes.slice(
-                          (currentPage - 1) * itemsPerPage,
-                          currentPage * itemsPerPage
-                        )}
-                        rowKey="id"
-                        onRowClick={(row) => handleImageSelect(row.id)}
+                  <TabPanel value="volume" className="pt-3">
+                    <VStack gap={3} className="w-full">
+                      <SearchInput
+                        placeholder="Search volume by attributes"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        onClear={() => {
+                          setSearchQuery('');
+                          setCurrentPage(1);
+                        }}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
                       />
-                      <SelectionIndicator
-                        selectedItems={
-                          selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                        }
-                        onRemove={() => onSelectImage('')}
-                        error={!!sourceError}
-                        errorMessage={sourceError}
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredVolumes.length / itemsPerPage) || 1}
+                        totalItems={filteredVolumes.length}
+                        onPageChange={setCurrentPage}
+                        selectedCount={selectedImageId ? 1 : 0}
                       />
+                      <VStack gap={2}>
+                        <Table
+                          columns={volumeColumns}
+                          data={filteredVolumes.slice(
+                            (currentPage - 1) * itemsPerPage,
+                            currentPage * itemsPerPage
+                          )}
+                          rowKey="id"
+                          onRowClick={(row) => handleImageSelect(row.id)}
+                        />
+                        <SelectionIndicator
+                          selectedItems={
+                            selectedImage
+                              ? [{ id: selectedImage.id, label: selectedImage.name }]
+                              : []
+                          }
+                          onRemove={() => onSelectImage('')}
+                          error={!!sourceError}
+                          errorMessage={sourceError}
+                        />
+                      </VStack>
                     </VStack>
-                  </VStack>
-                </TabPanel>
-              </Tabs>
+                  </TabPanel>
+                </Tabs>
+              </div>
             )}
           </VStack>
 
@@ -1665,49 +1672,35 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {createSystemDisk && (
-              <HStack
-                gap={6}
-                align="start"
-                className="flex-wrap mt-3 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3"
-              >
-                <VStack gap={2}>
-                  <label className="text-label-sm text-[var(--color-text-default)]">Type</label>
-                  <Select
-                    options={storageTypeOptions}
-                    value={storageType}
-                    onChange={setStorageType}
-                  />
-                </VStack>
-                <VStack gap={2}>
-                  <label className="text-label-sm text-[var(--color-text-default)]">Size</label>
-                  <HStack gap={3} align="center">
-                    <Slider
-                      min={1}
-                      max={1000}
-                      step={10}
-                      value={storageSize}
-                      onChange={setStorageSize}
+              <div className="mt-3 w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+                <HStack gap={6} align="center">
+                  <HStack gap={1.5} align="center">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
+                    <Select
+                      options={storageTypeOptions}
+                      value={storageType}
+                      onChange={setStorageType}
                     />
+                  </HStack>
+                  <HStack gap={1.5} align="center">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
                     <NumberInput
                       value={storageSize}
-                      onChange={setStorageSize}
+                      onChange={(v) => setStorageSize(v ?? 30)}
                       min={1}
                       max={1000}
                       step={1}
-                      width="xs"
+                      width="sm"
                       suffix="GiB"
                     />
                   </HStack>
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">1-1,000 GiB</span>
-                </VStack>
-                <div className="pt-[31px]">
                   <Checkbox
                     label="Deleted with the instance"
                     checked={deleteWithInstance}
                     onChange={(e) => setDeleteWithInstance(e.target.checked)}
                   />
-                </div>
-              </HStack>
+                </HStack>
+              </div>
             )}
           </div>
 
@@ -1723,86 +1716,62 @@ function ImageSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1} className="w-full">
-                {dataDisks.map((disk) => (
-                  <div
-                    key={disk.id}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3 w-full"
-                  >
-                    <HStack gap={6} align="start" className="flex-wrap">
-                      <VStack gap={2}>
-                        <label className="text-label-sm text-[var(--color-text-default)]">
-                          Type
-                        </label>
-                        <Select
-                          options={storageTypeOptions}
-                          value={disk.type}
-                          onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
-                        />
-                      </VStack>
-                      <VStack gap={2}>
-                        <label className="text-label-sm text-[var(--color-text-default)]">
-                          Size
-                        </label>
-                        <HStack gap={3} align="center">
-                          <Slider
-                            min={1}
-                            max={1000}
-                            step={10}
-                            value={disk.size}
-                            onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v)}
-                          />
-                          <NumberInput
-                            value={disk.size}
-                            onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v)}
-                            min={1}
-                            max={1000}
-                            step={1}
-                            width="xs"
-                            suffix="GiB"
-                          />
-                        </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          1-1,000 GiB
-                        </span>
-                      </VStack>
-                      <div className="pt-[31px]">
-                        <Checkbox
-                          label="Deleted with the instance"
-                          checked={disk.deleteWithInstance}
-                          onChange={(e) =>
-                            handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
-                          }
-                        />
-                      </div>
-                      <div className="ml-auto">
-                        <button
-                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                          onClick={() => handleRemoveDataDisk(disk.id)}
-                        >
-                          <IconX
-                            size={16}
-                            className="text-[var(--color-text-muted)]"
-                            stroke={1.5}
-                          />
-                        </button>
-                      </div>
+            <VStack gap={2} className="w-full">
+              {dataDisks.map((disk) => (
+                <div
+                  key={disk.id}
+                  className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                >
+                  <HStack gap={6} align="center">
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
+                      <Select
+                        options={storageTypeOptions}
+                        value={disk.type}
+                        onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
+                      />
                     </HStack>
-                  </div>
-                ))}
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} />}
-                    onClick={handleAddDataDisk}
-                  >
-                    Add Data disk
-                  </Button>
+                    <HStack gap={1.5} align="center">
+                      <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
+                      <NumberInput
+                        value={disk.size}
+                        onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v ?? 10)}
+                        min={1}
+                        max={1000}
+                        step={1}
+                        width="sm"
+                        suffix="GiB"
+                      />
+                    </HStack>
+                    <Checkbox
+                      label="Deleted with the instance"
+                      checked={disk.deleteWithInstance}
+                      onChange={(e) =>
+                        handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
+                      }
+                    />
+                    <div className="ml-auto">
+                      <button
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        onClick={() => handleRemoveDataDisk(disk.id)}
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  </HStack>
                 </div>
-              </VStack>
-            </div>
+              ))}
+              <div className="w-fit">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={handleAddDataDisk}
+                >
+                  Add Data disk
+                </Button>
+              </div>
+            </VStack>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2069,14 +2038,16 @@ function FlavorSection({
             </span>
 
             {/* Flavor Type Tabs */}
-            <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="vcpu">vCPU</Tab>
-                <Tab value="gpu">GPU</Tab>
-                <Tab value="npu">NPU</Tab>
-                <Tab value="custom">Custom</Tab>
-              </TabList>
-            </Tabs>
+            <div className="mt-1">
+              <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="vcpu">vCPU</Tab>
+                  <Tab value="gpu">GPU</Tab>
+                  <Tab value="npu">NPU</Tab>
+                  <Tab value="custom">Custom</Tab>
+                </TabList>
+              </Tabs>
+            </div>
           </VStack>
 
           {/* Search, Pagination, Table, and Selection Indicator */}
@@ -3880,7 +3851,7 @@ function TemplatesSection({
                 Choose the resource category to apply to the flavor.
               </FormField.Description>
               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <VStack gap={3} align="start">
+                <VStack className="gap-[var(--radio-group-item-gap)]" align="start">
                   <Radio
                     value="vm"
                     checked={resourceType === 'vm'}

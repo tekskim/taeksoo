@@ -1524,13 +1524,15 @@ function ImageSection({
                 </VStack>
               ) : (
                 <>
-                  <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-                    <TabList>
-                      <Tab value="image">Image</Tab>
-                      <Tab value="snapshot">Instance snapshot</Tab>
-                      <Tab value="volume">Bootable volume</Tab>
-                    </TabList>
-                  </Tabs>
+                  <div className="mt-1">
+                    <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                      <TabList>
+                        <Tab value="image">Image</Tab>
+                        <Tab value="snapshot">Instance snapshot</Tab>
+                        <Tab value="volume">Bootable volume</Tab>
+                      </TabList>
+                    </Tabs>
+                  </div>
 
                   {sourceTab === 'image' && (
                     <Tabs
@@ -1639,7 +1641,7 @@ function ImageSection({
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+              <div className="mt-3 w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
                 <HStack gap={6} align="start" className="flex-wrap">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1877,7 +1879,7 @@ function FlavorSection({
             </VStack>
 
             {/* Flavor Type Tabs */}
-            <VStack gap={3} align="stretch">
+            <VStack gap={3} align="stretch" className="mt-1">
               <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="cpu">CPU</Tab>
