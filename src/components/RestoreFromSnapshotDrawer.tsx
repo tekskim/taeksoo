@@ -187,14 +187,14 @@ export function RestoreFromSnapshotDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleRestore}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Restoring...' : 'Restore'}
           </Button>
@@ -210,8 +210,8 @@ export function RestoreFromSnapshotDrawer({
             </h2>
           </VStack>
           <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a new image using this volume as the source. The image will contain all data
-            currently stored on the volume and can be used to launch new instances.
+            Restore this volume to a previous state using the selected snapshot. All existing data
+            on the volume will be replaced with the snapshot data.
           </p>
         </VStack>
 

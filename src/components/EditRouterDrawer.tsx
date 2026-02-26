@@ -154,17 +154,22 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
             ) : (
               <IconChevronRight size={16} stroke={1} />
             )}
-            Lable
+            Label
           </button>
 
           {/* Admin State Toggle (Collapsible) */}
           {isAdvancedExpanded && (
-            <HStack gap={2} className="items-center">
-              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {adminStateUp ? 'Up' : 'Down'}
-              </span>
-            </HStack>
+            <FormField label="Admin state" spacing="loose">
+              <HStack gap={2} className="items-center">
+                <Toggle
+                  checked={adminStateUp}
+                  onChange={(e) => setAdminStateUp(e.target.checked)}
+                />
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                  {adminStateUp ? 'Up' : 'Down'}
+                </span>
+              </HStack>
+            </FormField>
           )}
         </VStack>
       </VStack>

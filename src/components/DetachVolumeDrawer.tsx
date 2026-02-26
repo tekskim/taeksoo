@@ -9,6 +9,7 @@ import {
   SelectionIndicator,
   Table,
   InlineMessage,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -214,10 +215,7 @@ export function DetachVolumeDrawer({
           </InlineMessage>
 
           {/* Instance Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance name</div>
-            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
-          </div>
+          <InfoBox label="Instance name" value={instance.name} />
         </VStack>
 
         {/* Volume Section */}

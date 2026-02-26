@@ -273,15 +273,10 @@ export function DisconnectSubnetDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={onClose} className="w-[152px]">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={false}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSubmit} disabled={false} className="w-[152px]">
             Disconnect
           </Button>
         </HStack>

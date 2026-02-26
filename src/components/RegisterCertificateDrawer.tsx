@@ -87,7 +87,7 @@ function FileUploadSection({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
           />
         </VStack>
       </FormField.Control>
@@ -174,7 +174,7 @@ function CollapsibleSection({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="e.g. -----BEGIN CERTIFICATE----- ..."
-            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
           />
           <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             ({sizeKB.toFixed(1)}/64 KB)
@@ -267,14 +267,14 @@ export function RegisterCertificateDrawer({
       width={360}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Registering...' : 'Register'}
           </Button>

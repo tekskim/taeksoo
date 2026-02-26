@@ -9,6 +9,7 @@ import {
   SelectionIndicator,
   Table,
   fixedColumns,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -228,14 +229,7 @@ export function AttachVolumeDrawer({
         </VStack>
 
         {/* Volume Info Box */}
-        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Volume</span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {volume?.name || '-'}
-            </span>
-          </VStack>
-        </div>
+        <InfoBox label="Volume" value={volume?.name || '-'} />
 
         {/* Instances Section */}
         <VStack gap={3} className="mt-3 pb-5">

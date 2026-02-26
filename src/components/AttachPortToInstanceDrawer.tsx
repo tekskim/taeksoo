@@ -259,8 +259,7 @@ export function AttachPortToInstanceDrawer({
               emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedInstanceId}
               errorMessage="Please select an instance."
-              className="shrink-0"
-              style={{ width: '648px' }}
+              className="shrink-0 w-[648px]"
             />
           </VStack>
         </VStack>

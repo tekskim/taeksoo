@@ -3,6 +3,7 @@ import {
   Drawer,
   Button,
   Radio,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -10,6 +11,7 @@ import {
   Pagination,
   StatusIndicator,
   SelectionIndicator,
+  InfoBox,
   IconUbuntu,
   IconRocky,
   IconGrid,
@@ -216,27 +218,13 @@ export function RebuildInstanceDrawer({
           </InlineMessage>
         </VStack>
 
-        {/* Instance Field */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Instance</span>
-          <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-body-md text-[var(--color-text-default)]">{instance.name}</span>
-          </div>
-        </VStack>
-
-        {/* Current Image Field */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Current image</span>
-          <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {instance.currentImage}
-            </span>
-          </div>
-        </VStack>
+        <InfoBox.Group>
+          <InfoBox label="Instance" value={instance.name} />
+          <InfoBox label="Current image" value={instance.currentImage} />
+        </InfoBox.Group>
 
         {/* Image Selection */}
-        <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Image</span>
+        <FormField label="Image" spacing="loose">
           <VStack gap={2}>
             {/* Current Image Option */}
             <Radio
@@ -256,7 +244,7 @@ export function RebuildInstanceDrawer({
               label="Another image"
             />
           </VStack>
-        </VStack>
+        </FormField>
 
         {/* Image Selection Table (shown when "Another image" is selected) */}
         {imageOption === 'another' && (

@@ -186,14 +186,14 @@ export function ManageSNICertificateDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -249,7 +249,7 @@ export function ManageSNICertificateDrawer({
           />
 
           <VStack gap={2}>
-            <div style={{ width: '648px', maxWidth: '648px' }}>
+            <div className="w-[648px] max-w-[648px]">
               <Table<SNICertificateItem>
                 columns={certificateColumns}
                 data={paginatedCertificates}
@@ -267,8 +267,7 @@ export function ManageSNICertificateDrawer({
               selectedItems={selectedItems}
               onRemove={handleRemoveSelection}
               emptyText="No item selected"
-              className="shrink-0"
-              style={{ width: '648px' }}
+              className="shrink-0 w-[648px]"
             />
           </VStack>
         </VStack>

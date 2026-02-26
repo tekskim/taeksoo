@@ -312,10 +312,10 @@ export function ConnectSubnetDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px]">
             Connect
           </Button>
         </HStack>

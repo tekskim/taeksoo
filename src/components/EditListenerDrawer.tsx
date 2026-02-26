@@ -165,14 +165,14 @@ export function EditListenerDrawer({
       width={360}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>

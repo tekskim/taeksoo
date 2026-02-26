@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Drawer, Button, SearchInput } from '@/design-system';
+import { Drawer, Button, SearchInput, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconCirclePlus, IconCircleMinus, IconGripVertical } from '@tabler/icons-react';
 
@@ -217,13 +217,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
         <VStack gap={3}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage rules</h2>
 
-          {/* Policy Info */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-              Firewall policy
-            </div>
-            <div className="text-body-md text-[var(--color-text-default)]">{policy.name}</div>
-          </div>
+          <InfoBox label="Firewall policy" value={policy.name} />
         </VStack>
 
         {/* Rules Section */}

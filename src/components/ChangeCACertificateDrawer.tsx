@@ -8,6 +8,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -175,14 +176,14 @@ export function ChangeCACertificateDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Changing...' : 'Change'}
           </Button>
@@ -196,17 +197,10 @@ export function ChangeCACertificateDrawer({
             Change CA certificate
           </h2>
 
-          {/* Current Certificate Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Current CA certificate
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {currentCertificate.name} (expired on {currentCertificate.expiredOn})
-              </span>
-            </VStack>
-          </div>
+          <InfoBox
+            label="Current CA certificate"
+            value={`${currentCertificate.name} (expired on ${currentCertificate.expiredOn})`}
+          />
         </VStack>
 
         {/* New Certificate Section */}
@@ -254,8 +248,7 @@ export function ChangeCACertificateDrawer({
               emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedCertificateId}
               errorMessage="Please select a certificate."
-              className="shrink-0"
-              style={{ width: '648px' }}
+              className="shrink-0 w-[648px]"
             />
           </VStack>
         </VStack>

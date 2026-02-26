@@ -279,15 +279,10 @@ export function AllocateFloatingIPDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+            <Button variant="secondary" onClick={handleClose} className="w-[152px]">
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleSubmit}
-              disabled={false}
-              className="w-[152px] h-8"
-            >
+            <Button variant="primary" onClick={handleSubmit} disabled={false} className="w-[152px]">
               Allocate
             </Button>
           </HStack>
@@ -354,8 +349,7 @@ export function AllocateFloatingIPDrawer({
               emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedNetworkId}
               errorMessage="Please select a network."
-              className="shrink-0"
-              style={{ width: '648px' }}
+              className="shrink-0 w-[648px]"
             />
           </VStack>
         </VStack>
@@ -365,23 +359,25 @@ export function AllocateFloatingIPDrawer({
           <Disclosure.Trigger>Allocation</Disclosure.Trigger>
           <Disclosure.Panel>
             <VStack gap={3} className="pt-3">
-              <VStack gap={2}>
-                <Radio
-                  checked={allocationMode === 'automatic-single'}
-                  onChange={() => setAllocationMode('automatic-single')}
-                  label="Automatic (single)"
-                />
-                <Radio
-                  checked={allocationMode === 'manual-single'}
-                  onChange={() => setAllocationMode('manual-single')}
-                  label="Manual (single)"
-                />
-                <Radio
-                  checked={allocationMode === 'automatic-batch'}
-                  onChange={() => setAllocationMode('automatic-batch')}
-                  label="Automatic (batch)"
-                />
-              </VStack>
+              <FormField label="Allocation mode" spacing="loose">
+                <VStack gap={2}>
+                  <Radio
+                    checked={allocationMode === 'automatic-single'}
+                    onChange={() => setAllocationMode('automatic-single')}
+                    label="Automatic (single)"
+                  />
+                  <Radio
+                    checked={allocationMode === 'manual-single'}
+                    onChange={() => setAllocationMode('manual-single')}
+                    label="Manual (single)"
+                  />
+                  <Radio
+                    checked={allocationMode === 'automatic-batch'}
+                    onChange={() => setAllocationMode('automatic-batch')}
+                    label="Automatic (batch)"
+                  />
+                </VStack>
+              </FormField>
 
               {/* Manual IP Address Input */}
               {allocationMode === 'manual-single' && (

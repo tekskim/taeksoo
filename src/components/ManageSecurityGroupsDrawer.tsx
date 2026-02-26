@@ -7,6 +7,7 @@ import {
   StatusIndicator,
   Table,
   SelectionIndicator,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -262,10 +263,7 @@ export function ManageSecurityGroupsDrawer({
           </VStack>
 
           {/* Instance Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</div>
-            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
-          </div>
+          <InfoBox label="Instance" value={instance.name} />
         </VStack>
 
         {/* Interfaces Section */}
@@ -294,7 +292,7 @@ export function ManageSecurityGroupsDrawer({
           />
 
           <VStack gap={2}>
-            <div style={{ width: '648px', maxWidth: '648px' }}>
+            <div className="w-[648px] max-w-[648px]">
               <Table<InterfaceItem>
                 columns={interfaceColumns}
                 data={paginatedInterfaces}
@@ -326,8 +324,7 @@ export function ManageSecurityGroupsDrawer({
               emptyText="No item selected"
               error={hasAttemptedSubmit && !selectedInterfaceId}
               errorMessage="Please select an interface."
-              className="shrink-0"
-              style={{ width: '648px' }}
+              className="shrink-0 w-[648px]"
             />
           </VStack>
         </VStack>
