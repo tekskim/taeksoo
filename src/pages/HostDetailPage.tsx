@@ -16,6 +16,7 @@ import {
   SectionCard,
   DetailHeader,
   Badge,
+  BadgeList,
   Table,
   StatusIndicator,
   SearchInput,
@@ -1172,13 +1173,11 @@ export default function HostDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.daemons,
       render: (_, row) => (
-        <div className="flex flex-wrap gap-0.5">
-          {row.daemons.map((daemon, index) => (
-            <Badge key={index} theme="white" size="sm">
-              {daemon}
-            </Badge>
-          ))}
-        </div>
+        <BadgeList
+          items={row.daemons}
+          maxVisible={2}
+          popoverTitle={`All Daemons (${row.daemons.length})`}
+        />
       ),
     },
   ];

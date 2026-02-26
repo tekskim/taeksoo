@@ -10,7 +10,7 @@ import {
   TopBarAction,
   Breadcrumb,
   StatusIndicator,
-  Badge,
+  BadgeList,
   PageShell,
   PageHeader,
   ListToolbar,
@@ -178,24 +178,6 @@ function StatusCell({ status }: StatusCellProps) {
    Labels Cell Component
    ---------------------------------------- */
 
-interface LabelsCellProps {
-  labels: string[];
-}
-
-function LabelsCell({ labels }: LabelsCellProps) {
-  if (labels.length === 0) return null;
-
-  return (
-    <div className="flex flex-wrap gap-1">
-      {labels.map((label, index) => (
-        <Badge key={index} variant="info" size="sm">
-          {label}
-        </Badge>
-      ))}
-    </div>
-  );
-}
-
 /* ----------------------------------------
    Model Cell Component
    ---------------------------------------- */
@@ -294,7 +276,13 @@ export function HostsPage() {
       flex: 1,
       minWidth: columnMinWidths.labels,
       sortable: false,
-      render: (_, row) => <LabelsCell labels={row.labels} />,
+      render: (_, row) => (
+        <BadgeList
+          items={row.labels}
+          maxVisible={2}
+          popoverTitle={`All Labels (${row.labels.length})`}
+        />
+      ),
     },
     {
       key: 'model',

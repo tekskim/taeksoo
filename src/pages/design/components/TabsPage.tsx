@@ -9,15 +9,15 @@ function CapsuleTabDemo() {
   const [selected, setSelected] = useState<'left' | 'right'>('left');
 
   return (
-    <div className="inline-flex gap-2 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+    <div className="inline-flex gap-2 p-1 bg-[var(--color-surface-subtle)] shadow-[inset_0_0_0_1px_var(--color-border-default)] rounded-[8px] w-fit">
       <button
         onClick={() => setSelected('left')}
         className={`
           min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
           ${
             selected === 'left'
-              ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
-              : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+              ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
+              : 'bg-transparent text-[var(--color-text-default)]'
           }
         `}
       >
@@ -29,8 +29,8 @@ function CapsuleTabDemo() {
           min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
           ${
             selected === 'right'
-              ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
-              : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+              ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
+              : 'bg-transparent text-[var(--color-text-default)]'
           }
         `}
       >

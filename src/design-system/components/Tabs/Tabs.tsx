@@ -141,7 +141,7 @@ export function TabList({ children, className = '' }: TabListProps) {
       'p-1',
       'h-10',
       'bg-[var(--color-surface-subtle)]',
-      'border border-[var(--color-border-subtle)]',
+      'shadow-[inset_0_0_0_1px_var(--color-border-subtle)]',
       'rounded-lg',
       'w-fit',
     ].join(' '),
@@ -229,7 +229,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
         'cursor-pointer transition-colors duration-[var(--duration-fast)]',
         sizeStyles[size],
         isActive
-          ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
+          ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
           : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]',
         disabled && 'cursor-not-allowed opacity-50',
         className

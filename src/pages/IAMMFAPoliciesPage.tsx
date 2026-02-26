@@ -163,50 +163,57 @@ export default function IAMMFAPoliciesPage() {
             <TabPanel value="enforcement" className="pt-0">
               <VStack gap={4} className="pt-4">
                 <SectionCard>
-                  <SectionCard.Header title="MFA enforcement" />
-                  <SectionCard.Content gap={3} showDividers={false}>
-                    {/* Description */}
-                    <p className="text-body-md text-[var(--color-text-subtle)]">
-                      Choose whether to make Multi-Factor Authentication (MFA) mandatory for all
-                      users, or let them enable it voluntarily.
-                    </p>
+                  <SectionCard.Header title="MFA enforcement" showDivider={false} />
+                  <SectionCard.Content showDividers={false}>
+                    <VStack gap={0}>
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                    {/* Radio Options */}
-                    <VStack gap={3}>
-                      <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
-                        <Radio
-                          checked={mfaEnforcement === 'voluntary'}
-                          onChange={() => setMfaEnforcement('voluntary')}
-                          label="Voluntary"
-                        />
-                        <Tooltip content="Users can choose whether to enable MFA for their accounts.">
-                          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-                        </Tooltip>
+                      <VStack gap={3} className="py-6">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          Choose whether to make Multi-Factor Authentication (MFA) mandatory for all
+                          users, or let them enable it voluntarily.
+                        </p>
+                        <VStack className="gap-[var(--radio-group-item-gap)]">
+                          <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
+                            <Radio
+                              checked={mfaEnforcement === 'voluntary'}
+                              onChange={() => setMfaEnforcement('voluntary')}
+                              label="Voluntary"
+                            />
+                            <Tooltip content="Users can choose whether to enable MFA for their accounts.">
+                              <IconInfoCircle
+                                size={14}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </Tooltip>
+                          </HStack>
+                          <Radio
+                            checked={mfaEnforcement === 'required'}
+                            onChange={() => setMfaEnforcement('required')}
+                            label="Required for all users"
+                          />
+                        </VStack>
+                      </VStack>
+
+                      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                      <HStack gap={2} justify="end" className="w-full pt-3">
+                        <button
+                          type="button"
+                          onClick={handleResetToDefault}
+                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                        >
+                          <IconRefresh size={12} stroke={1.5} />
+                          Reset to default
+                        </button>
+                        <Button variant="secondary" size="md" onClick={handleReload}>
+                          Reload
+                        </Button>
+                        <Button variant="primary" size="md" onClick={handleSave}>
+                          Save
+                        </Button>
                       </HStack>
-                      <Radio
-                        checked={mfaEnforcement === 'required'}
-                        onChange={() => setMfaEnforcement('required')}
-                        label="Required for all users"
-                      />
                     </VStack>
-
-                    {/* Action Buttons */}
-                    <HStack gap={2} justify="end" className="w-full">
-                      <button
-                        type="button"
-                        onClick={handleResetToDefault}
-                        className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
-                      >
-                        <IconRefresh size={12} stroke={1.5} />
-                        Reset to default
-                      </button>
-                      <Button variant="secondary" size="sm" onClick={handleReload}>
-                        Reload
-                      </Button>
-                      <Button variant="primary" size="sm" onClick={handleSave}>
-                        Save
-                      </Button>
-                    </HStack>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -216,124 +223,131 @@ export default function IAMMFAPoliciesPage() {
             <TabPanel value="methods" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Method Sub-tabs */}
-                <div className="flex gap-2 p-[4px] h-[45px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg w-fit">
-                  <button
-                    type="button"
-                    onClick={() => setActiveMethodTab('otp')}
-                    className={`flex items-center justify-center min-w-[200px] px-6 text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
-                      activeMethodTab === 'otp'
-                        ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                        : 'bg-transparent text-[var(--color-text-default)]'
-                    }`}
-                  >
-                    OTP
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveMethodTab('email')}
-                    className={`flex items-center justify-center min-w-[200px] px-6 text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
-                      activeMethodTab === 'email'
-                        ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                        : 'bg-transparent text-[var(--color-text-default)]'
-                    }`}
-                  >
-                    Email
-                  </button>
-                </div>
+                <Tabs
+                  value={activeMethodTab}
+                  onChange={(v) => setActiveMethodTab(v as 'otp' | 'email')}
+                  variant="boxed"
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="otp">OTP</Tab>
+                    <Tab value="email">Email</Tab>
+                  </TabList>
+                </Tabs>
 
                 {/* OTP Policy Card */}
                 {activeMethodTab === 'otp' && (
                   <SectionCard>
-                    <SectionCard.Header title="OTP policy" />
-                    <SectionCard.Content>
-                      {/* OTP Enable Toggle */}
-                      <Toggle
-                        checked={otpEnabled}
-                        onChange={(e) => setOtpEnabled(e.target.checked)}
-                        label={otpEnabled ? 'On' : 'Off'}
-                      />
+                    <SectionCard.Header title="OTP policy" showDivider={false} />
+                    <SectionCard.Content showDividers={false}>
+                      <VStack gap={0}>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                      {/* Look Around Window */}
-                      <FormField required>
-                        <FormField.Label>Look around window</FormField.Label>
-                        <FormField.Description>
-                          Allows for slight time differences between the server and the user's
-                          device to prevent login failures. 1 is recommended.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <NumberInput
-                            value={lookAroundWindow}
-                            onChange={setLookAroundWindow}
-                            min={0}
-                            max={2}
-                            step={1}
-                            width="xs"
-                            disabled={!otpEnabled}
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>0 - 2</FormField.HelperText>
-                      </FormField>
-
-                      {/* Reusable Token */}
-                      <FormField>
-                        <FormField.Label>Reusable token</FormField.Label>
-                        <FormField.Description>
-                          For security, always keep this disabled. Enabling it may expose the system
-                          to replay attacks.
-                        </FormField.Description>
-                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                        {/* OTP Enable Toggle */}
+                        <div className="py-6">
                           <Toggle
-                            checked={reusableToken}
-                            onChange={(e) => setReusableToken(e.target.checked)}
-                            label={reusableToken ? 'On' : 'Off'}
-                            disabled={!otpEnabled}
+                            checked={otpEnabled}
+                            onChange={(e) => setOtpEnabled(e.target.checked)}
+                            label={otpEnabled ? 'On' : 'Off'}
                           />
-                        </FormField.Control>
-                      </FormField>
+                        </div>
 
-                      {/* Supported Applications */}
-                      <FormField>
-                        <FormField.Label>Supported applications</FormField.Label>
-                        <FormField.Description>
-                          Recommended authenticator apps that support this policy.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <HStack className="gap-[var(--primitive-spacing-1-5)]">
-                            <Badge
-                              theme="white"
-                              size="sm"
-                              leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                            >
-                              Google auth
-                            </Badge>
-                            <Badge
-                              theme="white"
-                              size="sm"
-                              leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
-                            >
-                              MS Auth
-                            </Badge>
-                          </HStack>
-                        </FormField.Control>
-                      </FormField>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                      {/* Action Buttons */}
-                      <HStack gap={2} justify="end" className="w-full">
-                        <button
-                          type="button"
-                          onClick={handleMethodsResetToDefault}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
-                        >
-                          <IconRefresh size={12} stroke={1.5} />
-                          Reset to default
-                        </button>
-                        <Button variant="secondary" size="sm" onClick={handleMethodsReload}>
-                          Reload
-                        </Button>
-                        <Button variant="primary" size="sm" onClick={handleMethodsSave}>
-                          Save
-                        </Button>
-                      </HStack>
+                        {/* Look Around Window */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Look around window</FormField.Label>
+                            <FormField.Description>
+                              Allows for slight time differences between the server and the user's
+                              device to prevent login failures. 1 is recommended.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <NumberInput
+                                value={lookAroundWindow}
+                                onChange={setLookAroundWindow}
+                                min={0}
+                                max={2}
+                                step={1}
+                                width="xs"
+                                disabled={!otpEnabled}
+                              />
+                            </FormField.Control>
+                            <FormField.HelperText>0 - 2</FormField.HelperText>
+                          </FormField>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Reusable Token */}
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Reusable token</FormField.Label>
+                            <FormField.Description>
+                              For security, always keep this disabled. Enabling it may expose the
+                              system to replay attacks.
+                            </FormField.Description>
+                            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                              <Toggle
+                                checked={reusableToken}
+                                onChange={(e) => setReusableToken(e.target.checked)}
+                                label={reusableToken ? 'On' : 'Off'}
+                                disabled={!otpEnabled}
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Supported Applications */}
+                        <div className="py-6">
+                          <FormField>
+                            <FormField.Label>Supported applications</FormField.Label>
+                            <FormField.Description>
+                              Recommended authenticator apps that support this policy.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <HStack className="gap-[var(--primitive-spacing-1-5)]">
+                                <Badge
+                                  theme="white"
+                                  size="sm"
+                                  leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
+                                >
+                                  Google auth
+                                </Badge>
+                                <Badge
+                                  theme="white"
+                                  size="sm"
+                                  leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
+                                >
+                                  MS Auth
+                                </Badge>
+                              </HStack>
+                            </FormField.Control>
+                          </FormField>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Action Buttons */}
+                        <HStack gap={2} justify="end" className="w-full pt-3">
+                          <button
+                            type="button"
+                            onClick={handleMethodsResetToDefault}
+                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          >
+                            <IconRefresh size={12} stroke={1.5} />
+                            Reset to default
+                          </button>
+                          <Button variant="secondary" size="md" onClick={handleMethodsReload}>
+                            Reload
+                          </Button>
+                          <Button variant="primary" size="md" onClick={handleMethodsSave}>
+                            Save
+                          </Button>
+                        </HStack>
+                      </VStack>
                     </SectionCard.Content>
                   </SectionCard>
                 )}
@@ -341,131 +355,161 @@ export default function IAMMFAPoliciesPage() {
                 {/* Email Policy Card */}
                 {activeMethodTab === 'email' && (
                   <SectionCard>
-                    <SectionCard.Header title="Email policy" />
-                    <SectionCard.Content>
-                      {/* Email Enable Toggle */}
-                      <Toggle
-                        checked={emailEnabled}
-                        onChange={(e) => setEmailEnabled(e.target.checked)}
-                        label={emailEnabled ? 'On' : 'Off'}
-                      />
+                    <SectionCard.Header title="Email policy" showDivider={false} />
+                    <SectionCard.Content showDividers={false}>
+                      <VStack gap={0}>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                      {/* Code Validity Period */}
-                      <FormField required>
-                        <FormField.Label>Code validity period</FormField.Label>
-                        <FormField.Description>
-                          Set the time limit within which the user must enter the email code.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={codeValidityPeriod}
-                              onChange={setCodeValidityPeriod}
-                              min={1}
-                              max={600}
-                              step={1}
-                              width="sm"
-                              disabled={!emailEnabled}
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              Seconds
-                            </span>
-                          </HStack>
-                        </FormField.Control>
-                        <FormField.HelperText>1-600 Seconds</FormField.HelperText>
-                      </FormField>
+                        {/* Email Enable Toggle */}
+                        <div className="py-6">
+                          <Toggle
+                            checked={emailEnabled}
+                            onChange={(e) => setEmailEnabled(e.target.checked)}
+                            label={emailEnabled ? 'On' : 'Off'}
+                          />
+                        </div>
 
-                      {/* Resend Cooldown */}
-                      <FormField required>
-                        <FormField.Label>Resend cooldown</FormField.Label>
-                        <FormField.Description>
-                          The minimum time a user must wait before requesting a new authentication
-                          code.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={resendCooldown}
-                              onChange={setResendCooldown}
-                              min={1}
-                              max={120}
-                              step={1}
-                              width="sm"
-                              disabled={!emailEnabled}
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              Seconds
-                            </span>
-                          </HStack>
-                        </FormField.Control>
-                        <FormField.HelperText>1-120 Seconds</FormField.HelperText>
-                      </FormField>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-                      {/* Verification Attempts */}
-                      <FormField required>
-                        <FormField.Label>Verification attempts</FormField.Label>
-                        <FormField.Description>
-                          Protect user accounts from unusual activities by limiting the number of
-                          verification attempts allowed within a time frame.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <div className="flex items-center gap-[var(--primitive-spacing-6)] px-[var(--primitive-spacing-4)] py-[var(--primitive-spacing-2)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full bg-[var(--color-surface-default)]">
-                            <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Time window
-                              </span>
-                              <NumberInput
-                                value={verificationTimeWindow}
-                                onChange={setVerificationTimeWindow}
-                                min={1}
-                                max={60}
-                                step={1}
-                                className="w-[80px]"
-                                disabled={!emailEnabled}
-                              />
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                Minutes
-                              </span>
-                            </HStack>
-                            <HStack align="center" className="gap-[var(--primitive-spacing-1-5)]">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Max attempts
-                              </span>
-                              <NumberInput
-                                value={verificationMaxAttempts}
-                                onChange={setVerificationMaxAttempts}
-                                min={1}
-                                max={10}
-                                step={1}
-                                className="w-[80px]"
-                                disabled={!emailEnabled}
-                              />
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                Times
-                              </span>
-                            </HStack>
-                          </div>
-                        </FormField.Control>
-                        <FormField.HelperText>1-60 Minutes / 1-10 Times</FormField.HelperText>
-                      </FormField>
+                        {/* Code Validity Period */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Code validity period</FormField.Label>
+                            <FormField.Description>
+                              Set the time limit within which the user must enter the email code.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <HStack gap={2} align="center">
+                                <NumberInput
+                                  value={codeValidityPeriod}
+                                  onChange={setCodeValidityPeriod}
+                                  min={1}
+                                  max={600}
+                                  step={1}
+                                  width="xs"
+                                  disabled={!emailEnabled}
+                                />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  Seconds
+                                </span>
+                              </HStack>
+                            </FormField.Control>
+                            <FormField.HelperText>1-600 Seconds</FormField.HelperText>
+                          </FormField>
+                        </div>
 
-                      {/* Action Buttons */}
-                      <HStack gap={2} justify="end" className="w-full">
-                        <button
-                          type="button"
-                          onClick={handleMethodsResetToDefault}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
-                        >
-                          <IconRefresh size={12} stroke={1.5} />
-                          Reset to default
-                        </button>
-                        <Button variant="secondary" size="sm" onClick={handleMethodsReload}>
-                          Reload
-                        </Button>
-                        <Button variant="primary" size="sm" onClick={handleMethodsSave}>
-                          Save
-                        </Button>
-                      </HStack>
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Resend Cooldown */}
+                        <div className="py-6">
+                          <FormField required>
+                            <FormField.Label>Resend cooldown</FormField.Label>
+                            <FormField.Description>
+                              The minimum time a user must wait before requesting a new
+                              authentication code.
+                            </FormField.Description>
+                            <FormField.Control>
+                              <HStack gap={2} align="center">
+                                <NumberInput
+                                  value={resendCooldown}
+                                  onChange={setResendCooldown}
+                                  min={1}
+                                  max={120}
+                                  step={1}
+                                  width="xs"
+                                  disabled={!emailEnabled}
+                                />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  Seconds
+                                </span>
+                              </HStack>
+                            </FormField.Control>
+                            <FormField.HelperText>1-120 Seconds</FormField.HelperText>
+                          </FormField>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Verification Attempts */}
+                        <div className="py-6">
+                          <VStack gap={6}>
+                            <VStack gap={1}>
+                              <span className="text-heading-h6 text-[var(--color-text-default)]">
+                                Verification attempts{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </span>
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
+                                Protect user accounts from unusual activities by limiting the number
+                                of verification attempts allowed within a time frame.
+                              </p>
+                            </VStack>
+
+                            <VStack gap={6}>
+                              <FormField required>
+                                <FormField.Label>Time window</FormField.Label>
+                                <FormField.Control>
+                                  <HStack gap={2} align="center">
+                                    <NumberInput
+                                      value={verificationTimeWindow}
+                                      onChange={setVerificationTimeWindow}
+                                      min={1}
+                                      max={60}
+                                      step={1}
+                                      width="xs"
+                                      disabled={!emailEnabled}
+                                    />
+                                    <span className="text-body-md text-[var(--color-text-default)]">
+                                      Minutes
+                                    </span>
+                                  </HStack>
+                                </FormField.Control>
+                                <FormField.HelperText>1-60 Minutes</FormField.HelperText>
+                              </FormField>
+
+                              <FormField required>
+                                <FormField.Label>Max attempts</FormField.Label>
+                                <FormField.Control>
+                                  <HStack gap={2} align="center">
+                                    <NumberInput
+                                      value={verificationMaxAttempts}
+                                      onChange={setVerificationMaxAttempts}
+                                      min={1}
+                                      max={10}
+                                      step={1}
+                                      width="xs"
+                                      disabled={!emailEnabled}
+                                    />
+                                    <span className="text-body-md text-[var(--color-text-default)]">
+                                      Times
+                                    </span>
+                                  </HStack>
+                                </FormField.Control>
+                                <FormField.HelperText>1-10 Times</FormField.HelperText>
+                              </FormField>
+                            </VStack>
+                          </VStack>
+                        </div>
+
+                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        {/* Action Buttons */}
+                        <HStack gap={2} justify="end" className="w-full pt-3">
+                          <button
+                            type="button"
+                            onClick={handleMethodsResetToDefault}
+                            className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          >
+                            <IconRefresh size={12} stroke={1.5} />
+                            Reset to default
+                          </button>
+                          <Button variant="secondary" size="md" onClick={handleMethodsReload}>
+                            Reload
+                          </Button>
+                          <Button variant="primary" size="md" onClick={handleMethodsSave}>
+                            Save
+                          </Button>
+                        </HStack>
+                      </VStack>
                     </SectionCard.Content>
                   </SectionCard>
                 )}

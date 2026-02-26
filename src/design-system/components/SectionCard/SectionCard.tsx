@@ -132,7 +132,11 @@ function SectionCardContent({
   }
 
   return (
-    <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>
+    <div
+      className={twMerge('flex flex-col w-full', gap !== undefined ? '' : 'gap-3', className)}
+      style={gap !== undefined ? { gap: `${gap * 4}px` } : undefined}
+      {...props}
+    >
       {childArray.map((child, index) => (
         <Fragment key={index}>
           {index > 0 && <DataRowDivider />}

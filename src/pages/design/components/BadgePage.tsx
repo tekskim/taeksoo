@@ -1,8 +1,10 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DocSection } from '../_shared/DocSection';
+import { PropsTable } from '../_shared/PropsTable';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Badge, VStack } from '@/design-system';
+import { Badge, BadgeList, VStack } from '@/design-system';
 import { IconCheck, IconArrowRight } from '@tabler/icons-react';
 
 const badgeProps: PropDef[] = [
@@ -39,6 +41,59 @@ const badgeProps: PropDef[] = [
   { name: 'children', type: 'ReactNode', required: true, description: 'Badge content' },
 ];
 
+const badgeListProps: PropDef[] = [
+  {
+    name: 'items',
+    type: 'string[]',
+    required: true,
+    description: 'Array of badge items to display',
+  },
+  {
+    name: 'maxVisible',
+    type: 'number',
+    default: '2',
+    required: false,
+    description: 'Maximum badges shown before +N overflow',
+  },
+  {
+    name: 'maxBadgeWidth',
+    type: 'string',
+    required: false,
+    description: "Max width per badge with truncation (e.g. '120px')",
+  },
+  {
+    name: 'size',
+    type: "'sm' | 'md' | 'lg'",
+    default: "'sm'",
+    required: false,
+    description: 'Badge size',
+  },
+  {
+    name: 'theme',
+    type: "'white' | 'blue' | 'red' | 'green' | 'yellow' | 'gray'",
+    required: false,
+    description: 'Badge theme',
+  },
+  {
+    name: 'type',
+    type: "'solid' | 'subtle'",
+    required: false,
+    description: 'Badge type',
+  },
+  {
+    name: 'popoverTitle',
+    type: 'string',
+    required: false,
+    description: 'Popover header (default: "All items (N)")',
+  },
+  {
+    name: 'renderItem',
+    type: '(item: string, index: number) => ReactNode',
+    required: false,
+    description: 'Custom render for each badge item',
+  },
+];
+
 export function BadgePage() {
   return (
     <ComponentPageTemplate
@@ -46,16 +101,16 @@ export function BadgePage() {
       description="Status indicators and labels with various styles"
       preview={
         <ComponentPreview
-          code={`<Badge>Default</Badge>
-<Badge theme="blue" type="subtle">Label</Badge>
-<Badge theme="green" type="subtle">Completed</Badge>`}
+          code={`<Badge size="sm">Default</Badge>
+<Badge size="sm" theme="blue" type="subtle">Label</Badge>
+<Badge size="sm" theme="green" type="subtle">Completed</Badge>`}
         >
           <div className="flex gap-2">
-            <Badge>Default</Badge>
-            <Badge theme="blue" type="subtle">
+            <Badge size="sm">Default</Badge>
+            <Badge size="sm" theme="blue" type="subtle">
               Label
             </Badge>
-            <Badge theme="green" type="subtle">
+            <Badge size="sm" theme="green" type="subtle">
               Completed
             </Badge>
           </div>
@@ -94,21 +149,6 @@ export function BadgePage() {
                 <div className="flex gap-2">
                   <Badge size="sm" theme="white">
                     White
-                  </Badge>
-                  <Badge size="sm" theme="blue">
-                    Blue
-                  </Badge>
-                  <Badge size="sm" theme="green">
-                    Green
-                  </Badge>
-                  <Badge size="sm" theme="red">
-                    Red
-                  </Badge>
-                  <Badge size="sm" theme="yellow">
-                    Yellow
-                  </Badge>
-                  <Badge size="sm" theme="gray">
-                    Gray
                   </Badge>
                 </div>
               </VStack>
@@ -320,6 +360,95 @@ export function BadgePage() {
           description: 'Badge in headers',
         },
       ]}
-    />
+    >
+      {/* BadgeList Section */}
+      <DocSection id="badge-list" title="BadgeList">
+        <VStack gap={8}>
+          <p className="text-body-lg text-[var(--color-text-muted)]">
+            테이블 셀에서 배열 데이터를 뱃지로 표시할 때 사용하는 컴포넌트입니다. 오버플로우 시 +N
+            인디케이터와 Popover로 전체 항목을 보여줍니다.
+          </p>
+
+          <VStack gap={3}>
+            <Label>Basic — 짧은 값 (daemons, osds, status)</Label>
+            <ComponentPreview
+              code={`<BadgeList
+  items={['osd.4', 'osd.5', 'osd.6', 'osd.7']}
+  maxVisible={2}
+  popoverTitle="All OSDs (4)"
+/>`}
+            >
+              <BadgeList
+                items={['osd.4', 'osd.5', 'osd.6', 'osd.7']}
+                maxVisible={2}
+                popoverTitle="All OSDs (4)"
+              />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Truncation — 긴 값 (labels, tags)</Label>
+            <ComponentPreview
+              code={`<BadgeList
+  items={[
+    'kubernetes.io/metadata.name=production',
+    'app.kubernetes.io/instance=nginx',
+    'env=staging',
+  ]}
+  maxVisible={2}
+  maxBadgeWidth="120px"
+  popoverTitle="All Labels (3)"
+/>`}
+            >
+              <BadgeList
+                items={[
+                  'kubernetes.io/metadata.name=production',
+                  'app.kubernetes.io/instance=nginx',
+                  'env=staging',
+                ]}
+                maxVisible={2}
+                maxBadgeWidth="120px"
+                popoverTitle="All Labels (3)"
+              />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>maxVisible=1 — 매우 긴 값</Label>
+            <ComponentPreview
+              code={`<BadgeList
+  items={[
+    'app.kubernetes.io/managed-by=helm',
+    'topology.kubernetes.io/zone=us-east-1a',
+  ]}
+  maxVisible={1}
+  maxBadgeWidth="140px"
+  popoverTitle="All Annotations (2)"
+/>`}
+            >
+              <BadgeList
+                items={[
+                  'app.kubernetes.io/managed-by=helm',
+                  'topology.kubernetes.io/zone=us-east-1a',
+                ]}
+                maxVisible={1}
+                maxBadgeWidth="140px"
+                popoverTitle="All Annotations (2)"
+              />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>항목이 적은 경우 — 오버플로우 없음</Label>
+            <div className="flex gap-6">
+              <BadgeList items={['admin']} maxVisible={2} />
+              <BadgeList items={['in', 'up']} maxVisible={2} />
+            </div>
+          </VStack>
+
+          <PropsTable props={badgeListProps} name="BadgeListProps" />
+        </VStack>
+      </DocSection>
+    </ComponentPageTemplate>
   );
 }

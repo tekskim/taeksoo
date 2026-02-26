@@ -185,11 +185,11 @@ export const columnMinWidths = {
   deviceId: '100px',
   deviceName: '150px',
   devicePath: '150px',
-  daemons: '100px',
+  daemons: '160px',
   daemonName: '150px',
   daemonEvents: '100px',
   osd: '80px',
-  osds: '80px',
+  osds: '160px',
 
   // ============================================================================
   // Network
