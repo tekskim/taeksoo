@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -87,14 +87,14 @@ export function EditSystemAdminDrawer({
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -112,16 +112,7 @@ export function EditSystemAdminDrawer({
           </p>
 
           {/* Username Info Card */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Username
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {initialData.username}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="Username" value={initialData.username} />
         </VStack>
 
         {/* Email Address */}

@@ -145,14 +145,14 @@ export function CreateObjectDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Creating...' : 'Create'}
           </Button>
@@ -249,7 +249,7 @@ export function CreateObjectDrawer({
           <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={2}>
+            <VStack gap={1}>
               {tags.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                   <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
@@ -275,10 +275,11 @@ export function CreateObjectDrawer({
                     fullWidth
                   />
                   <button
+                    type="button"
                     onClick={() => handleRemoveTag(tag.id)}
                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    <IconX size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                   </button>
                 </div>
               ))}

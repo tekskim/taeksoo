@@ -11,6 +11,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -581,14 +582,7 @@ export function AssociateFloatingIPDrawer({
       <VStack gap={6} className="h-full">
         {/* Floating IP Info */}
         <VStack gap={3}>
-          <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
-              Floating IP
-            </p>
-            <p className="text-body-md text-[var(--color-text-default)] leading-4">
-              {floatingIP.address}
-            </p>
-          </div>
+          <InfoBox label="Floating IP" value={floatingIP.address} />
         </VStack>
 
         {/* Resource Type Section */}

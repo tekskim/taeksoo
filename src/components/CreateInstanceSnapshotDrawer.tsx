@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField, InlineMessage } from '@/design-system';
+import { Drawer, Button, Input, FormField, InlineMessage, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -105,10 +105,7 @@ export function CreateInstanceSnapshotDrawer({
           </VStack>
 
           {/* Instance Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Instance</p>
-            <p className="text-body-md text-[var(--color-text-default)]">{instance?.name || '-'}</p>
-          </div>
+          <InfoBox label="Instance" value={instance?.name || '-'} />
 
           {/* Warning Message */}
           <InlineMessage variant="error">

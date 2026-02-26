@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, NumberInput, Disclosure } from '@/design-system';
+import { Drawer, Button, NumberInput, Disclosure, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -163,11 +163,7 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
           </p>
         </VStack>
 
-        {/* Tenant Info */}
-        <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-          <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Tenant</div>
-          <div className="text-body-md text-[var(--color-text-default)]">{tenant.name}</div>
-        </div>
+        <InfoBox label="Tenant" value={tenant.name} />
 
         {/* Compute Section */}
         <VStack gap={0} className="w-full">

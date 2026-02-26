@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -17,21 +17,6 @@ export interface CreateTransferDrawerProps {
   onClose: () => void;
   volume: VolumeInfo | null;
   onSubmit?: (transferName: string) => void;
-}
-
-/* ----------------------------------------
-   InfoBox Component
-   ---------------------------------------- */
-
-function InfoBox({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
-        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
-      </VStack>
-    </div>
-  );
 }
 
 /* ----------------------------------------

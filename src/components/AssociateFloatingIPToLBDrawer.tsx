@@ -7,6 +7,7 @@ import {
   Radio,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -187,14 +188,14 @@ export function AssociateFloatingIPToLBDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleAssociate}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Associating...' : 'Associate'}
           </Button>
@@ -202,32 +203,13 @@ export function AssociateFloatingIPToLBDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Info Boxes Section */}
-        <VStack gap={3}>
-          {/* Load Balancer Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Load balancer
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {loadBalancer.name}
-              </span>
-            </VStack>
-          </div>
-
-          {/* Owned Network Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Owned network
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {loadBalancer.networkName} (ID : {loadBalancer.networkId})
-              </span>
-            </VStack>
-          </div>
-        </VStack>
+        <InfoBox.Group>
+          <InfoBox label="Load balancer" value={loadBalancer.name} />
+          <InfoBox
+            label="Owned network"
+            value={`${loadBalancer.networkName} (ID : ${loadBalancer.networkId})`}
+          />
+        </InfoBox.Group>
 
         {/* Floating IP Section */}
         <VStack gap={3} className="pb-5">

@@ -170,7 +170,7 @@ export function ResourceTypeSearchDrawer({
         />
 
         {/* Resource List */}
-        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[4px] max-h-[calc(100vh-200px)] drawer-scroll">
+        <div className="overflow-auto border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] max-h-[calc(100vh-200px)] drawer-scroll">
           {filteredCategories.map((category, categoryIndex) => {
             const isExpanded = expandedCategories[category.id] ?? true;
             const isCategoryHighlighted = category.id === selectedCategoryId;
@@ -218,14 +218,16 @@ export function ResourceTypeSearchDrawer({
                           onClick={() => handleSelect(category.id, item.id, item.name)}
                           className={`flex items-center justify-between w-full h-[30px] pl-9 pr-3 transition-colors ${
                             isSelected
-                              ? 'bg-[var(--color-action-primary)] text-white'
+                              ? 'bg-[var(--color-action-primary)] text-[var(--semantic-color-on-primary)]'
                               : 'hover:bg-[var(--color-surface-subtle)]'
                           }`}
                         >
                           <span className="text-body-md truncate">{item.name}</span>
                           <span
                             className={`text-body-md shrink-0 ml-2 ${
-                              isSelected ? 'text-white' : 'text-[var(--color-text-subtle)]'
+                              isSelected
+                                ? 'text-[var(--semantic-color-on-primary)]'
+                                : 'text-[var(--color-text-subtle)]'
                             }`}
                           >
                             {item.count}

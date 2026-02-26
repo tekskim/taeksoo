@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Toggle, FormField } from '@/design-system';
+import { Drawer, Button, Toggle, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 export interface InstanceInfo {
@@ -67,18 +67,7 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Lock setting</h2>
 
         {/* Instance Info */}
-        {instance && (
-          <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Instance
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {instance.name}
-              </span>
-            </VStack>
-          </div>
-        )}
+        {instance && <InfoBox label="Instance" value={instance.name} />}
 
         {/* Lock Status */}
         <FormField

@@ -8,6 +8,7 @@ import {
   Radio,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -170,10 +171,7 @@ export function DisassociateFloatingIPDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Instance Info */}
-        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</p>
-          <p className="text-body-md text-[var(--color-text-default)]">{instance.name}</p>
-        </div>
+        <InfoBox label="Instance" value={instance.name} />
 
         {/* Floating IPs Section */}
         <VStack gap={3}>

@@ -143,14 +143,14 @@ export function CreateVolumeSnapshotDrawer({
           {/* Buttons */}
           <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} className="w-full">
-            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+            <Button variant="secondary" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 h-8"
+              className="flex-1"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

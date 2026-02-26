@@ -225,7 +225,7 @@ export function CreateKeyPairDrawer({
                   value={publicKey}
                   onChange={(e) => setPublicKey(e.target.value)}
                   placeholder="Upload a file with a public key or enter it in the field."
-                  className={`w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
+                  className={`w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-[var(--primitive-radius-md)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
                 />
               </VStack>
             </FormField.Control>

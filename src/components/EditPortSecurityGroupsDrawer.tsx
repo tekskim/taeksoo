@@ -8,6 +8,7 @@ import {
   Toggle,
   SelectionIndicator,
   FormField,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -90,7 +91,7 @@ interface FilterTagProps {
 
 function FilterTag({ label, value, onRemove }: FilterTagProps) {
   return (
-    <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-[var(--color-border-default)] rounded-md">
+    <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
       <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>
       <span className="text-body-sm text-[var(--color-border-default)]">|</span>
       <span className="text-label-sm text-[var(--color-text-default)]">{value}</span>
@@ -232,17 +233,7 @@ export function EditPortSecurityGroupsDrawer({
             off.
           </p>
 
-          {/* Port Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Port name
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {port.name}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="Port name" value={port.name} />
         </VStack>
 
         {/* Port Security Toggle Section */}
@@ -301,7 +292,7 @@ export function EditPortSecurityGroupsDrawer({
             />
 
             <VStack gap={2}>
-              <div style={{ width: '648px', maxWidth: '648px' }}>
+              <div className="w-[648px] max-w-[648px]">
                 <Table<SecurityGroupItem>
                   columns={securityGroupColumns}
                   data={paginatedSecurityGroups}
