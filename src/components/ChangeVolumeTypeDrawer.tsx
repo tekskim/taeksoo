@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Select, FormField, InlineMessage } from '@/design-system';
+import { Drawer, Button, Select, FormField, InlineMessage, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -23,21 +23,6 @@ export interface ChangeVolumeTypeDrawerProps {
   volume: VolumeInfo | null;
   volumeTypes?: VolumeTypeOption[];
   onSubmit?: (newVolumeType: string) => void;
-}
-
-/* ----------------------------------------
-   InfoBox Component
-   ---------------------------------------- */
-
-function InfoBox({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
-        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
-      </VStack>
-    </div>
-  );
 }
 
 /* ----------------------------------------
@@ -97,14 +82,14 @@ export function ChangeVolumeTypeDrawer({
       width={360}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -129,11 +114,10 @@ export function ChangeVolumeTypeDrawer({
             For data consistency, stop all write operations on the instance before retyping.
           </InlineMessage>
 
-          {/* Volume Info */}
-          <InfoBox label="Volume" value={volume?.name ?? '-'} />
-
-          {/* Current Volume Type Info */}
-          <InfoBox label="Current volume type" value={volume?.currentType ?? '-'} />
+          <InfoBox.Group>
+            <InfoBox label="Volume" value={volume?.name ?? '-'} />
+            <InfoBox label="Current volume type" value={volume?.currentType ?? '-'} />
+          </InfoBox.Group>
         </VStack>
 
         {/* New Volume Type Select */}

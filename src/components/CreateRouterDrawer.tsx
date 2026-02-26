@@ -100,7 +100,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
         />
         {/* Next usage preview (lighter green) */}
         <div
-          className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
+          className="absolute left-0 top-0 h-full bg-[var(--color-state-success-bg)] rounded-lg z-[1]"
           style={{ width: isUnlimited ? '10%' : `${Math.min(nextPercentage, 100)}%` }}
         />
       </div>
@@ -264,14 +264,14 @@ export function CreateRouterDrawer({
           {/* Buttons */}
           <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} justify="center" className="w-full">
-            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+            <Button variant="secondary" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="w-[152px] h-8"
+              className="flex-1"
             >
               {isSubmitting ? 'Creating...' : 'Create'}
             </Button>

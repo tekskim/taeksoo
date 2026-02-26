@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Radio, Input, FormField } from '@/design-system';
+import { Drawer, Button, Radio, Input, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconEye, IconEyeOff, IconCheck, IconX } from '@tabler/icons-react';
 
@@ -125,14 +125,14 @@ export function ResetPasswordDrawer({
       showCloseButton={false}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1 h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Resetting...' : 'Reset'}
           </Button>
@@ -150,14 +150,7 @@ export function ResetPasswordDrawer({
           </p>
 
           {/* User Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">User</span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {userName}
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="User" value={userName} />
         </VStack>
 
         {/* Password Section */}

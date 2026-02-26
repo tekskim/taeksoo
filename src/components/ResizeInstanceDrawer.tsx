@@ -13,6 +13,8 @@ import {
   NumberInput,
   Table,
   InlineMessage,
+  InfoBox,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -314,7 +316,7 @@ export function ResizeInstanceDrawer({
                   style={{ width: `${vcpuUsedPercent}%` }}
                 />
                 <div
-                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1"
+                  className="h-1 rounded-lg bg-[var(--color-state-success-bg)] z-[2] -mr-1"
                   style={{ width: `${vcpuUsedPercent}%` }}
                 />
                 <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] z-[1]" />
@@ -337,7 +339,7 @@ export function ResizeInstanceDrawer({
                   style={{ width: `${ramUsedPercent}%` }}
                 />
                 <div
-                  className="h-1 rounded-lg bg-green-200 z-[2] -mr-1"
+                  className="h-1 rounded-lg bg-[var(--color-state-success-bg)] z-[2] -mr-1"
                   style={{ width: `${ramUsedPercent}%` }}
                 />
                 <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] z-[1]" />
@@ -381,11 +383,7 @@ export function ResizeInstanceDrawer({
             processes and connections will be interrupted.
           </InlineMessage>
 
-          {/* Instance Info Box */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</div>
-            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
-          </div>
+          <InfoBox label="Instance" value={instance.name} />
         </VStack>
 
         {/* Flavor Section */}
@@ -466,9 +464,7 @@ export function ResizeInstanceDrawer({
         </VStack>
 
         {/* Approval Method Section */}
-        <VStack gap={3} className="pb-5">
-          <span className="text-label-lg text-[var(--color-text-default)]">Approval method</span>
-
+        <FormField label="Approval method" spacing="loose" className="pb-5">
           <VStack gap={2}>
             {/* Manual confirm option */}
             <Radio
@@ -494,7 +490,7 @@ export function ResizeInstanceDrawer({
 
           {/* Auto-confirm settings */}
           {approvalMethod === 'auto' && (
-            <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-md flex items-center gap-6">
+            <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] flex items-center gap-6">
               <HStack gap={1.5} align="center">
                 <span className="text-label-lg text-[var(--color-text-default)]">After</span>
                 <NumberInput
@@ -520,7 +516,7 @@ export function ResizeInstanceDrawer({
               </HStack>
             </div>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

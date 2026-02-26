@@ -103,7 +103,7 @@ export function EditVolumeBackupDrawer({
 
         {/* Volume Snapshot Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
-          <FormField.Label>Volume snapshot name</FormField.Label>
+          <FormField.Label>Volume backup name</FormField.Label>
           <FormField.Control>
             <Input
               value={backupName}

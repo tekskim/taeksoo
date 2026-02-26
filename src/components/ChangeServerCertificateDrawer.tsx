@@ -8,6 +8,7 @@ import {
   SelectionIndicator,
   StatusIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -187,14 +188,14 @@ export function ChangeServerCertificateDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <Button variant="secondary" onClick={handleClose} className="w-[152px]">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleChange}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="w-[152px]"
           >
             {isSubmitting ? 'Changing...' : 'Change'}
           </Button>
@@ -202,17 +203,10 @@ export function ChangeServerCertificateDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Current Certificate Info Box */}
-        <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Current server certificate
-            </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {currentCertificate.name} (expired on {currentCertificate.expiresAt})
-            </span>
-          </VStack>
-        </div>
+        <InfoBox
+          label="Current server certificate"
+          value={`${currentCertificate.name} (expired on ${currentCertificate.expiresAt})`}
+        />
 
         {/* New Server Certificate Section */}
         <VStack gap={3} className="pb-5">

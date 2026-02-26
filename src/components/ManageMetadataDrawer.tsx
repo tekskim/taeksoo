@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Input, SearchInput, FormField } from '@/design-system';
+import { Drawer, Button, Input, SearchInput, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import {
   IconCirclePlus,
@@ -168,11 +168,7 @@ export function ManageMetadataDrawer({
         <VStack gap={3}>
           <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage metadata</h2>
 
-          {/* Image Info */}
-          <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Image</div>
-            <div className="text-body-md text-[var(--color-text-default)]">{image.name}</div>
-          </div>
+          <InfoBox label="Image" value={image.name} />
         </VStack>
 
         {/* Metadata Section */}

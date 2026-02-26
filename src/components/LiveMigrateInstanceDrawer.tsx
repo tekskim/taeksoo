@@ -4,6 +4,7 @@ import {
   Button,
   Radio,
   Checkbox,
+  FormField,
   SearchInput,
   Pagination,
   ProgressBar,
@@ -307,11 +308,13 @@ export function LiveMigrateInstanceDrawer({
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Transfer the full disk image of the instance during live migration.
           </p>
-          <Checkbox
-            checked={blockMigrate}
-            onChange={(e) => setBlockMigrate(e.target.checked)}
-            label="Block migrate"
-          />
+          <FormField spacing="loose">
+            <Checkbox
+              checked={blockMigrate}
+              onChange={(e) => setBlockMigrate(e.target.checked)}
+              label="Block migrate"
+            />
+          </FormField>
         </VStack>
       </VStack>
     </Drawer>
