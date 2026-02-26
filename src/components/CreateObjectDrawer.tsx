@@ -252,10 +252,8 @@ export function CreateObjectDrawer({
             <VStack gap={2}>
               {tags.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                  <span className="block text-label-lg text-[var(--color-text-default)]">Key</span>
-                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                    Value
-                  </span>
+                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
+                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Value</span>
                   <div />
                 </div>
               )}
@@ -280,7 +278,7 @@ export function CreateObjectDrawer({
                     onClick={() => handleRemoveTag(tag.id)}
                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    <IconX size={14} className="text-[var(--color-text-muted)]" />
                   </button>
                 </div>
               ))}

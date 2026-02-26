@@ -336,15 +336,6 @@ export function ManageSecurityGroupsDrawer({
         <VStack gap={3} className="pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)]">Security groups</h3>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={sgPage}
-            totalPages={sgTotalPages}
-            totalItems={filteredSecurityGroups.length}
-            onPageChange={setSgPage}
-            selectedCount={selectedSecurityGroupIds.length}
-          />
-
           {/* Search */}
           <div className="w-[280px]">
             <SearchInput
@@ -356,6 +347,15 @@ export function ManageSecurityGroupsDrawer({
               fullWidth
             />
           </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={sgPage}
+            totalPages={sgTotalPages}
+            totalItems={filteredSecurityGroups.length}
+            onPageChange={setSgPage}
+            selectedCount={selectedSecurityGroupIds.length}
+          />
 
           <VStack gap={2}>
             <Table<SecurityGroupItem>

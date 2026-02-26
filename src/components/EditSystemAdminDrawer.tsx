@@ -161,20 +161,17 @@ export function EditSystemAdminDrawer({
         </FormField>
 
         {/* Status */}
-        <FormField>
-          <FormField.Label>Status</FormField.Label>
-          <FormField.Description>
-            Select the account&apos;s status. If &apos;disabled&apos;, the system administrator will
-            be prevented from signing in.
-          </FormField.Description>
-          <FormField.Control>
-            <HStack gap={2} align="center">
-              <Toggle checked={enabled} onChange={setEnabled} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {enabled ? 'Enabled' : 'Disabled'}
-              </span>
-            </HStack>
-          </FormField.Control>
+        <FormField
+          label="Status"
+          description="Select the account's status. If 'disabled', the system administrator will be prevented from signing in."
+          spacing="loose"
+        >
+          <HStack gap={2} align="center">
+            <Toggle checked={enabled} onChange={setEnabled} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {enabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </HStack>
         </FormField>
       </VStack>
     </Drawer>

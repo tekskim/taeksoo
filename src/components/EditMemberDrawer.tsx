@@ -202,32 +202,26 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
               </FormField>
 
               {/* Backup */}
-              <FormField>
-                <FormField.Label>Backup</FormField.Label>
-                <FormField.Control>
-                  <HStack gap={2} className="items-center">
-                    <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {backup ? 'On' : 'Off'}
-                    </span>
-                  </HStack>
-                </FormField.Control>
+              <FormField label="Backup" spacing="loose">
+                <HStack gap={2} className="items-center">
+                  <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    {backup ? 'On' : 'Off'}
+                  </span>
+                </HStack>
               </FormField>
 
               {/* Admin State */}
-              <FormField>
-                <FormField.Label>Admin state</FormField.Label>
-                <FormField.Control>
-                  <HStack gap={2} className="items-center">
-                    <Toggle
-                      checked={adminStateUp}
-                      onChange={(e) => setAdminStateUp(e.target.checked)}
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {adminStateUp ? 'Up' : 'Down'}
-                    </span>
-                  </HStack>
-                </FormField.Control>
+              <FormField label="Admin state" spacing="loose">
+                <HStack gap={2} className="items-center">
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    {adminStateUp ? 'Up' : 'Down'}
+                  </span>
+                </HStack>
               </FormField>
             </VStack>
           )}

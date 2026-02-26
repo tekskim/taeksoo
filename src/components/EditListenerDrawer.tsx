@@ -377,27 +377,17 @@ export function EditListenerDrawer({
                 </FormField.Description>
                 <FormField.Control>
                   <VStack gap={2} className="w-full">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleAddCidr}
-                      leftIcon={<IconCirclePlus size={12} />}
-                      className="self-start"
-                    >
-                      Add CIDR
-                    </Button>
-
                     {/* CIDR List */}
                     {allowedCidrs.map((cidr, index) => (
                       <HStack
                         key={index}
-                        gap={6}
+                        gap={3}
                         align="center"
-                        className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
+                        className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
                       >
-                        <HStack gap={3} align="center" className="flex-1 min-w-0">
+                        <HStack gap={1.5} align="center" className="flex-1 min-w-0">
                           <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
-                            Key
+                            CIDR
                           </span>
                           <Input
                             value={cidr}
@@ -409,30 +399,37 @@ export function EditListenerDrawer({
                         <button
                           type="button"
                           onClick={() => handleRemoveCidr(index)}
-                          className="p-0.5 shrink-0 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                         >
-                          <IconX size={12} className="text-[var(--color-text-default)]" />
+                          <IconX size={14} className="text-[var(--color-text-muted)]" />
                         </button>
                       </HStack>
                     ))}
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={handleAddCidr}
+                        leftIcon={<IconCirclePlus size={12} />}
+                      >
+                        Add CIDR
+                      </Button>
+                    </div>
                   </VStack>
                 </FormField.Control>
               </FormField>
 
               {/* Listener Admin State */}
-              <FormField>
-                <FormField.Label>Listener admin state</FormField.Label>
-                <FormField.Control>
-                  <HStack gap={2} className="items-center">
-                    <Toggle
-                      checked={adminStateUp}
-                      onChange={(e) => setAdminStateUp(e.target.checked)}
-                    />
-                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                      {adminStateUp ? 'Up' : 'Down'}
-                    </span>
-                  </HStack>
-                </FormField.Control>
+              <FormField label="Listener admin state" spacing="loose">
+                <HStack gap={2} className="items-center">
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    {adminStateUp ? 'Up' : 'Down'}
+                  </span>
+                </HStack>
               </FormField>
             </VStack>
           )}

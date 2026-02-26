@@ -325,37 +325,29 @@ export function CreateRouterDrawer({
             <Disclosure.Panel>
               <VStack gap={6} className="mt-3">
                 {/* Admin state */}
-                <FormField>
-                  <FormField.Label>Admin state</FormField.Label>
-                  <FormField.Description>
-                    Setting it to &quot;Down&quot; disables all related network or control
-                    operations, regardless of runtime status.
-                  </FormField.Description>
-                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <Toggle
-                      checked={adminStateUp}
-                      onChange={(e) => setAdminStateUp(e.target.checked)}
-                      label={adminStateUp ? 'Up' : 'Down'}
-                    />
-                  </FormField.Control>
+                <FormField
+                  label="Admin state"
+                  description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
+                  spacing="loose"
+                >
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
+                    label={adminStateUp ? 'Up' : 'Down'}
+                  />
                 </FormField>
 
                 {/* External Gateway */}
-                <FormField>
-                  <FormField.Label>External Gateway</FormField.Label>
-                  <FormField.Description>
-                    The external gateway connects your router to an external (public) network.
-                    <br />
-                    When enabled, instances in the connected subnets can access the internet using
-                    floating IPs.
-                  </FormField.Description>
-                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                    <Toggle
-                      checked={externalGatewayEnabled}
-                      onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
-                      label={externalGatewayEnabled ? 'Open' : 'Close'}
-                    />
-                  </FormField.Control>
+                <FormField
+                  label="External Gateway"
+                  description="The external gateway connects your router to an external (public) network. When enabled, instances in the connected subnets can access the internet using floating IPs."
+                  spacing="loose"
+                >
+                  <Toggle
+                    checked={externalGatewayEnabled}
+                    onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
+                    label={externalGatewayEnabled ? 'Open' : 'Close'}
+                  />
                 </FormField>
               </VStack>
             </Disclosure.Panel>

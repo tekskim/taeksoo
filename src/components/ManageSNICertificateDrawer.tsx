@@ -207,19 +207,16 @@ export function ManageSNICertificateDrawer({
         </h2>
 
         {/* SNI Toggle Section */}
-        <FormField>
-          <FormField.Label>SNI</FormField.Label>
-          <FormField.Description>
-            Add more certificates here to host multiple, different HTTPS websites on this single
-            listener.
-          </FormField.Description>
-          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-            <Toggle
-              checked={sniEnabled}
-              onChange={(e) => setSniEnabled(e.target.checked)}
-              label={sniEnabled ? 'On' : 'Off'}
-            />
-          </FormField.Control>
+        <FormField
+          label="SNI"
+          description="Add more certificates here to host multiple, different HTTPS websites on this single listener."
+          spacing="loose"
+        >
+          <Toggle
+            checked={sniEnabled}
+            onChange={(e) => setSniEnabled(e.target.checked)}
+            label={sniEnabled ? 'On' : 'Off'}
+          />
         </FormField>
 
         {/* SNI Certificates Section */}

@@ -3991,56 +3991,103 @@ function TemplatesSection({
 
           {/* Templates Sub-section */}
           <VStack gap={3} align="start" className="w-full py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Select the template to use for creating the instance. A template includes predefined
-              settings such as the image, flavor, and network configuration required for the
-              instance.
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select the template to use for creating the instance. A template includes predefined
+                settings such as the image, flavor, and network configuration required for the
+                instance.
+              </span>
+            </VStack>
 
             {/* Tabs */}
-            <Tabs
-              value={activeTab}
-              onChange={setActiveTab}
-              size="sm"
-              variant="underline"
-              className="w-full"
-            >
-              <TabList>
-                <Tab value="favorites">Favorites</Tab>
-                <Tab value="current-tenant">Current tenant</Tab>
-                <Tab value="public">Public</Tab>
-              </TabList>
+            <div className="mt-1 w-full">
+              <Tabs
+                value={activeTab}
+                onChange={setActiveTab}
+                size="sm"
+                variant="underline"
+                className="w-full"
+              >
+                <TabList>
+                  <Tab value="favorites">Favorites</Tab>
+                  <Tab value="current-tenant">Current tenant</Tab>
+                  <Tab value="public">Public</Tab>
+                </TabList>
 
-              <TabPanel value="favorites" className="pt-3">
-                <VStack gap={2} className="w-full">
-                  {/* Action Bar - Search + Create Button */}
-                  <HStack justify="between" align="center" className="w-full">
-                    <SearchInput
-                      placeholder="Search templates by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
+                <TabPanel value="favorites" className="pt-3">
+                  <VStack gap={2} className="w-full">
+                    {/* Action Bar - Search + Create Button */}
+                    <HStack justify="between" align="center" className="w-full">
+                      <SearchInput
+                        placeholder="Search templates by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button variant="outline" size="sm">
+                        <span>Create a new template</span>
+                        <IconExternalLink size={12} stroke={1.5} />
+                      </Button>
+                    </HStack>
+
+                    {/* Pagination */}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                      totalItems={filteredTemplates.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
                     />
-                    <Button variant="outline" size="sm">
-                      <span>Create a new template</span>
-                      <IconExternalLink size={12} stroke={1.5} />
-                    </Button>
-                  </HStack>
 
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                    totalItems={filteredTemplates.length}
-                    onPageChange={setCurrentPage}
-                    selectedCount={selectedId ? 1 : 0}
-                  />
+                    {/* Table with Selection */}
+                    <VStack gap={2}>
+                      {filteredTemplates.length > 0 ? (
+                        <Table
+                          columns={columns}
+                          data={filteredTemplates}
+                          rowKey="id"
+                          onRowClick={(row) => onSelect(row.id)}
+                        />
+                      ) : (
+                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                          No favorite templates
+                        </div>
+                      )}
+                    </VStack>
+                  </VStack>
+                </TabPanel>
 
-                  {/* Table with Selection */}
-                  <VStack gap={2}>
+                <TabPanel value="current-tenant" className="pt-3">
+                  <VStack gap={2} className="w-full">
+                    {/* Action Bar - Search + Create Button */}
+                    <HStack justify="between" align="center" className="w-full">
+                      <SearchInput
+                        placeholder="Search templates by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button variant="outline" size="sm">
+                        <span>Create a new template</span>
+                        <IconExternalLink size={12} stroke={1.5} />
+                      </Button>
+                    </HStack>
+
+                    {/* Pagination */}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                      totalItems={filteredTemplates.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
+                    />
+
+                    {/* Table with Selection */}
                     {filteredTemplates.length > 0 ? (
                       <Table
                         columns={columns}
@@ -4050,99 +4097,56 @@ function TemplatesSection({
                       />
                     ) : (
                       <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No favorite templates
+                        No templates in current tenant
                       </div>
                     )}
                   </VStack>
-                </VStack>
-              </TabPanel>
+                </TabPanel>
 
-              <TabPanel value="current-tenant" className="pt-3">
-                <VStack gap={2} className="w-full">
-                  {/* Action Bar - Search + Create Button */}
-                  <HStack justify="between" align="center" className="w-full">
-                    <SearchInput
-                      placeholder="Search templates by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
+                <TabPanel value="public" className="pt-3">
+                  <VStack gap={2} className="w-full">
+                    {/* Action Bar - Search + Create Button */}
+                    <HStack justify="between" align="center" className="w-full">
+                      <SearchInput
+                        placeholder="Search templates by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button variant="outline" size="sm">
+                        <span>Create a new template</span>
+                        <IconExternalLink size={12} stroke={1.5} />
+                      </Button>
+                    </HStack>
+
+                    {/* Pagination */}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                      totalItems={filteredTemplates.length}
+                      onPageChange={setCurrentPage}
+                      selectedCount={selectedId ? 1 : 0}
                     />
-                    <Button variant="outline" size="sm">
-                      <span>Create a new template</span>
-                      <IconExternalLink size={12} stroke={1.5} />
-                    </Button>
-                  </HStack>
 
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                    totalItems={filteredTemplates.length}
-                    onPageChange={setCurrentPage}
-                    selectedCount={selectedId ? 1 : 0}
-                  />
-
-                  {/* Table with Selection */}
-                  {filteredTemplates.length > 0 ? (
-                    <Table
-                      columns={columns}
-                      data={filteredTemplates}
-                      rowKey="id"
-                      onRowClick={(row) => onSelect(row.id)}
-                    />
-                  ) : (
-                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                      No templates in current tenant
-                    </div>
-                  )}
-                </VStack>
-              </TabPanel>
-
-              <TabPanel value="public" className="pt-3">
-                <VStack gap={2} className="w-full">
-                  {/* Action Bar - Search + Create Button */}
-                  <HStack justify="between" align="center" className="w-full">
-                    <SearchInput
-                      placeholder="Search templates by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button variant="outline" size="sm">
-                      <span>Create a new template</span>
-                      <IconExternalLink size={12} stroke={1.5} />
-                    </Button>
-                  </HStack>
-
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                    totalItems={filteredTemplates.length}
-                    onPageChange={setCurrentPage}
-                    selectedCount={selectedId ? 1 : 0}
-                  />
-
-                  {/* Table with Selection */}
-                  {filteredTemplates.length > 0 ? (
-                    <Table
-                      columns={columns}
-                      data={filteredTemplates}
-                      rowKey="id"
-                      onRowClick={(row) => onSelect(row.id)}
-                    />
-                  ) : (
-                    <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                      No public templates available
-                    </div>
-                  )}
-                </VStack>
-              </TabPanel>
-            </Tabs>
+                    {/* Table with Selection */}
+                    {filteredTemplates.length > 0 ? (
+                      <Table
+                        columns={columns}
+                        data={filteredTemplates}
+                        rowKey="id"
+                        onRowClick={(row) => onSelect(row.id)}
+                      />
+                    ) : (
+                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                        No public templates available
+                      </div>
+                    )}
+                  </VStack>
+                </TabPanel>
+              </Tabs>
+            </div>
 
             {/* Selection Indicator for Templates */}
             <SelectionIndicator

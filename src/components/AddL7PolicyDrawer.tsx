@@ -201,16 +201,13 @@ export function AddL7PolicyDrawer({
         </FormField>
 
         {/* Admin State Toggle */}
-        <FormField>
-          <FormField.Label>Admin state</FormField.Label>
-          <FormField.Control>
-            <HStack gap={2} className="items-center">
-              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {adminStateUp ? 'Up' : 'Down'}
-              </span>
-            </HStack>
-          </FormField.Control>
+        <FormField label="Admin state" spacing="loose">
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
         </FormField>
       </VStack>
     </Drawer>

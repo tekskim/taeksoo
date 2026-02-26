@@ -166,19 +166,16 @@ export function CreateKeyPairDrawer({
         </VStack>
 
         {/* Create Type Radio */}
-        <FormField>
-          <FormField.Label>Create type</FormField.Label>
-          <FormField.Control>
-            <RadioGroup
-              value={createType}
-              onChange={(value) => setCreateType(value as 'create' | 'import')}
-            >
-              <VStack gap={2}>
-                <Radio value="create" label="Create key pair" />
-                <Radio value="import" label="Import key pair" />
-              </VStack>
-            </RadioGroup>
-          </FormField.Control>
+        <FormField label="Create type" spacing="loose">
+          <RadioGroup
+            value={createType}
+            onChange={(value) => setCreateType(value as 'create' | 'import')}
+          >
+            <VStack gap={2}>
+              <Radio value="create" label="Create key pair" />
+              <Radio value="import" label="Import key pair" />
+            </VStack>
+          </RadioGroup>
         </FormField>
 
         {/* Key Pair Name Input */}

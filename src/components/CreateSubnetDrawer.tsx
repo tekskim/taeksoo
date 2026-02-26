@@ -229,27 +229,24 @@ export function CreateSubnetDrawer({
         </FormField>
 
         {/* Gateway */}
-        <FormField>
-          <FormField.Label>Gateway</FormField.Label>
-          <FormField.Control>
-            <VStack gap={2}>
-              <Toggle
-                checked={gatewayEnabled}
-                onChange={(e) => setGatewayEnabled(e.target.checked)}
-                label={gatewayEnabled ? 'On' : 'Off'}
-              />
-              {gatewayEnabled && (
-                <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
-              )}
-            </VStack>
-          </FormField.Control>
-          {gatewayEnabled && (
-            <FormField.HelperText>
-              Gateway must be an IP address within the subnet range, excluding the network and
-              broadcast addresses.
-            </FormField.HelperText>
-          )}
+        <FormField label="Gateway" spacing="loose">
+          <VStack gap={2}>
+            <Toggle
+              checked={gatewayEnabled}
+              onChange={(e) => setGatewayEnabled(e.target.checked)}
+              label={gatewayEnabled ? 'On' : 'Off'}
+            />
+            {gatewayEnabled && (
+              <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
+            )}
+          </VStack>
         </FormField>
+        {gatewayEnabled && (
+          <p className="text-body-sm text-[var(--color-text-subtle)] -mt-4">
+            Gateway must be an IP address within the subnet range, excluding the network and
+            broadcast addresses.
+          </p>
+        )}
 
         {/* Advanced Options Disclosure */}
         <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
@@ -257,15 +254,12 @@ export function CreateSubnetDrawer({
           <Disclosure.Panel>
             <VStack gap={6} className="mt-6">
               {/* DHCP */}
-              <FormField>
-                <FormField.Label>DHCP</FormField.Label>
-                <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                  <Toggle
-                    checked={dhcpEnabled}
-                    onChange={(e) => setDhcpEnabled(e.target.checked)}
-                    label={dhcpEnabled ? 'Up' : 'Down'}
-                  />
-                </FormField.Control>
+              <FormField label="DHCP" spacing="loose">
+                <Toggle
+                  checked={dhcpEnabled}
+                  onChange={(e) => setDhcpEnabled(e.target.checked)}
+                  label={dhcpEnabled ? 'Up' : 'Down'}
+                />
               </FormField>
 
               {/* Allocation Pools */}

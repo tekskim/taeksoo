@@ -277,7 +277,7 @@ export function CreateVolumeFromBackupDrawer({
                 min={minCapacity}
                 max={maxCapacity}
                 step={50}
-                className="flex-1"
+                fullWidth
               />
               <NumberInput
                 value={capacity}

@@ -100,7 +100,7 @@ export function AdminLockSettingDrawer({
         </VStack>
 
         {/* Lock Status */}
-        <FormField label="Lock status">
+        <FormField label="Lock status" spacing="loose">
           <HStack gap={2} align="center">
             <Toggle checked={locked} onChange={setLocked} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">

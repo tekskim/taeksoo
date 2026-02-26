@@ -9,7 +9,6 @@ import {
   NumberInput,
   Input,
   Table,
-  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -81,57 +80,8 @@ const mockInitialMembers: MemberItem[] = [
 ];
 
 /* ----------------------------------------
-   Member Card Component
+   (MemberCard removed — replaced by dynamic form field grid)
    ---------------------------------------- */
-
-interface MemberCardProps {
-  member: MemberItem;
-  onPortChange: (port: number) => void;
-  onWeightChange: (weight: number) => void;
-  onRemove: () => void;
-}
-
-function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCardProps) {
-  return (
-    <HStack
-      gap={3}
-      align="end"
-      className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
-    >
-      <FormField label="IP address">
-        <Input value={member.ipAddress} disabled width="sm" />
-      </FormField>
-
-      <FormField label="Port">
-        <NumberInput
-          value={member.port}
-          onChange={(value) => onPortChange(value ?? 80)}
-          min={1}
-          max={65535}
-          width="sm"
-        />
-      </FormField>
-
-      <FormField label="Weight">
-        <NumberInput
-          value={member.weight}
-          onChange={(value) => onWeightChange(value ?? 1)}
-          min={0}
-          max={256}
-          width="sm"
-        />
-      </FormField>
-
-      <button
-        type="button"
-        onClick={onRemove}
-        className="p-0.5 shrink-0 ml-auto mb-[10px] hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      >
-        <IconX size={12} className="text-[var(--color-text-default)]" />
-      </button>
-    </HStack>
-  );
-}
 
 /* ----------------------------------------
    Main Component
@@ -346,76 +296,70 @@ export function ManageMembersDrawer({
             Allocated members
           </h3>
 
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleAddExternalMember}
-            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-            className="w-fit"
-          >
-            Add external member
-          </Button>
-
-          {/* Member Rows */}
-          {members.length > 0 && (
-            <VStack gap={2} className="w-full">
-              {members.map((member) =>
-                member.isExternal ? (
-                  <HStack
-                    key={member.id}
-                    gap={3}
-                    align="end"
-                    className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
-                  >
-                    <FormField label="IP address" className="flex-1 min-w-0">
-                      <Input
-                        value={member.ipAddress}
-                        onChange={(e) => handleIpAddressChange(member.id, e.target.value)}
-                        placeholder="Enter IP address"
-                        fullWidth
-                      />
-                    </FormField>
-
-                    <FormField label="Port">
-                      <NumberInput
-                        value={member.port}
-                        onChange={(value) => handlePortChange(member.id, value ?? 80)}
-                        min={1}
-                        max={65535}
-                        width="sm"
-                      />
-                    </FormField>
-
-                    <FormField label="Weight">
-                      <NumberInput
-                        value={member.weight}
-                        onChange={(value) => handleWeightChange(member.id, value ?? 1)}
-                        min={0}
-                        max={256}
-                        width="sm"
-                      />
-                    </FormField>
-
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMember(member.id)}
-                      className="p-0.5 shrink-0 ml-auto mb-[10px] hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={12} className="text-[var(--color-text-default)]" />
-                    </button>
-                  </HStack>
-                ) : (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    onPortChange={(port) => handlePortChange(member.id, port)}
-                    onWeightChange={(weight) => handleWeightChange(member.id, weight)}
-                    onRemove={() => handleRemoveMember(member.id)}
-                  />
-                )
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={1}>
+              {members.length > 0 && (
+                <div className="grid grid-cols-[1fr_100px_100px_20px] gap-2 w-full">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    IP address
+                  </span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">Port</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Weight
+                  </span>
+                  <div />
+                </div>
               )}
+              {members.map((member) => (
+                <div
+                  key={member.id}
+                  className="grid grid-cols-[1fr_100px_100px_20px] gap-2 w-full items-center"
+                >
+                  {member.isExternal ? (
+                    <Input
+                      value={member.ipAddress}
+                      onChange={(e) => handleIpAddressChange(member.id, e.target.value)}
+                      placeholder="Enter IP address"
+                      fullWidth
+                    />
+                  ) : (
+                    <Input value={member.ipAddress} disabled fullWidth />
+                  )}
+                  <NumberInput
+                    value={member.port}
+                    onChange={(value) => handlePortChange(member.id, value ?? 80)}
+                    min={1}
+                    max={65535}
+                    width="full"
+                  />
+                  <NumberInput
+                    value={member.weight}
+                    onChange={(value) => handleWeightChange(member.id, value ?? 1)}
+                    min={0}
+                    max={256}
+                    width="full"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveMember(member.id)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  >
+                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </button>
+                </div>
+              ))}
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleAddExternalMember}
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                >
+                  Add external member
+                </Button>
+              </div>
             </VStack>
-          )}
+          </div>
         </VStack>
       </VStack>
     </Drawer>

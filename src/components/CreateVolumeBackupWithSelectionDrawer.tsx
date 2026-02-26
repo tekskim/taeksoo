@@ -349,28 +349,25 @@ export function CreateVolumeBackupWithSelectionDrawer({
         </VStack>
 
         {/* Form Fields Section */}
-        <VStack gap={2}>
+        <VStack gap={6}>
           {/* Backup Mode */}
-          <FormField className="gap-2">
-            <FormField.Label>Backup mode</FormField.Label>
-            <FormField.Control>
-              <VStack gap={2}>
-                <Radio
-                  name="backup-mode"
-                  value="full"
-                  checked={backupMode === 'full'}
-                  onChange={() => setBackupMode('full')}
-                  label="Full backup"
-                />
-                <Radio
-                  name="backup-mode"
-                  value="incremental"
-                  checked={backupMode === 'incremental'}
-                  onChange={() => setBackupMode('incremental')}
-                  label="Increment backup"
-                />
-              </VStack>
-            </FormField.Control>
+          <FormField label="Backup mode" spacing="loose">
+            <VStack gap={2}>
+              <Radio
+                name="backup-mode"
+                value="full"
+                checked={backupMode === 'full'}
+                onChange={() => setBackupMode('full')}
+                label="Full backup"
+              />
+              <Radio
+                name="backup-mode"
+                value="incremental"
+                checked={backupMode === 'incremental'}
+                onChange={() => setBackupMode('incremental')}
+                label="Increment backup"
+              />
+            </VStack>
           </FormField>
 
           {/* Volume Backup Name */}

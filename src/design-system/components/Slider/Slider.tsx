@@ -24,6 +24,8 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onCha
   showValue?: boolean;
   /** Format value for display */
   formatValue?: (value: number) => string;
+  /** Stretch track to fill available width */
+  fullWidth?: boolean;
   /** Aria label */
   'aria-label'?: string;
 }
@@ -42,6 +44,7 @@ export function Slider({
   disabled = false,
   showValue = false,
   formatValue = (v) => String(v),
+  fullWidth = false,
   className = '',
   'aria-label': ariaLabel = 'Slider',
   ...props
@@ -181,6 +184,7 @@ export function Slider({
     <div
       className={twMerge(
         'flex items-center gap-[var(--slider-gap)]',
+        fullWidth && 'flex-1 min-w-0',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
@@ -190,7 +194,8 @@ export function Slider({
       <div
         ref={trackRef}
         className={twMerge(
-          'relative w-[var(--slider-track-width)] h-[var(--slider-track-height)]',
+          'relative h-[var(--slider-track-height)]',
+          fullWidth ? 'w-full' : 'w-[var(--slider-track-width)]',
           'bg-[var(--slider-track-bg)]',
           'rounded-[var(--slider-track-radius)]',
           !disabled && 'cursor-pointer'

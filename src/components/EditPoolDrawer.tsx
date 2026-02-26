@@ -277,46 +277,37 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         </VStack>
 
         {/* Backend TLS */}
-        <FormField>
-          <FormField.Label>Backend TLS</FormField.Label>
-          <FormField.Control>
-            <HStack gap={2} className="items-center">
-              <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {tlsEnabled ? 'On' : 'Off'}
-              </span>
-            </HStack>
-          </FormField.Control>
-          {tlsEnabled && (
-            <>
-              <FormField.Control>
-                <Textarea
-                  value={tlsCiphers}
-                  onChange={(e) => setTlsCiphers(e.target.value)}
-                  placeholder="Input custom cipher string (leave blank to use safe defaults)"
-                  rows={3}
-                  fullWidth
-                />
-              </FormField.Control>
-              <FormField.HelperText>
-                Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and
-                special characters are not allowed.
-              </FormField.HelperText>
-            </>
-          )}
+        <FormField label="Backend TLS" spacing="loose">
+          <HStack gap={2} className="items-center">
+            <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {tlsEnabled ? 'On' : 'Off'}
+            </span>
+          </HStack>
         </FormField>
+        {tlsEnabled && (
+          <FormField
+            label="TLS ciphers"
+            helperText="Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and special characters are not allowed."
+          >
+            <Textarea
+              value={tlsCiphers}
+              onChange={(e) => setTlsCiphers(e.target.value)}
+              placeholder="Input custom cipher string (leave blank to use safe defaults)"
+              rows={3}
+              fullWidth
+            />
+          </FormField>
+        )}
 
         {/* Admin State */}
-        <FormField>
-          <FormField.Label>Admin state</FormField.Label>
-          <FormField.Control>
-            <HStack gap={2} className="items-center">
-              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {adminStateUp ? 'Up' : 'Down'}
-              </span>
-            </HStack>
-          </FormField.Control>
+        <FormField label="Admin state" spacing="loose">
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
         </FormField>
       </VStack>
     </Drawer>
