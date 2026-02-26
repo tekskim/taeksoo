@@ -1489,10 +1489,11 @@ export default function CreateLoadBalancerPage() {
                         label="Provider"
                         description="Choose the provider to use for the load balancer."
                         required
+                        spacing="loose"
                         error={!!providerError}
                         errorMessage={providerError || undefined}
                       >
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <HStack gap={1.5} align="center">
                             <Radio
                               value="ovn"
@@ -2333,7 +2334,7 @@ export default function CreateLoadBalancerPage() {
                                 Defines custom header values to be forwarded to backend servers.
                               </FormField.Description>
                               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                                <VStack gap={3} align="start">
+                                <VStack gap={2} align="start">
                                   <HStack gap={2} align="center">
                                     <Checkbox
                                       checked={xForwardedFor}
@@ -3248,24 +3249,23 @@ export default function CreateLoadBalancerPage() {
                         </div>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Health monitor admin state */}
-                        <VStack gap={3} className="py-6">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Health monitor admin state
-                          </span>
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Set the administrative state of the health monitor. 'UP' enables traffic
-                            handling, while 'DOWN' disables it.
-                          </p>
-                          <HStack gap={2} align="center">
-                            <Toggle
-                              checked={healthMonitorAdminState}
-                              onChange={setHealthMonitorAdminState}
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {healthMonitorAdminState ? 'Up' : 'Down'}
-                            </span>
-                          </HStack>
-                        </VStack>
+                        <div className="py-6">
+                          <FormField
+                            label="Health monitor admin state"
+                            description="Set the administrative state of the health monitor. 'UP' enables traffic handling, while 'DOWN' disables it."
+                            spacing="loose"
+                          >
+                            <HStack gap={2} align="center">
+                              <Toggle
+                                checked={healthMonitorAdminState}
+                                onChange={setHealthMonitorAdminState}
+                              />
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {healthMonitorAdminState ? 'Up' : 'Down'}
+                              </span>
+                            </HStack>
+                          </FormField>
+                        </div>
                       </>
                     )}
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

@@ -1055,8 +1055,8 @@ export function CreateVolumePage() {
                       <>
                         {/* Volume type - Read-only for snapshot */}
                         <div className="py-6">
-                          <VStack gap={4} align="stretch">
-                            <VStack gap={3} align="start">
+                          <VStack gap={2} align="stretch">
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Volume type{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
