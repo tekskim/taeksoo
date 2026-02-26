@@ -317,40 +317,45 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
     <SectionCard className="pb-6">
       <SectionCard.Header title="Resource quotas" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-          <VStack gap={3}>
-            {/* Quota Items */}
-            {quotaItems.length > 0 && (
-              <VStack gap={2} className="w-full">
-                {/* Header Labels */}
-                <div className="flex gap-2 w-full">
-                  <div className="flex-1">
-                    <VStack gap={1}>
-                      <span className="text-label-lg text-[var(--color-text-default)]">
-                        Resource Type
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Select the resource type to apply the quota.
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="flex-1">
-                    <VStack gap={1}>
-                      <span className="text-label-lg text-[var(--color-text-default)]">Limit</span>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the maximum usage allowed for the selected resource type.
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="w-5" />
-                </div>
+        <VStack gap={3}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Resource</span>
 
-                {quotaItems.map((item) => {
-                  const unit = getResourceUnit(item.resourceType);
-                  const placeholder = getResourcePlaceholder(item.resourceType);
-                  return (
-                    <div key={item.id} className="flex gap-2 items-center w-full">
-                      <div className="flex-1">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={1} className="w-full">
+              {quotaItems.map((item) => {
+                const unit = getResourceUnit(item.resourceType);
+                const placeholder = getResourcePlaceholder(item.resourceType);
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                  >
+                    <VStack gap={1}>
+                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
+                        <VStack gap={0.5}>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Resource Type
+                          </span>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            Select the resource type to apply the quota.
+                          </span>
+                        </VStack>
+                        <VStack gap={0.5}>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Limit
+                          </span>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            Specify the maximum usage allowed for the selected resource type.
+                          </span>
+                        </VStack>
+                        <button
+                          onClick={() => removeQuotaItem(item.id)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        >
+                          <IconX size={14} className="text-[var(--color-text-muted)]" />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                         <Select
                           options={RESOURCE_TYPE_OPTIONS}
                           value={item.resourceType}
@@ -358,44 +363,39 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                           placeholder="Select resource type"
                           fullWidth
                         />
+                        <HStack gap={2} align="center">
+                          <Input
+                            placeholder={placeholder}
+                            value={item.limit}
+                            onChange={(e) => updateQuotaItem(item.id, 'limit', e.target.value)}
+                            fullWidth
+                          />
+                          {unit && (
+                            <span className="text-body-md text-[var(--color-text-default)] shrink-0">
+                              {unit}
+                            </span>
+                          )}
+                        </HStack>
+                        <div />
                       </div>
-                      <div className="flex-1 relative">
-                        <Input
-                          placeholder={placeholder}
-                          value={item.limit}
-                          onChange={(e) => updateQuotaItem(item.id, 'limit', e.target.value)}
-                          fullWidth
-                        />
-                        {unit && (
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
-                            {unit}
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => removeQuotaItem(item.id)}
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
-                  );
-                })}
-              </VStack>
-            )}
+                    </VStack>
+                  </div>
+                );
+              })}
 
-            {/* Add Resource Button */}
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={addQuotaItem}
-              className="self-start bg-white"
-            >
-              Add Resource
-            </Button>
-          </VStack>
-        </div>
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={addQuotaItem}
+                >
+                  Add Resource
+                </Button>
+              </div>
+            </VStack>
+          </div>
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -430,7 +430,7 @@ function LabelsAnnotationsSection({
     <SectionCard className="pb-6">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={6}>
+        <VStack gap={8}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>
@@ -574,7 +574,11 @@ export function CreateResourceQuotaPage() {
 
   // Resource Quotas state
   const [quotaItems, setQuotaItems] = useState<ResourceQuotaItem[]>(
-    isV2 ? [{ id: 'default-1', resourceType: '', limit: '' }] : []
+    RESOURCE_TYPE_OPTIONS.map((opt) => ({
+      id: opt.value,
+      resourceType: opt.value,
+      limit: '',
+    }))
   );
 
   // Labels & Annotations state
