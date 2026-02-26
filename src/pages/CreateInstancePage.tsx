@@ -1213,13 +1213,15 @@ function ImageSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </span>
-            <span className="text-body-md text-[var(--color-text-muted)] mb-4">
-              Select a template to launch the instance. You can start from an OS image, a snapshot,
-              or an existing volume.
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select a template to launch the instance. You can start from an OS image, a
+                snapshot, or an existing volume.
+              </span>
+            </VStack>
 
             {isV2 ? (
               <VStack gap={6}>
@@ -2926,40 +2928,36 @@ function NetworkSection({
               selectedCount={selectedSecurityGroups.size}
             />
 
-            <VStack gap={2}>
-              <Table
-                columns={securityGroupColumns}
-                data={filteredSecurityGroups}
-                rowKey="id"
-                onRowClick={(row) => {
-                  const newSet = new Set(selectedSecurityGroups);
-                  if (newSet.has(row.id)) {
-                    newSet.delete(row.id);
-                  } else {
-                    newSet.add(row.id);
-                  }
-                  setSelectedSecurityGroups(newSet);
-                  // Clear error when security group is selected
-                  if (newSet.size > 0) {
-                    setSecurityGroupError(null);
-                  }
-                }}
-              />
+            <Table
+              columns={securityGroupColumns}
+              data={filteredSecurityGroups}
+              rowKey="id"
+              onRowClick={(row) => {
+                const newSet = new Set(selectedSecurityGroups);
+                if (newSet.has(row.id)) {
+                  newSet.delete(row.id);
+                } else {
+                  newSet.add(row.id);
+                }
+                setSelectedSecurityGroups(newSet);
+                if (newSet.size > 0) {
+                  setSecurityGroupError(null);
+                }
+              }}
+            />
 
-              {/* Selection Indicator for Security Groups */}
-              <SelectionIndicator
-                selectedItems={mockSecurityGroups
-                  .filter((sg) => selectedSecurityGroups.has(sg.id))
-                  .map((sg) => ({ id: sg.id, label: sg.name }))}
-                onRemove={(id) => {
-                  const newSet = new Set(selectedSecurityGroups);
-                  newSet.delete(id);
-                  setSelectedSecurityGroups(newSet);
-                }}
-                error={!!securityGroupError}
-                errorMessage={securityGroupError}
-              />
-            </VStack>
+            <SelectionIndicator
+              selectedItems={mockSecurityGroups
+                .filter((sg) => selectedSecurityGroups.has(sg.id))
+                .map((sg) => ({ id: sg.id, label: sg.name }))}
+              onRemove={(id) => {
+                const newSet = new Set(selectedSecurityGroups);
+                newSet.delete(id);
+                setSelectedSecurityGroups(newSet);
+              }}
+              error={!!securityGroupError}
+              errorMessage={securityGroupError}
+            />
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />

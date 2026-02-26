@@ -97,6 +97,18 @@ const mockNetworks: NetworkRow[] = [
   },
 ];
 
+const mockSubnetOptions = [
+  { value: 'subnet-01', label: 'subnet-01 (192.168.1.0/24)' },
+  { value: 'subnet-02', label: 'subnet-02 (10.0.1.0/24)' },
+  { value: 'subnet-03', label: 'subnet-03 (172.16.0.0/24)' },
+];
+
+const subnetAllocationRanges: Record<string, string> = {
+  'subnet-01': '192.168.1.100 - 192.168.1.200',
+  'subnet-02': '10.0.1.100 - 10.0.1.200',
+  'subnet-03': '172.16.0.100 - 172.16.0.200',
+};
+
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
@@ -217,13 +229,11 @@ export default function CreateVirtualAdapterPage() {
   );
 
   const addFixedIP = () => {
-    if (!selectedNetwork) return;
-    const network = mockNetworks.find((n) => n.id === selectedNetwork);
     setFixedIPs((prev) => [
       ...prev,
       {
         id: `fixed-ip-${Date.now()}`,
-        subnet: network?.subnetCidr || '',
+        subnet: '',
         ipMode: 'auto',
         ipAddress: '',
       },
@@ -750,7 +760,7 @@ export default function CreateVirtualAdapterPage() {
                     {/* Fixed IP Section */}
                     <div className="py-6">
                       <VStack gap={3}>
-                        <VStack gap={1.5}>
+                        <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Fixed IP
                           </span>
@@ -760,75 +770,80 @@ export default function CreateVirtualAdapterPage() {
                           </p>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
-                            {fixedIPs.map((entry) => (
-                              <div
-                                key={entry.id}
-                                className="grid grid-cols-[auto_1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                              >
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Subnet
-                                </span>
-                                <Select
-                                  value={entry.subnet}
-                                  onChange={(value) => updateFixedIP(entry.id, { subnet: value })}
-                                  options={[{ value: entry.subnet, label: entry.subnet }]}
-                                  placeholder="Select"
-                                  fullWidth
-                                />
+                        <VStack gap={2} className="w-full">
+                          {fixedIPs.map((entry) => (
+                            <div
+                              key={entry.id}
+                              className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                            >
+                              <HStack gap={3} align="center">
+                                <HStack gap={1.5} align="center" className="shrink-0">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Subnet
+                                  </span>
+                                  <Select
+                                    value={entry.subnet}
+                                    onChange={(value) =>
+                                      updateFixedIP(entry.id, {
+                                        subnet: value,
+                                        ipMode: 'auto',
+                                        ipAddress: '',
+                                      })
+                                    }
+                                    options={mockSubnetOptions}
+                                    placeholder="Select"
+                                  />
+                                </HStack>
                                 <Select
                                   value={entry.ipMode}
                                   onChange={(value) =>
                                     updateFixedIP(entry.id, {
                                       ipMode: value as 'auto' | 'manual',
+                                      ipAddress: '',
                                     })
                                   }
                                   options={[
                                     { value: 'auto', label: 'Auto-allocate' },
-                                    { value: 'manual', label: 'Manual' },
+                                    { value: 'manual', label: 'Custom' },
                                   ]}
-                                  disabled
-                                  fullWidth
+                                  disabled={!entry.subnet}
                                 />
-                                {entry.ipMode === 'auto' ? (
-                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                    192.168.1.100 - 192.168.1.200
-                                  </span>
-                                ) : (
+                                {entry.ipMode === 'manual' && (
                                   <Input
                                     placeholder="Enter IP address"
                                     value={entry.ipAddress}
                                     onChange={(e) =>
                                       updateFixedIP(entry.id, { ipAddress: e.target.value })
                                     }
-                                    fullWidth
                                   />
                                 )}
-                                <button
-                                  onClick={() => removeFixedIP(entry.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addFixedIP}
-                              >
-                                Add fixed IP
-                              </Button>
+                                {entry.subnet && entry.ipMode === 'auto' && (
+                                  <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
+                                    {subnetAllocationRanges[entry.subnet] || ''}
+                                  </span>
+                                )}
+                                <div className="ml-auto shrink-0">
+                                  <button
+                                    onClick={() => removeFixedIP(entry.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                                  </button>
+                                </div>
+                              </HStack>
                             </div>
-                          </VStack>
-                        </div>
+                          ))}
+                          <div className="w-fit">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} />}
+                              onClick={addFixedIP}
+                            >
+                              Add fixed IP
+                            </Button>
+                          </div>
+                        </VStack>
                       </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />

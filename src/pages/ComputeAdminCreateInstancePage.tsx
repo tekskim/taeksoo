@@ -1214,13 +1214,15 @@ function ImageSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </span>
-            <span className="text-body-md text-[var(--color-text-muted)] mb-4">
-              Select a template to launch the instance. You can start from an OS image, a snapshot,
-              or an existing volume.
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select a template to launch the instance. You can start from an OS image, a
+                snapshot, or an existing volume.
+              </span>
+            </VStack>
 
             {isV2 ? (
               <VStack gap={6}>
@@ -2913,84 +2915,78 @@ function NetworkSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
-          <div className="py-6">
-            <VStack gap={2}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Security groups
-                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-              </span>
+          <VStack gap={3} className="py-6">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Security groups
+              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
 
-              <HStack justify="between" align="center" className="w-full">
-                <SearchInput
-                  placeholder="Search security group by attributes"
-                  value={sgSearch}
-                  onChange={(e) => setSgSearch(e.target.value)}
-                  onClear={() => setSgSearch('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
-                <Button variant="secondary" size="sm">
-                  <HStack gap={1} align="center">
-                    <span>Create a new security group</span>
-                    <svg
-                      className="w-3 h-3"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                  </HStack>
-                </Button>
-              </HStack>
-
-              <Pagination
-                currentPage={sgPage}
-                totalPages={Math.ceil(filteredSecurityGroups.length / 5) || 1}
-                totalItems={filteredSecurityGroups.length}
-                onPageChange={setSgPage}
-                selectedCount={selectedSecurityGroups.size}
+            <HStack justify="between" align="center" className="w-full">
+              <SearchInput
+                placeholder="Search security group by attributes"
+                value={sgSearch}
+                onChange={(e) => setSgSearch(e.target.value)}
+                onClear={() => setSgSearch('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
+              <Button variant="secondary" size="sm">
+                <HStack gap={1} align="center">
+                  <span>Create a new security group</span>
+                  <svg
+                    className="w-3 h-3"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                </HStack>
+              </Button>
+            </HStack>
 
-              <VStack gap={2}>
-                <Table
-                  columns={securityGroupColumns}
-                  data={filteredSecurityGroups}
-                  rowKey="id"
-                  onRowClick={(row) => {
-                    const newSet = new Set(selectedSecurityGroups);
-                    if (newSet.has(row.id)) {
-                      newSet.delete(row.id);
-                    } else {
-                      newSet.add(row.id);
-                    }
-                    setSelectedSecurityGroups(newSet);
-                    // Clear error when security group is selected
-                    if (newSet.size > 0) {
-                      setSecurityGroupError(null);
-                    }
-                  }}
-                />
+            <Pagination
+              currentPage={sgPage}
+              totalPages={Math.ceil(filteredSecurityGroups.length / 5) || 1}
+              totalItems={filteredSecurityGroups.length}
+              onPageChange={setSgPage}
+              selectedCount={selectedSecurityGroups.size}
+            />
 
-                {/* Selection Indicator for Security Groups */}
-                <SelectionIndicator
-                  selectedItems={mockSecurityGroups
-                    .filter((sg) => selectedSecurityGroups.has(sg.id))
-                    .map((sg) => ({ id: sg.id, label: sg.name }))}
-                  onRemove={(id) => {
-                    const newSet = new Set(selectedSecurityGroups);
-                    newSet.delete(id);
-                    setSelectedSecurityGroups(newSet);
-                  }}
-                  error={!!securityGroupError}
-                  errorMessage={securityGroupError}
-                />
-              </VStack>
-            </VStack>
-          </div>
+            <Table
+              columns={securityGroupColumns}
+              data={filteredSecurityGroups}
+              rowKey="id"
+              onRowClick={(row) => {
+                const newSet = new Set(selectedSecurityGroups);
+                if (newSet.has(row.id)) {
+                  newSet.delete(row.id);
+                } else {
+                  newSet.add(row.id);
+                }
+                setSelectedSecurityGroups(newSet);
+                if (newSet.size > 0) {
+                  setSecurityGroupError(null);
+                }
+              }}
+            />
+
+            <SelectionIndicator
+              selectedItems={mockSecurityGroups
+                .filter((sg) => selectedSecurityGroups.has(sg.id))
+                .map((sg) => ({ id: sg.id, label: sg.name }))}
+              onRemove={(id) => {
+                const newSet = new Set(selectedSecurityGroups);
+                newSet.delete(id);
+                setSelectedSecurityGroups(newSet);
+              }}
+              error={!!securityGroupError}
+              errorMessage={securityGroupError}
+            />
+          </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
