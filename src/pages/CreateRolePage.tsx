@@ -12,7 +12,7 @@ import {
   Pagination,
   SelectionIndicator,
   SearchInput,
-  Badge,
+  BadgeList,
   Checkbox,
   FormField,
   PageShell,
@@ -554,20 +554,20 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
       <div className="flex flex-col gap-[var(--table-row-gap)]">
         {/* Table Header */}
         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-          <div className="w-10 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center">
-            #
+          <div className="w-10 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center">
+            <span className="whitespace-nowrap truncate">#</span>
           </div>
-          <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-            Application
+          <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+            <span className="whitespace-nowrap truncate">Application</span>
           </div>
-          <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-            Partition
+          <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+            <span className="whitespace-nowrap truncate">Partition</span>
           </div>
-          <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-            Resource
+          <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+            <span className="whitespace-nowrap truncate">Resource</span>
           </div>
-          <div className="flex-[2] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-            Action
+          <div className="flex-[2] min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+            <span className="whitespace-nowrap truncate">Action</span>
           </div>
         </div>
 
@@ -577,24 +577,20 @@ function PolicyDetails({ permissions }: PolicyDetailsProps) {
             key={index}
             className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] hover:bg-[var(--table-row-hover-bg)] transition-colors"
           >
-            <div className="w-10 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-muted)] flex items-center">
+            <div className="w-10 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-muted)] flex items-center">
               {index + 1}
             </div>
-            <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
-              {perm.application}
+            <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+              <span className="truncate">{perm.application}</span>
             </div>
-            <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
-              {perm.partition}
+            <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+              <span className="truncate">{perm.partition}</span>
             </div>
-            <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
-              {perm.resource}
+            <div className="flex-1 min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+              <span className="truncate">{perm.resource}</span>
             </div>
-            <div className="flex-[2] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center gap-1 flex-wrap">
-              {perm.actions.map((action, i) => (
-                <Badge key={i} theme="white" size="sm">
-                  {action}
-                </Badge>
-              ))}
+            <div className="flex-[2] min-w-0 overflow-hidden px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] flex items-center">
+              <BadgeList items={perm.actions} maxVisible={4} />
             </div>
           </div>
         ))}
@@ -775,23 +771,23 @@ function AddPoliciesSection({
                     onChange={(e) => toggleAllSelection(e.target.checked)}
                   />
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Name
+                <div className="flex-[2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Name</span>
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Type
+                <div className="flex-[0.8] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Type</span>
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Apps
+                <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Apps</span>
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Roles
+                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Roles</span>
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Description
+                <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Description</span>
                 </div>
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Edited at
+                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                  <span className="whitespace-nowrap truncate">Edited at</span>
                 </div>
               </div>
 
@@ -811,10 +807,10 @@ function AddPoliciesSection({
                       />
                     </div>
                     {/* Name with expand icon */}
-                    <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    <div className="flex-[2] min-w-0 overflow-hidden flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                       <button
                         onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                        className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                        className={`shrink-0 p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                       >
                         {expandedPolicies.has(policy.id) ? (
                           <IconChevronDown size={12} stroke={1.5} />
@@ -822,35 +818,35 @@ function AddPoliciesSection({
                           <IconChevronRight size={12} stroke={1.5} />
                         )}
                       </button>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-md text-[var(--color-action-primary)]">
+                      <HStack gap={1.5} align="center" className="min-w-0">
+                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
                           {policy.name}
                         </span>
                         <IconExternalLink
                           size={12}
-                          className="text-[var(--color-action-primary)]"
+                          className="shrink-0 text-[var(--color-action-primary)]"
                         />
                       </HStack>
                     </div>
                     {/* Type */}
-                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {policy.type}
+                    <div className="flex-[0.8] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <span className="truncate">{policy.type}</span>
                     </div>
                     {/* Apps */}
-                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {policy.apps}
+                    <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <span className="truncate">{policy.apps}</span>
                     </div>
                     {/* Roles */}
-                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {policy.roles}
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <span className="truncate">{policy.roles}</span>
                     </div>
                     {/* Description */}
-                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {policy.description}
+                    <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <span className="truncate">{policy.description}</span>
                     </div>
                     {/* Edited at */}
-                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      {policy.editedAt}
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <span className="truncate whitespace-nowrap">{policy.editedAt}</span>
                     </div>
                   </div>
 
