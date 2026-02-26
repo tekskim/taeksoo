@@ -632,7 +632,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -693,7 +693,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -2037,7 +2037,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2111,7 +2111,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2293,7 +2293,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2352,7 +2352,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2429,7 +2429,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2504,7 +2504,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2749,7 +2749,7 @@ export function CreateCronJobPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2769,7 +2769,7 @@ export function CreateCronJobPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
+                                    <div className="w-fit mt-1">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -2982,7 +2982,7 @@ export function CreateCronJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -3005,7 +3005,7 @@ export function CreateCronJobPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -3027,7 +3027,7 @@ export function CreateCronJobPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3364,7 +3364,7 @@ export function CreateCronJobPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3470,7 +3470,7 @@ export function CreateCronJobPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3590,7 +3590,7 @@ export function CreateCronJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4572,7 +4572,7 @@ export function CreateCronJobPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -5045,7 +5045,7 @@ export function CreateCronJobPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5329,7 +5329,7 @@ export function CreateCronJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5587,7 +5587,7 @@ export function CreateCronJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -6095,7 +6095,7 @@ export function CreateCronJobPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit">
+                                          <div className="w-fit mt-1">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -7274,7 +7274,7 @@ export function CreateCronJobPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"

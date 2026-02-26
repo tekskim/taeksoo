@@ -998,15 +998,16 @@ function PolicyEditorSection({
           ))}
 
           {/* Add Permission Button */}
-          <Button
-            variant="secondary"
-            size="sm"
-            leftIcon={<IconCirclePlus size={12} />}
-            onClick={addPermission}
-            className="w-fit"
-          >
-            Add Permission
-          </Button>
+          <div className="w-fit mt-1">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} />}
+              onClick={addPermission}
+            >
+              Add Permission
+            </Button>
+          </div>
 
           {/* Conditions */}
           <div className="flex flex-col gap-3 w-full">

@@ -641,7 +641,7 @@ export default function CreateIngressPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -659,7 +659,7 @@ export default function CreateIngressPage() {
                   ))}
 
                   {/* Add Rule button */}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -789,7 +789,7 @@ export default function CreateIngressPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -805,7 +805,7 @@ export default function CreateIngressPage() {
                           </VStack>
                         </div>
                       ))}
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -897,7 +897,7 @@ export default function CreateIngressPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -969,7 +969,7 @@ export default function CreateIngressPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"

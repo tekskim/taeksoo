@@ -192,7 +192,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -356,7 +356,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -474,7 +474,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -564,7 +564,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -663,7 +663,7 @@ export function FormPatternsPage() {
                       </VStack>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -714,7 +714,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -789,7 +789,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -875,7 +875,7 @@ export function FormPatternsPage() {
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"

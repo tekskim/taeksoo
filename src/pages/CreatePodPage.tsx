@@ -586,7 +586,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -648,7 +648,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -1867,7 +1867,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1941,7 +1941,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2123,7 +2123,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2182,7 +2182,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2259,7 +2259,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2334,7 +2334,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2579,7 +2579,7 @@ export function CreatePodPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2599,7 +2599,7 @@ export function CreatePodPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
+                                    <div className="w-fit mt-1">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -2812,7 +2812,7 @@ export function CreatePodPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -2835,7 +2835,7 @@ export function CreatePodPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -2857,7 +2857,7 @@ export function CreatePodPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3194,7 +3194,7 @@ export function CreatePodPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3300,7 +3300,7 @@ export function CreatePodPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3420,7 +3420,7 @@ export function CreatePodPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4402,7 +4402,7 @@ export function CreatePodPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -4880,7 +4880,7 @@ export function CreatePodPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5164,7 +5164,7 @@ export function CreatePodPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5422,7 +5422,7 @@ export function CreatePodPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5930,7 +5930,7 @@ export function CreatePodPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit">
+                                          <div className="w-fit mt-1">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -7109,7 +7109,7 @@ export function CreatePodPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
