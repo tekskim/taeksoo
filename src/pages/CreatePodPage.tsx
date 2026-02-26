@@ -4586,78 +4586,95 @@ export function CreatePodPage() {
                     <SectionCard className="pb-6">
                       <SectionCard.Header title="Command" />
                       <SectionCard.Content className="pt-3">
-                        <VStack gap={4}>
-                          {/* Row 1: Command and Arguments */}
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={2}>
+                        <VStack gap={8}>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
                               </span>
-                              <Input
-                                placeholder="e.g./bin/sh"
-                                value={config.command || ''}
-                                onChange={(e) =>
-                                  updateContainerConfig(containerId, {
-                                    command: e.target.value,
-                                  })
-                                }
-                                fullWidth
-                              />
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                            <VStack gap={2}>
+                            <Input
+                              placeholder="e.g. /bin/sh"
+                              fullWidth
+                              value={config.command || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  command: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Arguments
                               </span>
-                              <Input
-                                placeholder="e.g./usr/sbin/httpd -f httpd.conf"
-                                value={config.args || ''}
-                                onChange={(e) =>
-                                  updateContainerConfig(containerId, {
-                                    args: e.target.value,
-                                  })
-                                }
-                                fullWidth
-                              />
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                          </div>
-
-                          {/* Row 2: WorkingDir and Stdin */}
-                          <div className="grid grid-cols-2 gap-6 w-full">
-                            <VStack gap={2}>
+                            <Input
+                              placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
+                              fullWidth
+                              value={config.args || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  args: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
                               </span>
-                              <Input
-                                placeholder="e.g./myapp"
-                                value={config.workingDir || ''}
-                                onChange={(e) =>
-                                  updateContainerConfig(containerId, {
-                                    workingDir: e.target.value,
-                                  })
-                                }
-                                fullWidth
-                              />
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                            <VStack gap={2}>
+                            <Input
+                              placeholder="e.g. /myapp"
+                              fullWidth
+                              value={config.workingDir || ''}
+                              onChange={(e) =>
+                                updateContainerConfig(containerId, {
+                                  workingDir: e.target.value,
+                                })
+                              }
+                            />
+                          </VStack>
+                          <VStack gap={2}>
+                            <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Stdin
                               </span>
-                              <Select
-                                options={[
-                                  { value: 'Always', label: 'Always' },
-                                  { value: 'Never', label: 'Never' },
-                                  { value: 'Once', label: 'Once' },
-                                ]}
-                                value={config.stdin || 'Always'}
-                                onChange={(val) =>
-                                  updateContainerConfig(containerId, {
-                                    stdin: val,
-                                  })
-                                }
-                                fullWidth
-                              />
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
-                          </div>
+                            <Select
+                              options={[
+                                { value: 'Always', label: 'Always' },
+                                { value: 'Never', label: 'Never' },
+                                { value: 'Once', label: 'Once' },
+                              ]}
+                              value={config.stdin || 'Always'}
+                              onChange={(val) =>
+                                updateContainerConfig(containerId, {
+                                  stdin: val,
+                                })
+                              }
+                              fullWidth
+                            />
+                          </VStack>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>

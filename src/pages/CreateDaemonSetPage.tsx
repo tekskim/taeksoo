@@ -4629,6 +4629,10 @@ export function CreateDaemonSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /bin/sh"
@@ -4645,6 +4649,10 @@ export function CreateDaemonSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Arguments
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Input
@@ -4663,6 +4671,10 @@ export function CreateDaemonSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /myapp"
@@ -4679,6 +4691,10 @@ export function CreateDaemonSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Stdin
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
