@@ -2,7 +2,20 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DocSection } from '../_shared/DocSection';
-import { Button, SectionCard, VStack, HStack, Input, Select } from '@/design-system';
+import {
+  Button,
+  SectionCard,
+  VStack,
+  HStack,
+  Input,
+  Select,
+  Tabs,
+  TabList,
+  Tab,
+  Table,
+  SearchInput,
+  FormField,
+} from '@/design-system';
 import { IconEdit } from '@tabler/icons-react';
 
 const sectionCardProps: PropDef[] = [
@@ -415,6 +428,210 @@ Next 버튼`}
                 </pre>
               </VStack>
             </div>
+          </VStack>
+
+          {/* Field Block Pattern */}
+          <VStack gap={3}>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">
+              Field Block 패턴
+            </span>
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              Open Section Card 내부에서 <strong>라벨 + 설명 + 복합 콘텐츠</strong> (탭, 테이블,
+              검색, 페이지네이션 등)를 묶는 패턴입니다. 단일 Input/Select를 감싸는 FormField와 달리
+              복잡한 UI 구조를 포함할 때 사용합니다.
+            </span>
+          </VStack>
+
+          {/* Field Block vs FormField comparison */}
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <VStack gap={3}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                Field Block vs FormField
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                        구분
+                      </th>
+                      <th className="text-left py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                        FormField
+                      </th>
+                      <th className="text-left py-2 text-label-sm text-[var(--color-text-muted)]">
+                        Field Block
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-[var(--color-text-default)]">
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">라벨 크기</td>
+                      <td className="py-2 pr-4">
+                        <code>text-label-sm</code> (11px)
+                      </td>
+                      <td className="py-2">
+                        <code>text-label-lg</code> (13px)
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">라벨 ↔ 콘텐츠 간격</td>
+                      <td className="py-2 pr-4">8px (input-label-gap)</td>
+                      <td className="py-2">
+                        <strong>12px</strong> (gap-3)
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">라벨 ↔ 탭 간격</td>
+                      <td className="py-2 pr-4">—</td>
+                      <td className="py-2">
+                        <strong>16px</strong> (gap-3 + mt-1)
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">콘텐츠 유형</td>
+                      <td className="py-2 pr-4">단일 Input / Select / Toggle</td>
+                      <td className="py-2">탭, 테이블, 검색, 필터, 동적 행 등 복합 UI</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4">래퍼</td>
+                      <td className="py-2 pr-4">
+                        <code>{'<FormField>'}</code>
+                      </td>
+                      <td className="py-2">
+                        <code>{'<VStack gap={3}>'}</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+          </div>
+
+          {/* Field Block spacing diagram */}
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">간격 구조</h4>
+              <pre className="text-body-xs text-[var(--color-text-muted)] font-[var(--font-family-mono)] leading-relaxed whitespace-pre">
+                {`VStack gap={3} (12px)
+ ├─ VStack gap={1} (4px)     ← Label/Description 그룹
+ │   ├─ span.text-label-lg   ← 라벨 (13px, medium)
+ │   └─ span.text-body-md    ← 설명 (12px, optional)
+ │
+ ├─ Tabs (mt-1 → 12+4=16px)  ← 탭은 4px 추가 마진
+ ├─ SearchInput               ← 12px gap
+ └─ Table                     ← 12px gap`}
+              </pre>
+            </VStack>
+          </div>
+
+          {/* Field Block live example */}
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Field Block Example
+            </span>
+            <ComponentPreview
+              code={`<SectionCard isActive>
+  <SectionCard.Header title="Source" showDivider={false} />
+  <SectionCard.Content showDividers={false}>
+    <VStack gap={0}>
+      <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+      <div className="py-6">
+        <VStack gap={3}>
+          <VStack gap={1}>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Start source <span className="text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select a template to launch the instance.
+            </span>
+          </VStack>
+
+          {/* 탭: mt-1로 16px 간격 확보 */}
+          <div className="mt-1">
+            <Tabs variant="underline" size="sm">...</Tabs>
+          </div>
+          <SearchInput ... />
+          <Table ... />
+        </VStack>
+      </div>
+    </VStack>
+  </SectionCard.Content>
+</SectionCard>`}
+            >
+              <SectionCard isActive>
+                <SectionCard.Header title="Source" showDivider={false} />
+                <SectionCard.Content showDividers={false}>
+                  <VStack gap={0}>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                    <div className="py-6">
+                      <VStack gap={3}>
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Start source <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Select a template to launch the instance. You can start from an OS
+                            image, a snapshot, or an existing volume.
+                          </span>
+                        </VStack>
+
+                        <div className="mt-1">
+                          <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
+                            <TabList>
+                              <Tab value="image">Image</Tab>
+                              <Tab value="snapshot">Instance snapshot</Tab>
+                              <Tab value="volume">Bootable volume</Tab>
+                            </TabList>
+                          </Tabs>
+                        </div>
+
+                        <SearchInput
+                          placeholder="Search images by attributes"
+                          value=""
+                          onChange={() => {}}
+                          size="sm"
+                          className="w-[var(--search-input-width)]"
+                        />
+
+                        <Table
+                          columns={[
+                            { key: 'name', title: 'Name', flex: 2 },
+                            { key: 'status', title: 'Status', flex: 1 },
+                            { key: 'size', title: 'Size', flex: 1 },
+                          ]}
+                          data={[
+                            { id: '1', name: 'ubuntu-24.04', status: 'Active', size: '2.4 GiB' },
+                            { id: '2', name: 'rocky-9.3', status: 'Active', size: '1.8 GiB' },
+                          ]}
+                          rowKey="id"
+                        />
+                      </VStack>
+                    </div>
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
+            </ComponentPreview>
+          </VStack>
+
+          {/* FormField comparison example */}
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              FormField (비교용)
+            </span>
+            <ComponentPreview
+              code={`{/* FormField: 단일 Input 필드용 */}
+<FormField label="Instance name" helperText="2-64 characters" required>
+  <Input placeholder="Enter instance name" fullWidth />
+</FormField>`}
+            >
+              <div className="w-full max-w-[400px]">
+                <FormField label="Instance name" helperText="2-64 characters" required>
+                  <Input placeholder="Enter instance name" fullWidth />
+                </FormField>
+              </div>
+            </ComponentPreview>
           </VStack>
         </DocSection>
       }

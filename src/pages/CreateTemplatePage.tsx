@@ -623,6 +623,7 @@ function TemplateInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Template information"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -638,8 +639,9 @@ function TemplateInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Template name */}
-          <div className="pt-3 pb-6">
+          <div className="py-6">
             <FormField
               label="Template name"
               required
@@ -678,7 +680,7 @@ function TemplateInformationSection({
 
           {/* Favorite */}
           <div className="py-6">
-            <FormField label="Favorite">
+            <FormField label="Favorite" spacing="loose">
               <Checkbox
                 label="Mark as Favorite"
                 checked={isFavorite}
@@ -736,6 +738,7 @@ function BasicInformationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Basic information"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -751,6 +754,7 @@ function BasicInformationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* AZ (Availability zone) */}
           <div className="py-6">
             <FormField
@@ -894,6 +898,7 @@ function ImageSection({
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
+      align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -903,16 +908,18 @@ function ImageSection({
       label: 'Name',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0}>
-          <HStack gap={1} align="center">
+        <VStack gap={0} className="min-w-0">
+          <HStack gap={1} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
             >
               {value}
             </a>
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID: {row.id}
+          </span>
         </VStack>
       ),
     },
@@ -947,6 +954,7 @@ function ImageSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Source"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -962,9 +970,10 @@ function ImageSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
           <div className="py-6">
-            <VStack gap={2}>
+            <VStack gap={3}>
               <VStack gap={1}>
                 <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -974,13 +983,15 @@ function ImageSection({
               </VStack>
 
               {/* Source Tabs */}
-              <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="image">Image</Tab>
-                  <Tab value="snapshot">Instance snapshot</Tab>
-                  <Tab value="volume">Bootable volume</Tab>
-                </TabList>
-              </Tabs>
+              <div className="mt-1">
+                <Tabs value={sourceTab} onChange={setSourceTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="image">Image</Tab>
+                    <Tab value="snapshot">Instance snapshot</Tab>
+                    <Tab value="volume">Bootable volume</Tab>
+                  </TabList>
+                </Tabs>
+              </div>
 
               {/* OS Filter Chips Container - Only for Image tab */}
               {(isV2 || sourceTab === 'image') && (
@@ -1089,7 +1100,7 @@ function ImageSection({
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
-              <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+              <div className="mt-3 w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1254,11 +1265,11 @@ function FlavorSection({
       label: 'Name',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0} align="start">
-          <HStack gap={1.5} align="center">
+        <VStack gap={0} align="start" className="min-w-0">
+          <HStack gap={1.5} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1285,6 +1296,7 @@ function FlavorSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Flavor"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1300,9 +1312,10 @@ function FlavorSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Flavors Label & Description */}
           <div className="py-6">
-            <VStack gap={2} align="stretch">
+            <VStack gap={3} align="stretch">
               <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -1313,7 +1326,7 @@ function FlavorSection({
               </VStack>
 
               {/* Flavor Type Tabs */}
-              <VStack gap={3} align="stretch">
+              <VStack gap={3} align="stretch" className="mt-1">
                 <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
                   <TabList>
                     <Tab value="cpu">CPU</Tab>
@@ -1629,11 +1642,11 @@ function NetworkSection({
       label: 'Name',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0} align="start">
-          <HStack gap={1.5} align="center">
+        <VStack gap={0} align="start" className="min-w-0">
+          <HStack gap={1.5} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1702,11 +1715,11 @@ function NetworkSection({
       label: 'Name',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0} align="start">
-          <HStack gap={1.5} align="center">
+        <VStack gap={0} align="start" className="min-w-0">
+          <HStack gap={1.5} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1768,11 +1781,11 @@ function NetworkSection({
       label: 'Name',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0} align="start">
-          <HStack gap={1.5} align="center">
+        <VStack gap={0} align="start" className="min-w-0">
+          <HStack gap={1.5} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1790,11 +1803,11 @@ function NetworkSection({
       label: 'Owned network',
       sortable: true,
       render: (value, row) => (
-        <VStack gap={0} align="start">
-          <HStack gap={1.5} align="center">
+        <VStack gap={0} align="start" className="min-w-0">
+          <HStack gap={1.5} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1814,6 +1827,7 @@ function NetworkSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Network"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -1829,9 +1843,10 @@ function NetworkSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Networks Section */}
           <div className="py-6">
-            <VStack gap={2} align="stretch">
+            <VStack gap={3} align="stretch">
               <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
@@ -1913,7 +1928,7 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={2}>
+            <VStack gap={3}>
               <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Each selected network requires at least one Virtual LAN configuration. Each VLAN
@@ -1985,7 +2000,7 @@ function NetworkSection({
 
           {/* Security groups Section */}
           <div className="py-6">
-            <VStack gap={2} align="stretch">
+            <VStack gap={3} align="stretch">
               <VStack gap={1} align="start">
                 <span className="text-label-lg text-[var(--color-text-default)]">
                   Security groups
@@ -2211,6 +2226,7 @@ function AuthenticationSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Authentication"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2226,6 +2242,7 @@ function AuthenticationSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type */}
           <div className="py-6">
             <FormField label="Login type" required>
@@ -2251,7 +2268,7 @@ function AuthenticationSection({
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               {/* Key pair */}
               <div className="py-6">
-                <VStack gap={2}>
+                <VStack gap={3}>
                   <span className="text-label-lg text-[var(--color-text-default)]">
                     Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                   </span>
@@ -2381,6 +2398,7 @@ function AdvancedSection({
     <SectionCard isActive={isActive}>
       <SectionCard.Header
         title="Advanced"
+        showDivider={false}
         actions={
           isEditing ? (
             <HStack gap={2}>
@@ -2396,6 +2414,7 @@ function AdvancedSection({
       />
       <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Tags Section */}
           <div className="py-6">
             <VStack gap={3}>

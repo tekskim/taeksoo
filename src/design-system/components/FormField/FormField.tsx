@@ -153,8 +153,8 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
             {/* Description (below label, 4px gap from label) */}
             {description && <FormFieldDescription>{description}</FormFieldDescription>}
 
-            {/* Control with auto-injected props (8px gap from label/description) */}
-            <FormFieldControl className="mt-[var(--primitive-spacing-2)]">
+            {/* Control with auto-injected props */}
+            <FormFieldControl>
               {Children.map(children, (child) => {
                 if (isValidElement(child)) {
                   // Auto-inject id, error, disabled props to form controls
@@ -260,19 +260,15 @@ FormFieldControl.displayName = 'FormField.Control';
 
 const FormFieldDescription = forwardRef<HTMLParagraphElement, FormFieldDescriptionProps>(
   ({ children, className, ...props }, ref) => {
-    const { id, spacing } = useFormField();
+    const { id } = useFormField();
 
-    // Label ↔ Description: default 4px, loose 12px
-    // Description uses text-body-md (12px/18px), HelperText uses text-body-sm (11px/16px)
+    // Label ↔ Description: always 4px regardless of spacing
     return (
       <p
         ref={ref}
         id={id ? `${id}-description` : undefined}
         className={twMerge(
-          'text-body-md text-[var(--color-text-subtle)]',
-          spacing === 'loose'
-            ? 'mt-[var(--primitive-spacing-3)]'
-            : 'mt-[var(--primitive-spacing-1)]',
+          'text-body-md text-[var(--color-text-subtle)] mt-[var(--primitive-spacing-1)]',
           className
         )}
         {...props}

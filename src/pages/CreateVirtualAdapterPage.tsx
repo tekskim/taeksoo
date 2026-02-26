@@ -671,31 +671,36 @@ export default function CreateVirtualAdapterPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Owned network - Network Table */}
                     <div className="py-6">
-                      <VStack gap={4} align="stretch">
-                        <FormField required>
-                          <FormField.Label>Owned network</FormField.Label>
-                          <FormField.Description>
+                      <VStack gap={3} align="stretch">
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Owned network
+                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
                             Select the network to which the virtual adaptor will be attached.
-                          </FormField.Description>
-                        </FormField>
+                          </span>
+                        </VStack>
 
                         {/* Network Tabs */}
-                        <Tabs
-                          value={networkTab}
-                          onChange={(value) =>
-                            setNetworkTab(value as 'current' | 'shared' | 'external')
-                          }
-                          variant="underline"
-                        >
-                          <TabList>
-                            <Tab value="current">Current tenant</Tab>
-                            <Tab value="shared">Shared</Tab>
-                            <Tab value="external">External</Tab>
-                          </TabList>
-                        </Tabs>
+                        <div className="mt-1">
+                          <Tabs
+                            value={networkTab}
+                            onChange={(value) =>
+                              setNetworkTab(value as 'current' | 'shared' | 'external')
+                            }
+                            variant="underline"
+                          >
+                            <TabList>
+                              <Tab value="current">Current tenant</Tab>
+                              <Tab value="shared">Shared</Tab>
+                              <Tab value="external">External</Tab>
+                            </TabList>
+                          </Tabs>
+                        </div>
 
                         {/* Network Table Body */}
-                        <VStack gap={2} align="stretch">
+                        <VStack gap={3} align="stretch">
                           {/* Search and Pagination */}
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
@@ -964,64 +969,62 @@ export default function CreateVirtualAdapterPage() {
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="py-6">
-                          <VStack gap={2} align="stretch">
-                            <FormField>
-                              <FormField.Label>Security groups</FormField.Label>
-                              <FormField.Description>
+                          <VStack gap={3} align="stretch">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Security groups
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Select the security groups to apply to the port.
-                              </FormField.Description>
-                              <FormField.Control>
-                                <VStack gap={2} align="stretch">
-                                  {/* Search + Create Button Row */}
-                                  <HStack justify="between" align="center">
-                                    <div className="w-[var(--search-input-width)]">
-                                      <SearchInput
-                                        placeholder="Search fixed IPs by attributes"
-                                        value={securityGroupSearch}
-                                        onChange={(e) => setSecurityGroupSearch(e.target.value)}
-                                      />
-                                    </div>
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconEdit size={12} />}
-                                    >
-                                      Create a new security group
-                                    </Button>
-                                  </HStack>
+                              </span>
+                            </VStack>
 
-                                  {/* Pagination */}
-                                  <Pagination
-                                    currentPage={securityGroupPage}
-                                    totalPages={5}
-                                    totalItems={115}
-                                    onPageChange={setSecurityGroupPage}
-                                    selectedCount={selectedSecurityGroups.length}
-                                  />
+                            {/* Search + Create Button Row */}
+                            <HStack justify="between" align="center">
+                              <div className="w-[var(--search-input-width)]">
+                                <SearchInput
+                                  placeholder="Search fixed IPs by attributes"
+                                  value={securityGroupSearch}
+                                  onChange={(e) => setSecurityGroupSearch(e.target.value)}
+                                />
+                              </div>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconEdit size={12} />}
+                              >
+                                Create a new security group
+                              </Button>
+                            </HStack>
 
-                                  {/* Security Groups Table */}
-                                  <Table
-                                    columns={securityGroupColumns}
-                                    data={mockSecurityGroups}
-                                    getRowId={(row) => row.id}
-                                  />
+                            {/* Pagination */}
+                            <Pagination
+                              currentPage={securityGroupPage}
+                              totalPages={5}
+                              totalItems={115}
+                              onPageChange={setSecurityGroupPage}
+                              selectedCount={selectedSecurityGroups.length}
+                            />
 
-                                  {/* Selection Indicator for Security Groups */}
-                                  <SelectionIndicator
-                                    selectedItems={selectedSecurityGroups.map((id) => ({
-                                      id,
-                                      label:
-                                        mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
-                                    }))}
-                                    onRemove={(id) =>
-                                      setSelectedSecurityGroups((prev) =>
-                                        prev.filter((sgId) => sgId !== id)
-                                      )
-                                    }
-                                  />
-                                </VStack>
-                              </FormField.Control>
-                            </FormField>
+                            {/* Security Groups Table */}
+                            <Table
+                              columns={securityGroupColumns}
+                              data={mockSecurityGroups}
+                              getRowId={(row) => row.id}
+                            />
+
+                            {/* Selection Indicator for Security Groups */}
+                            <SelectionIndicator
+                              selectedItems={selectedSecurityGroups.map((id) => ({
+                                id,
+                                label: mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
+                              }))}
+                              onRemove={(id) =>
+                                setSelectedSecurityGroups((prev) =>
+                                  prev.filter((sgId) => sgId !== id)
+                                )
+                              }
+                            />
                           </VStack>
                         </div>
                       </>

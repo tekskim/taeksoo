@@ -654,19 +654,16 @@ export default function CreateNetworkPage() {
 
                     {/* Admin State */}
                     <div className="py-6">
-                      <FormField>
-                        <FormField.Label>Admin state</FormField.Label>
-                        <FormField.Description>
-                          Indicates whether the load balancer&apos;s administrative state is Up or
-                          Down.
-                        </FormField.Description>
-                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                          <Toggle
-                            checked={adminState}
-                            onChange={(e) => setAdminState(e.target.checked)}
-                            label={adminState ? 'Up' : 'Down'}
-                          />
-                        </FormField.Control>
+                      <FormField
+                        label="Admin state"
+                        description="Indicates whether the load balancer's administrative state is Up or Down."
+                        spacing="loose"
+                      >
+                        <Toggle
+                          checked={adminState}
+                          onChange={(e) => setAdminState(e.target.checked)}
+                          label={adminState ? 'Up' : 'Down'}
+                        />
                       </FormField>
                     </div>
 
@@ -674,19 +671,16 @@ export default function CreateNetworkPage() {
 
                     {/* Port Security */}
                     <div className="py-6">
-                      <FormField>
-                        <FormField.Label>Port security</FormField.Label>
-                        <FormField.Description>
-                          Enhances security by allowing only permitted devices to access this
-                          network. It is recommended to keep this enabled in most cases.
-                        </FormField.Description>
-                        <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                          <Toggle
-                            checked={portSecurity}
-                            onChange={(e) => setPortSecurity(e.target.checked)}
-                            label={portSecurity ? 'On' : 'Off'}
-                          />
-                        </FormField.Control>
+                      <FormField
+                        label="Port security"
+                        description="Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases."
+                        spacing="loose"
+                      >
+                        <Toggle
+                          checked={portSecurity}
+                          onChange={(e) => setPortSecurity(e.target.checked)}
+                          label={portSecurity ? 'On' : 'Off'}
+                        />
                       </FormField>
                     </div>
 
@@ -938,58 +932,42 @@ export default function CreateNetworkPage() {
                             <Disclosure.Panel>
                               <VStack gap={6} align="stretch" className="mt-4">
                                 {/* DHCP */}
-                                <FormField>
-                                  <FormField.Label>DHCP</FormField.Label>
-                                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                                    <Toggle
-                                      checked={dhcp}
-                                      onChange={(e) => setDhcp(e.target.checked)}
-                                      label={dhcp ? 'On' : 'Off'}
-                                    />
-                                  </FormField.Control>
+                                <FormField label="DHCP" spacing="loose">
+                                  <Toggle
+                                    checked={dhcp}
+                                    onChange={(e) => setDhcp(e.target.checked)}
+                                    label={dhcp ? 'On' : 'Off'}
+                                  />
                                 </FormField>
 
                                 {/* Allocation pools */}
-                                <FormField>
-                                  <FormField.Label>Allocation pools</FormField.Label>
-                                  <FormField.Description>
-                                    Manually define the range of IP addresses to be automatically
-                                    allocated by DHCP. IPs outside this range will not be allocated,
-                                    which is useful for reserving static IPs.
-                                  </FormField.Description>
-                                  <FormField.Control>
-                                    <Textarea
-                                      placeholder="e.g. 192.168.0.100,192.168.0.200"
-                                      value={allocationPools}
-                                      onChange={(e) => setAllocationPools(e.target.value)}
-                                      rows={3}
-                                      fullWidth
-                                    />
-                                  </FormField.Control>
-                                  <FormField.HelperText>
-                                    Enter one IP address allocation range per line.
-                                  </FormField.HelperText>
+                                <FormField
+                                  label="Allocation pools"
+                                  description="Manually define the range of IP addresses to be automatically allocated by DHCP. IPs outside this range will not be allocated, which is useful for reserving static IPs."
+                                  helperText="Enter one IP address allocation range per line."
+                                >
+                                  <Textarea
+                                    placeholder="e.g. 192.168.0.100,192.168.0.200"
+                                    value={allocationPools}
+                                    onChange={(e) => setAllocationPools(e.target.value)}
+                                    rows={3}
+                                    fullWidth
+                                  />
                                 </FormField>
 
                                 {/* Host routes */}
-                                <FormField>
-                                  <FormField.Label>Host routes</FormField.Label>
-                                  <FormField.Description>
-                                    An advanced feature for manually specifying a route to a
-                                    specific network destination.
-                                  </FormField.Description>
-                                  <FormField.Control>
-                                    <Textarea
-                                      placeholder="e.g. 10.10.0.0/24,192.168.0.254"
-                                      value={hostRoutes}
-                                      onChange={(e) => setHostRoutes(e.target.value)}
-                                      rows={3}
-                                      fullWidth
-                                    />
-                                  </FormField.Control>
-                                  <FormField.HelperText>
-                                    Enter the destination CIDR and the next hop IP address.
-                                  </FormField.HelperText>
+                                <FormField
+                                  label="Host routes"
+                                  description="An advanced feature for manually specifying a route to a specific network destination."
+                                  helperText="Enter the destination CIDR and the next hop IP address."
+                                >
+                                  <Textarea
+                                    placeholder="e.g. 10.10.0.0/24,192.168.0.254"
+                                    value={hostRoutes}
+                                    onChange={(e) => setHostRoutes(e.target.value)}
+                                    rows={3}
+                                    fullWidth
+                                  />
                                 </FormField>
                               </VStack>
                             </Disclosure.Panel>
