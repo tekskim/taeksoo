@@ -207,7 +207,11 @@ export function InputPage() {
             <Label>With icons</Label>
             <div className="flex gap-4">
               <Input placeholder="Search..." leftElement={<IconSearch size={14} />} width="md" />
-              <Input placeholder="Email" rightElement={<IconMail size={14} />} width="md" />
+              <Input
+                placeholder="Email"
+                rightElement={<IconMail size={14} stroke={1.5} />}
+                width="md"
+              />
             </div>
           </VStack>
 

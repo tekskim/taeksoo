@@ -302,7 +302,7 @@ function OpenSectionTableDemo() {
 
               {sourceTab === 'image' && (
                 <div className="mt-2">
-                  <div className="inline-flex gap-1 p-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] w-fit">
+                  <div className="inline-flex gap-1 p-1 bg-[var(--color-surface-subtle)] shadow-[inset_0_0_0_1px_var(--color-border-default)] rounded-[8px] w-fit">
                     {(['other', 'ubuntu', 'windows', 'rocky'] as const).map((filter) => (
                       <button
                         key={filter}
@@ -314,8 +314,8 @@ function OpenSectionTableDemo() {
                         flex items-center gap-1 px-[10px] py-[6px] rounded-[6px] text-[12px] font-medium leading-5 text-center transition-all
                         ${
                           osFilter === filter
-                            ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)] shadow-sm'
-                            : 'bg-transparent border border-transparent text-[var(--color-text-default)]'
+                            ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
+                            : 'bg-transparent text-[var(--color-text-default)]'
                         }
                       `}
                       >
