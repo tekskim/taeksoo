@@ -363,7 +363,7 @@ function ObjectRow({
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
-              <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">S3 URI</span>
                 <button
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
@@ -386,7 +386,7 @@ function ObjectRow({
             </div>
             {/* Object URL Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
-              <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">Object URL</span>
                 <button
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"

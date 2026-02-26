@@ -19,6 +19,7 @@ import {
   PageShell,
   type TableColumn,
   fixedColumns,
+  columnMinWidths,
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -613,43 +614,43 @@ function AddUsersSection({
     {
       key: 'username',
       label: 'Username',
+      flex: 1,
+      minWidth: columnMinWidths.username,
       sortable: true,
       render: (_, row) => (
-        <HStack gap={1.5} align="center">
-          <span className="text-label-md text-[var(--color-action-primary)]">{row.username}</span>
-          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+        <HStack gap={1.5} align="center" className="min-w-0">
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.username}
+          </span>
+          <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
         </HStack>
       ),
     },
     {
       key: 'userGroups',
       label: 'User groups',
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
+      flex: 1,
+      minWidth: columnMinWidths.userGroups,
     },
     {
       key: 'roles',
       label: 'Roles',
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
+      flex: 1,
+      minWidth: columnMinWidths.iamRoles,
     },
     {
       key: 'lastSignIn',
       label: 'Last Sign-in',
+      flex: 1,
+      minWidth: columnMinWidths.lastSignIn,
       sortable: true,
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
     },
   ];
 
