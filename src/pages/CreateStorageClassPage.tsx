@@ -270,54 +270,60 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
     <SectionCard className="pb-6">
       <SectionCard.Header title="Parameters" showDivider />
       <SectionCard.Content className="pt-3">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-          <VStack gap={3}>
-            {/* Header row */}
-            {parameters.length > 0 && (
-              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                <label className="text-label-sm text-[var(--color-text-default)]">Key</label>
-                <label className="text-label-sm text-[var(--color-text-default)]">Value</label>
-                <div></div>
-              </div>
-            )}
+        <VStack gap={3}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
 
-            {/* Parameter rows */}
-            {parameters.map((param, index) => (
-              <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
-                <Input
-                  placeholder="e.g. foo"
-                  value={param.key}
-                  onChange={(e) => updateParameter(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="e.g. bar"
-                  value={param.value}
-                  onChange={(e) => updateParameter(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => removeParameter(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={1}>
+              {parameters.length > 0 && (
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Value
+                  </span>
+                  <div className="w-5" />
+                </div>
+              )}
+
+              {parameters.map((param, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                 >
-                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </div>
-            ))}
+                  <Input
+                    placeholder="e.g. foo"
+                    value={param.key}
+                    onChange={(e) => updateParameter(index, 'key', e.target.value)}
+                    fullWidth
+                  />
+                  <Input
+                    placeholder="e.g. bar"
+                    value={param.value}
+                    onChange={(e) => updateParameter(index, 'value', e.target.value)}
+                    fullWidth
+                  />
+                  <button
+                    onClick={() => removeParameter(index)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                  >
+                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                  </button>
+                </div>
+              ))}
 
-            {/* Add Parameter button */}
-            <div className="w-fit">
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                onClick={addParameter}
-              >
-                Add Parameter
-              </Button>
-            </div>
-          </VStack>
-        </div>
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} />}
+                  onClick={addParameter}
+                >
+                  Add Parameter
+                </Button>
+              </div>
+            </VStack>
+          </div>
+        </VStack>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -368,112 +374,94 @@ function CustomizeSection({
       <SectionCard.Content className="pt-3">
         <VStack gap={8}>
           {/* Reclaim Policy */}
-          <FormField>
-            <FormField.Label>Reclaim Policy</FormField.Label>
-            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <RadioGroup
-                value={reclaimPolicy}
-                onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
-              >
-                <VStack gap={1}>
-                  <Radio
-                    value="delete"
-                    label="Delete volumes and underlying device when volume claim is deleted"
-                  />
-                  <Radio value="retain" label="Retain the volume for manual cleanup" />
-                </VStack>
-              </RadioGroup>
-            </FormField.Control>
-          </FormField>
+          <RadioGroup
+            label="Reclaim Policy"
+            value={reclaimPolicy}
+            onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
+          >
+            <VStack gap={1}>
+              <Radio
+                value="delete"
+                label="Delete volumes and underlying device when volume claim is deleted"
+              />
+              <Radio value="retain" label="Retain the volume for manual cleanup" />
+            </VStack>
+          </RadioGroup>
 
           {/* Allow Volume Expansion */}
-          <FormField>
-            <FormField.Label>Allow Volume Expansion</FormField.Label>
-            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <RadioGroup
-                value={volumeExpansion}
-                onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
-              >
-                <VStack gap={1}>
-                  <Radio value="enabled" label="Enabled" />
-                  <Radio value="disabled" label="Disabled" />
-                </VStack>
-              </RadioGroup>
-            </FormField.Control>
-          </FormField>
+          <RadioGroup
+            label="Allow Volume Expansion"
+            value={volumeExpansion}
+            onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
+          >
+            <VStack gap={1}>
+              <Radio value="enabled" label="Enabled" />
+              <Radio value="disabled" label="Disabled" />
+            </VStack>
+          </RadioGroup>
 
           {/* Volume Binding Mode */}
-          <FormField>
-            <FormField.Label>Volume Binding Mode</FormField.Label>
-            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <RadioGroup
-                value={volumeBindingMode}
-                onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}
-              >
-                <VStack gap={1}>
-                  <Radio
-                    value="immediate"
-                    label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
-                  />
-                  <Radio
-                    value="waitForFirstConsumer"
-                    label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
-                  />
-                </VStack>
-              </RadioGroup>
-            </FormField.Control>
-          </FormField>
+          <RadioGroup
+            label="Volume Binding Mode"
+            value={volumeBindingMode}
+            onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}
+          >
+            <VStack gap={1}>
+              <Radio
+                value="immediate"
+                label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
+              />
+              <Radio
+                value="waitForFirstConsumer"
+                label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
+              />
+            </VStack>
+          </RadioGroup>
 
           {/* Mount Options */}
-          <FormField>
-            <FormField.Label>Mount Options</FormField.Label>
-            <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={3}>
-                  {/* Header row */}
-                  {mountOptions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                      <span className="block text-label-sm text-[var(--color-text-default)]">
-                        Value
-                      </span>
-                      <div></div>
-                    </div>
-                  )}
+          <VStack gap={3}>
+            <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
-                  {/* Mount option rows */}
-                  {mountOptions.map((option, index) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
-                    >
-                      <Input
-                        placeholder="e.g. bar"
-                        value={option.value}
-                        onChange={(e) => updateMountOption(index, e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => removeMountOption(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
-                  ))}
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                      onClick={addMountOption}
-                    >
-                      Add Option
-                    </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={1}>
+                {mountOptions.length > 0 && (
+                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
                   </div>
-                </VStack>
-              </div>
-            </FormField.Control>
-          </FormField>
+                )}
+
+                {mountOptions.map((option, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
+                    <Input
+                      placeholder="e.g. bar"
+                      value={option.value}
+                      onChange={(e) => updateMountOption(index, e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeMountOption(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={addMountOption}
+                  >
+                    Add Option
+                  </Button>
+                </div>
+              </VStack>
+            </div>
+          </VStack>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
