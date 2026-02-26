@@ -1063,8 +1063,7 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Action',
-      flex: 1,
-      minWidth: columnMinWidths.id,
+      width: fixedColumns.actions,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">

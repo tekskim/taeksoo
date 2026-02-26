@@ -1,4 +1,11 @@
-import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+} from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 
@@ -97,15 +104,54 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     );
 
     // Increment/Decrement handlers
-    const increment = () => {
+    const increment = useCallback(() => {
       if (disabled) return;
       updateValue((currentValue ?? 0) + step);
-    };
+    }, [disabled, currentValue, step, updateValue]);
 
-    const decrement = () => {
+    const decrement = useCallback(() => {
       if (disabled) return;
       updateValue((currentValue ?? 0) - step);
-    };
+    }, [disabled, currentValue, step, updateValue]);
+
+    // Long-press continuous stepping
+    const repeatTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const repeatIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const directionRef = useRef<'up' | 'down' | null>(null);
+    const incrementRef = useRef(increment);
+    const decrementRef = useRef(decrement);
+    incrementRef.current = increment;
+    decrementRef.current = decrement;
+
+    const stopContinuousAction = useCallback(() => {
+      if (repeatTimerRef.current) {
+        clearTimeout(repeatTimerRef.current);
+        repeatTimerRef.current = null;
+      }
+      if (repeatIntervalRef.current) {
+        clearInterval(repeatIntervalRef.current);
+        repeatIntervalRef.current = null;
+      }
+      directionRef.current = null;
+    }, []);
+
+    const startContinuousAction = useCallback(
+      (direction: 'up' | 'down') => {
+        stopContinuousAction();
+        directionRef.current = direction;
+        const fire = () => {
+          if (directionRef.current === 'up') incrementRef.current();
+          else if (directionRef.current === 'down') decrementRef.current();
+        };
+        fire();
+        repeatTimerRef.current = setTimeout(() => {
+          repeatIntervalRef.current = setInterval(fire, 60);
+        }, 400);
+      },
+      [stopContinuousAction]
+    );
+
+    useEffect(() => stopContinuousAction, [stopContinuousAction]);
 
     // Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -235,7 +281,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 type="button"
                 tabIndex={-1}
                 className={buttonClasses}
-                onClick={increment}
+                onPointerDown={() => startContinuousAction('up')}
+                onPointerUp={stopContinuousAction}
+                onPointerLeave={stopContinuousAction}
                 disabled={
                   disabled ||
                   (max !== undefined && currentValue !== undefined && currentValue >= max)
@@ -248,7 +296,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 type="button"
                 tabIndex={-1}
                 className={buttonClasses}
-                onClick={decrement}
+                onPointerDown={() => startContinuousAction('down')}
+                onPointerUp={stopContinuousAction}
+                onPointerLeave={stopContinuousAction}
                 disabled={
                   disabled ||
                   (min !== undefined && currentValue !== undefined && currentValue <= min)
