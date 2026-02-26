@@ -140,7 +140,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     // Base styles
     const baseStyles = [
-      'w-full',
+      'block w-full',
       'min-h-[var(--textarea-min-height)]',
       'px-[var(--input-padding-x)]',
       'py-[var(--input-padding-y)]',

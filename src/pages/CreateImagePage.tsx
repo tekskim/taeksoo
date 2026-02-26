@@ -391,6 +391,7 @@ export function CreateImagePage() {
                       <FormField
                         label="Protected"
                         description="Protected images cannot be deleted, preventing accidental removal."
+                        spacing="loose"
                       >
                         <HStack gap={2} align="center">
                           <Toggle checked={isProtected} onChange={setIsProtected} />
@@ -457,22 +458,30 @@ export function CreateImagePage() {
 
                     {/* Upload type */}
                     <div className="py-6">
-                      <FormField
-                        label="Upload type"
-                        required
-                        description="Registers an image by uploading a file or entering a file URL."
-                      >
-                        <Tabs
-                          value={sourceType}
-                          onChange={(value) => setSourceType(value as 'file' | 'url')}
-                          variant="underline"
-                          size="sm"
-                        >
-                          <TabList>
-                            <Tab value="file">Upload file</Tab>
-                            <Tab value="url">File URL</Tab>
-                          </TabList>
-                        </Tabs>
+                      <VStack gap={3}>
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Upload type
+                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Registers an image by uploading a file or entering a file URL.
+                          </span>
+                        </VStack>
+
+                        <div className="mt-1">
+                          <Tabs
+                            value={sourceType}
+                            onChange={(value) => setSourceType(value as 'file' | 'url')}
+                            variant="underline"
+                            size="sm"
+                          >
+                            <TabList>
+                              <Tab value="file">Upload file</Tab>
+                              <Tab value="url">File URL</Tab>
+                            </TabList>
+                          </Tabs>
+                        </div>
 
                         {(isV2 || sourceType === 'file') && (
                           <VStack gap={3} align="start">
@@ -509,7 +518,7 @@ export function CreateImagePage() {
                             />
                           </FormField>
                         )}
-                      </FormField>
+                      </VStack>
                     </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -836,6 +845,7 @@ export function CreateImagePage() {
                       <FormField
                         label="QEMU guest agent"
                         description="Enables communication and status retrieval between the hypervisor and the instance."
+                        spacing="loose"
                       >
                         <HStack gap={2} align="center">
                           <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
