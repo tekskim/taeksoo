@@ -66,7 +66,9 @@ export function DesignSystemLayout() {
           {/* Logo */}
           <Link to="/design" className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
-              <span className="text-[10px] font-bold text-white">TDS</span>
+              <span className="text-[10px] font-bold text-[var(--semantic-color-on-primary)]">
+                TDS
+              </span>
             </div>
             <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
               Design system
@@ -223,7 +225,7 @@ export function DesignSystemLayout() {
         {showScrollTop && (
           <button
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 z-50 w-10 h-10 rounded-full bg-[var(--color-action-primary)] text-white flex items-center justify-center shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
+            className="fixed bottom-8 right-8 z-50 w-10 h-10 rounded-full bg-[var(--color-action-primary)] text-[var(--semantic-color-on-primary)] flex items-center justify-center shadow-lg hover:bg-[var(--color-action-primary-hover)] transition-colors"
           >
             <IconArrowUp size={20} stroke={2} />
           </button>

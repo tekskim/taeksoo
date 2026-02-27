@@ -234,12 +234,14 @@ export function MigrateVolumeDrawer({
 
         {/* Target Storage Backend Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Target storage backend <span className="text-[var(--color-state-danger)]">*</span>
-          </h3>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Select the destination storage backend or volume type for the migration.
-          </p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Target storage backend <span className="text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Select the destination storage backend or volume type for the migration.
+            </p>
+          </div>
 
           {/* Search */}
           <SearchInput

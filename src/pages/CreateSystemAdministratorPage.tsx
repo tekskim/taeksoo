@@ -352,7 +352,7 @@ function PasswordSection({
         </FormField.Description>
         <FormField.Control>
           <VStack gap={2}>
-            <label className="flex items-center gap-1.5 cursor-pointer">
+            <label className="flex items-start gap-1.5 cursor-pointer">
               <Radio
                 value="temporary"
                 checked={passwordOption === 'temporary'}
@@ -362,7 +362,7 @@ function PasswordSection({
                 Auto-generated password
               </span>
             </label>
-            <label className="flex items-center gap-1.5 cursor-pointer">
+            <label className="flex items-start gap-1.5 cursor-pointer">
               <Radio
                 value="manual"
                 checked={passwordOption === 'manual'}

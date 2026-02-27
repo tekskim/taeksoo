@@ -132,7 +132,9 @@ export function LayoutPage() {
                 <div className="w-[52px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
                   <div className="p-2 border-b border-[var(--color-border-subtle)]">
                     <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
-                      <span className="text-[6px] font-bold text-white">TDS</span>
+                      <span className="text-[6px] font-bold text-[var(--semantic-color-on-primary)]">
+                        TDS
+                      </span>
                     </div>
                   </div>
                   <div className="flex-1 p-2 space-y-1">
@@ -180,7 +182,9 @@ export function LayoutPage() {
                 <div className="w-[42px] bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
                   <div className="p-1.5 border-b border-[var(--color-border-subtle)]">
                     <div className="w-5 h-5 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
-                      <span className="text-[5px] font-bold text-white">TDS</span>
+                      <span className="text-[5px] font-bold text-[var(--semantic-color-on-primary)]">
+                        TDS
+                      </span>
                     </div>
                   </div>
                   <div className="flex-1 p-1.5 space-y-1">
@@ -242,7 +246,7 @@ export function LayoutPage() {
                   <div className="flex-1 p-3">
                     <div className="h-full bg-[var(--color-surface-default)] rounded flex items-start p-2">
                       <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center cursor-pointer">
-                        <IconMenu2 size={12} className="text-white" />
+                        <IconMenu2 size={12} className="text-[var(--semantic-color-on-primary)]" />
                       </div>
                     </div>
                   </div>

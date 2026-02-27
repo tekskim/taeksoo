@@ -126,7 +126,7 @@ export const baseChartOptions = {
     axisLine: { show: false },
     axisTick: { show: false },
     axisLabel: {
-      color: chartColors.slate400,
+      color: getCSSColor('--color-text-subtle', chartColors.slate400),
       fontSize: 10,
     },
     boundaryGap: false,
@@ -142,15 +142,15 @@ export const baseChartOptions = {
       },
     },
     axisLabel: {
-      color: chartColors.slate400,
+      color: getCSSColor('--color-text-subtle', chartColors.slate400),
       fontSize: 10,
     },
   },
   tooltip: {
     trigger: 'axis' as const,
-    backgroundColor: 'white',
-    borderColor: '#e2e8f0',
-    textStyle: { color: chartColors.slate800, fontSize: 11 },
+    backgroundColor: getCSSColor('--color-surface-default', '#ffffff'),
+    borderColor: getCSSColor('--color-border-default', '#e2e8f0'),
+    textStyle: { color: getCSSColor('--color-text-default', chartColors.slate800), fontSize: 11 },
     formatter: (
       params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
     ) => {
@@ -424,10 +424,10 @@ export function LineChart({
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
+      backgroundColor: getCSSColor('--color-surface-default', '#ffffff'),
+      borderColor: getCSSColor('--color-border-default', '#e2e8f0'),
       textStyle: {
-        color: chartColors.slate800,
+        color: getCSSColor('--color-text-default', chartColors.slate800),
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -812,13 +812,13 @@ export function PieChartDemo({
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: getCSSColor('--color-surface-default', '#ffffff'),
+      borderColor: getCSSColor('--color-border-default', '#e2e8f0'),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: getCSSColor('--color-text-default', '#1e293b'),
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -924,13 +924,13 @@ export function DoughnutChartDemo({
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: getColor('--color-surface-default', '#ffffff'),
+      borderColor: getColor('--color-border-default', '#e2e8f0'),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: getColor('--color-text-default', '#1e293b'),
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -1218,13 +1218,13 @@ export function SingleValueDoughnutDemo({
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: getColor('--color-surface-default', '#ffffff'),
+      borderColor: getColor('--color-border-default', '#e2e8f0'),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: getColor('--color-text-default', '#1e293b'),
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },

@@ -1148,8 +1148,8 @@ export function AgentLogDetailDrawer({
     {
       id: 'step-1',
       type: 'Think',
-      color: 'bg-[#eab308]',
-      textColor: 'text-[#fefce8]',
+      color: 'bg-[var(--primitive-color-yellow500)]',
+      textColor: 'text-[var(--primitive-color-yellow50)]',
       confidence: 81,
       analyze: `사용자가 '2025년 한국 GDP 성장률 전망'을 질문했습니다. 이전 대화에서 사용자가 '한국은행 경제전망보고서 2025년 8월' 문서를 언급했고, 이 문서에 GDP 전망이 포함되어 있다고 언급했습니다.`,
       plan: `이전 대화에서 문서의 존재는 확인되었으나, 구체적인 GDP 성장률 수치는 아직 제공되지 않았습니다. 'rag_search' 도구를 사용하여 한국은행 경제전망보고서에서 2025년 GDP 성장률 전망 데이터를 찾아야 합니다.`,
@@ -1157,8 +1157,8 @@ export function AgentLogDetailDrawer({
     {
       id: 'step-2',
       type: 'Act',
-      color: 'bg-[#16a34a]',
-      textColor: 'text-[#f0fdf4]',
+      color: 'bg-[var(--primitive-color-green600)]',
+      textColor: 'text-[var(--primitive-color-green50)]',
       confidence: 81,
       analyze: 'rag_search',
       tool: `{
@@ -1172,8 +1172,8 @@ export function AgentLogDetailDrawer({
     {
       id: 'step-3',
       type: 'Observe',
-      color: 'bg-[#3b82f6]',
-      textColor: 'text-[#eff6ff]',
+      color: 'bg-[var(--primitive-color-blue500)]',
+      textColor: 'text-[var(--primitive-color-blue50)]',
       confidence: 81,
       analyze: 'rag_search',
       toolResult: `Found 10 search results.

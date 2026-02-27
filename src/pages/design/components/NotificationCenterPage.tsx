@@ -123,7 +123,11 @@ export function NotificationCenterPage() {
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                    <IconCheck size={10} stroke={2} className="text-white" />
+                    <IconCheck
+                      size={10}
+                      stroke={2}
+                      className="text-[var(--semantic-color-on-primary)]"
+                    />
                   </div>
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Success
@@ -136,7 +140,11 @@ export function NotificationCenterPage() {
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] flex items-center justify-center">
-                    <IconX size={10} stroke={2} className="text-white" />
+                    <IconX
+                      size={10}
+                      stroke={2}
+                      className="text-[var(--semantic-color-on-primary)]"
+                    />
                   </div>
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Error
@@ -149,7 +157,11 @@ export function NotificationCenterPage() {
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] flex items-center justify-center">
-                    <IconAlertTriangle size={10} stroke={2} className="text-white" />
+                    <IconAlertTriangle
+                      size={10}
+                      stroke={2}
+                      className="text-[var(--semantic-color-on-primary)]"
+                    />
                   </div>
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Warning
@@ -162,7 +174,11 @@ export function NotificationCenterPage() {
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] flex items-center justify-center">
-                    <IconInfoCircle size={10} stroke={2} className="text-white" />
+                    <IconInfoCircle
+                      size={10}
+                      stroke={2}
+                      className="text-[var(--semantic-color-on-primary)]"
+                    />
                   </div>
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Info

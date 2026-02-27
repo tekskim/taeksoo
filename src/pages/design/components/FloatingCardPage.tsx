@@ -71,7 +71,11 @@ export function FloatingCardPage() {
                         Basic information
                       </span>
                       <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                        <IconCheck size={10} stroke={2.5} className="text-white" />
+                        <IconCheck
+                          size={10}
+                          stroke={2.5}
+                          className="text-[var(--semantic-color-on-primary)]"
+                        />
                       </div>
                     </div>
                     <div className="flex items-center justify-between py-1">
@@ -126,7 +130,11 @@ export function FloatingCardPage() {
                             </span>
                             {i < 3 ? (
                               <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                                <IconCheck size={10} stroke={2.5} className="text-white" />
+                                <IconCheck
+                                  size={10}
+                                  stroke={2.5}
+                                  className="text-[var(--semantic-color-on-primary)]"
+                                />
                               </div>
                             ) : i === 3 ? (
                               <div
@@ -219,7 +227,11 @@ export function FloatingCardPage() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
-                  <IconAlertTriangle size={10} stroke={2} className="text-white" />
+                  <IconAlertTriangle
+                    size={10}
+                    stroke={2}
+                    className="text-[var(--semantic-color-on-primary)]"
+                  />
                 </div>
                 <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                   Warning
@@ -227,7 +239,11 @@ export function FloatingCardPage() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
-                  <IconCheck size={10} stroke={2} className="text-white" />
+                  <IconCheck
+                    size={10}
+                    stroke={2}
+                    className="text-[var(--semantic-color-on-primary)]"
+                  />
                 </div>
                 <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                   Success

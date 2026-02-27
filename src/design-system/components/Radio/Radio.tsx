@@ -15,6 +15,8 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   value: string;
   /** Children (alternative to label) */
   children?: ReactNode;
+  /** Apply 2px top offset to radio circle for multiline label alignment */
+  multiline?: boolean;
 }
 
 /* ----------------------------------------
@@ -23,7 +25,17 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   (
-    { label, description, value, disabled: propDisabled, className = '', id, children, ...props },
+    {
+      label,
+      description,
+      value,
+      disabled: propDisabled,
+      className = '',
+      id,
+      children,
+      multiline,
+      ...props
+    },
     ref
   ) => {
     // Support children as alternative to label
@@ -44,7 +56,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
         <label
           htmlFor={inputId}
           className={twMerge(
-            'inline-flex items-center gap-[var(--radio-gap)] cursor-pointer',
+            'inline-flex items-start gap-[var(--radio-gap)] cursor-pointer',
             disabled && 'cursor-not-allowed'
           )}
         >
@@ -67,6 +79,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
           <span
             className={twMerge(
               'shrink-0',
+              multiline && 'mt-[2px]',
               'w-[var(--radio-size)] h-[var(--radio-size)]',
               'rounded-full',
               'transition-all duration-[var(--duration-fast)]',

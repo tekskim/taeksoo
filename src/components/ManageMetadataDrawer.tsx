@@ -173,7 +173,7 @@ export function ManageMetadataDrawer({
 
         {/* Metadata Section */}
         <VStack gap={3} className="w-full">
-          <VStack gap={2}>
+          <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">Metadata</span>
             <p className="text-body-md text-[var(--color-text-subtle)]">
               Select existing metadata or define new metadata to apply to the image.
@@ -183,7 +183,7 @@ export function ManageMetadataDrawer({
           {/* Two Column Layout */}
           <div className="flex gap-3 h-[500px]">
             {/* Left Column - Available Metadata */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
+            <div className="flex-1 flex flex-col gap-3 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Available metadata
               </span>
@@ -351,7 +351,7 @@ export function ManageMetadataDrawer({
             </div>
 
             {/* Right Column - Existing Metadata */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
+            <div className="flex-1 flex flex-col gap-3 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Existing metadata
               </span>

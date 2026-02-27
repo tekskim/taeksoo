@@ -721,7 +721,7 @@ export function CreateMCPTemplatePage() {
                                   </div>
 
                                   <HStack gap={4}>
-                                    <label className="flex items-center gap-2 cursor-pointer">
+                                    <label className="flex items-start gap-2 cursor-pointer">
                                       <input
                                         type="checkbox"
                                         checked={env.required}
@@ -738,7 +738,7 @@ export function CreateMCPTemplatePage() {
                                         Req
                                       </span>
                                     </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
+                                    <label className="flex items-start gap-2 cursor-pointer">
                                       <input
                                         type="checkbox"
                                         checked={env.secret}
@@ -900,7 +900,7 @@ export function CreateMCPTemplatePage() {
                                             onChange={() => {}}
                                             fullWidth
                                           />
-                                          <label className="flex items-center gap-2 cursor-pointer">
+                                          <label className="flex items-start gap-2 cursor-pointer">
                                             <Toggle checked={param.required} onChange={() => {}} />
                                             <span className="text-label-sm text-[var(--color-text-default)]">
                                               Req

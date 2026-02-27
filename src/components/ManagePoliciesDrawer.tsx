@@ -194,9 +194,9 @@ export function ManagePoliciesDrawer({
         </VStack>
 
         {/* Policies Section */}
-        <VStack gap={4} className="w-full pb-5">
+        <VStack gap={3} className="w-full pb-5">
           {/* Section Header */}
-          <VStack gap={2}>
+          <VStack gap={1}>
             <div className="flex items-start gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Policies
