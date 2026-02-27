@@ -555,15 +555,16 @@ function SettingsSection({
                     </div>
                   ))}
 
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddTag}
-                    className="self-start"
-                  >
-                    Add Tags
-                  </Button>
+                  <div className="w-fit mt-1">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddTag}
+                    >
+                      Add Tags
+                    </Button>
+                  </div>
                 </VStack>
               </div>
             </VStack>

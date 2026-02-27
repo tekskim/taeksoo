@@ -749,7 +749,7 @@ export function CreateServicePage() {
                         ))}
 
                         {/* Add Port Button */}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -868,7 +868,7 @@ export function CreateServicePage() {
                             ))}
 
                             {/* Add Port Button */}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1001,7 +1001,7 @@ export function CreateServicePage() {
                             ))}
 
                             {/* Add Port Button */}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1104,7 +1104,7 @@ export function CreateServicePage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1351,7 +1351,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1421,7 +1421,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"

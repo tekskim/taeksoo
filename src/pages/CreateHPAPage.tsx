@@ -756,7 +756,7 @@ export default function CreateHPAPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -861,7 +861,7 @@ export default function CreateHPAPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -918,14 +918,14 @@ export default function CreateHPAPage() {
                             {(metric.source === 'External' ||
                               metric.source === 'Pods' ||
                               metric.source === 'Object') && (
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <InlineMessage variant="warning">
                                   In order to use external metrics with HPA, you need to deploy the
                                   external metrics server such as prometheus adapter.
                                 </InlineMessage>
                               </div>
                             )}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <InlineMessage variant="warning">
                                 The selected target reference does not have the correct resource
                                 requests on the spec. Without this the HPA metric will have no
@@ -1143,7 +1143,7 @@ export default function CreateHPAPage() {
                                       </button>
                                     </div>
                                   ))}
-                                  <div className="w-fit">
+                                  <div className="w-fit mt-1">
                                     <Button
                                       variant="secondary"
                                       size="sm"
@@ -1163,7 +1163,7 @@ export default function CreateHPAPage() {
                   ))}
 
                   {/* Add a new row button */}
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -1234,7 +1234,7 @@ export default function CreateHPAPage() {
                               ))}
                             </VStack>
                           )}
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -1305,7 +1305,7 @@ export default function CreateHPAPage() {
                               ))}
                             </VStack>
                           )}
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"

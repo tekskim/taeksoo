@@ -80,7 +80,7 @@ function SectionCardHeader({
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       {description && (
-        <span className="text-body-sm text-[var(--color-text-subtle)] mt-3">{description}</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
       )}
     </div>
   );
