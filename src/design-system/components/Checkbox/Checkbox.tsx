@@ -34,6 +34,8 @@ export interface CheckboxProps extends Omit<
   errorMessage?: string;
   /** Change handler (supports both standard event and thaki-ui boolean signature) */
   onChange?: StandardOnChange | ThakiOnChange;
+  /** Apply 2px top offset to checkbox box for multiline label alignment */
+  multiline?: boolean;
 }
 
 /* ----------------------------------------
@@ -54,6 +56,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onChange,
       className = '',
       id,
+      multiline,
       ...props
     },
     forwardedRef
@@ -164,7 +167,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <label
           htmlFor={inputId}
           className={twMerge(
-            'group inline-flex items-center gap-[var(--checkbox-gap)] cursor-pointer',
+            'group inline-flex items-start gap-[var(--checkbox-gap)] cursor-pointer',
             disabled && 'cursor-not-allowed'
           )}
         >
@@ -185,7 +188,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           />
 
           {/* Custom checkbox box */}
-          <span className={twMerge(getBoxStyles())}>
+          <span className={twMerge(getBoxStyles(), multiline && 'mt-[2px]')}>
             {isChecked &&
               (indeterminate ? (
                 <IconMinus

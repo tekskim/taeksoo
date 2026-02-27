@@ -222,7 +222,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
 
         {/* Rules Section */}
         <VStack gap={3} className="w-full">
-          <VStack gap={2}>
+          <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rules</span>
             <p className="text-body-md text-[var(--color-text-subtle)]">
               Select rules from the list to add to the policy.
@@ -232,7 +232,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
           {/* Two Column Layout */}
           <div className="flex gap-3 h-[500px]">
             {/* Left Column - Available Rules */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
+            <div className="flex-1 flex flex-col gap-3 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">
                 Available rules
               </span>
@@ -298,7 +298,7 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
             </div>
 
             {/* Right Column - Selected Rules */}
-            <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
+            <div className="flex-1 flex flex-col gap-3 bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 min-h-0">
               <span className="text-label-lg text-[var(--color-text-default)]">Selected rules</span>
 
               <SearchInput

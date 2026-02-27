@@ -56,9 +56,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
       {!showCode && (
         <div
           data-theme={previewTheme}
-          className={`p-6 rounded-b-[var(--primitive-radius-lg)] transition-colors ${
-            previewTheme === 'dark' ? 'bg-[#0f172a]' : 'bg-[var(--color-surface-default)]'
-          }`}
+          className="p-6 rounded-b-[var(--primitive-radius-lg)] transition-colors bg-[var(--color-surface-default)]"
         >
           {children}
         </div>

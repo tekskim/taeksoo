@@ -2777,7 +2777,7 @@ function NetworkSection({
 
               {/* Radio Options */}
               <VStack gap={2}>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-start gap-2 cursor-pointer">
                   <Radio
                     value="none"
                     checked={floatingIpOption === 'none'}
@@ -2785,7 +2785,7 @@ function NetworkSection({
                   />
                   <span className="text-body-md">None (internal only)</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-start gap-2 cursor-pointer">
                   <Radio
                     value="auto"
                     checked={floatingIpOption === 'auto'}
@@ -2793,7 +2793,7 @@ function NetworkSection({
                   />
                   <span className="text-body-md">Auto-assign IP</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-start gap-2 cursor-pointer">
                   <Radio
                     value="existing"
                     checked={floatingIpOption === 'existing'}

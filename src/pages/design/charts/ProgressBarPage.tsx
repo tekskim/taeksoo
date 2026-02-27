@@ -4,10 +4,18 @@ import type { PropDef } from '../_shared/PropsTable';
 import { QuotaBarDemo } from '../../design-system-sections/ChartComponents';
 import { ProgressBar, VStack } from '@/design-system';
 
+function getCSSVar(name: string, fallback: string) {
+  if (typeof window !== 'undefined') {
+    const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return val || fallback;
+  }
+  return fallback;
+}
+
 function statusColor(pct: number) {
-  if (pct >= 100) return '#dc2626';
-  if (pct >= 70) return '#ea580c';
-  return '#22c55e';
+  if (pct >= 100) return getCSSVar('--color-state-danger', '#dc2626');
+  if (pct >= 70) return getCSSVar('--color-state-warning', '#ea580c');
+  return getCSSVar('--color-state-success', '#22c55e');
 }
 
 function GaugeHoverTooltip({

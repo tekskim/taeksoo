@@ -163,8 +163,9 @@ export function ResetPasswordDrawer({
             required
           >
             <VStack gap={2}>
-              <label className="flex items-center gap-1.5 cursor-pointer">
+              <label className="flex items-start gap-1.5 cursor-pointer">
                 <Radio
+                  multiline
                   checked={resetOption === 'temporary'}
                   onChange={() => setResetOption('temporary')}
                 />
@@ -172,8 +173,9 @@ export function ResetPasswordDrawer({
                   Issue a temporary password (email sent automatically)
                 </span>
               </label>
-              <label className="flex items-center gap-1.5 cursor-pointer">
+              <label className="flex items-start gap-1.5 cursor-pointer">
                 <Radio
+                  multiline
                   checked={resetOption === 'manual'}
                   onChange={() => setResetOption('manual')}
                 />
@@ -255,12 +257,12 @@ export function ResetPasswordDrawer({
                     <HStack key={index} gap={1.5} align="center">
                       {isMet ? (
                         <IconCheck
-                          size={16}
-                          stroke={2}
+                          size={12}
+                          stroke={1.5}
                           className="text-[var(--color-state-success)]"
                         />
                       ) : (
-                        <IconX size={16} stroke={2} className="text-[var(--color-text-muted)]" />
+                        <IconX size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
                       )}
                       <span
                         className={`text-body-sm leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}

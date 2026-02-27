@@ -4,15 +4,15 @@ import { VStack } from '@/design-system';
 function AxisTooltipDemo() {
   return (
     <div
-      className="bg-white border border-[#e2e8f0] rounded-[4px] shadow-sm p-2"
-      style={{ fontSize: 11, color: '#1e293b', width: 'fit-content' }}
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] shadow-sm p-2 text-[var(--color-text-default)]"
+      style={{ fontSize: 11, width: 'fit-content' }}
     >
       <div>14:30:00</div>
       <div className="mt-1 flex flex-col gap-0.5">
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: '#22d3ee' }}
+            style={{ backgroundColor: 'var(--chart-color-1)' }}
           />
           <span>CPU Usage</span>
           <span className="font-medium ml-auto pl-4">42%</span>
@@ -20,7 +20,7 @@ function AxisTooltipDemo() {
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: '#34d399' }}
+            style={{ backgroundColor: 'var(--chart-color-2)' }}
           />
           <span>Memory</span>
           <span className="font-medium ml-auto pl-4">67%</span>
@@ -28,7 +28,7 @@ function AxisTooltipDemo() {
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: '#fbbf24' }}
+            style={{ backgroundColor: 'var(--chart-color-3)' }}
           />
           <span>Disk I/O</span>
           <span className="font-medium ml-auto pl-4">28%</span>
@@ -41,10 +41,9 @@ function AxisTooltipDemo() {
 function PieTooltipDemo() {
   return (
     <div
-      className="bg-white border border-[#e2e8f0] rounded-[6px] shadow-sm"
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] shadow-sm text-[var(--color-text-default)]"
       style={{
         fontSize: 11,
-        color: '#1e293b',
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         padding: '8px 12px',
         width: 'fit-content',
@@ -53,7 +52,7 @@ function PieTooltipDemo() {
       <div className="flex items-center gap-1.5">
         <span
           className="inline-block w-2 h-2 rounded-full"
-          style={{ backgroundColor: '#22d3ee' }}
+          style={{ backgroundColor: 'var(--chart-color-1)' }}
         />
         <span>Compute</span>
       </div>
@@ -70,7 +69,7 @@ function GaugeTooltipDemo() {
       <div className="flex items-center gap-2">
         <span
           className="inline-block w-2 h-2 rounded-full"
-          style={{ backgroundColor: '#22c55e' }}
+          style={{ backgroundColor: 'var(--color-state-success)' }}
         />
         <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
           Used: <span className="font-medium">66.5TiB (35%)</span>

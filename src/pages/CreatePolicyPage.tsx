@@ -866,7 +866,7 @@ function PolicyEditorSection({
                       className="w-[var(--search-input-width)]"
                     />
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                    <label className="flex items-center gap-1.5 cursor-pointer">
+                    <label className="flex items-start gap-1.5 cursor-pointer">
                       <Checkbox
                         checked={permission.allActions}
                         onChange={() => toggleAllActions(permission.id)}
@@ -892,7 +892,7 @@ function PolicyEditorSection({
                           }`}
                           onClick={() => toggleAction(permission.id, action)}
                         >
-                          <label className="flex items-center gap-2.5 cursor-pointer">
+                          <label className="flex items-start gap-2.5 cursor-pointer">
                             <Checkbox
                               checked={permission.actions[action]}
                               onChange={() => toggleAction(permission.id, action)}
@@ -935,7 +935,7 @@ function PolicyEditorSection({
                             }`}
                           >
                             {/* Category Header */}
-                            <label className="flex items-center gap-2.5 shrink-0 cursor-pointer">
+                            <label className="flex items-start gap-2.5 shrink-0 cursor-pointer">
                               <Checkbox
                                 checked={allCategorySelected}
                                 onChange={() => toggleCategoryActions(permission.id, category)}
@@ -1031,7 +1031,7 @@ function PolicyEditorSection({
             </div>
 
             {(isV2 || conditionsExpanded) && (
-              <label className="flex items-center gap-1.5 cursor-pointer">
+              <label className="flex items-start gap-1.5 cursor-pointer">
                 <Checkbox
                   checked={permissions[0]?.mfaRequired || false}
                   onChange={() => {

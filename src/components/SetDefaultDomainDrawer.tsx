@@ -255,9 +255,9 @@ export function SetDefaultDomainDrawer({
         </VStack>
 
         {/* Domains Section */}
-        <VStack gap={4} className="pb-5">
+        <VStack gap={3} className="pb-5">
           {/* Section Header */}
-          <VStack gap={2}>
+          <VStack gap={1}>
             <div className="flex items-start gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Domains

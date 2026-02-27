@@ -394,8 +394,9 @@ function PasswordSection({
         required
       >
         <VStack gap={2}>
-          <label className="flex items-center gap-1.5 cursor-pointer">
+          <label className="flex items-start gap-1.5 cursor-pointer">
             <Radio
+              multiline
               value="temporary"
               checked={passwordOption === 'temporary'}
               onChange={() => onPasswordOptionChange('temporary')}
@@ -404,8 +405,9 @@ function PasswordSection({
               Issue a temporary password (email sent automatically)
             </span>
           </label>
-          <label className="flex items-center gap-1.5 cursor-pointer">
+          <label className="flex items-start gap-1.5 cursor-pointer">
             <Radio
+              multiline
               value="manual"
               checked={passwordOption === 'manual'}
               onChange={() => onPasswordOptionChange('manual')}

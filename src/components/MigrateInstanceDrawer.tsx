@@ -245,12 +245,14 @@ export function MigrateInstanceDrawer({
 
         {/* Hosts Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Hosts <span className="text-[var(--color-state-danger)]">*</span>
-          </h3>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Select a host to migrate the instance to. Only available hosts are shown.
-          </p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Hosts <span className="text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Select a host to migrate the instance to. Only available hosts are shown.
+            </p>
+          </div>
 
           {/* Search */}
           <SearchInput
