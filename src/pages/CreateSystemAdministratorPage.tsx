@@ -703,7 +703,7 @@ function BasicInformationSection({
 
           {/* Status */}
           <div className="py-6">
-            <FormField>
+            <FormField spacing="loose">
               <FormField.Label>Status</FormField.Label>
               <FormField.Description>
                 Select the user's status. If 'Disabled', the user will be prevented from signing in.
@@ -814,7 +814,7 @@ function DefaultDomainSection({
         {/* Divider */}
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
         <VStack gap={0} className="py-6">
-          <FormField required error={!!domainError && !selectedDomain}>
+          <FormField required spacing="loose" error={!!domainError && !selectedDomain}>
             <FormField.Label>Domains</FormField.Label>
             <FormField.Description>
               Defines which domain is opened first when the administrator signs in. The selected
@@ -822,7 +822,7 @@ function DefaultDomainSection({
             </FormField.Description>
             <FormField.Control>
               {/* Search */}
-              <div className="mt-4">
+              <div>
                 <SearchInput
                   placeholder="Search domains by attributes"
                   value={searchQuery}
