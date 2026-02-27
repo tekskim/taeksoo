@@ -761,7 +761,7 @@ function BasicInformationSection({
 
           {/* Status */}
           <div className="py-6">
-            <FormField>
+            <FormField spacing="loose">
               <FormField.Label>Status</FormField.Label>
               <FormField.Description>
                 Select the user's status. If 'Disabled', the user will be prevented from signing in.
@@ -914,7 +914,7 @@ function UserGroupSection({
         {/* Divider */}
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
         <VStack gap={0} className="py-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <div className="flex gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)]">User groups</span>
               <span className="text-[var(--color-state-danger)]">*</span>
@@ -926,7 +926,7 @@ function UserGroupSection({
           </div>
 
           {/* Search */}
-          <div className="mt-4">
+          <div className="mt-3">
             <SearchInput
               placeholder="Search user groups by attributes"
               value={searchQuery}

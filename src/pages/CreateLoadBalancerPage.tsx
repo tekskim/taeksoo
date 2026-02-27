@@ -1783,16 +1783,22 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* VIP Address */}
                     <div className="py-6">
-                      <FormField required>
-                        <FormField.Label>VIP address</FormField.Label>
-                        <FormField.Description>
-                          Select the subnet for the VIP. You can assign an IP automatically or
-                          manually enter one within the subnet range.
-                        </FormField.Description>
-                        <FormField.Control>
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-6">
-                            <HStack gap={2} align="center">
-                              <span className="text-label-md text-[var(--color-text-default)]">
+                      <VStack gap={3}>
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            VIP address
+                            <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Select the subnet for the VIP. You can assign an IP automatically or
+                            manually enter one within the subnet range.
+                          </span>
+                        </VStack>
+
+                        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2">
+                          <HStack gap={3} align="center">
+                            <HStack gap={1.5} align="center" className="shrink-0">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Subnet
                               </span>
                               <Select
@@ -1811,10 +1817,9 @@ export default function CreateLoadBalancerPage() {
                                 value={subnet}
                                 onChange={setSubnet}
                                 placeholder="Select"
-                                width="md"
                               />
                             </HStack>
-                            <HStack gap={2} align="center">
+                            <HStack gap={1.5} align="center" className="shrink-0">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 VIP
                               </span>
@@ -1826,23 +1831,22 @@ export default function CreateLoadBalancerPage() {
                                 value={vipMode}
                                 onChange={(value) => setVipMode(value as 'auto' | 'manual')}
                                 placeholder="Auto-assign"
-                                width="md"
                               />
-                              {vipMode === 'manual' && (
-                                <Input
-                                  placeholder="Enter VIP address"
-                                  value={manualVip}
-                                  onChange={(e) => setManualVip(e.target.value)}
-                                  style={{ width: '160px' }}
-                                />
-                              )}
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                10.62.0.31 - 10.62.0.77
-                              </span>
                             </HStack>
-                          </div>
-                        </FormField.Control>
-                      </FormField>
+                            {vipMode === 'manual' && (
+                              <Input
+                                placeholder="Enter VIP address"
+                                value={manualVip}
+                                onChange={(e) => setManualVip(e.target.value)}
+                                className="w-[160px]"
+                              />
+                            )}
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              10.62.0.31 - 10.62.0.77
+                            </span>
+                          </HStack>
+                        </div>
+                      </VStack>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Load Balancer Admin State */}
