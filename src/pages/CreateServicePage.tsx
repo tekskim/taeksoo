@@ -555,10 +555,10 @@ export function CreateServicePage() {
           {/* Form Content */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Basic information" showDivider />
               <SectionCard.Content>
-                <VStack gap={8}>
+                <VStack gap={6}>
                   {/* Service Type */}
                   <FormField
                     label="Service Type"
@@ -621,10 +621,10 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* External Name Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="External name" showDivider />
               <SectionCard.Content>
-                <VStack gap={8}>
+                <VStack gap={6}>
                   {/* DNS Name */}
                   <FormField
                     label="DNS name"
@@ -648,16 +648,16 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Service Ports Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Service ports" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
                       Cluster IP, Headless
                     </span>
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {/* Header row */}
                         {ports.length > 0 && (
                           <div
@@ -749,7 +749,7 @@ export function CreateServicePage() {
                         ))}
 
                         {/* Add Port Button */}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -770,7 +770,7 @@ export function CreateServicePage() {
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
                               <div
@@ -868,7 +868,7 @@ export function CreateServicePage() {
                             ))}
 
                             {/* Add Port Button */}
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -912,7 +912,7 @@ export function CreateServicePage() {
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
                               <div
@@ -1001,7 +1001,7 @@ export function CreateServicePage() {
                             ))}
 
                             {/* Add Port Button */}
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1042,10 +1042,10 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* IP Addresses Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="IP Addresses" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Cluster IP */}
                   <FormField label="Cluster IP">
                     <Input
@@ -1072,7 +1072,7 @@ export function CreateServicePage() {
                       External IPs
                     </label>
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {externalIPs.length > 0 && (
                           <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1104,7 +1104,7 @@ export function CreateServicePage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1122,14 +1122,14 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Selectors Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header
                 title="Selectors"
                 description="Selector keys and values are intended to match labels and values on existing pods."
               />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
-                  <VStack gap={3}>
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)]">
                       Keys and values
                     </span>
@@ -1151,7 +1151,7 @@ export function CreateServicePage() {
                       </div>
                     ) : (
                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                        <VStack gap={1}>
+                        <VStack gap={1.5}>
                           {selectors.length > 0 && (
                             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                               <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1212,7 +1212,7 @@ export function CreateServicePage() {
                   </VStack>
 
                   {/* Matching Pods Table */}
-                  <VStack gap={3}>
+                  <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)]">
                       Matching Pods (1/10)
                     </span>
@@ -1249,10 +1249,10 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Session Affinity Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Session affinity" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   <VStack gap={3}>
                     <RadioGroup
                       value={sessionAffinity}
@@ -1294,10 +1294,10 @@ export function CreateServicePage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Labels */}
                   <VStack gap={3}>
                     <VStack gap={1.5}>
@@ -1309,7 +1309,7 @@ export function CreateServicePage() {
 
                     {/* Bordered container for labels */}
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1351,7 +1351,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1379,7 +1379,7 @@ export function CreateServicePage() {
 
                     {/* Bordered container for annotations */}
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1421,7 +1421,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"

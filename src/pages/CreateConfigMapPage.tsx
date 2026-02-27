@@ -207,10 +207,10 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Input
@@ -283,10 +283,10 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Data" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={3}>
+      <SectionCard.Content>
+        <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={3}>
@@ -387,10 +387,10 @@ function BinaryDataSection({
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Binary data" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={3}>
+      <SectionCard.Content>
+        <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Binary data</span>
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={3}>
@@ -489,12 +489,12 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -503,7 +503,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -541,7 +541,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -556,7 +556,7 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -565,7 +565,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -602,7 +602,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"

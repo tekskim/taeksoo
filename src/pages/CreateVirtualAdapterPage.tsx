@@ -759,7 +759,7 @@ export default function CreateVirtualAdapterPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Fixed IP Section */}
                     <div className="py-6">
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Fixed IP
@@ -833,7 +833,7 @@ export default function CreateVirtualAdapterPage() {
                               </HStack>
                             </div>
                           ))}
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="outline"
                               size="sm"

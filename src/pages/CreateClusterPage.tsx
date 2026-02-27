@@ -282,6 +282,7 @@ export function CreateClusterPage() {
       key: 'select',
       label: '',
       width: 48,
+      align: 'center',
       render: (_value, row) => (
         <Radio
           checked={selectedExternalNetwork === row.id}
@@ -299,6 +300,7 @@ export function CreateClusterPage() {
       key: 'select',
       label: '',
       width: 48,
+      align: 'center',
       render: (_value, row) => (
         <Radio
           checked={selectedTenantNetwork === row.id}
@@ -316,6 +318,7 @@ export function CreateClusterPage() {
       key: 'select',
       label: '',
       width: 48,
+      align: 'center',
       render: (_value, row) => (
         <Radio checked={selectedKeyPair === row.id} onChange={() => setSelectedKeyPair(row.id)} />
       ),
@@ -334,6 +337,7 @@ export function CreateClusterPage() {
       key: 'select',
       label: '',
       width: 48,
+      align: 'center',
       render: (_value, row) => (
         <Radio checked={cpFlavor === row.id} onChange={() => setCpFlavor(row.id)} />
       ),
@@ -350,6 +354,7 @@ export function CreateClusterPage() {
       key: 'select',
       label: '',
       width: 48,
+      align: 'center',
       render: (_value, row) => (
         <Radio checked={nodeFlavor === row.id} onChange={() => setNodeFlavor(row.id)} />
       ),
@@ -448,10 +453,10 @@ export function CreateClusterPage() {
         {/* Left Column - Form */}
         <div className="flex-1 flex flex-col gap-[16px]">
           {/* Basic Information */}
-          <SectionCard className="pb-6">
+          <SectionCard className="pb-4">
             <SectionCard.Header title="Basic information" />
-            <SectionCard.Content className="pt-3">
-              <VStack gap={8}>
+            <SectionCard.Content>
+              <VStack gap={6}>
                 {/* Name */}
                 <FormField required>
                   <FormField.Label>Name</FormField.Label>
@@ -528,10 +533,10 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Networking */}
-          <SectionCard className="pb-6">
+          <SectionCard className="pb-4">
             <SectionCard.Header title="Networking" />
-            <SectionCard.Content className="pt-3">
-              <VStack gap={8}>
+            <SectionCard.Content>
+              <VStack gap={6}>
                 {/* External Network */}
                 <FormField>
                   <FormField.Label>
@@ -672,10 +677,10 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Node Configuration */}
-          <SectionCard className="pb-6">
+          <SectionCard className="pb-4">
             <SectionCard.Header title="Node configuration" />
-            <SectionCard.Content className="pt-3">
-              <VStack gap={8}>
+            <SectionCard.Content>
+              <VStack gap={6}>
                 {/* Node Type */}
                 <FormField required>
                   <FormField.Label>Node Type</FormField.Label>
@@ -1024,10 +1029,10 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Worker Nodes */}
-          <SectionCard className="pb-6">
+          <SectionCard className="pb-4">
             <SectionCard.Header title="Worker Nodes" />
-            <SectionCard.Content className="pt-3">
-              <VStack gap={8}>
+            <SectionCard.Content>
+              <VStack gap={6}>
                 {/* Image */}
                 <FormField required>
                   <FormField.Label>Image</FormField.Label>
@@ -1248,10 +1253,10 @@ export function CreateClusterPage() {
           </SectionCard>
 
           {/* Labels & Annotations */}
-          <SectionCard className="pb-6">
+          <SectionCard className="pb-4">
             <SectionCard.Header title="Labels & Annotations" />
-            <SectionCard.Content className="pt-3">
-              <VStack gap={8}>
+            <SectionCard.Content>
+              <VStack gap={6}>
                 {/* Labels */}
                 <VStack gap={3}>
                   <VStack gap={1.5}>
@@ -1263,7 +1268,7 @@ export function CreateClusterPage() {
 
                   {/* Bordered container for labels */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1}>
+                    <VStack gap={1.5}>
                       {labels.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1305,7 +1310,7 @@ export function CreateClusterPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -1332,7 +1337,7 @@ export function CreateClusterPage() {
 
                   {/* Bordered container for annotations */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1}>
+                    <VStack gap={1.5}>
                       {annotations.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1376,7 +1381,7 @@ export function CreateClusterPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"

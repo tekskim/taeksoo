@@ -17,7 +17,7 @@ function DynamicFieldTableDemo() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-      <VStack gap={1}>
+      <VStack gap={1.5}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
             <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
@@ -68,7 +68,7 @@ function DynamicFieldTableDemo() {
             </button>
           </div>
         ))}
-        <div className="w-fit mt-1">
+        <div className="w-fit">
           <Button
             variant="secondary"
             size="sm"
@@ -90,13 +90,13 @@ function RepeatableFieldGroupDemo() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-      <VStack gap={1} className="w-full">
+      <VStack gap={1.5} className="w-full">
         {groups.map((group, gi) => (
           <div
             key={gi}
             className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
           >
-            <VStack gap={1}>
+            <VStack gap={1.5}>
               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
                 <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -160,7 +160,7 @@ function RepeatableFieldGroupDemo() {
             </VStack>
           </div>
         ))}
-        <div className="w-fit mt-1">
+        <div className="w-fit">
           <Button
             variant="secondary"
             size="sm"
@@ -182,7 +182,7 @@ function WithLabelDescriptionDemo() {
   ]);
 
   return (
-    <VStack gap={3}>
+    <VStack gap={2}>
       <VStack gap={1}>
         <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
         <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -191,7 +191,7 @@ function WithLabelDescriptionDemo() {
       </VStack>
 
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-        <VStack gap={1}>
+        <VStack gap={1.5}>
           {labels.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
@@ -229,7 +229,7 @@ function WithLabelDescriptionDemo() {
               </button>
             </div>
           ))}
-          <div className="w-fit mt-1">
+          <div className="w-fit">
             <Button
               variant="secondary"
               size="sm"
@@ -252,11 +252,11 @@ function WithLabelDemo() {
   ]);
 
   return (
-    <VStack gap={3}>
+    <VStack gap={2}>
       <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
 
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-        <VStack gap={1}>
+        <VStack gap={1.5}>
           {labels.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
@@ -294,7 +294,7 @@ function WithLabelDemo() {
               </button>
             </div>
           ))}
-          <div className="w-fit mt-1">
+          <div className="w-fit">
             <Button
               variant="secondary"
               size="sm"
@@ -315,7 +315,7 @@ function DescriptionHeaderDemo() {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-      <VStack gap={1}>
+      <VStack gap={1.5}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
             <VStack gap={0.5}>
@@ -363,7 +363,7 @@ function DescriptionHeaderDemo() {
             </button>
           </div>
         ))}
-        <div className="w-fit mt-1">
+        <div className="w-fit">
           <Button
             variant="secondary"
             size="sm"
@@ -378,13 +378,13 @@ function DescriptionHeaderDemo() {
   );
 }
 
-const withLabelCode = `<VStack gap={3}>
+const withLabelCode = `<VStack gap={2}>
   {/* Label */}
   <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
 
   {/* Key-Value Table */}
   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-    <VStack gap={1}>
+    <VStack gap={1.5}>
       {/* Column headers */}
       <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
         <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
@@ -399,7 +399,7 @@ const withLabelCode = `<VStack gap={3}>
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
         </div>
       ))}
-      <div className="w-fit mt-1">
+      <div className="w-fit">
         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
           onClick={() => addItem()}>
           Add Label
@@ -409,7 +409,7 @@ const withLabelCode = `<VStack gap={3}>
   </div>
 </VStack>`;
 
-const withLabelDescriptionCode = `<VStack gap={3}>
+const withLabelDescriptionCode = `<VStack gap={2}>
   {/* Label + Description */}
   <VStack gap={1}>
     <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
@@ -420,7 +420,7 @@ const withLabelDescriptionCode = `<VStack gap={3}>
 
   {/* Key-Value Table */}
   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-    <VStack gap={1}>
+    <VStack gap={1.5}>
       {/* Column headers */}
       <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
         <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
@@ -435,7 +435,7 @@ const withLabelDescriptionCode = `<VStack gap={3}>
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
         </div>
       ))}
-      <div className="w-fit mt-1">
+      <div className="w-fit">
         <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
           onClick={() => addItem()}>
           Add Label
@@ -446,14 +446,14 @@ const withLabelDescriptionCode = `<VStack gap={3}>
 </VStack>`;
 
 const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-  <VStack gap={1}>
+  <VStack gap={1.5}>
     {/* Column headers with description */}
     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-      <VStack gap={1}>
+      <VStack gap={0.5}>
         <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
         <p className="text-body-sm text-[var(--color-text-subtle)]">Specify the option name.</p>
       </VStack>
-      <VStack gap={1}>
+      <VStack gap={0.5}>
         <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
         <p className="text-body-sm text-[var(--color-text-subtle)]">The value for this option.</p>
       </VStack>
@@ -467,7 +467,7 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
         <button onClick={() => removeRow(i)}><IconX size={16} /></button>
       </div>
     ))}
-    <div className="w-fit mt-1">
+    <div className="w-fit">
       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
         onClick={() => addRow()}>
         Add Option
@@ -477,7 +477,7 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
 </div>`;
 
 const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-  <VStack gap={1}>
+  <VStack gap={1.5}>
     {/* Column headers */}
     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
       <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
@@ -496,7 +496,7 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
         </button>
       </div>
     ))}
-    <div className="w-fit mt-1">
+    <div className="w-fit">
       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}
         onClick={() => addRow()}>
         Add Variable
@@ -506,10 +506,10 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
 </div>`;
 
 const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle)] border ... rounded-[6px] p-3 w-full">
-  <VStack gap={1} className="w-full">
+  <VStack gap={1.5} className="w-full">
     {groups.map((group, gi) => (
       <div key={gi} className="bg-[var(--color-surface-default)] border ... rounded-[6px] p-3 w-full">
-        <VStack gap={1}>
+        <VStack gap={1.5}>
           {/* Headers + close button */}
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
             <span className="text-label-sm ...">Name</span>
@@ -527,7 +527,7 @@ const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle
         </VStack>
       </div>
     ))}
-    <div className="w-fit mt-1">
+    <div className="w-fit">
       <Button variant="secondary" size="sm" onClick={() => addGroup()}>Add Variable</Button>
     </div>
   </VStack>
@@ -741,28 +741,28 @@ export function DynamicFormFieldsPage() {
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Dynamic Field Table (List):</strong> bg-subtle container → column headers
-                (text-label-sm) → input rows (grid-aligned, gap-1) → Add button (mt-1)
+                (text-label-sm) → input rows (grid-aligned, gap-1.5) → Add button (gap-1.5)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
-                <strong>With Label &amp; Description (List):</strong> VStack gap-3 → label
+                <strong>With Label &amp; Description (List):</strong> VStack gap-2 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
-                headers + input rows (gap-1) + Add button (mt-1)
+                headers + input rows (gap-1.5) + Add button (gap-1.5)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
-                <strong>With Label (List):</strong> VStack gap-3 → label (text-label-lg) → bg-subtle
-                container → column headers + input rows (gap-1) + Add button (mt-1)
+                <strong>With Label (List):</strong> VStack gap-2 → label (text-label-lg) → bg-subtle
+                container → column headers + input rows (gap-1.5) + Add button (gap-1.5)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
-                <strong>With Description Headers (List):</strong> VStack gap-3 → label
+                <strong>With Description Headers (List):</strong> VStack gap-2 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
-                headers (VStack gap-1: text-label-sm label + text-body-sm description) → input rows
-                (grid-aligned) → Add button (mt-1)
+                headers (VStack gap-0.5: text-label-sm label + text-body-sm description) → input
+                rows (grid-aligned, gap-1.5) → Add button (gap-1.5)
               </p>
             </div>
             <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
@@ -789,7 +789,7 @@ export function DynamicFormFieldsPage() {
               <tbody>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Label → table gap</td>
-                  <td className="py-2 text-[var(--color-text-muted)]">12px (gap-3)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">8px (gap-2)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
@@ -815,19 +815,19 @@ export function DynamicFormFieldsPage() {
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Header → rows gap (List)
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">4px (gap-1)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">6px (gap-1.5)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Header → rows gap (Card)
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">4px (gap-1)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">6px (gap-1.5)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Rows → Add button gap
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">8px (gap-1 + mt-1)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">6px (gap-1.5)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Column gap</td>
@@ -846,7 +846,7 @@ export function DynamicFormFieldsPage() {
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Header description</td>
                   <td className="py-2 text-[var(--color-text-muted)]">
-                    text-body-sm text-subtle, gap-1 from label
+                    text-body-sm text-subtle, gap-0.5 (2px) from label
                   </td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
