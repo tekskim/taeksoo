@@ -311,7 +311,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
                 </div>
               ))}
 
-              <div className="w-fit">
+              <div className="w-fit mt-1">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -449,7 +449,7 @@ function CustomizeSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"

@@ -528,7 +528,7 @@ function DataSection({
                 ))}
 
                 <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -540,7 +540,7 @@ function DataSection({
                       Read from File
                     </Button>
                   </div>
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -596,7 +596,7 @@ function DataSection({
                 ))}
 
                 <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -608,7 +608,7 @@ function DataSection({
                       Read from File
                     </Button>
                   </div>
-                  <div className="w-fit">
+                  <div className="w-fit mt-1">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -797,7 +797,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="outline"
                     size="sm"
@@ -859,7 +859,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="outline"
                     size="sm"

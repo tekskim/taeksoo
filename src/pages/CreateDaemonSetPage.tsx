@@ -629,7 +629,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -692,7 +692,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -1908,7 +1908,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1980,7 +1980,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2162,7 +2162,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2221,7 +2221,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2298,7 +2298,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2373,7 +2373,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2618,7 +2618,7 @@ export function CreateDaemonSetPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2638,7 +2638,7 @@ export function CreateDaemonSetPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
+                                    <div className="w-fit mt-1">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -2851,7 +2851,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -2874,7 +2874,7 @@ export function CreateDaemonSetPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -2896,7 +2896,7 @@ export function CreateDaemonSetPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3233,7 +3233,7 @@ export function CreateDaemonSetPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3339,7 +3339,7 @@ export function CreateDaemonSetPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3459,7 +3459,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4439,7 +4439,7 @@ export function CreateDaemonSetPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -4912,7 +4912,7 @@ export function CreateDaemonSetPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5196,7 +5196,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5454,7 +5454,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5962,7 +5962,7 @@ export function CreateDaemonSetPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit">
+                                          <div className="w-fit mt-1">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -7141,7 +7141,7 @@ export function CreateDaemonSetPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
