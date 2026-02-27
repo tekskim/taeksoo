@@ -247,7 +247,7 @@ export function CreateServiceYamlPage() {
           }
         />
       }
-      contentClassName="pt-4 px-8 pb-6"
+      contentClassName="h-full flex flex-col pt-4 px-8 pb-6 min-h-0"
     >
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}

@@ -213,7 +213,7 @@ export function CreateDaemonSetYamlPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-6 flex flex-col min-h-0"
+      contentClassName="h-full flex flex-col pt-3 px-8 pb-6 min-h-0"
     >
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
