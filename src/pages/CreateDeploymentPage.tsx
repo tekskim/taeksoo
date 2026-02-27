@@ -655,7 +655,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -718,7 +718,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -1082,7 +1082,7 @@ function EnvVarTypeSection({
               </button>
             </div>
           ))}
-          <div className="w-fit">
+          <div className="w-fit mt-1">
             <Button
               variant="secondary"
               size="sm"
@@ -2207,7 +2207,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2281,7 +2281,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2463,7 +2463,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2522,7 +2522,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2599,7 +2599,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2674,7 +2674,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2919,7 +2919,7 @@ export function CreateDeploymentPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2939,7 +2939,7 @@ export function CreateDeploymentPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
+                                    <div className="w-fit mt-1">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -3152,7 +3152,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -3175,7 +3175,7 @@ export function CreateDeploymentPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -3197,7 +3197,7 @@ export function CreateDeploymentPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3534,7 +3534,7 @@ export function CreateDeploymentPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3640,7 +3640,7 @@ export function CreateDeploymentPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3760,7 +3760,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4429,7 +4429,7 @@ export function CreateDeploymentPage() {
                           </div>
                         ))}
 
-                        <div className="w-fit">
+                        <div className="w-fit mt-1">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -4923,7 +4923,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -5396,7 +5396,7 @@ export function CreateDeploymentPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5680,7 +5680,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5938,7 +5938,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -6452,7 +6452,7 @@ export function CreateDeploymentPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit">
+                                          <div className="w-fit mt-1">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -7631,7 +7631,7 @@ export function CreateDeploymentPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
