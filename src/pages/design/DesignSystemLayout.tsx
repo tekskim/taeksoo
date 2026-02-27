@@ -1,9 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect, type RefObject } from 'react';
+import { Outlet, Link, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { VStack, Button } from '@/design-system';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
 import { navGroups, allNavItems } from './_shared/navigationData';
+
+interface DesignLayoutContext {
+  mainRef: RefObject<HTMLDivElement | null>;
+}
+
+export function useDesignLayoutContext(): RefObject<HTMLElement | null> {
+  const ctx = useOutletContext<DesignLayoutContext>();
+  return ctx?.mainRef ?? { current: null };
+}
 
 export function DesignSystemLayout() {
   const location = useLocation();
