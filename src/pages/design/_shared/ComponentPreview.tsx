@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { CodeBlock } from './CodeBlock';
-import { IconCode, IconEye } from '@tabler/icons-react';
+import { IconCode, IconEye, IconSun, IconMoon } from '@tabler/icons-react';
 
 interface ComponentPreviewProps {
   children: ReactNode;
@@ -10,6 +10,7 @@ interface ComponentPreviewProps {
 
 export function ComponentPreview({ children, code, language }: ComponentPreviewProps) {
   const [showCode, setShowCode] = useState(false);
+  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>('light');
 
   return (
     <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
@@ -17,27 +18,48 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
         <span className="text-body-xs text-[var(--color-text-subtle)] font-medium uppercase tracking-wider">
           Preview
         </span>
-        <button
-          onClick={() => setShowCode(!showCode)}
-          className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
-          aria-label={showCode ? 'Show preview' : 'Show code'}
-        >
-          {showCode ? (
-            <>
-              <IconEye size={12} stroke={1.5} />
-              <span>Preview</span>
-            </>
-          ) : (
-            <>
-              <IconCode size={12} stroke={1.5} />
-              <span>Code</span>
-            </>
+        <div className="flex items-center gap-1">
+          {!showCode && (
+            <button
+              onClick={() => setPreviewTheme(previewTheme === 'light' ? 'dark' : 'light')}
+              className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+              aria-label={`Switch to ${previewTheme === 'light' ? 'dark' : 'light'} theme`}
+            >
+              {previewTheme === 'light' ? (
+                <IconMoon size={12} stroke={1.5} />
+              ) : (
+                <IconSun size={12} stroke={1.5} />
+              )}
+              <span>{previewTheme === 'light' ? 'Dark' : 'Light'}</span>
+            </button>
           )}
-        </button>
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            aria-label={showCode ? 'Show preview' : 'Show code'}
+          >
+            {showCode ? (
+              <>
+                <IconEye size={12} stroke={1.5} />
+                <span>Preview</span>
+              </>
+            ) : (
+              <>
+                <IconCode size={12} stroke={1.5} />
+                <span>Code</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {!showCode && (
-        <div className="p-6 bg-[var(--color-surface-default)] rounded-b-[var(--primitive-radius-lg)]">
+        <div
+          data-theme={previewTheme}
+          className={`p-6 rounded-b-[var(--primitive-radius-lg)] transition-colors ${
+            previewTheme === 'dark' ? 'bg-[#0f172a]' : 'bg-[var(--color-surface-default)]'
+          }`}
+        >
           {children}
         </div>
       )}

@@ -73,6 +73,16 @@ export function ButtonPage() {
     <ComponentPageTemplate
       title="Button"
       description="Interactive button component with multiple variants, sizes, and states"
+      whenToUse={[
+        'Use buttons to communicate actions users can take and to allow users to interact with the page.',
+        'Each page should have only one primary button. Remaining calls to action should use lower emphasis buttons.',
+        'Use icon-only buttons when space is limited and the icon clearly conveys the action.',
+      ]}
+      whenNotToUse={[
+        'Do not use buttons as navigational elements. Use links instead when the action takes the user to a new page.',
+        'Do not use two primary buttons in the same context. Use secondary or ghost for the less important action.',
+        'Avoid using buttons for toggling state. Use Toggle or Checkbox components instead.',
+      ]}
       preview={
         <ComponentPreview code={`<Button variant="primary" size="md">Create</Button>`}>
           <Button variant="primary" size="md">
@@ -725,11 +735,19 @@ export function ButtonPage() {
         </>
       }
       apiReference={buttonProps}
+      keyboardInteractions={[
+        { key: 'Enter', description: 'Activates the button' },
+        { key: 'Space', description: 'Activates the button' },
+        { key: 'Tab', description: 'Moves focus to the next focusable element' },
+      ]}
       accessibility={
         <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Enter/Space: Activate button</li>
-          <li>Tab: Move focus</li>
-          <li>Icon-only buttons require aria-label</li>
+          <li>Icon-only buttons require aria-label for screen reader accessibility.</li>
+          <li>
+            Disabled buttons should provide context about why they are disabled (e.g., tooltip or
+            helper text).
+          </li>
+          <li>Loading state buttons are automatically set to aria-busy=&quot;true&quot;.</li>
         </ul>
       }
       relatedLinks={[
