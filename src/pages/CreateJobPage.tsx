@@ -629,7 +629,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -692,7 +692,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -1888,7 +1888,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1962,7 +1962,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2144,7 +2144,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2203,7 +2203,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2280,7 +2280,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2355,7 +2355,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2600,7 +2600,7 @@ export function CreateJobPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit">
+                                        <div className="w-fit mt-1">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2620,7 +2620,7 @@ export function CreateJobPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
+                                    <div className="w-fit mt-1">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -2833,7 +2833,7 @@ export function CreateJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -2856,7 +2856,7 @@ export function CreateJobPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit">
+                              <div className="w-fit mt-1">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -2878,7 +2878,7 @@ export function CreateJobPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit">
+                          <div className="w-fit mt-1">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3215,7 +3215,7 @@ export function CreateJobPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3321,7 +3321,7 @@ export function CreateJobPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit">
+                      <div className="w-fit mt-1">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3441,7 +3441,7 @@ export function CreateJobPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4423,7 +4423,7 @@ export function CreateJobPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit">
+                                <div className="w-fit mt-1">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -4896,7 +4896,7 @@ export function CreateJobPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5180,7 +5180,7 @@ export function CreateJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5438,7 +5438,7 @@ export function CreateJobPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5946,7 +5946,7 @@ export function CreateJobPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit">
+                                          <div className="w-fit mt-1">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -7125,7 +7125,7 @@ export function CreateJobPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit">
+                                      <div className="w-fit mt-1">
                                         <Button
                                           variant="secondary"
                                           size="sm"

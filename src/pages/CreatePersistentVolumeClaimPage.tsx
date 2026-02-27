@@ -551,7 +551,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -612,7 +612,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit">
+                <div className="w-fit mt-1">
                   <Button
                     variant="secondary"
                     size="sm"

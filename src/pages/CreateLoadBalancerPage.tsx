@@ -2480,7 +2480,7 @@ export default function CreateLoadBalancerPage() {
                                       </button>
                                     </div>
                                   ))}
-                                  <div className="w-fit">
+                                  <div className="w-fit mt-1">
                                     <Button
                                       variant="secondary"
                                       size="sm"
@@ -3012,7 +3012,7 @@ export default function CreateLoadBalancerPage() {
                                 </button>
                               </div>
                             ))}
-                            <div className="w-fit">
+                            <div className="w-fit mt-1">
                               <Button
                                 variant="secondary"
                                 size="sm"
