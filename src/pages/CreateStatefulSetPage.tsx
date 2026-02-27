@@ -2057,7 +2057,9 @@ export function CreateStatefulSetPage() {
                             suffix="Seconds"
                           />
                         </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">0-600</span>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          0-600 seconds
+                        </span>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -2074,13 +2076,15 @@ export function CreateStatefulSetPage() {
                           Network Settings
                         </h6>
                         <VStack gap={6} className="w-full">
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Network Mode
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Select the networking mode for the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Network Mode
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Select the networking mode for the pod.
+                              </span>
+                            </VStack>
                             <Select
                               options={[
                                 { value: 'normal', label: 'Normal' },
@@ -2091,13 +2095,15 @@ export function CreateStatefulSetPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              DNS Policy
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Select the DNS policy to apply to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                DNS Policy
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Select the DNS policy to apply to the pod.
+                              </span>
+                            </VStack>
                             <Select
                               options={[
                                 { value: 'cluster-first', label: 'Cluster first' },
@@ -2109,13 +2115,15 @@ export function CreateStatefulSetPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Hostname
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Specify the hostname assigned to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Hostname
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Specify the hostname assigned to the pod.
+                              </span>
+                            </VStack>
                             <Input
                               placeholder="e.g. web"
                               fullWidth
@@ -2123,13 +2131,15 @@ export function CreateStatefulSetPage() {
                               onChange={(e) => setHostname(e.target.value)}
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Subdomain
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Specify the subdomain assigned to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Subdomain
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Specify the subdomain assigned to the pod.
+                              </span>
+                            </VStack>
                             <Input
                               placeholder="e.g. web"
                               fullWidth
@@ -2428,7 +2438,7 @@ export function CreateStatefulSetPage() {
                       </RadioGroup>
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={8}>
+                          <VStack gap={6}>
                             <span className="text-label-lg text-[var(--color-text-default)] italic">
                               Specific node(s)
                             </span>
@@ -2488,7 +2498,7 @@ export function CreateStatefulSetPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={8} className="w-full">
+                                  <VStack gap={6} className="w-full">
                                     <VStack gap={2} className="w-full">
                                       <VStack gap={1}>
                                         <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -2519,37 +2529,21 @@ export function CreateStatefulSetPage() {
                                       <span className="block text-label-lg text-[var(--color-text-default)]">
                                         Weight
                                       </span>
-                                      <HStack gap={3} align="center">
-                                        <Slider
-                                          min={1}
-                                          max={100}
-                                          step={1}
-                                          value={Number(term.weight) || 1}
-                                          onChange={(val) => {
-                                            const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              weight: String(val),
-                                            };
-                                            setNodeAffinityTerms(newTerms);
-                                          }}
-                                        />
-                                        <NumberInput
-                                          min={1}
-                                          max={100}
-                                          step={1}
-                                          value={Number(term.weight) || 1}
-                                          onChange={(val) => {
-                                            const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              weight: String(val),
-                                            };
-                                            setNodeAffinityTerms(newTerms);
-                                          }}
-                                          width="sm"
-                                        />
-                                      </HStack>
+                                      <NumberInput
+                                        min={1}
+                                        max={100}
+                                        step={1}
+                                        value={Number(term.weight) || 1}
+                                        onChange={(val) => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex] = {
+                                            ...newTerms[termIndex],
+                                            weight: String(val),
+                                          };
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                        width="sm"
+                                      />
                                     </VStack>
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
@@ -2661,19 +2655,19 @@ export function CreateStatefulSetPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit">
-                                      <Button
-                                        variant="secondary"
-                                        size="sm"
-                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      >
-                                        Add Node Selector
-                                      </Button>
-                                    </div>
                                   </VStack>
                                 </div>
                               ))}
                             </VStack>
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              >
+                                Add Node Selector
+                              </Button>
+                            </div>
                           </VStack>
                         </div>
                       )}
@@ -2696,7 +2690,7 @@ export function CreateStatefulSetPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     <div className="flex items-start justify-between w-full">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Rule {termIndex + 1}
@@ -2717,7 +2711,7 @@ export function CreateStatefulSetPage() {
                                       </button>
                                     </div>
 
-                                    <VStack gap={8} className="w-full">
+                                    <VStack gap={6} className="w-full">
                                       <VStack gap={2} className="w-full">
                                         <VStack gap={1}>
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -2749,37 +2743,21 @@ export function CreateStatefulSetPage() {
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
-                                          <HStack gap={3} align="center">
-                                            <Slider
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                            />
-                                            <NumberInput
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              width="sm"
-                                            />
-                                          </HStack>
+                                          <NumberInput
+                                            min={1}
+                                            max={100}
+                                            step={1}
+                                            value={Number(term.weight) || 1}
+                                            onChange={(val) => {
+                                              const newTerms = [...nodeAffinityTerms];
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                weight: String(val),
+                                              };
+                                              setNodeAffinityTerms(newTerms);
+                                            }}
+                                            width="sm"
+                                          />
                                         </VStack>
                                       )}
                                     </VStack>
@@ -2938,13 +2916,13 @@ export function CreateStatefulSetPage() {
                 <SectionCard className="pb-4">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content>
-                    <VStack gap={6}>
+                    <VStack gap={3}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
                         >
-                          <VStack gap={8}>
+                          <VStack gap={6}>
                             {/* Type Section */}
                             <VStack gap={2}>
                               <div className="flex items-start justify-between w-full">
@@ -3326,37 +3304,21 @@ export function CreateStatefulSetPage() {
                               <span className="block text-label-lg text-[var(--color-text-default)]">
                                 Weight
                               </span>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={1}
-                                  max={100}
-                                  step={1}
-                                  value={Number(term.weight) || 1}
-                                  onChange={(val) => {
-                                    const newTerms = [...podAffinityTerms];
-                                    newTerms[termIndex] = {
-                                      ...newTerms[termIndex],
-                                      weight: String(val),
-                                    };
-                                    setPodAffinityTerms(newTerms);
-                                  }}
-                                />
-                                <NumberInput
-                                  min={1}
-                                  max={100}
-                                  step={1}
-                                  value={Number(term.weight) || 1}
-                                  onChange={(val) => {
-                                    const newTerms = [...podAffinityTerms];
-                                    newTerms[termIndex] = {
-                                      ...newTerms[termIndex],
-                                      weight: String(val),
-                                    };
-                                    setPodAffinityTerms(newTerms);
-                                  }}
-                                  width="sm"
-                                />
-                              </HStack>
+                              <NumberInput
+                                min={1}
+                                max={100}
+                                step={1}
+                                value={Number(term.weight) || 1}
+                                onChange={(val) => {
+                                  const newTerms = [...podAffinityTerms];
+                                  newTerms[termIndex] = {
+                                    ...newTerms[termIndex],
+                                    weight: String(val),
+                                  };
+                                  setPodAffinityTerms(newTerms);
+                                }}
+                                width="sm"
+                              />
                             </VStack>
                           </VStack>
                         </div>
@@ -3497,7 +3459,7 @@ export function CreateStatefulSetPage() {
                       </VStack>
 
                       {/* Priority */}
-                      <div className="grid grid-cols-2 gap-6 w-full">
+                      <div className="grid grid-cols-2 gap-4 w-full">
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority
@@ -3564,7 +3526,7 @@ export function CreateStatefulSetPage() {
                           key={index}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                         >
-                          <VStack gap={8}>
+                          <VStack gap={6}>
                             {/* Header with type title and close button */}
                             <div className="flex items-start justify-between w-full">
                               <h6 className="text-heading-h6 text-[var(--color-text-default)]">
@@ -3588,7 +3550,7 @@ export function CreateStatefulSetPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3657,7 +3619,7 @@ export function CreateStatefulSetPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3724,7 +3686,7 @@ export function CreateStatefulSetPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3774,7 +3736,7 @@ export function CreateStatefulSetPage() {
                             {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3817,7 +3779,7 @@ export function CreateStatefulSetPage() {
                                     </VStack>
 
                                     {!(volume as CreatePVCVolume).useExistingPV && (
-                                      <VStack gap={8}>
+                                      <VStack gap={6}>
                                         <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
@@ -4006,7 +3968,7 @@ export function CreateStatefulSetPage() {
                                 stroke={1.5}
                               />
                             </button>
-                            <VStack gap={8}>
+                            <VStack gap={6}>
                               <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
@@ -4038,7 +4000,7 @@ export function CreateStatefulSetPage() {
                               </RadioGroup>
 
                               {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={8}>
+                                <VStack gap={6}>
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
@@ -5173,8 +5135,8 @@ export function CreateStatefulSetPage() {
                       <SectionCard.Content>
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
-                          <VStack gap={8}>
-                            <VStack gap={2}>
+                          <VStack gap={6}>
+                            <VStack gap={3}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Post Start
                               </span>
@@ -5211,7 +5173,7 @@ export function CreateStatefulSetPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
-                              <VStack gap={8}>
+                              <VStack gap={6}>
                                 <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
@@ -5432,8 +5394,8 @@ export function CreateStatefulSetPage() {
                           </VStack>
 
                           {/* Pre Stop */}
-                          <VStack gap={8}>
-                            <VStack gap={2}>
+                          <VStack gap={6}>
+                            <VStack gap={3}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
                               </span>
@@ -5470,7 +5432,7 @@ export function CreateStatefulSetPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
-                              <VStack gap={8}>
+                              <VStack gap={6}>
                                 <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
@@ -5762,7 +5724,7 @@ export function CreateStatefulSetPage() {
                             )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                <VStack gap={8}>
+                                <VStack gap={6}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
                                   <div className="flex gap-6 w-full">
                                     {(config.readinessProbe?.type === 'httpGet' ||
@@ -6272,7 +6234,7 @@ export function CreateStatefulSetPage() {
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.livenessProbe?.type === 'httpGet' ||
@@ -6574,7 +6536,7 @@ export function CreateStatefulSetPage() {
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
                                       {(config.startupProbe?.type === 'httpGet' ||
@@ -6822,33 +6784,18 @@ export function CreateStatefulSetPage() {
                                   Specify the minimum CPU amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={4000}
-                                  step={50}
-                                  value={config.cpuRequest ? parseInt(config.cpuRequest) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuRequest: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.cpuRequest ? parseInt(config.cpuRequest) : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuRequest: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={4000}
-                                  width="sm"
-                                  suffix="mCPUs"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={config.cpuRequest ? parseInt(config.cpuRequest) : undefined}
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    cpuRequest: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={4000}
+                                width="sm"
+                                suffix="mCPUs"
+                              />
                             </VStack>
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
@@ -6859,31 +6806,18 @@ export function CreateStatefulSetPage() {
                                   Specify the maximum CPU amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={4000}
-                                  step={50}
-                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuLimit: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuLimit: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={4000}
-                                  width="sm"
-                                  suffix="mCPUs"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    cpuLimit: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={4000}
+                                width="sm"
+                                suffix="mCPUs"
+                              />
                             </VStack>
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
@@ -6897,35 +6831,20 @@ export function CreateStatefulSetPage() {
                                   Specify the minimum memory amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={8192}
-                                  step={100}
-                                  value={config.memoryRequest ? parseInt(config.memoryRequest) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryRequest: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.memoryRequest
-                                      ? parseInt(config.memoryRequest)
-                                      : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryRequest: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={8192}
-                                  width="sm"
-                                  suffix="MiB"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={
+                                  config.memoryRequest ? parseInt(config.memoryRequest) : undefined
+                                }
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    memoryRequest: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={8192}
+                                width="sm"
+                                suffix="MiB"
+                              />
                             </VStack>
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
@@ -6936,33 +6855,20 @@ export function CreateStatefulSetPage() {
                                   Specify the maximum memory amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={8192}
-                                  step={100}
-                                  value={config.memoryLimit ? parseInt(config.memoryLimit) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryLimit: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.memoryLimit ? parseInt(config.memoryLimit) : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryLimit: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={8192}
-                                  width="sm"
-                                  suffix="MiB"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={
+                                  config.memoryLimit ? parseInt(config.memoryLimit) : undefined
+                                }
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    memoryLimit: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={8192}
+                                width="sm"
+                                suffix="MiB"
+                              />
                             </VStack>
                           </div>
                         </VStack>
@@ -7129,7 +7035,7 @@ export function CreateStatefulSetPage() {
                             />
                           </VStack>
                           {/* Row 4: Add Capabilities + Drop Capabilities */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Add Capabilities
@@ -7183,7 +7089,7 @@ export function CreateStatefulSetPage() {
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Storage" />
                       <SectionCard.Content>
-                        <VStack gap={6}>
+                        <VStack gap={3}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
                             <VStack gap={3}>
@@ -7220,7 +7126,7 @@ export function CreateStatefulSetPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7228,7 +7134,7 @@ export function CreateStatefulSetPage() {
                                                 *
                                               </span>
                                             </span>
-                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               Specify the path inside the container where the volume
                                               will be mounted.
                                             </span>
@@ -7237,13 +7143,11 @@ export function CreateStatefulSetPage() {
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Sub Path in Volume
                                             </span>
-                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               Specify the sub-path within the volume to use.
                                             </span>
                                           </VStack>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Read Only
-                                          </span>
+                                          <div />
                                           <div className="w-5" />
                                         </div>
                                       )}
@@ -7258,7 +7162,7 @@ export function CreateStatefulSetPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""
@@ -7294,8 +7198,10 @@ export function CreateStatefulSetPage() {
                                                 });
                                               }}
                                             />
-                                            <div className="flex items-center">
+                                            <div className="flex items-center whitespace-nowrap">
                                               <Checkbox
+                                                label="Read Only"
+                                                className="[&>label]:flex-row-reverse"
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
                                                   const newVolumes = [
