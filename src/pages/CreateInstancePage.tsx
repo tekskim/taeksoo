@@ -1981,16 +1981,18 @@ function FlavorSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Flavors Label & Description */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </span>
-            <span className="text-body-md text-[var(--color-text-muted)] mb-4">
-              Select the flavor that defines the vCPU, RAM, and disk capacity allocated to the
-              instance.
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select the flavor that defines the vCPU, RAM, and disk capacity allocated to the
+                instance.
+              </span>
+            </VStack>
 
             {/* Flavor Type Tabs */}
-            <div className="mt-1">
+            <div>
               <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="vcpu">vCPU</Tab>
@@ -4001,7 +4003,7 @@ function TemplatesSection({
             </VStack>
 
             {/* Tabs */}
-            <div className="mt-1 w-full">
+            <div className="w-full">
               <Tabs
                 value={activeTab}
                 onChange={setActiveTab}

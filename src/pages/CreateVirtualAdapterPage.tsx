@@ -774,7 +774,7 @@ export default function CreateVirtualAdapterPage() {
                           {fixedIPs.map((entry) => (
                             <div
                               key={entry.id}
-                              className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                              className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] px-4 py-2"
                             >
                               <HStack gap={3} align="center">
                                 <HStack gap={1.5} align="center" className="shrink-0">

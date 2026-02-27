@@ -710,7 +710,7 @@ function AddPoliciesSection({
         {/* Divider */}
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
         <VStack gap={0} className="py-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <div className="flex gap-[3px]">
               <span className="text-label-lg text-[var(--color-text-default)]">Policies</span>
               <span className="text-[var(--color-state-danger)]">*</span>
@@ -722,7 +722,7 @@ function AddPoliciesSection({
           </div>
 
           {/* Search */}
-          <div className="mt-4">
+          <div className="mt-3">
             <SearchInput
               placeholder="Search policies by attributes"
               value={searchQuery}
