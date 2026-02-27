@@ -567,12 +567,12 @@ export default function CreateIngressPage() {
                         </VStack>
 
                         {/* Paths container — List style */}
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Paths
                           </span>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1}>
+                            <VStack gap={1.5}>
                               {rule.paths.length > 0 && (
                                 <div className="grid grid-cols-[2fr_1fr_1fr_20px] gap-2 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -641,7 +641,7 @@ export default function CreateIngressPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -659,7 +659,7 @@ export default function CreateIngressPage() {
                   ))}
 
                   {/* Add Rule button */}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -714,12 +714,12 @@ export default function CreateIngressPage() {
             <SectionCard>
               <SectionCard.Header title="Certificates" />
               <SectionCard.Content>
-                <VStack gap={3}>
+                <VStack gap={2}>
                   <span className="text-label-lg text-[var(--color-text-default)]">
                     Certificates
                   </span>
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1} className="w-full">
+                    <VStack gap={1.5} className="w-full">
                       {certificates.map((cert) => (
                         <div
                           key={cert.id}
@@ -789,7 +789,7 @@ export default function CreateIngressPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -805,7 +805,7 @@ export default function CreateIngressPage() {
                           </VStack>
                         </div>
                       ))}
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -856,7 +856,7 @@ export default function CreateIngressPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -897,7 +897,7 @@ export default function CreateIngressPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -924,7 +924,7 @@ export default function CreateIngressPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -969,7 +969,7 @@ export default function CreateIngressPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"

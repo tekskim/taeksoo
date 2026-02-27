@@ -504,10 +504,10 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Select
@@ -602,12 +602,12 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -617,7 +617,7 @@ function LabelsAnnotationsSection({
 
             {/* Labels container */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -655,7 +655,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -670,7 +670,7 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -680,7 +680,7 @@ function LabelsAnnotationsSection({
 
             {/* Annotations container */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -718,7 +718,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -784,10 +784,10 @@ function ScalingPolicySection({
   onProgressDeadlineChange,
 }: ScalingPolicySectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Scaling and Upgrade Policy" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Strategy Selection */}
           <FormField>
             <FormField.Label>Update policy</FormField.Label>
@@ -835,21 +835,13 @@ function ScalingPolicySection({
                 The maximum number of additional pods that can be created during an update.
               </p>
             </VStack>
-            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
-              <Slider
-                min={0}
-                max={100}
-                step={5}
-                value={maxSurge}
-                onChange={onMaxSurgeChange}
-                className="flex-1"
-              />
+            <HStack gap={2} align="center">
               <NumberInput
                 value={maxSurge}
                 onChange={onMaxSurgeChange}
                 min={0}
                 max={100}
-                width="xs"
+                width="sm"
               />
               <Select
                 options={UNIT_OPTIONS}
@@ -870,21 +862,13 @@ function ScalingPolicySection({
                 The maximum number of pods that can be unavailable during an update.
               </p>
             </VStack>
-            <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
-              <Slider
-                min={0}
-                max={100}
-                step={5}
-                value={maxUnavailable}
-                onChange={onMaxUnavailableChange}
-                className="flex-1"
-              />
+            <HStack gap={2} align="center">
               <NumberInput
                 value={maxUnavailable}
                 onChange={onMaxUnavailableChange}
                 min={0}
                 max={100}
-                width="xs"
+                width="sm"
               />
               <Select
                 options={UNIT_OPTIONS}
@@ -922,7 +906,7 @@ function ScalingPolicySection({
                 suffix="Seconds"
               />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">0–300</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">0–300 seconds</span>
           </VStack>
 
           {/* Revision History Limit */}
@@ -953,7 +937,7 @@ function ScalingPolicySection({
                 suffix="Revisions"
               />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">1–100</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">1–100 revisions</span>
           </VStack>
 
           {/* Progress Deadline */}
@@ -985,7 +969,7 @@ function ScalingPolicySection({
                 suffix="Seconds"
               />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">60–3600</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">60–3600 seconds</span>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -1045,10 +1029,10 @@ function EnvVarTypeSection({
   };
 
   return (
-    <VStack gap={3}>
+    <VStack gap={2}>
       <span className="text-label-lg text-[var(--color-text-default)]">{title}</span>
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-        <VStack gap={1} className="w-full">
+        <VStack gap={1.5} className="w-full">
           {rows.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1082,7 +1066,7 @@ function EnvVarTypeSection({
               </button>
             </div>
           ))}
-          <div className="w-fit mt-1">
+          <div className="w-fit">
             <Button
               variant="secondary"
               size="sm"
@@ -2042,7 +2026,7 @@ export function CreateDeploymentPage() {
       }
       contentClassName="pt-4 px-8 pb-60"
     >
-      <VStack gap={8}>
+      <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
@@ -2148,12 +2132,12 @@ export function CreateDeploymentPage() {
             {activeTab === 'pod' && (
               <>
                 {/* Labels & Annotations */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Labels & Annotations" />
-                  <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                  <SectionCard.Content>
+                    <VStack gap={6}>
                       {/* Labels */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
@@ -2165,7 +2149,7 @@ export function CreateDeploymentPage() {
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2207,7 +2191,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2222,7 +2206,7 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Annotations */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
@@ -2235,7 +2219,7 @@ export function CreateDeploymentPage() {
 
                         {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2281,7 +2265,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2299,9 +2283,9 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Scaling and Upgrade Policy */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={6}>
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
@@ -2335,30 +2319,34 @@ export function CreateDeploymentPage() {
                             suffix="Seconds"
                           />
                         </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">0-600</span>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          0–600 seconds
+                        </span>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
 
                 {/* Networking */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                  <SectionCard.Content>
+                    <VStack gap={6}>
                       {/* Network Settings */}
                       <VStack gap={6}>
                         <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                           Network Settings
                         </h6>
                         <VStack gap={6} className="w-full">
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Network Mode
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Select the networking mode for the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Network Mode
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Select the networking mode for the pod.
+                              </span>
+                            </VStack>
                             <Select
                               options={[
                                 { value: 'normal', label: 'Normal' },
@@ -2369,13 +2357,15 @@ export function CreateDeploymentPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              DNS Policy
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Select the DNS policy to apply to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                DNS Policy
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Select the DNS policy to apply to the pod.
+                              </span>
+                            </VStack>
                             <Select
                               options={[
                                 { value: 'cluster-first', label: 'Cluster first' },
@@ -2387,13 +2377,15 @@ export function CreateDeploymentPage() {
                               fullWidth
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Hostname
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Specify the hostname assigned to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Hostname
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Specify the hostname assigned to the pod.
+                              </span>
+                            </VStack>
                             <Input
                               placeholder="e.g. web"
                               fullWidth
@@ -2401,13 +2393,15 @@ export function CreateDeploymentPage() {
                               onChange={(e) => setHostname(e.target.value)}
                             />
                           </VStack>
-                          <VStack gap={1} className="w-full">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Subdomain
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              Specify the subdomain assigned to the pod.
-                            </span>
+                          <VStack gap={2} className="w-full">
+                            <VStack gap={1}>
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Subdomain
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                Specify the subdomain assigned to the pod.
+                              </span>
+                            </VStack>
                             <Input
                               placeholder="e.g. web"
                               fullWidth
@@ -2419,16 +2413,16 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Nameservers */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Nameservers
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
                                   </span>
@@ -2463,7 +2457,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2478,16 +2472,16 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Search Domains */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Search Domains
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
                                   </span>
@@ -2522,7 +2516,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2537,16 +2531,16 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Resolver Options */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Resolver Options
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
                                   </span>
@@ -2554,7 +2548,7 @@ export function CreateDeploymentPage() {
                                     Specify the name of the DNS resolver option.
                                   </p>
                                 </VStack>
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
@@ -2599,7 +2593,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2614,16 +2608,16 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Host Aliases */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Host Aliases
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
                                   </span>
@@ -2631,7 +2625,7 @@ export function CreateDeploymentPage() {
                                     Specify the IP address used for the host alias.
                                   </p>
                                 </VStack>
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Hostname
                                   </span>
@@ -2674,7 +2668,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2692,9 +2686,9 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Node Scheduling */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Node scheduling" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={4}>
                       <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
                         <Radio value="any" label="Run pods on any available node" />
@@ -2706,8 +2700,8 @@ export function CreateDeploymentPage() {
                       </RadioGroup>
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={8}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
+                          <VStack gap={6}>
+                            <span className="text-label-lg text-[var(--color-text-default)] italic">
                               Specific node(s)
                             </span>
                             <VStack gap={1} className="w-full">
@@ -2749,12 +2743,12 @@ export function CreateDeploymentPage() {
                       )}
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)] italic">
                                 Matching scheduling rules
                               </span>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)] italic">
                                 Define rules for scheduling pods on specific nodes based on node
                                 labels.
                               </p>
@@ -2766,7 +2760,7 @@ export function CreateDeploymentPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={8} className="w-full">
+                                  <VStack gap={6} className="w-full">
                                     <VStack gap={2} className="w-full">
                                       <VStack gap={1}>
                                         <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -2797,40 +2791,24 @@ export function CreateDeploymentPage() {
                                       <span className="block text-label-lg text-[var(--color-text-default)]">
                                         Weight
                                       </span>
-                                      <HStack gap={3} align="center">
-                                        <Slider
-                                          min={1}
-                                          max={100}
-                                          step={1}
-                                          value={Number(term.weight) || 1}
-                                          onChange={(val) => {
-                                            const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              weight: String(val),
-                                            };
-                                            setNodeAffinityTerms(newTerms);
-                                          }}
-                                        />
-                                        <NumberInput
-                                          min={1}
-                                          max={100}
-                                          step={1}
-                                          value={Number(term.weight) || 1}
-                                          onChange={(val) => {
-                                            const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              weight: String(val),
-                                            };
-                                            setNodeAffinityTerms(newTerms);
-                                          }}
-                                          width="xs"
-                                        />
-                                      </HStack>
+                                      <NumberInput
+                                        min={1}
+                                        max={100}
+                                        step={1}
+                                        value={Number(term.weight) || 1}
+                                        onChange={(val) => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex] = {
+                                            ...newTerms[termIndex],
+                                            weight: String(val),
+                                          };
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                        width="sm"
+                                      />
                                     </VStack>
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                      <VStack gap={1}>
+                                      <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2919,7 +2897,7 @@ export function CreateDeploymentPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit mt-1">
+                                        <div className="w-fit">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2939,29 +2917,29 @@ export function CreateDeploymentPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit mt-1">
-                                      <Button
-                                        variant="secondary"
-                                        size="sm"
-                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      >
-                                        Add Node Selector
-                                      </Button>
-                                    </div>
                                   </VStack>
                                 </div>
                               ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                >
+                                  Add Node Selector
+                                </Button>
+                              </div>
                             </VStack>
                           </VStack>
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Node Affinity Rules
                             </span>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)] italic">
                               Define rules for scheduling pods on specific nodes based on node
                               labels.
                             </p>
@@ -2974,7 +2952,7 @@ export function CreateDeploymentPage() {
                                   key={termIndex}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     <div className="flex items-start justify-between w-full">
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Rule {termIndex + 1}
@@ -2995,7 +2973,7 @@ export function CreateDeploymentPage() {
                                       </button>
                                     </div>
 
-                                    <VStack gap={8} className="w-full">
+                                    <VStack gap={6} className="w-full">
                                       <VStack gap={2} className="w-full">
                                         <VStack gap={1}>
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -3027,37 +3005,21 @@ export function CreateDeploymentPage() {
                                           <span className="block text-label-lg text-[var(--color-text-default)]">
                                             Weight
                                           </span>
-                                          <HStack gap={3} align="center">
-                                            <Slider
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                            />
-                                            <NumberInput
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              width="xs"
-                                            />
-                                          </HStack>
+                                          <NumberInput
+                                            min={1}
+                                            max={100}
+                                            step={1}
+                                            value={Number(term.weight) || 1}
+                                            onChange={(val) => {
+                                              const newTerms = [...nodeAffinityTerms];
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                weight: String(val),
+                                              };
+                                              setNodeAffinityTerms(newTerms);
+                                            }}
+                                            width="sm"
+                                          />
                                         </VStack>
                                       )}
                                     </VStack>
@@ -3152,7 +3114,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -3175,7 +3137,7 @@ export function CreateDeploymentPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -3197,7 +3159,7 @@ export function CreateDeploymentPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -3213,16 +3175,16 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Pod Scheduling */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content>
-                    <VStack gap={8}>
+                    <VStack gap={3}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
                         >
-                          <VStack gap={8}>
+                          <VStack gap={6}>
                             {/* Type Section */}
                             <VStack gap={2}>
                               <div className="flex items-start justify-between w-full">
@@ -3310,7 +3272,7 @@ export function CreateDeploymentPage() {
 
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Select namespaces
                                 </span>
@@ -3433,7 +3395,7 @@ export function CreateDeploymentPage() {
 
                             {/* Match Expressions / Rules Section */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={1}>
+                              <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3534,7 +3496,7 @@ export function CreateDeploymentPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit mt-1">
+                                <div className="w-fit">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3604,43 +3566,27 @@ export function CreateDeploymentPage() {
                               <span className="block text-label-lg text-[var(--color-text-default)]">
                                 Weight
                               </span>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={1}
-                                  max={100}
-                                  step={1}
-                                  value={Number(term.weight) || 1}
-                                  onChange={(val) => {
-                                    const newTerms = [...podAffinityTerms];
-                                    newTerms[termIndex] = {
-                                      ...newTerms[termIndex],
-                                      weight: String(val),
-                                    };
-                                    setPodAffinityTerms(newTerms);
-                                  }}
-                                />
-                                <NumberInput
-                                  min={1}
-                                  max={100}
-                                  step={1}
-                                  value={Number(term.weight) || 1}
-                                  onChange={(val) => {
-                                    const newTerms = [...podAffinityTerms];
-                                    newTerms[termIndex] = {
-                                      ...newTerms[termIndex],
-                                      weight: String(val),
-                                    };
-                                    setPodAffinityTerms(newTerms);
-                                  }}
-                                  width="xs"
-                                />
-                              </HStack>
+                              <NumberInput
+                                min={1}
+                                max={100}
+                                step={1}
+                                value={Number(term.weight) || 1}
+                                onChange={(val) => {
+                                  const newTerms = [...podAffinityTerms];
+                                  newTerms[termIndex] = {
+                                    ...newTerms[termIndex],
+                                    weight: String(val),
+                                  };
+                                  setPodAffinityTerms(newTerms);
+                                }}
+                                width="sm"
+                              />
                             </VStack>
                           </VStack>
                         </div>
                       ))}
 
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3668,18 +3614,18 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Resources */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Resources" />
                   <SectionCard.Content>
-                    <VStack gap={8}>
+                    <VStack gap={6}>
                       {/* Tolerations */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Tolerations
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3760,7 +3706,7 @@ export function CreateDeploymentPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -3775,7 +3721,7 @@ export function CreateDeploymentPage() {
                       </VStack>
 
                       {/* Priority */}
-                      <div className="grid grid-cols-2 gap-6 w-full">
+                      <div className="grid grid-cols-2 gap-4 w-full">
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Priority
@@ -3810,22 +3756,24 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Security Context */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Security context" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={4}>
-                      <VStack gap={1}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Pod Filesystem Group
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          Specify the filesystem group used by the pod.
-                        </span>
+                      <VStack gap={2}>
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Pod Filesystem Group
+                          </span>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Specify the filesystem group used by the pod.
+                          </span>
+                        </VStack>
                         <NumberInput
                           value={Number(podFilesystemGroup) || 0}
                           onChange={(val) => setPodFilesystemGroup(String(val))}
                           min={0}
-                          width="xs"
+                          width="sm"
                         />
                       </VStack>
                     </VStack>
@@ -3833,16 +3781,16 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Storage */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Storage" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={2}>
                       {volumes.map((volume, index) => (
                         <div
                           key={index}
                           className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                         >
-                          <VStack gap={8}>
+                          <VStack gap={6}>
                             {/* Header with type title and close button */}
                             <div className="flex items-start justify-between w-full">
                               <h6 className="text-heading-h6 text-[var(--color-text-default)]">
@@ -3866,7 +3814,7 @@ export function CreateDeploymentPage() {
                             {/* ConfigMap content */}
                             {volume.type === 'configmap' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -3935,7 +3883,7 @@ export function CreateDeploymentPage() {
                             {/* Secret content */}
                             {volume.type === 'secret' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -4002,7 +3950,7 @@ export function CreateDeploymentPage() {
                             {/* PVC content */}
                             {volume.type === 'pvc' && (
                               <>
-                                <VStack gap={8} className="w-full">
+                                <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Volume Name{' '}
@@ -4052,7 +4000,7 @@ export function CreateDeploymentPage() {
                             {volume.type === 'create-pvc' && (
                               <>
                                 <div className="w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4095,7 +4043,7 @@ export function CreateDeploymentPage() {
                                     </VStack>
 
                                     {!(volume as CreatePVCVolume).useExistingPV && (
-                                      <VStack gap={8}>
+                                      <VStack gap={6}>
                                         <VStack gap={2} className="w-full">
                                           <span className="text-label-lg text-[var(--color-text-default)]">
                                             Storage Class{' '}
@@ -4135,7 +4083,7 @@ export function CreateDeploymentPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            width="xs"
+                                            width="sm"
                                           />
                                         </VStack>
                                       </VStack>
@@ -4164,7 +4112,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     )}
 
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -4264,9 +4212,9 @@ export function CreateDeploymentPage() {
                 </SectionCard>
 
                 {/* Volume Claim Templates */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Volume claim templates" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <div className="w-full">
                       <VStack gap={3}>
                         {volumeClaimTemplates.map((template, index) => (
@@ -4284,7 +4232,7 @@ export function CreateDeploymentPage() {
                                 stroke={1.5}
                               />
                             </button>
-                            <VStack gap={8}>
+                            <VStack gap={6}>
                               <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Persistent Volume Claim Name{' '}
@@ -4316,7 +4264,7 @@ export function CreateDeploymentPage() {
                               </RadioGroup>
 
                               {(isV2 || !template.useExistingPV) && (
-                                <VStack gap={8}>
+                                <VStack gap={6}>
                                   <VStack gap={2} className="w-full">
                                     <span className="text-label-lg text-[var(--color-text-default)]">
                                       Storage Class{' '}
@@ -4352,7 +4300,7 @@ export function CreateDeploymentPage() {
                                         })
                                       }
                                       suffix="GiB"
-                                      width="xs"
+                                      width="sm"
                                     />
                                   </VStack>
                                 </VStack>
@@ -4381,7 +4329,7 @@ export function CreateDeploymentPage() {
                                 </VStack>
                               )}
 
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Access Modes{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
@@ -4429,7 +4377,7 @@ export function CreateDeploymentPage() {
                           </div>
                         ))}
 
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -4501,7 +4449,7 @@ export function CreateDeploymentPage() {
                         </span>
                         {showRequestPath ? (
                           <>
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4549,7 +4497,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             </div>
                             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4599,7 +4547,7 @@ export function CreateDeploymentPage() {
                                 </HStack>
                               </VStack>
                             </div>
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4645,7 +4593,7 @@ export function CreateDeploymentPage() {
                                 />
                               </VStack>
                             </div>
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4673,7 +4621,7 @@ export function CreateDeploymentPage() {
                         ) : (
                           <>
                             {type !== 'exec' ? (
-                              <div className="flex gap-6 w-full">
+                              <div className="flex gap-4 w-full">
                                 <VStack gap={2} className="flex-1">
                                   <VStack gap={1}>
                                     <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4724,7 +4672,7 @@ export function CreateDeploymentPage() {
                               </VStack>
                             )}
                             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4774,7 +4722,7 @@ export function CreateDeploymentPage() {
                                 </HStack>
                               </VStack>
                             </div>
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4820,7 +4768,7 @@ export function CreateDeploymentPage() {
                                 />
                               </VStack>
                             </div>
-                            <div className="flex gap-6 w-full">
+                            <div className="flex gap-4 w-full">
                               <VStack gap={2} className="flex-1">
                                 <VStack gap={1}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4846,12 +4794,12 @@ export function CreateDeploymentPage() {
                           </>
                         )}
                         {showHeaders && (
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Request Headers
                             </span>
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={1}>
+                              <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
@@ -4923,7 +4871,7 @@ export function CreateDeploymentPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit mt-1">
+                                <div className="w-fit">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -4953,10 +4901,10 @@ export function CreateDeploymentPage() {
                 return (
                   <>
                     {/* 1. Basic Information Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Container Name
@@ -5023,10 +4971,10 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 2. Image Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Image" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5104,10 +5052,10 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 2b. Command Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Command" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5196,11 +5144,11 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 3. Environment Variables Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Environment variables" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1} className="w-full">
+                          <VStack gap={1.5} className="w-full">
                             {(config.envVars || []).map((envVar, index) => {
                               const hasFourCols =
                                 envVar.type === 'resource' ||
@@ -5396,7 +5344,7 @@ export function CreateDeploymentPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -5418,9 +5366,9 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 5. Service Account Name Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Service account name" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5446,13 +5394,13 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 7. Lifecycle Hooks Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Lifecycle hooks" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
-                          <VStack gap={8}>
-                            <VStack gap={2}>
+                          <VStack gap={6}>
+                            <VStack gap={3}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Post Start
                               </span>
@@ -5489,8 +5437,8 @@ export function CreateDeploymentPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
-                              <VStack gap={8}>
-                                <VStack gap={3}>
+                              <VStack gap={6}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
@@ -5586,12 +5534,12 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={1}>
+                                    <VStack gap={1.5}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
@@ -5680,7 +5628,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5710,8 +5658,8 @@ export function CreateDeploymentPage() {
                           </VStack>
 
                           {/* Pre Stop */}
-                          <VStack gap={8}>
-                            <VStack gap={2}>
+                          <VStack gap={6}>
+                            <VStack gap={3}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pre Stop
                               </span>
@@ -5748,8 +5696,8 @@ export function CreateDeploymentPage() {
                             )}
 
                             {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
-                              <VStack gap={8}>
-                                <VStack gap={3}>
+                              <VStack gap={6}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
@@ -5845,12 +5793,12 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={1}>
+                                    <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5938,7 +5886,7 @@ export function CreateDeploymentPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5971,10 +5919,10 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 8. Health Check Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Health check" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Readiness Check */}
                           <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
@@ -6046,9 +5994,9 @@ export function CreateDeploymentPage() {
                             )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
                               <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                <VStack gap={8}>
+                                <VStack gap={6}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
-                                  <div className="flex gap-6 w-full">
+                                  <div className="flex gap-4 w-full">
                                     {(config.readinessProbe?.type === 'httpGet' ||
                                       config.readinessProbe?.type === 'tcpSocket') && (
                                       <VStack gap={2} className="flex-1">
@@ -6151,7 +6099,7 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   </div>
                                   {/* Row 2: Request Path (httpGet only) + Initial Delay */}
-                                  <div className="flex gap-6 w-full">
+                                  <div className="flex gap-4 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
@@ -6243,7 +6191,7 @@ export function CreateDeploymentPage() {
                                     )}
                                   </div>
                                   {/* Row 3: Timeout + Success Threshold (httpGet) or Success + Failure (others) */}
-                                  <div className="flex gap-6 w-full">
+                                  <div className="flex gap-4 w-full">
                                     {config.readinessProbe?.type === 'httpGet' && (
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
@@ -6362,12 +6310,12 @@ export function CreateDeploymentPage() {
                                     </VStack>
                                   )}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                        <VStack gap={1}>
+                                        <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -6452,7 +6400,7 @@ export function CreateDeploymentPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit mt-1">
+                                          <div className="w-fit">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -6556,9 +6504,9 @@ export function CreateDeploymentPage() {
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       {(config.livenessProbe?.type === 'httpGet' ||
                                         config.livenessProbe?.type === 'tcpSocket') && (
                                         <VStack gap={2} className="flex-1">
@@ -6661,7 +6609,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -6726,7 +6674,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -6858,9 +6806,9 @@ export function CreateDeploymentPage() {
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
                                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                                  <VStack gap={8}>
+                                  <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       {(config.startupProbe?.type === 'httpGet' ||
                                         config.startupProbe?.type === 'tcpSocket') && (
                                         <VStack gap={2} className="flex-1">
@@ -6963,7 +6911,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     </div>
                                     {/* Row 2: Initial Delay + Timeout */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -7028,7 +6976,7 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     </div>
                                     {/* Row 3: Success Threshold + Failure Threshold */}
-                                    <div className="flex gap-6 w-full">
+                                    <div className="flex gap-4 w-full">
                                       <VStack gap={2} className="flex-1">
                                         <VStack gap={1}>
                                           <span className="text-label-lg text-[var(--color-text-default)]">
@@ -7091,12 +7039,12 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 9. Resources Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Resources" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -7106,33 +7054,18 @@ export function CreateDeploymentPage() {
                                   Specify the minimum CPU amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={4000}
-                                  step={50}
-                                  value={config.cpuRequest ? parseInt(config.cpuRequest) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuRequest: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.cpuRequest ? parseInt(config.cpuRequest) : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuRequest: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={4000}
-                                  width="xs"
-                                  suffix="mCPUs"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={config.cpuRequest ? parseInt(config.cpuRequest) : undefined}
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    cpuRequest: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={4000}
+                                width="sm"
+                                suffix="mCPUs"
+                              />
                             </VStack>
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
@@ -7143,35 +7076,22 @@ export function CreateDeploymentPage() {
                                   Specify the maximum CPU amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={4000}
-                                  step={50}
-                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuLimit: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      cpuLimit: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={4000}
-                                  width="xs"
-                                  suffix="mCPUs"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={config.cpuLimit ? parseInt(config.cpuLimit) : undefined}
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    cpuLimit: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={4000}
+                                width="sm"
+                                suffix="mCPUs"
+                              />
                             </VStack>
                           </div>
                           {/* Row 2: Memory Reservation + Memory Limit */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
@@ -7181,35 +7101,20 @@ export function CreateDeploymentPage() {
                                   Specify the minimum memory amount reserved for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={8192}
-                                  step={100}
-                                  value={config.memoryRequest ? parseInt(config.memoryRequest) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryRequest: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.memoryRequest
-                                      ? parseInt(config.memoryRequest)
-                                      : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryRequest: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={8192}
-                                  width="xs"
-                                  suffix="MiB"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={
+                                  config.memoryRequest ? parseInt(config.memoryRequest) : undefined
+                                }
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    memoryRequest: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={8192}
+                                width="sm"
+                                suffix="MiB"
+                              />
                             </VStack>
                             <VStack gap={2} className="flex-1">
                               <VStack gap={1}>
@@ -7220,33 +7125,20 @@ export function CreateDeploymentPage() {
                                   Specify the maximum memory amount allowed for the container.
                                 </span>
                               </VStack>
-                              <HStack gap={3} align="center">
-                                <Slider
-                                  min={0}
-                                  max={8192}
-                                  step={100}
-                                  value={config.memoryLimit ? parseInt(config.memoryLimit) : 0}
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryLimit: val.toString(),
-                                    })
-                                  }
-                                />
-                                <NumberInput
-                                  value={
-                                    config.memoryLimit ? parseInt(config.memoryLimit) : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateContainerConfig(containerId, {
-                                      memoryLimit: val?.toString() || '',
-                                    })
-                                  }
-                                  min={0}
-                                  max={8192}
-                                  width="xs"
-                                  suffix="MiB"
-                                />
-                              </HStack>
+                              <NumberInput
+                                value={
+                                  config.memoryLimit ? parseInt(config.memoryLimit) : undefined
+                                }
+                                onChange={(val) =>
+                                  updateContainerConfig(containerId, {
+                                    memoryLimit: val?.toString() || '',
+                                  })
+                                }
+                                min={0}
+                                max={8192}
+                                width="sm"
+                                suffix="MiB"
+                              />
                             </VStack>
                           </div>
                         </VStack>
@@ -7254,12 +7146,12 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 10. Security Context Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Security context" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Row 1: Privileged + Privilege Escalation */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Privileged
@@ -7328,7 +7220,7 @@ export function CreateDeploymentPage() {
                             </VStack>
                           </div>
                           {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Run as Non-Root
@@ -7413,7 +7305,7 @@ export function CreateDeploymentPage() {
                             />
                           </VStack>
                           {/* Row 4: Add Capabilities + Drop Capabilities */}
-                          <div className="flex gap-6 w-full">
+                          <div className="flex gap-4 w-full">
                             <VStack gap={2} className="flex-1">
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Add Capabilities
@@ -7464,10 +7356,10 @@ export function CreateDeploymentPage() {
                     </SectionCard>
 
                     {/* 11. Storage Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Storage" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={3}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
                             <VStack gap={3}>
@@ -7504,7 +7396,7 @@ export function CreateDeploymentPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7512,7 +7404,7 @@ export function CreateDeploymentPage() {
                                                 *
                                               </span>
                                             </span>
-                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               Specify the path inside the container where the volume
                                               will be mounted.
                                             </span>
@@ -7521,13 +7413,11 @@ export function CreateDeploymentPage() {
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Sub Path in Volume
                                             </span>
-                                            <span className="text-body-xs text-[var(--color-text-subtle)]">
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               Specify the sub-path within the volume to use.
                                             </span>
                                           </VStack>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Read Only
-                                          </span>
+                                          <div />
                                           <div className="w-5" />
                                         </div>
                                       )}
@@ -7542,7 +7432,7 @@ export function CreateDeploymentPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_60px_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""
@@ -7578,8 +7468,10 @@ export function CreateDeploymentPage() {
                                                 });
                                               }}
                                             />
-                                            <div className="flex items-center">
+                                            <div className="flex items-center whitespace-nowrap">
                                               <Checkbox
+                                                label="Read Only"
+                                                className="[&>label]:flex-row-reverse"
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
                                                   const newVolumes = [
@@ -7631,7 +7523,7 @@ export function CreateDeploymentPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"

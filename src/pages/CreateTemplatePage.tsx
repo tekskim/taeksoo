@@ -973,7 +973,7 @@ function ImageSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Start Source */}
           <div className="py-6">
-            <VStack gap={3}>
+            <VStack gap={2}>
               <VStack gap={1}>
                 <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -1928,14 +1928,14 @@ function NetworkSection({
 
           {/* Virtual LAN Section */}
           <div className="py-6">
-            <VStack gap={3}>
+            <VStack gap={2}>
               <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Each selected network requires at least one Virtual LAN configuration. Each VLAN
                 represents a virtual network card (NIC) attached to the selected network.
               </span>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1981,7 +1981,7 @@ function NetworkSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -2268,7 +2268,7 @@ function AuthenticationSection({
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               {/* Key pair */}
               <div className="py-6">
-                <VStack gap={3}>
+                <VStack gap={2}>
                   <span className="text-label-lg text-[var(--color-text-default)]">
                     Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                   </span>
@@ -2427,7 +2427,7 @@ function AdvancedSection({
               </VStack>
 
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">

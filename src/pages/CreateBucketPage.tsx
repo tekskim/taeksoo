@@ -513,11 +513,11 @@ function SettingsSection({
 
           {/* Tags */}
           <div className="py-6">
-            <VStack gap={3}>
+            <VStack gap={2}>
               <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -555,7 +555,7 @@ function SettingsSection({
                     </div>
                   ))}
 
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"

@@ -231,10 +231,10 @@ function BasicInfoSection({
   const [descriptionExpanded, setDescriptionExpanded] = useState(true);
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Secret Type */}
           <FormField required>
             <FormField.Label>Secret Type</FormField.Label>
@@ -415,10 +415,10 @@ function DataSection({
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Data" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Data */}
           <VStack gap={3}>
             <VStack gap={1}>
@@ -429,7 +429,7 @@ function DataSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {dataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -499,7 +499,7 @@ function DataSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {stringDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -528,7 +528,7 @@ function DataSection({
                 ))}
 
                 <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -540,7 +540,7 @@ function DataSection({
                       Read from File
                     </Button>
                   </div>
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -567,7 +567,7 @@ function DataSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {tlsDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -596,7 +596,7 @@ function DataSection({
                 ))}
 
                 <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -608,7 +608,7 @@ function DataSection({
                       Read from File
                     </Button>
                   </div>
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -635,7 +635,7 @@ function DataSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {httpBasicAuthDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -675,7 +675,7 @@ function DataSection({
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={3}>
-                <VStack gap={1}>
+                <VStack gap={0.5}>
                   <span className="block text-label-sm text-[var(--color-text-default)]">
                     Registry domain name
                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -746,12 +746,12 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -760,7 +760,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -797,7 +797,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="outline"
                     size="sm"
@@ -813,7 +813,7 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -822,7 +822,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -859,7 +859,7 @@ function LabelsAnnotationsSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="outline"
                     size="sm"

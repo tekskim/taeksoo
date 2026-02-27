@@ -1783,7 +1783,7 @@ export default function CreateLoadBalancerPage() {
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* VIP Address */}
                     <div className="py-6">
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             VIP address
@@ -2447,7 +2447,7 @@ export default function CreateLoadBalancerPage() {
                               </VStack>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={1.5}>
                                   {allowedCidrs.length > 0 && (
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       CIDR
@@ -2484,7 +2484,7 @@ export default function CreateLoadBalancerPage() {
                                       </button>
                                     </div>
                                   ))}
-                                  <div className="w-fit mt-1">
+                                  <div className="w-fit">
                                     <Button
                                       variant="secondary"
                                       size="sm"
@@ -2940,7 +2940,7 @@ export default function CreateLoadBalancerPage() {
                         </VStack>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {externalMembers.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3016,7 +3016,7 @@ export default function CreateLoadBalancerPage() {
                                 </button>
                               </div>
                             ))}
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"

@@ -287,15 +287,15 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 --card-padding-lg: 1.5rem;       /* 24px */
 --card-padding-bottom: 0.75rem;  /* 12px */
 --card-radius: 0.5rem;           /* 8px */
---card-gap: 0.75rem;             /* 12px */
+--card-gap: 1rem;                /* 16px */
 ```
 
 **SectionCard specific:**
-- Top padding: `pt-3` (12px)
-- Bottom padding: `pb-3` (12px) — use `pb-6` (24px) only in Open Form pattern via className override
+- Top padding: `pt-4` (16px)
+- Bottom padding: `pb-3` (12px) — use `pb-4` (16px) in Open Form pattern via className override
 - Horizontal padding: `px-4` (16px)
-- Internal gap (Header ↔ Content): `gap-3` (12px)
-- Header divider → content total: 24px (gap-3 12px + Content pt-3 12px)
+- Internal gap (Header ↔ Content): `gap-4` (16px)
+- Content top padding: none (removed, gap-4 handles spacing)
 
 ### DetailHeader
 
@@ -1571,7 +1571,7 @@ Create 페이지에서 SectionCard가 열린(active) 상태일 때의 간격 규
 ### 간격 구조
 ```
 헤더 타이틀 (28px)
-  ↕ 12px (SectionCard gap-3)
+  ↕ 16px (SectionCard gap-4)
 디바이더 ─────────────────
   ↕ 24px (py-6)
 폼 필드 1
@@ -1900,6 +1900,34 @@ Slider / RangeSlider 트랙은 고정 240px입니다. 별도의 max-width 래퍼
 </FormField>
 ```
 
+**Slider + NumberInput + Unit Select (단위 선택 포함)**:
+
+값과 함께 단위를 전환해야 하는 경우 (예: % / Pods), Select를 오른쪽에 추가합니다.
+
+```tsx
+const UNIT_OPTIONS = [
+  { value: '%', label: '%' },
+  { value: 'pods', label: 'Pods' },
+];
+
+<FormField label="Max Surge" description="The maximum number of additional pods...">
+  <HStack gap={2} align="center" className="max-w-[var(--slider-row-max-width)]">
+    <Slider min={0} max={100} step={5} value={maxSurge}
+      onChange={setMaxSurge} className="flex-1" />
+    <NumberInput min={0} max={100} step={1} value={maxSurge}
+      onChange={setMaxSurge} width="xs" />
+    <Select options={UNIT_OPTIONS} value={unit}
+      onChange={setUnit} className="w-[80px]" />
+  </HStack>
+</FormField>
+```
+
+```css
+--slider-row-max-width: 312px; /* Slider + NumberInput + Select 행 최대 너비 */
+```
+
+**적용 대상**: Max Surge (% / Pods), Max Unavailable (% / Pods)
+
 **Slider step 가이드**:
 
 | 범위 크기 | Slider step | NumberInput step | 예시 |
@@ -2083,6 +2111,7 @@ const [vlans, setVlans] = useState<{ id: string; network: string; subnet: string
 | 행 삭제 버튼 | `IconX size={14}`, ghost style, 20px 컬럼 |
 | Grid gap | `gap-2` (8px) |
 | Header 텍스트 | `text-label-sm text-[var(--color-text-subtle)]` |
+| Header label → description gap | `gap-0.5` (2px) — `VStack gap={0.5}` |
 | 필수 컬럼 표시 | Header에 `*` 추가 |
 | 고유 키 | 배열 객체에 `id` 필드 사용 (`crypto.randomUUID()`) |
 

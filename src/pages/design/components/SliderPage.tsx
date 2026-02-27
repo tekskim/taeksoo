@@ -319,7 +319,7 @@ export function SliderPage() {
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> ·{' '}
-          <code>fill: primary</code>
+          <code>fill: primary</code> · <code>--slider-track-width: 220px</code>
         </div>
       }
       apiReference={sliderProps}
