@@ -83,6 +83,77 @@ function DynamicFieldTableDemo() {
   );
 }
 
+function EmptyDynamicFieldTableDemo() {
+  const [rows, setRows] = useState<{ name: string; type: string; value: string }[]>([]);
+
+  return (
+    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+      <VStack gap={1.5}>
+        {rows.length > 0 && (
+          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+            <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
+            <span className="block text-label-sm text-[var(--color-text-default)]">Value Type</span>
+            <span className="block text-label-sm text-[var(--color-text-default)]">
+              Value/Source
+            </span>
+            <div />
+          </div>
+        )}
+        {rows.map((row, i) => (
+          <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+            <Input
+              placeholder="input variable name"
+              value={row.name}
+              onChange={(e) => {
+                const n = [...rows];
+                n[i].name = e.target.value;
+                setRows(n);
+              }}
+              fullWidth
+            />
+            <Select
+              options={ENV_TYPE_OPTIONS}
+              value={row.type}
+              onChange={(v) => {
+                const n = [...rows];
+                n[i].type = v;
+                setRows(n);
+              }}
+              fullWidth
+            />
+            <Input
+              placeholder="input value"
+              value={row.value}
+              onChange={(e) => {
+                const n = [...rows];
+                n[i].value = e.target.value;
+                setRows(n);
+              }}
+              fullWidth
+            />
+            <button
+              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              onClick={() => setRows(rows.filter((_, idx) => idx !== i))}
+            >
+              <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+            </button>
+          </div>
+        ))}
+        <div className="w-fit">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+            onClick={() => setRows([...rows, { name: '', type: 'value', value: '' }])}
+          >
+            Add Variable
+          </Button>
+        </div>
+      </VStack>
+    </div>
+  );
+}
+
 function RepeatableFieldGroupDemo() {
   const [groups, setGroups] = useState([
     [{ name: 'API_KEY', type: 'value', value: 'sk-1234567890' }],
@@ -564,6 +635,27 @@ export function DynamicFormFieldsPage() {
               </p>
             </VStack>
             <DynamicFieldTableDemo />
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  Empty State (Closed)
+                </h4>
+                <Badge variant="info" size="sm">
+                  List
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Initial empty state with no rows. Only the add button is visible. Clicking it adds a
+                new row and reveals the column headers. This is the default state before any data is
+                entered.
+              </p>
+            </VStack>
+            <EmptyDynamicFieldTableDemo />
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
