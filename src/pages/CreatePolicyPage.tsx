@@ -998,7 +998,7 @@ function PolicyEditorSection({
           ))}
 
           {/* Add Permission Button */}
-          <div className="w-fit mt-1">
+          <div className="w-fit">
             <Button
               variant="secondary"
               size="sm"

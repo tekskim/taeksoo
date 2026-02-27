@@ -384,7 +384,7 @@ export function EditNodeConfigPage() {
               <SectionCard.Content>
                 <VStack gap={3}>
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1}>
+                    <VStack gap={1.5}>
                       {taints.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-lg text-[var(--color-text-default)]">
@@ -435,7 +435,7 @@ export function EditNodeConfigPage() {
                           </button>
                         </div>
                       ))}
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -507,7 +507,7 @@ export function EditNodeConfigPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -574,7 +574,7 @@ export function EditNodeConfigPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"

@@ -194,10 +194,10 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Name */}
           <FormField required error={!!storageClassNameError}>
             <FormField.Label>Name</FormField.Label>
@@ -267,14 +267,14 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Parameters" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={3}>
+      <SectionCard.Content>
+        <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
 
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={1}>
+            <VStack gap={1.5}>
               {parameters.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                   <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
@@ -311,7 +311,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
                 </div>
               ))}
 
-              <div className="w-fit mt-1">
+              <div className="w-fit">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -369,10 +369,10 @@ function CustomizeSection({
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Customize" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Reclaim Policy */}
           <RadioGroup
             label="Reclaim Policy"
@@ -419,11 +419,11 @@ function CustomizeSection({
           </RadioGroup>
 
           {/* Mount Options */}
-          <VStack gap={3}>
+          <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {mountOptions.length > 0 && (
                   <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -449,7 +449,7 @@ function CustomizeSection({
                     </button>
                   </div>
                 ))}
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"

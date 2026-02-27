@@ -458,7 +458,7 @@ export function CreateImagePage() {
 
                     {/* Upload type */}
                     <div className="py-6">
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Upload type

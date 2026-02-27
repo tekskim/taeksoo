@@ -497,10 +497,10 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Namespace */}
           <FormField label="Namespace" required>
             <Select
@@ -576,13 +576,13 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={3}>
-            <VStack gap={1.5}>
+          <VStack gap={2}>
+            <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
@@ -591,7 +591,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for labels */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -629,7 +629,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -644,8 +644,8 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={3}>
-            <VStack gap={1.5}>
+          <VStack gap={2}>
+            <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
@@ -654,7 +654,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for annotations */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -692,7 +692,7 @@ function LabelsAnnotationsSection({
                   </div>
                 ))}
 
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -741,10 +741,10 @@ function ScalingPolicySection({
   onRevisionHistoryLimitChange,
 }: ScalingPolicySectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Scaling and Upgrade Policy" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Strategy Selection */}
           <FormField>
             <FormField.Label>Update policy</FormField.Label>
@@ -815,7 +815,7 @@ function ScalingPolicySection({
                   onChange={onMinReadyChange}
                   min={0}
                   max={300}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -835,14 +835,14 @@ function ScalingPolicySection({
                   onChange={onRevisionHistoryLimitChange}
                   min={0}
                   max={100}
-                  width="sm"
+                  width="xs"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Revisions
                 </span>
               </HStack>
             </FormField.Control>
-            <FormField.HelperText>0-100</FormField.HelperText>
+            <FormField.HelperText>0-100 revisions</FormField.HelperText>
           </FormField>
         </VStack>
       </SectionCard.Content>
@@ -1849,12 +1849,12 @@ export function CreateDaemonSetPage() {
             {activeTab === 'pod' && (
               <>
                 {/* Labels & Annotations */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Labels & Annotations" />
-                  <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                  <SectionCard.Content>
+                    <VStack gap={6}>
                       {/* Labels */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
@@ -1866,7 +1866,7 @@ export function CreateDaemonSetPage() {
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1908,7 +1908,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1923,7 +1923,7 @@ export function CreateDaemonSetPage() {
                       </VStack>
 
                       {/* Annotations */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Annotations
                         </span>
@@ -1934,7 +1934,7 @@ export function CreateDaemonSetPage() {
 
                         {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1980,7 +1980,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -1998,9 +1998,9 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Scaling and Upgrade Policy */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Scaling and Upgrade Policy" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={6}>
                       <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                         Pod Policy
@@ -2041,10 +2041,10 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Networking */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Networking" />
-                  <SectionCard.Content className="pt-3">
-                    <VStack gap={8}>
+                  <SectionCard.Content>
+                    <VStack gap={6}>
                       {/* Network Settings */}
                       <VStack gap={6}>
                         <h6 className="text-heading-h6 text-[var(--color-text-default)]">
@@ -2118,16 +2118,16 @@ export function CreateDaemonSetPage() {
                       </VStack>
 
                       {/* Nameservers */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Nameservers
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
                                   </span>
@@ -2162,7 +2162,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2177,16 +2177,16 @@ export function CreateDaemonSetPage() {
                       </VStack>
 
                       {/* Search Domains */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Search Domains
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
                                   </span>
@@ -2221,7 +2221,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2236,16 +2236,16 @@ export function CreateDaemonSetPage() {
                       </VStack>
 
                       {/* Resolver Options */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Resolver Options
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
                                   </span>
@@ -2253,7 +2253,7 @@ export function CreateDaemonSetPage() {
                                     Specify the name of the DNS resolver option.
                                   </p>
                                 </VStack>
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
@@ -2298,7 +2298,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2313,16 +2313,16 @@ export function CreateDaemonSetPage() {
                       </VStack>
 
                       {/* Host Aliases */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Host Aliases
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
                                   </span>
@@ -2330,7 +2330,7 @@ export function CreateDaemonSetPage() {
                                     Specify the IP address used for the host alias.
                                   </p>
                                 </VStack>
-                                <VStack gap={1}>
+                                <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Hostname
                                   </span>
@@ -2373,7 +2373,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -2391,9 +2391,9 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Node Scheduling */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Node scheduling" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={4}>
                       <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
                         <Radio value="any" label="Run pods on any available node" />
@@ -2406,7 +2406,7 @@ export function CreateDaemonSetPage() {
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                           <VStack gap={8}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)] italic">
                               Specific node(s)
                             </span>
                             <VStack gap={1} className="w-full">
@@ -2448,12 +2448,12 @@ export function CreateDaemonSetPage() {
                       )}
                       {isV2 && (
                         <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <VStack gap={1}>
-                              <span className="text-label-lg text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)] italic">
                                 Matching scheduling rules
                               </span>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)] italic">
                                 Define rules for scheduling pods on specific nodes based on node
                                 labels.
                               </p>
@@ -2524,12 +2524,12 @@ export function CreateDaemonSetPage() {
                                             };
                                             setNodeAffinityTerms(newTerms);
                                           }}
-                                          width="xs"
+                                          width="sm"
                                         />
                                       </HStack>
                                     </VStack>
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                      <VStack gap={1}>
+                                      <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -2618,7 +2618,7 @@ export function CreateDaemonSetPage() {
                                             </button>
                                           </div>
                                         ))}
-                                        <div className="w-fit mt-1">
+                                        <div className="w-fit">
                                           <Button
                                             variant="secondary"
                                             size="sm"
@@ -2638,7 +2638,7 @@ export function CreateDaemonSetPage() {
                                         </div>
                                       </VStack>
                                     </div>
-                                    <div className="w-fit mt-1">
+                                    <div className="w-fit">
                                       <Button
                                         variant="secondary"
                                         size="sm"
@@ -2655,12 +2655,12 @@ export function CreateDaemonSetPage() {
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
-                        <VStack gap={3}>
+                        <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Node Affinity Rules
                             </span>
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)] italic">
                               Define rules for scheduling pods on specific nodes based on node
                               labels.
                             </p>
@@ -2754,7 +2754,7 @@ export function CreateDaemonSetPage() {
                                                 };
                                                 setNodeAffinityTerms(newTerms);
                                               }}
-                                              width="xs"
+                                              width="sm"
                                             />
                                           </HStack>
                                         </VStack>
@@ -2851,7 +2851,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -2874,7 +2874,7 @@ export function CreateDaemonSetPage() {
                                 </div>
                               ))}
 
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -2896,7 +2896,7 @@ export function CreateDaemonSetPage() {
                             </VStack>
                           </div>
 
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -2912,10 +2912,10 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Pod Scheduling */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Pod scheduling" />
                   <SectionCard.Content>
-                    <VStack gap={8}>
+                    <VStack gap={6}>
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
@@ -3009,7 +3009,7 @@ export function CreateDaemonSetPage() {
 
                             {/* Specific Namespaces Section - shown when 'selected' is chosen */}
                             {term.namespaces === 'selected' && (
-                              <VStack gap={3}>
+                              <VStack gap={2}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   Select namespaces
                                 </span>
@@ -3132,7 +3132,7 @@ export function CreateDaemonSetPage() {
 
                             {/* Match Expressions / Rules Section */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={1}>
+                              <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3233,7 +3233,7 @@ export function CreateDaemonSetPage() {
                                     </button>
                                   </div>
                                 ))}
-                                <div className="w-fit mt-1">
+                                <div className="w-fit">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -3331,7 +3331,7 @@ export function CreateDaemonSetPage() {
                                     };
                                     setPodAffinityTerms(newTerms);
                                   }}
-                                  width="xs"
+                                  width="sm"
                                 />
                               </HStack>
                             </VStack>
@@ -3339,7 +3339,7 @@ export function CreateDaemonSetPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -3367,18 +3367,18 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Resources */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Resources" />
                   <SectionCard.Content>
-                    <VStack gap={8}>
+                    <VStack gap={6}>
                       {/* Tolerations */}
-                      <VStack gap={3}>
+                      <VStack gap={2}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
                           Tolerations
                         </span>
 
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1}>
+                          <VStack gap={1.5}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3459,7 +3459,7 @@ export function CreateDaemonSetPage() {
                               </div>
                             ))}
 
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -3509,9 +3509,9 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Security Context */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Security context" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={4}>
                       <VStack gap={1}>
                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -3524,7 +3524,7 @@ export function CreateDaemonSetPage() {
                           value={Number(podFilesystemGroup) || 0}
                           onChange={(val) => setPodFilesystemGroup(String(val))}
                           min={0}
-                          width="xs"
+                          width="sm"
                         />
                       </VStack>
                     </VStack>
@@ -3532,9 +3532,9 @@ export function CreateDaemonSetPage() {
                 </SectionCard>
 
                 {/* Storage */}
-                <SectionCard className="pb-6">
+                <SectionCard className="pb-4">
                   <SectionCard.Header title="Storage" />
-                  <SectionCard.Content className="pt-3">
+                  <SectionCard.Content>
                     <VStack gap={2}>
                       {volumes.map((volume, index) => (
                         <div
@@ -3834,7 +3834,7 @@ export function CreateDaemonSetPage() {
                                               })
                                             }
                                             suffix="GiB"
-                                            width="xs"
+                                            width="sm"
                                           />
                                         </VStack>
                                       </VStack>
@@ -3863,7 +3863,7 @@ export function CreateDaemonSetPage() {
                                       </VStack>
                                     )}
 
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
@@ -4362,12 +4362,12 @@ export function CreateDaemonSetPage() {
                           </>
                         )}
                         {showHeaders && (
-                          <VStack gap={3}>
+                          <VStack gap={2}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Request Headers
                             </span>
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                              <VStack gap={1}>
+                              <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
@@ -4439,7 +4439,7 @@ export function CreateDaemonSetPage() {
                                     </div>
                                   )
                                 )}
-                                <div className="w-fit mt-1">
+                                <div className="w-fit">
                                   <Button
                                     variant="secondary"
                                     size="sm"
@@ -4469,10 +4469,10 @@ export function CreateDaemonSetPage() {
                 return (
                   <>
                     {/* 1. Basic Information Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2} className="w-full">
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Container Name
@@ -4539,10 +4539,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 2. Image Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Image" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4620,10 +4620,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 2b. Command Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Command" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4712,11 +4712,11 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 3. Environment Variables Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Environment variables" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1} className="w-full">
+                          <VStack gap={1.5} className="w-full">
                             {(config.envVars || []).map((envVar, index) => {
                               const hasFourCols =
                                 envVar.type === 'resource' ||
@@ -4912,7 +4912,7 @@ export function CreateDaemonSetPage() {
                                 </div>
                               );
                             })}
-                            <div className="w-fit mt-1">
+                            <div className="w-fit">
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -4934,9 +4934,9 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 5. Service Account Name Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Service account name" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <VStack gap={2}>
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
@@ -4962,9 +4962,9 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 7. Lifecycle Hooks Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Lifecycle hooks" />
-                      <SectionCard.Content className="pt-3">
+                      <SectionCard.Content>
                         <div className="grid grid-cols-2 gap-6">
                           {/* Post Start */}
                           <VStack gap={8}>
@@ -5006,7 +5006,7 @@ export function CreateDaemonSetPage() {
 
                             {(isV2 || config.lifecycleHooks?.postStart?.type === 'httpGet') && (
                               <VStack gap={8}>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
@@ -5102,12 +5102,12 @@ export function CreateDaemonSetPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={1}>
+                                    <VStack gap={1.5}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
@@ -5196,7 +5196,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5265,7 +5265,7 @@ export function CreateDaemonSetPage() {
 
                             {(isV2 || config.lifecycleHooks?.preStop?.type === 'httpGet') && (
                               <VStack gap={8}>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
@@ -5361,12 +5361,12 @@ export function CreateDaemonSetPage() {
                                     </VStack>
                                   </div>
                                 </VStack>
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                    <VStack gap={1}>
+                                    <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
                                         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5454,7 +5454,7 @@ export function CreateDaemonSetPage() {
                                           </button>
                                         </div>
                                       ))}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"
@@ -5487,10 +5487,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 8. Health Check Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Health check" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Readiness Check */}
                           <VStack gap={3}>
                             <span className="text-heading-h6 text-[var(--color-text-default)]">
@@ -5872,12 +5872,12 @@ export function CreateDaemonSetPage() {
                                     </VStack>
                                   )}
                                   {config.readinessProbe?.type === 'httpGet' && (
-                                    <VStack gap={3}>
+                                    <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                        <VStack gap={1}>
+                                        <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
                                             <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -5962,7 +5962,7 @@ export function CreateDaemonSetPage() {
                                               </div>
                                             )
                                           )}
-                                          <div className="w-fit mt-1">
+                                          <div className="w-fit">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -6601,10 +6601,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 9. Resources Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Resources" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Row 1: CPU Reservation + CPU Limit */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
@@ -6639,7 +6639,7 @@ export function CreateDaemonSetPage() {
                                   }
                                   min={0}
                                   max={4000}
-                                  width="xs"
+                                  width="sm"
                                   suffix="mCPUs"
                                 />
                               </HStack>
@@ -6674,7 +6674,7 @@ export function CreateDaemonSetPage() {
                                   }
                                   min={0}
                                   max={4000}
-                                  width="xs"
+                                  width="sm"
                                   suffix="mCPUs"
                                 />
                               </HStack>
@@ -6716,7 +6716,7 @@ export function CreateDaemonSetPage() {
                                   }
                                   min={0}
                                   max={8192}
-                                  width="xs"
+                                  width="sm"
                                   suffix="MiB"
                                 />
                               </HStack>
@@ -6753,7 +6753,7 @@ export function CreateDaemonSetPage() {
                                   }
                                   min={0}
                                   max={8192}
-                                  width="xs"
+                                  width="sm"
                                   suffix="MiB"
                                 />
                               </HStack>
@@ -6764,10 +6764,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 10. Security Context Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Security context" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Row 1: Privileged + Privilege Escalation */}
                           <div className="flex gap-6 w-full">
                             <VStack gap={2} className="flex-1">
@@ -6974,10 +6974,10 @@ export function CreateDaemonSetPage() {
                     </SectionCard>
 
                     {/* 11. Storage Section */}
-                    <SectionCard className="pb-6">
+                    <SectionCard className="pb-4">
                       <SectionCard.Header title="Storage" />
-                      <SectionCard.Content className="pt-3">
-                        <VStack gap={8}>
+                      <SectionCard.Content>
+                        <VStack gap={6}>
                           {/* Selected volumes with their mounts */}
                           {config.selectedVolumes && config.selectedVolumes.length > 0 && (
                             <VStack gap={3}>
@@ -7141,7 +7141,7 @@ export function CreateDaemonSetPage() {
                                         )
                                       )}
                                       {/* Add Mount button inside volume container */}
-                                      <div className="w-fit mt-1">
+                                      <div className="w-fit">
                                         <Button
                                           variant="secondary"
                                           size="sm"

@@ -1712,7 +1712,7 @@ function ImageSection({
                   </HStack>
                 </div>
               ))}
-              <div className="w-fit mt-1">
+              <div className="w-fit">
                 <Button
                   variant="outline"
                   size="sm"
