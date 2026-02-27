@@ -2489,7 +2489,7 @@ function AdvancedSection({
           {/* User data Section */}
           <div className="py-6">
             <VStack gap={3} align="stretch">
-              <VStack gap={2} align="stretch">
+              <VStack gap={1} align="stretch">
                 <span className="text-label-lg text-[var(--color-text-default)]">User data</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   Enter a script or cloud-init configuration to run when the instance first boots.
