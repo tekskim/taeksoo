@@ -29,13 +29,13 @@ function LabelsSection() {
   const [labels, setLabels] = useState([{ key: 'app', value: 'my-service' }]);
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           <FormField label="Labels">
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={1}>
+              <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -77,7 +77,7 @@ function LabelsSection() {
                     </button>
                   </div>
                 ))}
-                <div className="w-fit mt-1">
+                <div className="w-fit">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -99,10 +99,10 @@ function LabelsSection() {
 function OpenFormPreview() {
   return (
     <VStack gap={4} className="w-full">
-      <SectionCard className="pb-6">
+      <SectionCard className="pb-4">
         <SectionCard.Header title="Basic information" />
-        <SectionCard.Content className="pt-3">
-          <VStack gap={8}>
+        <SectionCard.Content>
+          <VStack gap={6}>
             <FormField
               label="Name"
               required
@@ -120,10 +120,10 @@ function OpenFormPreview() {
         </SectionCard.Content>
       </SectionCard>
 
-      <SectionCard className="pb-6">
+      <SectionCard className="pb-4">
         <SectionCard.Header title="Configuration" />
-        <SectionCard.Content className="pt-3">
-          <VStack gap={8}>
+        <SectionCard.Content>
+          <VStack gap={6}>
             <FormField label="Port" required>
               <Input placeholder="e.g. 8080" fullWidth />
             </FormField>
@@ -140,11 +140,11 @@ function OpenFormPreview() {
 }
 
 const previewCode = `<VStack gap={4} className="flex-1">
-  {/* Section 1 — pb-6 overrides default 12px → 24px for Open Form */}
-  <SectionCard className="pb-6">
+  {/* Section 1 — pb-4 overrides default 12px → 16px for Open Form */}
+  <SectionCard className="pb-4">
     <SectionCard.Header title="Basic information" />
-    <SectionCard.Content className="pt-3">
-      <VStack gap={8}>
+    <SectionCard.Content>
+      <VStack gap={6}>
         <FormField label="Name" required helperText="...">
           <Input placeholder="Enter resource name" fullWidth />
         </FormField>
@@ -156,10 +156,10 @@ const previewCode = `<VStack gap={4} className="flex-1">
   </SectionCard>
 
   {/* Section 2 */}
-  <SectionCard className="pb-6">
+  <SectionCard className="pb-4">
     <SectionCard.Header title="Configuration" />
-    <SectionCard.Content className="pt-3">
-      <VStack gap={8}>
+    <SectionCard.Content>
+      <VStack gap={6}>
         <FormField label="Port" required>
           <Input placeholder="e.g. 8080" fullWidth />
         </FormField>
@@ -168,10 +168,10 @@ const previewCode = `<VStack gap={4} className="flex-1">
   </SectionCard>
 
   {/* Section 3 */}
-  <SectionCard className="pb-6">
+  <SectionCard className="pb-4">
     <SectionCard.Header title="Labels & Annotations" />
-    <SectionCard.Content className="pt-3">
-      <VStack gap={8}>
+    <SectionCard.Content>
+      <VStack gap={6}>
         <FormField label="Labels">
           <Input placeholder="e.g. app=my-service" fullWidth />
         </FormField>
@@ -353,15 +353,13 @@ export function OpenFormPage() {
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Header divider → content
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">
-                    24px (SectionCard gap-3 12px + Content pt-3 12px)
-                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">16px (SectionCard gap-4)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     Between form fields
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">32px (gap-8)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">24px (gap-6)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Label → input</td>
@@ -371,7 +369,7 @@ export function OpenFormPage() {
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
                     SectionCard bottom padding
                   </td>
-                  <td className="py-2 text-[var(--color-text-muted)]">24px (pb-6)</td>
+                  <td className="py-2 text-[var(--color-text-muted)]">16px (pb-4)</td>
                 </tr>
                 <tr className="border-b border-[var(--color-border-subtle)]">
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">
@@ -395,16 +393,12 @@ export function OpenFormPage() {
                   Wrap all SectionCards in <code className="text-body-sm">VStack gap={'{4}'}</code>
                 </li>
                 <li>
-                  Add <code className="text-body-sm">className=&quot;pb-6&quot;</code> to every{' '}
-                  <code className="text-body-sm">SectionCard</code> (24px bottom padding for Open
+                  Add <code className="text-body-sm">className=&quot;pb-4&quot;</code> to every{' '}
+                  <code className="text-body-sm">SectionCard</code> (16px bottom padding for Open
                   Form only)
                 </li>
                 <li>
-                  Add <code className="text-body-sm">className=&quot;pt-3&quot;</code> to every{' '}
-                  <code className="text-body-sm">SectionCard.Content</code>
-                </li>
-                <li>
-                  Use <code className="text-body-sm">VStack gap={'{8}'}</code> inside Content for
+                  Use <code className="text-body-sm">VStack gap={'{6}'}</code> inside Content for
                   field spacing
                 </li>
                 <li>

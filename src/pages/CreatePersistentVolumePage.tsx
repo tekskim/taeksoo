@@ -200,7 +200,7 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -383,7 +383,7 @@ function StorageConfigSection({
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -435,7 +435,7 @@ function StorageConfigSection({
             <FormField.Label>Mount Options</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {mountOptions.length > 0 && (
                     <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -463,7 +463,7 @@ function StorageConfigSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -483,7 +483,7 @@ function StorageConfigSection({
             <FormField.Label>Node Selectors</FormField.Label>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1} className="w-full">
+                <VStack gap={1.5} className="w-full">
                   {nodeSelectors.map((selector, selectorIndex) => (
                     <div
                       key={selectorIndex}
@@ -550,7 +550,7 @@ function StorageConfigSection({
                           </div>
                         ))}
                         <HStack justify="between" className="w-full">
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -570,7 +570,7 @@ function StorageConfigSection({
                       </VStack>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -616,10 +616,10 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>
@@ -628,7 +628,7 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -665,7 +665,7 @@ function LabelsAnnotationsSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -688,7 +688,7 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {annotations.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -725,7 +725,7 @@ function LabelsAnnotationsSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"

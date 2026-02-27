@@ -176,7 +176,7 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
@@ -314,14 +314,14 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
   };
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Resource quotas" showDivider />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={3}>
+      <SectionCard.Content>
+        <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Resource</span>
 
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={1} className="w-full">
+            <VStack gap={1.5} className="w-full">
               {quotaItems.map((item) => {
                 const unit = getResourceUnit(item.resourceType);
                 const placeholder = getResourcePlaceholder(item.resourceType);
@@ -383,7 +383,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                 );
               })}
 
-              <div className="w-fit mt-1">
+              <div className="w-fit">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -427,10 +427,10 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={8}>
+        <VStack gap={6}>
           {/* Labels */}
           <FormField>
             <FormField.Label>Labels</FormField.Label>
@@ -439,7 +439,7 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -476,7 +476,7 @@ function LabelsAnnotationsSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="outline"
                       size="sm"
@@ -500,7 +500,7 @@ function LabelsAnnotationsSection({
             </FormField.Description>
             <FormField.Control>
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                <VStack gap={1}>
+                <VStack gap={1.5}>
                   {annotations.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -537,7 +537,7 @@ function LabelsAnnotationsSection({
                       </button>
                     </div>
                   ))}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="outline"
                       size="sm"

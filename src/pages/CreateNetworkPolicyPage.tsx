@@ -452,10 +452,10 @@ function TrafficRulesSection({
   const activeRule = rules[activeRuleIndex];
 
   return (
-    <SectionCard className="pb-6">
+    <SectionCard className="pb-4">
       <SectionCard.Header title={title} />
-      <SectionCard.Content className="pt-3">
-        <VStack gap={8}>
+      <SectionCard.Content>
+        <VStack gap={6}>
           {/* Enable checkbox */}
           <Checkbox
             checked={enabled}
@@ -520,7 +520,7 @@ function TrafficRulesSection({
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1} className="w-full">
+                            <VStack gap={1.5} className="w-full">
                               {activeRule.targets.map((target) => (
                                 <div
                                   key={target.id}
@@ -580,7 +580,7 @@ function TrafficRulesSection({
                                     {target.ruleType === 'namespace-label-selector' && (
                                       <>
                                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                          <VStack gap={1}>
+                                          <VStack gap={1.5}>
                                             {(target.namespaceSelectors || []).length > 0 && (
                                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -660,7 +660,7 @@ function TrafficRulesSection({
                                                 </button>
                                               </div>
                                             ))}
-                                            <div className="w-fit mt-1">
+                                            <div className="w-fit">
                                               <Button
                                                 variant="secondary"
                                                 size="sm"
@@ -912,7 +912,7 @@ function TrafficRulesSection({
                                     {target.ruleType === 'pod-label-selector' && (
                                       <>
                                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                          <VStack gap={1}>
+                                          <VStack gap={1.5}>
                                             {(target.podSelectors || []).length > 0 && (
                                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -992,7 +992,7 @@ function TrafficRulesSection({
                                                 </button>
                                               </div>
                                             ))}
-                                            <div className="w-fit mt-1">
+                                            <div className="w-fit">
                                               <Button
                                                 variant="secondary"
                                                 size="sm"
@@ -1051,7 +1051,7 @@ function TrafficRulesSection({
                                     {/* Exceptions list (shown for IP block) */}
                                     {target.ruleType === 'ip-block' && (
                                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                        <VStack gap={1}>
+                                        <VStack gap={1.5}>
                                           {target.exceptions.length > 0 && (
                                             <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
                                               <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1085,7 +1085,7 @@ function TrafficRulesSection({
                                               </button>
                                             </div>
                                           ))}
-                                          <div className="w-fit mt-1">
+                                          <div className="w-fit">
                                             <Button
                                               variant="secondary"
                                               size="sm"
@@ -1101,7 +1101,7 @@ function TrafficRulesSection({
                                   </VStack>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -1122,7 +1122,7 @@ function TrafficRulesSection({
                           </label>
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1} className="w-full">
+                            <VStack gap={1.5} className="w-full">
                               {activeRule.allowedPorts.map((port) => (
                                 <div
                                   key={port.id}
@@ -1169,7 +1169,7 @@ function TrafficRulesSection({
                                   </VStack>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -1445,10 +1445,10 @@ export function CreateNetworkPolicyPage() {
           {/* Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Basic information" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Namespace */}
                   <FormField label="Namespace" required>
                     <Select
@@ -1508,16 +1508,16 @@ export function CreateNetworkPolicyPage() {
             />
 
             {/* Selector Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header
                 title="Selector"
                 description="Selector keys and values are intended to match labels and values on existing pods."
               />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Selector Rules */}
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1}>
+                    <VStack gap={1.5}>
                       {selectorRules.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1569,7 +1569,7 @@ export function CreateNetworkPolicyPage() {
                         </div>
                       ))}
 
-                      <div className="w-fit mt-1">
+                      <div className="w-fit">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -1612,10 +1612,10 @@ export function CreateNetworkPolicyPage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Labels */}
                   <VStack gap={3}>
                     <VStack gap={1}>
@@ -1628,7 +1628,7 @@ export function CreateNetworkPolicyPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1669,7 +1669,7 @@ export function CreateNetworkPolicyPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -1696,7 +1696,7 @@ export function CreateNetworkPolicyPage() {
                     </VStack>
 
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1}>
+                      <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -1741,7 +1741,7 @@ export function CreateNetworkPolicyPage() {
                             </button>
                           </div>
                         ))}
-                        <div className="w-fit mt-1">
+                        <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"

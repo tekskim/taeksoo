@@ -586,10 +586,10 @@ export default function CreateHPAPage() {
           {/* Form Sections */}
           <VStack gap={4} className="flex-1">
             {/* Basic Information Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Basic information" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Namespace */}
                   <FormField required>
                     <FormField.Label>Namespace</FormField.Label>
@@ -639,9 +639,9 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Target Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Target" />
-              <SectionCard.Content className="pt-3">
+              <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Target Reference */}
                   <FormField required>
@@ -680,10 +680,10 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Behavior Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Behavior" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Scale down behavior */}
                   <VStack gap={3}>
                     <label className="text-label-lg text-[var(--color-text-default)]">
@@ -700,7 +700,7 @@ export default function CreateHPAPage() {
                         {/* Policy table */}
                         <VStack gap={3}>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1}>
+                            <VStack gap={1.5}>
                               {scaleDownPolicies.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -756,7 +756,7 @@ export default function CreateHPAPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -809,7 +809,7 @@ export default function CreateHPAPage() {
                         {/* Policy table */}
                         <VStack gap={3}>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1}>
+                            <VStack gap={1.5}>
                               {scaleUpPolicies.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -861,7 +861,7 @@ export default function CreateHPAPage() {
                                   </button>
                                 </div>
                               ))}
-                              <div className="w-fit mt-1">
+                              <div className="w-fit">
                                 <Button
                                   variant="secondary"
                                   size="sm"
@@ -902,7 +902,7 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Metrics Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Metrics" />
               <SectionCard.Content>
                 <VStack gap={2}>
@@ -1072,7 +1072,7 @@ export default function CreateHPAPage() {
                                 Metric Selector
                               </label>
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                                <VStack gap={1}>
+                                <VStack gap={1.5}>
                                   {metric.selectors.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-label-sm text-[var(--color-text-default)]">
@@ -1143,7 +1143,7 @@ export default function CreateHPAPage() {
                                       </button>
                                     </div>
                                   ))}
-                                  <div className="w-fit mt-1">
+                                  <div className="w-fit">
                                     <Button
                                       variant="secondary"
                                       size="sm"
@@ -1163,7 +1163,7 @@ export default function CreateHPAPage() {
                   ))}
 
                   {/* Add a new row button */}
-                  <div className="w-fit mt-1">
+                  <div className="w-fit">
                     <Button
                       variant="secondary"
                       size="sm"
@@ -1178,10 +1178,10 @@ export default function CreateHPAPage() {
             </SectionCard>
 
             {/* Labels & Annotations Section */}
-            <SectionCard className="pb-6">
+            <SectionCard className="pb-4">
               <SectionCard.Header title="Labels & Annotations" />
-              <SectionCard.Content className="pt-3">
-                <VStack gap={8}>
+              <SectionCard.Content>
+                <VStack gap={6}>
                   {/* Labels */}
                   <FormField>
                     <FormField.Label>Labels</FormField.Label>
@@ -1234,7 +1234,7 @@ export default function CreateHPAPage() {
                               ))}
                             </VStack>
                           )}
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
@@ -1305,7 +1305,7 @@ export default function CreateHPAPage() {
                               ))}
                             </VStack>
                           )}
-                          <div className="w-fit mt-1">
+                          <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
