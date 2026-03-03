@@ -737,7 +737,7 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
                     <VStack gap={1}>
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         IP Address
@@ -759,7 +759,7 @@ export function FormPatternsPage() {
                   {hostAliases.map((alias, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="e.g. 127.0.0.1"

@@ -2108,9 +2108,11 @@ const [vlans, setVlans] = useState<{ id: string; network: string; subnet: string
 | 항목 | 규칙 |
 |---|---|
 | 외부 컨테이너 | `bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full` (border 없음) |
+| 카드 컨테이너 | `bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full` |
 | 행 추가 버튼 | `Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}` |
 | 행 삭제 버튼 | `IconX size={14}`, ghost style, 20px 컬럼 |
-| Grid gap | `gap-1` (4px) |
+| Grid gap (기본) | `gap-1` (4px) — 외부 컨테이너 직접 배치 시 |
+| Grid gap (카드) | `gap-2` (8px) — 카드 컨테이너 내부 배치 시 |
 | Header 텍스트 | `text-label-sm text-[var(--color-text-subtle)]` |
 | Header label → description gap | `gap-0.5` (2px) — `VStack gap={0.5}` |
 | 필수 컬럼 표시 | Header에 `*` 추가 |
