@@ -528,7 +528,7 @@ function TrafficRulesSection({
                                 >
                                   <VStack gap={3}>
                                     {/* Rule type + CIDR row */}
-                                    <VStack gap={1}>
+                                    <VStack gap={2}>
                                       <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                         <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Rule type
@@ -1128,7 +1128,7 @@ function TrafficRulesSection({
                                   key={port.id}
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
-                                  <VStack gap={1}>
+                                  <VStack gap={2}>
                                     <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                       <span className="block text-label-sm text-[var(--color-text-default)]">
                                         Port
