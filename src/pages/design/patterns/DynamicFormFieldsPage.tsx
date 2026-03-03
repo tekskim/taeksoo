@@ -16,7 +16,7 @@ function DynamicFieldTableDemo() {
   ]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -87,7 +87,7 @@ function EmptyDynamicFieldTableDemo() {
   const [rows, setRows] = useState<{ name: string; type: string; value: string }[]>([]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -160,7 +160,7 @@ function RepeatableFieldGroupDemo() {
   ]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5} className="w-full">
         {groups.map((group, gi) => (
           <div
@@ -261,7 +261,7 @@ function WithLabelDescriptionDemo() {
         </p>
       </VStack>
 
-      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
         <VStack gap={1.5}>
           {labels.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -326,7 +326,7 @@ function WithLabelDemo() {
     <VStack gap={2}>
       <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
 
-      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
         <VStack gap={1.5}>
           {labels.length > 0 && (
             <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -385,7 +385,7 @@ function DescriptionHeaderDemo() {
   const [rows, setRows] = useState([{ name: 'ndots', value: '5' }]);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -454,7 +454,7 @@ const withLabelCode = `<VStack gap={2}>
   <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
 
   {/* Key-Value Table */}
-  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
     <VStack gap={1.5}>
       {/* Column headers */}
       <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -490,7 +490,7 @@ const withLabelDescriptionCode = `<VStack gap={2}>
   </VStack>
 
   {/* Key-Value Table */}
-  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
     <VStack gap={1.5}>
       {/* Column headers */}
       <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -516,7 +516,7 @@ const withLabelDescriptionCode = `<VStack gap={2}>
   </div>
 </VStack>`;
 
-const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={1.5}>
     {/* Column headers with description */}
     <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -547,7 +547,7 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
   </VStack>
 </div>`;
 
-const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={1.5}>
     {/* Column headers */}
     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">

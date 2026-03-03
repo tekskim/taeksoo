@@ -656,7 +656,7 @@ export function CreateServicePage() {
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
                       Cluster IP, Headless
                     </span>
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {/* Header row */}
                         {ports.length > 0 && (
@@ -769,7 +769,7 @@ export function CreateServicePage() {
                     </span>
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
@@ -911,7 +911,7 @@ export function CreateServicePage() {
                     </span>
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
@@ -1071,7 +1071,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       External IPs
                     </label>
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {externalIPs.length > 0 && (
                           <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
@@ -1134,7 +1134,7 @@ export function CreateServicePage() {
                       Keys and values
                     </span>
                     {selectors.length === 0 ? (
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <HStack gap={2}>
                           <Button
                             variant="secondary"
@@ -1150,7 +1150,7 @@ export function CreateServicePage() {
                         </HStack>
                       </div>
                     ) : (
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={1.5}>
                           {selectors.length > 0 && (
                             <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1308,7 +1308,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for labels */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1378,7 +1378,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for annotations */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">

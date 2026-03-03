@@ -1130,11 +1130,15 @@ html.theme-transition *::after {
   --badge-subtle-gray-bg: var(--color-surface-muted);
   --badge-subtle-gray-text: var(--color-text-muted);
 
-  /* Input - Disabled (Dark Mode) */
+  /* Input (Dark Mode) */
+  --input-bg: var(--color-surface-default);
+  --input-border: var(--color-border-strong);
   --input-bg-disabled: #252525; /* surface-muted */
   --input-text-disabled: #4a4a4a; /* text-disabled */
 
   /* Select (Dark Mode) */
+  --select-bg: var(--color-surface-default);
+  --select-border: var(--color-border-strong);
   --select-bg-disabled: #252525; /* surface-muted */
   --select-menu-bg: #1c1c1c; /* surface-default */
   --select-menu-border: #444444; /* border-strong */
