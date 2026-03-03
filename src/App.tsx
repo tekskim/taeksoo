@@ -369,6 +369,7 @@ import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
+import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
@@ -1027,6 +1028,7 @@ function AppRoutes() {
         <Route path="patterns/layout" element={<LayoutPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/form-validation" element={<FormValidationPage />} />
+        <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
