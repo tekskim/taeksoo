@@ -385,6 +385,15 @@ const figmaItems: NavItem[] = [
   },
 ];
 
+const testItems: NavItem[] = [
+  {
+    id: 'nested-box-test',
+    label: 'Nested Box',
+    icon: IconBoxMultiple,
+    path: '/design/test/nested-box',
+  },
+];
+
 export const navGroups: NavGroup[] = [
   { title: 'Foundation', items: foundationItems },
   { title: 'Form Controls', items: formControlItems },
@@ -395,6 +404,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Layout', items: layoutItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Figma Migration', items: figmaItems },
+  { title: 'Test', items: testItems },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
