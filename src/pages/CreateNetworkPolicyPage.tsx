@@ -519,7 +519,7 @@ function TrafficRulesSection({
                             Targets
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.targets.map((target) => (
                                 <div
@@ -529,7 +529,7 @@ function TrafficRulesSection({
                                   <VStack gap={3}>
                                     {/* Rule type + CIDR row */}
                                     <VStack gap={1}>
-                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                         <span className="block text-label-sm text-[var(--color-text-default)]">
                                           Rule type
                                         </span>
@@ -551,7 +551,7 @@ function TrafficRulesSection({
                                           />
                                         </button>
                                       </div>
-                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                         <Select
                                           options={RULE_TYPE_OPTIONS}
                                           value={target.ruleType}
@@ -579,10 +579,10 @@ function TrafficRulesSection({
                                     {/* Namespace Label Selectors (namespace-label-selector only) */}
                                     {target.ruleType === 'namespace-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.namespaceSelectors || []).length > 0 && (
-                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Key
                                                 </span>
@@ -598,7 +598,7 @@ function TrafficRulesSection({
                                             {(target.namespaceSelectors || []).map((sel) => (
                                               <div
                                                 key={sel.id}
-                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="input key"
@@ -730,7 +730,7 @@ function TrafficRulesSection({
                                                   key={sel.id}
                                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                                 >
-                                                  <div className="flex gap-2 w-full">
+                                                  <div className="flex gap-1 w-full">
                                                     <VStack gap={2} className="flex-1 min-w-0">
                                                       <span className="text-label-sm text-[var(--color-text-default)]">
                                                         Key
@@ -803,7 +803,7 @@ function TrafficRulesSection({
                                                   key={sel.id}
                                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                                 >
-                                                  <div className="flex gap-2 w-full">
+                                                  <div className="flex gap-1 w-full">
                                                     <VStack gap={2} className="flex-1 min-w-0">
                                                       <span className="text-label-sm text-[var(--color-text-default)]">
                                                         Key
@@ -911,10 +911,10 @@ function TrafficRulesSection({
                                     {/* Pod Label Selectors (shown for pod type only) */}
                                     {target.ruleType === 'pod-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.podSelectors || []).length > 0 && (
-                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                                   Key
                                                 </span>
@@ -930,7 +930,7 @@ function TrafficRulesSection({
                                             {(target.podSelectors || []).map((sel) => (
                                               <div
                                                 key={sel.id}
-                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="input key"
@@ -1050,10 +1050,10 @@ function TrafficRulesSection({
 
                                     {/* Exceptions list (shown for IP block) */}
                                     {target.ruleType === 'ip-block' && (
-                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                         <VStack gap={1.5}>
                                           {target.exceptions.length > 0 && (
-                                            <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                            <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                                               <span className="block text-label-sm text-[var(--color-text-default)]">
                                                 Exception CIDR
                                               </span>
@@ -1063,7 +1063,7 @@ function TrafficRulesSection({
                                           {target.exceptions.map((ex, exIdx) => (
                                             <div
                                               key={exIdx}
-                                              className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                              className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
                                             >
                                               <Input
                                                 placeholder="e.g. 1.1.1.1/32"
@@ -1121,7 +1121,7 @@ function TrafficRulesSection({
                             Allowed Ports
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.allowedPorts.map((port) => (
                                 <div
@@ -1129,7 +1129,7 @@ function TrafficRulesSection({
                                   className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                                 >
                                   <VStack gap={1}>
-                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                       <span className="block text-label-sm text-[var(--color-text-default)]">
                                         Port
                                       </span>
@@ -1147,7 +1147,7 @@ function TrafficRulesSection({
                                         />
                                       </button>
                                     </div>
-                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                                       <Input
                                         placeholder="e.g. 8080"
                                         value={port.port}
@@ -1516,10 +1516,10 @@ export function CreateNetworkPolicyPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Selector Rules */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {selectorRules.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -1536,7 +1536,7 @@ export function CreateNetworkPolicyPage() {
                       {selectorRules.map((rule) => (
                         <div
                           key={rule.id}
-                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                         >
                           <Input
                             placeholder="input key"
@@ -1627,10 +1627,10 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1643,7 +1643,7 @@ export function CreateNetworkPolicyPage() {
                         {labels.map((label) => (
                           <div
                             key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -1695,10 +1695,10 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1711,7 +1711,7 @@ export function CreateNetworkPolicyPage() {
                         {annotations.map((annotation) => (
                           <div
                             key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"

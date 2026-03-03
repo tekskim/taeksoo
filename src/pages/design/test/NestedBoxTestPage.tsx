@@ -47,14 +47,14 @@ function KVGrid({
   return (
     <VStack gap={1}>
       {rows.length > 0 && (
-        <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
           <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
           <span className="block text-label-sm text-[var(--color-text-subtle)]">Value</span>
           <div className="w-5" />
         </div>
       )}
       {rows.map((row, i) => (
-        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
           <Input
             placeholder={keyPlaceholder}
             value={row.key}
@@ -219,7 +219,7 @@ function MatchExpressionsGrid({
   return (
     <VStack gap={1}>
       {expressions.length > 0 && (
-        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
           <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
           <span className="block text-label-sm text-[var(--color-text-subtle)]">Operator</span>
           <span className="block text-label-sm text-[var(--color-text-subtle)]">Value</span>
@@ -227,7 +227,7 @@ function MatchExpressionsGrid({
         </div>
       )}
       {expressions.map((expr, ei) => (
-        <div key={ei} className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center">
+        <div key={ei} className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center">
           <Input
             placeholder="e.g. kubernetes.io/os"
             value={expr.key}
@@ -291,7 +291,7 @@ function PatternA() {
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <KVGrid
                 rows={labels.rows}
                 onAdd={labels.add}
@@ -310,7 +310,7 @@ function PatternA() {
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <KVGrid
                 rows={annotations.rows}
                 onAdd={annotations.add}
@@ -580,7 +580,7 @@ function NodeSchedulingA() {
                       />
                     </VStack>
                     {/* L3: match expressions bordered box */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <MatchExpressionsGrid
                         expressions={term.matchExpressions}
                         onAdd={() => addExpression(ti)}

@@ -11,6 +11,7 @@ import {
   TopBar,
   PageShell,
   Input,
+  NumberInput,
   Select,
   SectionCard,
 } from '@/design-system';
@@ -274,13 +275,32 @@ const getResourcePlaceholder = (resourceType: string): string => {
   switch (resourceType) {
     case 'cpu-limit':
     case 'cpu-reservation':
-      return 'e.g. 2000';
+      return 'e.g. 1000';
     case 'memory-limit':
     case 'memory-reservation':
+      return 'e.g. 128';
     case 'storage-reservation':
-      return 'e.g. 2048';
+      return 'e.g. 512';
     default:
       return 'e.g. 50';
+  }
+};
+
+// Get range helper text for resource type
+const getResourceRangeText = (resourceType: string): string | null => {
+  switch (resourceType) {
+    case 'cpu-reservation':
+      return '10-1000 mCPUs';
+    case 'cpu-limit':
+      return '10-1000 mCPUs';
+    case 'memory-reservation':
+      return '4-128 GiB';
+    case 'memory-limit':
+      return '4-128 GiB';
+    case 'storage-reservation':
+      return '4-512000 GiB';
+    default:
+      return null;
   }
 };
 
@@ -320,18 +340,19 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Resource</span>
 
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={1.5} className="w-full">
               {quotaItems.map((item) => {
                 const unit = getResourceUnit(item.resourceType);
                 const placeholder = getResourcePlaceholder(item.resourceType);
+                const rangeText = getResourceRangeText(item.resourceType);
                 return (
                   <div
                     key={item.id}
                     className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                   >
                     <VStack gap={1}>
-                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
+                      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-start">
                         <VStack gap={0.5}>
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Resource Type
@@ -355,7 +376,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                           <IconX size={14} className="text-[var(--color-text-muted)]" />
                         </button>
                       </div>
-                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
                         <Select
                           options={RESOURCE_TYPE_OPTIONS}
                           value={item.resourceType}
@@ -363,19 +384,26 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                           placeholder="Select resource type"
                           fullWidth
                         />
-                        <HStack gap={2} align="center">
-                          <Input
-                            placeholder={placeholder}
-                            value={item.limit}
-                            onChange={(e) => updateQuotaItem(item.id, 'limit', e.target.value)}
-                            fullWidth
-                          />
-                          {unit && (
-                            <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                              {unit}
+                        <VStack gap={1}>
+                          <HStack gap={2} align="center">
+                            <NumberInput
+                              value={item.limit === '' ? undefined : Number(item.limit)}
+                              onChange={(val) => updateQuotaItem(item.id, 'limit', String(val))}
+                              width="sm"
+                              placeholder={placeholder}
+                            />
+                            {unit && (
+                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
+                                {unit}
+                              </span>
+                            )}
+                          </HStack>
+                          {rangeText && (
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
+                              {rangeText}
                             </span>
                           )}
-                        </HStack>
+                        </VStack>
                         <div />
                       </div>
                     </VStack>
@@ -438,10 +466,10 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -454,7 +482,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -499,10 +527,10 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -515,7 +543,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"

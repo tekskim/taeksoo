@@ -274,23 +274,24 @@ function ContainerResourceLimitSection({
               <FormField.Control>
                 <HStack gap={3} align="center">
                   <Slider
-                    min={0}
-                    max={4000}
-                    step={50}
+                    min={10}
+                    max={1000}
+                    step={10}
                     value={parseInt(resourceLimit.cpuReservation) || 0}
                     onChange={(val) => updateField('cpuReservation', val.toString())}
                   />
                   <NumberInput
                     value={resourceLimit.cpuReservation}
                     onChange={(val) => updateField('cpuReservation', val)}
-                    min={0}
-                    max={4000}
+                    min={10}
+                    max={1000}
                     step={1}
                     width="xs"
                     suffix="mCPUs"
                   />
                 </HStack>
               </FormField.Control>
+              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* CPU Limit */}
@@ -302,23 +303,24 @@ function ContainerResourceLimitSection({
               <FormField.Control>
                 <HStack gap={3} align="center">
                   <Slider
-                    min={0}
-                    max={4000}
-                    step={50}
+                    min={10}
+                    max={1000}
+                    step={10}
                     value={parseInt(resourceLimit.cpuLimit) || 0}
                     onChange={(val) => updateField('cpuLimit', val.toString())}
                   />
                   <NumberInput
                     value={resourceLimit.cpuLimit}
                     onChange={(val) => updateField('cpuLimit', val)}
-                    min={0}
-                    max={4000}
+                    min={10}
+                    max={1000}
                     step={1}
                     width="xs"
                     suffix="mCPUs"
                   />
                 </HStack>
               </FormField.Control>
+              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* Memory Reservation */}
@@ -330,23 +332,24 @@ function ContainerResourceLimitSection({
               <FormField.Control>
                 <HStack gap={3} align="center">
                   <Slider
-                    min={0}
-                    max={256}
-                    step={5}
+                    min={4}
+                    max={128}
+                    step={4}
                     value={parseInt(resourceLimit.memoryReservation) || 0}
                     onChange={(val) => updateField('memoryReservation', val.toString())}
                   />
                   <NumberInput
                     value={resourceLimit.memoryReservation}
                     onChange={(val) => updateField('memoryReservation', val)}
-                    min={0}
-                    max={256}
+                    min={4}
+                    max={128}
                     step={1}
                     width="xs"
                     suffix="GiB"
                   />
                 </HStack>
               </FormField.Control>
+              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
 
             {/* Memory Limit */}
@@ -358,23 +361,24 @@ function ContainerResourceLimitSection({
               <FormField.Control>
                 <HStack gap={3} align="center">
                   <Slider
-                    min={0}
-                    max={256}
-                    step={5}
+                    min={4}
+                    max={128}
+                    step={4}
                     value={parseInt(resourceLimit.memoryLimit) || 0}
                     onChange={(val) => updateField('memoryLimit', val.toString())}
                   />
                   <NumberInput
                     value={resourceLimit.memoryLimit}
                     onChange={(val) => updateField('memoryLimit', val)}
-                    min={0}
-                    max={256}
+                    min={4}
+                    max={128}
                     step={1}
                     width="xs"
                     suffix="GiB"
                   />
                 </HStack>
               </FormField.Control>
+              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
           </div>
         </VStack>
@@ -420,10 +424,10 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -436,7 +440,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -481,10 +485,10 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -497,7 +501,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -556,10 +560,10 @@ export function CreateLimitRangePage() {
 
   // Container Resource Limit state
   const [resourceLimit, setResourceLimit] = useState<ContainerResourceLimit>({
-    cpuReservation: '',
-    cpuLimit: '',
-    memoryReservation: '',
-    memoryLimit: '',
+    cpuReservation: '1000',
+    cpuLimit: '1000',
+    memoryReservation: '128',
+    memoryLimit: '128',
   });
 
   // Labels & Annotations state
