@@ -168,7 +168,7 @@ function RepeatableFieldGroupDemo() {
             className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
           >
             <VStack gap={1.5}>
-              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
+              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
                 <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
                 <span className="block text-label-sm text-[var(--color-text-default)]">
                   Value Type
@@ -186,7 +186,7 @@ function RepeatableFieldGroupDemo() {
               {group.map((ev, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                 >
                   <Input
                     placeholder="input variable name"

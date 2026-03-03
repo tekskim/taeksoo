@@ -592,7 +592,7 @@ export default function CreateIngressPage() {
                                   key={path.id}
                                   className="grid grid-cols-[2fr_1fr_1fr_20px] gap-1 w-full items-center"
                                 >
-                                  <HStack gap={2}>
+                                  <HStack gap={1}>
                                     <Select
                                       options={PATH_TYPE_OPTIONS}
                                       value={path.pathType}

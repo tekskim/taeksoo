@@ -1176,7 +1176,7 @@ export default function CreateHPAPage() {
                           {labels.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1188,7 +1188,7 @@ export default function CreateHPAPage() {
                               {labels.map((label) => (
                                 <div
                                   key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"
@@ -1243,7 +1243,7 @@ export default function CreateHPAPage() {
                           {annotations.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1255,7 +1255,7 @@ export default function CreateHPAPage() {
                               {annotations.map((annotation) => (
                                 <div
                                   key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"
