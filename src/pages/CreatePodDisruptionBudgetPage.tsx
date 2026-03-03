@@ -884,17 +884,15 @@ export function CreatePodDisruptionBudgetPage() {
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <div className="flex flex-col gap-[9px]">
-          <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Pod Disruption Budget
-            </h1>
-          </div>
+        <VStack gap={2}>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+            Create Pod Disruption Budget
+          </h1>
           <p className="text-body-md text-[var(--color-text-muted)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available
             during voluntary disruptions to ensure application stability.
           </p>
-        </div>
+        </VStack>
 
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">
