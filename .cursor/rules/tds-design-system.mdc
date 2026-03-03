@@ -1988,7 +1988,7 @@ const UNIT_OPTIONS = [
 const [labels, setLabels] = useState<{ key: string; value: string }[]>([]);
 
 // Layout: grid-cols-[1fr_1fr_20px]
-<div className="grid grid-cols-[1fr_1fr_20px] gap-2 items-center">
+<div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center">
   {/* Header */}
   <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
   <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
@@ -2109,7 +2109,7 @@ const [vlans, setVlans] = useState<{ id: string; network: string; subnet: string
 |---|---|
 | 행 추가 버튼 | `Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}` |
 | 행 삭제 버튼 | `IconX size={14}`, ghost style, 20px 컬럼 |
-| Grid gap | `gap-2` (8px) |
+| Grid gap | `gap-1` (4px) |
 | Header 텍스트 | `text-label-sm text-[var(--color-text-subtle)]` |
 | Header label → description gap | `gap-0.5` (2px) — `VStack gap={0.5}` |
 | 필수 컬럼 표시 | Header에 `*` 추가 |

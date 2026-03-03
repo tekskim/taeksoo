@@ -597,7 +597,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -610,7 +610,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="label key"
@@ -658,7 +658,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -671,7 +671,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="annotation key"
@@ -723,14 +723,14 @@ interface ScalingPolicySectionProps {
   onParallelismChange: (value: number) => void;
   backOffLimit: number;
   onBackOffLimitChange: (value: number) => void;
-  activeDeadline: number;
-  onActiveDeadlineChange: (value: number) => void;
+  activeDeadline: number | undefined;
+  onActiveDeadlineChange: (value: number | undefined) => void;
   successfulJobHistoryLimit: number;
   onSuccessfulJobHistoryLimitChange: (value: number) => void;
   failedJobHistoryLimit: number;
   onFailedJobHistoryLimitChange: (value: number) => void;
-  startingDeadlineSeconds: number;
-  onStartingDeadlineSecondsChange: (value: number) => void;
+  startingDeadlineSeconds: number | undefined;
+  onStartingDeadlineSecondsChange: (value: number | undefined) => void;
   concurrencyPolicy: 'allow' | 'forbid' | 'replace';
   onConcurrencyPolicyChange: (value: 'allow' | 'forbid' | 'replace') => void;
   suspend: boolean;
@@ -771,7 +771,7 @@ function ScalingPolicySection({
                   value={completions}
                   onChange={onCompletionsChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -789,7 +789,7 @@ function ScalingPolicySection({
                   value={parallelism}
                   onChange={onParallelismChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -807,7 +807,7 @@ function ScalingPolicySection({
                   value={backOffLimit}
                   onChange={onBackOffLimitChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -825,7 +825,7 @@ function ScalingPolicySection({
                   value={activeDeadline}
                   onChange={onActiveDeadlineChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -842,7 +842,7 @@ function ScalingPolicySection({
                 value={successfulJobHistoryLimit}
                 onChange={onSuccessfulJobHistoryLimitChange}
                 min={0}
-                width="xs"
+                width="sm"
               />
             </FormField.Control>
           </FormField>
@@ -855,7 +855,7 @@ function ScalingPolicySection({
                 value={failedJobHistoryLimit}
                 onChange={onFailedJobHistoryLimitChange}
                 min={0}
-                width="xs"
+                width="sm"
               />
             </FormField.Control>
           </FormField>
@@ -870,7 +870,7 @@ function ScalingPolicySection({
                   onChange={onStartingDeadlineSecondsChange}
                   min={0}
                   size="sm"
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -883,7 +883,7 @@ function ScalingPolicySection({
           <FormField>
             <FormField.Label>Concurrency</FormField.Label>
             <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <VStack gap={3} align="start">
+              <VStack gap={2} align="start">
                 <Radio
                   checked={concurrencyPolicy === 'allow'}
                   onChange={() => onConcurrencyPolicyChange('allow')}
@@ -907,7 +907,7 @@ function ScalingPolicySection({
           <FormField>
             <FormField.Label>Suspend</FormField.Label>
             <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-              <VStack gap={3} align="start">
+              <VStack gap={2} align="start">
                 <Radio
                   checked={suspend === true}
                   onChange={() => onSuspendChange(true)}
@@ -956,10 +956,12 @@ export function CreateCronJobPage() {
   const [completions, setCompletions] = useState(1);
   const [parallelism, setParallelism] = useState(1);
   const [backOffLimit, setBackOffLimit] = useState(6);
-  const [activeDeadline, setActiveDeadline] = useState(0);
+  const [activeDeadline, setActiveDeadline] = useState<number | undefined>(undefined);
   const [successfulJobHistoryLimit, setSuccessfulJobHistoryLimit] = useState(3);
   const [failedJobHistoryLimit, setFailedJobHistoryLimit] = useState(1);
-  const [startingDeadlineSeconds, setStartingDeadlineSeconds] = useState(0);
+  const [startingDeadlineSeconds, setStartingDeadlineSeconds] = useState<number | undefined>(
+    undefined
+  );
   const [concurrencyPolicy, setConcurrencyPolicy] = useState<'allow' | 'forbid' | 'replace'>(
     'allow'
   );
@@ -1997,7 +1999,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -2010,7 +2012,7 @@ export function CreateCronJobPage() {
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="label key"
@@ -2067,7 +2069,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -2080,7 +2082,7 @@ export function CreateCronJobPage() {
                             {podAnnotations.map((annotation, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="annotation key"
@@ -2656,7 +2658,7 @@ export function CreateCronJobPage() {
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2672,7 +2674,7 @@ export function CreateCronJobPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2891,7 +2893,7 @@ export function CreateCronJobPage() {
                                         Match Expressions
                                       </span>
                                       {term.matchExpressions.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Key
                                           </span>
@@ -2907,7 +2909,7 @@ export function CreateCronJobPage() {
                                       {term.matchExpressions.map((expr, exprIndex) => (
                                         <div
                                           key={exprIndex}
-                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. kubernetes.io/os"
@@ -3489,7 +3491,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -3511,7 +3513,7 @@ export function CreateCronJobPage() {
                             {tolerations.map((toleration, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="Key"
@@ -7069,7 +7071,7 @@ export function CreateCronJobPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7105,7 +7107,7 @@ export function CreateCronJobPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""

@@ -325,7 +325,7 @@ function VolumeClaimSection({
                 value={sourceType}
                 onChange={(value) => onSourceTypeChange(value as VolumeSourceType)}
               >
-                <VStack gap={1}>
+                <VStack gap={2}>
                   <Radio
                     value="storage-class"
                     label="Use a Storage Class to provision a new Persistent Volume"
@@ -443,7 +443,7 @@ function StorageConfigSection({ accessModes, onAccessModesChange }: StorageConfi
           <FormField>
             <FormField.Label>Access Modes</FormField.Label>
             <FormField.Control>
-              <VStack gap={1.5}>
+              <VStack gap={2}>
                 <Checkbox
                   checked={accessModes.singleNodeReadWrite}
                   onChange={(e) =>
@@ -516,7 +516,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -529,7 +529,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -577,7 +577,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -590,7 +590,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"

@@ -1937,7 +1937,7 @@ function NetworkSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {virtualLANs.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Network
                       </span>
@@ -1953,7 +1953,7 @@ function NetworkSection({
                   {virtualLANs.map((vlan) => (
                     <div
                       key={vlan.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
@@ -2429,7 +2429,7 @@ function AdvancedSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {tags.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -2442,7 +2442,7 @@ function AdvancedSection({
                   {tags.map((tag, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="tag key"

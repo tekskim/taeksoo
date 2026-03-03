@@ -391,7 +391,7 @@ function StorageConfigSection({
           <FormField>
             <FormField.Label>Access Modes</FormField.Label>
             <FormField.Control>
-              <VStack gap={1.5}>
+              <VStack gap={2}>
                 <Checkbox
                   checked={accessModes.singleNodeReadWrite}
                   onChange={(e) =>
@@ -437,7 +437,7 @@ function StorageConfigSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {mountOptions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Option
                       </span>
@@ -447,7 +447,7 @@ function StorageConfigSection({
                   {mountOptions.map((option, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="input key"
@@ -489,8 +489,8 @@ function StorageConfigSection({
                       key={selectorIndex}
                       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                     >
-                      <VStack gap={1}>
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                      <VStack gap={1.5}>
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -505,7 +505,7 @@ function StorageConfigSection({
                         {selector.rules.map((rule, ruleIndex) => (
                           <div
                             key={ruleIndex}
-                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="input key"
@@ -549,24 +549,16 @@ function StorageConfigSection({
                             </button>
                           </div>
                         ))}
-                        <HStack justify="between" className="w-full">
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} />}
-                              onClick={() => addNodeSelectorRule(selectorIndex)}
-                            >
-                              Add Rule
-                            </Button>
-                          </div>
-                          <button
-                            onClick={() => removeNodeSelector(selectorIndex)}
-                            className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} />}
+                            onClick={() => addNodeSelectorRule(selectorIndex)}
                           >
-                            <IconX size={14} />
-                          </button>
-                        </HStack>
+                            Add Rule
+                          </Button>
+                        </div>
                       </VStack>
                     </div>
                   ))}
@@ -630,7 +622,7 @@ function LabelsAnnotationsSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -643,7 +635,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -690,7 +682,7 @@ function LabelsAnnotationsSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -703,7 +695,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
