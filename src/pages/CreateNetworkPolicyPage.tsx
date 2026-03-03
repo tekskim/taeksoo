@@ -519,7 +519,7 @@ function TrafficRulesSection({
                             Targets
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.targets.map((target) => (
                                 <div
@@ -579,7 +579,7 @@ function TrafficRulesSection({
                                     {/* Namespace Label Selectors (namespace-label-selector only) */}
                                     {target.ruleType === 'namespace-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.namespaceSelectors || []).length > 0 && (
                                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -911,7 +911,7 @@ function TrafficRulesSection({
                                     {/* Pod Label Selectors (shown for pod type only) */}
                                     {target.ruleType === 'pod-label-selector' && (
                                       <>
-                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                           <VStack gap={1.5}>
                                             {(target.podSelectors || []).length > 0 && (
                                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -1050,7 +1050,7 @@ function TrafficRulesSection({
 
                                     {/* Exceptions list (shown for IP block) */}
                                     {target.ruleType === 'ip-block' && (
-                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                         <VStack gap={1.5}>
                                           {target.exceptions.length > 0 && (
                                             <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
@@ -1121,7 +1121,7 @@ function TrafficRulesSection({
                             Allowed Ports
                           </label>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5} className="w-full">
                               {activeRule.allowedPorts.map((port) => (
                                 <div
@@ -1516,7 +1516,7 @@ export function CreateNetworkPolicyPage() {
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Selector Rules */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {selectorRules.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -1627,7 +1627,7 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1695,7 +1695,7 @@ export function CreateNetworkPolicyPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">

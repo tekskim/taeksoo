@@ -291,7 +291,7 @@ function PatternA() {
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <KVGrid
                 rows={labels.rows}
                 onAdd={labels.add}
@@ -310,7 +310,7 @@ function PatternA() {
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <KVGrid
                 rows={annotations.rows}
                 onAdd={annotations.add}
@@ -580,7 +580,7 @@ function NodeSchedulingA() {
                       />
                     </VStack>
                     {/* L3: match expressions bordered box */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <MatchExpressionsGrid
                         expressions={term.matchExpressions}
                         onAdd={() => addExpression(ti)}

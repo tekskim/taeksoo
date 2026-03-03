@@ -594,7 +594,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -655,7 +655,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1186,7 +1186,7 @@ export function CreateCronJobPage() {
   );
 
   // Scaling and Upgrade Policy state
-  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('30');
+  const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('');
 
   // Node Scheduling state
   const [nodeScheduling, setNodeScheduling] = useState<string>('any');
@@ -1996,7 +1996,7 @@ export function CreateCronJobPage() {
                         </VStack>
 
                         {/* Labels container */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -2066,7 +2066,7 @@ export function CreateCronJobPage() {
                         </VStack>
 
                         {/* Annotations container */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -2141,35 +2141,22 @@ export function CreateCronJobPage() {
                       <VStack gap={2} className="w-full">
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
-                            Termination Grace Period
+                            Pod Active Deadline
                           </span>
                           <span className="text-body-md text-[var(--color-text-subtle)]">
-                            The period allowed after receiving a termination request before the pod
-                            is forcibly terminated.
+                            The maximum duration a pod is allowed to run before it is automatically
+                            terminated.
                           </span>
                         </VStack>
-                        <HStack gap={3} align="center">
-                          <Slider
-                            min={0}
-                            max={600}
-                            step={10}
-                            value={terminationGracePeriod ? parseInt(terminationGracePeriod) : 0}
-                            onChange={(val) => setTerminationGracePeriod(val.toString())}
-                          />
-                          <NumberInput
-                            width="xs"
-                            value={
-                              terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
-                            }
-                            onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
-                            min={0}
-                            max={600}
-                            suffix="Seconds"
-                          />
-                        </HStack>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          0-600 seconds
-                        </span>
+                        <NumberInput
+                          width="sm"
+                          value={
+                            terminationGracePeriod ? parseInt(terminationGracePeriod) : undefined
+                          }
+                          onChange={(val) => setTerminationGracePeriod(val?.toString() || '')}
+                          min={0}
+                          suffix="Seconds"
+                        />
                       </VStack>
                     </VStack>
                   </SectionCard.Content>
@@ -2266,7 +2253,7 @@ export function CreateCronJobPage() {
                           Nameservers
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2325,7 +2312,7 @@ export function CreateCronJobPage() {
                           Search Domains
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2384,7 +2371,7 @@ export function CreateCronJobPage() {
                           Resolver Options
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2461,7 +2448,7 @@ export function CreateCronJobPage() {
                           Host Aliases
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2655,7 +2642,7 @@ export function CreateCronJobPage() {
                                         width="sm"
                                       />
                                     </VStack>
-                                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -2793,7 +2780,7 @@ export function CreateCronJobPage() {
                             </p>
                           </VStack>
 
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={3}>
                               {nodeAffinityTerms.map((term, termIndex) => (
                                 <div
@@ -3258,7 +3245,7 @@ export function CreateCronJobPage() {
                             )}
 
                             {/* Match Expressions / Rules Section */}
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
@@ -3488,7 +3475,7 @@ export function CreateCronJobPage() {
                           Tolerations
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
@@ -4479,7 +4466,7 @@ export function CreateCronJobPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Request Headers
                             </span>
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -4828,7 +4815,7 @@ export function CreateCronJobPage() {
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content>
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5} className="w-full">
                             {(config.envVars || []).map((envVar, index) => {
                               const hasFourCols =
@@ -5219,7 +5206,7 @@ export function CreateCronJobPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                     <VStack gap={1.5}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
@@ -5478,7 +5465,7 @@ export function CreateCronJobPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
@@ -5989,7 +5976,7 @@ export function CreateCronJobPage() {
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
-                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
@@ -7053,7 +7040,7 @@ export function CreateCronJobPage() {
                                 ) => (
                                   <div
                                     key={volIndex}
-                                    className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                    className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
                                   >
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">

@@ -273,7 +273,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
 
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={1.5}>
               {parameters.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -422,7 +422,7 @@ function CustomizeSection({
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {mountOptions.length > 0 && (
                   <div className="grid grid-cols-[1fr_20px] gap-1 w-full">

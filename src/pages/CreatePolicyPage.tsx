@@ -885,7 +885,7 @@ function PolicyEditorSection({
                       {(['read', 'list', 'write', 'delete', 'admin'] as const).map((action) => (
                         <div
                           key={action}
-                          className={`flex-1 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
+                          className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 cursor-pointer h-[44px] flex items-center ${
                             actionErrors[permission.id]
                               ? 'ring-1 ring-[var(--color-state-danger)]'
                               : ''

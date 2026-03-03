@@ -571,7 +571,7 @@ export default function CreateIngressPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Paths
                           </span>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5}>
                               {rule.paths.length > 0 && (
                                 <div className="grid grid-cols-[2fr_1fr_1fr_20px] gap-1 w-full">
@@ -722,7 +722,7 @@ export default function CreateIngressPage() {
                     {certificates.map((cert) => (
                       <div
                         key={cert.id}
-                        className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                        className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
                       >
                         <VStack gap={3}>
                           <VStack gap={1}>
@@ -851,7 +851,7 @@ export default function CreateIngressPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -919,7 +919,7 @@ export default function CreateIngressPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
