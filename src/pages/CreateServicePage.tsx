@@ -661,7 +661,7 @@ export function CreateServicePage() {
                         {/* Header row */}
                         {ports.length > 0 && (
                           <div
-                            className={`grid gap-2 w-full ${
+                            className={`grid gap-1 w-full ${
                               showNodePort
                                 ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                 : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -692,7 +692,7 @@ export function CreateServicePage() {
                         {ports.map((port) => (
                           <div
                             key={port.id}
-                            className={`grid gap-2 w-full items-center ${
+                            className={`grid gap-1 w-full items-center ${
                               showNodePort
                                 ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                 : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -774,7 +774,7 @@ export function CreateServicePage() {
                             {/* Header row */}
                             {ports.length > 0 && (
                               <div
-                                className={`grid gap-2 w-full ${
+                                className={`grid gap-1 w-full ${
                                   showNodePort
                                     ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                     : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -805,7 +805,7 @@ export function CreateServicePage() {
                             {ports.map((port) => (
                               <div
                                 key={port.id}
-                                className={`grid gap-2 w-full items-center ${
+                                className={`grid gap-1 w-full items-center ${
                                   showNodePort
                                     ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                     : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -916,7 +916,7 @@ export function CreateServicePage() {
                             {/* Header row */}
                             {ports.length > 0 && (
                               <div
-                                className={`grid gap-2 w-full ${
+                                className={`grid gap-1 w-full ${
                                   showNodePort
                                     ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
                                     : 'grid-cols-[1fr_1fr_1fr_20px]'
@@ -944,7 +944,7 @@ export function CreateServicePage() {
                             {ports.map((port) => (
                               <div
                                 key={port.id}
-                                className={`grid gap-2 w-full items-center ${
+                                className={`grid gap-1 w-full items-center ${
                                   showNodePort
                                     ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
                                     : 'grid-cols-[1fr_1fr_1fr_20px]'

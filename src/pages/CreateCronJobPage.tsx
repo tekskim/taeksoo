@@ -2256,7 +2256,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
@@ -2271,7 +2271,7 @@ export function CreateCronJobPage() {
                             {nameservers.map((ns, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 8.8.8.8"
@@ -2315,7 +2315,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
@@ -2330,7 +2330,7 @@ export function CreateCronJobPage() {
                             {searchDomains.map((sd, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. example.com"
@@ -2374,7 +2374,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
@@ -2397,7 +2397,7 @@ export function CreateCronJobPage() {
                             {resolverOptions.map((opt, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="input name"
@@ -2451,7 +2451,7 @@ export function CreateCronJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
@@ -2474,7 +2474,7 @@ export function CreateCronJobPage() {
                             {hostAliases.map((alias, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 127.0.0.1"
@@ -3248,7 +3248,7 @@ export function CreateCronJobPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
@@ -3264,7 +3264,7 @@ export function CreateCronJobPage() {
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
+                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full items-center"
                                   >
                                     <Input
                                       placeholder="Input key"
@@ -4469,7 +4469,7 @@ export function CreateCronJobPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
@@ -4483,7 +4483,7 @@ export function CreateCronJobPage() {
                                   (header: { name: string; value: string }, index: number) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                                     >
                                       <Input
                                         placeholder="e.g. X-Custom-Header"
@@ -5211,7 +5211,7 @@ export function CreateCronJobPage() {
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5229,7 +5229,7 @@ export function CreateCronJobPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -5469,7 +5469,7 @@ export function CreateCronJobPage() {
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5487,7 +5487,7 @@ export function CreateCronJobPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -5980,7 +5980,7 @@ export function CreateCronJobPage() {
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
-                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
@@ -5994,7 +5994,7 @@ export function CreateCronJobPage() {
                                             (header, index) => (
                                               <div
                                                 key={index}
-                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="Input name"
