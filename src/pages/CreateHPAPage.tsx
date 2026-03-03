@@ -296,7 +296,7 @@ export default function CreateHPAPage() {
             source: 'Resource',
             resourceName: 'CPU',
             type: 'AverageUtilization',
-            quantity: 1,
+            quantity: 80,
             metricName: '',
             referentApiVersion: '',
             referentKind: '',
@@ -308,7 +308,7 @@ export default function CreateHPAPage() {
             source: 'External',
             resourceName: '',
             type: 'AverageUtilization',
-            quantity: 1,
+            quantity: 80,
             metricName: '',
             referentApiVersion: '',
             referentKind: '',
@@ -320,7 +320,7 @@ export default function CreateHPAPage() {
             source: 'Pods',
             resourceName: '',
             type: 'AverageUtilization',
-            quantity: 1,
+            quantity: 80,
             metricName: '',
             referentApiVersion: '',
             referentKind: '',
@@ -332,7 +332,7 @@ export default function CreateHPAPage() {
             source: 'Object',
             resourceName: '',
             type: 'AverageUtilization',
-            quantity: 1,
+            quantity: 80,
             metricName: '',
             referentApiVersion: '',
             referentKind: '',
@@ -663,7 +663,7 @@ export default function CreateHPAPage() {
                         value={minReplicas}
                         onChange={setMinReplicas}
                         min={1}
-                        width="xs"
+                        width="sm"
                       />
                     </FormField>
                     <FormField label="Maximum Replicas" required>
@@ -671,7 +671,7 @@ export default function CreateHPAPage() {
                         value={maxReplicas}
                         onChange={setMaxReplicas}
                         min={1}
-                        width="xs"
+                        width="sm"
                       />
                     </FormField>
                   </VStack>
@@ -683,9 +683,9 @@ export default function CreateHPAPage() {
             <SectionCard className="pb-4">
               <SectionCard.Header title="Behavior" />
               <SectionCard.Content>
-                <VStack gap={6}>
+                <HStack gap={6} className="w-full items-start">
                   {/* Scale down behavior */}
-                  <VStack gap={3}>
+                  <VStack gap={3} className="flex-1">
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Scale down behavior
                     </label>
@@ -696,105 +696,94 @@ export default function CreateHPAPage() {
                     />
 
                     {scaleDownBehavior && (
-                      <VStack gap={8} className="mt-1">
-                        {/* Policy table */}
-                        <VStack gap={3}>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1.5}>
-                              {scaleDownPolicies.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Type <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Value{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Period seconds{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <div className="w-5" />
-                                </div>
-                              )}
-                              {scaleDownPolicies.map((policy) => (
-                                <div
-                                  key={policy.id}
-                                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Select
-                                    options={SCALING_POLICY_TYPE_OPTIONS}
-                                    value={policy.type}
-                                    onChange={(val) =>
-                                      updateScaleDownPolicy(policy.id, 'type', val)
-                                    }
-                                    placeholder="Select type"
-                                    fullWidth
-                                  />
-                                  <NumberInput
-                                    value={policy.value}
-                                    onChange={(val) =>
-                                      updateScaleDownPolicy(policy.id, 'value', val)
-                                    }
-                                    min={0}
-                                    width="full"
-                                  />
-                                  <NumberInput
-                                    value={policy.periodSeconds}
-                                    onChange={(val) =>
-                                      updateScaleDownPolicy(policy.id, 'periodSeconds', val)
-                                    }
-                                    min={0}
-                                    width="full"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => removeScaleDownPolicy(policy.id)}
-                                    className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-                                  >
-                                    <IconX size={14} />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} />}
-                                  onClick={addScaleDownPolicy}
-                                >
-                                  Add Policy
-                                </Button>
+                      <VStack gap={6} className="mt-1">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <VStack gap={1.5}>
+                            {scaleDownPolicies.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Type <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Value <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Period seconds{' '}
+                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <div className="w-5" />
                               </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Select Policy & Stabilization */}
-                        <div className="grid grid-cols-2 gap-6 w-full">
-                          <FormField label="Select Policy">
-                            <Select
-                              options={SELECT_POLICY_OPTIONS}
-                              value={scaleDownSelectPolicy}
-                              onChange={setScaleDownSelectPolicy}
-                              fullWidth
-                            />
-                          </FormField>
-                          <FormField label="Stabilization window seconds">
-                            <NumberInput
-                              value={scaleDownStabilization}
-                              onChange={setScaleDownStabilization}
-                              min={0}
-                              width="full"
-                            />
-                          </FormField>
+                            )}
+                            {scaleDownPolicies.map((policy) => (
+                              <div
+                                key={policy.id}
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                              >
+                                <Select
+                                  options={SCALING_POLICY_TYPE_OPTIONS}
+                                  value={policy.type}
+                                  onChange={(val) => updateScaleDownPolicy(policy.id, 'type', val)}
+                                  placeholder="Select type"
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={policy.value}
+                                  onChange={(val) => updateScaleDownPolicy(policy.id, 'value', val)}
+                                  min={0}
+                                  width="full"
+                                />
+                                <NumberInput
+                                  value={policy.periodSeconds}
+                                  onChange={(val) =>
+                                    updateScaleDownPolicy(policy.id, 'periodSeconds', val)
+                                  }
+                                  min={0}
+                                  width="full"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeScaleDownPolicy(policy.id)}
+                                  className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                >
+                                  <IconX size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} />}
+                                onClick={addScaleDownPolicy}
+                              >
+                                Add Policy
+                              </Button>
+                            </div>
+                          </VStack>
                         </div>
+
+                        <FormField label="Select Policy">
+                          <Select
+                            options={SELECT_POLICY_OPTIONS}
+                            value={scaleDownSelectPolicy}
+                            onChange={setScaleDownSelectPolicy}
+                            fullWidth
+                          />
+                        </FormField>
+                        <FormField label="Stabilization window seconds">
+                          <NumberInput
+                            value={scaleDownStabilization}
+                            onChange={setScaleDownStabilization}
+                            min={0}
+                            width="sm"
+                          />
+                        </FormField>
                       </VStack>
                     )}
                   </VStack>
 
                   {/* Scale up behavior */}
-                  <VStack gap={3}>
+                  <VStack gap={3} className="flex-1">
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       Scale up behavior
                     </label>
@@ -805,99 +794,92 @@ export default function CreateHPAPage() {
                     />
 
                     {scaleUpBehavior && (
-                      <VStack gap={8} className="mt-1">
-                        {/* Policy table */}
-                        <VStack gap={3}>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={1.5}>
-                              {scaleUpPolicies.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Type <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Value{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Period seconds{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </span>
-                                  <div className="w-5" />
-                                </div>
-                              )}
-                              {scaleUpPolicies.map((policy) => (
-                                <div
-                                  key={policy.id}
-                                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Select
-                                    options={SCALING_POLICY_TYPE_OPTIONS}
-                                    value={policy.type}
-                                    onChange={(val) => updateScaleUpPolicy(policy.id, 'type', val)}
-                                    placeholder="Select type"
-                                    fullWidth
-                                  />
-                                  <NumberInput
-                                    value={policy.value}
-                                    onChange={(val) => updateScaleUpPolicy(policy.id, 'value', val)}
-                                    min={0}
-                                    width="full"
-                                  />
-                                  <NumberInput
-                                    value={policy.periodSeconds}
-                                    onChange={(val) =>
-                                      updateScaleUpPolicy(policy.id, 'periodSeconds', val)
-                                    }
-                                    min={0}
-                                    width="full"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => removeScaleUpPolicy(policy.id)}
-                                    className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-                                  >
-                                    <IconX size={14} />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} />}
-                                  onClick={addScaleUpPolicy}
-                                >
-                                  Add Policy
-                                </Button>
+                      <VStack gap={6} className="mt-1">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <VStack gap={1.5}>
+                            {scaleUpPolicies.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Type <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Value <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Period seconds{' '}
+                                  <span className="text-[var(--color-state-danger)]">*</span>
+                                </span>
+                                <div className="w-5" />
                               </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Select Policy & Stabilization */}
-                        <div className="grid grid-cols-2 gap-6 w-full">
-                          <FormField label="Select Policy">
-                            <Select
-                              options={SELECT_POLICY_OPTIONS}
-                              value={scaleUpSelectPolicy}
-                              onChange={setScaleUpSelectPolicy}
-                              fullWidth
-                            />
-                          </FormField>
-                          <FormField label="Stabilization window seconds">
-                            <NumberInput
-                              value={scaleUpStabilization}
-                              onChange={setScaleUpStabilization}
-                              min={0}
-                              width="full"
-                            />
-                          </FormField>
+                            )}
+                            {scaleUpPolicies.map((policy) => (
+                              <div
+                                key={policy.id}
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                              >
+                                <Select
+                                  options={SCALING_POLICY_TYPE_OPTIONS}
+                                  value={policy.type}
+                                  onChange={(val) => updateScaleUpPolicy(policy.id, 'type', val)}
+                                  placeholder="Select type"
+                                  fullWidth
+                                />
+                                <NumberInput
+                                  value={policy.value}
+                                  onChange={(val) => updateScaleUpPolicy(policy.id, 'value', val)}
+                                  min={0}
+                                  width="full"
+                                />
+                                <NumberInput
+                                  value={policy.periodSeconds}
+                                  onChange={(val) =>
+                                    updateScaleUpPolicy(policy.id, 'periodSeconds', val)
+                                  }
+                                  min={0}
+                                  width="full"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeScaleUpPolicy(policy.id)}
+                                  className="flex items-center justify-center w-5 h-5 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                                >
+                                  <IconX size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} />}
+                                onClick={addScaleUpPolicy}
+                              >
+                                Add Policy
+                              </Button>
+                            </div>
+                          </VStack>
                         </div>
+
+                        <FormField label="Select Policy">
+                          <Select
+                            options={SELECT_POLICY_OPTIONS}
+                            value={scaleUpSelectPolicy}
+                            onChange={setScaleUpSelectPolicy}
+                            fullWidth
+                          />
+                        </FormField>
+                        <FormField label="Stabilization window seconds">
+                          <NumberInput
+                            value={scaleUpStabilization}
+                            onChange={setScaleUpStabilization}
+                            min={0}
+                            width="sm"
+                          />
+                        </FormField>
                       </VStack>
                     )}
                   </VStack>
-                </VStack>
+                </HStack>
               </SectionCard.Content>
             </SectionCard>
 
@@ -993,7 +975,7 @@ export default function CreateHPAPage() {
                             onChange={(val) => updateMetric(metric.id, 'quantity', val)}
                             min={0}
                             step={1}
-                            width="xs"
+                            width="sm"
                             suffix={metric.type === 'AverageUtilization' ? '%' : undefined}
                           />
                         </VStack>
@@ -1071,10 +1053,10 @@ export default function CreateHPAPage() {
                               <label className="text-label-lg text-[var(--color-text-default)]">
                                 Metric Selector
                               </label>
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                 <VStack gap={1.5}>
                                   {metric.selectors.length > 0 && (
-                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                                       <label className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </label>
@@ -1090,7 +1072,7 @@ export default function CreateHPAPage() {
                                   {metric.selectors.map((selector) => (
                                     <div
                                       key={selector.id}
-                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                                     >
                                       <Input
                                         placeholder="Input key"
@@ -1189,7 +1171,7 @@ export default function CreateHPAPage() {
                       Specify the labels used to identify and categorize the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {labels.length > 0 && (
                             <VStack gap={2} className="w-full">
@@ -1256,7 +1238,7 @@ export default function CreateHPAPage() {
                       Specify the annotations used to provide additional metadata for the resource.
                     </FormField.Description>
                     <FormField.Control>
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={3}>
                           {annotations.length > 0 && (
                             <VStack gap={2} className="w-full">

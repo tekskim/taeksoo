@@ -34,10 +34,10 @@ function LabelsSection() {
       <SectionCard.Content>
         <VStack gap={6}>
           <FormField label="Labels">
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -48,7 +48,7 @@ function LabelsSection() {
                   </div>
                 )}
                 {labels.map((row, i) => (
-                  <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+                  <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
                     <Input
                       placeholder="key"
                       value={row.key}

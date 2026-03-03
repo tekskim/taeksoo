@@ -571,10 +571,10 @@ export default function CreateIngressPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Paths
                           </span>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                             <VStack gap={1.5}>
                               {rule.paths.length > 0 && (
-                                <div className="grid grid-cols-[2fr_1fr_1fr_20px] gap-2 w-full">
+                                <div className="grid grid-cols-[2fr_1fr_1fr_20px] gap-1 w-full">
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Path
                                   </span>
@@ -590,7 +590,7 @@ export default function CreateIngressPage() {
                               {rule.paths.map((path) => (
                                 <div
                                   key={path.id}
-                                  className="grid grid-cols-[2fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                  className="grid grid-cols-[2fr_1fr_1fr_20px] gap-1 w-full items-center"
                                 >
                                   <HStack gap={2}>
                                     <Select
@@ -684,7 +684,7 @@ export default function CreateIngressPage() {
                   </InlineMessage>
 
                   {/* Target Service and Port */}
-                  <HStack gap={6} className="w-full">
+                  <HStack gap={4} className="w-full">
                     <VStack gap={2} className="flex-1">
                       <label className="text-label-lg text-[var(--color-text-default)]">
                         Target Service
@@ -718,21 +718,64 @@ export default function CreateIngressPage() {
                   <span className="text-label-lg text-[var(--color-text-default)]">
                     Certificates
                   </span>
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-                    <VStack gap={1.5} className="w-full">
-                      {certificates.map((cert) => (
-                        <div
-                          key={cert.id}
-                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                        >
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <HStack className="w-full" align="center" justify="between">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Secret Name
-                                </span>
+                  <VStack gap={1.5} className="w-full">
+                    {certificates.map((cert) => (
+                      <div
+                        key={cert.id}
+                        className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
+                      >
+                        <VStack gap={3}>
+                          <VStack gap={1}>
+                            <HStack className="w-full" align="center" justify="between">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
+                                Secret Name
+                              </span>
+                              <button
+                                onClick={() => removeCertificate(cert.id)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </HStack>
+                            <Select
+                              options={CERTIFICATE_OPTIONS}
+                              value={cert.secretName}
+                              onChange={(value) => updateCertificate(cert.id, 'secretName', value)}
+                              fullWidth
+                            />
+                          </VStack>
+
+                          <VStack gap={1}>
+                            <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Host
+                              </span>
+                              <div className="w-5" />
+                            </div>
+                            {cert.hosts.map((host, hi) => (
+                              <div
+                                key={hi}
+                                className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
+                              >
+                                <Input
+                                  placeholder="e.g. example.com"
+                                  value={host}
+                                  onChange={(e) => {
+                                    const newHosts = [...cert.hosts];
+                                    newHosts[hi] = e.target.value;
+                                    updateCertificate(cert.id, 'hosts', newHosts);
+                                  }}
+                                  fullWidth
+                                />
                                 <button
-                                  onClick={() => removeCertificate(cert.id)}
+                                  onClick={() => {
+                                    const newHosts = cert.hosts.filter((_, idx) => idx !== hi);
+                                    updateCertificate(cert.id, 'hosts', newHosts);
+                                  }}
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
@@ -741,82 +784,35 @@ export default function CreateIngressPage() {
                                     stroke={1.5}
                                   />
                                 </button>
-                              </HStack>
-                              <Select
-                                options={CERTIFICATE_OPTIONS}
-                                value={cert.secretName}
-                                onChange={(value) =>
-                                  updateCertificate(cert.id, 'secretName', value)
+                              </div>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() =>
+                                  updateCertificate(cert.id, 'hosts', [...cert.hosts, ''])
                                 }
-                                fullWidth
-                              />
-                            </VStack>
-
-                            <VStack gap={1}>
-                              <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Host
-                                </span>
-                                <div className="w-5" />
-                              </div>
-                              {cert.hosts.map((host, hi) => (
-                                <div
-                                  key={hi}
-                                  className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="e.g. example.com"
-                                    value={host}
-                                    onChange={(e) => {
-                                      const newHosts = [...cert.hosts];
-                                      newHosts[hi] = e.target.value;
-                                      updateCertificate(cert.id, 'hosts', newHosts);
-                                    }}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => {
-                                      const newHosts = cert.hosts.filter((_, idx) => idx !== hi);
-                                      updateCertificate(cert.id, 'hosts', newHosts);
-                                    }}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={() =>
-                                    updateCertificate(cert.id, 'hosts', [...cert.hosts, ''])
-                                  }
-                                >
-                                  Add host
-                                </Button>
-                              </div>
-                            </VStack>
+                              >
+                                Add host
+                              </Button>
+                            </div>
                           </VStack>
-                        </div>
-                      ))}
-                      <div className="w-fit">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                          onClick={addCertificate}
-                        >
-                          Add certificate
-                        </Button>
+                        </VStack>
                       </div>
-                    </VStack>
-                  </div>
+                    ))}
+                    <div className="w-fit">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                        onClick={addCertificate}
+                      >
+                        Add certificate
+                      </Button>
+                    </div>
+                  </VStack>
                 </VStack>
               </SectionCard.Content>
             </SectionCard>
@@ -855,10 +851,10 @@ export default function CreateIngressPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -871,7 +867,7 @@ export default function CreateIngressPage() {
                         {labels.map((label) => (
                           <div
                             key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="Input key"
@@ -923,10 +919,10 @@ export default function CreateIngressPage() {
                       </span>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -939,7 +935,7 @@ export default function CreateIngressPage() {
                         {annotations.map((annotation) => (
                           <div
                             key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="Input key"

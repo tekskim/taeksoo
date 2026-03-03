@@ -1267,10 +1267,10 @@ export function CreateClusterPage() {
                   </VStack>
 
                   {/* Bordered container for labels */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {labels.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -1283,7 +1283,7 @@ export function CreateClusterPage() {
                       {labels.map((label) => (
                         <div
                           key={label.id}
-                          className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                         >
                           <Input
                             placeholder="label key"
@@ -1336,10 +1336,10 @@ export function CreateClusterPage() {
                   </VStack>
 
                   {/* Bordered container for annotations */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {annotations.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -1352,7 +1352,7 @@ export function CreateClusterPage() {
                       {annotations.map((annotation) => (
                         <div
                           key={annotation.id}
-                          className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                         >
                           <Input
                             placeholder="annotation key"

@@ -383,10 +383,10 @@ export function EditNodeConfigPage() {
               <SectionCard.Header title="Taints" />
               <SectionCard.Content>
                 <VStack gap={3}>
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {taints.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-lg text-[var(--color-text-default)]">
                             Key
                           </span>
@@ -402,7 +402,7 @@ export function EditNodeConfigPage() {
                       {taints.map((taint, index) => (
                         <div
                           key={index}
-                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                         >
                           <Input
                             placeholder="input key"
@@ -465,10 +465,10 @@ export function EditNodeConfigPage() {
                       </p>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={3}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-lg text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -481,7 +481,7 @@ export function EditNodeConfigPage() {
                         {labels.map((label, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -532,10 +532,10 @@ export function EditNodeConfigPage() {
                       </p>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={3}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-lg text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -548,7 +548,7 @@ export function EditNodeConfigPage() {
                         {annotations.map((annotation, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"

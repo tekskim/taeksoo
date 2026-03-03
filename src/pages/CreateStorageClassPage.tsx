@@ -273,10 +273,10 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
 
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={1.5}>
               {parameters.length > 0 && (
-                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                   <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
                   <span className="block text-label-sm text-[var(--color-text-default)]">
                     Value
@@ -288,7 +288,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
               {parameters.map((param, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                 >
                   <Input
                     placeholder="e.g. foo"
@@ -379,7 +379,7 @@ function CustomizeSection({
             value={reclaimPolicy}
             onChange={(value) => onReclaimPolicyChange(value as ReclaimPolicy)}
           >
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Radio
                 value="delete"
                 label="Delete volumes and underlying device when volume claim is deleted"
@@ -394,7 +394,7 @@ function CustomizeSection({
             value={volumeExpansion}
             onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
           >
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Radio value="enabled" label="Enabled" />
               <Radio value="disabled" label="Disabled" />
             </VStack>
@@ -406,7 +406,7 @@ function CustomizeSection({
             value={volumeBindingMode}
             onChange={(value) => onVolumeBindingModeChange(value as VolumeBindingMode)}
           >
-            <VStack gap={1}>
+            <VStack gap={2}>
               <Radio
                 value="immediate"
                 label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
@@ -422,10 +422,10 @@ function CustomizeSection({
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {mountOptions.length > 0 && (
-                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
@@ -434,7 +434,7 @@ function CustomizeSection({
                 )}
 
                 {mountOptions.map((option, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
+                  <div key={index} className="grid grid-cols-[1fr_20px] gap-1 w-full items-center">
                     <Input
                       placeholder="e.g. bar"
                       value={option.value}

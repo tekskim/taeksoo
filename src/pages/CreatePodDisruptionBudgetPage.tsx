@@ -326,7 +326,7 @@ function BudgetSection({
                   onChange={onMinAvailablePodsChange}
                   min={0}
                   max={minAvailableUnit === 'percent' ? 100 : undefined}
-                  width="xs"
+                  width="sm"
                 />
                 <Select
                   options={BUDGET_UNIT_OPTIONS}
@@ -348,7 +348,7 @@ function BudgetSection({
                   onChange={onMaxUnavailablePodsChange}
                   min={0}
                   max={maxUnavailableUnit === 'percent' ? 100 : undefined}
-                  width="xs"
+                  width="sm"
                 />
                 <Select
                   options={BUDGET_UNIT_OPTIONS}
@@ -420,10 +420,10 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
           {/* Selector Rules */}
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
-            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {selectorRules.length > 0 && (
-                  <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -439,7 +439,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                 {selectorRules.map((rule) => (
                   <div
                     key={rule.id}
-                    className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="input key"
@@ -574,10 +574,10 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -590,7 +590,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -635,10 +635,10 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -651,7 +651,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -884,17 +884,15 @@ export function CreatePodDisruptionBudgetPage() {
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <div className="flex flex-col gap-[9px]">
-          <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Pod Disruption Budget
-            </h1>
-          </div>
+        <VStack gap={2}>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+            Create Pod Disruption Budget
+          </h1>
           <p className="text-body-md text-[var(--color-text-muted)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available
             during voluntary disruptions to ensure application stability.
           </p>
-        </div>
+        </VStack>
 
         {/* Main Content with Sidebar */}
         <HStack gap={6} align="start" className="w-full">

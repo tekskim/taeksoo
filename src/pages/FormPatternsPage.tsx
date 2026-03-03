@@ -146,10 +146,10 @@ export function FormPatternsPage() {
               description="Dynamic key-value rows with add/remove."
               source="CreateDeploymentPage, CreateServicePage, CreateConfigMapPage, CreateSecretPage, CreateIngressPage, +20 more"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -162,7 +162,7 @@ export function FormPatternsPage() {
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="label key"
@@ -213,7 +213,7 @@ export function FormPatternsPage() {
               description="Key-value with 'Read from File' button."
               source="CreateConfigMapPage, CreateSecretPage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={3}>
                   {dataEntries.length > 0 && (
                     <VStack gap={2} className="w-full">
@@ -297,10 +297,10 @@ export function FormPatternsPage() {
               description="Three-column grid with Select for operator."
               source="CreateDeploymentPage, CreatePodPage, CreateStatefulSetPage, CreateNetworkPolicyPage, CreatePodDisruptionBudgetPage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {expressions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -316,7 +316,7 @@ export function FormPatternsPage() {
                   {expressions.map((expr, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="e.g. kubernetes.io/os"
@@ -379,9 +379,9 @@ export function FormPatternsPage() {
               description="Dynamic rows with 4-5 columns for service port configuration."
               source="CreateServicePage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Port Name <span className="text-[#ea580c]">*</span>
                     </span>
@@ -402,7 +402,7 @@ export function FormPatternsPage() {
                   {ports.map((port) => (
                     <div
                       key={port.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="e.g. myport"
@@ -507,9 +507,9 @@ export function FormPatternsPage() {
               description="Three-column grid: Name, Value Type (Select), Value/Source."
               source="CreatePodPage, CreateDeploymentPage, CreateStatefulSetPage, CreateDaemonSetPage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Name
                     </span>
@@ -524,7 +524,7 @@ export function FormPatternsPage() {
                   {envVars.map((ev, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="input variable name"
@@ -578,7 +578,7 @@ export function FormPatternsPage() {
                   </div>
                 </VStack>
               </div>
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1} className="w-full">
                   {envVarGroups.map((group, gi) => (
                     <div
@@ -586,7 +586,7 @@ export function FormPatternsPage() {
                       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                     >
                       <VStack gap={1}>
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Name
                           </span>
@@ -612,7 +612,7 @@ export function FormPatternsPage() {
                         {group.map((ev, i) => (
                           <div
                             key={i}
-                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="input variable name"
@@ -686,16 +686,16 @@ export function FormPatternsPage() {
               description="One-column dynamic list with add/remove."
               source="CreatePodPage (Nameservers, Search Domains), CreatePersistentVolumePage (Mount Options), CreateStorageClassPage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div className="w-5" />
                   </div>
                   {nameservers.map((ns, i) => (
-                    <div key={i} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
+                    <div key={i} className="grid grid-cols-[1fr_20px] gap-1 w-full items-center">
                       <Input
                         placeholder="e.g. 8.8.8.8"
                         value={ns}
@@ -735,7 +735,7 @@ export function FormPatternsPage() {
               description="Key-value grid where column headers have descriptions."
               source="CreateDeploymentPage, CreatePodPage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                     <VStack gap={1}>
@@ -810,10 +810,10 @@ export function FormPatternsPage() {
               description="Inline label + Select pairs (Network, Subnet, Auto-assign) with add/remove."
               source="CreateTemplatePage, ComputeAdminCreateTemplatePage"
             >
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {virtualLANs.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Network
                       </span>
@@ -829,7 +829,7 @@ export function FormPatternsPage() {
                   {virtualLANs.map((vlan) => (
                     <div
                       key={vlan.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
