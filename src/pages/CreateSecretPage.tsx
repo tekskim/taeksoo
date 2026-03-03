@@ -431,7 +431,7 @@ function DataSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {dataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -444,7 +444,7 @@ function DataSection({
                 {dataEntries.map((entry, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Enter key"
@@ -467,7 +467,7 @@ function DataSection({
                   </div>
                 ))}
 
-                <HStack gap={2}>
+                <HStack gap={1}>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -501,7 +501,7 @@ function DataSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {stringDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Public key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                     </span>
@@ -511,7 +511,7 @@ function DataSection({
                   </div>
                 )}
                 {stringDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
                     <Input
                       placeholder="Enter key"
                       value={entry.key}
@@ -527,7 +527,7 @@ function DataSection({
                   </div>
                 ))}
 
-                <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                   <div className="w-fit">
                     <Button
                       variant="secondary"
@@ -569,7 +569,7 @@ function DataSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {tlsDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                     </span>
@@ -579,7 +579,7 @@ function DataSection({
                   </div>
                 )}
                 {tlsDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
                     <Input
                       placeholder="Enter key"
                       value={entry.key}
@@ -595,7 +595,7 @@ function DataSection({
                   </div>
                 ))}
 
-                <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                   <div className="w-fit">
                     <Button
                       variant="secondary"
@@ -637,7 +637,7 @@ function DataSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {httpBasicAuthDataEntries.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                     </span>
@@ -647,7 +647,7 @@ function DataSection({
                   </div>
                 )}
                 {httpBasicAuthDataEntries.map((entry, index) => (
-                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                  <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
                     <Input
                       placeholder="Enter key"
                       value={entry.key}
@@ -675,7 +675,7 @@ function DataSection({
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={3}>
-                <VStack gap={0.5}>
+                <VStack gap={2}>
                   <span className="block text-label-sm text-[var(--color-text-default)]">
                     Registry domain name
                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
@@ -685,7 +685,7 @@ function DataSection({
 
                 <VStack gap={2}>
                   {registryDataEntries.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </span>
@@ -695,7 +695,7 @@ function DataSection({
                     </div>
                   )}
                   {registryDataEntries.map((entry, index) => (
-                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-2 w-full items-center">
+                    <div key={index} className="grid grid-cols-[1fr_1fr] gap-1 w-full items-center">
                       <Input
                         placeholder="Enter key"
                         value={entry.key}
@@ -762,7 +762,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -775,7 +775,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -824,7 +824,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -837,7 +837,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"

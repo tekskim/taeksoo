@@ -593,7 +593,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -606,7 +606,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="label key"
@@ -656,7 +656,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -669,7 +669,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="annotation key"
@@ -750,7 +750,7 @@ function ScalingPolicySection({
                   value={completions}
                   onChange={onCompletionsChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -768,7 +768,7 @@ function ScalingPolicySection({
                   value={parallelism}
                   onChange={onParallelismChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -786,7 +786,7 @@ function ScalingPolicySection({
                   value={backOffLimit}
                   onChange={onBackOffLimitChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Times
@@ -804,7 +804,7 @@ function ScalingPolicySection({
                   value={activeDeadline}
                   onChange={onActiveDeadlineChange}
                   min={0}
-                  width="xs"
+                  width="sm"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                   Seconds
@@ -1848,7 +1848,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1861,7 +1861,7 @@ export function CreateJobPage() {
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="label key"
@@ -1918,7 +1918,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1931,7 +1931,7 @@ export function CreateJobPage() {
                             {podAnnotations.map((annotation, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="annotation key"
@@ -2507,7 +2507,7 @@ export function CreateJobPage() {
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2523,7 +2523,7 @@ export function CreateJobPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2742,7 +2742,7 @@ export function CreateJobPage() {
                                         Match Expressions
                                       </span>
                                       {term.matchExpressions.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Key
                                           </span>
@@ -2758,7 +2758,7 @@ export function CreateJobPage() {
                                       {term.matchExpressions.map((expr, exprIndex) => (
                                         <div
                                           key={exprIndex}
-                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. kubernetes.io/os"
@@ -3340,7 +3340,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -3362,7 +3362,7 @@ export function CreateJobPage() {
                             {tolerations.map((toleration, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
                                   placeholder="Key"
@@ -6920,7 +6920,7 @@ export function CreateJobPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -6956,7 +6956,7 @@ export function CreateJobPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""

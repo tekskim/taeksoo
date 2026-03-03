@@ -289,12 +289,12 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={3}>
+            <VStack gap={1.5}>
               {/* Data Entries */}
               {dataEntries.length > 0 && (
                 <VStack gap={2} className="w-full">
                   {/* Header row */}
-                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                  <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
                     <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                       Key
                     </span>
@@ -304,7 +304,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                     <div className="w-5" />
                   </div>
                   {dataEntries.map((entry, index) => (
-                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center">
                       <Input
                         placeholder="Enter key"
                         value={entry.key}
@@ -328,7 +328,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                 </VStack>
               )}
 
-              <HStack gap={2}>
+              <HStack gap={1}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -393,12 +393,12 @@ function BinaryDataSection({
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Binary data</span>
           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={3}>
+            <VStack gap={1.5}>
               {/* Binary Data Entries */}
               {binaryDataEntries.length > 0 && (
                 <VStack gap={2} className="w-full">
                   {/* Header row */}
-                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                  <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
                     <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                       Key
                     </span>
@@ -408,7 +408,7 @@ function BinaryDataSection({
                     <div className="w-5" />
                   </div>
                   {binaryDataEntries.map((entry, index) => (
-                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
+                    <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center">
                       <Input
                         placeholder="Enter key"
                         value={entry.key}
@@ -432,7 +432,7 @@ function BinaryDataSection({
                 </VStack>
               )}
 
-              <HStack gap={2}>
+              <HStack gap={1}>
                 <Button
                   variant="outline"
                   size="sm"
@@ -505,7 +505,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -518,7 +518,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -567,7 +567,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -580,7 +580,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="Key"

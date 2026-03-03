@@ -19,7 +19,7 @@ function DynamicFieldTableDemo() {
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
-          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
             <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
             <span className="block text-label-sm text-[var(--color-text-default)]">Value Type</span>
             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -29,7 +29,7 @@ function DynamicFieldTableDemo() {
           </div>
         )}
         {rows.map((row, i) => (
-          <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+          <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
             <Input
               placeholder="input variable name"
               value={row.name}
@@ -90,7 +90,7 @@ function EmptyDynamicFieldTableDemo() {
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
-          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
             <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
             <span className="block text-label-sm text-[var(--color-text-default)]">Value Type</span>
             <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -100,7 +100,7 @@ function EmptyDynamicFieldTableDemo() {
           </div>
         )}
         {rows.map((row, i) => (
-          <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+          <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
             <Input
               placeholder="input variable name"
               value={row.name}
@@ -168,7 +168,7 @@ function RepeatableFieldGroupDemo() {
             className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
           >
             <VStack gap={1.5}>
-              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
                 <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
                 <span className="block text-label-sm text-[var(--color-text-default)]">
                   Value Type
@@ -186,7 +186,7 @@ function RepeatableFieldGroupDemo() {
               {group.map((ev, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                  className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                 >
                   <Input
                     placeholder="input variable name"
@@ -264,14 +264,14 @@ function WithLabelDescriptionDemo() {
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
         <VStack gap={1.5}>
           {labels.length > 0 && (
-            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
               <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
               <div className="w-5" />
             </div>
           )}
           {labels.map((label, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
               <Input
                 placeholder="label key"
                 value={label.key}
@@ -329,14 +329,14 @@ function WithLabelDemo() {
       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
         <VStack gap={1.5}>
           {labels.length > 0 && (
-            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
               <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
               <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
               <div className="w-5" />
             </div>
           )}
           {labels.map((label, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+            <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
               <Input
                 placeholder="label key"
                 value={label.key}
@@ -388,7 +388,7 @@ function DescriptionHeaderDemo() {
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
       <VStack gap={1.5}>
         {rows.length > 0 && (
-          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
             <VStack gap={0.5}>
               <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
               <p className="text-body-sm text-[var(--color-text-subtle)]">
@@ -405,7 +405,7 @@ function DescriptionHeaderDemo() {
           </div>
         )}
         {rows.map((row, i) => (
-          <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+          <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
             <Input
               placeholder="e.g. ndots"
               value={row.name}
@@ -457,14 +457,14 @@ const withLabelCode = `<VStack gap={2}>
   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
     <VStack gap={1.5}>
       {/* Column headers */}
-      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
         <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
         <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
         <div className="w-5" />
       </div>
       {/* Rows */}
       {items.map((item, i) => (
-        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
           <Input placeholder="label key" value={item.key} onChange={...} fullWidth />
           <Input placeholder="label value" value={item.value} onChange={...} fullWidth />
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
@@ -493,14 +493,14 @@ const withLabelDescriptionCode = `<VStack gap={2}>
   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
     <VStack gap={1.5}>
       {/* Column headers */}
-      <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+      <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
         <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
         <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
         <div className="w-5" />
       </div>
       {/* Rows */}
       {items.map((item, i) => (
-        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+        <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
           <Input placeholder="label key" value={item.key} onChange={...} fullWidth />
           <Input placeholder="label value" value={item.value} onChange={...} fullWidth />
           <button onClick={() => removeItem(i)}><IconX size={16} /></button>
@@ -519,7 +519,7 @@ const withLabelDescriptionCode = `<VStack gap={2}>
 const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={1.5}>
     {/* Column headers with description */}
-    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
       <VStack gap={0.5}>
         <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
         <p className="text-body-sm text-[var(--color-text-subtle)]">Specify the option name.</p>
@@ -532,7 +532,7 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
     </div>
     {/* Rows */}
     {rows.map((row, i) => (
-      <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
+      <div key={i} className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
         <Input placeholder="e.g. ndots" value={row.name} onChange={...} fullWidth />
         <Input placeholder="e.g. 5" value={row.value} onChange={...} fullWidth />
         <button onClick={() => removeRow(i)}><IconX size={16} /></button>
@@ -550,7 +550,7 @@ const descriptionHeaderCode = `<div className="bg-[var(--color-surface-subtle)] 
 const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
   <VStack gap={1.5}>
     {/* Column headers */}
-    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
       <span className="block text-label-sm text-[var(--color-text-default)]">Name</span>
       <span className="block text-label-sm text-[var(--color-text-default)]">Value Type</span>
       <span className="block text-label-sm text-[var(--color-text-default)]">Value/Source</span>
@@ -558,7 +558,7 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
     </div>
     {/* Rows */}
     {rows.map((row, i) => (
-      <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+      <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
         <Input placeholder="input variable name" value={row.name} onChange={...} fullWidth />
         <Select options={options} value={row.type} onChange={...} fullWidth />
         <Input placeholder="input value" value={row.value} onChange={...} fullWidth />
@@ -582,7 +582,7 @@ const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle
       <div key={gi} className="bg-[var(--color-surface-default)] border ... rounded-[6px] p-3 w-full">
         <VStack gap={1.5}>
           {/* Headers + close button */}
-          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
             <span className="text-label-sm ...">Name</span>
             <span className="text-label-sm ...">Value Type</span>
             <span className="text-label-sm ...">Value/Source</span>
@@ -590,7 +590,7 @@ const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle
           </div>
           {/* Rows */}
           {group.map((ev, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+            <div key={i} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
               <Input ... /><Select ... /><Input ... />
               <div />
             </div>

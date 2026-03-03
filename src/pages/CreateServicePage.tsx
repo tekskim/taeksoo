@@ -891,7 +891,7 @@ export function CreateServicePage() {
                             value={externalTrafficPolicy}
                             onChange={setExternalTrafficPolicy}
                           >
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <Radio value="Cluster" label="Cluster" />
                               <Radio value="Local" label="Local" />
                             </VStack>
@@ -1024,7 +1024,7 @@ export function CreateServicePage() {
                             value={externalTrafficPolicy}
                             onChange={setExternalTrafficPolicy}
                           >
-                            <VStack gap={3}>
+                            <VStack gap={2}>
                               <Radio value="Cluster" label="Cluster" />
                               <Radio value="Local" label="Local" />
                             </VStack>
@@ -1074,7 +1074,7 @@ export function CreateServicePage() {
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {externalIPs.length > 0 && (
-                          <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               External IP
                             </span>
@@ -1084,7 +1084,7 @@ export function CreateServicePage() {
                         {externalIPs.map((ip) => (
                           <div
                             key={ip.id}
-                            className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="e.g. 1.1.1.1"
@@ -1153,7 +1153,7 @@ export function CreateServicePage() {
                       <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                         <VStack gap={1.5}>
                           {selectors.length > 0 && (
-                            <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                               <span className="block text-label-sm text-[var(--color-text-default)]">
                                 Key
                               </span>
@@ -1166,7 +1166,7 @@ export function CreateServicePage() {
                           {selectors.map((selector, index) => (
                             <div
                               key={index}
-                              className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                             >
                               <Input
                                 placeholder="e.g. key"
@@ -1311,7 +1311,7 @@ export function CreateServicePage() {
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1324,7 +1324,7 @@ export function CreateServicePage() {
                         {labels.map((label, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="label key"
@@ -1381,7 +1381,7 @@ export function CreateServicePage() {
                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
                             </span>
@@ -1394,7 +1394,7 @@ export function CreateServicePage() {
                         {annotations.map((annotation, index) => (
                           <div
                             key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="annotation key"

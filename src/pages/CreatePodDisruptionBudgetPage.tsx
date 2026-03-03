@@ -326,7 +326,7 @@ function BudgetSection({
                   onChange={onMinAvailablePodsChange}
                   min={0}
                   max={minAvailableUnit === 'percent' ? 100 : undefined}
-                  width="xs"
+                  width="sm"
                 />
                 <Select
                   options={BUDGET_UNIT_OPTIONS}
@@ -348,7 +348,7 @@ function BudgetSection({
                   onChange={onMaxUnavailablePodsChange}
                   min={0}
                   max={maxUnavailableUnit === 'percent' ? 100 : undefined}
-                  width="xs"
+                  width="sm"
                 />
                 <Select
                   options={BUDGET_UNIT_OPTIONS}
@@ -423,7 +423,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {selectorRules.length > 0 && (
-                  <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -439,7 +439,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                 {selectorRules.map((rule) => (
                   <div
                     key={rule.id}
-                    className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                   >
                     <Input
                       placeholder="input key"
@@ -577,7 +577,7 @@ function LabelsAnnotationsSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -590,7 +590,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -638,7 +638,7 @@ function LabelsAnnotationsSection({
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -651,7 +651,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="Key"

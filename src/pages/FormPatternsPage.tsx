@@ -149,7 +149,7 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -162,7 +162,7 @@ export function FormPatternsPage() {
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="label key"
@@ -300,7 +300,7 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {expressions.length > 0 && (
-                    <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -316,7 +316,7 @@ export function FormPatternsPage() {
                   {expressions.map((expr, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="e.g. kubernetes.io/os"
@@ -381,7 +381,7 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Port Name <span className="text-[#ea580c]">*</span>
                     </span>
@@ -402,7 +402,7 @@ export function FormPatternsPage() {
                   {ports.map((port) => (
                     <div
                       key={port.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="e.g. myport"
@@ -509,7 +509,7 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Name
                     </span>
@@ -524,7 +524,7 @@ export function FormPatternsPage() {
                   {envVars.map((ev, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Input
                         placeholder="input variable name"
@@ -586,7 +586,7 @@ export function FormPatternsPage() {
                       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                     >
                       <VStack gap={1}>
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Name
                           </span>
@@ -612,7 +612,7 @@ export function FormPatternsPage() {
                         {group.map((ev, i) => (
                           <div
                             key={i}
-                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                           >
                             <Input
                               placeholder="input variable name"
@@ -688,14 +688,14 @@ export function FormPatternsPage() {
             >
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
-                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                  <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Value
                     </span>
                     <div className="w-5" />
                   </div>
                   {nameservers.map((ns, i) => (
-                    <div key={i} className="grid grid-cols-[1fr_20px] gap-2 w-full items-center">
+                    <div key={i} className="grid grid-cols-[1fr_20px] gap-1 w-full items-center">
                       <Input
                         placeholder="e.g. 8.8.8.8"
                         value={ns}
@@ -813,7 +813,7 @@ export function FormPatternsPage() {
               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {virtualLANs.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Network
                       </span>
@@ -829,7 +829,7 @@ export function FormPatternsPage() {
                   {virtualLANs.map((vlan) => (
                     <div
                       key={vlan.id}
-                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
                     >
                       <Select
                         options={[{ value: 'network', label: 'network' }]}
