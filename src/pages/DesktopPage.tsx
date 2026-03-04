@@ -25,6 +25,7 @@ import {
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import DesktopBg from '@/assets/bg-01.jpg';
 import { Select } from '@/design-system';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
@@ -583,35 +584,37 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
           />
           {/* Panel - centered on screen */}
-          <motion.div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-          >
-            <button
-              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-              onClick={() => console.log('Storage Admin clicked')}
+          <div className="fixed inset-0 z-[501] flex items-center justify-center pointer-events-none">
+            <motion.div
+              className="bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-white/30 pointer-events-auto"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
             >
-              <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-              <span className="text-label-md text-white text-center">Storage Admin</span>
-            </button>
-            <button
-              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-              onClick={() => console.log('Compute Admin clicked')}
-            >
-              <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-              <span className="text-label-md text-white text-center">Compute Admin</span>
-            </button>
-            <button
-              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-              onClick={() => console.log('Cloud Builder clicked')}
-            >
-              <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-              <span className="text-label-md text-white text-center">Cloud Builder</span>
-            </button>
-          </motion.div>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+                onClick={() => console.log('Storage Admin clicked')}
+              >
+                <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
+                <span className="text-label-md text-white text-center">Storage Admin</span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+                onClick={() => console.log('Compute Admin clicked')}
+              >
+                <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
+                <span className="text-label-md text-white text-center">Compute Admin</span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+                onClick={() => console.log('Cloud Builder clicked')}
+              >
+                <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
+                <span className="text-label-md text-white text-center">Cloud Builder</span>
+              </button>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
@@ -1190,18 +1193,12 @@ export function DesktopPage() {
   );
 
   return (
-    <div
-      className="fixed inset-0 overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(ellipse at 20% 20%, #1a0533 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 80%, #0a2a3c 0%, transparent 50%),
-          radial-gradient(ellipse at 50% 50%, #0f1b3d 0%, transparent 60%),
-          #0a0e1a
-        `,
-      }}
-      onClick={handleDesktopClick}
-    >
+    <div className="fixed inset-0 overflow-hidden bg-black" onClick={handleDesktopClick}>
+      <img
+        src={DesktopBg}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none"
+      />
       {/* Top Bar */}
       <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
