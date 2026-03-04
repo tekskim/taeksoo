@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { IconMoon, IconSun, IconMail, IconBook } from '@tabler/icons-react';
+import { IconMoon, IconSun, IconBook } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
 // App icons
@@ -38,7 +38,7 @@ const appCards: AppCard[] = [
     id: 'compute',
     title: 'Compute',
     description: 'Virtual machines, instances, and cloud infrastructure management',
-    icon: <img src={ComputeIcon} alt="Compute" className="w-16 h-16" />,
+    icon: <img src={ComputeIcon} alt="Compute" className="w-[72px] h-[72px]" />,
     path: '/compute',
     color: 'from-blue-500 to-cyan-500',
     available: true,
@@ -47,7 +47,7 @@ const appCards: AppCard[] = [
     id: 'compute-admin',
     title: 'Compute Admin',
     description: 'Virtual machines, instances, and cloud infrastructure management',
-    icon: <img src={ComputeAdminIcon} alt="Compute Admin" className="w-16 h-16" />,
+    icon: <img src={ComputeAdminIcon} alt="Compute Admin" className="w-[72px] h-[72px]" />,
     path: '/compute-admin',
     color: 'from-blue-500 to-cyan-500',
     available: true,
@@ -56,34 +56,34 @@ const appCards: AppCard[] = [
     id: 'container',
     title: 'Container',
     description: 'Kubernetes clusters, container orchestration, and microservices',
-    icon: <img src={ContainerIcon} alt="Container" className="w-16 h-16" />,
+    icon: <img src={ContainerIcon} alt="Container" className="w-[72px] h-[72px]" />,
     path: '/container',
     color: 'from-violet-500 to-purple-500',
-    available: true,
-  },
-  {
-    id: 'storage',
-    title: 'Storage',
-    description: 'Object storage, file systems, and data management',
-    icon: <img src={StorageIcon} alt="Storage" className="w-16 h-16" />,
-    path: '/storage',
-    color: 'from-indigo-500 to-blue-500',
     available: true,
   },
   {
     id: 'iam',
     title: 'IAM',
     description: 'Identity and access management, users, roles, and permissions',
-    icon: <img src={IAMIcon} alt="IAM" className="w-16 h-16" />,
+    icon: <img src={IAMIcon} alt="IAM" className="w-[72px] h-[72px]" />,
     path: '/iam',
     color: 'from-amber-500 to-yellow-500',
+    available: true,
+  },
+  {
+    id: 'storage',
+    title: 'Storage',
+    description: 'Object storage, file systems, and data management',
+    icon: <img src={StorageIcon} alt="Storage" className="w-[72px] h-[72px]" />,
+    path: '/storage',
+    color: 'from-indigo-500 to-blue-500',
     available: true,
   },
   {
     id: 'desktop',
     title: 'Desktop',
     description: 'Virtual desktops, remote workstations, and VDI solutions',
-    icon: <img src={DesktopIcon} alt="Desktop" className="w-16 h-16" />,
+    icon: <img src={DesktopIcon} alt="Desktop" className="w-[72px] h-[72px]" />,
     path: '/desktop',
     color: 'from-slate-500 to-zinc-500',
     available: true,
@@ -92,29 +92,16 @@ const appCards: AppCard[] = [
     id: 'settings',
     title: 'Settings',
     description: 'Application settings, preferences, and configuration',
-    icon: <img src={SettingsIcon} alt="Settings" className="w-16 h-16" />,
+    icon: <img src={SettingsIcon} alt="Settings" className="w-[72px] h-[72px]" />,
     path: '/settings',
     color: 'from-gray-500 to-slate-500',
-    available: true,
-  },
-  {
-    id: 'mail-template',
-    title: 'Mail Template',
-    description: 'Email templates for authentication, notifications, and marketing',
-    icon: (
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
-        <IconMail size={32} className="text-white" stroke={1.5} />
-      </div>
-    ),
-    path: '/mail-template',
-    color: 'from-rose-500 to-pink-500',
     available: true,
   },
   {
     id: 'cloud-builder',
     title: 'Cloud Builder',
     description: 'CI/CD pipelines, build automation, and deployment workflows',
-    icon: <img src={CloudBuilderIcon} alt="Cloud Builder" className="w-16 h-16" />,
+    icon: <img src={CloudBuilderIcon} alt="Cloud Builder" className="w-[72px] h-[72px]" />,
     path: '/cloudbuilder',
     color: 'from-orange-500 to-amber-500',
     available: true,
@@ -123,7 +110,7 @@ const appCards: AppCard[] = [
     id: 'ai-platform',
     title: 'AI Platform',
     description: 'Machine learning models, training pipelines, and MLOps',
-    icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-16 h-16" />,
+    icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-[72px] h-[72px]" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
     available: false,
@@ -132,7 +119,7 @@ const appCards: AppCard[] = [
     id: 'ai-agent',
     title: 'AI Agent',
     description: 'Intelligent agents, automation bots, and AI assistants',
-    icon: <img src={AIAgentIcon} alt="AI Agent" className="w-16 h-16" />,
+    icon: <img src={AIAgentIcon} alt="AI Agent" className="w-[72px] h-[72px]" />,
     path: '/agent',
     color: 'from-emerald-500 to-teal-500',
     available: false,
@@ -173,22 +160,18 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       />
 
       {/* Content */}
-      <div className="relative h-full p-5 flex flex-col">
+      <div className="relative h-full pl-3 pr-4 py-4 flex items-center justify-between gap-4">
         {/* Icon */}
         <div
           className={`
-            w-16 h-16 transition-transform duration-300 origin-center ${isAvailable ? 'group-hover:scale-110' : ''}
+            w-[72px] h-[72px] shrink-0 transition-transform duration-300 origin-center ${isAvailable ? 'group-hover:scale-110' : ''}
           `}
         >
           {card.icon}
         </div>
 
         {/* Title */}
-        <div className="mt-6">
-          <h4 className="text-heading-h6 !font-medium text-[var(--color-text-default)]">
-            {card.title}
-          </h4>
-        </div>
+        <h4 className="text-label-lg text-[var(--color-text-default)] text-right">{card.title}</h4>
 
         {/* Coming Soon Badge */}
         {!isAvailable && (
@@ -217,7 +200,7 @@ export function EntryPage() {
   };
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
+    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)] flex flex-col min-h-screen">
       {/* Header */}
       <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
@@ -227,7 +210,7 @@ export function EntryPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" onClick={() => navigate('/design')}>
               Design system{' '}
             </Button>
@@ -261,7 +244,7 @@ export function EntryPage() {
       </header>
 
       {/* Main Content */}
-      <main>
+      <main className="flex-1">
         <div className="max-w-7xl mx-auto px-8 pt-12 pb-16">
           {/* App Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -310,6 +293,9 @@ export function EntryPage() {
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/form-patterns')}>
                   Form Patterns{' '}
+                </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/mail-template')}>
+                  Mail Template{' '}
                 </Button>
               </div>
             </div>
