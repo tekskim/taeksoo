@@ -44,9 +44,10 @@ import { AppSwitcher } from './AppSwitcher';
 interface SidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  currentAppId?: string;
 }
 
-export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
+export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps) {
   const { projects, selectedProjectId, setSelectedProjectId } = useProject();
   const location = useLocation();
   const isCloudBuilder =
@@ -94,7 +95,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
-      <AppSwitcher onToggleSidebar={onToggle} />
+      <AppSwitcher currentAppId={currentAppId} onToggleSidebar={onToggle} />
 
       {/* Project Selector - Hide for compute-admin routes */}
       {!isComputeAdmin && (

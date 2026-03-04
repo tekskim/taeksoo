@@ -47,7 +47,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
-      <AppSwitcher onToggleSidebar={onToggle} />
+      <AppSwitcher currentAppId="storage" onToggleSidebar={onToggle} />
 
       {/* Project Selector */}
       <div className="px-3 py-2">

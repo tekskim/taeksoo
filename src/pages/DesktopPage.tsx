@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import { IconLayoutDashboard, IconCheck } from '@tabler/icons-react';
@@ -13,15 +13,28 @@ import {
   IconWindowActive,
   IconWindowMinimized,
 } from '@/design-system';
-import { motion, Reorder } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion, Reorder, AnimatePresence } from 'framer-motion';
+import {
+  Link,
+  MemoryRouter,
+  Routes,
+  Route,
+  UNSAFE_LocationContext,
+  UNSAFE_RouteContext,
+} from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
+import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
+import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import { Select } from '@/design-system';
+import { computeRoutes } from '@/routes/compute.routes';
+import { storageRoutes } from '@/routes/storage.routes';
+import { agentRoutes } from '@/routes/agent.routes';
+import { iamRoutes } from '@/routes/iam.routes';
+import { containerRoutes } from '@/routes/container.routes';
 import { ComputeHomePage } from './ComputeHomePage';
 import { StorageHomePage } from './StorageHomePage';
-import { ContainerDashboardPage } from './ContainerDashboardPage';
 import { HomePage } from './HomePage';
+import { AIPlatformPage } from './AIPlatformPage';
 
 // Desktop Icon Images (Figma exports)
 import imgIam from '@/assets/desktop/iam.png';
@@ -444,11 +457,11 @@ function DesktopTopBar({
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[52px] bg-[#f8fafc] flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.15)]">
+    <div className="fixed top-0 left-0 right-0 h-[52px] bg-black/40 backdrop-blur-xl flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.2)] border-b border-white/10">
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-8 h-full">
         {/* THAKI Cloud Logo */}
-        <img src={ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
+        <img src={ThakiLogoDark} alt="THAKI Cloud" className="h-5" />
 
         {/* Dock Icons */}
         {dockIcons}
@@ -468,7 +481,7 @@ function DesktopTopBar({
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu items={contextMenuItems} trigger="click" minTop={52}>
-            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
               <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
@@ -496,21 +509,21 @@ function DesktopTopBar({
             trigger="click"
             minTop={52}
           >
-            <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
+            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
               <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
-            className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors"
+            className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors"
           >
             <Icons.Notification size={20} stroke={1.5} />
           </button>
         </div>
 
         {/* Separator + Chatbot */}
-        <div className="flex items-center border-l border-[#e2e8f0] px-2.5">
+        <div className="flex items-center border-l border-white/20 px-2.5">
           <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
@@ -559,37 +572,52 @@ interface AdminPanelProps {
 }
 
 function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
-  if (!isOpen) return null;
-
   return (
-    <>
-      {/* Overlay backdrop */}
-      <div className="fixed inset-0 z-[500] bg-black/40" onClick={onClose} />
-      {/* Panel - centered on screen */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30">
-        <button
-          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-          onClick={() => console.log('Storage Admin clicked')}
-        >
-          <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-label-md text-white text-center">Storage Admin</span>
-        </button>
-        <button
-          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-          onClick={() => console.log('Compute Admin clicked')}
-        >
-          <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-label-md text-white text-center">Compute Admin</span>
-        </button>
-        <button
-          className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
-          onClick={() => console.log('Cloud Builder clicked')}
-        >
-          <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-label-md text-white text-center">Cloud Builder</span>
-        </button>
-      </div>
-    </>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Overlay backdrop */}
+          <motion.div
+            className="fixed inset-0 z-[500] bg-black/40"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          />
+          {/* Panel - centered on screen */}
+          <motion.div
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            <button
+              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+              onClick={() => console.log('Storage Admin clicked')}
+            >
+              <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
+              <span className="text-label-md text-white text-center">Storage Admin</span>
+            </button>
+            <button
+              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+              onClick={() => console.log('Compute Admin clicked')}
+            >
+              <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
+              <span className="text-label-md text-white text-center">Compute Admin</span>
+            </button>
+            <button
+              className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+              onClick={() => console.log('Cloud Builder clicked')}
+            >
+              <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
+              <span className="text-label-md text-white text-center">Cloud Builder</span>
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -622,6 +650,72 @@ interface AppState {
 }
 
 /* ----------------------------------------
+   Isolated Router — resets parent router context so MemoryRouter can nest
+   ---------------------------------------- */
+
+function IsolatedRouter({ initialPath, appId }: { initialPath: string; appId: AppId }) {
+  return (
+    <DesktopWindowProvider value={true}>
+      <UNSAFE_LocationContext.Provider value={null as any}>
+        <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
+          <MemoryRouter initialEntries={[initialPath]}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
+                  Loading...
+                </div>
+              }
+            >
+              <AppRoutes appId={appId} />
+            </Suspense>
+          </MemoryRouter>
+        </UNSAFE_RouteContext.Provider>
+      </UNSAFE_LocationContext.Provider>
+    </DesktopWindowProvider>
+  );
+}
+
+function AppRoutes({ appId }: { appId: AppId }) {
+  switch (appId) {
+    case 'compute':
+      return (
+        <Routes>
+          <Route path="/compute" element={<ComputeHomePage />} />
+          {computeRoutes}
+          <Route path="/compute/*" element={<ComputeHomePage />} />
+        </Routes>
+      );
+    case 'storage':
+      return (
+        <Routes>
+          {storageRoutes}
+          <Route path="/storage/*" element={<StorageHomePage />} />
+        </Routes>
+      );
+    case 'container':
+      return <Routes>{containerRoutes}</Routes>;
+    case 'agent':
+      return (
+        <Routes>
+          {agentRoutes}
+          <Route path="/agent/*" element={<HomePage />} />
+        </Routes>
+      );
+    case 'ai-platform':
+      return (
+        <Routes>
+          <Route path="/ai-platform" element={<AIPlatformPage />} />
+          <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+        </Routes>
+      );
+    case 'iam':
+      return <Routes>{iamRoutes}</Routes>;
+    default:
+      return null;
+  }
+}
+
+/* ----------------------------------------
    Window Component for Page Overlay
    ---------------------------------------- */
 
@@ -638,6 +732,10 @@ interface PageWindowProps {
   zIndex: number;
 }
 
+const TOP_BAR_HEIGHT = 52;
+const MIN_WINDOW_WIDTH = 400;
+const MIN_WINDOW_HEIGHT = 300;
+
 function PageWindow({
   windowId,
   isOpen,
@@ -653,7 +751,16 @@ function PageWindow({
   const [isMaximized, setIsMaximized] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ width: 1200, height: 800 });
+  const [preMaxState, setPreMaxState] = useState<{
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  } | null>(null);
   const windowRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const isResizing = useRef<string | null>(null);
+  const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0, w: 0, h: 0 });
 
   useEffect(() => {
     if (isActive && windowRef.current) {
@@ -661,30 +768,126 @@ function PageWindow({
     }
   }, [isActive]);
 
-  if (!isOpen || isMinimized) return null;
+  // Drag handler
+  const handleDragStart = useCallback(
+    (e: React.MouseEvent) => {
+      if (isMaximized) return;
+      e.preventDefault();
+      isDragging.current = true;
+      dragStart.current = {
+        x: e.clientX,
+        y: e.clientY,
+        posX: position.x,
+        posY: position.y,
+        w: 0,
+        h: 0,
+      };
+
+      const handleMouseMove = (ev: MouseEvent) => {
+        if (!isDragging.current) return;
+        const dx = ev.clientX - dragStart.current.x;
+        const dy = ev.clientY - dragStart.current.y;
+        setPosition({
+          x: dragStart.current.posX + dx,
+          y: Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy),
+        });
+      };
+      const handleMouseUp = () => {
+        isDragging.current = false;
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    },
+    [isMaximized, position]
+  );
+
+  // Resize handler
+  const handleResizeStart = useCallback(
+    (e: React.MouseEvent, direction: string) => {
+      if (isMaximized) return;
+      e.preventDefault();
+      e.stopPropagation();
+      isResizing.current = direction;
+      dragStart.current = {
+        x: e.clientX,
+        y: e.clientY,
+        posX: position.x,
+        posY: position.y,
+        w: size.width,
+        h: size.height,
+      };
+
+      const handleMouseMove = (ev: MouseEvent) => {
+        if (!isResizing.current) return;
+        const dx = ev.clientX - dragStart.current.x;
+        const dy = ev.clientY - dragStart.current.y;
+        const dir = isResizing.current;
+
+        let newW = dragStart.current.w;
+        let newH = dragStart.current.h;
+        let newX = dragStart.current.posX;
+        let newY = dragStart.current.posY;
+
+        if (dir.includes('e')) newW = Math.max(MIN_WINDOW_WIDTH, dragStart.current.w + dx);
+        if (dir.includes('s')) newH = Math.max(MIN_WINDOW_HEIGHT, dragStart.current.h + dy);
+        if (dir.includes('w')) {
+          const proposedW = dragStart.current.w - dx;
+          if (proposedW >= MIN_WINDOW_WIDTH) {
+            newW = proposedW;
+            newX = dragStart.current.posX + dx;
+          }
+        }
+        if (dir.includes('n')) {
+          const proposedH = dragStart.current.h - dy;
+          if (proposedH >= MIN_WINDOW_HEIGHT) {
+            newH = proposedH;
+            newY = Math.max(TOP_BAR_HEIGHT, dragStart.current.posY + dy);
+          }
+        }
+
+        setSize({ width: newW, height: newH });
+        setPosition({ x: newX, y: newY });
+      };
+      const handleMouseUp = () => {
+        isResizing.current = null;
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    },
+    [isMaximized, position, size]
+  );
+
+  if (!isOpen) return null;
 
   const handleMinimize = () => {
     onMinimize();
   };
 
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized);
     if (!isMaximized) {
-      setSize({ width: window.innerWidth, height: window.innerHeight });
-      setPosition({ x: 0, y: 0 });
+      setPreMaxState({ x: position.x, y: position.y, w: size.width, h: size.height });
+      setIsMaximized(true);
     } else {
-      setSize({ width: 1200, height: 800 });
-      setPosition({ x: 100, y: 100 });
+      if (preMaxState) {
+        setPosition({ x: preMaxState.x, y: preMaxState.y });
+        setSize({ width: preMaxState.w, height: preMaxState.h });
+      }
+      setIsMaximized(false);
     }
   };
 
-  const windowStyle = isMaximized
+  const windowStyle: React.CSSProperties = isMaximized
     ? {
         width: '100vw',
-        height: '100vh',
-        top: 0,
+        height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
+        top: `${TOP_BAR_HEIGHT}px`,
         left: 0,
         zIndex: zIndex,
+        borderRadius: 0,
       }
     : {
         width: `${size.width}px`,
@@ -694,10 +897,18 @@ function PageWindow({
         zIndex: zIndex,
       };
 
+  const resizeHandleBase = 'absolute pointer-events-auto z-10';
+  const edgeThickness = '4px';
+  const cornerSize = '12px';
+
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2000 + zIndex }}>
-      <div
+      <motion.div
         ref={windowRef}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         className={`absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto ${
           isActive ? 'ring-2 ring-[var(--color-action-primary)]' : ''
         }`}
@@ -705,12 +916,20 @@ function PageWindow({
         onClick={onFocus}
         onMouseDown={onFocus}
       >
-        {/* Window Header */}
-        <div className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] shrink-0">
+        {/* Window Header — draggable */}
+        <div
+          className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] shrink-0 select-none"
+          onMouseDown={handleDragStart}
+          onDoubleClick={handleMaximize}
+        >
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-label-md text-[var(--color-text-default)] truncate">{title}</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div
+            className="flex items-center gap-1"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
             <WindowControls
               onMinimize={handleMinimize}
               onMaximize={handleMaximize}
@@ -721,8 +940,58 @@ function PageWindow({
         </div>
 
         {/* Window Content */}
-        <div className="flex-1 overflow-hidden">{children}</div>
-      </div>
+        <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
+          {children}
+        </div>
+
+        {/* Resize handles (hidden when maximized) */}
+        {!isMaximized && (
+          <>
+            {/* Edges */}
+            <div
+              className={`${resizeHandleBase} top-0 left-3 right-3 cursor-n-resize`}
+              style={{ height: edgeThickness }}
+              onMouseDown={(e) => handleResizeStart(e, 'n')}
+            />
+            <div
+              className={`${resizeHandleBase} bottom-0 left-3 right-3 cursor-s-resize`}
+              style={{ height: edgeThickness }}
+              onMouseDown={(e) => handleResizeStart(e, 's')}
+            />
+            <div
+              className={`${resizeHandleBase} left-0 top-3 bottom-3 cursor-w-resize`}
+              style={{ width: edgeThickness }}
+              onMouseDown={(e) => handleResizeStart(e, 'w')}
+            />
+            <div
+              className={`${resizeHandleBase} right-0 top-3 bottom-3 cursor-e-resize`}
+              style={{ width: edgeThickness }}
+              onMouseDown={(e) => handleResizeStart(e, 'e')}
+            />
+            {/* Corners */}
+            <div
+              className={`${resizeHandleBase} top-0 left-0 cursor-nw-resize`}
+              style={{ width: cornerSize, height: cornerSize }}
+              onMouseDown={(e) => handleResizeStart(e, 'nw')}
+            />
+            <div
+              className={`${resizeHandleBase} top-0 right-0 cursor-ne-resize`}
+              style={{ width: cornerSize, height: cornerSize }}
+              onMouseDown={(e) => handleResizeStart(e, 'ne')}
+            />
+            <div
+              className={`${resizeHandleBase} bottom-0 left-0 cursor-sw-resize`}
+              style={{ width: cornerSize, height: cornerSize }}
+              onMouseDown={(e) => handleResizeStart(e, 'sw')}
+            />
+            <div
+              className={`${resizeHandleBase} bottom-0 right-0 cursor-se-resize`}
+              style={{ width: cornerSize, height: cornerSize }}
+              onMouseDown={(e) => handleResizeStart(e, 'se')}
+            />
+          </>
+        )}
+      </motion.div>
     </div>
   );
 }
@@ -740,72 +1009,19 @@ export function DesktopPage() {
 
   // Window Management System
   // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트
-  const isSimulationMode = true;
+  const isSimulationMode = false;
 
-  // Mock up 초기 상태: Compute, Storage, Container는 실행중
-  // Compute 앱의 윈도우들: Instances (Focus in), Images (Focus out), Dashboard (Minimized)
-  const [windows, setWindows] = useState<WindowState[]>(() => {
-    const computeWindows: WindowState[] = [
-      {
-        id: 'compute-instances',
-        appId: 'compute',
-        title: 'Instances',
-        isMinimized: false,
-        isActive: true,
-        zIndex: 3,
-        createdAt: Date.now() - 3000,
-      },
-      {
-        id: 'compute-images',
-        appId: 'compute',
-        title: 'Images',
-        isMinimized: false,
-        isActive: false,
-        zIndex: 2,
-        createdAt: Date.now() - 2000,
-      },
-      {
-        id: 'compute-dashboard',
-        appId: 'compute',
-        title: 'Dashboard',
-        isMinimized: true,
-        isActive: false,
-        zIndex: 1,
-        createdAt: Date.now() - 1000,
-      },
-    ];
-    const storageWindow: WindowState = {
-      id: 'storage-1',
-      appId: 'storage',
-      title: 'Storage',
-      isMinimized: false,
-      isActive: false,
-      zIndex: 1,
-      createdAt: Date.now() - 5000,
-    };
-    const containerWindow: WindowState = {
-      id: 'container-1',
-      appId: 'container',
-      title: 'Container',
-      isMinimized: false,
-      isActive: false,
-      zIndex: 1,
-      createdAt: Date.now() - 4000,
-    };
-    return [...computeWindows, storageWindow, containerWindow];
-  });
-  const [nextZIndex, setNextZIndex] = useState(10);
-  const [appConfigs] = useState<
-    Record<AppId, { name: string; icon: string; component: React.ReactNode }>
-  >({
-    compute: { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
-    storage: { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
-    container: { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
-    agent: { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
-    'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
-    iam: { name: 'IAM', icon: imgIam, component: null },
-    settings: { name: 'Settings', icon: imgSettings, component: null },
-  });
+  const [windows, setWindows] = useState<WindowState[]>([]);
+  const [nextZIndex, setNextZIndex] = useState(1);
+  const appConfigs: Record<AppId, { name: string; icon: string; initialPath: string }> = {
+    compute: { name: 'Compute', icon: imgCompute, initialPath: '/compute' },
+    storage: { name: 'Storage', icon: imgStorage, initialPath: '/storage' },
+    container: { name: 'Container', icon: imgContainer, initialPath: '/container' },
+    agent: { name: 'Agent Ops', icon: imgAgent, initialPath: '/agent' },
+    'ai-platform': { name: 'AI Platform', icon: imgAi, initialPath: '/ai-platform' },
+    iam: { name: 'IAM', icon: imgIam, initialPath: '/iam' },
+    settings: { name: 'Settings', icon: imgSettings, initialPath: '/settings' },
+  };
   // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
   const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
     new Set(['ai-platform', 'agent', 'settings'])
@@ -839,11 +1055,10 @@ export function DesktopPage() {
       setWindows((prev) => prev.map((w) => ({ ...w, isActive: false })).concat(newWindow));
       setNextZIndex((prev) => prev + 1);
 
-      if (isSimulationMode) {
-        console.log(`[Simulation] New window created for ${appId}: ${newWindow.title}`);
-      }
+      // Dock에 앱이 없으면 추가
+      setDockAppOrder((prev) => (prev.includes(appId) ? prev : [...prev, appId]));
     },
-    [appConfigs, nextZIndex, isSimulationMode]
+    [appConfigs, nextZIndex]
   );
 
   const closeWindow = useCallback((windowId: string) => {
@@ -978,7 +1193,18 @@ export function DesktopPage() {
   );
 
   return (
-    <div className="fixed inset-0 bg-[#353535] overflow-hidden" onClick={handleDesktopClick}>
+    <div
+      className="fixed inset-0 overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(ellipse at 20% 20%, #1a0533 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 80%, #0a2a3c 0%, transparent 50%),
+          radial-gradient(ellipse at 50% 50%, #0f1b3d 0%, transparent 60%),
+          #0a0e1a
+        `,
+      }}
+      onClick={handleDesktopClick}
+    >
       {/* Top Bar */}
       <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
@@ -997,7 +1223,7 @@ export function DesktopPage() {
               name: appConfigs[appId].name,
               icon: appConfigs[appId].icon,
               isPinned: pinnedApps.has(appId),
-              hasWindows: windows.some((w) => w.appId === appId && !w.isMinimized),
+              hasWindows: windows.some((w) => w.appId === appId),
               hasActiveWindow: windows.some((w) => w.appId === appId && w.isActive),
               windows: windows.filter((w) => w.appId === appId),
             }))}
@@ -1037,42 +1263,12 @@ export function DesktopPage() {
         className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]"
         onClick={handleDesktopClick}
       >
-        <DesktopIcon
-          icon={imgIam}
-          label="IAM"
-          onClick={() => {
-            console.log('IAM clicked - not implemented yet');
-          }}
-        />
-        <DesktopIcon
-          icon={imgCompute}
-          label="Compute"
-          onClick={() => {
-            console.log('Compute clicked');
-          }}
-        />
-        <DesktopIcon
-          icon={imgStorage}
-          label="Storage"
-          onClick={() => {
-            console.log('Storage clicked');
-          }}
-        />
-        <DesktopIcon
-          icon={imgContainer}
-          label="Container"
-          onClick={() => {
-            console.log('Container clicked');
-          }}
-        />
-        <DesktopIcon
-          icon={imgAi}
-          label="AI Platform"
-          onClick={() => {
-            console.log('AI Platform clicked - not implemented yet');
-          }}
-        />
-        <DesktopIcon icon={imgAgent} label="Agent Ops" onClick={() => setShowAgent(true)} />
+        <DesktopIcon icon={imgIam} label="IAM" onClick={() => focusApp('iam')} />
+        <DesktopIcon icon={imgCompute} label="Compute" onClick={() => focusApp('compute')} />
+        <DesktopIcon icon={imgStorage} label="Storage" onClick={() => focusApp('storage')} />
+        <DesktopIcon icon={imgContainer} label="Container" onClick={() => focusApp('container')} />
+        <DesktopIcon icon={imgAi} label="AI Platform" onClick={() => focusApp('ai-platform')} />
+        <DesktopIcon icon={imgAgent} label="Agent Ops" onClick={() => focusApp('agent')} />
         <DesktopIcon icon={imgSettings} label="Settings" onClick={() => setShowSettings(true)} />
         <AdminCenterIcon
           iconRef={adminCenterIconRef}
@@ -1120,29 +1316,33 @@ export function DesktopPage() {
           );
         })()}
 
-      {/* App Windows - 시뮬레이션 모드에서는 실제 윈도우 UI를 표시하지 않음 */}
-      {!isSimulationMode &&
-        windows.map((window) => {
-          const config = appConfigs[window.appId];
-          if (!config || !config.component) return null;
+      {/* App Windows */}
+      <AnimatePresence>
+        {!isSimulationMode &&
+          windows
+            .filter((w) => !w.isMinimized)
+            .map((window) => {
+              const config = appConfigs[window.appId];
+              if (!config || window.appId === 'settings') return null;
 
-          return (
-            <PageWindow
-              key={window.id}
-              windowId={window.id}
-              isOpen={true}
-              isMinimized={window.isMinimized}
-              isActive={window.isActive}
-              onClose={() => closeWindow(window.id)}
-              onMinimize={() => minimizeWindow(window.id)}
-              onFocus={() => focusWindow(window.id)}
-              title={window.title}
-              zIndex={window.zIndex}
-            >
-              {config.component}
-            </PageWindow>
-          );
-        })}
+              return (
+                <PageWindow
+                  key={window.id}
+                  windowId={window.id}
+                  isOpen={true}
+                  isMinimized={false}
+                  isActive={window.isActive}
+                  onClose={() => closeWindow(window.id)}
+                  onMinimize={() => minimizeWindow(window.id)}
+                  onFocus={() => focusWindow(window.id)}
+                  title={window.title}
+                  zIndex={window.zIndex}
+                >
+                  <IsolatedRouter initialPath={config.initialPath} appId={window.appId} />
+                </PageWindow>
+              );
+            })}
+      </AnimatePresence>
 
       {/* Main Page Navigation Button - Bottom Left */}
       <Link

@@ -20,7 +20,7 @@ describe('Badge', () => {
     it('applies white theme by default', () => {
       render(<Badge>White</Badge>);
       const badge = screen.getByText('White');
-      expect(badge).toHaveClass('bg-white');
+      expect(badge).toHaveClass('bg-[var(--color-surface-default)]');
     });
 
     it('applies red theme', () => {

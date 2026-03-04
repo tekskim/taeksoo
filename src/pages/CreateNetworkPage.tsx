@@ -216,7 +216,7 @@ export default function CreateNetworkPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={3} className="min-w-[1176px]">
         {/* Page Title */}

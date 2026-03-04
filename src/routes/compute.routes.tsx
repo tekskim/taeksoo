@@ -11,8 +11,7 @@ const InstanceTemplateDetailPage = lazy(() => import('@/pages/InstanceTemplateDe
 const CreateTemplatePage = lazy(() => import('@/pages/CreateTemplatePage'));
 const InstanceSnapshotsPage = lazy(() => import('@/pages/InstanceSnapshotsPage'));
 const InstanceSnapshotDetailPage = lazy(() => import('@/pages/InstanceSnapshotDetailPage'));
-const ImagesPage = lazy(() => import('@/pages/ImagesPage'));
-const ImageDetailPage = lazy(() => import('@/pages/ImageDetailPage'));
+// ImagesPage & ImageDetailPage moved to storage.routes.tsx
 const FlavorsPage = lazy(() => import('@/pages/FlavorsPage'));
 const FlavorDetailPage = lazy(() => import('@/pages/FlavorDetailPage'));
 const KeyPairsPage = lazy(() => import('@/pages/KeyPairsPage'));
@@ -59,8 +58,7 @@ export const computeRoutes = (
     <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
     <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
     <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
-    <Route path="/compute/images" element={<ImagesPage />} />
-    <Route path="/compute/images/:id" element={<ImageDetailPage />} />
+    {/* Images are in storage.routes.tsx (StorageSidebar) */}
     <Route path="/compute/flavors" element={<FlavorsPage />} />
     <Route path="/compute/flavors/:id" element={<FlavorDetailPage />} />
     <Route path="/compute/key-pairs" element={<KeyPairsPage />} />

@@ -1623,7 +1623,7 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1671,7 +1671,7 @@ function ImageSection({
               {dataDisks.map((disk) => (
                 <div
                   key={disk.id}
-                  className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
                 >
                   <HStack gap={6} align="center">
                     <HStack gap={1.5} align="center">
@@ -4566,7 +4566,7 @@ export function CreateInstancePage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={3} className="min-w-[1176px]">
         {/* Page Title */}

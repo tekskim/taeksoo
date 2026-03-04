@@ -304,7 +304,11 @@ export function FloatingCardPage() {
           path: '/design/components/section-card',
           description: 'Content sections',
         },
-        { label: 'Progress bar', path: '/design/components/table', description: 'Quota display' },
+        {
+          label: 'Gauge bar chart',
+          path: '/design/charts/gauge-bar',
+          description: 'Quota display',
+        },
       ]}
     />
   );

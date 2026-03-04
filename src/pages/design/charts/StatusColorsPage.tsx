@@ -128,8 +128,8 @@ export function StatusColorsPage() {
           description: 'Chart guidelines',
         },
         {
-          label: 'Progress Bar',
-          path: '/design/charts/progress-bar',
+          label: 'Gauge bar chart',
+          path: '/design/charts/gauge-bar',
           description: 'Uses status colors',
         },
         {

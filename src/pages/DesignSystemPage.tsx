@@ -305,6 +305,7 @@ const foundationItems = [
   { id: 'spacing-radius', label: 'Spacing & Radius', icon: IconBoxMultiple },
   { id: 'borders', label: 'Borders', icon: IconBorderAll },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple },
+  { id: 'transitions', label: 'Transitions', icon: IconActivity },
   { id: 'icons', label: 'Icons', icon: IconStar },
   { id: 'app-icons', label: 'App icons', icon: IconApps },
 ];
@@ -383,7 +384,7 @@ const layoutItems = [
 const graphItems = [
   { id: 'chart-overview', label: 'Chart overview', icon: IconChartBar },
   { id: 'status-colors', label: 'Status colors', icon: IconPalette },
-  { id: 'bar-chart', label: 'Progress Bar', icon: IconChartBar },
+  { id: 'gauge-bar-chart', label: 'Gauge bar chart', icon: IconChartBar },
   { id: 'area-chart', label: 'Area chart', icon: IconChartBar },
   { id: 'pie-chart', label: 'Pie chart', icon: IconActivity },
   { id: 'half-doughnut-chart', label: 'Half-Doughnut chart', icon: IconGauge },
@@ -3641,6 +3642,65 @@ function TableDemo() {
 }
 
 /* ----------------------------------------
+   Transition Demo Components
+   ---------------------------------------- */
+
+function TransitionDemo({ duration, label }: { duration: string; label: string }) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={() => setActive(!active)}
+        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+      >
+        {active ? 'Reset' : 'Play'}
+      </button>
+      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-md)] overflow-hidden relative">
+        <div
+          className="absolute top-0 left-0 h-full rounded-[var(--primitive-radius-md)]"
+          style={{
+            width: active ? '100%' : '0%',
+            backgroundColor: 'var(--color-action-primary)',
+            opacity: 0.7,
+            transition: `width ${duration} ease-out`,
+          }}
+        />
+        <span className="absolute inset-0 flex items-center justify-center text-body-xs font-mono text-[var(--color-text-muted)]">
+          {duration}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function EasingDemo({ easing }: { easing: string }) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={() => setActive(!active)}
+        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer shrink-0"
+      >
+        {active ? 'Reset' : 'Play'}
+      </button>
+      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-md)] relative overflow-hidden px-1">
+        <div
+          className="absolute top-1 w-6 h-6 rounded-full bg-[var(--color-action-primary)]"
+          style={{
+            left: active ? 'calc(100% - 28px)' : '4px',
+            transition: `left 600ms ${easing}`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Design system Page
    ---------------------------------------- */
 
@@ -5337,6 +5397,311 @@ outline: 2px solid var(--color-border-focus);`}
                         </div>
                       </div>
                     ))}
+                  </div>
+                </Section>
+
+                {/* Transitions */}
+                <Section
+                  id="transitions"
+                  title="Transitions"
+                  description="Duration tokens, easing functions, and animation patterns for consistent motion across the system"
+                >
+                  {/* Duration Tokens */}
+                  <div className="space-y-6">
+                    <Label>Duration Tokens</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        {
+                          name: 'fast',
+                          value: '150ms',
+                          token: '--duration-fast',
+                          primitive: '--primitive-duration-fast',
+                          usage: 'Hover, focus, color changes',
+                        },
+                        {
+                          name: 'normal',
+                          value: '200ms',
+                          token: '--duration-normal',
+                          primitive: '--primitive-duration-normal',
+                          usage: 'Default transitions, dropdowns, tooltips',
+                        },
+                        {
+                          name: 'slow',
+                          value: '300ms',
+                          token: '--duration-slow',
+                          primitive: '--primitive-duration-slow',
+                          usage: 'Modals, drawers, page transitions',
+                        },
+                      ].map(({ name, value, token, primitive, usage }) => (
+                        <div
+                          key={name}
+                          className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-heading-h6 text-[var(--color-text-default)] capitalize">
+                              {name}
+                            </span>
+                            <span className="text-body-md font-mono text-[var(--color-text-muted)]">
+                              {value}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <code className="text-body-sm font-mono text-[var(--color-state-info)]">
+                              {token}
+                            </code>
+                            <code className="text-body-xs font-mono text-[var(--color-text-subtle)]">
+                              {primitive}
+                            </code>
+                          </div>
+                          <p className="text-body-sm text-[var(--color-text-subtle)]">{usage}</p>
+                          <TransitionDemo duration={value} label={name} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Easing Functions */}
+                    <Label>Easing Functions</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        {
+                          name: 'ease',
+                          css: 'ease',
+                          desc: 'Default browser easing — gentle acceleration and deceleration',
+                          usage: 'General-purpose, theme transitions',
+                        },
+                        {
+                          name: 'ease-out',
+                          css: 'ease-out',
+                          desc: 'Fast start, slow end — feels responsive and natural',
+                          usage: 'Modals, panels, popups entering',
+                        },
+                        {
+                          name: 'ease-in-out',
+                          css: 'ease-in-out',
+                          desc: 'Smooth acceleration and deceleration — balanced motion',
+                          usage: 'Loading shimmer, continuous animations',
+                        },
+                        {
+                          name: 'linear',
+                          css: 'linear',
+                          desc: 'Constant speed — no acceleration',
+                          usage: 'Progress bars, timers',
+                        },
+                      ].map(({ name, css, desc, usage }) => (
+                        <div
+                          key={name}
+                          className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-heading-h6 text-[var(--color-text-default)]">
+                              {name}
+                            </span>
+                            <code className="text-body-sm font-mono text-[var(--color-text-muted)]">
+                              {css}
+                            </code>
+                          </div>
+                          <p className="text-body-sm text-[var(--color-text-subtle)]">{desc}</p>
+                          <p className="text-body-xs text-[var(--color-text-muted)]">
+                            <strong>Usage:</strong> {usage}
+                          </p>
+                          <EasingDemo easing={css} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* CSS Transition Patterns */}
+                    <Label>CSS Transition Patterns</Label>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left">
+                        <thead>
+                          <tr className="border-b border-[var(--color-border-default)]">
+                            <th className="py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                              Pattern
+                            </th>
+                            <th className="py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                              Properties
+                            </th>
+                            <th className="py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                              Duration
+                            </th>
+                            <th className="py-2 pr-4 text-label-sm text-[var(--color-text-muted)]">
+                              Easing
+                            </th>
+                            <th className="py-2 text-label-sm text-[var(--color-text-muted)]">
+                              Components
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-body-md">
+                          {[
+                            {
+                              pattern: 'Color change',
+                              properties: 'background-color, border-color, color',
+                              duration: '150ms',
+                              easing: 'ease',
+                              components: 'Button, Input, Toggle, Menu item',
+                            },
+                            {
+                              pattern: 'Opacity',
+                              properties: 'opacity',
+                              duration: '200ms',
+                              easing: 'ease-out',
+                              components: 'Tooltip, Backdrop, Fade transitions',
+                            },
+                            {
+                              pattern: 'Transform',
+                              properties: 'transform (scale, translate)',
+                              duration: '200ms',
+                              easing: 'ease-out',
+                              components: 'Modal, Popover, Desktop icons',
+                            },
+                            {
+                              pattern: 'Layout shift',
+                              properties: 'width, height, padding',
+                              duration: '200ms',
+                              easing: 'ease',
+                              components: 'Sidebar, Disclosure, Drawer',
+                            },
+                            {
+                              pattern: 'All properties',
+                              properties: 'all',
+                              duration: '150ms',
+                              easing: 'ease',
+                              components: 'Generic hover states',
+                            },
+                            {
+                              pattern: 'Theme switch',
+                              properties: 'background-color, border-color, color, fill, stroke',
+                              duration: '300ms / 150ms',
+                              easing: 'ease',
+                              components: 'Global (root-level)',
+                            },
+                          ].map(({ pattern, properties, duration, easing, components }) => (
+                            <tr
+                              key={pattern}
+                              className="border-b border-[var(--color-border-subtle)]"
+                            >
+                              <td className="py-2.5 pr-4 text-[var(--color-text-default)] font-medium whitespace-nowrap">
+                                {pattern}
+                              </td>
+                              <td className="py-2.5 pr-4 font-mono text-body-sm text-[var(--color-text-muted)]">
+                                {properties}
+                              </td>
+                              <td className="py-2.5 pr-4 font-mono text-body-sm text-[var(--color-state-info)]">
+                                {duration}
+                              </td>
+                              <td className="py-2.5 pr-4 font-mono text-body-sm text-[var(--color-text-muted)]">
+                                {easing}
+                              </td>
+                              <td className="py-2.5 text-body-sm text-[var(--color-text-subtle)]">
+                                {components}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Framer Motion Patterns */}
+                    <Label>Framer Motion Patterns (Desktop)</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        {
+                          name: 'Enter / Exit (Tween)',
+                          code: `initial={{ scale: 0.95, opacity: 0 }}
+animate={{ scale: 1, opacity: 1 }}
+exit={{ scale: 0.95, opacity: 0 }}
+transition={{ duration: 0.2, ease: 'easeOut' }}`,
+                          usage: 'Windows, modals, panels',
+                        },
+                        {
+                          name: 'Backdrop Fade',
+                          code: `initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+exit={{ opacity: 0 }}
+transition={{ duration: 0.2, ease: 'easeOut' }}`,
+                          usage: 'Modal/panel overlays',
+                        },
+                        {
+                          name: 'Drag Reorder (Spring)',
+                          code: `transition={{
+  type: 'spring',
+  stiffness: 400,
+  damping: 25,
+}}
+whileDrag={{ scale: 1.15, zIndex: 50 }}`,
+                          usage: 'Dock icon drag & drop',
+                        },
+                        {
+                          name: 'Layout Animation',
+                          code: `<motion.div layoutId={id}>
+  {/* shared layout */}
+</motion.div>
+
+<AnimatePresence>
+  {isOpen && <motion.div ... />}
+</AnimatePresence>`,
+                          usage: 'Shared layout transitions, conditional rendering',
+                        },
+                      ].map(({ name, code, usage }) => (
+                        <div
+                          key={name}
+                          className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                        >
+                          <span className="text-heading-h6 text-[var(--color-text-default)]">
+                            {name}
+                          </span>
+                          <pre className="text-body-sm font-mono text-[var(--color-text-muted)] bg-[var(--color-surface-default)] p-3 rounded-[var(--primitive-radius-md)] overflow-x-auto whitespace-pre">
+                            {code}
+                          </pre>
+                          <p className="text-body-sm text-[var(--color-text-subtle)]">
+                            <strong>Usage:</strong> {usage}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Guidelines */}
+                    <Label>Guidelines</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)]/20 rounded-[var(--primitive-radius-lg)]">
+                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-2">
+                          DO
+                        </h4>
+                        <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
+                          <li>• Use duration tokens instead of hardcoded values</li>
+                          <li>
+                            • Prefer <code className="font-mono text-body-sm">ease-out</code> for
+                            elements entering the viewport
+                          </li>
+                          <li>• Keep durations under 300ms for UI interactions</li>
+                          <li>
+                            • Use <code className="font-mono text-body-sm">AnimatePresence</code>{' '}
+                            for enter/exit animations
+                          </li>
+                          <li>• Match transition speed to the size of the change</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)]/20 rounded-[var(--primitive-radius-lg)]">
+                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-2">
+                          DON'T
+                        </h4>
+                        <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
+                          <li>• Don't animate layout properties (width/height) unless necessary</li>
+                          <li>• Don't use durations longer than 500ms for interactive UI</li>
+                          <li>
+                            • Don't use <code className="font-mono text-body-sm">ease-in</code>{' '}
+                            alone — it feels sluggish on entry
+                          </li>
+                          <li>• Don't animate multiple unrelated properties simultaneously</li>
+                          <li>
+                            • Don't forget{' '}
+                            <code className="font-mono text-body-sm">prefers-reduced-motion</code>{' '}
+                            accessibility
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </Section>
 
@@ -16670,10 +17035,10 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
                 </Section>
 
-                {/* Progress Bar */}
+                {/* Gauge bar chart */}
                 <Section
-                  id="bar-chart"
-                  title="Progress Bar"
+                  id="gauge-bar-chart"
+                  title="Gauge bar chart"
                   description="Visual indicator for quota usage and progress with status-based colors"
                 >
                   <VStack gap={8}>
