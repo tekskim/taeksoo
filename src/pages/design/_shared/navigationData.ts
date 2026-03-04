@@ -93,6 +93,12 @@ const foundationItems: NavItem[] = [
   },
   { id: 'borders', label: 'Borders', icon: IconBorderAll, path: '/design/foundation/borders' },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple, path: '/design/foundation/shadows' },
+  {
+    id: 'transitions',
+    label: 'Transitions',
+    icon: IconActivity,
+    path: '/design/foundation/transitions',
+  },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
   { id: 'app-icons', label: 'App icons', icon: IconApps, path: '/design/foundation/app-icons' },
   {
@@ -337,10 +343,10 @@ const graphItems: NavItem[] = [
     path: '/design/charts/status-colors',
   },
   {
-    id: 'bar-chart',
-    label: 'Progress Bar',
+    id: 'gauge-bar-chart',
+    label: 'Gauge bar chart',
     icon: IconChartBar,
-    path: '/design/charts/progress-bar',
+    path: '/design/charts/gauge-bar',
   },
   { id: 'area-chart', label: 'Area chart', icon: IconChartBar, path: '/design/charts/area-chart' },
   { id: 'pie-chart', label: 'Pie chart', icon: IconActivity, path: '/design/charts/pie-chart' },

@@ -1674,7 +1674,7 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {createSystemDisk && (
-              <div className="mt-3 w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1722,7 +1722,7 @@ function ImageSection({
               {dataDisks.map((disk) => (
                 <div
                   key={disk.id}
-                  className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
                 >
                   <HStack gap={6} align="center">
                     <HStack gap={1.5} align="center">

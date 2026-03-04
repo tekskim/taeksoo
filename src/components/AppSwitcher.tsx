@@ -59,7 +59,7 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
     }
     // Try to match by path
     const currentPath = location.pathname;
-    return apps.find((app) => currentPath.startsWith(app.path)) || apps[0];
+    return apps.find((app) => currentPath.startsWith(app.path));
   };
 
   const currentApp = getCurrentApp();

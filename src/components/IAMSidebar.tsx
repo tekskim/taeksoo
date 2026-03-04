@@ -47,7 +47,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
   return (
     <aside className="w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col fixed left-0 top-0">
       {/* App Switcher with Toggle */}
-      <AppSwitcher onToggleSidebar={onToggle} />
+      <AppSwitcher currentAppId="iam" onToggleSidebar={onToggle} />
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">

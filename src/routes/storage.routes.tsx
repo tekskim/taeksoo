@@ -12,6 +12,8 @@ const PoolsPage = lazy(() => import('@/pages/PoolsPage'));
 const BucketsPage = lazy(() => import('@/pages/BucketsPage'));
 const BucketDetailPage = lazy(() => import('@/pages/BucketDetailPage'));
 const CreateBucketPage = lazy(() => import('@/pages/CreateBucketPage'));
+const ImagesPage = lazy(() => import('@/pages/ImagesPage'));
+const ImageDetailPage = lazy(() => import('@/pages/ImageDetailPage'));
 
 export const storageRoutes = (
   <>
@@ -26,5 +28,7 @@ export const storageRoutes = (
     <Route path="/storage/buckets" element={<BucketsPage />} />
     <Route path="/storage/buckets/create" element={<CreateBucketPage />} />
     <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
+    <Route path="/storage/images" element={<ImagesPage />} />
+    <Route path="/storage/images/:id" element={<ImageDetailPage />} />
   </>
 );

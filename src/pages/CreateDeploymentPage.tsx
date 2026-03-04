@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -1525,6 +1525,7 @@ export function CreateDeploymentPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'deployment';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+  const tabListRef = useRef<HTMLDivElement>(null);
 
   // Build inner tabs for the form
   const formTabs = [
@@ -1951,7 +1952,12 @@ export function CreateDeploymentPage() {
         selectedVolume: '',
       },
     }));
-  }, [containerTabs]);
+    setActiveTab(newContainer.id);
+    requestAnimationFrame(() => {
+      const el = tabListRef.current?.querySelector('[role="tablist"]');
+      el?.scrollTo({ left: el.scrollWidth, behavior: 'smooth' });
+    });
+  }, [containerTabs, setActiveTab]);
 
   // Check if create button should be disabled
   const isCreateDisabled = !name.trim();
@@ -2029,7 +2035,7 @@ export function CreateDeploymentPage() {
       <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
-          <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
             Create Deployment
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -2040,17 +2046,11 @@ export function CreateDeploymentPage() {
 
         {/* Form Tabs - Outside the row so sidebar aligns with content */}
         <div className="w-full border-b border-[var(--color-border-default)]">
-          <Tabs
-            value={activeTab}
-            onChange={setActiveTab}
-            size="sm"
-            variant="underline"
-            className="max-w-[861px]"
-          >
-            <div className="flex items-start">
-              <TabList className="after:hidden min-w-0 overflow-hidden">
+          <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
+            <div ref={tabListRef} className="flex items-start pt-3">
+              <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
                 {formTabs.map((tab) => (
-                  <Tab key={tab.id} value={tab.id} className="min-w-0 shrink">
+                  <Tab key={tab.id} value={tab.id} className="shrink-0">
                     <HStack gap={2} align="center" className="min-w-0">
                       <span className="truncate">{tab.label}</span>
                       {tab.closable && (
@@ -2059,21 +2059,23 @@ export function CreateDeploymentPage() {
                             e.stopPropagation();
                             removeContainerTab(tab.id);
                           }}
-                          className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
+                          className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
                         >
-                          <IconX size={16} stroke={1.5} />
+                          <IconX size={12} stroke={1} />
                         </button>
                       )}
                     </HStack>
                   </Tab>
                 ))}
               </TabList>
-              <button
-                onClick={addContainerTab}
-                className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
-              >
-                <IconPlus size={16} stroke={1.5} />
-              </button>
+              <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
+                <button
+                  onClick={addContainerTab}
+                  className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
+                >
+                  <IconPlus size={14} stroke={1} />
+                </button>
+              </div>
             </div>
           </Tabs>
         </div>

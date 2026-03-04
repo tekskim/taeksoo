@@ -314,6 +314,7 @@ import { TypographyPage } from '@/pages/design/foundation/TypographyPage';
 import { SpacingPage } from '@/pages/design/foundation/SpacingPage';
 import { BordersPage } from '@/pages/design/foundation/BordersPage';
 import { ShadowsPage } from '@/pages/design/foundation/ShadowsPage';
+import { TransitionsPage } from '@/pages/design/foundation/TransitionsPage';
 import { IconsPage } from '@/pages/design/foundation/IconsPage';
 import { AppIconsPage } from '@/pages/design/foundation/AppIconsPage';
 import { UXWritingGuidePage } from '@/pages/design/foundation/UXWritingGuidePage';
@@ -968,6 +969,7 @@ function AppRoutes() {
         <Route path="foundation/spacing" element={<SpacingPage />} />
         <Route path="foundation/borders" element={<BordersPage />} />
         <Route path="foundation/shadows" element={<ShadowsPage />} />
+        <Route path="foundation/transitions" element={<TransitionsPage />} />
         <Route path="foundation/icons" element={<IconsPage />} />
         <Route path="foundation/app-icons" element={<AppIconsPage />} />
         <Route path="foundation/ux-writing" element={<UXWritingGuidePage />} />
@@ -1032,7 +1034,7 @@ function AppRoutes() {
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
-        <Route path="charts/progress-bar" element={<ProgressBarPage />} />
+        <Route path="charts/gauge-bar" element={<ProgressBarPage />} />
         <Route path="charts/area-chart" element={<AreaChartPage />} />
         <Route path="charts/pie-chart" element={<PieChartPage />} />
         <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />

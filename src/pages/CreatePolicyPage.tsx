@@ -164,7 +164,7 @@ function SummarySidebar({
         {/* Quota Section */}
         <VStack gap={2}>
           <span className="text-label-lg text-[var(--color-text-default)]">Quota</span>
-          <div className="bg-white border border-[var(--color-border-subtle)] rounded-lg p-4">
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4">
             <VStack gap={2}>
               <div className="flex items-center justify-between w-full">
                 <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
@@ -743,7 +743,7 @@ function PolicyEditorSection({
           {permissions.map((permission, index) => (
             <div
               key={permission.id}
-              className="bg-white border border-[var(--color-border-default)] rounded-[6px] p-4 w-full relative"
+              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-4 w-full relative"
             >
               {/* Delete button - only show for cards after the first one */}
               {index > 0 && (
@@ -958,7 +958,7 @@ function PolicyEditorSection({
                                 return (
                                   <label
                                     key={actionName}
-                                    className={`bg-white border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
+                                    className={`bg-[var(--color-surface-default)] border rounded-[6px] p-2 flex items-center gap-1.5 cursor-pointer shrink-0 min-w-0 ${
                                       isSelected
                                         ? 'border-[var(--color-action-primary)]'
                                         : 'border-[var(--color-border-strong)]'
@@ -1304,7 +1304,7 @@ export default function CreatePolicyPage() {
           }
         />
       }
-      contentClassName="pt-3 px-8 pb-20"
+      contentClassName="pt-4 px-8 pb-20"
     >
       {/* Main content area */}
       <VStack gap={3} className="min-w-[1176px]">

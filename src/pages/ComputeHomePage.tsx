@@ -224,7 +224,7 @@ export function ComputeHomePage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} currentAppId="compute" />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar

@@ -67,7 +67,8 @@ const themeStyles = {
     green: 'bg-[var(--color-state-success)] text-white',
     yellow: 'bg-[var(--color-state-warning)] text-white',
     gray: 'bg-[var(--color-text-subtle)] text-white',
-    white: 'bg-white text-[var(--color-text-default)] border border-[var(--color-border-default)]',
+    white:
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-default)]',
   },
   subtle: {
     blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
@@ -75,7 +76,8 @@ const themeStyles = {
     green: 'bg-[var(--badge-subtle-green-bg)] text-[var(--badge-subtle-green-text)]',
     yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
     gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
-    white: 'bg-white text-[var(--color-text-default)] border border-[var(--color-border-default)]',
+    white:
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-default)]',
   },
 } as const;
 
@@ -146,11 +148,26 @@ export const Badge = memo(function Badge({
   );
 
   const dotColors: Record<BadgeTheme, string> = {
-    blue: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-info)]',
-    red: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-danger)]',
-    green: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-success)]',
-    yellow: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-state-warning)]',
-    gray: resolvedType === 'solid' ? 'bg-white/50' : 'bg-[var(--color-text-subtle)]',
+    blue:
+      resolvedType === 'solid'
+        ? 'bg-[var(--color-surface-default)]/50'
+        : 'bg-[var(--color-state-info)]',
+    red:
+      resolvedType === 'solid'
+        ? 'bg-[var(--color-surface-default)]/50'
+        : 'bg-[var(--color-state-danger)]',
+    green:
+      resolvedType === 'solid'
+        ? 'bg-[var(--color-surface-default)]/50'
+        : 'bg-[var(--color-state-success)]',
+    yellow:
+      resolvedType === 'solid'
+        ? 'bg-[var(--color-surface-default)]/50'
+        : 'bg-[var(--color-state-warning)]',
+    gray:
+      resolvedType === 'solid'
+        ? 'bg-[var(--color-surface-default)]/50'
+        : 'bg-[var(--color-text-subtle)]',
     white: 'bg-[var(--color-text-default)]',
   };
 

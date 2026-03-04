@@ -115,7 +115,7 @@ const progressBarProps: PropDef[] = [
 export function ProgressBarPage() {
   return (
     <ComponentPageTemplate
-      title="Progress Bar"
+      title="Gauge bar chart"
       description="Visual indicator for quota usage and progress with status-based colors"
       preview={
         <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">

@@ -185,7 +185,9 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
 
         {/* Title */}
         <div className="mt-6">
-          <h4 className="text-heading-h6 text-[var(--color-text-default)]">{card.title}</h4>
+          <h4 className="text-heading-h6 !font-medium text-[var(--color-text-default)]">
+            {card.title}
+          </h4>
         </div>
 
         {/* Coming Soon Badge */}

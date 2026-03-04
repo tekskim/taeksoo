@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
+import { useIsDesktopWindow } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Types
@@ -70,6 +71,9 @@ export const TabBar: React.FC<TabBarProps> = ({
   onWindowClose,
   className = '',
 }) => {
+  const isDesktopWindow = useIsDesktopWindow();
+  const effectiveShowWindowControls = showWindowControls && !isDesktopWindow;
+
   // Drag and drop state
   const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
   const [dragOverTabId, setDragOverTabId] = useState<string | null>(null);
@@ -275,7 +279,7 @@ export const TabBar: React.FC<TabBarProps> = ({
       <div className="flex-1" />
 
       {/* Window Controls */}
-      {showWindowControls && (
+      {effectiveShowWindowControls && (
         <div className="flex items-center gap-1 px-2">
           <button
             type="button"
