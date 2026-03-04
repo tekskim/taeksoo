@@ -36,20 +36,21 @@ import { StorageHomePage } from './StorageHomePage';
 import { HomePage } from './HomePage';
 import { AIPlatformPage } from './AIPlatformPage';
 
-// Desktop Icon Images (Figma exports)
-import imgIam from '@/assets/desktop/iam.png';
-import imgCompute from '@/assets/desktop/compute.png';
-import imgStorage from '@/assets/desktop/storage.png';
-import imgContainer from '@/assets/desktop/container.png';
-import imgAi from '@/assets/desktop/ai.png';
-import imgAgent from '@/assets/desktop/agent.png';
-import imgSettings from '@/assets/desktop/settings.png';
-import imgStorageAdmin from '@/assets/desktop/storage_admin.png';
-import imgComputeAdmin from '@/assets/desktop/compute_admin.png';
-import imgCloud from '@/assets/desktop/cloud.png';
+// App Icon Images
+import imgIam from '@/assets/appIcon/iam.png';
+import imgCompute from '@/assets/appIcon/compute.png';
+import imgStorage from '@/assets/appIcon/storage.png';
+import imgContainer from '@/assets/appIcon/container.png';
+import imgAi from '@/assets/appIcon/aiplatform.png';
+import imgAgent from '@/assets/appIcon/agentops.png';
+import imgSettings from '@/assets/appIcon/settings.png';
+import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
+import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
+import imgCloud from '@/assets/appIcon/cloudbuilder.png';
+import imgAdminCenter from '@/assets/appIcon/admincenter.png';
 
-// App Icons for Dock (32x32)
-import appIconAIChat from '@/assets/appIcon/AI Chat.png';
+// App Icons
+import appIconAIChat from '@/assets/appIcon/chat.png';
 
 /* ----------------------------------------
    Desktop Icon Component
@@ -308,17 +309,13 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
       aria-label="Admin center"
     >
       <div className="w-20 h-20 flex items-center justify-center rounded-lg">
-        <div className="bg-white/10 rounded-2xl p-2 flex flex-col gap-1">
-          <div className="flex gap-1 items-center">
-            <img src={imgStorageAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-            <img src={imgComputeAdmin} alt="" className="w-[22px] h-[22px] object-cover" />
-          </div>
-          <div className="flex items-center">
-            <img src={imgCloud} alt="" className="w-[22px] h-[22px] object-cover" />
-          </div>
-        </div>
+        <img
+          src={imgAdminCenter}
+          alt="Admin center"
+          className="w-16 h-16 object-cover object-center"
+        />
       </div>
-      <span className="text-label-md text-white text-center w-16">Admin center</span>
+      <span className="text-label-md text-white text-center whitespace-nowrap">Admin center</span>
     </button>
   );
 }

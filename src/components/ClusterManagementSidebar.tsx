@@ -13,7 +13,7 @@ import { FolderCog } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import containerIcon from '@/assets/container.png';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Cluster Management Sidebar Component

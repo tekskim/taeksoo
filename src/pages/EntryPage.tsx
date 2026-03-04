@@ -6,15 +6,15 @@ import { IconMoon, IconSun, IconMail, IconBook } from '@tabler/icons-react';
 import { Button } from '@/design-system';
 
 // App icons
-import ComputeIcon from '@/assets/compute.png';
+import ComputeIcon from '@/assets/appIcon/compute.png';
 import ComputeAdminIcon from '@/assets/appIcon/computeadmin.png';
-import ContainerIcon from '@/assets/container.png';
-import CloudBuilderIcon from '@/assets/cloudbuilder.png';
-import AIPlatformIcon from '@/assets/aiplatform.png';
-import AIAgentIcon from '@/assets/agentops.png';
-import StorageIcon from '@/assets/storage.png';
-import IAMIcon from '@/assets/iam.png';
-import DesktopIcon from '@/assets/settings.png';
+import ContainerIcon from '@/assets/appIcon/container.png';
+import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
+import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
+import AIAgentIcon from '@/assets/appIcon/agentops.png';
+import StorageIcon from '@/assets/appIcon/storage.png';
+import IAMIcon from '@/assets/appIcon/iam.png';
+import DesktopIcon from '@/assets/appIcon/settings.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
 
 /* ----------------------------------------

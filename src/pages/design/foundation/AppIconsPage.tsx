@@ -13,6 +13,7 @@ import AppIconIAM from '@/assets/appIcon/iam.png';
 import AppIconSettings from '@/assets/appIcon/settings.png';
 import AppIconStorage from '@/assets/appIcon/storage.png';
 import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
+import AppIconChat from '@/assets/appIcon/chat.png';
 
 export function AppIconsPage() {
   return (
@@ -27,8 +28,8 @@ export function AppIconsPage() {
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>
                   THAKI Cloud의 각 서비스(Compute, Compute Admin, Container, Storage, Storage Admin,
-                  Cloud Builder, AI Platform, Agent ops, IAM, Settings, Admin center)를 대표하는
-                  아이콘입니다.
+                  Cloud Builder, AI Platform, Agent ops, IAM, Settings, Admin center, Chat)를
+                  대표하는 아이콘입니다.
                 </li>
                 <li>
                   <strong>크기</strong>: 기본 64×64px. 사이드바 등 작은 영역에서는 축소 사용 가능.
@@ -57,6 +58,7 @@ export function AppIconsPage() {
                 { src: AppIconIAM, name: 'IAM' },
                 { src: AppIconSettings, name: 'Settings' },
                 { src: AppIconAdminCenter, name: 'Admin center' },
+                { src: AppIconChat, name: 'Chat' },
               ].map(({ src, name }) => (
                 <div key={name} className="flex flex-col items-center gap-2">
                   <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
