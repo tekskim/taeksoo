@@ -9,8 +9,10 @@ import CloudBuilderIcon from '@/assets/appIcon/cloudbuilder.png';
 import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AgentOpsIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
+import StorageAdminIcon from '@/assets/appIcon/storageadmin.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
+import AdminCenterIcon from '@/assets/appIcon/admincenter.png';
 
 /* ----------------------------------------
    Types
@@ -32,12 +34,14 @@ const apps: AppItem[] = [
   { id: 'iam', title: 'IAM', icon: IAMIcon, path: '/iam' },
   { id: 'compute-admin', title: 'Compute Admin', icon: ComputeAdminIcon, path: '/compute-admin' },
   { id: 'compute', title: 'Compute', icon: ComputeIcon, path: '/compute' },
+  { id: 'storage-admin', title: 'Storage Admin', icon: StorageAdminIcon, path: '/storage-admin' },
   { id: 'storage', title: 'Storage', icon: StorageIcon, path: '/storage' },
   { id: 'container', title: 'Container', icon: ContainerIcon, path: '/container' },
   { id: 'ai-platform', title: 'AI Platform', icon: AIPlatformIcon, path: '/ai-platform' },
   { id: 'agent-ops', title: 'Agent Ops', icon: AgentOpsIcon, path: '/agent' },
   { id: 'settings', title: 'Settings', icon: SettingsIcon, path: '/settings' },
   { id: 'cloud-builder', title: 'Cloud Builder', icon: CloudBuilderIcon, path: '/cloudbuilder' },
+  { id: 'admin-center', title: 'Admin Center', icon: AdminCenterIcon, path: '/admin-center' },
 ];
 
 /* ----------------------------------------

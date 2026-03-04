@@ -31,7 +31,7 @@ import {
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import containerIcon from '@/assets/container.png';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Container Sidebar Component
