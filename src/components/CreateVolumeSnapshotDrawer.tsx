@@ -84,6 +84,7 @@ export function CreateVolumeSnapshotDrawer({
   onSubmit,
 }: CreateVolumeSnapshotDrawerProps) {
   const [snapshotName, setSnapshotName] = useState('');
+  const [snapshotDescription, setSnapshotDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
@@ -163,6 +164,12 @@ export function CreateVolumeSnapshotDrawer({
         <VStack gap={3}>
           {/* Header */}
 
+          {/* Warning Message */}
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            snapshot.
+          </InlineMessage>
+
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
             <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Volume</p>
@@ -170,12 +177,6 @@ export function CreateVolumeSnapshotDrawer({
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
-
-          {/* Warning Message */}
-          <InlineMessage variant="error">
-            For data consistency, stop all write operations on the instance before creating a
-            snapshot.
-          </InlineMessage>
         </VStack>
 
         {/* Snapshot Name Input */}
@@ -192,7 +193,25 @@ export function CreateVolumeSnapshotDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Snapshot name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={snapshotDescription}
+              onChange={(e) => setSnapshotDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
       </VStack>

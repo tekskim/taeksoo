@@ -118,24 +118,17 @@ export function ManageTagsDrawer({
         <VStack gap={3}>
           {/* Tags Header */}
           <VStack gap={2}>
-            <HStack gap={1.5} align="center">
-              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-            </HStack>
+            <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
             <div className="text-body-sm text-[var(--color-text-subtle)]">
               <p className="mb-0">
                 A tag consists of a Key that defines the resource category and a Value that
-                describes it.
-              </p>
-              <p>
-                Keys must be unique and 1-256 characters long. A maximum of {maxTags} tags can be
-                added. ({tags.length}/{maxTags})
+                describes it. Each resource can have up to 50 tags.
               </p>
             </div>
           </VStack>
 
           {/* Tag Container */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={1}>
               {tags.length > 0 && (
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -173,7 +166,7 @@ export function ManageTagsDrawer({
                 </div>
               ))}
 
-              <div className="w-fit">
+              <HStack gap={2} align="center">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -183,7 +176,10 @@ export function ManageTagsDrawer({
                 >
                   Add Tag
                 </Button>
-              </div>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  {tags.length}/{maxTags}
+                </span>
+              </HStack>
             </VStack>
           </div>
         </VStack>
