@@ -7,7 +7,6 @@ import {
   Pagination,
   Radio,
   Toggle,
-  Disclosure,
   StatusIndicator,
   SelectionIndicator,
   Table,
@@ -133,7 +132,6 @@ export function CreateRouterDrawer({
   const [currentPage, setCurrentPage] = useState(1);
 
   // Advanced options disclosure state
-  const [showAdvanced, setShowAdvanced] = useState(true);
 
   // Filter networks
   const filteredNetworks = networks.filter(
@@ -159,7 +157,6 @@ export function CreateRouterDrawer({
       setSelectedNetworkId(null);
       setSearchQuery('');
       setCurrentPage(1);
-      setShowAdvanced(true);
     }
   }, [isOpen]);
 
@@ -248,7 +245,7 @@ export function CreateRouterDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Create Router"
-      description="Create a virtual router to route traffic between different networks or subnets. You can optionally connect the router to an external network to enable internet access or floating IP usage."
+      description="Create a virtual router to route traffic between different networks or subnets."
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -283,9 +280,10 @@ export function CreateRouterDrawer({
         {/* Router name */}
         <FormField
           label="Router name"
-          helperText={'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
+          helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
           error={hasAttemptedSubmit && !routerName.trim()}
           errorMessage="Router name is required"
+          required
         >
           <Input
             value={routerName}
@@ -297,7 +295,10 @@ export function CreateRouterDrawer({
         </FormField>
 
         {/* Description */}
-        <FormField label="Description (Optional)">
+        <FormField
+          label="Description"
+          helperText="You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters."
+        >
           <Input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -306,43 +307,44 @@ export function CreateRouterDrawer({
           />
         </FormField>
 
-        {/* Advanced Options Disclosure */}
-        <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-          <Disclosure.Trigger>Label</Disclosure.Trigger>
-          <Disclosure.Panel>
-            <VStack gap={6} className="mt-3">
-              {/* Admin state */}
-              <FormField
-                label="Admin state"
-                description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
-                spacing="loose"
-              >
-                <Toggle
-                  checked={adminStateUp}
-                  onChange={(e) => setAdminStateUp(e.target.checked)}
-                  label={adminStateUp ? 'Up' : 'Down'}
-                />
-              </FormField>
+        {/* Admin state */}
+        <FormField
+          label="Admin state"
+          description="Indicates whether the router's administrative state is Up or Down."
+          spacing="loose"
+        >
+          <Toggle
+            checked={adminStateUp}
+            onChange={(e) => setAdminStateUp(e.target.checked)}
+            label={adminStateUp ? 'Up' : 'Down'}
+          />
+        </FormField>
 
-              {/* External Gateway */}
-              <FormField
-                label="External Gateway"
-                description="The external gateway connects your router to an external (public) network. When enabled, instances in the connected subnets can access the internet using floating IPs."
-                spacing="loose"
-              >
-                <Toggle
-                  checked={externalGatewayEnabled}
-                  onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
-                  label={externalGatewayEnabled ? 'Open' : 'Close'}
-                />
-              </FormField>
-            </VStack>
-          </Disclosure.Panel>
-        </Disclosure>
+        {/* External Gateway */}
+        <FormField
+          label="External gateway"
+          description="Indicates whether the external gateway is enabled on the router."
+          spacing="loose"
+        >
+          <Toggle
+            checked={externalGatewayEnabled}
+            onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
+            label={externalGatewayEnabled ? 'Open' : 'Close'}
+          />
+        </FormField>
 
         {/* Network Selection (only shown when External Gateway is enabled) */}
         {externalGatewayEnabled && (
           <VStack gap={3} className="pb-5">
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                External network<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select an external network to connect the router to.
+              </span>
+            </VStack>
+
             {/* Search */}
             <div className="w-[280px]">
               <SearchInput

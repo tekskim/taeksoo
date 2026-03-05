@@ -79,7 +79,8 @@ const interfaceColumns: TableColumn<InterfaceItem>[] = [
   },
   {
     key: 'portName',
-    label: 'Network',
+    label: 'Name',
+    sortable: true,
     render: (_value, row) => (
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-1.5">
@@ -98,7 +99,8 @@ const interfaceColumns: TableColumn<InterfaceItem>[] = [
   },
   {
     key: 'networkName',
-    label: 'Port ID',
+    label: 'Network',
+    sortable: true,
     render: (_value, row) => (
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-1.5">
@@ -115,7 +117,7 @@ const interfaceColumns: TableColumn<InterfaceItem>[] = [
       </div>
     ),
   },
-  { key: 'ipAddress', label: 'IP address' },
+  { key: 'ipAddress', label: 'Fixed IP' },
   { key: 'macAddress', label: 'MAC address' },
 ];
 
@@ -123,6 +125,7 @@ const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
   {
     key: 'name',
     label: 'Name',
+    sortable: true,
     render: (_value, row) => (
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-1.5">
@@ -139,8 +142,8 @@ const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
       </div>
     ),
   },
-  { key: 'description', label: 'Description' },
-  { key: 'createdAt', label: 'Created at' },
+  { key: 'description', label: 'Description', sortable: true },
+  { key: 'createdAt', label: 'Created at', sortable: true },
 ];
 
 /* ----------------------------------------
@@ -257,7 +260,14 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Interfaces Section */}
         <VStack gap={3}>
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Interfaces<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the interface to apply security groups to.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -320,7 +330,14 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Security groups</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Security groups<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the security groups to apply to the chosen interface.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">

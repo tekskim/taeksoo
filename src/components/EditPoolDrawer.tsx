@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle, Textarea, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Select,
+  Toggle,
+  FormField,
+  Radio,
+  RadioGroup,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -179,30 +188,35 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
           </FormField.Control>
           <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
-            &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Pool description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. For distributing traffic to backend web servers"
+              placeholder="Enter description"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
         {/* Algorithm Select */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Algorithm</FormField.Label>
+          <FormField.Description>
+            Select how incoming requests are distributed across backend members. The chosen
+            algorithm determines how traffic is routed to each server.
+          </FormField.Description>
           <FormField.Control>
             <Select
               value={algorithm}
@@ -218,12 +232,22 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         <FormField>
           <FormField.Label>Protocol</FormField.Label>
           <FormField.Control>
-            <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                {pool.protocol}
-              </span>
-            </div>
+            <Input value={pool.protocol} disabled fullWidth />
           </FormField.Control>
+        </FormField>
+
+        {/* Admin State */}
+        <FormField
+          label="Admin state"
+          description="Set the administrative state of the pool. 'UP' enables traffic handling, while 'DOWN' disables it."
+          spacing="loose"
+        >
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
         </FormField>
 
         {/* Session Persistence (Collapsible) */}
@@ -238,71 +262,50 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
             ) : (
               <IconChevronRight size={16} stroke={1} />
             )}
-            Label
+            Advanced
           </button>
 
           {isSessionPersistenceExpanded && (
             <VStack gap={2} className="w-full">
-              <Select
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">
+                  Session persistence
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Select the protocol used to communicate with backend members. It must match or be
+                  compatible with the listener's protocol.
+                </span>
+              </VStack>
+              <RadioGroup
                 value={sessionPersistenceType}
                 onChange={(value) => setSessionPersistenceType(value as SessionPersistenceType)}
-                options={sessionPersistenceOptions}
-                fullWidth
-              />
+              >
+                <VStack gap={2}>
+                  <Radio value="NONE" label="None" />
+                  <Radio value="SOURCE_IP" label="Source IP" />
+                  <Radio value="HTTP_COOKIE" label="HTTP cookie" />
+                  <Radio value="APP_COOKIE" label="App cookie" />
+                </VStack>
+              </RadioGroup>
 
               {sessionPersistenceType === 'APP_COOKIE' && (
                 <FormField>
-                  <FormField.Label>Cookie name</FormField.Label>
                   <FormField.Control>
                     <Input
                       value={cookieName}
                       onChange={(e) => setCookieName(e.target.value)}
-                      placeholder="Input cookie name"
+                      placeholder="Enter cookie name"
                       fullWidth
                     />
                   </FormField.Control>
                   <FormField.HelperText>
-                    Allowed: 1–64 characters; letters, numbers, "-", "_", "."; No spaces
+                    You can use letters, numbers, and special characters (+.-_!#$%&amp;'*^|~).
                   </FormField.HelperText>
                 </FormField>
               )}
             </VStack>
           )}
         </VStack>
-
-        {/* Backend TLS */}
-        <FormField label="Backend TLS" spacing="loose">
-          <HStack gap={2} className="items-center">
-            <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {tlsEnabled ? 'On' : 'Off'}
-            </span>
-          </HStack>
-        </FormField>
-        {tlsEnabled && (
-          <FormField
-            label="TLS ciphers"
-            helperText="Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and special characters are not allowed."
-          >
-            <Textarea
-              value={tlsCiphers}
-              onChange={(e) => setTlsCiphers(e.target.value)}
-              placeholder="Input custom cipher string (leave blank to use safe defaults)"
-              rows={3}
-              fullWidth
-            />
-          </FormField>
-        )}
-
-        {/* Admin State */}
-        <FormField label="Admin state" spacing="loose">
-          <HStack gap={2} className="items-center">
-            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {adminStateUp ? 'Up' : 'Down'}
-            </span>
-          </HStack>
-        </FormField>
       </VStack>
     </Drawer>
   );

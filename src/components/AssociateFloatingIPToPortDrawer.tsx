@@ -22,6 +22,8 @@ export interface FixedIPItem {
   id: string;
   fixedIp: string;
   macAddress: string;
+  network: string;
+  networkId: string;
   subnetCidr: string;
 }
 
@@ -52,11 +54,46 @@ export interface AssociateFloatingIPToPortDrawerProps {
    ---------------------------------------- */
 
 const mockFixedIPs: FixedIPItem[] = [
-  { id: 'fip-1', fixedIp: '10.0.0.5', macAddress: '10.0.01', subnetCidr: '192.168.10.0/24' },
-  { id: 'fip-2', fixedIp: '10.0.0.5', macAddress: '10.0.01', subnetCidr: '192.168.10.0/24' },
-  { id: 'fip-3', fixedIp: '10.0.0.5', macAddress: '10.0.01', subnetCidr: '192.168.10.0/24' },
-  { id: 'fip-4', fixedIp: '10.0.0.5', macAddress: '10.0.01', subnetCidr: '192.168.10.0/24' },
-  { id: 'fip-5', fixedIp: '10.0.0.5', macAddress: '10.0.01', subnetCidr: '192.168.10.0/24' },
+  {
+    id: 'fip-1',
+    fixedIp: '10.0.0.5',
+    macAddress: '10.0.01',
+    network: 'net-02',
+    networkId: '17kfj123',
+    subnetCidr: '192.168.10.0/24',
+  },
+  {
+    id: 'fip-2',
+    fixedIp: '10.0.0.5',
+    macAddress: '10.0.01',
+    network: 'net-02',
+    networkId: '17kfj123',
+    subnetCidr: '192.168.10.0/24',
+  },
+  {
+    id: 'fip-3',
+    fixedIp: '10.0.0.5',
+    macAddress: '10.0.01',
+    network: 'net-02',
+    networkId: '17kfj123',
+    subnetCidr: '192.168.10.0/24',
+  },
+  {
+    id: 'fip-4',
+    fixedIp: '10.0.0.5',
+    macAddress: '10.0.01',
+    network: 'net-02',
+    networkId: '17kfj123',
+    subnetCidr: '192.168.10.0/24',
+  },
+  {
+    id: 'fip-5',
+    fixedIp: '10.0.0.5',
+    macAddress: '10.0.01',
+    network: 'net-02',
+    networkId: '17kfj123',
+    subnetCidr: '192.168.10.0/24',
+  },
 ];
 
 const mockFloatingIPs: FloatingIPItem[] = [
@@ -211,6 +248,25 @@ export function AssociateFloatingIPToPortDrawer({
     },
     { key: 'fixedIp', label: 'Fixed IP', flex: 1, sortable: true },
     { key: 'macAddress', label: 'MAC address', flex: 1 },
+    {
+      key: 'network',
+      label: 'Network',
+      flex: 1,
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.network}</span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.networkId}</span>
+        </div>
+      ),
+    },
     { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
   ];
 
@@ -300,7 +356,7 @@ export function AssociateFloatingIPToPortDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Associate floating IP"
-      description="Associate a floating IP with this port to enable external network access."
+      description="Assign a floating IP to this instance for external network access."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -315,11 +371,18 @@ export function AssociateFloatingIPToPortDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Port Info */}
-        <InfoBox label="Port" value={port.name} />
+        <InfoBox label="Instance" value={port.name} />
 
         {/* Fixed IP Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Fixed IP</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Fixed IP<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the Fixed IP of the instance to associate with a Floating IP.
+            </span>
+          </VStack>
 
           <div className="w-[280px]">
             <SearchInput
@@ -361,7 +424,14 @@ export function AssociateFloatingIPToPortDrawer({
 
         {/* Floating IP Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Floating IP</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Floating IP<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the Floating IP to associate with the chosen Fixed IP.
+            </span>
+          </VStack>
 
           <div className="w-[280px]">
             <SearchInput

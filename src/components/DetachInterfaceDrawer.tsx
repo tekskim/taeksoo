@@ -204,7 +204,14 @@ export function DetachInterfaceDrawer({
         {/* Interfaces Section */}
         <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Interfaces Header */}
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Interfaces<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the network of the interface you want to detach.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
