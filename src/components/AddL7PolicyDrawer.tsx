@@ -135,10 +135,7 @@ export function AddL7PolicyDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -181,10 +178,7 @@ export function AddL7PolicyDrawer({
 
         {/* Position Input */}
         <FormField>
-          <FormField.Label>
-            Position{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-          </FormField.Label>
+          <FormField.Label>Position</FormField.Label>
           <FormField.Control>
             <NumberInput
               value={position}

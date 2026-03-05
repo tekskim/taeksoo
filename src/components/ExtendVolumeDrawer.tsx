@@ -81,8 +81,8 @@ export function ExtendVolumeDrawer({
   isOpen,
   onClose,
   volume,
-  minCapacity = 201,
-  maxCapacity = 2000,
+  minCapacity = 50,
+  maxCapacity = 951,
   volumeCapacityQuota = { used: 20, total: 1000 },
   typeCapacityQuota = { used: 2, total: null },
   onSubmit,
@@ -188,8 +188,11 @@ export function ExtendVolumeDrawer({
         </VStack>
 
         {/* Capacity Slider */}
-        <FormField error={!!capacityError}>
+        <FormField error={!!capacityError} required>
           <FormField.Label>Capacity (GiB)</FormField.Label>
+          <FormField.Description>
+            Set the new volume size. It cannot be smaller than the current capacity.
+          </FormField.Description>
           <FormField.Control>
             <HStack gap={3} align="center" className="w-full">
               <Slider

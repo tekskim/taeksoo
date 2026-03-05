@@ -84,8 +84,8 @@ export function CreateVolumeFromSnapshotDrawer({
   isOpen,
   onClose,
   snapshot,
-  minCapacity = 201,
-  maxCapacity = 2000,
+  minCapacity = 70,
+  maxCapacity = 1756,
   volumeTypes = [
     { value: '_DEFAULT_', label: '_DEFAULT_' },
     { value: 'ssd', label: 'SSD' },
@@ -98,6 +98,7 @@ export function CreateVolumeFromSnapshotDrawer({
   onSubmit,
 }: CreateVolumeFromSnapshotDrawerProps) {
   const [volumeName, setVolumeName] = useState('');
+  const [description, setDescription] = useState('');
   const [capacity, setCapacity] = useState(minCapacity);
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,6 +108,7 @@ export function CreateVolumeFromSnapshotDrawer({
   useEffect(() => {
     if (isOpen && snapshot) {
       setVolumeName('');
+      setDescription('');
       setCapacity(Math.max(snapshot.size, minCapacity));
       setVolumeType('_DEFAULT_');
       setHasAttemptedSubmit(false);
@@ -128,6 +130,7 @@ export function CreateVolumeFromSnapshotDrawer({
 
   const handleClose = () => {
     setVolumeName('');
+    setDescription('');
     setCapacity(minCapacity);
     setVolumeType('_DEFAULT_');
     setHasAttemptedSubmit(false);
@@ -220,12 +223,35 @@ export function CreateVolumeFromSnapshotDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
-        <FormField label="Capacity (GiB)" helperText={`${minCapacity} - ${maxCapacity} GiB`}>
+        <FormField
+          label="Capacity (GiB)"
+          description="Set the size of the cloned volume. The size must be equal to or larger than the snapshot."
+          helperText={`${minCapacity} - ${maxCapacity} GiB`}
+          required
+        >
           <HStack gap={3} align="center" className="w-full">
             <Slider
               min={minCapacity}
@@ -248,7 +274,11 @@ export function CreateVolumeFromSnapshotDrawer({
         </FormField>
 
         {/* Volume Type Select */}
-        <FormField label="Volume type (optional)">
+        <FormField
+          label="Volume type"
+          description="Select the volume type for the new volume."
+          required
+        >
           <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />
         </FormField>
       </VStack>

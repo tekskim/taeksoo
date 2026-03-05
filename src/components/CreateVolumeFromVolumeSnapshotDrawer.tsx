@@ -232,10 +232,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -279,10 +276,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Volume Type Select */}
         <FormField>
-          <FormField.Label>
-            Volume type{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Volume type</FormField.Label>
           <FormField.Control>
             <Select
               value={volumeType}

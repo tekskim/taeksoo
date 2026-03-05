@@ -81,6 +81,7 @@ export function CreateVolumeBackupDrawer({
   onSubmit,
 }: CreateVolumeBackupDrawerProps) {
   const [backupName, setBackupName] = useState('');
+  const [backupDescription, setBackupDescription] = useState('');
   const [backupMode, setBackupMode] = useState<BackupMode>('full');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
@@ -163,6 +164,12 @@ export function CreateVolumeBackupDrawer({
         <VStack gap={3}>
           {/* Header */}
 
+          {/* Warning Message */}
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            backup.
+          </InlineMessage>
+
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
             <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Volume</p>
@@ -170,12 +177,6 @@ export function CreateVolumeBackupDrawer({
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
-
-          {/* Warning Message */}
-          <InlineMessage variant="error">
-            For data consistency, stop all write operations on the instance before creating a
-            backup.
-          </InlineMessage>
         </VStack>
 
         {/* Backup Name Input */}
@@ -192,7 +193,25 @@ export function CreateVolumeBackupDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={backupDescription}
+              onChange={(e) => setBackupDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
 

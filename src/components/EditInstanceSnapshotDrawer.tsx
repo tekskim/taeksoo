@@ -114,25 +114,26 @@ export function EditInstanceSnapshotDrawer({
           <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
             {
-              'The name should start with upper letter, lower letter or chinese, and be a string of 1 to 128, characters can only contain "0-9, a-z, A-Z, "-"\'_.".'
+              'You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.'
             }
           </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. before major update or backup"
+              placeholder="Enter description"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

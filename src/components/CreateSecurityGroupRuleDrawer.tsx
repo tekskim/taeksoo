@@ -288,7 +288,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* ICMP Type and Code (only for Custom ICMP) */}
         {protocol === 'custom_icmp' && (
           <>
-            <FormField label="ICMP type (optional)" helperText="0-255">
+            <FormField label="ICMP type" helperText="0-255">
               <NumberInput
                 value={icmpType}
                 onChange={(value) => setIcmpType(value ?? 0)}
@@ -298,7 +298,7 @@ export function CreateSecurityGroupRuleDrawer({
               />
             </FormField>
 
-            <FormField label="ICMP code (optional)" helperText="0-255">
+            <FormField label="ICMP code" helperText="0-255">
               <NumberInput
                 value={icmpCode}
                 onChange={(value) => setIcmpCode(value ?? 0)}

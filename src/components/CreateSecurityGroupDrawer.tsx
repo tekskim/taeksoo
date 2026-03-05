@@ -144,10 +144,7 @@ export function CreateSecurityGroupDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
