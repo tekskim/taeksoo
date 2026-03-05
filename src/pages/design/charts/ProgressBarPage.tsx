@@ -116,7 +116,19 @@ export function ProgressBarPage() {
   return (
     <ComponentPageTemplate
       title="Gauge bar chart"
-      description="Visual indicator for quota usage and progress with status-based colors"
+      description="전체 용량 대비 현재 사용량을 시각화하는 수평형 막대 인디케이터다. 사용률에 따라 상태 기반 색상(Status Color)이 자동 적용된다. 복수의 리소스를 리스트 형태로 나열하여 비교할 때 사용한다."
+      whenToUse={[
+        '리소스 할당량(Quota), 리소스 현황 등을 시각화할 때 (예: vCPU 5/10, Capacity 167.49/189.9 TiB)',
+        '사용률에 따른 상태를 색상(Status Color)으로 즉시 인지시켜야 할 때',
+        '표시할 리소스가 2개 이상이거나, 리스트/대시보드 형태로 나열할 때',
+      ]}
+      whenNotToUse={[
+        '단순한 진행 상태(Progress)를 나타낼 때 → Progress Bar 사용',
+        '여러 카테고리의 구성 비율을 비교할 때 → Pie Chart 사용',
+        '여러 카테고리의 값을 비교할 때 → Bar Chart 사용',
+        '전체 대비 비율 맥락이 없는 단독 지표 → Badge 또는 Tag로 대체',
+        'Standalone metric without total context — use Badge or Tag instead',
+      ]}
       preview={
         <div className="w-[var(--search-input-width)] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
           <GaugeHoverTooltip used={2} max={10}>
@@ -128,22 +140,121 @@ export function ProgressBarPage() {
         </div>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-              <li>
-                <strong>Quota 표시</strong>: 리소스 할당량 대비 사용량을 시각화합니다 (e.g. vCPU
-                5/10).
-              </li>
-              <li>
-                <strong>Status 색상</strong>: 사용률에 따라 Safe/Warning/Danger 색상이 자동
-                적용됩니다.
-              </li>
-              <li>Floating card의 Quota 섹션에서 주로 사용합니다.</li>
-            </ul>
-          </VStack>
-        </div>
+        <VStack gap={6}>
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        Variant
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-[var(--color-text-muted)]">
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium">Quota</td>
+                      <td className="py-2">
+                        리소스명과 사용량/총량 수치를 함께 표시. 항목별 Gauge Bar가 리스트 형태로
+                        나열됨
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium">Default</td>
+                      <td className="py-2">
+                        수치 레이블만 표시 (예: 30 MB (30%)). 공간이 제한적인 컨텍스트에서 사용
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium">Dashboard</td>
+                      <td className="py-2">
+                        리소스 그룹 타이틀(예: COMPUTE QUOTA)과 함께 항목별 이름, 사용량/총량,
+                        퍼센트를 모두 표시. 대시보드 전용 레이아웃
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                상태 기반 색상 전환
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        상태
+                      </th>
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        기준 (사용률)
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        색상
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-[var(--color-text-muted)]">
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">Safe (안전)</td>
+                      <td className="py-2 pr-4">0 – 69%</td>
+                      <td className="py-2">Green (초록)</td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4">Warning (경고)</td>
+                      <td className="py-2 pr-4">70 – 94%</td>
+                      <td className="py-2">Orange (주황)</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4">Danger (위험)</td>
+                      <td className="py-2 pr-4">95%+</td>
+                      <td className="py-2">Red (빨강)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                임계값은 서비스 도메인별로 조정 가능하며, Status Color 토큰과 함께 관리된다.
+              </p>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <VStack gap={2}>
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Do</h4>
+                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                  <li>
+                    같은 컨텍스트 안에서 Gauge Bar 트랙 너비를 통일하여 시각적 비교가 가능하도록
+                    한다.
+                  </li>
+                  <li>
+                    차트와 함께 반드시 수치를 표시한다 — 색상만으로 정보를 전달하지 않는다 (접근성).
+                  </li>
+                  <li>
+                    100%를 초과하는 경우, 채움은 100%로 표시하고 별도의 오버플로우 처리를 적용한다.
+                  </li>
+                </ul>
+              </VStack>
+              <VStack gap={2}>
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Don&apos;t</h4>
+                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                  <li>같은 컨텍스트에서 Gauge Bar Chart와 Donut Chart를 혼용하지 않는다.</li>
+                  <li>단일 리소스를 강조해야 할 때는 Gauge Bar 대신 Donut Chart를 사용한다.</li>
+                </ul>
+              </VStack>
+            </VStack>
+          </div>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
@@ -226,21 +337,8 @@ export function ProgressBarPage() {
       }
       apiReference={progressBarProps}
       relatedLinks={[
-        {
-          label: 'Status colors',
-          path: '/design/charts/status-colors',
-          description: 'Color thresholds',
-        },
-        {
-          label: 'Chart overview',
-          path: '/design/charts/overview',
-          description: 'Chart guidelines',
-        },
-        {
-          label: 'Floating card',
-          path: '/design/components/floating-card',
-          description: 'Uses quota bars',
-        },
+        { label: 'Status Colors', path: '/design/foundation/color' },
+        { label: 'Tooltip', path: '/design/components/tooltip' },
       ]}
     />
   );

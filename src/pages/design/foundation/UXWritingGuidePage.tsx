@@ -70,7 +70,15 @@ export function UXWritingGuidePage() {
   return (
     <ComponentPageTemplate
       title="UX Writing Guide"
-      description="Thaki Cloud Suite의 모든 UI 텍스트에 대한 기준 문서. 언어 원칙, 컴포넌트별 작성 패턴, 날짜/시간/숫자/단위의 표기 기준을 정의합니다."
+      description="제품 전반에서 사용하는 언어 스타일, 문장 구조, 표기 규칙을 정의하는 Foundation 문서이다. 이 문서는 버튼, 메시지, 상태 텍스트, 안내 문구 등 모든 UI 텍스트 작성 시 공통적으로 적용되는 기준을 제공한다. 컴포넌트별 세부 문구 작성 규칙은 각 Component 정책 문서의 Content Guidelines에서 정의한다."
+      whenToUse={[
+        '모든 UI 텍스트',
+        '시스템 메시지',
+        '버튼 레이블',
+        '상태 표시 텍스트',
+        '안내 문구',
+      ]}
+      whenNotToUse={['마케팅 카피', '블로그 및 외부 콘텐츠', '고객 지원 문서']}
       examples={
         <VStack gap={12}>
           {/* Source Link */}
@@ -848,26 +856,11 @@ export function UXWritingGuidePage() {
         </VStack>
       }
       relatedLinks={[
-        {
-          label: 'Button',
-          path: '/design/components/button',
-          description: '버튼 컴포넌트 및 라벨 규칙',
-        },
-        {
-          label: 'Input',
-          path: '/design/components/input',
-          description: '인풋 필드 컴포넌트',
-        },
-        {
-          label: 'Modal',
-          path: '/design/components/modal',
-          description: '모달 컴포넌트',
-        },
-        {
-          label: 'Typography',
-          path: '/design/foundation/typography',
-          description: '타이포그래피 기준',
-        },
+        { label: 'Menu', path: '/design/components/menu' },
+        { label: 'Button', path: '/design/components/button' },
+        { label: 'Input', path: '/design/components/input' },
+        { label: 'Modal', path: '/design/components/modal' },
+        { label: 'Toast', path: '/design/components/toast' },
       ]}
       notionPageId="ux-writing"
     />

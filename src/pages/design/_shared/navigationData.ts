@@ -45,6 +45,9 @@ import {
   IconFileOff,
   IconBook,
   IconComponents,
+  IconDeviceDesktop,
+  IconAlertTriangle,
+  IconStack2,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -53,6 +56,7 @@ export interface NavItem {
   label: string;
   icon: ComponentType<{ size?: number; stroke?: number; className?: string }>;
   path: string;
+  lastUpdated?: string;
 }
 
 export interface NavGroup {
@@ -125,6 +129,18 @@ const foundationItems: NavItem[] = [
     icon: IconUsers,
     path: '/design/foundation/contributing',
   },
+  {
+    id: 'error-alert',
+    label: 'Error & Alert',
+    icon: IconAlertTriangle,
+    path: '/design/foundation/error-alert',
+  },
+  {
+    id: 'system-error',
+    label: 'System Error',
+    icon: IconAlertTriangle,
+    path: '/design/foundation/system-error',
+  },
 ];
 
 const formControlItems: NavItem[] = [
@@ -158,6 +174,7 @@ const formControlItems: NavItem[] = [
 const dataDisplayItems: NavItem[] = [
   { id: 'table', label: 'Table', icon: IconList, path: '/design/components/table' },
   { id: 'badge', label: 'Badge', icon: IconTag, path: '/design/components/badge' },
+  { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
   { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
   {
     id: 'status-indicator',
@@ -316,6 +333,12 @@ const layoutItems: NavItem[] = [
   { id: 'shell', label: 'Shell', icon: IconTerminal2, path: '/design/components/shell' },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
+    id: 'desktop-grid',
+    label: 'Desktop Icon Grid',
+    icon: IconDeviceDesktop,
+    path: '/design/patterns/desktop-grid',
+  },
+  {
     id: 'dynamic-form-fields',
     label: 'Dynamic Form Fields',
     icon: IconForms,
@@ -391,6 +414,15 @@ const figmaItems: NavItem[] = [
   },
 ];
 
+const prototypeItems: NavItem[] = [
+  {
+    id: 'ai-workspace',
+    label: 'AI Workspace Setup',
+    icon: IconStack2,
+    path: '/design/prototype/ai-workspace',
+  },
+];
+
 const testItems: NavItem[] = [
   {
     id: 'nested-box-test',
@@ -410,7 +442,102 @@ export const navGroups: NavGroup[] = [
   { title: 'Layout', items: layoutItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Figma Migration', items: figmaItems },
+  { title: 'Prototype', items: prototypeItems },
   { title: 'Test', items: testItems },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
+
+export const pageLastUpdated: Record<string, string> = {
+  // Foundation
+  '/design/foundation/tokens': '2026-02-25 14:00:00',
+  '/design/foundation/primitive-colors': '2026-02-25 14:00:00',
+  '/design/foundation/semantic-colors': '2026-02-25 14:00:00',
+  '/design/foundation/typography': '2026-02-25 14:00:00',
+  '/design/foundation/spacing': '2026-02-25 14:00:00',
+  '/design/foundation/borders': '2026-02-25 14:00:00',
+  '/design/foundation/shadows': '2026-02-25 14:00:00',
+  '/design/foundation/transitions': '2026-02-25 14:00:00',
+  '/design/foundation/icons': '2026-02-25 14:00:00',
+  '/design/foundation/app-icons': '2026-03-01 10:30:00',
+  '/design/foundation/ux-writing': '2026-03-05 13:00:00',
+  '/design/foundation/accessibility': '2026-02-25 14:00:00',
+  '/design/foundation/theming': '2026-02-25 14:00:00',
+  '/design/foundation/contributing': '2026-02-25 14:00:00',
+  '/design/foundation/error-alert': '2026-03-05 13:00:00',
+  '/design/foundation/system-error': '2026-03-05 13:00:00',
+  // Form Controls
+  '/design/components/button': '2026-03-01 10:30:00',
+  '/design/components/input': '2026-03-01 10:30:00',
+  '/design/components/form-field': '2026-03-01 10:30:00',
+  '/design/components/filter-search-input': '2026-03-01 10:30:00',
+  '/design/components/select': '2026-03-05 13:00:00',
+  '/design/components/datepicker': '2026-03-01 10:30:00',
+  '/design/components/slider': '2026-03-05 13:00:00',
+  '/design/components/toggle': '2026-03-05 13:00:00',
+  '/design/components/checkbox': '2026-03-05 13:00:00',
+  '/design/components/radio': '2026-03-05 13:00:00',
+  // Data Display
+  '/design/components/table': '2026-03-01 10:30:00',
+  '/design/components/badge': '2026-03-05 13:00:00',
+  '/design/components/card': '2026-03-05 13:00:00',
+  '/design/components/chip': '2026-03-01 10:30:00',
+  '/design/components/status-indicator': '2026-03-01 10:30:00',
+  '/design/components/pagination': '2026-03-01 10:30:00',
+  '/design/components/selection-indicator': '2026-03-01 10:30:00',
+  '/design/components/file-list-card': '2026-03-01 10:30:00',
+  // Feedback
+  '/design/components/inline-message': '2026-03-01 10:30:00',
+  '/design/components/loading': '2026-03-01 10:30:00',
+  '/design/components/empty-state': '2026-03-05 13:00:00',
+  // Navigation
+  '/design/components/topbar': '2026-03-01 10:30:00',
+  '/design/components/tabbar': '2026-03-01 10:30:00',
+  '/design/components/tabs': '2026-03-01 10:30:00',
+  '/design/components/breadcrumb': '2026-03-05 13:00:00',
+  // Overlay
+  '/design/components/tooltip': '2026-03-05 13:00:00',
+  '/design/components/popover': '2026-03-01 10:30:00',
+  '/design/components/menu': '2026-03-05 13:00:00',
+  '/design/components/context-menu': '2026-03-01 10:30:00',
+  '/design/components/modal': '2026-03-01 10:30:00',
+  '/design/components/drawer': '2026-03-01 10:30:00',
+  '/design/components/notification-center': '2026-03-01 10:30:00',
+  '/design/components/toast': '2026-03-01 10:30:00',
+  '/design/components/global-notification-panel': '2026-03-01 10:30:00',
+  '/design/components/floating-card': '2026-03-05 13:00:00',
+  // Layout & Patterns
+  '/design/components/disclosure': '2026-03-03 18:45:00',
+  '/design/components/window-control': '2026-03-01 10:30:00',
+  '/design/components/scrollbar': '2026-03-05 13:00:00',
+  '/design/patterns/common': '2026-03-01 10:30:00',
+  '/design/components/detail-header': '2026-03-01 10:30:00',
+  '/design/components/section-card': '2026-03-01 10:30:00',
+  '/design/patterns/wizard': '2026-03-05 13:00:00',
+  '/design/patterns/open-form': '2026-03-01 10:30:00',
+  '/design/patterns/multi-tab-create': '2026-03-05 13:00:00',
+  '/design/components/monitoring-toolbar': '2026-03-01 10:30:00',
+  '/design/components/csv-download': '2026-03-01 10:30:00',
+  '/design/components/shell': '2026-03-05 13:00:00',
+  '/design/patterns/layout': '2026-03-01 10:30:00',
+  '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
+  '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
+  '/design/patterns/form-validation': '2026-03-01 10:30:00',
+  // Charts
+  '/design/charts/overview': '2026-03-01 10:30:00',
+  '/design/charts/status-colors': '2026-03-01 10:30:00',
+  '/design/charts/gauge-bar': '2026-03-05 13:00:00',
+  '/design/charts/area-chart': '2026-03-01 10:30:00',
+  '/design/charts/pie-chart': '2026-03-01 10:30:00',
+  '/design/charts/half-doughnut': '2026-03-05 13:00:00',
+  '/design/charts/doughnut': '2026-03-05 13:00:00',
+  '/design/charts/tooltip': '2026-03-01 10:30:00',
+  // Figma Migration
+  '/design/figma/guide': '2026-03-01 10:30:00',
+  '/design/figma/foundation': '2026-03-01 10:30:00',
+  '/design/figma/components': '2026-03-01 10:30:00',
+  // Prototype
+  '/design/prototype/ai-workspace': '2026-03-05 14:00:00',
+  // Test
+  '/design/test/nested-box': '2026-03-05 01:30:00',
+};
