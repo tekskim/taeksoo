@@ -223,7 +223,12 @@ export function RescueInstanceDrawer({
         </VStack>
 
         {/* Image Selection */}
-        <FormField label="Image" spacing="loose">
+        <FormField
+          label="Image"
+          description="Select the image to use for the rescue instance."
+          spacing="loose"
+          required
+        >
           <VStack gap={2}>
             {/* Current Image Option */}
             <Radio

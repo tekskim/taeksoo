@@ -65,6 +65,7 @@ export function EditInstanceDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Edit instance"
+      description="Edit the instance's name and description. These changes update basic information only."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -101,24 +102,26 @@ export function EditInstanceDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Instance for running internal API service"
+              placeholder="Enter description"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

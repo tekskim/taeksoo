@@ -5,9 +5,11 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  Radio,
   Table,
   SelectionIndicator,
   InfoBox,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -69,57 +71,7 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (
 
 const ITEMS_PER_PAGE = 5;
 
-const interfaceColumns: TableColumn<InterfaceItem>[] = [
-  {
-    key: 'status',
-    label: 'Status',
-    width: '59px',
-    align: 'center',
-    render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
-  },
-  {
-    key: 'portName',
-    label: 'Name',
-    sortable: true,
-    render: (_value, row) => (
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <div className="flex items-center gap-1.5">
-          <span className="text-label-md text-[var(--color-action-primary)] truncate">
-            {row.portName}
-          </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
-        </div>
-        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
-      </div>
-    ),
-  },
-  {
-    key: 'networkName',
-    label: 'Network',
-    sortable: true,
-    render: (_value, row) => (
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <div className="flex items-center gap-1.5">
-          <span className="text-label-md text-[var(--color-action-primary)] truncate">
-            {row.networkName}
-          </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
-        </div>
-        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
-      </div>
-    ),
-  },
-  { key: 'ipAddress', label: 'Fixed IP' },
-  { key: 'macAddress', label: 'MAC address' },
-];
+// interfaceColumns defined inside component (needs selectedInterfaceId state)
 
 const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
   {
@@ -184,6 +136,77 @@ export function ManageSecurityGroupsDrawer({
     (interfacePage - 1) * ITEMS_PER_PAGE,
     interfacePage * ITEMS_PER_PAGE
   );
+
+  const interfaceColumns: TableColumn<InterfaceItem>[] = [
+    {
+      key: 'id' as keyof InterfaceItem,
+      label: '',
+      width: fixedColumns.radio,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="interface-select"
+            value={row.id}
+            checked={selectedInterfaceId === row.id}
+            onChange={() => setSelectedInterfaceId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'portName',
+      label: 'Name',
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5 overflow-hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.portName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'networkName',
+      label: 'Network',
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5 overflow-hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.networkName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'ipAddress', label: 'Fixed IP' },
+    { key: 'macAddress', label: 'MAC address' },
+  ];
 
   // Filter security groups
   const filteredSecurityGroups = securityGroups.filter(
@@ -296,12 +319,6 @@ export function ManageSecurityGroupsDrawer({
                 columns={interfaceColumns}
                 data={paginatedInterfaces}
                 rowKey="id"
-                selectable
-                hideSelectAll
-                selectedKeys={selectedInterfaceId ? [selectedInterfaceId] : []}
-                onSelectionChange={(keys) =>
-                  setSelectedInterfaceId(keys.length > 0 ? keys[keys.length - 1] : null)
-                }
                 onRowClick={(row) => setSelectedInterfaceId(row.id)}
                 emptyMessage="No interfaces found"
               />

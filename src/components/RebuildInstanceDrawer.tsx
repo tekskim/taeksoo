@@ -181,7 +181,7 @@ export function RebuildInstanceDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Rebuild Instance"
-      description="Rebuilding reinstalls the operating system using a new image."
+      description="Rebuild the instance using a selected image. The root disk will be reinstalled during this process."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
