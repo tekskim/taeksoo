@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -29,7 +28,6 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
   const [routerName, setRouterName] = useState(router.name);
   const [description, setDescription] = useState(router.description || '');
   const [adminStateUp, setAdminStateUp] = useState(router.adminStateUp ?? true);
-  const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -40,7 +38,6 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
       setRouterName(router.name);
       setDescription(router.description || '');
       setAdminStateUp(router.adminStateUp ?? true);
-      setIsAdvancedExpanded(true);
       setHasAttemptedSubmit(false);
       setNameError(null);
     }
@@ -114,56 +111,41 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
           </FormField.Control>
           <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Router for production web servers"
+              placeholder="Enter description"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
-        {/* Advanced Options Toggle */}
-        <VStack gap={3} className="w-full">
-          <button
-            type="button"
-            onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
-          >
-            {isAdvancedExpanded ? (
-              <IconChevronDown size={16} stroke={1} />
-            ) : (
-              <IconChevronRight size={16} stroke={1} />
-            )}
-            Label
-          </button>
-
-          {/* Admin State Toggle (Collapsible) */}
-          {isAdvancedExpanded && (
-            <FormField label="Admin state" spacing="loose">
-              <HStack gap={2} className="items-center">
-                <Toggle
-                  checked={adminStateUp}
-                  onChange={(e) => setAdminStateUp(e.target.checked)}
-                />
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  {adminStateUp ? 'Up' : 'Down'}
-                </span>
-              </HStack>
-            </FormField>
-          )}
-        </VStack>
+        {/* Admin state */}
+        <FormField
+          label="Admin state"
+          description="Indicates whether the router's administrative state is Up or Down."
+          spacing="loose"
+        >
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

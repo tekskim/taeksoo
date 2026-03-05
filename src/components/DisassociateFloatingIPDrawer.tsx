@@ -142,8 +142,8 @@ export function DisassociateFloatingIPDrawer({
         </div>
       ),
     },
-    { key: 'fixedIp', label: 'Fixed IP' },
-    { key: 'createdAt', label: 'Created at' },
+    { key: 'fixedIp', label: 'Fixed IP', sortable: true },
+    { key: 'createdAt', label: 'Created at', sortable: true },
   ];
 
   return (
@@ -175,10 +175,14 @@ export function DisassociateFloatingIPDrawer({
 
         {/* Floating IPs Section */}
         <VStack gap={3}>
-          {/* Header */}
-          <div className="flex items-center gap-1 h-7">
-            <span className="text-label-lg text-[var(--color-text-default)]">Floating IPs</span>
-          </div>
+          <VStack gap={1}>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Floating IPs<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the Floating IP to disassociate from the instance.
+            </span>
+          </VStack>
 
           {/* Search */}
           <SearchInput
