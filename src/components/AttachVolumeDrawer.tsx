@@ -195,8 +195,8 @@ export function AttachVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Attach Volume"
+      description="Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -214,25 +214,12 @@ export function AttachVolumeDrawer({
         </HStack>
       }
     >
-      <VStack gap={3} className="h-full">
-        {/* Header Section */}
-        <VStack gap={2}>
-          <VStack gap={0}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Attach Volume
-            </h2>
-          </VStack>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Attach one or more available volumes to this instance. Once attached, the volumes will
-            appear as additional storage devices inside the instance.
-          </p>
-        </VStack>
-
+      <VStack gap={6} className="h-full">
         {/* Volume Info Box */}
         <InfoBox label="Volume" value={volume?.name || '-'} />
 
         {/* Instances Section */}
-        <VStack gap={3} className="mt-3 pb-5">
+        <VStack gap={3} className="pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
           {/* Search */}

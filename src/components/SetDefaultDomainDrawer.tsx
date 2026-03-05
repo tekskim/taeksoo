@@ -218,8 +218,8 @@ export function SetDefaultDomainDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Set default domain"
+      description="Defines which domain is opened first when the system administrator signs in. The selected domain is used as the initial workspace."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -240,16 +240,6 @@ export function SetDefaultDomainDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Set default domain
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Defines which domain is opened first when the system administrator signs in. The
-              selected domain is used as the initial workspace.
-            </p>
-          </VStack>
-
           {/* Admin Info Card */}
           <InfoBox label="System administrator" value={adminUsername} />
         </VStack>

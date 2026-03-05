@@ -160,8 +160,7 @@ export function EditListenerDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit listener"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -180,13 +179,6 @@ export function EditListenerDrawer({
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit listener
-          </h2>
-        </VStack>
-
         {/* Listener Name */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Listener name</FormField.Label>
@@ -210,10 +202,7 @@ export function EditListenerDrawer({
 
         {/* Description */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -259,7 +248,7 @@ export function EditListenerDrawer({
                   onChange={(value) => setConnectionLimitValue(value ?? 0)}
                   min={0}
                   placeholder="Enter connection limit"
-                  fullWidth
+                  width="sm"
                 />
               )}
             </VStack>
@@ -316,7 +305,7 @@ export function EditListenerDrawer({
                     value={clientDataTimeout}
                     onChange={(value) => setClientDataTimeout(value ?? 0)}
                     min={0}
-                    fullWidth
+                    width="sm"
                   />
                 </FormField.Control>
               </FormField>
@@ -332,7 +321,7 @@ export function EditListenerDrawer({
                     value={memberConnectTimeout}
                     onChange={(value) => setMemberConnectTimeout(value ?? 0)}
                     min={0}
-                    fullWidth
+                    width="sm"
                   />
                 </FormField.Control>
               </FormField>
@@ -348,7 +337,7 @@ export function EditListenerDrawer({
                     value={memberDataTimeout}
                     onChange={(value) => setMemberDataTimeout(value ?? 0)}
                     min={0}
-                    fullWidth
+                    width="sm"
                   />
                 </FormField.Control>
               </FormField>
@@ -364,7 +353,7 @@ export function EditListenerDrawer({
                     value={tcpInspectTimeout}
                     onChange={(value) => setTcpInspectTimeout(value ?? 0)}
                     min={0}
-                    fullWidth
+                    width="sm"
                   />
                 </FormField.Control>
               </FormField>

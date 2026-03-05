@@ -76,8 +76,7 @@ export function EditVolumeSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit volume snapshots"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -97,10 +96,6 @@ export function EditVolumeSnapshotDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit volume snapshots
-        </h2>
-
         {/* Volume Snapshot Name Input */}
         <FormField error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Volume snapshot name</FormField.Label>
@@ -124,10 +119,7 @@ export function EditVolumeSnapshotDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

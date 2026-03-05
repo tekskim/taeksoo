@@ -149,8 +149,8 @@ export function ManageMetadataDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage metadata"
+      description="Select existing metadata or define new metadata to apply to the image."
       width={1032}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -166,8 +166,6 @@ export function ManageMetadataDrawer({
       <VStack gap={6}>
         {/* Title */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage metadata</h2>
-
           <InfoBox label="Image" value={image.name} />
         </VStack>
 
@@ -175,9 +173,6 @@ export function ManageMetadataDrawer({
         <VStack gap={3} className="w-full">
           <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">Metadata</span>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Select existing metadata or define new metadata to apply to the image.
-            </p>
           </VStack>
 
           {/* Two Column Layout */}

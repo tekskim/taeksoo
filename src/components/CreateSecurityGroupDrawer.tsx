@@ -96,8 +96,7 @@ export function CreateSecurityGroupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create security group"
       width={360}
       footer={
         <VStack gap={4} className="w-full">
@@ -125,13 +124,6 @@ export function CreateSecurityGroupDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create security group
-          </h2>
-        </VStack>
-
         {/* Security Group Name Input */}
         <FormField required error={hasAttemptedSubmit && !name.trim()}>
           <FormField.Label>Security group name</FormField.Label>
@@ -152,10 +144,7 @@ export function CreateSecurityGroupDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

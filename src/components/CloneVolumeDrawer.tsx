@@ -93,8 +93,8 @@ export function CloneVolumeDrawer({
   isOpen,
   onClose,
   volume,
-  minCapacity = 201,
-  maxCapacity = 2000,
+  minCapacity = 50,
+  maxCapacity = 951,
   volumeTypes = [
     { value: '_DEFAULT_', label: '_DEFAULT_' },
     { value: 'ssd', label: 'SSD' },
@@ -107,6 +107,7 @@ export function CloneVolumeDrawer({
   onSubmit,
 }: CloneVolumeDrawerProps) {
   const [volumeName, setVolumeName] = useState('');
+  const [volumeDescription, setVolumeDescription] = useState('');
   const [capacity, setCapacity] = useState(minCapacity);
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,8 +156,8 @@ export function CloneVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Clone Volume"
+      description="Create a new volume that is an exact copy of this volume's current data. The cloned volume can be used independently for testing, backup, or new instance creation."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -206,15 +207,12 @@ export function CloneVolumeDrawer({
         {/* Header + Volume Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Clone Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a new volume that is an exact copy of this volume's current data. The cloned
-              volume can be used independently for testing, backup, or new instance creation.
-            </p>
-          </VStack>
+
+          {/* Warning Message */}
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            backup.
+          </InlineMessage>
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
@@ -223,12 +221,6 @@ export function CloneVolumeDrawer({
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
-
-          {/* Warning Message */}
-          <InlineMessage variant="error">
-            For data consistency, stop all write operations on the instance before creating a
-            backup.
-          </InlineMessage>
         </VStack>
 
         {/* New Volume Name Input */}
@@ -245,12 +237,35 @@ export function CloneVolumeDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={volumeDescription}
+              onChange={(e) => setVolumeDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
-        <FormField label="Capacity (GiB)" helperText={`${minCapacity} - ${maxCapacity} GiB`}>
+        <FormField
+          label="Capacity (GiB)"
+          description="Set the size of the cloned volume. The size must be equal to or larger than the source volume."
+          helperText={`${minCapacity} - ${maxCapacity} GiB`}
+          required
+        >
           <HStack gap={3} align="center" className="w-full">
             <Slider
               min={minCapacity}
@@ -273,11 +288,9 @@ export function CloneVolumeDrawer({
         </FormField>
 
         {/* Volume Type Select */}
-        <FormField>
-          <FormField.Label>
-            Volume type{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+        <FormField required>
+          <FormField.Label>Volume type</FormField.Label>
+          <FormField.Description>Select the volume type for the new volume.</FormField.Description>
           <FormField.Control>
             <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />
           </FormField.Control>

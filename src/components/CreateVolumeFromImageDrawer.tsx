@@ -143,8 +143,8 @@ export function CreateVolumeFromImageDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Volume from Image"
+      description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -194,15 +194,6 @@ export function CreateVolumeFromImageDrawer({
         {/* Header + Image Info */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Volume from Image
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a new volume using the selected image. The new volume will contain an identical
-              copy of the image data.
-            </p>
-          </VStack>
 
           {/* Image Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

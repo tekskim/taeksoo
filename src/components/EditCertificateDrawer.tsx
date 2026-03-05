@@ -65,8 +65,7 @@ export function EditCertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit certificate"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -85,13 +84,6 @@ export function EditCertificateDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit certificate
-          </h2>
-        </VStack>
-
         {/* Certificate name Input */}
         <FormField required error={hasAttemptedSubmit && !name.trim()}>
           <FormField.Label>Certificate name</FormField.Label>
@@ -112,10 +104,7 @@ export function EditCertificateDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

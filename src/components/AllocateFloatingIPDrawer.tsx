@@ -292,10 +292,7 @@ export function AllocateFloatingIPDrawer({
       <VStack gap={6} className="h-full">
         {/* Description Field */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -407,7 +404,7 @@ export function AllocateFloatingIPDrawer({
                         onChange={(value) => setCount(value ?? 1)}
                         min={1}
                         max={floatingIPQuota.total - floatingIPQuota.used}
-                        fullWidth
+                        width="xs"
                       />
                     </FormField.Control>
                   </FormField>
@@ -421,7 +418,7 @@ export function AllocateFloatingIPDrawer({
         <Disclosure open={isDnsExpanded} onChange={setIsDnsExpanded}>
           <Disclosure.Trigger>DNS</Disclosure.Trigger>
           <Disclosure.Panel className="pb-[var(--primitive-spacing-5)]">
-            <VStack gap={4} className="pt-3 w-[328px]">
+            <VStack gap={4} className="pt-3 w-full">
               {/* DNS Domain */}
               <FormField>
                 <FormField.Label>DNS Domain</FormField.Label>

@@ -7,7 +7,6 @@ import {
   Pagination,
   Radio,
   Toggle,
-  Disclosure,
   StatusIndicator,
   SelectionIndicator,
   Table,
@@ -133,7 +132,6 @@ export function CreateRouterDrawer({
   const [currentPage, setCurrentPage] = useState(1);
 
   // Advanced options disclosure state
-  const [showAdvanced, setShowAdvanced] = useState(true);
 
   // Filter networks
   const filteredNetworks = networks.filter(
@@ -159,7 +157,6 @@ export function CreateRouterDrawer({
       setSelectedNetworkId(null);
       setSearchQuery('');
       setCurrentPage(1);
-      setShowAdvanced(true);
     }
   }, [isOpen]);
 
@@ -247,8 +244,8 @@ export function CreateRouterDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Router"
+      description="Create a virtual router to route traffic between different networks or subnets."
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -279,124 +276,115 @@ export function CreateRouterDrawer({
         </VStack>
       }
     >
-      <VStack gap={3} className="h-full">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Router
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a virtual router to route traffic between different networks or subnets. You can
-            optionally connect the router to an external network to enable internet access or
-            floating IP usage.
-          </p>
-        </VStack>
-
-        <VStack gap={6}>
-          {/* Router name */}
-          <FormField
-            label="Router name"
-            helperText={'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
+      <VStack gap={6} className="h-full">
+        {/* Router name */}
+        <FormField
+          label="Router name"
+          helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+          error={hasAttemptedSubmit && !routerName.trim()}
+          errorMessage="Router name is required"
+          required
+        >
+          <Input
+            value={routerName}
+            onChange={(e) => setRouterName(e.target.value)}
+            placeholder="e.g. web-router-01"
+            fullWidth
             error={hasAttemptedSubmit && !routerName.trim()}
-            errorMessage="Router name is required"
-          >
-            <Input
-              value={routerName}
-              onChange={(e) => setRouterName(e.target.value)}
-              placeholder="e.g. web-router-01"
-              fullWidth
-              error={hasAttemptedSubmit && !routerName.trim()}
-            />
-          </FormField>
+          />
+        </FormField>
 
-          {/* Description */}
-          <FormField label="Description (Optional)">
-            <Input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Router for production web servers"
-              fullWidth
-            />
-          </FormField>
+        {/* Description */}
+        <FormField
+          label="Description"
+          helperText="You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters."
+        >
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. Router for production web servers"
+            fullWidth
+          />
+        </FormField>
 
-          {/* Advanced Options Disclosure */}
-          <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-            <Disclosure.Trigger>Label</Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={6} className="mt-3">
-                {/* Admin state */}
-                <FormField
-                  label="Admin state"
-                  description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
-                  spacing="loose"
-                >
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                    label={adminStateUp ? 'Up' : 'Down'}
-                  />
-                </FormField>
+        {/* Admin state */}
+        <FormField
+          label="Admin state"
+          description="Indicates whether the router's administrative state is Up or Down."
+          spacing="loose"
+        >
+          <Toggle
+            checked={adminStateUp}
+            onChange={(e) => setAdminStateUp(e.target.checked)}
+            label={adminStateUp ? 'Up' : 'Down'}
+          />
+        </FormField>
 
-                {/* External Gateway */}
-                <FormField
-                  label="External Gateway"
-                  description="The external gateway connects your router to an external (public) network. When enabled, instances in the connected subnets can access the internet using floating IPs."
-                  spacing="loose"
-                >
-                  <Toggle
-                    checked={externalGatewayEnabled}
-                    onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
-                    label={externalGatewayEnabled ? 'Open' : 'Close'}
-                  />
-                </FormField>
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
+        {/* External Gateway */}
+        <FormField
+          label="External gateway"
+          description="Indicates whether the external gateway is enabled on the router."
+          spacing="loose"
+        >
+          <Toggle
+            checked={externalGatewayEnabled}
+            onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
+            label={externalGatewayEnabled ? 'Open' : 'Close'}
+          />
+        </FormField>
 
-          {/* Network Selection (only shown when External Gateway is enabled) */}
-          {externalGatewayEnabled && (
-            <VStack gap={3} className="pb-5">
-              {/* Search */}
-              <div className="w-[280px]">
-                <SearchInput
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  placeholder="Search network by attributes"
-                  size="sm"
-                  fullWidth
-                />
-              </div>
-
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredNetworks.length}
-                onPageChange={setCurrentPage}
-                selectedCount={selectedNetworkId ? 1 : 0}
-              />
-
-              {/* Networks Table */}
-              <VStack gap={2}>
-                <Table<NetworkItem>
-                  columns={networkColumns}
-                  data={paginatedNetworks}
-                  rowKey="id"
-                  onRowClick={(row) => setSelectedNetworkId(row.id)}
-                  emptyMessage="No networks found"
-                />
-                <SelectionIndicator
-                  selectedItems={
-                    selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
-                  }
-                  onRemove={() => setSelectedNetworkId(null)}
-                  emptyText="No item selected"
-                />
-              </VStack>
+        {/* Network Selection (only shown when External Gateway is enabled) */}
+        {externalGatewayEnabled && (
+          <VStack gap={3} className="pb-5">
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                External network<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select an external network to connect the router to.
+              </span>
             </VStack>
-          )}
-        </VStack>
+
+            {/* Search */}
+            <div className="w-[280px]">
+              <SearchInput
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                placeholder="Search network by attributes"
+                size="sm"
+                fullWidth
+              />
+            </div>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filteredNetworks.length}
+              onPageChange={setCurrentPage}
+              selectedCount={selectedNetworkId ? 1 : 0}
+            />
+
+            {/* Networks Table */}
+            <VStack gap={2}>
+              <Table<NetworkItem>
+                columns={networkColumns}
+                data={paginatedNetworks}
+                rowKey="id"
+                onRowClick={(row) => setSelectedNetworkId(row.id)}
+                emptyMessage="No networks found"
+              />
+              <SelectionIndicator
+                selectedItems={
+                  selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+                }
+                onRemove={() => setSelectedNetworkId(null)}
+                emptyText="No item selected"
+              />
+            </VStack>
+          </VStack>
+        )}
       </VStack>
     </Drawer>
   );

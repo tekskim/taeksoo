@@ -76,8 +76,8 @@ export function CreateImageFromVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Image from Volume"
+      description="Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -99,15 +99,6 @@ export function CreateImageFromVolumeDrawer({
         {/* Header + Volume Info */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Image from Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a new image using this volume as the source. The image will contain all data
-              currently stored on the volume and can be used to launch new instances.
-            </p>
-          </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

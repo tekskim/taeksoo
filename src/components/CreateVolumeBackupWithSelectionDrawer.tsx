@@ -257,8 +257,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create volume backup"
       width={696}
       footer={
         <VStack gap={0} className="w-full">
@@ -298,10 +297,6 @@ export function CreateVolumeBackupWithSelectionDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Create volume backup
-        </h2>
-
         {/* Volumes Section */}
         <VStack gap={3}>
           <h3 className="text-label-lg text-[var(--color-text-default)]">Volumes</h3>
@@ -389,10 +384,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
           {/* Description */}
           <FormField className="pb-[24px] gap-0">
-            <FormField.Label>
-              Description{' '}
-              <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-            </FormField.Label>
+            <FormField.Label>Description</FormField.Label>
             <FormField.Control>
               <Input
                 value={description}

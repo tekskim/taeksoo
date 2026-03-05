@@ -257,8 +257,7 @@ export function MoveFilesDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Move files"
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -278,7 +277,6 @@ export function MoveFilesDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move files</h2>
 
         {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">

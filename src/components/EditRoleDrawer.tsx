@@ -97,8 +97,8 @@ export function EditRoleDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit role"
+      description="Edit basic information for this role."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -118,12 +118,6 @@ export function EditRoleDrawer({
     >
       <VStack gap={6} className="pb-6">
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit role</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Edit basic information for this role.
-          </p>
-        </VStack>
 
         {/* Role name field */}
         <FormField required error={!!nameError}>

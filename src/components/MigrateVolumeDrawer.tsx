@@ -202,8 +202,8 @@ export function MigrateVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Migrate volume"
+      description="Migrates the volume to a different storage backend. The volume may be limited in availability during the migration process."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -218,13 +218,6 @@ export function MigrateVolumeDrawer({
     >
       <VStack gap={6}>
         {/* Title */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Migrate volume</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Migrates the volume to a different storage backend. The volume may be limited in
-            availability during the migration process.
-          </p>
-        </VStack>
 
         {/* Volume Info */}
         <InfoBox.Group>

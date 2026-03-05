@@ -158,8 +158,7 @@ export function CreateSubnetDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Subnet"
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -191,16 +190,9 @@ export function CreateSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Create Subnet
-        </h2>
-
         {/* Subnet Name */}
         <FormField>
-          <FormField.Label>
-            Subnet Name{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-          </FormField.Label>
+          <FormField.Label>Subnet Name</FormField.Label>
           <FormField.Control>
             <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
           </FormField.Control>
@@ -264,10 +256,7 @@ export function CreateSubnetDrawer({
 
               {/* Allocation Pools */}
               <FormField>
-                <FormField.Label>
-                  Allocation pools{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-                </FormField.Label>
+                <FormField.Label>Allocation pools</FormField.Label>
                 <FormField.Description>
                   Manually define the range of IP addresses to be automatically allocated by DHCP.
                   IPs outside this range will not be allocated, which is useful for reserving static
@@ -289,10 +278,7 @@ export function CreateSubnetDrawer({
 
               {/* DNS */}
               <FormField>
-                <FormField.Label>
-                  DNS{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-                </FormField.Label>
+                <FormField.Label>DNS</FormField.Label>
                 <FormField.Description>
                   The address of the server that acts like a phonebook for the internet, translating
                   domain names into IP addresses for your instances.
@@ -311,10 +297,7 @@ export function CreateSubnetDrawer({
 
               {/* Host Routes */}
               <FormField>
-                <FormField.Label>
-                  Host Routes{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-                </FormField.Label>
+                <FormField.Label>Host Routes</FormField.Label>
                 <FormField.Description>
                   An advanced feature for manually specifying a route to a specific network
                   destination.

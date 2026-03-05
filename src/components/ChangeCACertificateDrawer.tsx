@@ -171,8 +171,7 @@ export function ChangeCACertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Change CA certificate"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -193,10 +192,6 @@ export function ChangeCACertificateDrawer({
       <VStack gap={6} className="h-full">
         {/* Header Section */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Change CA certificate
-          </h2>
-
           <InfoBox
             label="Current CA certificate"
             value={`${currentCertificate.name} (expired on ${currentCertificate.expiredOn})`}

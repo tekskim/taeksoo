@@ -103,8 +103,8 @@ export function EditDomainDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit domain"
+      description="Edit the domain's basic information."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -123,16 +123,6 @@ export function EditDomainDrawer({
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit domain
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Edit the domain's basic information.
-          </p>
-        </VStack>
-
         {/* Domain name field */}
         <FormField required error={!!nameError}>
           <FormField.Label>Domain name</FormField.Label>

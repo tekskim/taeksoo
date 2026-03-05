@@ -71,8 +71,7 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit volume"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -92,7 +91,6 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit volume</h2>
 
         {/* Volume Name Input */}
         <FormField error={hasAttemptedSubmit && !!nameError}>
@@ -117,10 +115,7 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

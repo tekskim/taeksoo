@@ -8,6 +8,7 @@ import {
   Radio,
   SelectionIndicator,
   Select,
+  Input,
   Table,
   FormField,
   InfoBox,
@@ -72,6 +73,7 @@ export function AttachInterfaceDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [fixedIpMode, setFixedIpMode] = useState('auto-assign');
+  const [fixedIp, setFixedIp] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
@@ -174,8 +176,8 @@ export function AttachInterfaceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Attach Interface"
+      description="Attach a new network interface to this instance. You can connect it to another network or subnet for additional access."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -194,26 +196,22 @@ export function AttachInterfaceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Attach Interface
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Attach a new network interface to this instance. You can connect it to another network
-              or subnet for additional access.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance name" value={instance.name} />
         </VStack>
 
         {/* Networks Section */}
-        <VStack gap={3} className="flex-1 min-h-0 pb-5">
+        <VStack gap={3}>
           {/* Networks Header */}
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Networks</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Networks<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the network to attach to the instance.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -263,10 +261,21 @@ export function AttachInterfaceDrawer({
               errorMessage="Please select a network"
             />
           </VStack>
+        </VStack>
 
-          {/* Fixed IP Section */}
-          <VStack gap={2} className="shrink-0 w-full">
-            <FormField label="Subnet">
+        {/* Fixed IP Section */}
+        <VStack gap={2} className="shrink-0 w-full pb-5">
+          <VStack gap={1}>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Fixed IP<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Set the Fixed IP for the interface. You can assign an IP automatically or manually
+              enter one within the subnet range.
+            </span>
+          </VStack>
+          <div className="grid grid-cols-3 gap-3 w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-4 py-3">
+            <FormField label="Subnet" labelSize="sm">
               <Select
                 options={[
                   { value: 'subnet-1', label: '192.168.20.0/24 (subnet-1)' },
@@ -276,7 +285,7 @@ export function AttachInterfaceDrawer({
                 fullWidth
               />
             </FormField>
-            <FormField label="Fixed IP mode">
+            <FormField label="Fixed IP mode" labelSize="sm">
               <Select
                 options={[
                   { value: 'auto-assign', label: 'Auto-assign' },
@@ -287,7 +296,17 @@ export function AttachInterfaceDrawer({
                 fullWidth
               />
             </FormField>
-          </VStack>
+            {fixedIpMode === 'manual' && (
+              <FormField label="Fixed IP address" labelSize="sm">
+                <Input
+                  value={fixedIp}
+                  onChange={(e) => setFixedIp(e.target.value)}
+                  placeholder="e.g. 192.168.0.10"
+                  fullWidth
+                />
+              </FormField>
+            )}
+          </div>
         </VStack>
       </VStack>
     </Drawer>

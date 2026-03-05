@@ -170,8 +170,8 @@ export function DetachInterfaceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Detach Interface"
+      description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -189,19 +189,8 @@ export function DetachInterfaceDrawer({
         </HStack>
       }
     >
-      <VStack gap={3} className="h-full">
-        {/* Header Section */}
+      <VStack gap={6} className="h-full">
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Detach Interface
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Detach a network interface from this instance. This may interrupt connectivity if the
-              selected port is primary.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance" value={instance.name} />
 
@@ -215,7 +204,14 @@ export function DetachInterfaceDrawer({
         {/* Interfaces Section */}
         <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Interfaces Header */}
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Interfaces<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the network of the interface you want to detach.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">

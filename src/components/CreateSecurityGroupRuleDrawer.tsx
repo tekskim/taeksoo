@@ -189,8 +189,8 @@ export function CreateSecurityGroupRuleDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create rule"
+      description="A security group rule defines allowed inbound or outbound network traffic."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -222,16 +222,6 @@ export function CreateSecurityGroupRuleDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create rule
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            A security group rule defines allowed inbound or outbound network traffic.
-          </p>
-        </VStack>
-
         {/* Direction Radio */}
         <FormField label="Direction" spacing="loose">
           <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
@@ -263,19 +253,17 @@ export function CreateSecurityGroupRuleDrawer({
 
         {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
-          <FormField>
+          <FormField error={hasAttemptedSubmit && portRangeType === 'custom' && !portRange.trim()}>
             <FormField.Label>Port range</FormField.Label>
             <FormField.Control>
-              <Select
-                options={portRangeOptions}
-                value={portRangeType}
-                onChange={(value) => setPortRangeType(value as PortRangeType)}
-                fullWidth
-              />
-            </FormField.Control>
-            {portRangeType === 'custom' && (
-              <>
-                <FormField.Control>
+              <VStack gap={2}>
+                <Select
+                  options={portRangeOptions}
+                  value={portRangeType}
+                  onChange={(value) => setPortRangeType(value as PortRangeType)}
+                  fullWidth
+                />
+                {portRangeType === 'custom' && (
                   <Input
                     value={portRange}
                     onChange={(e) => setPortRange(e.target.value)}
@@ -283,7 +271,11 @@ export function CreateSecurityGroupRuleDrawer({
                     fullWidth
                     error={hasAttemptedSubmit && !portRange.trim()}
                   />
-                </FormField.Control>
+                )}
+              </VStack>
+            </FormField.Control>
+            {portRangeType === 'custom' && (
+              <>
                 <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
                 <FormField.HelperText>
                   e.g. single port '8080', port range '7000-7005'
@@ -296,23 +288,23 @@ export function CreateSecurityGroupRuleDrawer({
         {/* ICMP Type and Code (only for Custom ICMP) */}
         {protocol === 'custom_icmp' && (
           <>
-            <FormField label="ICMP type (optional)" helperText="0-255">
+            <FormField label="ICMP type" helperText="0-255">
               <NumberInput
                 value={icmpType}
                 onChange={(value) => setIcmpType(value ?? 0)}
                 min={0}
                 max={255}
-                fullWidth
+                width="xs"
               />
             </FormField>
 
-            <FormField label="ICMP code (optional)" helperText="0-255">
+            <FormField label="ICMP code" helperText="0-255">
               <NumberInput
                 value={icmpCode}
                 onChange={(value) => setIcmpCode(value ?? 0)}
                 min={0}
                 max={255}
-                fullWidth
+                width="xs"
               />
             </FormField>
           </>
@@ -332,47 +324,43 @@ export function CreateSecurityGroupRuleDrawer({
 
         {/* Remote (not shown for All Proto) */}
         {!isAllProto && (
-          <FormField
-            label="Remote"
-            description="Define the source or destination of traffic."
-            error={hasAttemptedSubmit && !remoteValue.trim()}
-            errorMessage={
-              hasAttemptedSubmit && !remoteValue.trim()
-                ? remoteType === 'cidr'
-                  ? 'CIDR is required'
-                  : 'Security group is required'
-                : undefined
-            }
-          >
-            <FormField.Control>
-              <Select
-                options={remoteTypeOptions}
-                value={remoteType}
-                onChange={(value) => setRemoteType(value as RemoteType)}
-                fullWidth
-              />
-            </FormField.Control>
-            {remoteType === 'cidr' ? (
-              <FormField.Control>
-                <Input
-                  value={remoteValue}
-                  onChange={(e) => setRemoteValue(e.target.value)}
-                  placeholder="e.g. 192.168.0.0/24"
-                  fullWidth
-                  error={hasAttemptedSubmit && !remoteValue.trim()}
-                />
-              </FormField.Control>
-            ) : (
-              <FormField.Control>
+          <FormField error={hasAttemptedSubmit && !remoteValue.trim()}>
+            <FormField.Label>Remote</FormField.Label>
+            <FormField.Description>
+              Define the source or destination of traffic.
+            </FormField.Description>
+            <FormField.Control className="mt-0">
+              <VStack gap={2}>
                 <Select
-                  options={securityGroups}
-                  value={remoteValue}
-                  onChange={(value) => setRemoteValue(value)}
-                  placeholder="Select a security group"
+                  options={remoteTypeOptions}
+                  value={remoteType}
+                  onChange={(value) => setRemoteType(value as RemoteType)}
                   fullWidth
-                  error={hasAttemptedSubmit && !remoteValue.trim()}
                 />
-              </FormField.Control>
+                {remoteType === 'cidr' ? (
+                  <Input
+                    value={remoteValue}
+                    onChange={(e) => setRemoteValue(e.target.value)}
+                    placeholder="e.g. 192.168.0.0/24"
+                    fullWidth
+                    error={hasAttemptedSubmit && !remoteValue.trim()}
+                  />
+                ) : (
+                  <Select
+                    options={securityGroups}
+                    value={remoteValue}
+                    onChange={(value) => setRemoteValue(value)}
+                    placeholder="Select a security group"
+                    fullWidth
+                    error={hasAttemptedSubmit && !remoteValue.trim()}
+                  />
+                )}
+              </VStack>
+            </FormField.Control>
+            {hasAttemptedSubmit && !remoteValue.trim() && (
+              <FormField.ErrorMessage>
+                {remoteType === 'cidr' ? 'CIDR is required' : 'Security group is required'}
+              </FormField.ErrorMessage>
             )}
           </FormField>
         )}
