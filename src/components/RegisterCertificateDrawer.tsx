@@ -33,6 +33,7 @@ interface FileUploadSectionProps {
   onChange: (value: string) => void;
   placeholder?: string;
   maxSizeKB?: number;
+  required?: boolean;
 }
 
 function FileUploadSection({
@@ -42,6 +43,7 @@ function FileUploadSection({
   onChange,
   placeholder = 'e.g. -----BEGIN CERTIFICATE----- ...',
   maxSizeKB = 64,
+  required,
 }: FileUploadSectionProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sizeKB = new Blob([value]).size / 1024;
@@ -62,7 +64,7 @@ function FileUploadSection({
   };
 
   return (
-    <FormField>
+    <FormField required={required}>
       <FormField.Label>{label}</FormField.Label>
       <FormField.Description>{description}</FormField.Description>
       <FormField.Control>
@@ -262,8 +264,8 @@ export function RegisterCertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Register Certificate"
+      description="Register a certificate issued by an external CA for use within Compute resources."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -282,18 +284,13 @@ export function RegisterCertificateDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Register Certificate
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Register a certificate issued by an external CA for use within Compute resources.
-          </p>
-        </VStack>
-
         {/* Type Radio */}
-        <FormField label="Type" spacing="loose">
+        <FormField
+          label="Type"
+          description="Choose the type of certificate to register."
+          spacing="loose"
+          required
+        >
           <RadioGroup
             value={certificateType}
             onChange={(value) => setCertificateType(value as CertificateType)}
@@ -312,37 +309,16 @@ export function RegisterCertificateDrawer({
             <Input
               value={certificateName}
               onChange={(e) => setCertificateName(e.target.value)}
-              placeholder={
-                certificateType === 'server' ? 'e.g. my-ssl-cert' : 'e.g. company-internal-ca'
-              }
+              placeholder={'Enter certificate name'}
               fullWidth
               error={hasAttemptedSubmit && !certificateName.trim()}
             />
           </FormField.Control>
           <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
-        </FormField>
-
-        {/* Description Input */}
-        <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
-          <FormField.Control>
-            <Input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={
-                certificateType === 'server'
-                  ? 'e.g. SSL certificate for web application HTTPS'
-                  : 'e.g. Internal Root Certificate Authority'
-              }
-              fullWidth
-            />
-          </FormField.Control>
         </FormField>
 
         {/* Certificate Body */}
@@ -351,6 +327,7 @@ export function RegisterCertificateDrawer({
             label="Certificate body"
             description="Paste the full contents of your server certificate file (.crt, .pem), including the BEGIN/END lines."
             value={certificateBody}
+            required
             onChange={(v) => {
               setCertificateBody(v);
               if (bodyError) setBodyError(null);
@@ -368,6 +345,7 @@ export function RegisterCertificateDrawer({
               label="Private key"
               description="Paste the contents of the private key file (.key) for your certificate."
               value={privateKey}
+              required
               onChange={(v) => {
                 setPrivateKey(v);
                 if (privateKeyError) setPrivateKeyError(null);
@@ -384,7 +362,7 @@ export function RegisterCertificateDrawer({
         {/* Intermediate Certificate (Collapsible, only for Server Certificate) */}
         {certificateType === 'server' && (
           <CollapsibleSection
-            label="Label"
+            label="Certificate chain"
             description="If you received an intermediate certificate from your CA, paste it here."
             value={intermediateCert}
             onChange={setIntermediateCert}

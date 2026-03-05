@@ -114,7 +114,7 @@ export function ResizeInstanceDrawer({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFlavorId, setSelectedFlavorId] = useState<string | null>(null);
-  const [approvalMethod, setApprovalMethod] = useState<'manual' | 'auto'>('manual');
+  const [approvalMethod, setApprovalMethod] = useState<'manual' | 'auto'>('auto');
   const [autoConfirmMinutes, setAutoConfirmMinutes] = useState(5);
   const [autoConfirmAction, setAutoConfirmAction] = useState('confirm');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -173,16 +173,9 @@ export function ResizeInstanceDrawer({
         </span>
       ),
     },
-    { key: 'vcpu', label: 'vCPU', width: '80px', sortable: true },
-    { key: 'ram', label: 'RAM', width: '80px', sortable: true },
-    { key: 'disk', label: 'Disk', width: '80px', sortable: true },
-    { key: 'ephemeralDisk', label: 'Ephemeral disk', width: '100px', sortable: true },
-    {
-      key: 'internalBandwidth',
-      label: 'Internal network bandwidth',
-      width: '140px',
-      sortable: true,
-    },
+    { key: 'vcpu', label: 'vCPU', flex: 1, sortable: true },
+    { key: 'ram', label: 'RAM', flex: 1, sortable: true },
+    { key: 'disk', label: 'Root disk', flex: 1, sortable: true },
   ];
 
   const comparisonData: ComparisonRow[] = [
@@ -228,7 +221,7 @@ export function ResizeInstanceDrawer({
     {
       key: 'name',
       label: 'Name',
-      width: '90px',
+      flex: 1,
       render: (_, row) =>
         row.isLink ? (
           <span className="flex flex-col">
@@ -250,12 +243,9 @@ export function ResizeInstanceDrawer({
           <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
         ),
     },
-    { key: 'vcpu', label: 'vCPU', width: '65px' },
-    { key: 'ram', label: 'RAM', width: '65px' },
-    { key: 'disk', label: 'Disk', width: '65px' },
-    { key: 'ephemeralDisk', label: 'Ephemeral disk', width: '95px' },
-    { key: 'gpu', label: 'GPU', width: '65px' },
-    { key: 'npu', label: 'NPU', flex: 1 },
+    { key: 'vcpu', label: 'vCPU', flex: 1 },
+    { key: 'ram', label: 'RAM', flex: 1 },
+    { key: 'disk', label: 'Root disk', flex: 1 },
   ];
 
   const handleResize = async () => {
@@ -295,8 +285,8 @@ export function ResizeInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Resize Instance"
+      description="Change the flavor of this instance to adjust its vCPU, memory, or disk capacity."
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -366,17 +356,7 @@ export function ResizeInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Resize Instance
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Change the flavor of this instance to adjust its vCPU, memory, or disk capacity.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             The instance will be stopped and restarted automatically during resize. All running
@@ -388,7 +368,14 @@ export function ResizeInstanceDrawer({
 
         {/* Flavor Section */}
         <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)]">Flavor</span>
+          <VStack gap={1}>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Flavor<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the new flavor for the resized instance.
+            </span>
+          </VStack>
 
           {/* Tabs */}
           <Tabs
@@ -465,57 +452,59 @@ export function ResizeInstanceDrawer({
 
         {/* Approval Method Section */}
         <FormField label="Approval method" spacing="loose" className="pb-5">
-          <VStack gap={2}>
-            {/* Manual confirm option */}
-            <Radio
-              name="approval-method"
-              value="manual"
-              checked={approvalMethod === 'manual'}
-              onChange={() => setApprovalMethod('manual')}
-              label="Manual confirm"
-            />
-
-            {/* Auto-confirm option */}
-            <HStack gap={1.5} align="center">
+          <VStack gap={3}>
+            <VStack gap={2}>
+              {/* Manual confirm option */}
               <Radio
                 name="approval-method"
-                value="auto"
-                checked={approvalMethod === 'auto'}
-                onChange={() => setApprovalMethod('auto')}
-                label="Auto-confirm"
+                value="manual"
+                checked={approvalMethod === 'manual'}
+                onChange={() => setApprovalMethod('manual')}
+                label="Manual confirm"
               />
-              <IconHelp size={12} className="text-[var(--color-text-subtle)] cursor-help" />
-            </HStack>
-          </VStack>
 
-          {/* Auto-confirm settings */}
-          {approvalMethod === 'auto' && (
-            <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] flex items-center gap-6">
+              {/* Auto-confirm option */}
               <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">After</span>
-                <NumberInput
-                  value={autoConfirmMinutes}
-                  onChange={setAutoConfirmMinutes}
-                  min={1}
-                  max={60}
-                  className="w-[80px]"
+                <Radio
+                  name="approval-method"
+                  value="auto"
+                  checked={approvalMethod === 'auto'}
+                  onChange={() => setApprovalMethod('auto')}
+                  label="Auto-confirm"
                 />
-                <span className="text-body-md text-[var(--color-text-default)]">minutes,</span>
+                <IconHelp size={12} className="text-[var(--color-text-subtle)] cursor-help" />
               </HStack>
-              <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">do</span>
-                <Select
-                  value={autoConfirmAction}
-                  onChange={(value) => setAutoConfirmAction(value)}
-                  options={[
-                    { value: 'confirm', label: 'Confirm' },
-                    { value: 'revert', label: 'Revert' },
-                  ]}
-                  width="sm"
-                />
-              </HStack>
-            </div>
-          )}
+            </VStack>
+
+            {/* Auto-confirm settings */}
+            {approvalMethod === 'auto' && (
+              <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] flex items-center gap-3">
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-lg text-[var(--color-text-default)]">After</span>
+                  <NumberInput
+                    value={autoConfirmMinutes}
+                    onChange={setAutoConfirmMinutes}
+                    min={1}
+                    max={60}
+                    className="w-[80px]"
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)]">minutes,</span>
+                </HStack>
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-lg text-[var(--color-text-default)]">do</span>
+                  <Select
+                    value={autoConfirmAction}
+                    onChange={(value) => setAutoConfirmAction(value)}
+                    options={[
+                      { value: 'confirm', label: 'Confirm' },
+                      { value: 'revert', label: 'Revert' },
+                    ]}
+                    width="sm"
+                  />
+                </HStack>
+              </div>
+            )}
+          </VStack>
         </FormField>
       </VStack>
     </Drawer>

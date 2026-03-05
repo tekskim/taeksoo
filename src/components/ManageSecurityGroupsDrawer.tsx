@@ -5,9 +5,11 @@ import {
   SearchInput,
   Pagination,
   StatusIndicator,
+  Radio,
   Table,
   SelectionIndicator,
   InfoBox,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -69,60 +71,13 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (
 
 const ITEMS_PER_PAGE = 5;
 
-const interfaceColumns: TableColumn<InterfaceItem>[] = [
-  {
-    key: 'status',
-    label: 'Status',
-    width: '59px',
-    align: 'center',
-    render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
-  },
-  {
-    key: 'portName',
-    label: 'Network',
-    render: (_value, row) => (
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <div className="flex items-center gap-1.5">
-          <span className="text-label-md text-[var(--color-action-primary)] truncate">
-            {row.portName}
-          </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
-        </div>
-        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
-      </div>
-    ),
-  },
-  {
-    key: 'networkName',
-    label: 'Port ID',
-    render: (_value, row) => (
-      <div className="flex flex-col gap-0.5 overflow-hidden">
-        <div className="flex items-center gap-1.5">
-          <span className="text-label-md text-[var(--color-action-primary)] truncate">
-            {row.networkName}
-          </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
-        </div>
-        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID : {row.id}</span>
-      </div>
-    ),
-  },
-  { key: 'ipAddress', label: 'IP address' },
-  { key: 'macAddress', label: 'MAC address' },
-];
+// interfaceColumns defined inside component (needs selectedInterfaceId state)
 
 const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
   {
     key: 'name',
     label: 'Name',
+    sortable: true,
     render: (_value, row) => (
       <div className="flex flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-1.5">
@@ -139,8 +94,8 @@ const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
       </div>
     ),
   },
-  { key: 'description', label: 'Description' },
-  { key: 'createdAt', label: 'Created at' },
+  { key: 'description', label: 'Description', sortable: true },
+  { key: 'createdAt', label: 'Created at', sortable: true },
 ];
 
 /* ----------------------------------------
@@ -181,6 +136,77 @@ export function ManageSecurityGroupsDrawer({
     (interfacePage - 1) * ITEMS_PER_PAGE,
     interfacePage * ITEMS_PER_PAGE
   );
+
+  const interfaceColumns: TableColumn<InterfaceItem>[] = [
+    {
+      key: 'id' as keyof InterfaceItem,
+      label: '',
+      width: fixedColumns.radio,
+      render: (_value, row) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Radio
+            name="interface-select"
+            value={row.id}
+            checked={selectedInterfaceId === row.id}
+            onChange={() => setSelectedInterfaceId(row.id)}
+          />
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      width: '59px',
+      align: 'center',
+      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    },
+    {
+      key: 'portName',
+      label: 'Name',
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5 overflow-hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.portName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'networkName',
+      label: 'Network',
+      sortable: true,
+      render: (_value, row) => (
+        <div className="flex flex-col gap-0.5 overflow-hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="text-label-md text-[var(--color-action-primary)] truncate">
+              {row.networkName}
+            </span>
+            <IconExternalLink
+              size={12}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-action-primary)]"
+            />
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+            ID : {row.id}
+          </span>
+        </div>
+      ),
+    },
+    { key: 'ipAddress', label: 'Fixed IP' },
+    { key: 'macAddress', label: 'MAC address' },
+  ];
 
   // Filter security groups
   const filteredSecurityGroups = securityGroups.filter(
@@ -230,8 +256,8 @@ export function ManageSecurityGroupsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage security groups"
+      description="You can attach or detach security groups for the selected interface. These rules control inbound and outbound traffic for the instance."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -250,25 +276,21 @@ export function ManageSecurityGroupsDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage security groups
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              You can attach or detach security groups for the selected interface. These rules
-              control inbound and outbound traffic for the instance.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance" value={instance.name} />
         </VStack>
 
         {/* Interfaces Section */}
         <VStack gap={3}>
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Interfaces<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the interface to apply security groups to.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -297,12 +319,6 @@ export function ManageSecurityGroupsDrawer({
                 columns={interfaceColumns}
                 data={paginatedInterfaces}
                 rowKey="id"
-                selectable
-                hideSelectAll
-                selectedKeys={selectedInterfaceId ? [selectedInterfaceId] : []}
-                onSelectionChange={(keys) =>
-                  setSelectedInterfaceId(keys.length > 0 ? keys[keys.length - 1] : null)
-                }
                 onRowClick={(row) => setSelectedInterfaceId(row.id)}
                 emptyMessage="No interfaces found"
               />
@@ -331,7 +347,14 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Security groups</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">
+              Security groups<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the security groups to apply to the chosen interface.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">

@@ -5,6 +5,7 @@ import {
   Radio,
   FormField,
   Disclosure,
+  Input,
   Tabs,
   TabList,
   Tab,
@@ -23,7 +24,7 @@ import {
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconDots } from '@tabler/icons-react';
+import { IconExternalLink, IconDots, IconEye, IconEyeOff } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -83,7 +84,9 @@ export function RescueInstanceDrawer({
   onRescue,
 }: RescueInstanceDrawerProps) {
   const [imageOption, setImageOption] = useState<'current' | 'another'>('current');
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Image selection state
@@ -173,7 +176,9 @@ export function RescueInstanceDrawer({
 
   const handleClose = () => {
     setImageOption('current');
-    setIsAdvancedOpen(false);
+    setIsPasswordOpen(false);
+    setPassword('');
+    setShowPassword(false);
     setSelectedImageId(null);
     setImageSearchQuery('');
     setImageCurrentPage(1);
@@ -184,8 +189,8 @@ export function RescueInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Rescue Instance"
+      description="Create a temporary recovery server using your instance's root disk."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -204,32 +209,26 @@ export function RescueInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Rescue Instance
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a temporary recovery server using your instance's root disk.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             Rescue mode will stop your instance and attach its root disk to a temporary server. You
             can log in to that server to recover data or fix configurations.
           </InlineMessage>
+
+          <InfoBox.Group>
+            <InfoBox label="Instance name" value={instance.name} />
+            <InfoBox label="Current image" value={instance.currentImage} />
+          </InfoBox.Group>
         </VStack>
 
-        <InfoBox.Group>
-          <InfoBox label="Instance" value={instance.name} />
-          <InfoBox label="Current image" value={instance.currentImage} />
-          <InfoBox label="Protocol" value={instance.protocol} />
-        </InfoBox.Group>
-
         {/* Image Selection */}
-        <FormField label="Image" spacing="loose">
+        <FormField
+          label="Image"
+          description="Select the image to use for the rescue instance."
+          spacing="loose"
+          required
+        >
           <VStack gap={2}>
             {/* Current Image Option */}
             <Radio
@@ -350,15 +349,41 @@ export function RescueInstanceDrawer({
           </VStack>
         )}
 
-        {/* Advanced Options (Disclosure) */}
-        <Disclosure
-          title="Label"
-          expanded={isAdvancedOpen}
-          onToggle={() => setIsAdvancedOpen(!isAdvancedOpen)}
-        >
-          <VStack gap={3} className="pt-3">
-            {/* Content placeholder */}
-          </VStack>
+        {/* Password (Disclosure) */}
+        <Disclosure open={isPasswordOpen} onChange={setIsPasswordOpen} className="pb-5">
+          <Disclosure.Trigger>Password</Disclosure.Trigger>
+          <Disclosure.Panel>
+            <VStack gap={3}>
+              <FormField>
+                <FormField.Description>
+                  Set a password to access the rescue instance.
+                </FormField.Description>
+                <FormField.Control>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    fullWidth
+                    rightElement={
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] cursor-pointer"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                      </button>
+                    }
+                  />
+                </FormField.Control>
+                <FormField.HelperText>
+                  You can use letters, numbers, and all common special characters and the length
+                  must be between 8-16 characters.
+                </FormField.HelperText>
+              </FormField>
+            </VStack>
+          </Disclosure.Panel>
         </Disclosure>
       </VStack>
     </Drawer>

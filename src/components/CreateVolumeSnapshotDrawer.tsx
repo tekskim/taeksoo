@@ -84,6 +84,7 @@ export function CreateVolumeSnapshotDrawer({
   onSubmit,
 }: CreateVolumeSnapshotDrawerProps) {
   const [snapshotName, setSnapshotName] = useState('');
+  const [snapshotDescription, setSnapshotDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
@@ -121,8 +122,8 @@ export function CreateVolumeSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create volume snapshot"
+      description="Create a snapshot of this volume to back up its current data state. You can use the snapshot to create new volumes or restore data later."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -162,15 +163,12 @@ export function CreateVolumeSnapshotDrawer({
         {/* Header + Volume Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create volume snapshot
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a snapshot of this volume to back up its current data state. You can use the
-              snapshot to create new volumes or restore data later.
-            </p>
-          </VStack>
+
+          {/* Warning Message */}
+          <InlineMessage variant="error">
+            For data consistency, stop all write operations on the instance before creating a
+            snapshot.
+          </InlineMessage>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
@@ -179,12 +177,6 @@ export function CreateVolumeSnapshotDrawer({
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
-
-          {/* Warning Message */}
-          <InlineMessage variant="error">
-            For data consistency, stop all write operations on the instance before creating a
-            snapshot.
-          </InlineMessage>
         </VStack>
 
         {/* Snapshot Name Input */}
@@ -201,7 +193,25 @@ export function CreateVolumeSnapshotDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Snapshot name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={snapshotDescription}
+              onChange={(e) => setSnapshotDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
       </VStack>

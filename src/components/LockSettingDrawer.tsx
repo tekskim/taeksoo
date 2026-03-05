@@ -43,8 +43,7 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Lock setting"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -64,7 +63,6 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Lock setting</h2>
 
         {/* Instance Info */}
         {instance && <InfoBox label="Instance" value={instance.name} />}

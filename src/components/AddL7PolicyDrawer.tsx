@@ -95,8 +95,7 @@ export function AddL7PolicyDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Add L7 policy"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -116,10 +115,6 @@ export function AddL7PolicyDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Add L7 policy
-        </h2>
-
         {/* L7 Policy Name Input */}
         <FormField required error={hasAttemptedSubmit && !policyName.trim()}>
           <FormField.Label>L7 policy name</FormField.Label>
@@ -140,10 +135,7 @@ export function AddL7PolicyDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -186,16 +178,13 @@ export function AddL7PolicyDrawer({
 
         {/* Position Input */}
         <FormField>
-          <FormField.Label>
-            Position{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-          </FormField.Label>
+          <FormField.Label>Position</FormField.Label>
           <FormField.Control>
             <NumberInput
               value={position}
               onChange={(value) => setPosition(value ?? 1)}
               min={1}
-              fullWidth
+              width="xs"
             />
           </FormField.Control>
         </FormField>

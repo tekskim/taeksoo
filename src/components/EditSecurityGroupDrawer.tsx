@@ -65,8 +65,7 @@ export function EditSecurityGroupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit security group"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -85,13 +84,6 @@ export function EditSecurityGroupDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit security group
-          </h2>
-        </VStack>
-
         {/* Security Group Name Input */}
         <FormField required error={hasAttemptedSubmit && !name.trim()}>
           <FormField.Label>Security group name</FormField.Label>
@@ -113,10 +105,7 @@ export function EditSecurityGroupDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

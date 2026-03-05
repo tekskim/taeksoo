@@ -81,8 +81,8 @@ export function ExtendVolumeDrawer({
   isOpen,
   onClose,
   volume,
-  minCapacity = 201,
-  maxCapacity = 2000,
+  minCapacity = 50,
+  maxCapacity = 951,
   volumeCapacityQuota = { used: 20, total: 1000 },
   typeCapacityQuota = { used: 2, total: null },
   onSubmit,
@@ -136,8 +136,8 @@ export function ExtendVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Extend Volume"
+      description="Increase the size of this volume to expand its storage capacity. The volume size can only be increased and cannot be reduced once extended."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -177,15 +177,6 @@ export function ExtendVolumeDrawer({
         {/* Header + Volume Info */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Extend Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Increase the size of this volume to expand its storage capacity. The volume size can
-              only be increased and cannot be reduced once extended.
-            </p>
-          </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
@@ -197,8 +188,11 @@ export function ExtendVolumeDrawer({
         </VStack>
 
         {/* Capacity Slider */}
-        <FormField error={!!capacityError}>
+        <FormField error={!!capacityError} required>
           <FormField.Label>Capacity (GiB)</FormField.Label>
+          <FormField.Description>
+            Set the new volume size. It cannot be smaller than the current capacity.
+          </FormField.Description>
           <FormField.Control>
             <HStack gap={3} align="center" className="w-full">
               <Slider

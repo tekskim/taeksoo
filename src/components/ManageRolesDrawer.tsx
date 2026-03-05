@@ -155,8 +155,8 @@ export function ManageRolesDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage roles"
+      description="Manages roles directly assigned to the user. The user receives permissions from both direct assignments and roles inherited from groups."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -177,16 +177,6 @@ export function ManageRolesDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage roles
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Manages roles directly assigned to the user. The user receives permissions from both
-              direct assignments and roles inherited from groups.
-            </p>
-          </VStack>
-
           <InfoBox label="User" value={userName} />
         </VStack>
 

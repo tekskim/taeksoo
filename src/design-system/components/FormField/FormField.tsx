@@ -201,7 +201,7 @@ const FormFieldLabel = forwardRef<HTMLLabelElement, FormFieldLabelProps>(
     const isRequired = requiredProp ?? contextRequired;
 
     const sizeStyles = {
-      sm: 'text-label-md',
+      sm: 'text-label-sm',
       md: 'text-label-lg',
     };
 

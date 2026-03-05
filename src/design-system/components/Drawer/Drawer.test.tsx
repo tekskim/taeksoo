@@ -24,7 +24,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('Test Drawer')).not.toBeInTheDocument();
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('calls onClose when backdrop is clicked', () => {
     const handleClose = vi.fn();
     render(
       <Drawer isOpen={true} onClose={handleClose} title="Test Drawer">
@@ -32,8 +32,8 @@ describe('Drawer', () => {
       </Drawer>
     );
 
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(closeButton);
+    const backdrop = screen.getByRole('dialog').previousElementSibling as HTMLElement;
+    fireEvent.click(backdrop);
 
     expect(handleClose).toHaveBeenCalledTimes(1);
   });

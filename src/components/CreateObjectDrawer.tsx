@@ -140,8 +140,7 @@ export function CreateObjectDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Object"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -161,10 +160,6 @@ export function CreateObjectDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Create Object
-        </h2>
-
         {/* Folder Path */}
         <FormField>
           <FormField.Label>Folder path</FormField.Label>
@@ -223,7 +218,7 @@ export function CreateObjectDrawer({
                     value={grantee}
                     onChange={(v) => setGrantee(v as Grantee)}
                     options={GRANTEE_OPTIONS}
-                    width="half"
+                    width="full"
                   />
                 </FormField>
                 <FormField label="Permissions">
@@ -231,7 +226,7 @@ export function CreateObjectDrawer({
                     value={permission}
                     onChange={(v) => setPermission(v as Permission)}
                     options={PERMISSION_OPTIONS}
-                    width="half"
+                    width="full"
                   />
                 </FormField>
               </VStack>

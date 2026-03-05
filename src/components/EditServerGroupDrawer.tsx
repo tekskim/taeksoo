@@ -73,8 +73,7 @@ export function EditServerGroupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit server group"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -94,10 +93,6 @@ export function EditServerGroupDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit server group
-        </h2>
-
         {/* Server group name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Server group name</FormField.Label>

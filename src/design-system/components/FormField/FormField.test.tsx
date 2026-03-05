@@ -69,7 +69,7 @@ describe('FormField', () => {
           <FormField.Label size="sm">Small Label</FormField.Label>
         </FormField>
       );
-      expect(container.querySelector('label')).toHaveClass('text-label-md');
+      expect(container.querySelector('label')).toHaveClass('text-label-sm');
     });
 
     it('applies md size styles by default', () => {

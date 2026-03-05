@@ -159,8 +159,8 @@ export function ManagePoliciesDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage policies"
+      description="Add or remove policies of this role."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -181,15 +181,6 @@ export function ManagePoliciesDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage policies
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Add or remove policies of this role.
-            </p>
-          </VStack>
-
           <InfoBox label="Role" value={roleName} />
         </VStack>
 

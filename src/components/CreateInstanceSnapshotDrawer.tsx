@@ -72,8 +72,8 @@ export function CreateInstanceSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create instance snapshot"
+      description="Create a snapshot of this instance to capture its current system state as an image."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -95,14 +95,6 @@ export function CreateInstanceSnapshotDrawer({
         {/* Header + Instance Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create instance snapshot
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a snapshot of this instance to capture its current system state as an image.
-            </p>
-          </VStack>
 
           {/* Instance Info Box */}
           <InfoBox label="Instance" value={instance?.name || '-'} />
@@ -134,10 +126,7 @@ export function CreateInstanceSnapshotDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} fullWidth />
           </FormField.Control>

@@ -88,8 +88,8 @@ export function CreateDomainDrawer({ isOpen, onClose, onSubmit }: CreateDomainDr
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create domain"
+      description="Create a new domain to manage resources and policies independently."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -109,14 +109,6 @@ export function CreateDomainDrawer({ isOpen, onClose, onSubmit }: CreateDomainDr
     >
       <VStack gap={6} className="pb-6">
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create domain
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a new domain to manage resources and policies independently.
-          </p>
-        </VStack>
 
         {/* Domain name field */}
         <FormField required error={!!nameError}>

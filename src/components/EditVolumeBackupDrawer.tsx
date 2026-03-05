@@ -76,8 +76,7 @@ export function EditVolumeBackupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit volume backup"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -97,10 +96,6 @@ export function EditVolumeBackupDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit volume backup
-        </h2>
-
         {/* Volume Snapshot Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Volume backup name</FormField.Label>
@@ -125,10 +120,7 @@ export function EditVolumeBackupDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

@@ -146,8 +146,8 @@ export function CreateServerGroupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create server group"
+      description="Create a server group to control how instances are placed across compute hosts."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -180,14 +180,6 @@ export function CreateServerGroupDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create server group
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a server group to control how instances are placed across compute hosts.
-          </p>
-        </VStack>
 
         {/* Server Group Name Input */}
         <FormField required error={hasAttemptedSubmit && !groupName.trim()}>

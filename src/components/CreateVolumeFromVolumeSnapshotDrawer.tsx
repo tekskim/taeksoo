@@ -154,8 +154,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Volume from Snapshot"
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -206,10 +205,6 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Volume from Snapshot
-          </h2>
-
           {/* Volume Snapshot Info */}
           <InfoBox
             label="Volume snapshot"
@@ -237,10 +232,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
@@ -284,10 +276,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Volume Type Select */}
         <FormField>
-          <FormField.Label>
-            Volume type{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Volume type</FormField.Label>
           <FormField.Control>
             <Select
               value={volumeType}
