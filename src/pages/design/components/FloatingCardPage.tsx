@@ -55,7 +55,17 @@ export function FloatingCardPage() {
   return (
     <ComponentPageTemplate
       title="Floating card"
-      description="Floating summary card for create/edit flows with sections, quota, and actions"
+      description="Create/Edit 페이지 우측에 고정되어, 사용자가 입력한 내용의 진행 상태와 요약 정보를 실시간으로 제공하는 카드 컴포넌트다. 페이지를 스크롤하는 동안에도 항상 노출되어, 전체 구성을 한눈에 파악하고 리소스 할당량(Quota)을 즉시 확인할 수 있도록 돕는다."
+      whenToUse={[
+        '다수의 섹션 또는 탭으로 구성된 Create/Edit 플로우에서 입력 진행 상태를 시각화해야 할 때',
+        '리소스 생성 전에 Quota(할당량) 초과 여부를 사전에 인지시켜야 할 때',
+        '사용자가 긴 폼을 작성하는 동안 현재까지 입력한 설정값을 요약하여 확인할 수 있어야 할 때',
+      ]}
+      whenNotToUse={[
+        '입력 섹션이 1개뿐이거나 폼이 단순한 경우 (단순한 경우 요약 카드가 불필요한 복잡도를 추가함)',
+        '모바일 환경 등 뷰포트 너비가 충분하지 않아 우측 고정 레이아웃을 지원하기 어려운 경우',
+        'Quota 정보가 없고 요약 내용이 없는 단순 확인(Confirm) 다이얼로그 상황',
+      ]}
       preview={
         <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
           <div className="w-[var(--wizard-summary-width)] shrink-0">
@@ -255,60 +265,254 @@ export function FloatingCardPage() {
       }
       guidelines={
         <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={4}>
+          <VStack gap={6}>
             <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">개요</h4>
-              <p className="text-body-md text-[var(--color-text-muted)]">
-                Create/Edit 페이지의 우측에 고정되어 입력 진행 상태와 요약 정보를 제공하는
-                카드입니다. 사용자가 전체 구성을 한눈에 파악하고, 리소스 할당량(Quota)을 실시간으로
-                확인할 수 있습니다.
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        Variant
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Default
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        Configuration·Quota·Summary 전부 포함
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Without Quota
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">Quota 없는 축약형</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        View Log / Read-only
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">읽기 전용</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                Composition (구성 요소)
+              </h4>
+              <p className="text-body-sm text-[var(--color-text-muted)]">4개 영역으로 구성된다.</p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        영역
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Configuration 영역
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        섹션 레이블 + 상태 아이콘으로 각 섹션 입력 완료 상태 표시
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Quota 영역
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        Gauge bar chart로 시각화
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Summary 영역
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">실시간 업데이트</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        액션 버튼 영역
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        Cancel(Secondary), Create-Save(Primary)
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="overflow-x-auto mt-2">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        상태
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        아이콘
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Default
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">빈 원형</td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Processing
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">점선 원형</td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Warning
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">경고 삼각형</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        Success
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">체크 원형</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">States</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        상태
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        초기 상태
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">섹션 미입력</td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        입력 중
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">Processing 아이콘</td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        완료
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">Success 아이콘</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        오류
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">Warning 아이콘</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Behavior</h4>
+              <p className="text-body-sm font-medium text-[var(--color-text-default)]">
+                위치 및 레이아웃 정책
               </p>
-            </VStack>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">구성 요소</h4>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  <strong>Configuration</strong>: 각 섹션/탭의 입력 완료 상태를 아이콘과 라벨로
-                  표시합니다.
-                </li>
-                <li>
-                  <strong>Quota</strong>: 현재 사용량 대비 할당량을 프로그레스 바로 시각화합니다.
-                  초과 시 danger 색상.
-                </li>
-                <li>
-                  <strong>Summary</strong>: 사용자가 입력한 주요 설정값을 요약 표시합니다.
-                </li>
-                <li>
-                  <strong>버튼 영역</strong>: Cancel(secondary)과 Create(primary) 버튼을 하단에 고정
-                  배치합니다.
-                </li>
+                <li>Create/Edit 페이지 우측에 sticky로 고정되어 스크롤 시에도 항상 노출된다.</li>
+                <li>뷰포트 너비가 충분할 때만 우측 고정 레이아웃을 적용한다.</li>
+              </ul>
+              <p className="text-body-sm font-medium text-[var(--color-text-default)] mt-2">
+                실시간 업데이트 정책
+              </p>
+              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>입력값 변경 시 Summary와 Quota가 즉시 반영된다.</li>
+                <li>섹션 완료 시 해당 Configuration 아이콘이 Success로 전환된다.</li>
+              </ul>
+              <p className="text-body-sm font-medium text-[var(--color-text-default)] mt-2">
+                Create/Save 버튼 동작 정책
+              </p>
+              <ol className="list-decimal pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>Create 클릭 시 전체 탭/섹션에 대한 Global Validation을 수행한다.</li>
+                <li>Validation 실패 시 해당 섹션으로 자동 스크롤하고 오류를 표시한다.</li>
+                <li>모든 필수 섹션이 완료되어야 Create 버튼이 활성화된다.</li>
+                <li>Edit 모드에서는 Save 버튼으로 동일한 검증·저장 흐름을 따른다.</li>
+              </ol>
+              <p className="text-body-sm font-medium text-[var(--color-text-default)] mt-2">
+                Quota 초과 시 동작 정책
+              </p>
+              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>Quota 초과 시 Gauge bar에 danger 색상을 적용한다.</li>
+                <li>Create 버튼을 비활성화하거나, 클릭 시 Quota 초과 안내 메시지를 표시한다.</li>
+                <li>사용자에게 할당량 증설 또는 기존 리소스 정리 안내를 제공한다.</li>
               </ul>
             </VStack>
+
             <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">동작 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>스크롤 시에도 Floating card는 우측에 고정(sticky) 상태를 유지합니다.</li>
-                <li>입력값 변경 시 실시간으로 Summary와 Quota가 업데이트됩니다.</li>
-                <li>Create 클릭 시 전체 탭/섹션에 대한 Global Validation을 수행합니다.</li>
-                <li>Validation 오류 시 해당 섹션으로 자동 스크롤하고 오류를 표시합니다.</li>
-              </ul>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <span className="text-body-sm font-medium text-[var(--color-state-success)]">
+                    Do ✅
+                  </span>
+                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
+                    <li>다수의 섹션/탭이 있는 Create 플로우에서 우측에 배치한다.</li>
+                    <li>Quota가 있는 리소스 생성 시 할당량을 Gauge bar로 시각화한다.</li>
+                    <li>입력 진행 상태를 섹션별 아이콘으로 명확히 표시한다.</li>
+                    <li>Summary 영역에 핵심 설정값만 간결하게 요약한다.</li>
+                  </ul>
+                </div>
+                <div>
+                  <span className="text-body-sm font-medium text-[var(--color-state-danger)]">
+                    Don&apos;t ❌
+                  </span>
+                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
+                    <li>단순 폼(섹션 1개)에 Floating card를 사용하지 않는다.</li>
+                    <li>모바일 등 좁은 뷰포트에서 우측 고정 레이아웃을 강제하지 않는다.</li>
+                    <li>Quota·Summary가 없는 Confirm 다이얼로그에 사용하지 않는다.</li>
+                    <li>Summary에 과도한 정보를 넣어 가독성을 해치지 않는다.</li>
+                  </ul>
+                </div>
+              </div>
             </VStack>
           </VStack>
         </div>
       }
       apiReference={floatingCardProps}
       relatedLinks={[
-        { label: 'Drawer', path: '/design/components/drawer', description: 'Form panel' },
-        {
-          label: 'Section card',
-          path: '/design/components/section-card',
-          description: 'Content sections',
-        },
-        {
-          label: 'Gauge bar chart',
-          path: '/design/charts/gauge-bar',
-          description: 'Quota display',
-        },
+        { label: 'Create Page', path: '/design/patterns/wizard' },
+        { label: 'Section Card', path: '/design/components/section-card' },
+        { label: 'Gauge Bar Chart', path: '/design/charts/gauge-bar' },
       ]}
     />
   );

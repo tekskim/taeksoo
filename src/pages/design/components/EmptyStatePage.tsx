@@ -54,7 +54,15 @@ export function EmptyStatePage() {
   return (
     <ComponentPageTemplate
       title="EmptyState / ErrorState"
-      description="데이터가 없거나 에러가 발생했을 때 사용자에게 상태를 안내하고 다음 행동을 유도하는 컴포넌트입니다."
+      description="데이터가 없을 때 사용자에게 현재 상태를 안내하고 다음 행동을 유도하는 패턴. 단순히 빈 화면을 노출하는 대신, 상황에 맞는 메시지와 액션을 제공하여 사용자가 막힘 없이 다음 단계로 진행할 수 있도록 돕는다."
+      whenToUse={[
+        '아직 데이터가 생성되지 않은 초기 상태일 때 (예: 첫 리소스 생성 유도)',
+        '검색 또는 필터 조건에 해당하는 결과가 없을 때',
+      ]}
+      whenNotToUse={[
+        '데이터 로딩 중인 상태 → Loading 컴포넌트 사용',
+        '오류로 인해 데이터를 불러오지 못한 경우 → Inline Message 또는 Error 패턴 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`<EmptyState
@@ -247,146 +255,147 @@ import { IconDatabase, IconAlertTriangle, IconPlus } from '@tabler/icons-react';
         </VStack>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={4}>
+        <VStack gap={6}>
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={2}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                EmptyState vs ErrorState 선택 기준
+                1. Composition (구성 요소)
               </h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-body-sm border-collapse">
                   <thead>
                     <tr className="border-b border-[var(--color-border-default)]">
                       <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        컴포넌트
+                        요소
                       </th>
                       <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        사용 상황
+                        필수/권장
                       </th>
                       <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        예시
+                        설명
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        EmptyState
+                        아이콘
                       </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        데이터가 아직 없거나 검색 결과가 없을 때
-                      </td>
+                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">권장</td>
                       <td className="py-2 text-[var(--color-text-muted)]">
-                        첫 리소스 생성 유도, 필터 결과 없음
+                        리소스 타입을 시각적으로 전달. size 48, stroke 1로 통일
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        제목
+                      </td>
+                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">필수</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        현재 상태를 명확하게 전달
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                        설명
+                      </td>
+                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">권장</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        다음 행동을 안내하는 보조 텍스트
                       </td>
                     </tr>
                     <tr>
                       <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        ErrorState
+                        액션 버튼
                       </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        API 실패, 네트워크 오류 등 시스템 에러 시
-                      </td>
+                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">조건부</td>
                       <td className="py-2 text-[var(--color-text-muted)]">
-                        서버 500 에러, 네트워크 끊김
+                        빈 상태에서 벗어날 수 있는 주요 행동이 있을 때 제공
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </VStack>
+          </div>
 
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={2}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                EmptyState variant 선택 기준
+                2. Behavior &amp; Flow
               </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        사용 조건
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        예시
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        card
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        독립적인 영역에서 빈 상태를 표시할 때 (기본값)
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        테이블 대신 표시, 전체 페이지 빈 상태
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        inline
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        이미 카드/패널 안에 배치될 때 (중복 테두리 방지)
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        SectionCard 내부, Drawer 내부, Tab 패널 내부
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <p className="text-body-md text-[var(--color-text-muted)]">상태 전환 흐름</p>
+              <ol className="list-decimal pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>데이터 로딩 완료 후 결과가 없을 때 EmptyState 표시</li>
+                <li>사용자가 액션 버튼을 클릭하면 해당 생성/업로드 플로우로 이동</li>
+                <li>필터·검색 결과 없음 시 inline variant로 간결하게 표시</li>
+              </ol>
+              <p className="text-body-md text-[var(--color-text-muted)] mt-2">엣지 케이스</p>
+              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>로딩 중 깜빡임 방지: 로딩이 완료된 후에만 EmptyState 노출</li>
+                <li>
+                  필터·검색 결과 없음: &quot;No results found&quot; 등 상황에 맞는 메시지 사용
+                </li>
+                <li>권한 없음 상태: EmptyState 대신 권한 요청 안내 메시지 사용</li>
+                <li>
+                  중첩 Empty State 방지: 상위에서 이미 빈 상태를 표시한 경우 하위에 중복 노출하지
+                  않음
+                </li>
+              </ul>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={2}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                3. Usage Guidelines
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-state-success)] bg-[var(--color-state-success-bg)]">
+                  <p className="text-label-md text-[var(--color-state-success)] mb-2">Do ✅</p>
+                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                    <li>상황에 맞는 메시지 제공 (초기 상태 vs 검색 결과 없음 구분)</li>
+                    <li>명확한 액션 버튼으로 다음 단계 유도</li>
+                    <li>간결하게 작성 (1~2문장)</li>
+                    <li>리소스 타입에 맞는 아이콘 사용</li>
+                  </ul>
+                </div>
+                <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
+                  <p className="text-label-md text-[var(--color-state-danger)] mb-2">
+                    Don&apos;t ❌
+                  </p>
+                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                    <li>로딩 중에 EmptyState 노출 금지</li>
+                    <li>여러 액션 버튼을 나열하지 않음 (1개 권장)</li>
+                    <li>오류 상황에 EmptyState 사용 금지</li>
+                    <li>아이콘 남용 금지 (리소스 타입과 무관한 아이콘 사용 지양)</li>
+                  </ul>
+                </div>
               </div>
             </VStack>
+          </div>
 
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">작성 가이드</h4>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                4. Content Guidelines
+              </h4>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>
-                  <strong>아이콘</strong>: <code>size={'{48}'}</code>, <code>stroke={'{1}'}</code>로
-                  통일합니다. 리소스 타입에 맞는 아이콘을 사용하세요.
+                  <strong>제목</strong>: &quot;No [리소스] found&quot; 패턴 권장. 상태를 명확하게
+                  전달.
                 </li>
                 <li>
-                  <strong>제목</strong>: 상태를 명확하게 전달합니다. &quot;No [리소스] found&quot;
-                  패턴을 권장합니다.
+                  <strong>설명</strong>: 다음 행동을 안내. 1~2문장으로 간결하게 작성.
                 </li>
                 <li>
-                  <strong>설명</strong>: 다음 행동을 안내합니다. 1~2문장으로 간결하게 작성합니다.
-                </li>
-                <li>
-                  <strong>액션 버튼</strong>: 빈 상태에서 벗어날 수 있는 주요 행동을 제공합니다.
-                  생성/업로드 등.
-                </li>
-                <li>
-                  <strong>ErrorState 액션</strong>: 주로 &quot;Retry&quot; 버튼을 제공합니다.{' '}
-                  <code>variant=&quot;secondary&quot;</code> 를 기본으로 사용합니다.
+                  <strong>액션 버튼 레이블</strong>: &quot;Create [리소스]&quot;, &quot;Upload&quot;
+                  등 구체적인 행동 명시.
                 </li>
               </ul>
             </VStack>
-
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">금지 패턴</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  커스텀 EmptyState를 인라인으로 직접 정의하지 마세요. 반드시 DS 컴포넌트를
-                  사용합니다.
-                </li>
-                <li>
-                  <code>variant=&quot;inline&quot;</code>을 독립 영역에서 사용하지 마세요. 카드/패널
-                  내부 전용입니다.
-                </li>
-                <li>
-                  ErrorState 아이콘에 <code>stroke={'{1.5}'}</code> 등 다른 값을 사용하지 마세요.{' '}
-                  <code>stroke={'{1}'}</code>로 통일합니다.
-                </li>
-              </ul>
-            </VStack>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
@@ -432,13 +441,9 @@ import { IconDatabase, IconAlertTriangle, IconPlus } from '@tabler/icons-react';
         </VStack>
       }
       relatedLinks={[
-        { label: 'Loading', path: '/design/components/loading', description: '로딩 상태 표시' },
-        {
-          label: 'InlineMessage',
-          path: '/design/components/inline-message',
-          description: '인라인 피드백 메시지',
-        },
-        { label: 'Button', path: '/design/components/button', description: '액션 버튼' },
+        { label: 'Loading', path: '/design/components/loading' },
+        { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Button', path: '/design/components/button' },
       ]}
     />
   );

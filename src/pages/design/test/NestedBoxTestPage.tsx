@@ -994,7 +994,9 @@ interface NetworkTarget {
   id: string;
   ruleType: string;
   cidr: string;
-  selectors: LabelSelector[];
+  exceptions: string[];
+  namespaceSelectors: LabelSelector[];
+  podSelectors: LabelSelector[];
 }
 
 interface AllowedPort {
@@ -1014,6 +1016,14 @@ const RULE_TYPE_OPTIONS = [
   { value: 'ip-block', label: 'IP Block' },
   { value: 'namespace-label-selector', label: 'Namespace Label Selector' },
   { value: 'pod-label-selector', label: 'Pod Label Selector' },
+  { value: 'namespace-pod-label-selector', label: 'Namespace/Pod Label Selector' },
+];
+
+const NP_OPERATOR_OPTIONS = [
+  { value: 'in', label: 'in list' },
+  { value: 'not-in', label: 'not in list' },
+  { value: 'exists', label: 'exists' },
+  { value: 'does-not-exist', label: 'does not exist' },
 ];
 
 const PROTOCOL_OPTIONS = [
@@ -1022,6 +1032,17 @@ const PROTOCOL_OPTIONS = [
   { value: 'SCTP', label: 'SCTP' },
 ];
 
+function createDefaultTarget(): NetworkTarget {
+  return {
+    id: crypto.randomUUID(),
+    ruleType: 'ip-block',
+    cidr: '',
+    exceptions: [],
+    namespaceSelectors: [],
+    podSelectors: [],
+  };
+}
+
 function useNetworkRules() {
   const [rules, setRules] = useState<NetworkRule[]>([
     {
@@ -1029,11 +1050,10 @@ function useNetworkRules() {
       name: 'Rule-1',
       targets: [
         {
-          id: crypto.randomUUID(),
+          ...createDefaultTarget(),
           ruleType: 'namespace-label-selector',
-          cidr: '',
-          selectors: [
-            { id: crypto.randomUUID(), key: 'env', operator: 'In', values: 'production' },
+          namespaceSelectors: [
+            { id: crypto.randomUUID(), key: 'env', operator: 'in', values: 'production' },
           ],
         },
       ],
@@ -1044,125 +1064,111 @@ function useNetworkRules() {
       name: 'Rule-2',
       targets: [
         {
-          id: crypto.randomUUID(),
+          ...createDefaultTarget(),
           ruleType: 'ip-block',
           cidr: '10.0.0.0/8',
-          selectors: [],
+          exceptions: ['10.0.1.0/24'],
         },
       ],
       allowedPorts: [{ id: crypto.randomUUID(), port: '443', protocol: 'TCP' }],
     },
   ]);
 
+  const updateRuleTargets = (ruleId: string, fn: (targets: NetworkTarget[]) => NetworkTarget[]) =>
+    setRules(rules.map((r) => (r.id === ruleId ? { ...r, targets: fn(r.targets) } : r)));
+
   const addRule = () =>
     setRules([
       ...rules,
-      {
-        id: crypto.randomUUID(),
-        name: `Rule-${rules.length + 1}`,
-        targets: [],
-        allowedPorts: [],
-      },
+      { id: crypto.randomUUID(), name: `Rule-${rules.length + 1}`, targets: [], allowedPorts: [] },
     ]);
-
   const removeRule = (ruleId: string) => setRules(rules.filter((r) => r.id !== ruleId));
 
   const addTarget = (ruleId: string) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              targets: [
-                ...r.targets,
-                { id: crypto.randomUUID(), ruleType: 'ip-block', cidr: '', selectors: [] },
-              ],
-            }
-          : r
-      )
-    );
-
+    updateRuleTargets(ruleId, (ts) => [...ts, createDefaultTarget()]);
   const removeTarget = (ruleId: string, targetId: string) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId ? { ...r, targets: r.targets.filter((t) => t.id !== targetId) } : r
-      )
-    );
+    updateRuleTargets(ruleId, (ts) => ts.filter((t) => t.id !== targetId));
 
   const updateTarget = (ruleId: string, targetId: string, field: string, val: string) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              targets: r.targets.map((t) => (t.id === targetId ? { ...t, [field]: val } : t)),
-            }
-          : r
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) => {
+        if (t.id !== targetId) return t;
+        const updated = { ...t, [field]: val };
+        if (field === 'ruleType') {
+          const mkSel = (): LabelSelector => ({
+            id: crypto.randomUUID(),
+            key: '',
+            operator: 'in',
+            values: '',
+          });
+          if (
+            (val === 'namespace-label-selector' || val === 'namespace-pod-label-selector') &&
+            !t.namespaceSelectors.length
+          )
+            updated.namespaceSelectors = [mkSel()];
+          if (
+            (val === 'pod-label-selector' || val === 'namespace-pod-label-selector') &&
+            !t.podSelectors.length
+          )
+            updated.podSelectors = [mkSel()];
+        }
+        return updated;
+      })
+    );
+
+  const addException = (ruleId: string, targetId: string) =>
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) => (t.id === targetId ? { ...t, exceptions: [...t.exceptions, ''] } : t))
+    );
+  const removeException = (ruleId: string, targetId: string, idx: number) =>
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) =>
+        t.id === targetId ? { ...t, exceptions: t.exceptions.filter((_, i) => i !== idx) } : t
+      )
+    );
+  const updateException = (ruleId: string, targetId: string, idx: number, val: string) =>
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) =>
+        t.id === targetId
+          ? { ...t, exceptions: t.exceptions.map((e, i) => (i === idx ? val : e)) }
+          : t
       )
     );
 
-  const addSelector = (ruleId: string, targetId: string) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId
+  type SF = 'namespaceSelectors' | 'podSelectors';
+  const addSelector = (ruleId: string, targetId: string, field: SF) =>
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) =>
+        t.id === targetId
           ? {
-              ...r,
-              targets: r.targets.map((t) =>
-                t.id === targetId
-                  ? {
-                      ...t,
-                      selectors: [
-                        ...t.selectors,
-                        { id: crypto.randomUUID(), key: '', operator: 'In', values: '' },
-                      ],
-                    }
-                  : t
-              ),
+              ...t,
+              [field]: [
+                ...t[field],
+                { id: crypto.randomUUID(), key: '', operator: 'in', values: '' },
+              ],
             }
-          : r
+          : t
       )
     );
-
-  const removeSelector = (ruleId: string, targetId: string, selId: string) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              targets: r.targets.map((t) =>
-                t.id === targetId
-                  ? { ...t, selectors: t.selectors.filter((s) => s.id !== selId) }
-                  : t
-              ),
-            }
-          : r
+  const removeSelector = (ruleId: string, targetId: string, field: SF, selId: string) =>
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) =>
+        t.id === targetId ? { ...t, [field]: t[field].filter((s) => s.id !== selId) } : t
       )
     );
-
   const updateSelector = (
     ruleId: string,
     targetId: string,
+    field: SF,
     selId: string,
-    field: string,
+    prop: string,
     val: string
   ) =>
-    setRules(
-      rules.map((r) =>
-        r.id === ruleId
-          ? {
-              ...r,
-              targets: r.targets.map((t) =>
-                t.id === targetId
-                  ? {
-                      ...t,
-                      selectors: t.selectors.map((s) =>
-                        s.id === selId ? { ...s, [field]: val } : s
-                      ),
-                    }
-                  : t
-              ),
-            }
-          : r
+    updateRuleTargets(ruleId, (ts) =>
+      ts.map((t) =>
+        t.id === targetId
+          ? { ...t, [field]: t[field].map((s) => (s.id === selId ? { ...s, [prop]: val } : s)) }
+          : t
       )
     );
 
@@ -1180,14 +1186,12 @@ function useNetworkRules() {
           : r
       )
     );
-
   const removePort = (ruleId: string, portId: string) =>
     setRules(
       rules.map((r) =>
         r.id === ruleId ? { ...r, allowedPorts: r.allowedPorts.filter((p) => p.id !== portId) } : r
       )
     );
-
   const updatePort = (ruleId: string, portId: string, field: string, val: string) =>
     setRules(
       rules.map((r) =>
@@ -1209,6 +1213,9 @@ function useNetworkRules() {
     addTarget,
     removeTarget,
     updateTarget,
+    addException,
+    removeException,
+    updateException,
     addSelector,
     removeSelector,
     updateSelector,
@@ -1216,6 +1223,89 @@ function useNetworkRules() {
     removePort,
     updatePort,
   };
+}
+
+function SelectorGrid({
+  title,
+  selectors,
+  ruleId,
+  targetId,
+  field,
+  onAdd,
+  onRemove,
+  onUpdate,
+}: {
+  title: string;
+  selectors: LabelSelector[];
+  ruleId: string;
+  targetId: string;
+  field: 'namespaceSelectors' | 'podSelectors';
+  onAdd: (ruleId: string, targetId: string, field: 'namespaceSelectors' | 'podSelectors') => void;
+  onRemove: (
+    ruleId: string,
+    targetId: string,
+    field: 'namespaceSelectors' | 'podSelectors',
+    selId: string
+  ) => void;
+  onUpdate: (
+    ruleId: string,
+    targetId: string,
+    field: 'namespaceSelectors' | 'podSelectors',
+    selId: string,
+    prop: string,
+    val: string
+  ) => void;
+}) {
+  return (
+    <VStack gap={1.5}>
+      {selectors.length > 0 && (
+        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+          <span className="block text-label-sm text-[var(--color-text-default)]">{title} Key</span>
+          <span className="block text-label-sm text-[var(--color-text-default)]">Operator</span>
+          <span className="block text-label-sm text-[var(--color-text-default)]">Values</span>
+          <div />
+        </div>
+      )}
+      {selectors.map((sel) => (
+        <div key={sel.id} className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center">
+          <Input
+            placeholder="key"
+            value={sel.key}
+            onChange={(e) => onUpdate(ruleId, targetId, field, sel.id, 'key', e.target.value)}
+            fullWidth
+          />
+          <Select
+            options={NP_OPERATOR_OPTIONS}
+            value={sel.operator}
+            onChange={(val) => onUpdate(ruleId, targetId, field, sel.id, 'operator', val)}
+            fullWidth
+          />
+          <Input
+            placeholder="values"
+            value={sel.values}
+            onChange={(e) => onUpdate(ruleId, targetId, field, sel.id, 'values', e.target.value)}
+            fullWidth
+          />
+          <button
+            onClick={() => onRemove(ruleId, targetId, field, sel.id)}
+            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
+            <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+          </button>
+        </div>
+      ))}
+      <div className="w-fit">
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+          onClick={() => onAdd(ruleId, targetId, field)}
+        >
+          Add {title.toLowerCase()} selector
+        </Button>
+      </div>
+    </VStack>
+  );
 }
 
 function NetworkPolicyFinal() {
@@ -1226,6 +1316,9 @@ function NetworkPolicyFinal() {
     addTarget,
     removeTarget,
     updateTarget,
+    addException,
+    removeException,
+    updateException,
     addSelector,
     removeSelector,
     updateSelector,
@@ -1233,6 +1326,11 @@ function NetworkPolicyFinal() {
     removePort,
     updatePort,
   } = useNetworkRules();
+
+  const hasNsSelectors = (type: string) =>
+    type === 'namespace-label-selector' || type === 'namespace-pod-label-selector';
+  const hasPodSelectors = (type: string) =>
+    type === 'pod-label-selector' || type === 'namespace-pod-label-selector';
 
   return (
     <SectionCard className="pb-6">
@@ -1291,30 +1389,20 @@ function NetworkPolicyFinal() {
                                 className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                               >
                                 <VStack gap={3}>
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center">
-                                    <Select
-                                      options={RULE_TYPE_OPTIONS}
-                                      value={target.ruleType}
-                                      onChange={(val) =>
-                                        updateTarget(rule.id, target.id, 'ruleType', val)
-                                      }
-                                      fullWidth
-                                    />
-                                    {target.ruleType === 'ip-block' ? (
-                                      <Input
-                                        placeholder="e.g. 10.0.0.0/8"
-                                        value={target.cidr}
-                                        onChange={(e) =>
-                                          updateTarget(rule.id, target.id, 'cidr', e.target.value)
+                                  <HStack gap={1} align="center" className="w-full">
+                                    <div className="flex-1">
+                                      <Select
+                                        options={RULE_TYPE_OPTIONS}
+                                        value={target.ruleType}
+                                        onChange={(val) =>
+                                          updateTarget(rule.id, target.id, 'ruleType', val)
                                         }
                                         fullWidth
                                       />
-                                    ) : (
-                                      <div />
-                                    )}
+                                    </div>
                                     <button
                                       onClick={() => removeTarget(rule.id, target.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                                     >
                                       <IconX
                                         size={16}
@@ -1322,95 +1410,100 @@ function NetworkPolicyFinal() {
                                         stroke={1.5}
                                       />
                                     </button>
-                                  </div>
-                                  {target.ruleType !== 'ip-block' && (
-                                    <VStack gap={1.5}>
-                                      {target.selectors.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Key
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Operator
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Values
-                                          </span>
-                                          <div />
-                                        </div>
-                                      )}
-                                      {target.selectors.map((sel) => (
-                                        <div
-                                          key={sel.id}
-                                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
-                                        >
-                                          <Input
-                                            placeholder="key"
-                                            value={sel.key}
-                                            onChange={(e) =>
-                                              updateSelector(
-                                                rule.id,
-                                                target.id,
-                                                sel.id,
-                                                'key',
-                                                e.target.value
-                                              )
-                                            }
-                                            fullWidth
-                                          />
-                                          <Select
-                                            options={OPERATOR_OPTIONS}
-                                            value={sel.operator}
-                                            onChange={(val) =>
-                                              updateSelector(
-                                                rule.id,
-                                                target.id,
-                                                sel.id,
-                                                'operator',
-                                                val
-                                              )
-                                            }
-                                            fullWidth
-                                          />
-                                          <Input
-                                            placeholder="values"
-                                            value={sel.values}
-                                            onChange={(e) =>
-                                              updateSelector(
-                                                rule.id,
-                                                target.id,
-                                                sel.id,
-                                                'values',
-                                                e.target.value
-                                              )
-                                            }
-                                            fullWidth
-                                          />
-                                          <button
-                                            onClick={() =>
-                                              removeSelector(rule.id, target.id, sel.id)
-                                            }
-                                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  </HStack>
+
+                                  {/* IP Block → CIDR + Exceptions */}
+                                  {target.ruleType === 'ip-block' && (
+                                    <VStack gap={3}>
+                                      <VStack gap={1.5}>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          CIDR
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 10.0.0.0/8"
+                                          value={target.cidr}
+                                          onChange={(e) =>
+                                            updateTarget(rule.id, target.id, 'cidr', e.target.value)
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                      <VStack gap={1.5}>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Exceptions
+                                        </span>
+                                        {target.exceptions.map((exc, ei) => (
+                                          <div
+                                            key={ei}
+                                            className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
                                           >
-                                            <IconX
-                                              size={16}
-                                              className="text-[var(--color-text-muted)]"
-                                              stroke={1.5}
+                                            <Input
+                                              placeholder="e.g. 10.0.1.0/24"
+                                              value={exc}
+                                              onChange={(e) =>
+                                                updateException(
+                                                  rule.id,
+                                                  target.id,
+                                                  ei,
+                                                  e.target.value
+                                                )
+                                              }
+                                              fullWidth
                                             />
-                                          </button>
+                                            <button
+                                              onClick={() =>
+                                                removeException(rule.id, target.id, ei)
+                                              }
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        ))}
+                                        <div className="w-fit">
+                                          <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                            onClick={() => addException(rule.id, target.id)}
+                                          >
+                                            Add exception
+                                          </Button>
                                         </div>
-                                      ))}
-                                      <div className="w-fit">
-                                        <Button
-                                          variant="secondary"
-                                          size="sm"
-                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                          onClick={() => addSelector(rule.id, target.id)}
-                                        >
-                                          Add selector
-                                        </Button>
-                                      </div>
+                                      </VStack>
                                     </VStack>
+                                  )}
+
+                                  {/* Namespace Label Selector */}
+                                  {hasNsSelectors(target.ruleType) && (
+                                    <SelectorGrid
+                                      title="Namespace"
+                                      selectors={target.namespaceSelectors}
+                                      ruleId={rule.id}
+                                      targetId={target.id}
+                                      field="namespaceSelectors"
+                                      onAdd={addSelector}
+                                      onRemove={removeSelector}
+                                      onUpdate={updateSelector}
+                                    />
+                                  )}
+
+                                  {/* Pod Label Selector */}
+                                  {hasPodSelectors(target.ruleType) && (
+                                    <SelectorGrid
+                                      title="Pod"
+                                      selectors={target.podSelectors}
+                                      ruleId={rule.id}
+                                      targetId={target.id}
+                                      field="podSelectors"
+                                      onAdd={addSelector}
+                                      onRemove={removeSelector}
+                                      onUpdate={updateSelector}
+                                    />
                                   )}
                                 </VStack>
                               </div>

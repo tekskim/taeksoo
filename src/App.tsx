@@ -321,6 +321,8 @@ import { UXWritingGuidePage } from '@/pages/design/foundation/UXWritingGuidePage
 import { AccessibilityPage } from '@/pages/design/foundation/AccessibilityPage';
 import { ThemingPage } from '@/pages/design/foundation/ThemingPage';
 import { ContributingPage } from '@/pages/design/foundation/ContributingPage';
+import { ErrorAlertPage } from '@/pages/design/foundation/ErrorAlertPage';
+import { SystemErrorPage } from '@/pages/design/foundation/SystemErrorPage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
 import { InputPage } from '@/pages/design/components/InputPage';
 import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
@@ -333,6 +335,7 @@ import { CheckboxPage } from '@/pages/design/components/CheckboxPage';
 import { RadioPage } from '@/pages/design/components/RadioPage';
 import { TablePage } from '@/pages/design/components/TablePage';
 import { BadgePage } from '@/pages/design/components/BadgePage';
+import { CardPage } from '@/pages/design/components/CardPage';
 import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
@@ -368,8 +371,10 @@ import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { MultiTabCreatePage } from '@/pages/design/patterns/MultiTabCreatePage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
+import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
+import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePrototypePage';
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
@@ -976,6 +981,8 @@ function AppRoutes() {
         <Route path="foundation/accessibility" element={<AccessibilityPage />} />
         <Route path="foundation/theming" element={<ThemingPage />} />
         <Route path="foundation/contributing" element={<ContributingPage />} />
+        <Route path="foundation/error-alert" element={<ErrorAlertPage />} />
+        <Route path="foundation/system-error" element={<SystemErrorPage />} />
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
@@ -989,6 +996,7 @@ function AppRoutes() {
         <Route path="components/radio" element={<RadioPage />} />
         <Route path="components/table" element={<TablePage />} />
         <Route path="components/badge" element={<BadgePage />} />
+        <Route path="components/card" element={<CardPage />} />
         <Route path="components/chip" element={<ChipPage />} />
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
@@ -1028,8 +1036,10 @@ function AppRoutes() {
         <Route path="patterns/open-form" element={<OpenFormPage />} />
         <Route path="patterns/multi-tab-create" element={<MultiTabCreatePage />} />
         <Route path="patterns/layout" element={<LayoutPage />} />
+        <Route path="patterns/desktop-grid" element={<DesktopGridPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/form-validation" element={<FormValidationPage />} />
+        {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
@@ -1046,6 +1056,7 @@ function AppRoutes() {
         <Route path="figma/components" element={<FigmaComponentsPage />} />
       </Route>
       {/* Standalone design showcase pages (outside DesignSystemLayout) */}
+      <Route path="/design/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
       <Route path="/design/drawers" element={<DrawersPage />} />
       <Route path="/design/modals" element={<ModalsPage />} />
       <Route path="/design/gradients" element={<GradientShowcasePage />} />

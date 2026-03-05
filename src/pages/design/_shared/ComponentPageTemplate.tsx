@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { VStack } from '@/design-system';
-import { IconArrowRight, IconCheck, IconX } from '@tabler/icons-react';
+import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
 import { PropsTable, type PropDef } from './PropsTable';
 import { CodeBlock } from './CodeBlock';
@@ -9,6 +9,7 @@ import { NotionDesignNotes } from './NotionDesignNotes';
 import { TableOfContents } from './TableOfContents';
 import { PrevNextNav } from './PrevNextNav';
 import { useDesignLayoutContext } from '../DesignSystemLayout';
+import { pageLastUpdated } from './navigationData';
 
 export type { PropDef };
 
@@ -70,6 +71,8 @@ export function ComponentPageTemplate({
   notionPageId,
 }: ComponentPageTemplateProps) {
   const mainRef = useDesignLayoutContext();
+  const location = useLocation();
+  const lastUpdated = pageLastUpdated[location.pathname];
 
   const tocItems = useMemo(() => {
     const items: { id: string; label: string }[] = [];
@@ -109,6 +112,14 @@ export function ComponentPageTemplate({
         <VStack gap={2} align="start">
           <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
           <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
+          {lastUpdated && (
+            <div className="flex items-center gap-1.5 mt-1">
+              <IconClock size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Last updated {lastUpdated}
+              </span>
+            </div>
+          )}
         </VStack>
 
         {/* Preview */}

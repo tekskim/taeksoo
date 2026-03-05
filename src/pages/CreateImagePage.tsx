@@ -723,7 +723,7 @@ export function CreateImagePage() {
                                   onChange={setMinDisk}
                                   min={0}
                                   max={500}
-                                  width="sm"
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)]">
                                   GiB
@@ -748,7 +748,7 @@ export function CreateImagePage() {
                                   onChange={setMinRam}
                                   min={0}
                                   max={500}
-                                  width="sm"
+                                  width="xs"
                                 />
                                 <span className="text-body-md text-[var(--color-text-default)]">
                                   GiB

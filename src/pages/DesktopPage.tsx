@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
-import { IconLayoutDashboard, IconCheck } from '@tabler/icons-react';
+import { IconLayoutDashboard, IconCheck, IconSelector } from '@tabler/icons-react';
 import {
   Icons,
   ContextMenu,
@@ -26,7 +26,6 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
-import { Select } from '@/design-system';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
 import { agentRoutes } from '@/routes/agent.routes';
@@ -333,6 +332,76 @@ interface TopBarProps {
   dockIcons?: React.ReactNode;
 }
 
+/* ----------------------------------------
+   Glass Domain Select (Desktop Top Bar)
+   ---------------------------------------- */
+
+interface GlassDomainSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; label: string }[];
+}
+
+function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
+    };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isOpen]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-1.5 h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-white/10 border border-white/15 text-white/90 text-body-md hover:bg-white/15 transition-colors cursor-pointer select-none"
+      >
+        <span className="truncate max-w-[120px]">{selectedLabel}</span>
+        <IconSelector size={14} stroke={1.5} className="text-white/60 shrink-0" />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-black/70 backdrop-blur-xl border border-white/15 rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setIsOpen(false);
+              }}
+              className={`w-full flex items-center gap-2 px-3 py-1.5 text-body-md transition-colors cursor-pointer ${
+                opt.value === value
+                  ? 'text-white bg-white/15'
+                  : 'text-white/75 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              <span className="w-4 shrink-0 flex items-center justify-center">
+                {opt.value === value && <IconCheck size={12} stroke={2} className="text-white" />}
+              </span>
+              <span>{opt.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DesktopTopBar({
   onChatbotToggle,
   onOpenSettings,
@@ -468,12 +537,10 @@ function DesktopTopBar({
       {/* Right Section */}
       <div className="flex items-center gap-4">
         {/* Domain Selector */}
-        <Select
+        <GlassDomainSelect
           value={selectedDomain}
-          onChange={(value) => setSelectedDomain(value)}
+          onChange={setSelectedDomain}
           options={domainOptions}
-          size="sm"
-          width="sm"
         />
 
         {/* Right Icons */}
@@ -1252,9 +1319,26 @@ export function DesktopPage() {
         }
       />
 
-      {/* Desktop Icons Row - Positioned like Figma */}
+      {/* Desktop Icons Grid
+          ─────────────────────────────────────────────
+          Cell:       80 × 100 (icon 64px + gap 4px + label)
+          Col gap:    48px  → effective col = 128px
+          Row gap:    32px
+          Padding:    44px horizontal, 24px top (from topbar)
+          Flow:       row (left→right, top→bottom)
+          Wrap:       auto-fill — columns determined by viewport
+          ─────────────────────────────────────────────
+          | Viewport | Available | Cols | Fits 8? |
+          |----------|-----------|------|---------|
+          | 1024px   |  936px    |  7   | 7 + 1   |
+          | 1280px   | 1192px    |  9   | ✓       |
+          | 1440px   | 1352px    | 10   | ✓       |
+          | 1920px   | 1832px    | 14   | ✓       |
+          | 2560px   | 2472px    | 19   | ✓       |
+          ───────────────────────────────────────────── */}
       <div
-        className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]"
+        className="absolute top-[76px] left-0 right-0 bottom-16 px-11 grid gap-x-12 gap-y-8 content-start items-start"
+        style={{ gridTemplateColumns: 'repeat(auto-fill, 80px)' }}
         onClick={handleDesktopClick}
       >
         <DesktopIcon icon={imgIam} label="IAM" onClick={() => focusApp('iam')} />

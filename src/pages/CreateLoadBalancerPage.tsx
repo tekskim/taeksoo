@@ -3243,7 +3243,7 @@ export default function CreateLoadBalancerPage() {
                                 onChange={setHealthMonitorMaxRetries}
                                 min={3}
                                 max={10}
-                                width="sm"
+                                width="xs"
                               />
                             </FormField.Control>
                             <FormField.HelperText>

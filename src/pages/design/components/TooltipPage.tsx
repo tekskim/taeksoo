@@ -91,7 +91,18 @@ export function TooltipPage() {
   return (
     <ComponentPageTemplate
       title="Tooltip"
-      description="Contextual information on hover"
+      description="특정 UI 요소에 마우스를 올리거나 키보드 포커스가 이동했을 때 나타나는 짧은 설명 레이블이다. 사용자가 요소의 기능이나 의미를 빠르게 파악할 수 있도록 보조 정보를 제공하며, 인터랙션 없이 읽기 전용으로만 동작한다."
+      whenToUse={[
+        '아이콘 전용 버튼처럼 레이블이 없는 UI 요소의 기능을 설명해야 할 때',
+        '말줄임(truncate) 처리된 텍스트의 전체 내용을 hover 시 보여줄 때',
+        '보조적인 힌트 정보가 있어 레이아웃에 항상 표시하기 어려울 때',
+      ]}
+      whenNotToUse={[
+        '전달해야 하는 내용이 인터랙션(버튼, 링크, 폼 등)을 포함할 때 → Popover 사용',
+        '2줄을 초과하는 긴 설명이 필요할 때 → Popover 또는 별도 안내 문구 사용',
+        '이미 레이블이나 설명 텍스트가 충분히 제공된 요소에 중복 정보를 추가할 때',
+        '비활성화(disabled) 상태의 버튼에 Tooltip을 붙여야 할 때 → 비활성 이유를 UI 내에 직접 안내하는 방식 권장',
+      ]}
       preview={
         <ComponentPreview
           code={`<Tooltip content="Delete this item permanently">
@@ -139,10 +150,264 @@ export function TooltipPage() {
         <VStack gap={6}>
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                1. Composition (구성 요소)
+              </h4>
               <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Tooltip vs Popover 선택 기준
-                </h4>
+                <pre className="text-body-sm text-[var(--color-text-muted)] font-mono whitespace-pre">
+                  {`[ Arrow ]
+[ Container ]
+  └─ [ Text ]`}
+                </pre>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-body-sm border-collapse">
+                    <thead>
+                      <tr className="border-b border-[var(--color-border-default)]">
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          요소
+                        </th>
+                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                          설명
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">Container</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">
+                          Tooltip의 배경 영역. 텍스트를 감싸는 박스
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">Text</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">
+                          보조 설명 문구. 최대 2줄, maxWidth 240px 이내
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">Arrow</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">
+                          트리거 요소를 가리키는 방향 표시 화살표 (4px)
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-body-sm border-collapse">
+                    <thead>
+                      <tr className="border-b border-[var(--color-border-default)]">
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          속성
+                        </th>
+                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                          값
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">padding</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">6px 4px</td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                          border-radius
+                        </td>
+                        <td className="py-2 text-[var(--color-text-muted)]">4px</td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">font-size</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">11px</td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">min-width</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">60px</td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">max-width</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">240px</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">arrow size</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">4px</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">2. Variants</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        구분
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">Default</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        일반 텍스트 Tooltip. 기본 위치는 트리거 상단(top)
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">Position — Top</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        트리거 요소 상단에 표시
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                        Position — Bottom
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        트리거 요소 하단에 표시
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                        Position — Left
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        트리거 요소 왼쪽에 표시
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                        Position — Right
+                      </td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        트리거 요소 오른쪽에 표시
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-body-sm text-[var(--color-text-muted)]">
+                화면 가장자리에 가까울 경우 자동으로 반대 방향으로 위치가 전환된다.
+              </p>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">3. States</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-body-sm border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        상태
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        설명
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">Hidden (기본)</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">Tooltip 표시하지 않음</td>
+                    </tr>
+                    <tr>
+                      <td className="py-2 pr-4 text-[var(--color-text-default)]">Visible</td>
+                      <td className="py-2 text-[var(--color-text-muted)]">
+                        트리거(hover) 또는 키보드 포커스 시 Tooltip 표시
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">4. Behavior</h4>
+              <VStack gap={2}>
+                <h5 className="text-label-md text-[var(--color-text-default)]">표시 / 숨김 정책</h5>
+                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                  <li>
+                    트리거: 트리거 요소에 마우스를 올리거나(hover) 키보드 포커스가 이동하면
+                    표시된다.
+                  </li>
+                  <li>표시 지연(delay): 기본 200ms 딜레이 후 표시. 의도치 않은 노출을 방지한다.</li>
+                  <li>
+                    숨김 조건: 마우스가 트리거 영역을 벗어나거나, 키보드 포커스가 이탈하거나, Escape
+                    키를 누르면 즉시 사라진다.
+                  </li>
+                  <li>
+                    Hover 유지: Tooltip이 표시된 상태에서 마우스를 Tooltip 위로 이동해도 Tooltip은
+                    닫히지 않는다.
+                  </li>
+                </ul>
+              </VStack>
+              <VStack gap={2}>
+                <h5 className="text-label-md text-[var(--color-text-default)]">위치 전환 정책</h5>
+                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                  <li>
+                    지정된 방향(top / bottom / left / right)에 공간이 충분하지 않을 경우, 반대
+                    방향으로 자동 전환된다.
+                  </li>
+                  <li>Tooltip은 뷰포트 바깥으로 벗어나지 않도록 위치를 자동 보정한다.</li>
+                </ul>
+              </VStack>
+              <VStack gap={2}>
+                <h5 className="text-label-md text-[var(--color-text-default)]">크기 정책</h5>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-body-sm border-collapse">
+                    <thead>
+                      <tr className="border-b border-[var(--color-border-default)]">
+                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                          속성
+                        </th>
+                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                          값
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">min-width</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">60px</td>
+                      </tr>
+                      <tr className="border-b border-[var(--color-border-subtle)]">
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">max-width</td>
+                        <td className="py-2 text-[var(--color-text-muted)]">240px</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                          텍스트 최대 줄 수
+                        </td>
+                        <td className="py-2 text-[var(--color-text-muted)]">2줄</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                5. Usage Guidelines
+              </h4>
+              <VStack gap={2}>
+                <h5 className="text-label-md text-[var(--color-text-default)]">
+                  선택 기준 — Tooltip vs Popover
+                </h5>
                 <div className="overflow-x-auto">
                   <table className="w-full text-body-sm border-collapse">
                     <thead>
@@ -165,7 +430,7 @@ export function TooltipPage() {
                           텍스트만 (1~2줄)
                         </td>
                         <td className="py-2 text-[var(--color-text-muted)]">
-                          인터랙티브 (폼, 버튼, 메뉴)
+                          인터랙티브 (폼, 버튼, 메뉴 등)
                         </td>
                       </tr>
                       <tr className="border-b border-[var(--color-border-subtle)]">
@@ -183,7 +448,7 @@ export function TooltipPage() {
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">접근성</td>
+                        <td className="py-2 pr-4 text-[var(--color-text-default)]">접근성 역할</td>
                         <td className="py-2 pr-4 text-[var(--color-text-muted)]">
                           <code>role=&quot;tooltip&quot;</code>
                         </td>
@@ -196,17 +461,53 @@ export function TooltipPage() {
                 </div>
               </VStack>
               <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
+                <h5 className="text-label-md text-[var(--color-text-default)]">Do ✅</h5>
                 <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공합니다.</li>
+                  <li>아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.</li>
                   <li>
-                    텍스트가 말줄임(truncate)된 경우 hover 시 전체 텍스트를 Tooltip으로 표시합니다.
+                    말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.
                   </li>
-                  <li>Tooltip 텍스트는 최대 2줄로 제한하며, maxWidth는 240px입니다.</li>
-                  <li>이미 충분히 설명적인 요소에는 Tooltip을 추가하지 않습니다.</li>
-                  <li>delay를 적절히 설정하여 불필요한 Tooltip 표시를 방지합니다 (기본 200ms).</li>
+                  <li>Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)</li>
+                  <li>표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)</li>
+                  <li>기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.</li>
                 </ul>
               </VStack>
+              <VStack gap={2}>
+                <h5 className="text-label-md text-[var(--color-text-default)]">Don&apos;t ❌</h5>
+                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                  <li>Tooltip 안에 링크, 버튼 등 인터랙티브 요소를 포함하지 않는다.</li>
+                  <li>이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.</li>
+                  <li>
+                    사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다. (hover 없이
+                    인지 불가)
+                  </li>
+                  <li>비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.</li>
+                  <li>
+                    레이아웃 컨테이너, 레이블, 비활성 툴바 등 정적인 요소에는 Tooltip을 사용하지
+                    않는다.
+                  </li>
+                </ul>
+              </VStack>
+            </VStack>
+          </div>
+
+          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <VStack gap={4}>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                6. Content Guidelines
+              </h4>
+              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+                <li>
+                  텍스트는 짧고 명확하게 작성한다. 문장보다는 명사구 또는 간결한 동사구 형태를
+                  권장한다. 예) 설정 저장, 전체 화면으로 보기, 클립보드에 복사
+                </li>
+                <li>트리거 요소에 이미 표시된 텍스트를 그대로 반복하지 않는다.</li>
+                <li>문장 끝에 마침표를 붙이지 않는다. (짧은 레이블 형태 유지)</li>
+                <li>
+                  아이콘 버튼의 경우 아이콘의 기술적 명칭 그대로 사용하지 말고, 맥락에 맞는 설명으로
+                  재작성한다. 예) edit_icon → 편집
+                </li>
+              </ul>
             </VStack>
           </div>
         </VStack>

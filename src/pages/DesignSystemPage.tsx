@@ -4179,7 +4179,7 @@ export function DesignSystemPage() {
                 <div className="flex items-center justify-between w-full">
                   <VStack gap={2} align="start">
                     <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                      TDS Design system
+                      Thaki Design System
                     </h1>
                     <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
                       Design tokens and components built with a 3-tier token architecture

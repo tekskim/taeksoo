@@ -64,14 +64,9 @@ export function DesignSystemLayout() {
       <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
         <div className="p-4 overflow-hidden">
           {/* Logo */}
-          <Link to="/design" className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded bg-[var(--color-action-primary)] flex items-center justify-center">
-              <span className="text-[10px] font-bold text-[var(--semantic-color-on-primary)]">
-                TDS
-              </span>
-            </div>
+          <Link to="/design" className="flex items-center mb-4">
             <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
-              Design system
+              TDS
             </span>
           </Link>
 
@@ -198,7 +193,7 @@ export function DesignSystemLayout() {
                 <div className="flex items-center justify-between w-full">
                   <VStack gap={2} align="start">
                     <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                      TDS Design system
+                      Thaki Design System
                     </h1>
                     <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
                       Design tokens and components built with a 3-tier token architecture
