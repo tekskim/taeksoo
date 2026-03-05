@@ -213,8 +213,8 @@ export function MigrateInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Migrate instance"
+      description="Migrate the instance to a different host. Migration does not change the instance configuration or data."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -229,13 +229,6 @@ export function MigrateInstanceDrawer({
     >
       <VStack gap={6}>
         {/* Title */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Migrate instance</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Migrate the instance to a different host. Migration does not change the instance
-            configuration or data.
-          </p>
-        </VStack>
 
         {/* Instance Info */}
         <InfoBox.Group>

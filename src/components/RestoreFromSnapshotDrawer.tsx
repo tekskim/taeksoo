@@ -182,8 +182,8 @@ export function RestoreFromSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Restore From Snapshot"
+      description="Restore this volume to a previous state using the selected snapshot. All existing data on the volume will be replaced with the snapshot data."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -202,19 +202,6 @@ export function RestoreFromSnapshotDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
-        <VStack gap={2}>
-          <VStack gap={0}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Restore From Snapshot
-            </h2>
-          </VStack>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Restore this volume to a previous state using the selected snapshot. All existing data
-            on the volume will be replaced with the snapshot data.
-          </p>
-        </VStack>
-
         {/* Volume Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>

@@ -104,8 +104,7 @@ export function EditObjectDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit object"
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -123,9 +122,8 @@ export function EditObjectDrawer({
         </HStack>
       }
     >
-      <VStack gap={3}>
+      <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit object</h2>
 
         <VStack gap={4} className="w-full">
           {/* Folder name Input */}

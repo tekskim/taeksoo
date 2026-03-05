@@ -208,6 +208,7 @@ export function EditPortSecurityGroupsDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Manage security groups"
+      description="When disabled, no security groups will be applied, and anti-spoofing checks are turned off."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -226,13 +227,7 @@ export function EditPortSecurityGroupsDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            When disabled, no security groups will be applied, and anti-spoofing checks are turned
-            off.
-          </p>
-
           <InfoBox label="Port name" value={port.name} />
         </VStack>
 

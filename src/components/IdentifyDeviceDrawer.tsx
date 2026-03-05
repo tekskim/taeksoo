@@ -51,8 +51,8 @@ export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDevi
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Identify device"
+      description="Please enter the duration how long to indicate the LED."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -72,14 +72,6 @@ export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDevi
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Identify device
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Please enter the duration how long to indicate the LED.
-          </p>
-        </VStack>
 
         {/* Duration Select */}
         <FormField required>

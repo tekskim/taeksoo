@@ -176,8 +176,8 @@ export function DetachVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Detach Volume"
+      description="Detach the selected volume from this instance. Once detached, it will no longer be accessible."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -196,18 +196,7 @@ export function DetachVolumeDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Detach Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Detach the selected volume from this instance. Once detached, it will no longer be
-              accessible.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             For data consistency, stop all write operations on the instance before detaching a

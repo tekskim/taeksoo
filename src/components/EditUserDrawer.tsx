@@ -81,9 +81,8 @@ export function EditUserDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
+      title="Edit user"
       width={360}
-      showCloseButton={false}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" onClick={handleClose} className="flex-1">
@@ -103,7 +102,6 @@ export function EditUserDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit user</h2>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Edit the user's basic information.
           </p>

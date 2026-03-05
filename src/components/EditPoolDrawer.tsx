@@ -143,8 +143,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit pool"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -163,11 +162,6 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit pool</h2>
-        </VStack>
-
         {/* Pool Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Pool name</FormField.Label>

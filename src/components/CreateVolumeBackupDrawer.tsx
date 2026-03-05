@@ -121,8 +121,8 @@ export function CreateVolumeBackupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create volume backup"
+      description="Create a full backup of this volume and store it in the backup service. The backup can be used to restore the volume or create new volumes in the future."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -162,15 +162,6 @@ export function CreateVolumeBackupDrawer({
         {/* Header + Volume Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create volume backup
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a full backup of this volume and store it in the backup service. The backup can
-              be used to restore the volume or create new volumes in the future.
-            </p>
-          </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

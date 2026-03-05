@@ -143,8 +143,8 @@ export function CreateVolumeFromSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create volume from instance snapshot"
+      description="The new volume will contain the same data as the snapshot's system disk and can be attached to another instance."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -194,15 +194,6 @@ export function CreateVolumeFromSnapshotDrawer({
         {/* Header + Snapshot Info */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create volume from instance snapshot
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              The new volume will contain the same data as the snapshot's system disk and can be
-              attached to another instance.
-            </p>
-          </VStack>
 
           {/* Instance Snapshot Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

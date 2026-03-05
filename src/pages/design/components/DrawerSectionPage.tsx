@@ -1,12 +1,22 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
-import { VStack } from '@/design-system';
+import { VStack, Button } from '@/design-system';
+import { CreateInstanceSnapshotDrawer } from '@/components/CreateInstanceSnapshotDrawer';
+import { EditInstanceDrawer } from '@/components/EditInstanceDrawer';
+import { LockSettingDrawer } from '@/components/LockSettingDrawer';
 
 const drawerProps: PropDef[] = [
   { name: 'isOpen', type: 'boolean', required: true, description: 'Open state' },
   { name: 'onClose', type: '() => void', required: true, description: 'Close handler' },
   { name: 'title', type: 'string', required: false, description: 'Drawer title' },
+  {
+    name: 'description',
+    type: 'string',
+    required: false,
+    description: 'Description text below title',
+  },
   {
     name: 'side',
     type: "'left' | 'right'",
@@ -26,20 +36,34 @@ const drawerProps: PropDef[] = [
     type: 'boolean',
     default: 'true',
     required: false,
-    description: 'Show close button',
+    description: 'Deprecated — close button has been removed',
   },
   { name: 'footer', type: 'ReactNode', required: false, description: 'Footer content' },
   { name: 'children', type: 'ReactNode', required: true, description: 'Drawer content' },
 ];
 
 export function DrawerSectionPage() {
+  const [snapshotOpen, setSnapshotOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [lockOpen, setLockOpen] = useState(false);
+
+  const sampleInstance = {
+    id: 'i-29tgj234',
+    name: 'web-server-01',
+    description: 'Production web server',
+    status: 'active',
+    image: 'Ubuntu 22.04',
+    flavor: 'm1.medium',
+    isLocked: false,
+  };
+
   return (
     <ComponentPageTemplate
       title="Drawer"
       description="Slide-out panel for forms, details, and secondary content"
       preview={<DrawerDemo />}
       usage={{
-        code: `import { Drawer, VStack, HStack, Button } from '@/design-system';\n\n<Drawer\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Edit Resource"\n  width={360}\n  footer={\n    <HStack gap={2} className="w-full">\n      <Button variant="secondary" className="flex-1">Cancel</Button>\n      <Button variant="primary" className="flex-1">Save</Button>\n    </HStack>\n  }\n>\n  {/* Content */}\n</Drawer>`,
+        code: `import { Drawer, VStack, HStack, Button } from '@/design-system';\n\n<Drawer\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Edit Resource"\n  description="Optional description text."\n  width={360}\n  footer={\n    <HStack gap={2} className="w-full">\n      <Button variant="secondary" className="flex-1">Cancel</Button>\n      <Button variant="primary" className="flex-1">Save</Button>\n    </HStack>\n  }\n>\n  {/* Content */}\n</Drawer>`,
       }}
       examples={
         <VStack gap={6}>
@@ -47,6 +71,49 @@ export function DrawerSectionPage() {
             <span className="text-label-md text-[var(--color-text-default)]">Interactive demo</span>
             <DrawerDemo />
           </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">With description</span>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setSnapshotOpen(true)}>
+                Create Instance Snapshot
+              </Button>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Basic</span>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
+                Edit Instance
+              </Button>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">With header box</span>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setLockOpen(true)}>
+                Lock Setting
+              </Button>
+            </div>
+          </VStack>
+
+          <CreateInstanceSnapshotDrawer
+            isOpen={snapshotOpen}
+            onClose={() => setSnapshotOpen(false)}
+            instance={sampleInstance}
+          />
+          <EditInstanceDrawer
+            isOpen={editOpen}
+            onClose={() => setEditOpen(false)}
+            instance={sampleInstance}
+          />
+          <LockSettingDrawer
+            isOpen={lockOpen}
+            onClose={() => setLockOpen(false)}
+            instance={sampleInstance}
+          />
         </VStack>
       }
       guidelines={
@@ -170,11 +237,8 @@ export function DrawerSectionPage() {
                 <h4 className="text-heading-h6 text-[var(--color-text-default)]">구조 규칙</h4>
                 <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                   <li>
-                    <strong>헤더</strong>: Custom header 사용 시 <code>title=&quot;&quot;</code>,{' '}
-                    <code>
-                      showCloseButton={'{'}false{'}'}
-                    </code>
-                    로 설정하고 내부에 h2(text-heading-h5)로 타이틀 작성.
+                    <strong>헤더</strong>: <code>title</code> prop으로 타이틀 설정. Close 버튼과
+                    border-bottom은 제거됨.
                   </li>
                   <li>
                     <strong>Footer</strong>: 액션 버튼은 footer prop에 배치. Cancel(secondary) 왼쪽,
@@ -186,6 +250,8 @@ export function DrawerSectionPage() {
                   </li>
                   <li>
                     <strong>스크롤</strong>: 콘텐츠가 길면 body 영역만 스크롤. Footer는 하단 고정.
+                    스크롤바는 overlay 방식으로 콘텐츠 위에 표시되어 좌우 패딩(24px)이 항상 균등하게
+                    유지됩니다.
                   </li>
                 </ul>
               </VStack>
@@ -217,7 +283,7 @@ export function DrawerSectionPage() {
           <code>width: 320px (default)</code> · <code>Form: 360px (4col)</code> ·{' '}
           <code>Selection: 696px (8col)</code> · <code>Large: 1032px (12col)</code> ·{' '}
           <code>padding-x: 24px</code> · <code>padding-y: 16px</code> ·{' '}
-          <code>animation: 300ms ease-out</code>
+          <code>scrollbar: 6px overlay</code> · <code>animation: 300ms ease-out</code>
         </div>
       }
       apiReference={drawerProps}

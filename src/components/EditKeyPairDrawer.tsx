@@ -70,8 +70,7 @@ export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKe
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit key pair"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -91,10 +90,6 @@ export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKe
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit key pair
-        </h2>
-
         {/* Key Pair Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Key pair name</FormField.Label>

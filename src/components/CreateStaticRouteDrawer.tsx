@@ -64,8 +64,8 @@ export function CreateStaticRouteDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Static Route"
+      description="Add a static route to manually define traffic paths beyond connected subnets."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -85,14 +85,6 @@ export function CreateStaticRouteDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Static Route
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Add a static route to manually define traffic paths beyond connected subnets.
-          </p>
-        </VStack>
 
         <InfoBox label="Router name" value={router.name} />
 

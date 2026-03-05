@@ -159,7 +159,7 @@ export function ResourceTypeSearchDrawer({
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title="Resource type search" width={400}>
-      <VStack gap={4}>
+      <VStack gap={6}>
         {/* Search Input */}
         <SearchInput
           placeholder="Search resource type by name"

@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
-import { IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -14,11 +13,13 @@ export interface DrawerProps {
   onClose: () => void;
   /** Drawer title */
   title?: string;
+  /** Description text below the title */
+  description?: string;
   /** Side from which the drawer appears */
   side?: 'left' | 'right';
   /** Width of the drawer */
   width?: string | number;
-  /** Whether to show close button */
+  /** @deprecated Close button has been removed from Drawer */
   showCloseButton?: boolean;
   /** Whether clicking backdrop closes drawer */
   closeOnBackdropClick?: boolean;
@@ -40,9 +41,10 @@ export function Drawer({
   isOpen,
   onClose,
   title,
+  description,
   side = 'right',
   width = 320,
-  showCloseButton = true,
+  showCloseButton: _showCloseButton,
   closeOnBackdropClick = true,
   closeOnEscape = true,
   children,
@@ -135,29 +137,23 @@ export function Drawer({
         aria-modal="true"
         aria-labelledby={title ? 'drawer-title' : undefined}
       >
-        {/* Header */}
-        {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border-subtle)]">
-            {title && (
+        {/* Content */}
+        <div className="flex-1 px-6 pt-4 pb-8 drawer-scroll">
+          {title && (
+            <>
               <h2 id="drawer-title" className="text-heading-h5 text-[var(--color-text-default)]">
                 {title}
               </h2>
-            )}
-            {showCloseButton && (
-              <button
-                type="button"
-                onClick={onClose}
-                className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
-                aria-label="Close drawer"
-              >
-                <IconX size={12} className="text-[var(--color-text-muted)]" />
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 pt-4 pb-8 drawer-scroll">{children}</div>
+              {description && (
+                <p className="text-body-md text-[var(--color-text-subtle)] mt-1 mb-4">
+                  {description}
+                </p>
+              )}
+              {!description && <div className="mb-4" />}
+            </>
+          )}
+          {children}
+        </div>
 
         {/* Footer */}
         {footer && (

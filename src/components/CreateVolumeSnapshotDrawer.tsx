@@ -121,8 +121,8 @@ export function CreateVolumeSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create volume snapshot"
+      description="Create a snapshot of this volume to back up its current data state. You can use the snapshot to create new volumes or restore data later."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -162,15 +162,6 @@ export function CreateVolumeSnapshotDrawer({
         {/* Header + Volume Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create volume snapshot
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a snapshot of this volume to back up its current data state. You can use the
-              snapshot to create new volumes or restore data later.
-            </p>
-          </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

@@ -136,8 +136,8 @@ export function ExtendVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Extend Volume"
+      description="Increase the size of this volume to expand its storage capacity. The volume size can only be increased and cannot be reduced once extended."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -177,15 +177,6 @@ export function ExtendVolumeDrawer({
         {/* Header + Volume Info */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Extend Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Increase the size of this volume to expand its storage capacity. The volume size can
-              only be increased and cannot be reduced once extended.
-            </p>
-          </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

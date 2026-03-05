@@ -174,8 +174,8 @@ export function AttachInterfaceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Attach Interface"
+      description="Attach a new network interface to this instance. You can connect it to another network or subnet for additional access."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -194,18 +194,7 @@ export function AttachInterfaceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Attach Interface
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Attach a new network interface to this instance. You can connect it to another network
-              or subnet for additional access.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance name" value={instance.name} />
         </VStack>

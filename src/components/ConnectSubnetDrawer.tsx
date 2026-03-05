@@ -309,6 +309,7 @@ export function ConnectSubnetDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Connect subnet"
+      description="Connect an existing subnet to this router to enable routing between networks. Once connected, instances within the subnet can communicate with other subnets or access external networks (if an external gateway is configured)."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -323,11 +324,6 @@ export function ConnectSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Description */}
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Connect an existing subnet to this router to enable routing between networks. Once
-          connected, instances within the subnet can communicate with other subnets or access
-          external networks (if an external gateway is configured).
-        </p>
 
         {/* Router Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
@@ -382,9 +378,6 @@ export function ConnectSubnetDrawer({
             />
           </VStack>
         </VStack>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-6">

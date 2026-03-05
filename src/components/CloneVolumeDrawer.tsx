@@ -155,8 +155,8 @@ export function CloneVolumeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Clone Volume"
+      description="Create a new volume that is an exact copy of this volume's current data. The cloned volume can be used independently for testing, backup, or new instance creation."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -206,15 +206,6 @@ export function CloneVolumeDrawer({
         {/* Header + Volume Info + Warning Group */}
         <VStack gap={3}>
           {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Clone Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a new volume that is an exact copy of this volume's current data. The cloned
-              volume can be used independently for testing, backup, or new instance creation.
-            </p>
-          </VStack>
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">

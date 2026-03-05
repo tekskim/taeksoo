@@ -178,8 +178,8 @@ export function ExternalGatewaySettingDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="External gateway setting"
+      description="Configure or update the external gateway for this router. The external gateway connects your router to a public network, allowing instances in attached subnets to access external networks through floating IPs."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -198,19 +198,7 @@ export function ExternalGatewaySettingDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3} className="w-[648px]">
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              External gateway setting
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Configure or update the external gateway for this router. The external gateway
-              connects your router to a public network, allowing instances in attached subnets to
-              access external networks through floating IPs.
-            </p>
-          </VStack>
-
           <InfoBox label="Router" value={router.name} />
         </VStack>
 

@@ -181,8 +181,7 @@ export function ManageSNICertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage SNI certificate"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -202,10 +201,6 @@ export function ManageSNICertificateDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Manage SNI certificate
-        </h2>
-
         {/* SNI Toggle Section */}
         <FormField
           label="SNI"

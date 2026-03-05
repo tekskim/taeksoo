@@ -8,6 +8,7 @@ import {
   InlineMessage,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -270,6 +271,7 @@ export function DisconnectSubnetDrawer({
       isOpen={isOpen}
       onClose={onClose}
       title="Disconnect subnet"
+      description="Disconnect a subnet from this router to remove its routing path."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -283,23 +285,13 @@ export function DisconnectSubnetDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Description */}
-        <VStack gap={3} className="w-full">
-          <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-            Disconnect a subnet from this router to remove its routing path.
-          </p>
-
-          {/* Warning Message */}
+        {/* Warning + Router Info */}
+        <VStack gap={3}>
           <InlineMessage variant="error">
             Disconnecting this subnet will immediately stop routing traffic through this router.
             Instances in the subnet may lose network connectivity.
           </InlineMessage>
-
-          {/* Router Info */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">Router</p>
-            <p className="text-body-md text-[var(--color-text-default)] leading-4">{router.name}</p>
-          </div>
+          <InfoBox label="Router" value={router.name} />
         </VStack>
 
         {/* Subnet Section */}
