@@ -140,8 +140,8 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Modify quotas"
+      description="Modifies the resource usage limits allocated to the tenant."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -156,12 +156,6 @@ export function ModifyQuotasDrawer({ isOpen, onClose, tenant, onSave }: ModifyQu
     >
       <VStack gap={6}>
         {/* Title */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Modify quotas</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Modifies the resource usage limits allocated to the tenant.
-          </p>
-        </VStack>
 
         <InfoBox label="Tenant" value={tenant.name} />
 

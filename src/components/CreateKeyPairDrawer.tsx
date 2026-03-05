@@ -122,8 +122,8 @@ export function CreateKeyPairDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Key pair"
+      description="Create a new SSH key pair to securely access your instances."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -156,14 +156,6 @@ export function CreateKeyPairDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Key pair
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a new SSH key pair to securely access your instances.
-          </p>
-        </VStack>
 
         {/* Create Type Radio */}
         <FormField label="Create type" spacing="loose">

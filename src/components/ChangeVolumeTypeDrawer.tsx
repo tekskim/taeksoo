@@ -77,8 +77,8 @@ export function ChangeVolumeTypeDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Change Type"
+      description="Change the storage type of this volume to another available volume type. The operation may take some time."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -99,16 +99,6 @@ export function ChangeVolumeTypeDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Change Type
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Change the storage type of this volume to another available volume type. The operation
-              may take some time.
-            </p>
-          </VStack>
-
           {/* Warning Box */}
           <InlineMessage variant="error">
             For data consistency, stop all write operations on the instance before retyping.

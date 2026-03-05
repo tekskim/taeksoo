@@ -57,8 +57,8 @@ export function AcceptVolumeTransferDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Accept Volume Transfer"
+      description="Accept a volume transfer using the provided transfer ID and authorization key. Once accepted, the volume will be moved to your project and ownership cannot be reverted."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -78,15 +78,6 @@ export function AcceptVolumeTransferDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Accept Volume Transfer
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Accept a volume transfer using the provided transfer ID and authorization key. Once
-            accepted, the volume will be moved to your project and ownership cannot be reverted.
-          </p>
-        </VStack>
 
         {/* Transfer ID Input */}
         <FormField required error={hasAttemptedSubmit && !transferId.trim()}>

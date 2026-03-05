@@ -97,8 +97,8 @@ export function EditUserGroupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit user group"
+      description="Edit the user group's basic information."
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -118,14 +118,6 @@ export function EditUserGroupDrawer({
     >
       <VStack gap={6} className="pb-6">
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit user group
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Edit the user group's basic information.
-          </p>
-        </VStack>
 
         {/* User group name field */}
         <FormField required error={!!nameError}>

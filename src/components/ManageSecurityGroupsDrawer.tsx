@@ -230,8 +230,8 @@ export function ManageSecurityGroupsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage security groups"
+      description="You can attach or detach security groups for the selected interface. These rules control inbound and outbound traffic for the instance."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -250,18 +250,7 @@ export function ManageSecurityGroupsDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage security groups
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              You can attach or detach security groups for the selected interface. These rules
-              control inbound and outbound traffic for the instance.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance" value={instance.name} />
         </VStack>

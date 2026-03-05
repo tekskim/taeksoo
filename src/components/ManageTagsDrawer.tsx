@@ -89,8 +89,8 @@ export function ManageTagsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage Tags"
+      description="Tags are used to categorize and manage resources."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -109,17 +109,7 @@ export function ManageTagsDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage Tags
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Tags are used to categorize and manage resources.
-            </p>
-          </VStack>
-
           {/* Instance Info Box */}
           <InfoBox label="Instance name" value={instance.name} />
         </VStack>

@@ -184,8 +184,8 @@ export function RescueInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Rescue Instance"
+      description="Create a temporary recovery server using your instance's root disk."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -204,29 +204,19 @@ export function RescueInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Rescue Instance
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a temporary recovery server using your instance's root disk.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             Rescue mode will stop your instance and attach its root disk to a temporary server. You
             can log in to that server to recover data or fix configurations.
           </InlineMessage>
-        </VStack>
 
-        <InfoBox.Group>
-          <InfoBox label="Instance" value={instance.name} />
-          <InfoBox label="Current image" value={instance.currentImage} />
-          <InfoBox label="Protocol" value={instance.protocol} />
-        </InfoBox.Group>
+          <InfoBox.Group>
+            <InfoBox label="Instance" value={instance.name} />
+            <InfoBox label="Current image" value={instance.currentImage} />
+            <InfoBox label="Protocol" value={instance.protocol} />
+          </InfoBox.Group>
+        </VStack>
 
         {/* Image Selection */}
         <FormField label="Image" spacing="loose">

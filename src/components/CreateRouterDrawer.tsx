@@ -247,8 +247,8 @@ export function CreateRouterDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Router"
+      description="Create a virtual router to route traffic between different networks or subnets. You can optionally connect the router to an external network to enable internet access or floating IP usage."
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -279,124 +279,110 @@ export function CreateRouterDrawer({
         </VStack>
       }
     >
-      <VStack gap={3} className="h-full">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Router
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a virtual router to route traffic between different networks or subnets. You can
-            optionally connect the router to an external network to enable internet access or
-            floating IP usage.
-          </p>
-        </VStack>
-
-        <VStack gap={6}>
-          {/* Router name */}
-          <FormField
-            label="Router name"
-            helperText={'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
+      <VStack gap={6} className="h-full">
+        {/* Router name */}
+        <FormField
+          label="Router name"
+          helperText={'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
+          error={hasAttemptedSubmit && !routerName.trim()}
+          errorMessage="Router name is required"
+        >
+          <Input
+            value={routerName}
+            onChange={(e) => setRouterName(e.target.value)}
+            placeholder="e.g. web-router-01"
+            fullWidth
             error={hasAttemptedSubmit && !routerName.trim()}
-            errorMessage="Router name is required"
-          >
-            <Input
-              value={routerName}
-              onChange={(e) => setRouterName(e.target.value)}
-              placeholder="e.g. web-router-01"
-              fullWidth
-              error={hasAttemptedSubmit && !routerName.trim()}
-            />
-          </FormField>
+          />
+        </FormField>
 
-          {/* Description */}
-          <FormField label="Description (Optional)">
-            <Input
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Router for production web servers"
-              fullWidth
-            />
-          </FormField>
+        {/* Description */}
+        <FormField label="Description (Optional)">
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. Router for production web servers"
+            fullWidth
+          />
+        </FormField>
 
-          {/* Advanced Options Disclosure */}
-          <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
-            <Disclosure.Trigger>Label</Disclosure.Trigger>
-            <Disclosure.Panel>
-              <VStack gap={6} className="mt-3">
-                {/* Admin state */}
-                <FormField
-                  label="Admin state"
-                  description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
-                  spacing="loose"
-                >
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                    label={adminStateUp ? 'Up' : 'Down'}
-                  />
-                </FormField>
-
-                {/* External Gateway */}
-                <FormField
-                  label="External Gateway"
-                  description="The external gateway connects your router to an external (public) network. When enabled, instances in the connected subnets can access the internet using floating IPs."
-                  spacing="loose"
-                >
-                  <Toggle
-                    checked={externalGatewayEnabled}
-                    onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
-                    label={externalGatewayEnabled ? 'Open' : 'Close'}
-                  />
-                </FormField>
-              </VStack>
-            </Disclosure.Panel>
-          </Disclosure>
-
-          {/* Network Selection (only shown when External Gateway is enabled) */}
-          {externalGatewayEnabled && (
-            <VStack gap={3} className="pb-5">
-              {/* Search */}
-              <div className="w-[280px]">
-                <SearchInput
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onClear={() => setSearchQuery('')}
-                  placeholder="Search network by attributes"
-                  size="sm"
-                  fullWidth
+        {/* Advanced Options Disclosure */}
+        <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
+          <Disclosure.Trigger>Label</Disclosure.Trigger>
+          <Disclosure.Panel>
+            <VStack gap={6} className="mt-3">
+              {/* Admin state */}
+              <FormField
+                label="Admin state"
+                description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
+                spacing="loose"
+              >
+                <Toggle
+                  checked={adminStateUp}
+                  onChange={(e) => setAdminStateUp(e.target.checked)}
+                  label={adminStateUp ? 'Up' : 'Down'}
                 />
-              </div>
+              </FormField>
 
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredNetworks.length}
-                onPageChange={setCurrentPage}
-                selectedCount={selectedNetworkId ? 1 : 0}
-              />
-
-              {/* Networks Table */}
-              <VStack gap={2}>
-                <Table<NetworkItem>
-                  columns={networkColumns}
-                  data={paginatedNetworks}
-                  rowKey="id"
-                  onRowClick={(row) => setSelectedNetworkId(row.id)}
-                  emptyMessage="No networks found"
+              {/* External Gateway */}
+              <FormField
+                label="External Gateway"
+                description="The external gateway connects your router to an external (public) network. When enabled, instances in the connected subnets can access the internet using floating IPs."
+                spacing="loose"
+              >
+                <Toggle
+                  checked={externalGatewayEnabled}
+                  onChange={(e) => setExternalGatewayEnabled(e.target.checked)}
+                  label={externalGatewayEnabled ? 'Open' : 'Close'}
                 />
-                <SelectionIndicator
-                  selectedItems={
-                    selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
-                  }
-                  onRemove={() => setSelectedNetworkId(null)}
-                  emptyText="No item selected"
-                />
-              </VStack>
+              </FormField>
             </VStack>
-          )}
-        </VStack>
+          </Disclosure.Panel>
+        </Disclosure>
+
+        {/* Network Selection (only shown when External Gateway is enabled) */}
+        {externalGatewayEnabled && (
+          <VStack gap={3} className="pb-5">
+            {/* Search */}
+            <div className="w-[280px]">
+              <SearchInput
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
+                placeholder="Search network by attributes"
+                size="sm"
+                fullWidth
+              />
+            </div>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={filteredNetworks.length}
+              onPageChange={setCurrentPage}
+              selectedCount={selectedNetworkId ? 1 : 0}
+            />
+
+            {/* Networks Table */}
+            <VStack gap={2}>
+              <Table<NetworkItem>
+                columns={networkColumns}
+                data={paginatedNetworks}
+                rowKey="id"
+                onRowClick={(row) => setSelectedNetworkId(row.id)}
+                emptyMessage="No networks found"
+              />
+              <SelectionIndicator
+                selectedItems={
+                  selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+                }
+                onRemove={() => setSelectedNetworkId(null)}
+                emptyText="No item selected"
+              />
+            </VStack>
+          </VStack>
+        )}
       </VStack>
     </Drawer>
   );

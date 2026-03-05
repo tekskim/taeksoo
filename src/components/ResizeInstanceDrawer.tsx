@@ -295,8 +295,8 @@ export function ResizeInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Resize Instance"
+      description="Change the flavor of this instance to adjust its vCPU, memory, or disk capacity."
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -366,17 +366,7 @@ export function ResizeInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Resize Instance
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Change the flavor of this instance to adjust its vCPU, memory, or disk capacity.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             The instance will be stopped and restarted automatically during resize. All running

@@ -262,8 +262,8 @@ export function RegisterCertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Register Certificate"
+      description="Register a certificate issued by an external CA for use within Compute resources."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -282,16 +282,6 @@ export function RegisterCertificateDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Register Certificate
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Register a certificate issued by an external CA for use within Compute resources.
-          </p>
-        </VStack>
-
         {/* Type Radio */}
         <FormField label="Type" spacing="loose">
           <RadioGroup

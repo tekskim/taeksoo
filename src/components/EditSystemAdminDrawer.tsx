@@ -82,8 +82,7 @@ export function EditSystemAdminDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit system administrator"
       width={360}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -104,13 +103,10 @@ export function EditSystemAdminDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit system administrator
-          </h2>
+          {' '}
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Edit the system administrator's basic information.
           </p>
-
           {/* Username Info Card */}
           <InfoBox label="Username" value={initialData.username} />
         </VStack>

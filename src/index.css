@@ -1418,11 +1418,17 @@ html.theme-transition *::after {
   min-width: 1176px;
 }
 
-/* Drawer Scrollbar */
+/* Drawer Scrollbar — overlay so left/right padding stays even */
 .drawer-scroll {
-  scrollbar-gutter: stable;
+  overflow-y: overlay;
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-default) transparent;
+}
+
+@supports not (overflow-y: overlay) {
+  .drawer-scroll {
+    overflow-y: auto;
+  }
 }
 
 .drawer-scroll::-webkit-scrollbar {

@@ -8,6 +8,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -299,6 +300,7 @@ export function AssociateFloatingIPToPortDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Associate floating IP"
+      description="Associate a floating IP with this port to enable external network access."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -312,16 +314,8 @@ export function AssociateFloatingIPToPortDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Description */}
-        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
-          Associate a floating IP with this port to enable external network access.
-        </p>
-
         {/* Port Info */}
-        <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">Port</p>
-          <p className="text-body-md text-[var(--color-text-default)] leading-4">{port.name}</p>
-        </div>
+        <InfoBox label="Port" value={port.name} />
 
         {/* Fixed IP Section */}
         <VStack gap={3} className="w-full">
@@ -364,9 +358,6 @@ export function AssociateFloatingIPToPortDrawer({
             />
           </VStack>
         </VStack>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
         {/* Floating IP Section */}
         <VStack gap={3} className="w-full pb-5">

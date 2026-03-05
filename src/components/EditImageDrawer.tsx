@@ -59,8 +59,7 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit image"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -80,7 +79,6 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit image</h2>
 
         {/* Image Name Input */}
         <FormField required error={hasAttemptedSubmit && !imageName.trim()}>

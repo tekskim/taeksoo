@@ -158,8 +158,7 @@ export function CreateSubnetDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Subnet"
       width={696}
       footer={
         <VStack gap={4} className="w-full">
@@ -191,10 +190,6 @@ export function CreateSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Create Subnet
-        </h2>
-
         {/* Subnet Name */}
         <FormField>
           <FormField.Label>

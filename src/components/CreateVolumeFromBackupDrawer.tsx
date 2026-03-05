@@ -163,8 +163,7 @@ export function CreateVolumeFromBackupDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Volume from Backup"
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -215,10 +214,6 @@ export function CreateVolumeFromBackupDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Volume from Backup
-          </h2>
-
           {/* Volume Backup Info */}
           <InfoBox
             label="Volume backup"

@@ -337,6 +337,45 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 - **tooltip**: `tooltip` prop으로 라벨 옆 도움말 아이콘 표시 가능
 - ReactNode `value`: Badge, Chip 등 커스텀 값 표시 가능 (Labels, Annotations 등)
 
+### Drawer
+
+```css
+--drawer-content-padding-top: 16px;     /* pt-4 */
+--drawer-content-padding-bottom: 32px;  /* pb-8 */
+--drawer-content-padding-x: 24px;       /* px-6 */
+--drawer-title-content-gap: 16px;       /* mb-4 (title only, no description) */
+--drawer-title-description-gap: 4px;    /* mt-1 */
+--drawer-description-content-gap: 16px; /* mb-4 (description to content) */
+--drawer-footer-padding: 16px 24px;     /* py-4 px-6 */
+--drawer-scrollbar-width: 6px;          /* thin overlay scrollbar */
+```
+
+**Drawer 공통 규칙:**
+- 타이틀, 설명, 콘텐츠가 하나의 스크롤 영역
+- Close 버튼 없음 (제거됨), Header 영역 없음
+- 타이틀은 `title` prop 사용 (`text-heading-h5`)
+- 설명은 `description` prop 사용 (`text-body-md`, `color-text-subtle`)
+- Footer는 하단 고정, `border-t` 구분선
+- 스크롤바는 `overflow-y: overlay`로 콘텐츠 위에 겹침 표시 — 좌우 패딩이 항상 균등하게 유지됨
+- `scrollbar-gutter: stable` 사용 금지 (스크롤바 공간 예약으로 우측 패딩 불균형 발생)
+
+**3가지 Drawer 타입:**
+
+| 타입 | 구조 | 예시 |
+|---|---|---|
+| **Basic** | title → FormField들 | Edit Instance, Edit Network |
+| **With description** | title → description → InfoBox/FormField들 | Create Instance Snapshot, Create Volume Backup |
+| **With header box** | title → InfoBox → FormField/Toggle들 | Lock Setting, Change Volume Type |
+
+**타입별 간격:**
+
+| 간격 | Basic | With description | With header box |
+|---|---|---|---|
+| 타이틀 ↔ 첫 콘텐츠 | 16px (`mb-4`) | — | 16px (`mb-4`) |
+| 타이틀 ↔ 설명 | — | 4px (`mt-1`) | — |
+| 설명 ↔ 첫 콘텐츠 | — | 16px (`mb-4`) | — |
+| 콘텐츠 간 간격 | 24px (`gap-6`) | 24px (`gap-6`) | 24px (`gap-6`) |
+
 ### Modal
 
 | Size | Width |
@@ -945,13 +984,13 @@ Checkbox(단독), Radio/CheckboxGroup, Toggle을 `FormField`로 감쌀 때는 **
 
 ## Drawer 사용법
 
+### Basic — 타이틀 + 폼 필드
 ```tsx
 <Drawer
   isOpen={isOpen}
   onClose={handleClose}
-  title=""                    // Custom header 사용 시 빈 문자열
-  showCloseButton={false}     // Custom header 사용 시 false
-  width={360}                 // 4col: 360, 8col: 696, 12col: 1032
+  title="Edit Instance"
+  width={360}
   footer={
     <HStack gap={2} className="w-full">
       <Button variant="secondary" onClick={handleClose} className="flex-1">Cancel</Button>
@@ -960,8 +999,49 @@ Checkbox(단독), Radio/CheckboxGroup, Toggle을 `FormField`로 감쌀 때는 **
   }
 >
   <VStack gap={6}>
-    <h2 className="text-heading-h5 text-[var(--color-text-default)]">Drawer Title</h2>
-    {/* Content */}
+    <FormField label="Instance Name" required>
+      <Input fullWidth />
+    </FormField>
+    <FormField label="Description">
+      <Textarea fullWidth />
+    </FormField>
+  </VStack>
+</Drawer>
+```
+
+### With description — 타이틀 + 설명 + 콘텐츠
+```tsx
+<Drawer
+  isOpen={isOpen}
+  onClose={handleClose}
+  title="Create instance snapshot"
+  description="Create a snapshot of this instance to capture its current system state as an image."
+  width={360}
+  footer={...}
+>
+  <VStack gap={6}>
+    <InfoBox label="Instance" value={instance.name} />
+    <FormField label="Snapshot Name" required>
+      <Input fullWidth />
+    </FormField>
+  </VStack>
+</Drawer>
+```
+
+### With header box — 타이틀 + InfoBox + 콘텐츠
+```tsx
+<Drawer
+  isOpen={isOpen}
+  onClose={handleClose}
+  title="Lock setting"
+  width={360}
+  footer={...}
+>
+  <VStack gap={6}>
+    <InfoBox label="Instance" value={instance.name} />
+    <FormField label="Lock instance" spacing="loose">
+      <Toggle checked={isLocked} onChange={setIsLocked} />
+    </FormField>
   </VStack>
 </Drawer>
 ```
@@ -1114,12 +1194,20 @@ const shellPanel = useShellPanel();
 ```
 
 ### Form Drawer 패턴
+
+3가지 Drawer 타입이 있습니다. 타입별 간격은 Drawer 토큰 섹션을 참조하세요.
+
+| 타입 | `description` prop | 첫 콘텐츠 | 예시 |
+|---|---|---|---|
+| **Basic** | 없음 | FormField | Edit Instance |
+| **With description** | 있음 | InfoBox / FormField | Create Snapshot |
+| **With header box** | 없음 | InfoBox | Lock Setting |
+
 ```tsx
 <Drawer
   isOpen={isOpen}
   onClose={handleClose}
-  title=""
-  showCloseButton={false}
+  title="Edit [Resource]"
   width={360}
   footer={
     <HStack gap={2} className="w-full">
@@ -1129,11 +1217,9 @@ const shellPanel = useShellPanel();
   }
 >
   <VStack gap={6}>
-    <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit [Resource]</h2>
-    
-    {/* Info Box (컨텍스트 정보) */}
+    {/* Info Box (컨텍스트 정보) — With header box 타입에서만 사용 */}
     <InfoBox label="Resource ID" value={resourceId} />
-    
+
     {/* Form Fields */}
     <FormField required>
       <FormField.Label>Name</FormField.Label>
@@ -1500,13 +1586,11 @@ PageShell > VStack gap={4} >
   SectionCard (Header + DataRow들)
 ```
 
-### 3. Form Drawer 패턴
+### 3. Form Drawer 패턴 (3가지 타입)
 ```
-Drawer (width: 360px) >
-  h2 "Edit [Resource]"
-  InfoBox (컨텍스트 정보)
-  FormField들
-  Footer: Cancel + Save 버튼
+Basic:          Drawer > title → FormField들 → Footer
+With description: Drawer > title + description → InfoBox/FormField들 → Footer
+With header box: Drawer > title → InfoBox → FormField/Toggle들 → Footer
 ```
 
 ### 4. Confirmation Modal 패턴

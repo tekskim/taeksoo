@@ -89,8 +89,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit member"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -109,13 +108,6 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit member
-          </h2>
-        </VStack>
-
         {/* Source (Read-only) */}
         <FormField>
           <FormField.Label>Source</FormField.Label>
@@ -149,7 +141,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
               onChange={(value) => setWeight(value ?? 1)}
               min={1}
               max={256}
-              fullWidth
+              width="xs"
             />
           </FormField.Control>
           <FormField.HelperText>1~256</FormField.HelperText>
@@ -195,7 +187,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
                     min={1}
                     max={65535}
                     placeholder="e.g. 8080"
-                    fullWidth
+                    width="sm"
                   />
                 </FormField.Control>
                 <FormField.HelperText>1~65535</FormField.HelperText>

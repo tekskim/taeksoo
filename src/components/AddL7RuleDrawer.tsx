@@ -138,8 +138,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Add L7 Rule"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -158,13 +157,6 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Add L7 Rule
-          </h2>
-        </VStack>
-
         {/* Rule Type */}
         <FormField>
           <FormField.Label>Rule type</FormField.Label>

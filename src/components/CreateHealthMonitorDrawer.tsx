@@ -108,8 +108,7 @@ export function CreateHealthMonitorDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Health Monitor"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -128,13 +127,6 @@ export function CreateHealthMonitorDrawer({
       }
     >
       <VStack gap={6} className="pb-6">
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Health Monitor
-          </h2>
-        </VStack>
-
         {/* Pool Name (Read-only) */}
         <FormField>
           <FormField.Label>Pool name</FormField.Label>
@@ -185,7 +177,7 @@ export function CreateHealthMonitorDrawer({
               onChange={(value) => setInterval(value ?? 1)}
               min={1}
               max={3600}
-              fullWidth
+              width="xs"
               error={hasAttemptedSubmit && !isIntervalValid}
             />
           </FormField.Control>
@@ -203,7 +195,7 @@ export function CreateHealthMonitorDrawer({
               onChange={(value) => setTimeout(value ?? 1)}
               min={1}
               max={3599}
-              fullWidth
+              width="xs"
               error={hasAttemptedSubmit && !isTimeoutValid}
             />
           </FormField.Control>
@@ -225,7 +217,7 @@ export function CreateHealthMonitorDrawer({
               onChange={(value) => setMaxRetries(value ?? 1)}
               min={1}
               max={10}
-              fullWidth
+              width="xs"
               error={hasAttemptedSubmit && !isMaxRetriesValid}
             />
           </FormField.Control>

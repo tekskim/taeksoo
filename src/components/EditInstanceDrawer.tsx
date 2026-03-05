@@ -64,8 +64,7 @@ export function EditInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit instance"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -85,10 +84,6 @@ export function EditInstanceDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit instance
-        </h2>
-
         {/* Instance Name Input */}
         <FormField required error={!!nameError}>
           <FormField.Label>Instance name</FormField.Label>

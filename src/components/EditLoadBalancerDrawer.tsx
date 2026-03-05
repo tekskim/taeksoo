@@ -82,8 +82,7 @@ export function EditLoadBalancerDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit load balancer"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -102,13 +101,6 @@ export function EditLoadBalancerDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit load balancer
-          </h2>
-        </VStack>
-
         {/* Load Balancer Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Load balancer name</FormField.Label>

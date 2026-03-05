@@ -78,8 +78,7 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit router"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -98,13 +97,6 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit router
-          </h2>
-        </VStack>
-
         {/* Router Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Router name</FormField.Label>

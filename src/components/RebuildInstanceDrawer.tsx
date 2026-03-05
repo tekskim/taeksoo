@@ -180,8 +180,8 @@ export function RebuildInstanceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Rebuild Instance"
+      description="Rebuilding reinstalls the operating system using a new image."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -200,28 +200,18 @@ export function RebuildInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header Section */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Rebuild Instance
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Rebuilding reinstalls the operating system using a new image.
-            </p>
-          </VStack>
-
           {/* Warning Message */}
           <InlineMessage variant="error">
             Rebuilding will permanently delete all data on the system disk. Make sure to back up
             important data before proceeding.
           </InlineMessage>
-        </VStack>
 
-        <InfoBox.Group>
-          <InfoBox label="Instance" value={instance.name} />
-          <InfoBox label="Current image" value={instance.currentImage} />
-        </InfoBox.Group>
+          <InfoBox.Group>
+            <InfoBox label="Instance" value={instance.name} />
+            <InfoBox label="Current image" value={instance.currentImage} />
+          </InfoBox.Group>
+        </VStack>
 
         {/* Image Selection */}
         <FormField label="Image" spacing="loose">

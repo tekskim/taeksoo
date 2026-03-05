@@ -63,8 +63,8 @@ export function CreateAllowedAddressPairDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Allowed Address Pair"
+      description="Specify additional IP or MAC addresses that are allowed to pass through this port."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -84,14 +84,6 @@ export function CreateAllowedAddressPairDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Allowed Address Pair
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify additional IP or MAC addresses that are allowed to pass through this port.
-          </p>
-        </VStack>
 
         {/* CIDR Input */}
         <FormField required error={hasAttemptedSubmit && !cidr.trim()}>

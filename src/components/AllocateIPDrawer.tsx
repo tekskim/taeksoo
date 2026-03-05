@@ -107,8 +107,8 @@ export function AllocateIPDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Allocate IP"
+      description="Assign an additional fixed IP address to this port. Select a subnet from the list below and choose whether to assign an IP automatically or manually."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -128,15 +128,6 @@ export function AllocateIPDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Allocate IP
-          </h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Assign an additional fixed IP address to this port. Select a subnet from the list below
-            and choose whether to assign an IP automatically or manually.
-          </p>
-        </VStack>
 
         {/* Port (Read-only) */}
         <FormField>

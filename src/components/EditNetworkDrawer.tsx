@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -38,7 +37,6 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
   const [portSecurityEnabled, setPortSecurityEnabled] = useState(
     network.portSecurityEnabled ?? true
   );
-  const [isAdvancedExpanded, setIsAdvancedExpanded] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -50,7 +48,6 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
       setDescription(network.description || '');
       setAdminStateUp(network.adminStateUp ?? true);
       setPortSecurityEnabled(network.portSecurityEnabled ?? true);
-      setIsAdvancedExpanded(true);
       setHasAttemptedSubmit(false);
       setNameError(null);
     }
@@ -88,8 +85,8 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Edit network"
+      description="Modifies the properties of the network."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -108,13 +105,6 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit network
-          </h2>
-        </VStack>
-
         {/* Network Name Input */}
         <FormField required error={hasAttemptedSubmit && !!nameError}>
           <FormField.Label>Network name</FormField.Label>
@@ -132,78 +122,75 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
           </FormField.Control>
           <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Description Input */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder=""
+              placeholder="Enter description"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
-        {/* Advanced Options Toggle */}
-        <button
-          type="button"
-          onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-          className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
+        {/* Admin state */}
+        <FormField
+          label="Admin state"
+          description="Indicates whether the network's administrative state is Up or Down."
+          spacing="loose"
         >
-          {isAdvancedExpanded ? (
-            <IconChevronDown size={16} stroke={1} />
-          ) : (
-            <IconChevronRight size={16} stroke={1} />
-          )}
-          Lable
-        </button>
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
+        </FormField>
 
-        {/* Advanced Options (Collapsible) */}
-        {isAdvancedExpanded && (
-          <>
-            {/* Admin state */}
-            <FormField
-              label="Admin state"
-              description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
-              spacing="loose"
-            >
-              <HStack gap={2} className="items-center">
-                <Toggle
-                  checked={adminStateUp}
-                  onChange={(e) => setAdminStateUp(e.target.checked)}
-                />
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  {adminStateUp ? 'Up' : 'Down'}
-                </span>
-              </HStack>
-            </FormField>
+        {/* Port security */}
+        <FormField
+          label="Port security"
+          description="Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases."
+          spacing="loose"
+        >
+          <HStack gap={2} className="items-center">
+            <Toggle
+              checked={portSecurityEnabled}
+              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+            />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {portSecurityEnabled ? 'On' : 'Off'}
+            </span>
+          </HStack>
+        </FormField>
 
-            {/* Port security */}
-            <FormField
-              label="Port security"
-              description="Enhances security by allowing only permitted devices to access this network. It is recommended to keep this enabled in most cases."
-              spacing="loose"
-            >
-              <HStack gap={2} className="items-center">
-                <Toggle
-                  checked={portSecurityEnabled}
-                  onChange={(e) => setPortSecurityEnabled(e.target.checked)}
-                />
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  {portSecurityEnabled ? 'On' : 'Off'}
-                </span>
-              </HStack>
-            </FormField>
-          </>
-        )}
+        {/* Shared */}
+        <FormField
+          label="Shared"
+          description="Indicates whether the network is available to other projects."
+          spacing="loose"
+        >
+          <HStack gap={2} className="items-center">
+            <Toggle
+              checked={portSecurityEnabled}
+              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+            />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {portSecurityEnabled ? 'Yes' : 'No'}
+            </span>
+          </HStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -276,12 +276,10 @@ export function DrawerDemo() {
       <Drawer
         isOpen={isBasicOpen}
         onClose={() => setIsBasicOpen(false)}
-        title=""
-        showCloseButton={false}
+        title="Drawer Title"
         width={360}
       >
-        <VStack gap={4}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Drawer Title</h2>
+        <VStack gap={6}>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
             <p className="text-body-md text-[var(--color-text-default)]">
               This is a basic drawer with content. Drawers are useful for secondary content, forms,
@@ -304,8 +302,7 @@ export function DrawerDemo() {
       <Drawer
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title=""
-        showCloseButton={false}
+        title="Edit Settings"
         width={360}
         footer={
           <div className="flex gap-2 w-full">
@@ -318,10 +315,9 @@ export function DrawerDemo() {
           </div>
         }
       >
-        <VStack gap={4}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit Settings</h2>
+        <VStack gap={6}>
           <VStack gap={2}>
-            <label className="text-label-md text-[var(--color-text-default)]">Setting Name </label>
+            <label className="text-label-md text-[var(--color-text-default)]">Setting Name</label>
             <Input
               value={formValue}
               onChange={(e) => setFormValue(e.target.value)}
@@ -384,8 +380,7 @@ export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onCl
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Edit basic Information"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -399,8 +394,6 @@ export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onCl
       }
     >
       <VStack gap={6}>
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit basic Information</h2>
-
         {/* Agent Name */}
         <FormField label="Agent name" required>
           <Input
@@ -500,8 +493,7 @@ export function EditModelSettingsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Edit model settings"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -515,8 +507,6 @@ export function EditModelSettingsDrawer({
       }
     >
       <VStack gap={6}>
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit model settings</h2>
-
         {/* Model Provider */}
         <FormField
           label="Model provider"
@@ -596,8 +586,7 @@ export function EditPromptSettingsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Edit prompt settings"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -611,8 +600,6 @@ export function EditPromptSettingsDrawer({
       }
     >
       <VStack gap={6}>
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit prompt settings</h2>
-
         {/* System Prompt */}
         <FormField
           label="System prompt"
@@ -809,8 +796,7 @@ export function ConnectDataSourceDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Connect data sources"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -824,9 +810,6 @@ export function ConnectDataSourceDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect data sources</h2>
-
         {/* Data Sources Section */}
         <VStack gap={2}>
           <p className="text-label-md text-[var(--color-text-default)]">Data sources</p>
@@ -1034,8 +1017,7 @@ export function ConnectMCPServerDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Connect MCP tools"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -1049,9 +1031,6 @@ export function ConnectMCPServerDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect MCP tools</h2>
-
         {/* MCP Tools Section */}
         <VStack gap={2}>
           <p className="text-label-md text-[var(--color-text-default)]">MCP tools</p>
@@ -1190,11 +1169,9 @@ GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
   ];
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="" showCloseButton={false} width={696}>
+    <Drawer isOpen={isOpen} onClose={onClose} title="Log detail" width={696}>
       <VStack gap={6}>
-        {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-heading-h4 text-[var(--color-text-default)]">Log detail</h2>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Shows a history of the agent's operations and results.
           </p>
@@ -1505,8 +1482,7 @@ export function CreateMCPTemplateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Create MCP template"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -1520,9 +1496,6 @@ export function CreateMCPTemplateDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Create MCP template</h2>
-
         {/* Basic Information */}
         <VStack gap={4}>
           <h3 className="text-heading-h6 text-[var(--color-text-default)]">Basic information</h3>
@@ -1659,8 +1632,7 @@ export function TemplateTypeSettingsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Template type settings"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -1674,9 +1646,6 @@ export function TemplateTypeSettingsDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Template type settings</h2>
-
         {/* Template Type Selection */}
         <VStack gap={4}>
           <FormField>
@@ -1777,8 +1746,7 @@ export function ContainerSettingsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Container settings"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -1792,9 +1760,6 @@ export function ContainerSettingsDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Container settings</h2>
-
         {/* Container Configuration */}
         <VStack gap={4}>
           <FormField required>
@@ -1926,8 +1891,7 @@ export function HTTPSettingsDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="HTTP settings"
       width={696}
       footer={
         <HStack gap={2} className="w-full">
@@ -1941,9 +1905,6 @@ export function HTTPSettingsDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">HTTP settings</h2>
-
         {/* HTTP Configuration */}
         <VStack gap={4}>
           <FormField required>
@@ -2016,8 +1977,7 @@ export function ToolAccessControlDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Edit access control"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -2031,9 +1991,6 @@ export function ToolAccessControlDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit access control</h2>
-
         {/* Form Fields */}
         <VStack gap={4}>
           <FormField>
@@ -2086,8 +2043,7 @@ export function ToolAuthenticationDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title=""
-      showCloseButton={false}
+      title="Edit authentication"
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -2101,9 +2057,6 @@ export function ToolAuthenticationDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit authentication</h2>
-
         {/* Form Fields */}
         <VStack gap={4}>
           <FormField>

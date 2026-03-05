@@ -154,8 +154,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Volume from Snapshot"
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -206,10 +205,6 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Create Volume from Snapshot
-          </h2>
-
           {/* Volume Snapshot Info */}
           <InfoBox
             label="Volume snapshot"

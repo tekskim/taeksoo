@@ -253,8 +253,8 @@ export function ManageUsersDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage users"
+      description="Add or remove members of this user group. Users included in the group automatically receive the permissions assigned to the group."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -275,16 +275,6 @@ export function ManageUsersDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Manage users
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Add or remove members of this user group. Users included in the group automatically
-              receive the permissions assigned to the group.
-            </p>
-          </VStack>
-
           <InfoBox label="User group" value={userGroupName} />
         </VStack>
 

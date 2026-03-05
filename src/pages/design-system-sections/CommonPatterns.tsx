@@ -27,6 +27,7 @@ import {
   ListToolbar,
   ContextMenu,
   InlineMessage,
+  InfoBox,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -318,8 +319,7 @@ export function FormDrawerPatternDemo() {
       <Drawer
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title=""
-        showCloseButton={false}
+        title="Edit Instance"
         width={360}
         footer={
           <HStack gap={2} className="w-full">
@@ -333,8 +333,6 @@ export function FormDrawerPatternDemo() {
         }
       >
         <VStack gap={6}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit Instance</h2>
-
           {/* Info Box Pattern */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
             <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Instance ID</div>
@@ -451,8 +449,8 @@ export function SelectionDrawerPatternDemo() {
       <Drawer
         isOpen={isOpen}
         onClose={handleClose}
-        title=""
-        showCloseButton={false}
+        title="Attach Volume"
+        description="Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance."
         width={696}
         footer={
           <HStack gap={2} justify="center" className="w-full">
@@ -465,32 +463,12 @@ export function SelectionDrawerPatternDemo() {
           </HStack>
         }
       >
-        <VStack gap={3} className="h-full">
-          {/* Header */}
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Attach Volume
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Attach one or more available volumes to this instance. Once attached, the volumes will
-              appear as additional storage devices inside the instance.
-            </p>
-          </VStack>
-
+        <VStack gap={6} className="h-full">
           {/* Info Box */}
-          <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <VStack gap={1.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                Volume
-              </span>
-              <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                vol-demo-01
-              </span>
-            </VStack>
-          </div>
+          <InfoBox label="Volume" value="vol-demo-01" />
 
           {/* Selection Section */}
-          <VStack gap={3} className="mt-3 pb-5">
+          <VStack gap={3} className="pb-5">
             <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
             {/* Search */}

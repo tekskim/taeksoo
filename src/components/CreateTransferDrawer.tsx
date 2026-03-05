@@ -63,8 +63,8 @@ export function CreateTransferDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Create Transfer"
+      description="Create a transfer request to share this volume with another project. The recipient will need the generated Transfer ID and auth key to accept it."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -85,16 +85,6 @@ export function CreateTransferDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <VStack gap={2}>
-            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-              Create Transfer
-            </h2>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Create a transfer request to share this volume with another project. The recipient
-              will need the generated Transfer ID and auth key to accept it.
-            </p>
-          </VStack>
-
           {/* Volume Info */}
           <InfoBox label="Volume" value={volume ? `${volume.name} (${volume.size}GiB)` : '-'} />
         </VStack>

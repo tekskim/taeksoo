@@ -198,8 +198,8 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title=""
-      showCloseButton={false}
+      title="Manage rules"
+      description="Select rules from the list to add to the policy."
       width={1032}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -215,8 +215,6 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
       <VStack gap={6}>
         {/* Title */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Manage rules</h2>
-
           <InfoBox label="Firewall policy" value={policy.name} />
         </VStack>
 
@@ -224,9 +222,6 @@ export function ManageRulesDrawer({ isOpen, onClose, policy, onSave }: ManageRul
         <VStack gap={3} className="w-full">
           <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rules</span>
-            <p className="text-body-md text-[var(--color-text-subtle)]">
-              Select rules from the list to add to the policy.
-            </p>
           </VStack>
 
           {/* Two Column Layout */}

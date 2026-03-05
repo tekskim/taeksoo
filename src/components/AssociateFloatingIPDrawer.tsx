@@ -581,9 +581,7 @@ export function AssociateFloatingIPDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Floating IP Info */}
-        <VStack gap={3}>
-          <InfoBox label="Floating IP" value={floatingIP.address} />
-        </VStack>
+        <InfoBox label="Floating IP" value={floatingIP.address} />
 
         {/* Resource Type Section */}
         <VStack gap={3} className="w-full">
