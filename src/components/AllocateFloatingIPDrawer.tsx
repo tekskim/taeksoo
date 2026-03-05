@@ -292,10 +292,7 @@ export function AllocateFloatingIPDrawer({
       <VStack gap={6} className="h-full">
         {/* Description Field */}
         <FormField>
-          <FormField.Label>
-            Description{' '}
-            <span className="text-body-sm text-[var(--color-text-subtle)]">(Optional)</span>
-          </FormField.Label>
+          <FormField.Label>Description</FormField.Label>
           <FormField.Control>
             <Input
               value={description}

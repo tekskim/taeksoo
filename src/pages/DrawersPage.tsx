@@ -27,6 +27,10 @@ import {
   LockSettingDrawer,
   type InstanceInfo as LockInstanceInfo,
 } from '@/components/LockSettingDrawer';
+import {
+  BootSettingDrawer,
+  type VolumeInfo as BootVolumeInfo,
+} from '@/components/BootSettingDrawer';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateVolumeSnapshotDrawer,
@@ -226,6 +230,13 @@ const mockLockInstance: LockInstanceInfo = {
   id: 'inst-001',
   name: 'web-server-01',
   isLocked: false,
+};
+
+const mockBootVolume: BootVolumeInfo = {
+  id: 'vol-005',
+  name: 'vol32',
+  size: '92 GiB',
+  isBootable: true,
 };
 
 const mockViewPreferencesColumns: ColumnConfig[] = [
@@ -621,7 +632,7 @@ export function DrawersPage() {
                       Drawers{' '}
                     </span>
                     <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (70 drawers)
+                      (71 drawers)
                     </span>
                   </div>
                 </div>
@@ -813,6 +824,14 @@ export function DrawersPage() {
                         description="Edit the name and description of an existing volume."
                         category="Volume"
                         onOpen={() => openDrawerFn('edit-volume')}
+                        linked
+                        linkedTo="Volumes"
+                      />
+                      <DrawerCard
+                        title="Boot setting"
+                        description="Enable or disable a volume as a boot source for new instances."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('boot-setting')}
                         linked
                         linkedTo="Volumes"
                       />
@@ -1648,6 +1667,15 @@ export function DrawersPage() {
         }}
       />
 
+      <BootSettingDrawer
+        isOpen={openDrawer === 'boot-setting'}
+        onClose={closeDrawer}
+        volume={mockBootVolume}
+        onSubmit={(isBootable) => {
+          console.log('Boot setting:', { isBootable });
+        }}
+      />
+
       <ViewPreferencesDrawer
         isOpen={openDrawer === 'view-preferences'}
         onClose={closeDrawer}
@@ -1684,8 +1712,8 @@ export function DrawersPage() {
         isOpen={openDrawer === 'clone-volume'}
         onClose={closeDrawer}
         volume={mockCloneVolume}
-        minCapacity={201}
-        maxCapacity={2000}
+        minCapacity={50}
+        maxCapacity={951}
         volumeQuota={{ used: 2, total: 10 }}
         volumeCapacityQuota={{ used: 20, total: 1000 }}
         typeQuota={{ used: 2, total: null }}
@@ -1699,8 +1727,8 @@ export function DrawersPage() {
         isOpen={openDrawer === 'extend-volume'}
         onClose={closeDrawer}
         volume={mockExtendVolume}
-        minCapacity={201}
-        maxCapacity={2000}
+        minCapacity={50}
+        maxCapacity={951}
         volumeCapacityQuota={{ used: 20, total: 1000 }}
         typeCapacityQuota={{ used: 2, total: null }}
         onSubmit={(newCapacity) => {
@@ -1721,8 +1749,8 @@ export function DrawersPage() {
         isOpen={openDrawer === 'create-volume-from-snapshot'}
         onClose={closeDrawer}
         snapshot={mockVolumeSnapshot}
-        minCapacity={201}
-        maxCapacity={2000}
+        minCapacity={70}
+        maxCapacity={1756}
         volumeQuota={{ used: 2, total: 10 }}
         volumeCapacityQuota={{ used: 20, total: 1000 }}
         typeQuota={{ used: 2, total: null }}
