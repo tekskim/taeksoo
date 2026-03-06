@@ -260,9 +260,7 @@ export default function CertificateDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={listenerStatusMap[row.status]} />,
     },
     {
       key: 'name',

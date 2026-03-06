@@ -214,7 +214,7 @@ export default function SubnetDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} />,
     },
     {
       key: 'name',

@@ -337,10 +337,7 @@ function DataSourcesTab() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator
-          status={row.status === 'active' ? 'active' : 'shutoff'}
-          layout="icon-only"
-        />
+        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} />
       ),
     },
     {
@@ -508,7 +505,7 @@ function MCPServersTab() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} />,
     },
     {
       key: 'title',

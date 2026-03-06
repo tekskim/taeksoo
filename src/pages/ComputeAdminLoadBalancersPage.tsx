@@ -371,7 +371,7 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} />,
     },
     {
       key: 'name',

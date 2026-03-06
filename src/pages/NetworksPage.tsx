@@ -331,9 +331,7 @@ export function NetworksPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={networkStatusMap[row.status]} />,
     },
     {
       key: 'name',

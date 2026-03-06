@@ -615,12 +615,7 @@ export function ComputeAdminBareMetalDetailPage() {
                           Down: 'down',
                           Build: 'building',
                         };
-                        return (
-                          <StatusIndicator
-                            status={statusMap[iface.portStatus] || 'down'}
-                            layout="icon-only"
-                          />
-                        );
+                        return <StatusIndicator status={statusMap[iface.portStatus] || 'down'} />;
                       },
                     },
                     {

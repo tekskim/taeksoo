@@ -78,10 +78,7 @@ export function ListPagePatternDemo() {
       width: fixedColumns.status,
       align: 'center' as const,
       render: (_: string, row: { status: string }) => (
-        <StatusIndicator
-          status={row.status as 'active' | 'error' | 'building'}
-          layout="icon-only"
-        />
+        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
     },
     { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name },
@@ -517,7 +514,6 @@ export function SelectionDrawerPatternDemo() {
                     render: (_, row) => (
                       <StatusIndicator
                         status={row.status as 'active' | 'error' | 'shutoff'}
-                        layout="icon-only"
                         size="sm"
                       />
                     ),

@@ -50,18 +50,17 @@ describe('StatusIndicator', () => {
   });
 
   describe('Layout variants', () => {
-    it('renders icon-only layout by default', () => {
+    it('renders default layout with icon and label by default', () => {
       render(<StatusIndicator status="active" />);
       const indicator = screen.getByRole('status');
-      expect(indicator).toHaveClass('rounded-full');
-      // Should not contain text label
-      expect(indicator).not.toHaveTextContent('Active');
+      expect(indicator).toHaveTextContent('Active');
     });
 
-    it('renders default layout with label', () => {
-      render(<StatusIndicator status="active" layout="default" />);
+    it('renders icon-only layout when specified', () => {
+      render(<StatusIndicator status="active" layout="icon-only" />);
       const indicator = screen.getByRole('status');
-      expect(indicator).toHaveTextContent('Active');
+      expect(indicator).toHaveClass('rounded-full');
+      expect(indicator).not.toHaveTextContent('Active');
     });
 
     it('renders badge layout', () => {
@@ -74,17 +73,17 @@ describe('StatusIndicator', () => {
 
   describe('Size variants (icon-only)', () => {
     it('renders sm size', () => {
-      render(<StatusIndicator status="active" size="sm" />);
+      render(<StatusIndicator status="active" layout="icon-only" size="sm" />);
       expect(screen.getByRole('status')).toHaveClass('size-[24px]');
     });
 
     it('renders md size (default)', () => {
-      render(<StatusIndicator status="active" size="md" />);
+      render(<StatusIndicator status="active" layout="icon-only" size="md" />);
       expect(screen.getByRole('status')).toHaveClass('size-[24px]');
     });
 
     it('renders lg size', () => {
-      render(<StatusIndicator status="active" size="lg" />);
+      render(<StatusIndicator status="active" layout="icon-only" size="lg" />);
       expect(screen.getByRole('status')).toHaveClass('size-[28px]');
     });
   });
@@ -156,7 +155,7 @@ describe('StatusIndicator', () => {
       render(<StatusIndicator status="active" className="mt-2" />);
       const indicator = screen.getByRole('status');
       expect(indicator).toHaveClass('mt-2');
-      expect(indicator).toHaveClass('rounded-full'); // base style preserved
+      expect(indicator).toHaveClass('bg-[var(--status-success-bg)]');
     });
   });
 

@@ -382,7 +382,7 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} />,
     },
     {
       key: 'name',
@@ -468,9 +468,7 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={l7PolicyStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={l7PolicyStatusMap[row.status]} />,
     },
     {
       key: 'name',
@@ -552,9 +550,7 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={certificateStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={certificateStatusMap[row.status]} />,
     },
     {
       key: 'name',
