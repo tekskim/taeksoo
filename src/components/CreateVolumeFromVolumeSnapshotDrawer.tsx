@@ -3,6 +3,7 @@ import {
   Drawer,
   Button,
   Input,
+  Textarea,
   Select,
   Slider,
   FormField,
@@ -226,7 +227,8 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 
@@ -234,13 +236,18 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Recovery test volume from snapshot"
+              placeholder="Enter description"
               fullWidth
+              rows={3}
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}

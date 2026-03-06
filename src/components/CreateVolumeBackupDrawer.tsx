@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Radio, FormField, InlineMessage } from '@/design-system';
+import { Drawer, Button, Input, Textarea, Radio, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconHelp } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
@@ -202,11 +202,12 @@ export function CreateVolumeBackupDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={backupDescription}
               onChange={(e) => setBackupDescription(e.target.value)}
               placeholder="Enter description"
               fullWidth
+              rows={3}
             />
           </FormField.Control>
           <FormField.HelperText>

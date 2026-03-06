@@ -1,7 +1,16 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import { VStack, HStack, Button, Input, Select, Badge } from '@/design-system';
+import {
+  VStack,
+  HStack,
+  Button,
+  Input,
+  Select,
+  Badge,
+  Disclosure,
+  NumberInput,
+} from '@/design-system';
 import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 const ENV_TYPE_OPTIONS = [
@@ -576,6 +585,351 @@ const dynamicFieldTableCode = `<div className="bg-[var(--color-surface-subtle)] 
   </VStack>
 </div>`;
 
+/* ──────────────────────────────────────────────
+   Disclosure Nested Grid Demo (Node Scheduling-style)
+   ────────────────────────────────────────────── */
+
+const SCHED_OPERATOR_OPTIONS = [
+  { value: 'In', label: 'In' },
+  { value: 'NotIn', label: 'NotIn' },
+  { value: 'Exists', label: 'Exists' },
+  { value: 'DoesNotExist', label: 'DoesNotExist' },
+];
+
+const SCHED_PRIORITY_OPTIONS = [
+  { value: 'required', label: 'Required' },
+  { value: 'preferred', label: 'Preferred' },
+];
+
+interface SchedExpression {
+  key: string;
+  operator: string;
+  value: string;
+}
+
+interface SchedTerm {
+  id: string;
+  priority: string;
+  weight: number;
+  expressions: SchedExpression[];
+}
+
+function DisclosureNestedGridDemo() {
+  const [terms, setTerms] = useState<SchedTerm[]>(() => {
+    const id1 = crypto.randomUUID();
+    const id2 = crypto.randomUUID();
+    return [
+      {
+        id: id1,
+        priority: 'required',
+        weight: 50,
+        expressions: [
+          { key: 'kubernetes.io/os', operator: 'In', value: 'linux' },
+          { key: 'node-type', operator: 'In', value: 'compute' },
+        ],
+      },
+      {
+        id: id2,
+        priority: 'preferred',
+        weight: 30,
+        expressions: [{ key: 'topology.kubernetes.io/zone', operator: 'In', value: 'us-east-1a' }],
+      },
+    ];
+  });
+  const [openIds, setOpenIds] = useState<Set<string>>(() => new Set([terms[0]?.id]));
+
+  const addTerm = () => {
+    const newId = crypto.randomUUID();
+    setTerms([
+      ...terms,
+      {
+        id: newId,
+        priority: 'preferred',
+        weight: 1,
+        expressions: [{ key: '', operator: 'In', value: '' }],
+      },
+    ]);
+    setOpenIds((prev) => new Set(prev).add(newId));
+  };
+
+  const removeTerm = (id: string) => {
+    setTerms(terms.filter((t) => t.id !== id));
+    setOpenIds((prev) => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const updateTerm = (id: string, field: 'priority' | 'weight', val: string | number) =>
+    setTerms(terms.map((t) => (t.id === id ? { ...t, [field]: val } : t)));
+
+  const addExpression = (termId: string) =>
+    setTerms(
+      terms.map((t) =>
+        t.id === termId
+          ? { ...t, expressions: [...t.expressions, { key: '', operator: 'In', value: '' }] }
+          : t
+      )
+    );
+
+  const removeExpression = (termId: string, ei: number) =>
+    setTerms(
+      terms.map((t) =>
+        t.id === termId ? { ...t, expressions: t.expressions.filter((_, j) => j !== ei) } : t
+      )
+    );
+
+  const updateExpression = (
+    termId: string,
+    ei: number,
+    field: keyof SchedExpression,
+    val: string
+  ) =>
+    setTerms(
+      terms.map((t) =>
+        t.id === termId
+          ? {
+              ...t,
+              expressions: t.expressions.map((e, j) => (j === ei ? { ...e, [field]: val } : e)),
+            }
+          : t
+      )
+    );
+
+  return (
+    <VStack gap={2}>
+      {terms.map((term, ti) => (
+        <div
+          key={term.id}
+          className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+        >
+          <Disclosure
+            open={openIds.has(term.id)}
+            onChange={(isOpen) =>
+              setOpenIds((prev) => {
+                const next = new Set(prev);
+                if (isOpen) {
+                  next.add(term.id);
+                } else {
+                  next.delete(term.id);
+                }
+                return next;
+              })
+            }
+          >
+            <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
+              <HStack gap={2} align="center" className="w-full">
+                <Disclosure.Trigger className="flex-1">
+                  <HStack gap={4} align="center">
+                    <span>Term {ti + 1}</span>
+                    <HStack gap={1} align="center">
+                      <Badge theme="white" size="sm">
+                        {term.priority === 'required' ? 'Required' : 'Preferred'}
+                      </Badge>
+                      {term.priority === 'preferred' && (
+                        <Badge theme="white" size="sm">
+                          W:{term.weight}
+                        </Badge>
+                      )}
+                      <Badge theme="white" size="sm">
+                        {term.expressions.length} rule
+                        {term.expressions.length !== 1 ? 's' : ''}
+                      </Badge>
+                    </HStack>
+                  </HStack>
+                </Disclosure.Trigger>
+                {terms.length > 1 && (
+                  <button
+                    onClick={() => removeTerm(term.id)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  >
+                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                  </button>
+                )}
+              </HStack>
+            </div>
+            <Disclosure.Panel className="px-4 py-4">
+              <VStack gap={6}>
+                <VStack gap={2} className="w-full">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Priority
+                  </span>
+                  <Select
+                    options={SCHED_PRIORITY_OPTIONS}
+                    value={term.priority}
+                    onChange={(val) => updateTerm(term.id, 'priority', val)}
+                    fullWidth
+                  />
+                </VStack>
+                {term.priority === 'preferred' && (
+                  <VStack gap={2}>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Weight
+                    </span>
+                    <NumberInput
+                      min={1}
+                      max={100}
+                      step={1}
+                      value={term.weight}
+                      onChange={(val) => updateTerm(term.id, 'weight', val ?? 1)}
+                      width="sm"
+                    />
+                  </VStack>
+                )}
+                <VStack gap={2}>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Rules
+                  </span>
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <VStack gap={1.5}>
+                      {term.expressions.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Operator
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div />
+                        </div>
+                      )}
+                      {term.expressions.map((expr, ei) => (
+                        <div
+                          key={ei}
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="e.g. kubernetes.io/os"
+                            value={expr.key}
+                            onChange={(e) => updateExpression(term.id, ei, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Select
+                            options={SCHED_OPERATOR_OPTIONS}
+                            value={expr.operator}
+                            onChange={(val) => updateExpression(term.id, ei, 'operator', val)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="e.g. linux"
+                            value={expr.value}
+                            onChange={(e) => updateExpression(term.id, ei, 'value', e.target.value)}
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeExpression(term.id, ei)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={() => addExpression(term.id)}
+                        >
+                          Add Rule
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+                </VStack>
+              </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+        </div>
+      ))}
+      <div className="w-fit">
+        <Button
+          variant="secondary"
+          size="sm"
+          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+          onClick={addTerm}
+        >
+          Add Term
+        </Button>
+      </div>
+    </VStack>
+  );
+}
+
+/* ──────────────────────────────────────────────
+   Disclosure code snippets
+   ────────────────────────────────────────────── */
+
+const disclosureNestedGridCode = `<VStack gap={2}>
+  {terms.map((term, i) => (
+    <div key={term.id}
+      className="border border-[var(--color-border-default)]
+        rounded-[var(--primitive-radius-md)] w-full overflow-hidden">
+      <Disclosure defaultOpen={i === 0}>
+        {/* Trigger header — bg-subtle with badges */}
+        <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
+          <HStack gap={2} align="center" className="w-full">
+            <Disclosure.Trigger className="flex-1">
+              <HStack gap={2} align="center">
+                <span>Term {i + 1}</span>
+                <Badge variant="info" size="sm">{term.priority}</Badge>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  W:{term.weight} · {term.expressions.length} rules
+                </span>
+              </HStack>
+            </Disclosure.Trigger>
+            <button onClick={() => removeTerm(term.id)}>
+              <IconX size={14} />
+            </button>
+          </HStack>
+        </div>
+        {/* Panel — form fields + nested bg-subtle grid */}
+        <Disclosure.Panel className="px-4 py-4">
+          <VStack gap={6}>
+            <VStack gap={2} className="w-full">
+              <span className="text-label-sm">Priority</span>
+              <Select options={priorityOptions} value={term.priority} ... fullWidth />
+            </VStack>
+            <VStack gap={2}>
+              <span className="text-label-sm">Weight</span>
+              <NumberInput min={1} max={100} value={term.weight} ... width="xs" />
+            </VStack>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              {/* Key-Operator-Value grid */}
+              <VStack gap={1.5}>
+                <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
+                  <span className="text-label-sm">Key</span>
+                  <span className="text-label-sm">Operator</span>
+                  <span className="text-label-sm">Value</span>
+                  <div />
+                </div>
+                {term.expressions.map((expr, ei) => (
+                  <div key={ei} className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 ...">
+                    <Input ... /><Select ... /><Input ... />
+                    <button onClick={() => removeExpr(term.id, ei)}><IconX /></button>
+                  </div>
+                ))}
+                <Button variant="secondary" size="sm" onClick={() => addExpr(term.id)}>
+                  Add Rule
+                </Button>
+              </VStack>
+            </div>
+          </VStack>
+        </Disclosure.Panel>
+      </Disclosure>
+    </div>
+  ))}
+  <Button variant="secondary" size="sm" onClick={addTerm}>Add Term</Button>
+</VStack>`;
+
 const repeatableFieldGroupCode = `<div className="bg-[var(--color-surface-subtle)] border ... rounded-[6px] p-3 w-full">
   <VStack gap={1.5} className="w-full">
     {groups.map((group, gi) => (
@@ -748,6 +1102,30 @@ export function DynamicFormFieldsPage() {
               <RepeatableFieldGroupDemo />
             </ComponentPreview>
           </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <HStack gap={2} align="center">
+                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+                  Disclosure with Nested Grid
+                </h4>
+                <Badge variant="info" size="sm">
+                  Disclosure
+                </Badge>
+              </HStack>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                Collapsible items containing form controls (Select, NumberInput) at the top level
+                and a bg-subtle Key-Operator-Value grid inside. The collapsed header shows badges
+                and a summary string. Use for complex scheduling rules, affinity terms, HPA metrics,
+                or any multi-field item with nested match expressions.
+              </p>
+            </VStack>
+            <ComponentPreview code={disclosureNestedGridCode}>
+              <DisclosureNestedGridDemo />
+            </ComponentPreview>
+          </VStack>
         </VStack>
       }
       guidelines={
@@ -824,6 +1202,18 @@ export function DynamicFormFieldsPage() {
                     Storage Volumes, Network Interfaces, Affinity Rules
                   </td>
                 </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
+                    Disclosure with Nested Grid (Disclosure)
+                  </td>
+                  <td className="py-2 pr-4 text-[var(--color-text-muted)]">
+                    Complex items with form controls at the top and a nested key-operator-value grid
+                    or match expression table inside
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    Node Scheduling, Pod Affinity, HPA Metrics, Network Policy Rules
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -861,6 +1251,14 @@ export function DynamicFormFieldsPage() {
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Repeatable Field Group (Card):</strong> bg-subtle outer container → white
                 inner cards (each with headers + close button + input rows) → Add button (mt-1)
+              </p>
+            </div>
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+              <p className="text-body-sm text-[var(--color-text-default)]">
+                <strong>Disclosure with Nested Grid (Disclosure):</strong> bordered container with
+                overflow-hidden → Disclosure → bg-subtle trigger header (title + badges + summary) →
+                Panel (px-4 py-4): top-level form controls (Select, NumberInput) + bg-subtle
+                key-operator-value grid → Add button outside
               </p>
             </div>
           </VStack>
@@ -945,6 +1343,38 @@ export function DynamicFormFieldsPage() {
                   <td className="py-2 pr-4 text-[var(--color-text-default)]">Border radius</td>
                   <td className="py-2 text-[var(--color-text-muted)]">6px (rounded-[6px])</td>
                 </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Disclosure trigger padding
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">px-4 py-3 (16px × 12px)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Disclosure panel padding
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">px-4 py-4 (16px × 16px)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Disclosure panel internal gap
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">24px (gap-6)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Disclosure items gap
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">8px (gap-2)</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                    Disclosure border radius
+                  </td>
+                  <td className="py-2 text-[var(--color-text-muted)]">
+                    var(--primitive-radius-md) (6px)
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -965,6 +1395,11 @@ export function DynamicFormFieldsPage() {
           label: 'Wizard (Create Flow)',
           path: '/design/patterns/wizard',
           description: 'Multi-step create form pattern',
+        },
+        {
+          label: 'Nested Box Pattern',
+          path: '/design/test/nested-box',
+          description: 'Full Disclosure pattern examples with real-world data',
         },
       ]}
     />

@@ -184,7 +184,8 @@ export function CreateKeyPairDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Key pair name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </FormField.HelperText>
         </FormField>
 

@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider, FormField, NumberInput } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Textarea,
+  Select,
+  Slider,
+  FormField,
+  NumberInput,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -84,8 +93,8 @@ export function CreateVolumeFromImageDrawer({
   isOpen,
   onClose,
   image,
-  minCapacity = 201,
-  maxCapacity = 2000,
+  minCapacity = 30,
+  maxCapacity = 1756,
   volumeTypes = [
     { value: '_DEFAULT_', label: '_DEFAULT_' },
     { value: 'ssd', label: 'SSD' },
@@ -98,6 +107,7 @@ export function CreateVolumeFromImageDrawer({
   onSubmit,
 }: CreateVolumeFromImageDrawerProps) {
   const [volumeName, setVolumeName] = useState('');
+  const [description, setDescription] = useState('');
   const [capacity, setCapacity] = useState(minCapacity);
   const [volumeType, setVolumeType] = useState('_DEFAULT_');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,6 +117,7 @@ export function CreateVolumeFromImageDrawer({
   useEffect(() => {
     if (isOpen && image) {
       setVolumeName('');
+      setDescription('');
       setCapacity(Math.max(image.size, minCapacity));
       setVolumeType('_DEFAULT_');
       setHasAttemptedSubmit(false);
@@ -128,6 +139,7 @@ export function CreateVolumeFromImageDrawer({
 
   const handleClose = () => {
     setVolumeName('');
+    setDescription('');
     setCapacity(minCapacity);
     setVolumeType('_DEFAULT_');
     setHasAttemptedSubmit(false);
@@ -218,13 +230,36 @@ export function CreateVolumeFromImageDrawer({
           </FormField.Control>
           <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           <FormField.HelperText>
-            Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
+          </FormField.HelperText>
+        </FormField>
+
+        {/* Description Input */}
+        <FormField>
+          <FormField.Label>Description</FormField.Label>
+          <FormField.Control>
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+              rows={3}
+            />
+          </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </FormField.HelperText>
         </FormField>
 
         {/* Capacity Slider */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Capacity (GiB)</FormField.Label>
+          <FormField.Description>
+            Set the size of the volume. The size must be equal to or greater than the minimum
+            required by the selected image.
+          </FormField.Description>
           <FormField.Control>
             <HStack gap={3} align="center" className="w-full">
               <Slider
@@ -252,8 +287,9 @@ export function CreateVolumeFromImageDrawer({
         </FormField>
 
         {/* Volume Type Select */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Volume type</FormField.Label>
+          <FormField.Description>Select the volume type for the new volume.</FormField.Description>
           <FormField.Control>
             <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />
           </FormField.Control>
