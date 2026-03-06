@@ -79,8 +79,8 @@ export function ListPagePatternDemo() {
       align: 'center' as const,
       render: (_: string, row: { status: string }) => (
         <StatusIndicator
-          status={row.status as 'active' | 'error' | 'building'}
           layout="icon-only"
+          status={row.status as 'active' | 'error' | 'building'}
         />
       ),
     },
@@ -516,8 +516,8 @@ export function SelectionDrawerPatternDemo() {
                     align: 'center' as const,
                     render: (_, row) => (
                       <StatusIndicator
-                        status={row.status as 'active' | 'error' | 'shutoff'}
                         layout="icon-only"
+                        status={row.status as 'active' | 'error' | 'shutoff'}
                         size="sm"
                       />
                     ),

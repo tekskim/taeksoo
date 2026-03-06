@@ -200,7 +200,7 @@ function StatusCell({ status }: StatusCellProps) {
     offline: 'down',
   };
 
-  return <StatusIndicator status={statusMap[status]} />;
+  return <StatusIndicator layout="icon-only" status={statusMap[status]} />;
 }
 
 /* ----------------------------------------

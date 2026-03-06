@@ -239,9 +239,31 @@ export function WizardPage() {
         </VStack>
       }
       relatedLinks={[
-        { label: 'Multi-tab Create', path: '/design/patterns/multi-tab-create' },
-        { label: 'Card', path: '/design/components/card' },
-        { label: 'Floating Card', path: '/design/components/floating-card' },
+        {
+          label: 'Open Form (Create Flow)',
+          path: '/design/patterns/open-form',
+          description: 'Open form and tab-based creation patterns',
+        },
+        {
+          label: 'Card',
+          path: '/design/components/card',
+          description: 'Card component',
+        },
+        {
+          label: 'Section card',
+          path: '/design/components/section-card',
+          description: 'Input card container',
+        },
+        {
+          label: 'Floating card',
+          path: '/design/components/floating-card',
+          description: 'Summary and quota sidebar',
+        },
+        {
+          label: 'Common patterns',
+          path: '/design/patterns/common',
+          description: 'Pattern selection guide',
+        },
       ]}
     />
   );

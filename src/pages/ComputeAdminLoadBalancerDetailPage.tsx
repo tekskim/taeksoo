@@ -271,7 +271,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={listenerStatusMap[row.status]} />
       ),
     },
     {
@@ -364,7 +364,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={poolStatusMap[row.status]} />,
     },
     {
       key: 'name',

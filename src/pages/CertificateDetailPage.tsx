@@ -262,7 +262,7 @@ export default function CertificateDetailPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={listenerStatusMap[row.status]} />
       ),
     },
     {

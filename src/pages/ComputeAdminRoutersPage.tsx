@@ -318,7 +318,7 @@ export function ComputeAdminRoutersPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={routerStatusMap[row.status]} />
       ),
     },
     {

@@ -1214,7 +1214,7 @@ export function InstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_, row: AttachedVolume) => (
-                        <StatusIndicator status={row.status as any} layout="icon-only" />
+                        <StatusIndicator layout="icon-only" status={row.status as any} />
                       ),
                     },
                     {
@@ -1384,8 +1384,8 @@ export function InstanceDetailPage() {
                         };
                         return (
                           <StatusIndicator
-                            status={statusMap[iface.portStatus] || 'down'}
                             layout="icon-only"
+                            status={statusMap[iface.portStatus] || 'down'}
                           />
                         );
                       },
@@ -1534,7 +1534,7 @@ export function InstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_value: string, row: FloatingIP) => (
-                        <StatusIndicator status={row.status} layout="icon-only" size="md" />
+                        <StatusIndicator layout="icon-only" status={row.status} size="md" />
                       ),
                     },
                     {
@@ -1783,6 +1783,7 @@ export function InstanceDetailPage() {
                       align: 'center',
                       render: (_value: string, row: InstanceSnapshot) => (
                         <StatusIndicator
+                          layout="icon-only"
                           status={
                             row.status === 'active'
                               ? 'active'
@@ -1792,7 +1793,6 @@ export function InstanceDetailPage() {
                                   ? 'building'
                                   : 'error'
                           }
-                          layout="icon-only"
                         />
                       ),
                     },

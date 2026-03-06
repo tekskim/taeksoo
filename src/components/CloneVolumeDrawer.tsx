@@ -3,6 +3,7 @@ import {
   Drawer,
   Button,
   Input,
+  Textarea,
   Select,
   Slider,
   FormField,
@@ -246,11 +247,12 @@ export function CloneVolumeDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={volumeDescription}
               onChange={(e) => setVolumeDescription(e.target.value)}
               placeholder="Enter description"
               fullWidth
+              rows={3}
             />
           </FormField.Control>
           <FormField.HelperText>

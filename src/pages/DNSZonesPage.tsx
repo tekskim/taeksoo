@@ -195,7 +195,7 @@ export function DNSZonesPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={statusMap[row.status]} />,
     },
     {
       key: 'name',

@@ -617,8 +617,8 @@ export function ComputeAdminBareMetalDetailPage() {
                         };
                         return (
                           <StatusIndicator
-                            status={statusMap[iface.portStatus] || 'down'}
                             layout="icon-only"
+                            status={statusMap[iface.portStatus] || 'down'}
                           />
                         );
                       },

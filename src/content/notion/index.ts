@@ -1,7 +1,8 @@
 // Auto-generated — DO NOT EDIT manually
-// Last synced: 2026-02-24T04:00:00.000Z
+// Last synced: 2026-03-04T00:00:00.000Z
 
 import button_data from './button.json';
+import status_indicator_data from './status-indicator.json';
 
 export const notionContent: Record<
   string,
@@ -15,4 +16,5 @@ export const notionContent: Record<
   }
 > = {
   button: button_data as never,
+  'status-indicator': status_indicator_data as never,
 };

@@ -321,7 +321,7 @@ export function VolumeBackupsPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={volumeBackupStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={volumeBackupStatusMap[row.status]} />
       ),
     },
     {

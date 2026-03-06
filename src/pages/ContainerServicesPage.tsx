@@ -8,7 +8,6 @@ import {
   Table,
   TableLink,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   Chip,
@@ -19,6 +18,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -165,13 +165,13 @@ export function ContainerServicesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={value === 'Running' ? 'active' : value === 'Failed' ? 'error' : 'building'}
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

@@ -10,7 +10,6 @@ import {
   Table,
   TableLink,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   ContextMenu,
@@ -18,6 +17,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -163,10 +163,14 @@ export function ContainerHPAPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       sortable: false,
-      render: (value) => <StatusIndicator status={getStatusType(value)} showIcon />,
+      render: (value) => (
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
+      ),
     },
     {
       key: 'name',

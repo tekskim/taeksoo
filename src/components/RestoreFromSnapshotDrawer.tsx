@@ -81,7 +81,7 @@ const getSnapshotColumns = (
     label: 'Status',
     width: fixedColumns.status,
     align: 'center',
-    render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+    render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
   },
   {
     key: 'name',

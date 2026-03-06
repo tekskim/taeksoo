@@ -246,7 +246,7 @@ export function ComputeAdminCreateImagePage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',

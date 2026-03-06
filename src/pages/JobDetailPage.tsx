@@ -14,7 +14,6 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   SearchInput,
   DetailHeader,
   Badge,
@@ -233,23 +232,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Running'
-              ? 'active'
-              : value === 'Succeeded'
-                ? 'active'
-                : value === 'Pending'
-                  ? 'building'
-                  : value === 'Failed'
-                    ? 'error'
-                    : 'muted'
-          }
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

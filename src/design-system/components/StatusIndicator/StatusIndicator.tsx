@@ -226,7 +226,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export const StatusIndicator = memo(function StatusIndicator({
   status,
-  layout: rawLayout = 'icon-only',
+  layout: rawLayout = 'default',
   size = 'md',
   label,
   className = '',
