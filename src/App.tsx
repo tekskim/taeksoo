@@ -343,7 +343,6 @@ import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndic
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
 import { LoadingPage } from '@/pages/design/components/LoadingPage';
-import { EmptyStatePage } from '@/pages/design/components/EmptyStatePage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
 import { TabBarPage } from '@/pages/design/components/TabBarPage';
 import { TabsPage } from '@/pages/design/components/TabsPage';
@@ -1003,7 +1002,6 @@ function AppRoutes() {
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
         <Route path="components/loading" element={<LoadingPage />} />
-        <Route path="components/empty-state" element={<EmptyStatePage />} />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />

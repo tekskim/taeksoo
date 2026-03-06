@@ -35,13 +35,16 @@ import {
   IconBox,
   IconCpu,
   IconBell,
+  IconNotebook,
+  IconStack2,
+  IconGitMerge,
 } from '@tabler/icons-react';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-type Intent = 'finetune' | 'serverless' | 'rag';
+type Intent = 'finetune' | 'serverless' | 'rag' | 'notebook' | 'batch' | 'mlops';
 type Phase = 'intent' | 'requirements' | 'plan' | 'executing' | 'done';
 type StepStatus = 'pending' | 'running' | 'done' | 'skipped';
 
@@ -66,6 +69,9 @@ interface RequirementsState {
   finetune: { model: string; datasource: string; gpuCount: number; storageGiB: number };
   serverless: { model: string; maxReplicas: number; autoScale: boolean };
   rag: { datasource: string; embeddingModel: string; llm: string };
+  notebook: { gpuType: string; cpuCores: number; memoryGiB: number; storageGiB: number };
+  batch: { model: string; schedule: string; inputSource: string; concurrency: number };
+  mlops: { framework: string; tracking: string; autoDeploy: boolean; gpuCount: number };
 }
 
 // ---------------------------------------------------------------------------
@@ -102,10 +108,26 @@ function buildEnvChecks(intent: Intent): EnvCheck[] {
   const base: EnvCheck[] = [
     { label: 'IAM 프로젝트', exists: true, detail: 'proj-ai-team (존재함)' },
     { label: 'K8s 클러스터', exists: false, detail: '없음 → 생성 필요' },
-    { label: 'GPU Flavor (A100)', exists: true, detail: 'gpu.a100.1 (존재함)' },
   ];
+
+  if (intent !== 'batch') {
+    base.push({ label: 'GPU Flavor (A100)', exists: true, detail: 'gpu.a100.1 (존재함)' });
+  }
   if (intent === 'finetune' || intent === 'rag') {
     base.push({ label: '학습 데이터 볼륨', exists: false, detail: '없음 → 생성 필요' });
+  }
+  if (intent === 'notebook') {
+    base.push({ label: 'JupyterHub Helm Chart', exists: true, detail: 'v4.1.0 (사용 가능)' });
+    base.push({ label: '워크스페이스 볼륨', exists: false, detail: '없음 → 생성 필요' });
+  }
+  if (intent === 'batch') {
+    base.push({ label: '모델 엔드포인트', exists: true, detail: 'qwen3-8b-serve (존재함)' });
+    base.push({ label: '입력 데이터 볼륨', exists: false, detail: '없음 → 생성 필요' });
+  }
+  if (intent === 'mlops') {
+    base.push({ label: 'Container Registry', exists: true, detail: 'harbor.thaki.io (존재함)' });
+    base.push({ label: 'MLflow 서버', exists: false, detail: '없음 → 배포 필요' });
+    base.push({ label: 'S3 호환 스토리지', exists: true, detail: 'ceph-rgw (존재함)' });
   }
   return base;
 }
@@ -243,7 +265,230 @@ function buildPlanSteps(intent: Intent, reqs: RequirementsState): PlanStep[] {
     ];
   }
 
-  const r = reqs.rag;
+  if (intent === 'rag') {
+    const r = reqs.rag;
+    return [
+      {
+        id: 'cluster',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: 'K8s 클러스터 생성',
+        endpoint: 'POST /v1/container/clusters',
+        params: { name: 'rag-cluster', k8s_version: 'v1.34', cni: 'kube-ovn', worker_count: 2 },
+        durationMs: 3500,
+        status: 'pending',
+      },
+      {
+        id: 'pvc',
+        service: 'Storage',
+        serviceColor: SERVICE_COLORS.Storage,
+        title: 'PVC 생성 (문서 저장소)',
+        endpoint: 'POST /v1/container/pvc',
+        params: { name: 'rag-documents', capacity: '100Gi', access_mode: 'ReadWriteMany' },
+        durationMs: 1500,
+        status: 'pending',
+      },
+      {
+        id: 'datasource',
+        service: 'Agent Platform',
+        serviceColor: SERVICE_COLORS['Agent Platform'],
+        title: '데이터소스 연결',
+        endpoint: 'POST /v1/agent/datasources',
+        params: {
+          name: 'enterprise-docs',
+          type: r.datasource,
+          chunking: 'semantic',
+          embedding_model: r.embeddingModel,
+        },
+        durationMs: 2000,
+        status: 'pending',
+      },
+      {
+        id: 'agent',
+        service: 'Agent Platform',
+        serviceColor: SERVICE_COLORS['Agent Platform'],
+        title: 'AI 에이전트 생성',
+        endpoint: 'POST /v1/agent/agents',
+        params: {
+          name: 'enterprise-rag-agent',
+          model: r.llm,
+          temperature: 0.3,
+          datasource: 'enterprise-docs',
+          max_iteration: 5,
+        },
+        durationMs: 1500,
+        status: 'pending',
+      },
+      {
+        id: 'chat',
+        service: 'Agent Platform',
+        serviceColor: SERVICE_COLORS['Agent Platform'],
+        title: '채팅 인터페이스 활성화',
+        endpoint: 'PATCH /v1/agent/agents/:id',
+        params: { status: 'active', websocket: true },
+        durationMs: 800,
+        status: 'pending',
+      },
+    ];
+  }
+
+  if (intent === 'notebook') {
+    const r = reqs.notebook;
+    return [
+      {
+        id: 'cluster-check',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: '기존 클러스터 확인',
+        endpoint: 'GET /v1/container/clusters',
+        params: { filter: 'gpu-enabled=true' },
+        durationMs: 800,
+        status: 'pending',
+      },
+      {
+        id: 'namespace',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: '네임스페이스 생성',
+        endpoint: 'POST /v1/container/namespaces',
+        params: { name: 'jupyter-workspace', pod_security: 'baseline' },
+        durationMs: 1000,
+        status: 'pending',
+      },
+      {
+        id: 'quota',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: '리소스 쿼터 설정',
+        endpoint: 'POST /v1/container/resource-quotas',
+        params: { cpu: r.cpuCores, memory: `${r.memoryGiB}Gi`, gpu: 1 },
+        durationMs: 800,
+        status: 'pending',
+      },
+      {
+        id: 'pvc',
+        service: 'Storage',
+        serviceColor: SERVICE_COLORS.Storage,
+        title: 'PVC 생성 (워크스페이스)',
+        endpoint: 'POST /v1/container/pvc',
+        params: {
+          name: 'jupyter-home',
+          storage_class: 'ceph-block',
+          capacity: `${r.storageGiB}Gi`,
+          access_mode: 'ReadWriteOnce',
+        },
+        durationMs: 1500,
+        status: 'pending',
+      },
+      {
+        id: 'jupyter',
+        service: 'AI Platform',
+        serviceColor: SERVICE_COLORS['AI Platform'],
+        title: 'JupyterHub 배포',
+        endpoint: 'POST /v1/ai-platform/notebooks',
+        params: {
+          name: 'ds-notebook',
+          image: 'jupyter/scipy-notebook:latest',
+          gpu_type: r.gpuType,
+          cpu: r.cpuCores,
+          memory: `${r.memoryGiB}Gi`,
+          volume: 'jupyter-home',
+        },
+        durationMs: 3000,
+        status: 'pending',
+      },
+      {
+        id: 'ingress',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: 'Ingress 설정',
+        endpoint: 'POST /v1/container/ingresses',
+        params: { host: 'notebook.thaki.io', service: 'jupyterhub', port: 8000, tls: 'auto' },
+        durationMs: 1200,
+        status: 'pending',
+      },
+    ];
+  }
+
+  if (intent === 'batch') {
+    const r = reqs.batch;
+    return [
+      {
+        id: 'cluster-check',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: '기존 클러스터 확인',
+        endpoint: 'GET /v1/container/clusters',
+        params: { filter: 'status=active' },
+        durationMs: 800,
+        status: 'pending',
+      },
+      {
+        id: 'namespace',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: '네임스페이스 생성',
+        endpoint: 'POST /v1/container/namespaces',
+        params: { name: 'batch-inference', pod_security: 'baseline' },
+        durationMs: 1000,
+        status: 'pending',
+      },
+      {
+        id: 'pvc-input',
+        service: 'Storage',
+        serviceColor: SERVICE_COLORS.Storage,
+        title: 'PVC 생성 (입력 데이터)',
+        endpoint: 'POST /v1/container/pvc',
+        params: { name: 'batch-input', capacity: '200Gi', access_mode: 'ReadWriteMany' },
+        durationMs: 1500,
+        status: 'pending',
+      },
+      {
+        id: 'pvc-output',
+        service: 'Storage',
+        serviceColor: SERVICE_COLORS.Storage,
+        title: 'PVC 생성 (결과 저장소)',
+        endpoint: 'POST /v1/container/pvc',
+        params: { name: 'batch-output', capacity: '100Gi', access_mode: 'ReadWriteMany' },
+        durationMs: 1200,
+        status: 'pending',
+      },
+      {
+        id: 'configmap',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: 'ConfigMap 생성',
+        endpoint: 'POST /v1/container/configmaps',
+        params: {
+          name: 'batch-config',
+          model_endpoint: `${r.model.toLowerCase().replace(/\//g, '-')}-serve`,
+          concurrency: r.concurrency,
+          input_source: r.inputSource,
+        },
+        durationMs: 600,
+        status: 'pending',
+      },
+      {
+        id: 'cronjob',
+        service: 'Container',
+        serviceColor: SERVICE_COLORS.Container,
+        title: 'CronJob 생성',
+        endpoint: 'POST /v1/container/cronjobs',
+        params: {
+          name: 'batch-inference-job',
+          schedule: r.schedule,
+          image: 'thaki/batch-runner:latest',
+          parallelism: r.concurrency,
+          restart_policy: 'OnFailure',
+        },
+        durationMs: 1500,
+        status: 'pending',
+      },
+    ];
+  }
+
+  // mlops
+  const r = reqs.mlops;
   return [
     {
       id: 'cluster',
@@ -251,61 +496,100 @@ function buildPlanSteps(intent: Intent, reqs: RequirementsState): PlanStep[] {
       serviceColor: SERVICE_COLORS.Container,
       title: 'K8s 클러스터 생성',
       endpoint: 'POST /v1/container/clusters',
-      params: { name: 'rag-cluster', k8s_version: 'v1.34', cni: 'kube-ovn', worker_count: 2 },
+      params: {
+        name: 'mlops-cluster',
+        k8s_version: 'v1.34',
+        cni: 'kube-ovn',
+        worker_count: 3,
+        flavor: 'gpu.a100.1',
+      },
       durationMs: 3500,
+      status: 'pending',
+    },
+    {
+      id: 'namespace',
+      service: 'Container',
+      serviceColor: SERVICE_COLORS.Container,
+      title: '네임스페이스 생성',
+      endpoint: 'POST /v1/container/namespaces',
+      params: { name: 'mlops', pod_security: 'baseline' },
+      durationMs: 1000,
       status: 'pending',
     },
     {
       id: 'pvc',
       service: 'Storage',
       serviceColor: SERVICE_COLORS.Storage,
-      title: 'PVC 생성 (문서 저장소)',
+      title: 'PVC 생성 (아티팩트 저장소)',
       endpoint: 'POST /v1/container/pvc',
-      params: { name: 'rag-documents', capacity: '100Gi', access_mode: 'ReadWriteMany' },
+      params: {
+        name: 'mlflow-artifacts',
+        capacity: '200Gi',
+        storage_class: 'ceph-fs',
+        access_mode: 'ReadWriteMany',
+      },
       durationMs: 1500,
       status: 'pending',
     },
     {
-      id: 'datasource',
-      service: 'Agent Platform',
-      serviceColor: SERVICE_COLORS['Agent Platform'],
-      title: '데이터소스 연결',
-      endpoint: 'POST /v1/agent/datasources',
+      id: 'mlflow',
+      service: 'AI Platform',
+      serviceColor: SERVICE_COLORS['AI Platform'],
+      title: 'MLflow 트래킹 서버 배포',
+      endpoint: 'POST /v1/ai-platform/mlflow',
       params: {
-        name: 'enterprise-docs',
-        type: r.datasource,
-        chunking: 'semantic',
-        embedding_model: r.embeddingModel,
+        name: 'mlflow-server',
+        tracking: r.tracking,
+        artifact_store: 's3://mlflow-artifacts',
+        db: 'postgresql://mlflow:mlflow@postgres:5432/mlflow',
+      },
+      durationMs: 2500,
+      status: 'pending',
+    },
+    {
+      id: 'registry',
+      service: 'AI Platform',
+      serviceColor: SERVICE_COLORS['AI Platform'],
+      title: '모델 레지스트리 설정',
+      endpoint: 'POST /v1/ai-platform/model-registry',
+      params: { name: 'thaki-models', backend: 'mlflow', auto_versioning: true },
+      durationMs: 1200,
+      status: 'pending',
+    },
+    {
+      id: 'pipeline',
+      service: 'AI Platform',
+      serviceColor: SERVICE_COLORS['AI Platform'],
+      title: '학습 파이프라인 생성',
+      endpoint: 'POST /v1/ai-platform/pipelines',
+      params: {
+        name: 'training-pipeline',
+        framework: r.framework,
+        gpu: r.gpuCount,
+        stages: 'preprocess → train → evaluate → register',
       },
       durationMs: 2000,
       status: 'pending',
     },
-    {
-      id: 'agent',
-      service: 'Agent Platform',
-      serviceColor: SERVICE_COLORS['Agent Platform'],
-      title: 'AI 에이전트 생성',
-      endpoint: 'POST /v1/agent/agents',
-      params: {
-        name: 'enterprise-rag-agent',
-        model: r.llm,
-        temperature: 0.3,
-        datasource: 'enterprise-docs',
-        max_iteration: 5,
-      },
-      durationMs: 1500,
-      status: 'pending',
-    },
-    {
-      id: 'chat',
-      service: 'Agent Platform',
-      serviceColor: SERVICE_COLORS['Agent Platform'],
-      title: '채팅 인터페이스 활성화',
-      endpoint: 'PATCH /v1/agent/agents/:id',
-      params: { status: 'active', websocket: true },
-      durationMs: 800,
-      status: 'pending',
-    },
+    ...(r.autoDeploy
+      ? [
+          {
+            id: 'auto-deploy',
+            service: 'AI Platform' as const,
+            serviceColor: SERVICE_COLORS['AI Platform'],
+            title: '자동 배포 트리거 설정',
+            endpoint: 'POST /v1/ai-platform/deploy-triggers',
+            params: {
+              name: 'auto-deploy-on-promote',
+              trigger: 'model-promoted-to-production',
+              target: 'serverless-endpoint',
+              canary: '10%',
+            },
+            durationMs: 1000,
+            status: 'pending' as StepStatus,
+          },
+        ]
+      : []),
   ];
 }
 
@@ -341,6 +625,27 @@ const INTENT_CARDS: {
     desc: '사내 문서를 학습한 AI 에이전트를 만들고, 채팅 인터페이스로 즉시 사용합니다.',
     tags: ['RAG', 'Agent', 'MCP'],
   },
+  {
+    id: 'notebook',
+    icon: IconNotebook,
+    title: 'Jupyter 노트북',
+    desc: 'GPU가 포함된 Jupyter 개발 환경을 즉시 프로비저닝합니다. 데이터 탐색과 실험에 최적화됩니다.',
+    tags: ['Jupyter', 'GPU', 'Development'],
+  },
+  {
+    id: 'batch',
+    icon: IconStack2,
+    title: '배치 추론 파이프라인',
+    desc: '대량 데이터를 스케줄에 따라 자동으로 일괄 처리합니다. CronJob 기반 파이프라인을 구축합니다.',
+    tags: ['Batch', 'CronJob', 'Pipeline'],
+  },
+  {
+    id: 'mlops',
+    icon: IconGitMerge,
+    title: 'MLOps 파이프라인',
+    desc: '데이터 전처리부터 모델 학습, 평가, 배포까지 자동화된 ML 워크플로우를 구성합니다.',
+    tags: ['MLOps', 'MLflow', 'CI/CD'],
+  },
 ];
 
 const MODEL_OPTIONS = [
@@ -365,6 +670,39 @@ const LLM_OPTIONS = [
   { value: 'claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
   { value: 'gpt-4o', label: 'GPT-4o' },
   { value: 'Qwen/Qwen3-8B', label: 'Qwen3-8B (On-premise)' },
+];
+
+const GPU_TYPE_OPTIONS = [
+  { value: 'A100', label: 'NVIDIA A100 (80GB)' },
+  { value: 'A10G', label: 'NVIDIA A10G (24GB)' },
+  { value: 'T4', label: 'NVIDIA T4 (16GB)' },
+  { value: 'none', label: 'CPU Only' },
+];
+
+const SCHEDULE_OPTIONS = [
+  { value: '0 2 * * *', label: '매일 02:00' },
+  { value: '0 */6 * * *', label: '6시간마다' },
+  { value: '0 0 * * 1', label: '매주 월요일 00:00' },
+  { value: '0 0 1 * *', label: '매월 1일 00:00' },
+];
+
+const INPUT_SOURCE_OPTIONS = [
+  { value: 's3://data-lake/raw', label: 'S3 Data Lake' },
+  { value: 'pvc://shared-data', label: 'Shared PVC' },
+  { value: 'postgres://analytics', label: 'PostgreSQL (analytics)' },
+];
+
+const FRAMEWORK_OPTIONS = [
+  { value: 'pytorch', label: 'PyTorch' },
+  { value: 'tensorflow', label: 'TensorFlow' },
+  { value: 'huggingface', label: 'HuggingFace Transformers' },
+  { value: 'sklearn', label: 'scikit-learn' },
+];
+
+const TRACKING_OPTIONS = [
+  { value: 'mlflow', label: 'MLflow' },
+  { value: 'wandb', label: 'Weights & Biases' },
+  { value: 'tensorboard', label: 'TensorBoard' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -669,6 +1007,14 @@ export function AIWorkspacePrototypePage() {
     finetune: { model: 'Qwen/Qwen3-4B', datasource: 'File', gpuCount: 1, storageGiB: 50 },
     serverless: { model: 'Qwen/Qwen3-4B', maxReplicas: 3, autoScale: true },
     rag: { datasource: 'File', embeddingModel: 'jina-embeddings-v3', llm: 'claude-sonnet-4-5' },
+    notebook: { gpuType: 'A100', cpuCores: 8, memoryGiB: 32, storageGiB: 100 },
+    batch: {
+      model: 'Qwen/Qwen3-8B',
+      schedule: '0 2 * * *',
+      inputSource: 's3://data-lake/raw',
+      concurrency: 4,
+    },
+    mlops: { framework: 'pytorch', tracking: 'mlflow', autoDeploy: true, gpuCount: 2 },
   });
   const [planSteps, setPlanSteps] = useState<PlanStep[]>([]);
   const [envChecks, setEnvChecks] = useState<EnvCheck[]>([]);
@@ -845,7 +1191,7 @@ export function AIWorkspacePrototypePage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                   무엇을 하고 싶으신가요?
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {INTENT_CARDS.map((card) => (
                     <IntentCard
                       key={card.id}
@@ -1066,6 +1412,234 @@ export function AIWorkspacePrototypePage() {
                         </div>
                       </>
                     )}
+                    {selectedIntent === 'notebook' && (
+                      <>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              GPU 타입
+                            </label>
+                            <Select
+                              options={GPU_TYPE_OPTIONS}
+                              value={requirements.notebook.gpuType}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  notebook: { ...p.notebook, gpuType: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              스토리지 (GiB)
+                            </label>
+                            <NumberInput
+                              min={10}
+                              max={500}
+                              step={10}
+                              value={requirements.notebook.storageGiB}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  notebook: { ...p.notebook, storageGiB: v ?? 100 },
+                                }))
+                              }
+                              width="xs"
+                              suffix="GiB"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              CPU 코어
+                            </label>
+                            <NumberInput
+                              min={2}
+                              max={32}
+                              step={2}
+                              value={requirements.notebook.cpuCores}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  notebook: { ...p.notebook, cpuCores: v ?? 8 },
+                                }))
+                              }
+                              width="xs"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              메모리 (GiB)
+                            </label>
+                            <NumberInput
+                              min={4}
+                              max={128}
+                              step={4}
+                              value={requirements.notebook.memoryGiB}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  notebook: { ...p.notebook, memoryGiB: v ?? 32 },
+                                }))
+                              }
+                              width="xs"
+                              suffix="GiB"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {selectedIntent === 'batch' && (
+                      <>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              추론 모델
+                            </label>
+                            <Select
+                              options={MODEL_OPTIONS}
+                              value={requirements.batch.model}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  batch: { ...p.batch, model: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              실행 스케줄
+                            </label>
+                            <Select
+                              options={SCHEDULE_OPTIONS}
+                              value={requirements.batch.schedule}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  batch: { ...p.batch, schedule: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              입력 데이터
+                            </label>
+                            <Select
+                              options={INPUT_SOURCE_OPTIONS}
+                              value={requirements.batch.inputSource}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  batch: { ...p.batch, inputSource: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              동시 처리 수
+                            </label>
+                            <NumberInput
+                              min={1}
+                              max={16}
+                              step={1}
+                              value={requirements.batch.concurrency}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  batch: { ...p.batch, concurrency: v ?? 4 },
+                                }))
+                              }
+                              width="xs"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {selectedIntent === 'mlops' && (
+                      <>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              ML 프레임워크
+                            </label>
+                            <Select
+                              options={FRAMEWORK_OPTIONS}
+                              value={requirements.mlops.framework}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  mlops: { ...p.mlops, framework: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              실험 추적 도구
+                            </label>
+                            <Select
+                              options={TRACKING_OPTIONS}
+                              value={requirements.mlops.tracking}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  mlops: { ...p.mlops, tracking: v },
+                                }))
+                              }
+                              fullWidth
+                            />
+                          </div>
+                        </div>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] block mb-2">
+                              GPU 수
+                            </label>
+                            <NumberInput
+                              min={1}
+                              max={8}
+                              step={1}
+                              value={requirements.mlops.gpuCount}
+                              onChange={(v) =>
+                                setRequirements((p) => ({
+                                  ...p,
+                                  mlops: { ...p.mlops, gpuCount: v ?? 2 },
+                                }))
+                              }
+                              width="xs"
+                            />
+                          </div>
+                          <div className="flex-1 flex items-end pb-0.5">
+                            <label className="flex items-center gap-2 text-label-sm text-[var(--color-text-default)] cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={requirements.mlops.autoDeploy}
+                                onChange={(e) =>
+                                  setRequirements((p) => ({
+                                    ...p,
+                                    mlops: { ...p.mlops, autoDeploy: e.target.checked },
+                                  }))
+                                }
+                                className="accent-[var(--color-action-primary)]"
+                              />
+                              모델 승격 시 자동 배포
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </VStack>
                 </div>
                 <HStack justify="between" className="w-full pt-2">
@@ -1232,6 +1806,12 @@ export function AIWorkspacePrototypePage() {
                           '서버리스 엔드포인트가 배포되었습니다. API 키를 발급받아 사용할 수 있습니다.'}
                         {selectedIntent === 'rag' &&
                           'RAG 에이전트가 활성화되었습니다. 채팅 인터페이스에서 대화를 시작하세요.'}
+                        {selectedIntent === 'notebook' &&
+                          'Jupyter 노트북 환경이 준비되었습니다. 브라우저에서 notebook.thaki.io로 접속하세요.'}
+                        {selectedIntent === 'batch' &&
+                          '배치 추론 파이프라인이 설정되었습니다. 설정된 스케줄에 따라 자동으로 실행됩니다.'}
+                        {selectedIntent === 'mlops' &&
+                          'MLOps 파이프라인이 구성되었습니다. MLflow에서 실험을 추적하고 모델을 관리하세요.'}
                       </p>
                       <HStack gap={2}>
                         <Button variant="secondary" size="md" onClick={resetAll}>
@@ -1244,7 +1824,13 @@ export function AIWorkspacePrototypePage() {
                         >
                           {selectedIntent === 'rag'
                             ? 'Agent Platform으로 이동'
-                            : 'AI Platform으로 이동'}
+                            : selectedIntent === 'notebook'
+                              ? '노트북 열기'
+                              : selectedIntent === 'batch'
+                                ? '파이프라인 모니터링'
+                                : selectedIntent === 'mlops'
+                                  ? 'MLflow 대시보드 열기'
+                                  : 'AI Platform으로 이동'}
                         </Button>
                       </HStack>
                     </VStack>
