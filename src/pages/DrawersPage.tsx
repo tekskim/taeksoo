@@ -297,6 +297,15 @@ const mockEditImage: EditImageInfo = {
   id: 'img-002',
   name: 'tk-instance',
   description: '',
+  os: 'ubuntu',
+  osVersion: '24.24',
+  osAdmin: 'root',
+  isProtected: true,
+  minDisk: 30,
+  minRam: 30,
+  qemuGuestAgent: true,
+  cpuPolicy: 'none',
+  cpuThreadPolicy: 'none',
 };
 
 const mockKeyPair: KeyPairInfo = {
@@ -1764,8 +1773,8 @@ export function DrawersPage() {
         isOpen={openDrawer === 'create-volume-from-image'}
         onClose={closeDrawer}
         image={mockImage}
-        minCapacity={201}
-        maxCapacity={2000}
+        minCapacity={30}
+        maxCapacity={1756}
         volumeQuota={{ used: 2, total: 10 }}
         volumeCapacityQuota={{ used: 20, total: 1000 }}
         typeQuota={{ used: 2, total: null }}

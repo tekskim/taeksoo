@@ -122,9 +122,9 @@ export function CommonPatternsPage() {
           description: 'Multi-step wizard pattern',
         },
         {
-          label: 'Multi Tab Create',
-          path: '/design/patterns/multi-tab-create',
-          description: 'Tab-based creation pattern',
+          label: 'Open Form (Create Flow)',
+          path: '/design/patterns/open-form',
+          description: 'Open form and tab-based creation patterns',
         },
         { label: 'Drawer', path: '/design/components/drawer', description: 'Side panel for forms' },
         {

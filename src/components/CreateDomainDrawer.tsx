@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, Textarea, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -136,7 +136,7 @@ export function CreateDomainDrawer({ isOpen, onClose, onSubmit }: CreateDomainDr
         <FormField error={!!descriptionError}>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
@@ -144,6 +144,7 @@ export function CreateDomainDrawer({ isOpen, onClose, onSubmit }: CreateDomainDr
               }}
               placeholder="Enter description"
               fullWidth
+              rows={3}
               error={!!descriptionError}
             />
           </FormField.Control>
