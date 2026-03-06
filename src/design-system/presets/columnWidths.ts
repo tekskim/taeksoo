@@ -40,8 +40,10 @@ export const fixedColumns = {
   radio: '40px',
   favorite: '40px',
 
-  // 상태 아이콘
+  // 상태 (Icon only)
   status: '64px',
+  // 상태 (Icon + Label pill)
+  statusLabel: '120px',
 
   // 잠금
   locked: '64px',

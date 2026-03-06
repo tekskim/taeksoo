@@ -9,7 +9,6 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   Chip,
@@ -19,6 +18,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -136,11 +136,13 @@ export function ClusterManagementPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       sortable: false,
       align: 'center',
       render: (status) => (
-        <StatusIndicator status={statusMap[status as ClusterStatus]} layout="icon-only" />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={status}>
+          <span className="truncate">{status}</span>
+        </Badge>
       ),
     },
     {

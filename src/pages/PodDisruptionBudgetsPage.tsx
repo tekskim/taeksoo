@@ -10,13 +10,13 @@ import {
   Pagination,
   ListToolbar,
   ContextMenu,
-  StatusIndicator,
   PageShell,
   PageHeader,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -192,12 +192,12 @@ export function PodDisruptionBudgetsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={value === 'Active' ? 'active' : value === 'Failed' ? 'error' : 'building'}
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

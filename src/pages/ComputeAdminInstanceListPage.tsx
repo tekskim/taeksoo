@@ -1126,7 +1126,7 @@ export function ComputeAdminInstanceListPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={statusMap[row.status]} />,
     },
     {
       key: 'name',
@@ -1320,7 +1320,7 @@ export function ComputeAdminInstanceListPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={statusMap[row.status]} />,
     },
     {
       key: 'name',

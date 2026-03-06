@@ -23,11 +23,11 @@ import {
   Pagination,
   Slider,
   Chip,
-  StatusIndicator,
   PageShell,
   WizardSectionStatusIcon,
   Tooltip,
   FilterSearchInput,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -3173,10 +3173,17 @@ export function CreateCronJobPage() {
                                     {
                                       key: 'status',
                                       label: 'Status',
-                                      width: '64px',
+                                      width: fixedColumns.statusLabel,
                                       align: 'center',
-                                      render: (_, row: NamespaceData) => (
-                                        <StatusIndicator status={row.status} />
+                                      render: (value: string) => (
+                                        <Badge
+                                          theme="white"
+                                          size="sm"
+                                          className="max-w-[80px]"
+                                          title={value}
+                                        >
+                                          <span className="truncate">{value}</span>
+                                        </Badge>
                                       ),
                                     },
                                     {

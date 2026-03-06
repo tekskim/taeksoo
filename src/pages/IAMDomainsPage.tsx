@@ -172,6 +172,7 @@ export default function IAMDomainsPage() {
       align: 'center',
       render: (value) => (
         <StatusIndicator
+          layout="icon-only"
           status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
         />
       ),

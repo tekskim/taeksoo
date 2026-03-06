@@ -18,6 +18,7 @@ export const notionMapping: Record<string, string> = {
 
   // Components
   button: '2b79eddc34e6809a96f3d95192282bba',
+  'status-indicator': '30d9eddc34e680099ef9c4aa24614fbb',
   // 'input': '',
   // 'modal': '',
   // 'select': '',

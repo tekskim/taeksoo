@@ -96,9 +96,7 @@ const previewColumns = [
     label: 'Status',
     width: '60px',
     align: 'center' as const,
-    render: (v: string) => (
-      <StatusIndicator status={v === 'Running' ? 'active' : 'error'} layout="icon-only" />
-    ),
+    render: (v: string) => <StatusIndicator status={v === 'Running' ? 'active' : 'error'} />,
   },
   { key: 'name', label: 'Name', flex: 1 },
   { key: 'id', label: 'ID', flex: 1 },
@@ -113,7 +111,7 @@ export function TablePage() {
         <ComponentPreview
           code={`<Table
   columns={[
-    { key: 'status', label: 'Status', width: '60px', align: 'center', render: (v) => <StatusIndicator status={v === 'Running' ? 'active' : 'error'} layout="icon-only" /> },
+    { key: 'status', label: 'Status', width: '60px', align: 'center', render: (v) => <StatusIndicator status={v === 'Running' ? 'active' : 'error'} /> },
     { key: 'name', label: 'Name', flex: 1 },
     { key: 'id', label: 'ID', flex: 1 },
   ]}

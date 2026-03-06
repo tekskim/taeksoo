@@ -133,7 +133,7 @@ export function ManageMembersDrawer({
       label: 'Status',
       width: '60px',
       align: 'center',
-      render: (_value, row) => <StatusIndicator status={row.status} />,
+      render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',

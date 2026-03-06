@@ -282,7 +282,7 @@ export function ComputeAdminBareMetalNodesPage() {
         width: fixedColumns.status,
         align: 'center',
         render: (_, row) => (
-          <StatusIndicator status={getStatusIndicator(row.status)} layout="icon-only" />
+          <StatusIndicator layout="icon-only" status={getStatusIndicator(row.status)} />
         ),
       },
       {

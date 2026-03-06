@@ -198,7 +198,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
       label: 'Status',
       width: '60px',
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
     },
     {
       key: 'name',
@@ -377,8 +377,8 @@ export function CreateVolumeBackupWithSelectionDrawer({
               />
             </FormField.Control>
             <FormField.HelperText>
-              Allowed: 1–128 characters, letters, numbers, &quot;-&quot;, &quot;_&quot;,
-              &quot;.&quot;, &quot;()&quot;, &quot;[]&quot;
+              You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+              between 2-128 characters.
             </FormField.HelperText>
           </FormField>
 

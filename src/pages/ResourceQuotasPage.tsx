@@ -13,11 +13,11 @@ import {
   Pagination,
   Chip,
   ContextMenu,
-  StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -177,9 +177,13 @@ export function ResourceQuotasPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
-      render: () => <StatusIndicator status="active" />,
+      render: () => (
+        <Badge theme="white" size="sm" className="max-w-[80px]">
+          Active
+        </Badge>
+      ),
     },
     {
       key: 'name',

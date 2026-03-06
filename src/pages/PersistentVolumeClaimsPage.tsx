@@ -8,7 +8,6 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   ListToolbar,
@@ -17,6 +16,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -202,13 +202,13 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={value === 'Bound' ? 'active' : value === 'Lost' ? 'error' : 'building'}
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

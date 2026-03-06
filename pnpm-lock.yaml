@@ -64,8 +64,8 @@ importers:
         specifier: ^9.39.1
         version: 9.39.2
       '@notionhq/client':
-        specifier: ^5.9.0
-        version: 5.9.0
+        specifier: ^5.11.1
+        version: 5.11.1
       '@rspack/cli':
         specifier: ^1.7.3
         version: 1.7.3(@rspack/core@1.7.3)(@types/express@4.17.25)(tslib@2.8.1)
@@ -942,8 +942,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@notionhq/client@5.9.0':
-    resolution: {integrity: sha512-TvAVMfwtVv61hsPrRfB9ehgzSjX6DaAi1ZRAnpg8xFjzaXhzhEfbO0PhBRm3ecSv1azDuO2kBuyQHh2/z7G4YQ==}
+  '@notionhq/client@5.11.1':
+    resolution: {integrity: sha512-393XUAb4706eWKQx1xxg/tdn/rTY6+qj3PxTGyTr03D7ydO6e7B7tYyidxJCbKzNSSCVTUAth/bLoKNhm0VoUQ==}
     engines: {node: '>=18'}
 
   '@polka/url@1.0.0-next.29':
@@ -5110,7 +5110,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.20.1
 
-  '@notionhq/client@5.9.0': {}
+  '@notionhq/client@5.11.1': {}
 
   '@polka/url@1.0.0-next.29': {}
 

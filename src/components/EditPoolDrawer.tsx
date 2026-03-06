@@ -3,6 +3,7 @@ import {
   Drawer,
   Button,
   Input,
+  Textarea,
   Select,
   Toggle,
   FormField,
@@ -197,11 +198,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         <FormField>
           <FormField.Label>Pool description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter description"
               fullWidth
+              rows={3}
             />
           </FormField.Control>
           <FormField.HelperText>

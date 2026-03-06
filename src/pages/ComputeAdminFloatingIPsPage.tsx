@@ -339,7 +339,7 @@ export function ComputeAdminFloatingIPsPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={floatingIPStatusMap[row.status]} />
       ),
     },
     {

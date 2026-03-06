@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField, InlineMessage } from '@/design-system';
+import { Drawer, Button, Input, Textarea, FormField, InlineMessage } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -202,11 +202,12 @@ export function CreateVolumeSnapshotDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={snapshotDescription}
               onChange={(e) => setSnapshotDescription(e.target.value)}
               placeholder="Enter description"
               fullWidth
+              rows={3}
             />
           </FormField.Control>
           <FormField.HelperText>

@@ -263,7 +263,7 @@ export default function PoolDetailPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={memberStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={memberStatusMap[row.status]} />
       ),
     },
     {

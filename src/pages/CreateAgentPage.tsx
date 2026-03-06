@@ -218,7 +218,7 @@ export function CreateAgentPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={dataSourceStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={dataSourceStatusMap[row.status]} />
       ),
     },
     {
@@ -260,7 +260,7 @@ export function CreateAgentPage() {
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={mcpToolStatusMap[row.status]} layout="icon-only" />
+        <StatusIndicator layout="icon-only" status={mcpToolStatusMap[row.status]} />
       ),
     },
     {
