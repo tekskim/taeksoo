@@ -57,7 +57,7 @@ const certificateColumns: TableColumn<SNICertificateItem>[] = [
     label: 'Status',
     width: '59px',
     align: 'center',
-    render: (_value, row) => <StatusIndicator status={row.status} size="sm" />,
+    render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
   },
   {
     key: 'name',

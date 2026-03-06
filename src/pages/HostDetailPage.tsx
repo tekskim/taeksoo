@@ -1261,7 +1261,7 @@ export default function HostDetailPage() {
           stopped: 'maintenance',
           error: 'down',
         };
-        return <StatusIndicator status={statusMap[row.status]} size="sm" />;
+        return <StatusIndicator layout="icon-only" status={statusMap[row.status]} size="sm" />;
       },
     },
     {

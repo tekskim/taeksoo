@@ -898,7 +898,7 @@ function DefaultDomainSection({
                         </div>
                         {/* Status column */}
                         <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center border-l border-transparent">
-                          <StatusIndicator status="active" size="md" />
+                          <StatusIndicator layout="icon-only" status="active" size="md" />
                         </div>
                         {/* Name column */}
                         <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">

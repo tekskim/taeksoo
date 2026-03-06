@@ -351,7 +351,9 @@ export function ComputeAdminNetworksPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={networkStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={networkStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

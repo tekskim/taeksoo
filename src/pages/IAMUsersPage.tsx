@@ -231,7 +231,9 @@ export function IAMUsersPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_value, row) => <StatusIndicator status={statusMap[row.status]} />,
+      render: (_value, row) => (
+        <StatusIndicator layout="icon-only" status={statusMap[row.status]} />
+      ),
     },
     {
       key: 'username',

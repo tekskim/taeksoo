@@ -323,7 +323,9 @@ export function ComputeAdminVolumeSnapshotsPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={volumeSnapshotStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={volumeSnapshotStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

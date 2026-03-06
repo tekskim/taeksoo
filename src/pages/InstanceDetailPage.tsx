@@ -1214,7 +1214,7 @@ export function InstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_, row: AttachedVolume) => (
-                        <StatusIndicator status={row.status as any} />
+                        <StatusIndicator layout="icon-only" status={row.status as any} />
                       ),
                     },
                     {
@@ -1382,7 +1382,12 @@ export function InstanceDetailPage() {
                           Down: 'down',
                           Build: 'building',
                         };
-                        return <StatusIndicator status={statusMap[iface.portStatus] || 'down'} />;
+                        return (
+                          <StatusIndicator
+                            layout="icon-only"
+                            status={statusMap[iface.portStatus] || 'down'}
+                          />
+                        );
                       },
                     },
                     {
@@ -1529,7 +1534,7 @@ export function InstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_value: string, row: FloatingIP) => (
-                        <StatusIndicator status={row.status} size="md" />
+                        <StatusIndicator layout="icon-only" status={row.status} size="md" />
                       ),
                     },
                     {
@@ -1778,6 +1783,7 @@ export function InstanceDetailPage() {
                       align: 'center',
                       render: (_value: string, row: InstanceSnapshot) => (
                         <StatusIndicator
+                          layout="icon-only"
                           status={
                             row.status === 'active'
                               ? 'active'

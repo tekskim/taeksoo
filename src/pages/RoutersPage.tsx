@@ -288,7 +288,9 @@ export function RoutersPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={routerStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={routerStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

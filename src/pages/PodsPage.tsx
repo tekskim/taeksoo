@@ -6,7 +6,6 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   ListToolbar,
@@ -17,6 +16,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -39,7 +39,7 @@ import {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded' | 'Unknown';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -77,7 +77,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'monitoring-prometheus-alertmanager-statefulset-0',
     namespace: 'production',
     image: 'backend-api:v2.1.0',
@@ -88,7 +88,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'Failed',
+    status: 'InvalidImageName',
     name: 'ingress-nginx-controller-admission-create-28t5q',
     namespace: 'analytics',
     image: 'data-processor:v1.5',
@@ -99,7 +99,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '5',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'kube-system-coredns-autoscaler-7f89d5c6b4-2pv8r',
     namespace: 'cache',
     image: 'redis:7.2',
@@ -243,21 +243,13 @@ export function PodsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Running'
-              ? 'active'
-              : value === 'Succeeded'
-                ? 'active'
-                : value === 'Failed'
-                  ? 'error'
-                  : 'building'
-          }
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

@@ -1054,7 +1054,10 @@ function ImageSection({
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status as 'active' | 'error' | 'building'}
+        />
       ),
     },
     {
@@ -1124,7 +1127,9 @@ function ImageSection({
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value) => <StatusIndicator status={value as 'active' | 'error' | 'building'} />,
+      render: (value) => (
+        <StatusIndicator layout="icon-only" status={value as 'active' | 'error' | 'building'} />
+      ),
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
@@ -1172,7 +1177,7 @@ function ImageSection({
           'in-use': 'in-use',
           error: 'error',
         };
-        return <StatusIndicator status={statusMap[value] || 'error'} />;
+        return <StatusIndicator layout="icon-only" status={statusMap[value] || 'error'} />;
       },
     },
     { key: 'name', label: 'Name', sortable: true },
@@ -2400,7 +2405,10 @@ function NetworkSection({
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'Active' ? 'active' : 'shutoff'}
+        />
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
@@ -2458,7 +2466,10 @@ function NetworkSection({
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'Active' ? 'active' : 'shutoff'}
+        />
       ),
     },
     {
@@ -2572,7 +2583,10 @@ function NetworkSection({
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'Active' ? 'active' : 'shutoff'}
+        />
       ),
     },
     {

@@ -129,7 +129,7 @@ export function DetachInterfaceDrawer({
       label: 'Status',
       width: 60,
       align: 'center' as const,
-      render: () => <StatusIndicator status="active" size="sm" />,
+      render: () => <StatusIndicator layout="icon-only" status="active" size="sm" />,
     },
     {
       key: 'name',

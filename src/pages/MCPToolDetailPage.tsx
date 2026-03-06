@@ -274,7 +274,7 @@ function ExecutionLogsTabContent() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={statusMap[row.status]} />,
     },
     {
       key: 'timestamp',

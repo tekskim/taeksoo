@@ -14,7 +14,6 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   SearchInput,
   DetailHeader,
   Badge,
@@ -239,20 +238,12 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Running'
-              ? 'active'
-              : value === 'Waiting'
-                ? 'pending'
-                : value === 'Terminated'
-                  ? 'error'
-                  : 'pending'
-          }
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

@@ -124,7 +124,7 @@ export function RebuildInstanceDrawer({
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: () => <StatusIndicator status="active" size="sm" />,
+      render: () => <StatusIndicator layout="icon-only" status="active" size="sm" />,
     },
     {
       key: 'name',

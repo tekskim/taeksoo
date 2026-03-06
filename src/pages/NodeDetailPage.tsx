@@ -14,7 +14,6 @@ import {
   Pagination,
   Button,
   ContextMenu,
-  StatusIndicator,
   SearchInput,
   ProgressBar,
   STATUS_THRESHOLDS,
@@ -390,12 +389,12 @@ function PodsTab({ pods }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={value === 'Running' ? 'active' : value === 'Pending' ? 'muted' : 'error'}
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

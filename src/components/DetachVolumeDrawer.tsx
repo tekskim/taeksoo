@@ -127,7 +127,7 @@ export function DetachVolumeDrawer({
       label: 'Status',
       width: '60px',
       align: 'center',
-      render: () => <StatusIndicator status="active" size="sm" />,
+      render: () => <StatusIndicator layout="icon-only" status="active" size="sm" />,
     },
     {
       key: 'name',

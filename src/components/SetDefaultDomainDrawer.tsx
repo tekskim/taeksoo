@@ -122,7 +122,7 @@ const getDomainColumns = (
     label: 'Status',
     width: fixedColumns.status,
     align: 'center',
-    render: (_, row) => <StatusIndicator status={row.status} />,
+    render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
   },
   { key: 'name', label: 'Name', flex: 1 },
   { key: 'description', label: 'Description', flex: 1 },

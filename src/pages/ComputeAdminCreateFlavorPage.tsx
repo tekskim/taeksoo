@@ -279,7 +279,10 @@ export function ComputeAdminCreateFlavorPage() {
       width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'active' ? 'active' : 'deactivated'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status === 'active' ? 'active' : 'deactivated'}
+        />
       ),
     },
     {

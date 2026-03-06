@@ -273,7 +273,9 @@ export default function PoolDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={memberStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={memberStatusMap[row.status]} />
+      ),
     },
     {
       key: 'id',

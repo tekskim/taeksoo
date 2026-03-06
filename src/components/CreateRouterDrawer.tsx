@@ -212,7 +212,7 @@ export function CreateRouterDrawer({
       label: 'Status',
       width: '60px',
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} size="sm" />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
     },
     {
       key: 'name',

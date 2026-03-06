@@ -687,7 +687,9 @@ function OpenSectionTableDemo() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_: unknown, row: DemoImageRow) => <StatusIndicator status={row.status} />,
+      render: (_: unknown, row: DemoImageRow) => (
+        <StatusIndicator layout="icon-only" status={row.status} />
+      ),
     },
     {
       key: 'name',
@@ -2759,6 +2761,7 @@ function TableDemo() {
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator
+          layout="icon-only"
           status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
         />
       ),
@@ -2978,6 +2981,7 @@ function TableDemo() {
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator
+          layout="icon-only"
           status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
         />
       ),
@@ -11384,7 +11388,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>Active</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="active">
-                          <StatusIndicator status="active" />
+                          <StatusIndicator layout="icon-only" status="active" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11393,7 +11397,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>Error</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="error">
-                          <StatusIndicator status="error" />
+                          <StatusIndicator layout="icon-only" status="error" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11402,13 +11406,13 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>Action (Blue)</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="building">
-                          <StatusIndicator status="building" />
+                          <StatusIndicator layout="icon-only" status="building" />
                         </Tooltip>
                         <Tooltip content="deleting">
-                          <StatusIndicator status="deleting" />
+                          <StatusIndicator layout="icon-only" status="deleting" />
                         </Tooltip>
                         <Tooltip content="pending">
-                          <StatusIndicator status="pending" />
+                          <StatusIndicator layout="icon-only" status="pending" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11417,19 +11421,19 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>Warning (Orange)</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="verify-resized">
-                          <StatusIndicator status="verify-resized" />
+                          <StatusIndicator layout="icon-only" status="verify-resized" />
                         </Tooltip>
                         <Tooltip content="degraded">
-                          <StatusIndicator status="degraded" />
+                          <StatusIndicator layout="icon-only" status="degraded" />
                         </Tooltip>
                         <Tooltip content="no-monitor">
-                          <StatusIndicator status="no-monitor" />
+                          <StatusIndicator layout="icon-only" status="no-monitor" />
                         </Tooltip>
                         <Tooltip content="down">
-                          <StatusIndicator status="down" />
+                          <StatusIndicator layout="icon-only" status="down" />
                         </Tooltip>
                         <Tooltip content="maintenance">
-                          <StatusIndicator status="maintenance" />
+                          <StatusIndicator layout="icon-only" status="maintenance" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11438,28 +11442,28 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>Muted (Gray)</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="suspended">
-                          <StatusIndicator status="suspended" />
+                          <StatusIndicator layout="icon-only" status="suspended" />
                         </Tooltip>
                         <Tooltip content="shelved-offloaded">
-                          <StatusIndicator status="shelved-offloaded" />
+                          <StatusIndicator layout="icon-only" status="shelved-offloaded" />
                         </Tooltip>
                         <Tooltip content="mounted">
-                          <StatusIndicator status="mounted" />
+                          <StatusIndicator layout="icon-only" status="mounted" />
                         </Tooltip>
                         <Tooltip content="shutoff">
-                          <StatusIndicator status="shutoff" />
+                          <StatusIndicator layout="icon-only" status="shutoff" />
                         </Tooltip>
                         <Tooltip content="paused">
-                          <StatusIndicator status="paused" />
+                          <StatusIndicator layout="icon-only" status="paused" />
                         </Tooltip>
                         <Tooltip content="draft">
-                          <StatusIndicator status="draft" />
+                          <StatusIndicator layout="icon-only" status="draft" />
                         </Tooltip>
                         <Tooltip content="deactivated">
-                          <StatusIndicator status="deactivated" />
+                          <StatusIndicator layout="icon-only" status="deactivated" />
                         </Tooltip>
                         <Tooltip content="in-use">
-                          <StatusIndicator status="in-use" />
+                          <StatusIndicator layout="icon-only" status="in-use" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -11475,7 +11479,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </span>
                           <div className="flex flex-wrap gap-4 items-start">
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="active" />
+                              <StatusIndicator layout="icon-only" status="active" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 active
                               </span>
@@ -11489,7 +11493,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </span>
                           <div className="flex flex-wrap gap-4 items-start">
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="error" />
+                              <StatusIndicator layout="icon-only" status="error" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 error
                               </span>
@@ -11503,19 +11507,19 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </span>
                           <div className="flex flex-wrap gap-4 items-start">
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="building" />
+                              <StatusIndicator layout="icon-only" status="building" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 building
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="deleting" />
+                              <StatusIndicator layout="icon-only" status="deleting" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 deleting
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="pending" />
+                              <StatusIndicator layout="icon-only" status="pending" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 pending
                               </span>
@@ -11529,31 +11533,31 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </span>
                           <div className="flex flex-wrap gap-4 items-start">
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="verify-resized" />
+                              <StatusIndicator layout="icon-only" status="verify-resized" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 verify-resized
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="degraded" />
+                              <StatusIndicator layout="icon-only" status="degraded" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 degraded
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="no-monitor" />
+                              <StatusIndicator layout="icon-only" status="no-monitor" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 no-monitor
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="down" />
+                              <StatusIndicator layout="icon-only" status="down" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 down
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="maintenance" />
+                              <StatusIndicator layout="icon-only" status="maintenance" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 maintenance
                               </span>
@@ -11567,49 +11571,49 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </span>
                           <div className="flex flex-wrap gap-4 items-start">
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="suspended" />
+                              <StatusIndicator layout="icon-only" status="suspended" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 suspended
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="shelved-offloaded" />
+                              <StatusIndicator layout="icon-only" status="shelved-offloaded" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 shelved
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="mounted" />
+                              <StatusIndicator layout="icon-only" status="mounted" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 mounted
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="shutoff" />
+                              <StatusIndicator layout="icon-only" status="shutoff" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 shutoff
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="paused" />
+                              <StatusIndicator layout="icon-only" status="paused" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 paused
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="draft" />
+                              <StatusIndicator layout="icon-only" status="draft" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 draft
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="deactivated" />
+                              <StatusIndicator layout="icon-only" status="deactivated" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 deactivated
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="in-use" />
+                              <StatusIndicator layout="icon-only" status="in-use" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 in-use
                               </span>
@@ -11623,9 +11627,13 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <VStack gap={3}>
                       <Label>Custom labels</Label>
                       <div className="flex gap-3 items-center">
-                        <StatusIndicator status="active" label="Running" />
-                        <StatusIndicator status="error" label="Failed" />
-                        <StatusIndicator status="building" label="Deploying..." />
+                        <StatusIndicator layout="icon-only" status="active" label="Running" />
+                        <StatusIndicator layout="icon-only" status="error" label="Failed" />
+                        <StatusIndicator
+                          layout="icon-only"
+                          status="building"
+                          label="Deploying..."
+                        />
                       </div>
                     </VStack>
 

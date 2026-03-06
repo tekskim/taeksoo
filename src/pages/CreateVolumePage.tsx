@@ -497,7 +497,7 @@ export function CreateVolumePage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value: ImageRow['status']) => <StatusIndicator status={value} />,
+      render: (value: ImageRow['status']) => <StatusIndicator layout="icon-only" status={value} />,
     },
     {
       key: 'name',
@@ -547,7 +547,9 @@ export function CreateVolumePage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value: SnapshotRow['status']) => <StatusIndicator status={value} />,
+      render: (value: SnapshotRow['status']) => (
+        <StatusIndicator layout="icon-only" status={value} />
+      ),
     },
     {
       key: 'name',
