@@ -121,7 +121,7 @@ export function ChangeServerCertificateDrawer({
       label: 'Status',
       width: '59px',
       align: 'center',
-      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+      render: (_value, row) => <StatusIndicator status={row.status} size="sm" />,
     },
     {
       key: 'name',

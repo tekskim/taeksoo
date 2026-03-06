@@ -324,9 +324,7 @@ export function FloatingIPsPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={floatingIPStatusMap[row.status]} />,
     },
     {
       key: 'floatingIp',

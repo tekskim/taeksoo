@@ -155,11 +155,11 @@ const statusIndicatorProps: PropDef[] = [
   },
   {
     name: 'layout',
-    type: "'icon-only' | 'default' | 'badge'",
-    default: "'icon-only'",
+    type: "'default' | 'icon-only' | 'badge'",
+    default: "'default'",
     required: false,
     description:
-      '표시 형식. icon-only: 아이콘만, default: Icon + Label (pill), badge: Icon + Label (square)',
+      '표시 형식. default: Icon + Label (pill), icon-only: 아이콘만 (공간 제한 시), badge: Icon + Label (square)',
   },
   {
     name: 'size',
@@ -184,14 +184,14 @@ export function StatusIndicatorPage() {
       preview={
         <ComponentPreview
           code={`// Defined — Icon + Label (사전 정의된 특수 상태)
-<StatusIndicator status="active" layout="default" />
-<StatusIndicator status="error" layout="default" />
-<StatusIndicator status="building" layout="default" />`}
+<StatusIndicator status="active" />
+<StatusIndicator status="error" />
+<StatusIndicator status="building" />`}
         >
           <div className="flex gap-3 items-center">
-            <StatusIndicator status="active" layout="default" />
-            <StatusIndicator status="error" layout="default" />
-            <StatusIndicator status="building" layout="default" />
+            <StatusIndicator status="active" />
+            <StatusIndicator status="error" />
+            <StatusIndicator status="building" />
           </div>
         </ComponentPreview>
       }
@@ -199,14 +199,14 @@ export function StatusIndicatorPage() {
         code: `import { StatusIndicator } from '@/design-system';
 
 // Defined — Icon + Label (기본 형식)
-<StatusIndicator status="active" layout="default" />
-<StatusIndicator status="error" layout="default" />
+<StatusIndicator status="active" />
+<StatusIndicator status="error" />
 
 // Defined — Icon Only (공간 제한 시)
 <StatusIndicator status="active" layout="icon-only" />
 
 // Defined — Custom label (기획 문서에서 정의한 레이블)
-<StatusIndicator status="active" layout="default" label="Running" />`,
+<StatusIndicator status="active" label="Running" />`,
       }}
       examples={
         <VStack gap={8}>
@@ -245,13 +245,13 @@ export function StatusIndicatorPage() {
           <VStack gap={3}>
             <Label>Defined — Active (Success / Green)</Label>
             <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="active" layout="default" />
+              <StatusIndicator status="active" />
             </div>
           </VStack>
           <VStack gap={3}>
             <Label>Defined — Error (Danger / Red)</Label>
             <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="error" layout="default" />
+              <StatusIndicator status="error" />
             </div>
           </VStack>
           <VStack gap={3}>
@@ -260,26 +260,26 @@ export function StatusIndicatorPage() {
               Action 타입 아이콘은 스피너 형태로 회전하여 진행 중임을 시각적으로 표현한다.
             </p>
             <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="building" layout="default" />
-              <StatusIndicator status="deleting" layout="default" />
-              <StatusIndicator status="pending" layout="default" />
+              <StatusIndicator status="building" />
+              <StatusIndicator status="deleting" />
+              <StatusIndicator status="pending" />
             </div>
           </VStack>
           <VStack gap={3}>
             <Label>Defined — Warning (Orange)</Label>
             <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="degraded" layout="default" />
-              <StatusIndicator status="down" layout="default" />
-              <StatusIndicator status="maintenance" layout="default" />
+              <StatusIndicator status="degraded" />
+              <StatusIndicator status="down" />
+              <StatusIndicator status="maintenance" />
             </div>
           </VStack>
           <VStack gap={3}>
             <Label>Defined — Muted (Gray)</Label>
             <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="suspended" layout="default" />
-              <StatusIndicator status="paused" layout="default" />
-              <StatusIndicator status="draft" layout="default" />
-              <StatusIndicator status="in-use" layout="default" />
+              <StatusIndicator status="suspended" />
+              <StatusIndicator status="paused" />
+              <StatusIndicator status="draft" />
+              <StatusIndicator status="in-use" />
             </div>
           </VStack>
 

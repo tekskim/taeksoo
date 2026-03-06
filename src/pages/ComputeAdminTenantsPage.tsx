@@ -130,9 +130,7 @@ export default function ComputeAdminTenantsPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={tenantStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={tenantStatusMap[row.status]} />,
     },
     {
       key: 'name',

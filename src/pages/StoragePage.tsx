@@ -236,7 +236,7 @@ export function StoragePage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} />,
     },
     {
       key: 'name',

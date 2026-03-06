@@ -295,9 +295,7 @@ export function VolumeSnapshotsPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={volumeSnapshotStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={volumeSnapshotStatusMap[row.status]} />,
     },
     {
       key: 'name',

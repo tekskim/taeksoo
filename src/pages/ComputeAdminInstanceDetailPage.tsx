@@ -1272,7 +1272,7 @@ export function ComputeAdminInstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_, row: AttachedVolume) => (
-                        <StatusIndicator status={row.status as any} layout="icon-only" />
+                        <StatusIndicator status={row.status as any} />
                       ),
                     },
                     {
@@ -1362,12 +1362,7 @@ export function ComputeAdminInstanceDetailPage() {
                           Down: 'down',
                           Build: 'building',
                         };
-                        return (
-                          <StatusIndicator
-                            status={statusMap[iface.portStatus] || 'down'}
-                            layout="icon-only"
-                          />
-                        );
+                        return <StatusIndicator status={statusMap[iface.portStatus] || 'down'} />;
                       },
                     },
                     {
@@ -1466,7 +1461,7 @@ export function ComputeAdminInstanceDetailPage() {
                       width: fixedColumns.status,
                       align: 'center',
                       render: (_value: string, row: FloatingIP) => (
-                        <StatusIndicator status={row.status} layout="icon-only" size="md" />
+                        <StatusIndicator status={row.status} size="md" />
                       ),
                     },
                     {
@@ -1634,7 +1629,6 @@ export function ComputeAdminInstanceDetailPage() {
                                   ? 'building'
                                   : 'error'
                           }
-                          layout="icon-only"
                         />
                       ),
                     },

@@ -400,9 +400,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={snapshotStatusMap[row.status]} />,
     },
     {
       key: 'name',
@@ -464,9 +462,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={backupStatusMap[row.status]} />,
     },
     {
       key: 'name',

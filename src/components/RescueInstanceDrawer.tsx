@@ -130,7 +130,7 @@ export function RescueInstanceDrawer({
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: () => <StatusIndicator status="active" layout="icon-only" size="sm" />,
+      render: () => <StatusIndicator status="active" size="sm" />,
     },
     {
       key: 'name',

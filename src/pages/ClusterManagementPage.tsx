@@ -139,9 +139,7 @@ export function ClusterManagementPage() {
       width: fixedColumns.status,
       sortable: false,
       align: 'center',
-      render: (status) => (
-        <StatusIndicator status={statusMap[status as ClusterStatus]} layout="icon-only" />
-      ),
+      render: (status) => <StatusIndicator status={statusMap[status as ClusterStatus]} />,
     },
     {
       key: 'name',

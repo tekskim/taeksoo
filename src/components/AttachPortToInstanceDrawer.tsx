@@ -141,7 +141,7 @@ export function AttachPortToInstanceDrawer({
       label: 'Status',
       width: 60,
       align: 'center',
-      render: (_value, row) => <StatusIndicator status={row.status} layout="icon-only" size="sm" />,
+      render: (_value, row) => <StatusIndicator status={row.status} size="sm" />,
     },
     {
       key: 'name',

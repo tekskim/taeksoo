@@ -336,9 +336,7 @@ export function ComputeAdminVolumeBackupsPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={volumeBackupStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={volumeBackupStatusMap[row.status]} />,
     },
     {
       key: 'name',

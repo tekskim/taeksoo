@@ -520,9 +520,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_: string, row: WorkloadRow) => (
-        <StatusIndicator status={row.status} layout="icon-only" size="lg" />
-      ),
+      render: (_: string, row: WorkloadRow) => <StatusIndicator status={row.status} size="lg" />,
     },
     {
       key: 'name',

@@ -726,10 +726,7 @@ export function ConnectDataSourceDrawer({
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator
-          status={row.status === 'active' ? 'active' : 'shutoff'}
-          layout="icon-only"
-        />
+        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} />
       ),
     },
     {
@@ -939,10 +936,7 @@ export function ConnectMCPServerDrawer({
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator
-          status={row.status === 'active' ? 'active' : 'shutoff'}
-          layout="icon-only"
-        />
+        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} />
       ),
     },
     {

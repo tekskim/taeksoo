@@ -305,7 +305,7 @@ export function ComputeAdminCertificatesPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" />,
+      render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} />,
     },
     {
       key: 'name',
