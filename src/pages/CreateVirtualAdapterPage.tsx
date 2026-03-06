@@ -327,7 +327,7 @@ export default function CreateVirtualAdapterPage() {
         label: 'Status',
         width: fixedColumns.status,
         align: 'center' as const,
-        render: (_value, row) => <StatusIndicator status={row.status} />,
+        render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
       },
       {
         key: 'name',

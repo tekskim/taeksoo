@@ -763,7 +763,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Status',
         width: fixedColumns.status,
         align: 'center' as const,
-        render: (_value, row) => <StatusIndicator status={row.status} />,
+        render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
       },
       {
         key: 'name',
@@ -832,7 +832,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Status',
         width: fixedColumns.status,
         align: 'center' as const,
-        render: (_value, row) => <StatusIndicator status={row.status} />,
+        render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
       },
       {
         key: 'name',
@@ -919,7 +919,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Status',
         width: fixedColumns.status,
         align: 'center' as const,
-        render: (_value, row) => <StatusIndicator status={row.status} />,
+        render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
       },
       {
         key: 'name',
@@ -1031,7 +1031,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Status',
         width: fixedColumns.status,
         align: 'center' as const,
-        render: (_value, row) => <StatusIndicator status={row.status} />,
+        render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} />,
       },
       {
         key: 'name',

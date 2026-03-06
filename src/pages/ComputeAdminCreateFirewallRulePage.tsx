@@ -221,7 +221,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={row.status} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',

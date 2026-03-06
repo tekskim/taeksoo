@@ -8,7 +8,6 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SearchInput,
   Pagination,
   ListToolbar,
@@ -17,6 +16,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -238,10 +238,14 @@ export function ContainerEventsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       sortable: false,
       align: 'center',
-      render: () => <StatusIndicator status="active" />,
+      render: () => (
+        <Badge theme="white" size="sm" className="max-w-[80px]">
+          Active
+        </Badge>
+      ),
     },
     {
       key: 'name',

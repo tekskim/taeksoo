@@ -294,7 +294,9 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={firewallStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={firewallStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

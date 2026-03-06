@@ -217,7 +217,9 @@ export function CreateAgentPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={dataSourceStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={dataSourceStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',
@@ -257,7 +259,9 @@ export function CreateAgentPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={mcpToolStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={mcpToolStatusMap[row.status]} />
+      ),
     },
     {
       key: 'title',

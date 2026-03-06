@@ -15,7 +15,6 @@ import {
   PageShell,
   Button,
   ContextMenu,
-  StatusIndicator,
   SearchInput,
   DetailHeader,
   Badge,
@@ -195,23 +194,13 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <StatusIndicator
-          status={
-            value === 'Completed'
-              ? 'active'
-              : value === 'Running'
-                ? 'building'
-                : value === 'Pending'
-                  ? 'pending'
-                  : value === 'Failed'
-                    ? 'error'
-                    : 'pending'
-          }
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

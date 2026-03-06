@@ -658,7 +658,9 @@ export function IAMUserDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value) => <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />,
+      render: (value) => (
+        <StatusIndicator layout="icon-only" status={value === 'active' ? 'active' : 'shutoff'} />
+      ),
     },
     {
       key: 'keyId',
@@ -894,7 +896,10 @@ export function IAMUserDetailPage() {
               label="Status"
               value={user.status === 'online' ? 'Online' : 'Offline'}
               statusIndicator={
-                <StatusIndicator status={user.status === 'online' ? 'active' : 'shutoff'} />
+                <StatusIndicator
+                  layout="icon-only"
+                  status={user.status === 'online' ? 'active' : 'shutoff'}
+                />
               }
             />
             <InfoCard label="Display name" value={user.displayName} />

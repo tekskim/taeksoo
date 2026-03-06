@@ -16,7 +16,6 @@ import {
   DetailHeader,
   Button,
   ContextMenu,
-  StatusIndicator,
   PageShell,
   type TableColumn,
   type ContextMenuItem,
@@ -518,9 +517,13 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
-      render: (_: string, row: WorkloadRow) => <StatusIndicator status={row.status} size="lg" />,
+      render: (value: string) => (
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
+      ),
     },
     {
       key: 'name',

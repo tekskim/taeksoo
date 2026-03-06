@@ -1243,7 +1243,7 @@ function WorkloadsContent() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center' as const,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={statusMap[row.status]} />,
     },
     {
       key: 'name',

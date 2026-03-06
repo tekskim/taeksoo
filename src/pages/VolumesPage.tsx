@@ -388,7 +388,9 @@ export function VolumesPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={volumeStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={volumeStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

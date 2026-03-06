@@ -382,7 +382,7 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={poolStatusMap[row.status]} />,
     },
     {
       key: 'name',
@@ -468,7 +468,9 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={l7PolicyStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={l7PolicyStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',
@@ -550,7 +552,9 @@ export default function ListenerDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={certificateStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={certificateStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',
@@ -826,7 +830,10 @@ export default function ListenerDetailPage() {
                     <SectionCard.DataRow
                       label="Status"
                       value={
-                        <StatusIndicator status={poolStatusMap[mockPools[0]?.status] || 'down'} />
+                        <StatusIndicator
+                          layout="icon-only"
+                          status={poolStatusMap[mockPools[0]?.status] || 'down'}
+                        />
                       }
                     />
                     <SectionCard.DataRow label="Description" value="-" />

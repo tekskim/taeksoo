@@ -447,7 +447,10 @@ export default function IAMSystemAdminDetailPage() {
                 label="Status"
                 value={admin.status === 'online' ? 'Online' : 'Offline'}
                 statusIndicator={
-                  <StatusIndicator status={admin.status === 'online' ? 'active' : 'shutoff'} />
+                  <StatusIndicator
+                    layout="icon-only"
+                    status={admin.status === 'online' ? 'active' : 'shutoff'}
+                  />
                 }
               />
               <InfoCard label="Display name" value={admin.displayName} />

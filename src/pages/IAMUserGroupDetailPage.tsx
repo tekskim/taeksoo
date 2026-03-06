@@ -438,7 +438,9 @@ export default function IAMUserGroupDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value) => <StatusIndicator status={value as 'active' | 'error' | 'shutoff'} />,
+      render: (value) => (
+        <StatusIndicator layout="icon-only" status={value as 'active' | 'error' | 'shutoff'} />
+      ),
     },
     {
       key: 'username',

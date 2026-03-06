@@ -320,7 +320,9 @@ export function VolumeBackupsPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={volumeBackupStatusMap[row.status]} />,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={volumeBackupStatusMap[row.status]} />
+      ),
     },
     {
       key: 'name',

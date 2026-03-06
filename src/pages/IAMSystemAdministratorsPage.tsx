@@ -188,6 +188,7 @@ export default function IAMSystemAdministratorsPage() {
       align: 'center',
       render: (value) => (
         <StatusIndicator
+          layout="icon-only"
           status={value === 'active' ? 'active' : value === 'inactive' ? 'shutoff' : 'building'}
         />
       ),

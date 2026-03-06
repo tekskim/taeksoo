@@ -8,7 +8,6 @@ import {
   Breadcrumb,
   Table,
   Button,
-  StatusIndicator,
   SectionCard,
   SearchInput,
   Pagination,
@@ -16,6 +15,7 @@ import {
   type TableColumn,
   fixedColumns,
   columnMinWidths,
+  Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -147,13 +147,13 @@ export function ContainerHomePage() {
     {
       key: 'status',
       label: 'Status',
-      width: fixedColumns.status,
+      width: fixedColumns.statusLabel,
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <StatusIndicator
-          status={value === 'Running' ? 'active' : value === 'Creating' ? 'building' : 'suspended'}
-        />
+        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
+          <span className="truncate">{value}</span>
+        </Badge>
       ),
     },
     {

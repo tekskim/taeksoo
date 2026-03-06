@@ -834,6 +834,7 @@ function TemplateInformationSection({
                         align: 'center',
                         render: (_, row) => (
                           <StatusIndicator
+                            layout="icon-only"
                             status={row.status === 'active' ? 'active' : 'deactivated'}
                           />
                         ),
@@ -1083,7 +1084,10 @@ function ImageSection({
       label: 'Status',
       width: fixedColumns.status,
       render: (_, row) => (
-        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status as 'active' | 'error' | 'building'}
+        />
       ),
     },
     {
@@ -1135,7 +1139,10 @@ function ImageSection({
       label: 'Status',
       width: fixedColumns.status,
       render: (_, row) => (
-        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status as 'active' | 'error' | 'building'}
+        />
       ),
     },
     {
@@ -1205,7 +1212,10 @@ function ImageSection({
       label: 'Status',
       width: fixedColumns.status,
       render: (_, row) => (
-        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
+        <StatusIndicator
+          layout="icon-only"
+          status={row.status as 'active' | 'error' | 'building'}
+        />
       ),
     },
     {
@@ -2185,7 +2195,7 @@ function NetworkSection({
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      render: (_, row) => <StatusIndicator status={row.status} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',
@@ -2330,7 +2340,7 @@ function NetworkSection({
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
-      render: (_, row) => <StatusIndicator status={row.status} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',

@@ -197,7 +197,7 @@ export function ComputeAdminServerGroupDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} />,
+      render: (_, row) => <StatusIndicator layout="icon-only" status={row.status} />,
     },
     {
       key: 'name',

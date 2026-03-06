@@ -114,7 +114,7 @@ export function ChatConversationPage() {
         <TopBar
           left={
             <div className="flex items-center gap-2 bg-[var(--color-surface-subtle)] rounded-md px-2 h-6">
-              <StatusIndicator status="active" />
+              <StatusIndicator layout="icon-only" status="active" />
               <span className="text-label-md text-[var(--color-text-default)]">{agentName}</span>
             </div>
           }
