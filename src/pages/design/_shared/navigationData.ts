@@ -42,7 +42,6 @@ import {
   IconBrush,
   IconChecklist,
   IconUsers,
-  IconFileOff,
   IconBook,
   IconComponents,
   IconDeviceDesktop,
@@ -210,12 +209,6 @@ const feedbackItems: NavItem[] = [
     path: '/design/components/inline-message',
   },
   { id: 'loading', label: 'Loading', icon: IconLoader2, path: '/design/components/loading' },
-  {
-    id: 'empty-state',
-    label: 'EmptyState / ErrorState',
-    icon: IconFileOff,
-    path: '/design/components/empty-state',
-  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -483,7 +476,6 @@ export const pageLastUpdated: Record<string, string> = {
   // Feedback
   '/design/components/inline-message': '2026-03-01 10:30:00',
   '/design/components/loading': '2026-03-01 10:30:00',
-  '/design/components/empty-state': '2026-03-05 13:00:00',
   // Navigation
   '/design/components/topbar': '2026-03-01 10:30:00',
   '/design/components/tabbar': '2026-03-01 10:30:00',
