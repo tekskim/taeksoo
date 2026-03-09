@@ -245,6 +245,18 @@ const feedbackItems: NavItem[] = [
     icon: IconProgress,
     path: '/design/components/progress-bar',
   },
+  {
+    id: 'skeleton',
+    label: 'Skeleton',
+    icon: IconStack2,
+    path: '/design/components/skeleton',
+  },
+  {
+    id: 'spinner',
+    label: 'Spinner',
+    icon: IconLoader2,
+    path: '/design/components/spinner',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -564,6 +576,8 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/inline-message': '2026-03-09 10:30:00',
   '/design/components/loading': '2026-03-09',
   '/design/components/progress-bar': '2026-03-09',
+  '/design/components/skeleton': '2026-03-09',
+  '/design/components/spinner': '2026-03-09',
   // Navigation
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',

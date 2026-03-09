@@ -58,13 +58,6 @@ const loadingProps: PropDef[] = [
     description: 'Loading variant',
   },
   {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Size',
-  },
-  {
     name: 'text',
     type: 'string',
     default: "'Loading'",
@@ -89,13 +82,6 @@ const loadingProps: PropDef[] = [
     type: 'string',
     required: false,
     description: 'Status text (progress variant)',
-  },
-  {
-    name: 'buttonLabel',
-    type: 'string',
-    default: "'Loading'",
-    required: false,
-    description: 'Button label (button variant)',
   },
 ];
 
@@ -303,12 +289,8 @@ export function LoadingPage() {
         '오류 발생 (→ Error state)',
       ]}
       preview={
-        <ComponentPreview
-          code={`<Loading variant="spinner" size="md" text="Loading" />
-<Loading variant="progress" text="Loading.." progress={68} />`}
-        >
+        <ComponentPreview code={`<Loading variant="progress" text="Loading.." progress={68} />`}>
           <div className="flex gap-8 items-center">
-            <Loading variant="spinner" size="md" text="Loading" />
             <Loading variant="progress" text="Loading.." progress={68} />
           </div>
         </ComponentPreview>
@@ -316,35 +298,10 @@ export function LoadingPage() {
       usage={{
         code: `import { Loading } from '@/design-system';
 
-<Loading variant="spinner" text="Loading" />
-<Loading variant="progress" text="Uploading" progress={50} />
-<Loading variant="button" buttonLabel="Saving" />`,
+<Loading variant="progress" text="Uploading" progress={50} />`,
       }}
       examples={
         <VStack gap={8}>
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Spinner variant (Inline Loading)</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                레이아웃을 예측할 수 없거나 단일 영역 로딩 시 사용. 버튼, 필드 등 작은 작업에 적합.
-              </span>
-            </VStack>
-            <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={2} align="center">
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Small</span>
-                <Loading variant="spinner" size="sm" text="Loading" />
-              </VStack>
-              <VStack gap={2} align="center">
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Medium</span>
-                <Loading variant="spinner" size="md" text="Loading" />
-              </VStack>
-              <VStack gap={2} align="center">
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Large</span>
-                <Loading variant="spinner" size="lg" text="Loading" />
-              </VStack>
-            </div>
-          </VStack>
-
           <VStack gap={3}>
             <VStack gap={1}>
               <Label>Progress variant</Label>
@@ -362,20 +319,6 @@ export function LoadingPage() {
               />
             </div>
           </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Button variant (Inline Loading)</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                제출 중인 버튼은 Spinner + disabled 상태로 표시. 중복 요청을 방지.
-              </span>
-            </VStack>
-            <div className="flex gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <Loading variant="button" buttonLabel="Loading" />
-              <Loading variant="button" buttonLabel="Saving" />
-              <Loading variant="button" buttonLabel="Processing" />
-            </div>
-          </VStack>
         </VStack>
       }
       guidelines={<LoadingGuidelines />}
@@ -390,21 +333,9 @@ export function LoadingPage() {
           <tbody>
             <tr>
               <Td>
-                <code>spinner</code>
-              </Td>
-              <Td>16 / 22 / 32px (sm / md / lg)</Td>
-            </tr>
-            <tr>
-              <Td>
                 <code>progress</code>
               </Td>
               <Td>h-1 (4px)</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>button</code>
-              </Td>
-              <Td>min-w-80px</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -419,10 +350,15 @@ export function LoadingPage() {
         </Prose>
       }
       relatedLinks={[
-        { label: 'Spinner', path: '/design/components/loading', description: '로딩 표시 컴포넌트' },
+        { label: 'Spinner', path: '/design/components/spinner', description: '로딩 표시 컴포넌트' },
+        {
+          label: 'Skeleton',
+          path: '/design/components/skeleton',
+          description: '콘텐츠 플레이스홀더',
+        },
         {
           label: 'Progress Bar',
-          path: '/design/charts/progress-bar',
+          path: '/design/components/progress-bar',
           description: '진행률 표시 (determinate)',
         },
         { label: 'Table', path: '/design/components/table', description: '리스트 데이터 로딩' },
@@ -431,7 +367,6 @@ export function LoadingPage() {
           path: '/design/patterns/empty-states',
           description: '데이터 없음 패턴',
         },
-        { label: 'Button', path: '/design/components/button', description: '버튼 로딩 상태' },
       ]}
       notionPageId="2a99eddc34e680f190a9ea81bafd558a"
     />

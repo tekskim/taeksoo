@@ -349,6 +349,8 @@ import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChe
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
 import { LoadingPage } from '@/pages/design/components/LoadingPage';
 import { ProgressBarComponentPage } from '@/pages/design/components/ProgressBarComponentPage';
+import { SkeletonPage } from '@/pages/design/components/SkeletonPage';
+import { SpinnerPage } from '@/pages/design/components/SpinnerPage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
 import { TabBarPage } from '@/pages/design/components/TabBarPage';
 import { TabsPage } from '@/pages/design/components/TabsPage';
@@ -1021,6 +1023,8 @@ function AppRoutes() {
         <Route path="components/inline-message" element={<InlineMessagePage />} />
         <Route path="components/loading" element={<LoadingPage />} />
         <Route path="components/progress-bar" element={<ProgressBarComponentPage />} />
+        <Route path="components/skeleton" element={<SkeletonPage />} />
+        <Route path="components/spinner" element={<SpinnerPage />} />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />
