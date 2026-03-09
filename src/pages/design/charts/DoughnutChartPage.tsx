@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { DoughnutChartDemo } from '../../design-system-sections/ChartComponents';
 import { VStack } from '@/design-system';
 
@@ -163,21 +164,14 @@ export function DoughnutChartPage() {
 
           <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Usage Guidelines - Do ✅
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>단일 리소스에만 사용한다. 복수 리소스는 Gauge Bar Chart 사용.</li>
-                  <li>소수점 둘째 자리까지 표시한다.</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Don&apos;t ❌</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>3개 이상의 세그먼트를 표시하지 않는다. Used / Available만 유지한다.</li>
-                </ul>
-              </VStack>
+              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
+              <DosDonts
+                doItems={[
+                  '단일 리소스에만 사용한다. 복수 리소스는 Gauge Bar Chart 사용.',
+                  '소수점 둘째 자리까지 표시한다.',
+                ]}
+                dontItems={['3개 이상의 세그먼트를 표시하지 않는다. Used / Available만 유지한다.']}
+              />
             </VStack>
           </div>
         </VStack>

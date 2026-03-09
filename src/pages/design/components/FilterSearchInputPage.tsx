@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { FilterSearchInput, Chip, VStack } from '@/design-system';
@@ -94,19 +95,6 @@ const SEARCH_INPUT_GUIDELINES = `## Overview
 ### 6) Placeholder Policy
 - Filter Search는 Label 대신 Placeholder를 사용한다.
 - 표준 문구: "Search {resources} by attributes"
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- 필터 키 기반 검색을 제공한다
-- 생성된 필터를 Chip으로 표시한다
-- Clear action을 제공한다
-
-### Don't ❌
-- 필터 조건을 텍스트로만 표시하지 않는다
-- 여러 필터를 하나의 문자열로 표현하지 않는다
 
 ---
 
@@ -357,7 +345,22 @@ export function FilterSearchInputPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={SEARCH_INPUT_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={SEARCH_INPUT_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '필터 키 기반 검색을 제공한다',
+              '생성된 필터를 Chip으로 표시한다',
+              'Clear action을 제공한다',
+            ]}
+            dontItems={[
+              '필터 조건을 텍스트로만 표시하지 않는다',
+              '여러 필터를 하나의 문자열로 표현하지 않는다',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> ·{' '}

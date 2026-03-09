@@ -1,6 +1,6 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { Disclosure } from '@/design-system';
 
 const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 전역 알림 패널은 모든 앱의 '안읽은(Unread)' 기록형 알림을 한곳에서 모아 보여주는 데스크탑 레벨 보조 뷰이다.
@@ -88,20 +88,6 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 안읽은 알림을 빠르게 확인할 수 있도록 사용한다
-- 알림을 앱별로 그룹화한다
-- 최신 알림을 상단에 표시한다
-
-### Don't ❌
-- 전역 패널을 알림 저장소로 사용하지 않는다
-- Toast를 전역 패널에 표시하지 않는다
-- 읽은 알림을 표시하지 않는다
-
----
-
 ## Related
 
 | 이름 | 유형 | 이유 |
@@ -111,35 +97,6 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | Notification Center | Component | 알림 원본 저장소 |
 | Error & Alert | Foundation | 알림 유형 정의 |
 | Desktop UI | Pattern | 전역 패널 위치 |
-`;
-
-const GLOBAL_NOTIFICATION_PANEL_PREV_VERSION = `## 개요
-
-| 항목 | 내용 |
-| --- | --- |
-| 목적 | 모든 앱의 안읽은 알림 집계 뷰 |
-| 위치 | 데스크탑 레벨 (상단바 등) |
-| 접근 | 전역 Notification icon 클릭 |
-
-## 구성요소
-1. Panel Icon — 패널 열기/닫기
-2. Panel — 알림 목록 컨테이너
-3. App Header — 앱별 그룹 헤더
-4. Show more / Show less — 알림 목록 확장
-5. Mark all as read — 전체 읽음
-6. Notification Item — 개별 알림 카드
-
-## 가이드라인
-1. 안읽은 알림을 빠르게 확인할 수 있도록 사용한다
-2. 알림을 앱별로 그룹화한다
-3. 최신 알림을 상단에 표시한다
-4. 전역 패널을 알림 저장소로 사용하지 않는다
-5. 읽은 알림을 표시하지 않는다
-
-## 시나리오
-1. 여러 앱 사용 중 새 알림 확인 → 전역 패널에서 앱별로 확인
-2. Snackbar를 놓친 경우 → 전역 패널에서 해당 알림 확인
-3. 현재 보고 있는 앱과 무관하게 알림 확인 → 전역 패널로 빠른 접근
 `;
 
 export function GlobalNotificationPanelPage() {
@@ -161,14 +118,18 @@ export function GlobalNotificationPanelPage() {
       guidelines={
         <>
           <NotionRenderer markdown={GLOBAL_NOTIFICATION_PANEL_GUIDELINES} />
-          <Disclosure className="mt-6">
-            <Disclosure.Trigger>이전 버전</Disclosure.Trigger>
-            <Disclosure.Panel>
-              <div className="pt-2">
-                <NotionRenderer markdown={GLOBAL_NOTIFICATION_PANEL_PREV_VERSION} />
-              </div>
-            </Disclosure.Panel>
-          </Disclosure>
+          <DosDonts
+            doItems={[
+              '안읽은 알림을 빠르게 확인할 수 있도록 사용한다',
+              '알림을 앱별로 그룹화한다',
+              '최신 알림을 상단에 표시한다',
+            ]}
+            dontItems={[
+              '전역 패널을 알림 저장소로 사용하지 않는다',
+              'Toast를 전역 패널에 표시하지 않는다',
+              '읽은 알림을 표시하지 않는다',
+            ]}
+          />
         </>
       }
       relatedLinks={[

@@ -3,6 +3,7 @@ import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Badge, StatusIndicator, Tooltip, VStack } from '@/design-system';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const STATUS_GUIDELINES = `## Overview
@@ -96,23 +97,6 @@ const STATUS_GUIDELINES = `## Overview
 ### 4) 접근성
 - Icon Only 형식 사용 시 \`aria-label\` 또는 \`title\` 속성으로 상태명을 제공해야 한다.
 - 색상만으로 상태를 전달하지 않고 아이콘과 레이블을 함께 사용한다.
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- 테이블의 Status 컬럼에서 리소스 상태를 표시한다.
-- Detail Header의 InfoCard에서 리소스 상태를 표시한다.
-- 하나의 리소스에는 하나의 Status만 표시한다.
-- Status 컬럼은 중앙 정렬한다.
-- 특수 상태는 기획 문서에 정의된 범위 내에서만 사용한다.
-
-### Don't ❌
-- 특수 상태로 정의되지 않은 상태값에 임의로 아이콘이나 컬러를 적용하지 않는다.
-- 시맨틱 타입을 의미와 맞지 않게 사용하지 않는다.
-- Default 상태에 임의로 색상이나 아이콘을 추가하지 않는다.
-- 상태가 아닌 수량·숫자 정보 표시에는 사용하지 않는다.
 
 ---
 
@@ -441,7 +425,26 @@ export function StatusIndicatorPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={STATUS_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={STATUS_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '테이블의 Status 컬럼에서 리소스 상태를 표시한다.',
+              'Detail Header의 InfoCard에서 리소스 상태를 표시한다.',
+              '하나의 리소스에는 하나의 Status만 표시한다.',
+              'Status 컬럼은 중앙 정렬한다.',
+              '특수 상태는 기획 문서에 정의된 범위 내에서만 사용한다.',
+            ]}
+            dontItems={[
+              '특수 상태로 정의되지 않은 상태값에 임의로 아이콘이나 컬러를 적용하지 않는다.',
+              '시맨틱 타입을 의미와 맞지 않게 사용하지 않는다.',
+              'Default 상태에 임의로 색상이나 아이콘을 추가하지 않는다.',
+              '상태가 아닌 수량·숫자 정보 표시에는 사용하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       apiReference={statusIndicatorProps}
       relatedLinks={[
         { label: 'Badge', path: '/design/components/badge' },

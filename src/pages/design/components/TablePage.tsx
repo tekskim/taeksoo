@@ -2,6 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
 import { Table, StatusIndicator } from '@/design-system';
 import { TableDemo } from '../../design-system-sections/TableDemo';
@@ -117,18 +118,6 @@ Table은 일반적으로 다음 패턴과 함께 사용된다.
 ---
 
 ## Usage Guidelines
-
-### Do ✅
-
-- 중요한 정보를 왼쪽 컬럼에 배치한다
-- 정렬 가능한 컬럼 제공
-- Batch action 제공
-
-### Don't ❌
-
-- 너무 많은 컬럼 사용
-- 의미 없는 컬럼 표시
-- 텍스트 과다 표시
 
 ---
 
@@ -320,7 +309,19 @@ const columns = [
           <TableDemo />
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={TABLE_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={TABLE_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '중요한 정보를 왼쪽 컬럼에 배치한다',
+              '정렬 가능한 컬럼 제공',
+              'Batch action 제공',
+            ]}
+            dontItems={['너무 많은 컬럼 사용', '의미 없는 컬럼 표시', '텍스트 과다 표시']}
+          />
+        </VStack>
+      }
       apiReference={tableProps}
       subComponentApis={[{ name: 'TableColumn', props: tableColumnProps }]}
       accessibility={

@@ -145,12 +145,32 @@ const foundationItems: NavItem[] = [
 
 const formControlItems: NavItem[] = [
   { id: 'button', label: 'Button', icon: IconClick, path: '/design/components/button' },
-  { id: 'input', label: 'Input', icon: IconForms, path: '/design/components/input' },
+  { id: 'input', label: 'Input (All)', icon: IconForms, path: '/design/components/input' },
+  { id: 'text-input', label: 'Text Input', icon: IconForms, path: '/design/components/text-input' },
+  {
+    id: 'number-input',
+    label: 'Number Input',
+    icon: IconForms,
+    path: '/design/components/number-input',
+  },
+  { id: 'textarea', label: 'Textarea', icon: IconForms, path: '/design/components/textarea' },
+  {
+    id: 'search-input',
+    label: 'Search Input',
+    icon: IconForms,
+    path: '/design/components/search-input',
+  },
   {
     id: 'form-field-spacing',
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
     path: '/design/components/form-field',
+  },
+  {
+    id: 'form-field-pattern',
+    label: 'Form Field',
+    icon: IconForms,
+    path: '/design/patterns/form-field-pattern',
   },
   {
     id: 'filter-search-input',
@@ -233,7 +253,12 @@ const navigationItems: NavItem[] = [
 const overlayItems: NavItem[] = [
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2, path: '/design/components/tooltip' },
   { id: 'popover', label: 'Popover', icon: IconMessage2, path: '/design/components/popover' },
-  { id: 'menu', label: 'Menu', icon: IconMenu2, path: '/design/components/menu' },
+  {
+    id: 'menu',
+    label: 'Side Navigation Bar (Menu)',
+    icon: IconMenu2,
+    path: '/design/components/menu',
+  },
   {
     id: 'context-menu',
     label: 'Context menu',
@@ -314,6 +339,12 @@ const layoutItems: NavItem[] = [
     path: '/design/patterns/open-form',
   },
   {
+    id: 'list-page',
+    label: 'List Page',
+    icon: IconList,
+    path: '/design/patterns/list-page',
+  },
+  {
     id: 'list-selector',
     label: 'List Selector',
     icon: IconList,
@@ -333,7 +364,7 @@ const layoutItems: NavItem[] = [
   },
   {
     id: 'csv-download',
-    label: 'CSV file download',
+    label: 'List Download (CSV Export)',
     icon: IconDownload,
     path: '/design/components/csv-download',
   },
@@ -342,6 +373,12 @@ const layoutItems: NavItem[] = [
     label: 'App Window',
     icon: IconTerminal2,
     path: '/design/components/app-window',
+  },
+  {
+    id: 'shell-pattern',
+    label: 'Shell',
+    icon: IconTerminal2,
+    path: '/design/patterns/shell',
   },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
@@ -481,6 +518,10 @@ export const pageLastUpdated: Record<string, string> = {
   // Form Controls
   '/design/components/button': '2026-03-09 10:30:00',
   '/design/components/input': '2026-03-01 10:30:00',
+  '/design/components/text-input': '2026-03-09 15:00:00',
+  '/design/components/number-input': '2026-03-09 15:00:00',
+  '/design/components/textarea': '2026-03-09 15:00:00',
+  '/design/components/search-input': '2026-03-09 15:00:00',
   '/design/components/form-field': '2026-03-01 10:30:00',
   '/design/components/filter-search-input': '2026-03-09 10:30:00',
   '/design/components/select': '2026-03-09 10:30:00',
@@ -510,7 +551,7 @@ export const pageLastUpdated: Record<string, string> = {
   // Overlay
   '/design/components/tooltip': '2026-03-09 10:30:00',
   '/design/components/popover': '2026-03-01 10:30:00',
-  '/design/components/menu': '2026-03-05 13:00:00',
+  '/design/components/menu': '2026-03-09',
   '/design/components/context-menu': '2026-03-01 10:30:00',
   '/design/components/modal': '2026-03-09 10:30:00',
   '/design/components/drawer': '2026-03-09 10:30:00',
@@ -529,14 +570,17 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/wizard': '2026-03-05 13:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
   '/design/components/monitoring-toolbar': '2026-03-01 10:30:00',
-  '/design/components/csv-download': '2026-03-01 10:30:00',
+  '/design/components/csv-download': '2026-03-09 15:00:00',
   '/design/components/app-window': '2026-03-09 10:30:00',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
   '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
   '/design/patterns/form-validation': '2026-03-01 10:30:00',
+  '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/list-selector': '2026-03-09 10:30:00',
   '/design/patterns/view-preferences': '2026-03-09 10:30:00',
+  '/design/patterns/form-field-pattern': '2026-03-09 15:00:00',
+  '/design/patterns/shell': '2026-03-09 15:00:00',
   // Charts
   '/design/charts/overview': '2026-03-09 10:30:00',
   '/design/charts/status-colors': '2026-03-01 10:30:00',

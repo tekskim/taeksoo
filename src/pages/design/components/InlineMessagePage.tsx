@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { InlineMessage, VStack } from '@/design-system';
@@ -59,20 +60,6 @@ const INLINE_MESSAGE_GUIDELINES = `## Overview
 - 같은 위치에 여러 InlineMessage가 필요한 경우 VStack으로 8px 간격으로 스태킹.
 - Severity 우선: error > warning > info > success
 - 동일 severity 내 최신 우선.
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- 상태 또는 지정된 조건이 해소되면 즉시 제거되도록 한다.
-- Section 메시지는 해당 섹션 컨텍스트를 벗어나면 노출하지 않는다.
-- severity는 의미에 맞게만 사용하고 남발하지 않는다.
-
-### Don't ❌
-- 단발 피드백(성공/실패)을 Inline Message로 처리하지 않는다.
-- 동일 이슈를 여러 위치에 중복 고정하지 않는다.
-- timestamp를 모든 메시지에 강제하여 노이즈를 만들지 않는다.
 
 ---
 
@@ -179,7 +166,23 @@ export function InlineMessagePage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={INLINE_MESSAGE_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={INLINE_MESSAGE_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '상태 또는 지정된 조건이 해소되면 즉시 제거되도록 한다.',
+              'Section 메시지는 해당 섹션 컨텍스트를 벗어나면 노출하지 않는다.',
+              'severity는 의미에 맞게만 사용하고 남발하지 않는다.',
+            ]}
+            dontItems={[
+              '단발 피드백(성공/실패)을 Inline Message로 처리하지 않는다.',
+              '동일 이슈를 여러 위치에 중복 고정하지 않는다.',
+              'timestamp를 모든 메시지에 강제하여 노이즈를 만들지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>padding: 12px</code> · <code>gap: 8px</code> · <code>radius: 6px</code> ·{' '}

@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const EXPANDABLE_CHECKLIST_GUIDELINES = `## Overview
@@ -71,20 +72,6 @@ const EXPANDABLE_CHECKLIST_GUIDELINES = `## Overview
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 최대 선택 개수가 있는 경우 컨테이너 서브타이틀에 명시한다.
-- 뱃지는 시스템이 자동으로 결정하는 상태 값에 한해 사용한다.
-- 항목 수가 많아 스크롤이 필요한 경우 컨테이너 높이를 고정하여 스크롤 영역을 명확히 한다.
-- 그룹 구조가 있는 경우 Expandable 타입을 사용한다.
-
-### Don't ❌
-- 최대 선택 개수 초과 시 기존 선택된 항목을 자동으로 해제하지 않는다.
-- 뱃지 색상을 임의로 지정하지 않는다.
-
----
-
 ## Content Guidelines
 - 컨테이너 타이틀: 대상 리소스 유형을 명사형으로 작성한다.
 - 항목 Title: 리소스의 고유 식별자 또는 이름을 그대로 사용한다.
@@ -112,7 +99,23 @@ export function ExpandableChecklistPage() {
         '선택 가능한 항목이 그룹(계층) 구조를 가지며, 각 항목의 상태(예: Completed, Running 등)를 함께 노출해야 할 때',
       ]}
       whenNotToUse={['항목 수가 적고 계층 구조가 없는 경우 → Checkbox 사용']}
-      guidelines={<NotionRenderer markdown={EXPANDABLE_CHECKLIST_GUIDELINES} />}
+      guidelines={
+        <>
+          <NotionRenderer markdown={EXPANDABLE_CHECKLIST_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '최대 선택 개수가 있는 경우 컨테이너 서브타이틀에 명시한다.',
+              '뱃지는 시스템이 자동으로 결정하는 상태 값에 한해 사용한다.',
+              '항목 수가 많아 스크롤이 필요한 경우 컨테이너 높이를 고정하여 스크롤 영역을 명확히 한다.',
+              '그룹 구조가 있는 경우 Expandable 타입을 사용한다.',
+            ]}
+            dontItems={[
+              '최대 선택 개수 초과 시 기존 선택된 항목을 자동으로 해제하지 않는다.',
+              '뱃지 색상을 임의로 지정하지 않는다.',
+            ]}
+          />
+        </>
+      }
       relatedLinks={[
         { label: 'Checkbox', path: '/design/components/checkbox' },
         { label: 'Badge', path: '/design/components/badge' },

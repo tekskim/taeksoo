@@ -1,24 +1,30 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { Disclosure } from '@/design-system';
+import { VStack, SearchInput, Pagination, Table, SelectionIndicator } from '@/design-system';
 
 const LIST_SELECTOR_GUIDELINES = `## Overview
 
-사용자가 리소스 목록에서 하나 이상의 항목을 검색하고 선택하기 위한 UI 패턴이다. 주로 카드, 드로어 또는 설정 패널 내부에서 사용된다.
+사용자가 리소스 목록에서 하나 이상의 항목을 검색하고 선택하기 위한 UI 패턴이다.
+이 패턴은 주로 카드, 드로어 또는 설정 패널 내부에서 사용된다.
 
 ---
 
 ## Components
 
 \`\`\`
-+----------------------------------------------------------+
-| [Tab 1] [Tab 2] ...              [Create] [Search input] |
-|----------------------------------------------------------|
-| Selection area: [Chip] [Chip] ...                         |
-|----------------------------------------------------------|
-| Table                                        Pagination   |
-| (리소스 목록)                              Item count    |
-+----------------------------------------------------------+
+Search
+
+Pagination
+
+--------------------------------
+Table
+--------------------------------
+
+Selection Area
+[chip] [chip] [chip]
 \`\`\`
 
 | 요소 | 설명 |
@@ -68,86 +74,100 @@ const LIST_SELECTOR_GUIDELINES = `## Overview
 ### 5) 행 개수
 - 단독으로 존재하는 리스트: 10개 고정
 - 한 카드/드로어에 List Selector가 2개 이상이거나 입력값이 많을 때: 5개 고정
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- 검색 기능을 제공한다.
-- 선택된 항목을 명확하게 표시한다.
-- Chip을 통해 선택 상태를 쉽게 제거할 수 있도록 한다.
-
-### Don't ❌
-- 선택 결과를 숨기지 않는다.
-- 선택 상태를 Table과 분리하여 표시하지 않는다.
-- Create 기능을 필수 요소로 만들지 않는다.
-
----
-
-## Related
-
-| 이름 | 유형 | 이유 |
-| --- | --- | --- |
-| Search Input | Component | 목록 검색 |
-| Table | Component | 데이터 표시 |
-| Pagination | Component | 페이지 탐색 |
-| Chip | Component | 선택 항목 표시 |
-| Drawer | Component | 패턴 사용 위치 |
 `;
 
-const LIST_SELECTOR_PREV_VERSION = `## 리스트 화면
+const selectorData = [
+  { id: 'net-001', name: 'default-network', type: 'Flat', subnet: '10.0.0.0/24' },
+  { id: 'net-002', name: 'internal-mgmt', type: 'VLAN', subnet: '172.16.0.0/16' },
+  { id: 'net-003', name: 'public-external', type: 'Flat', subnet: '192.168.1.0/24' },
+  { id: 'net-004', name: 'storage-backend', type: 'VXLAN', subnet: '10.10.0.0/20' },
+  { id: 'net-005', name: 'tenant-isolated', type: 'VLAN', subnet: '10.20.0.0/16' },
+];
 
-1. Tab — 리소스 유형별 분류
-2. Create button — 새 리소스 생성
-3. Search input — 검색 및 필터링
-4. Pagination — 페이지 이동
-5. Item count — 데이터 규모 표시
-6. Table — 리소스 목록
-7. Selection area — 선택된 리소스 표시 (Chip)
-8. 선택 영역 (Radio/Checkbox)
-9. 행 액션 (Context Menu 등)
+const selectorColumns = [
+  { key: 'name', label: 'Name', flex: 1 },
+  { key: 'type', label: 'Type', width: '100px' },
+  { key: 'subnet', label: 'Subnet', flex: 1 },
+];
 
----
+function ListSelectorPreview() {
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<string[]>(['net-001', 'net-003']);
 
-## 생성/편집 화면 리스트
+  const filtered = selectorData.filter((d) => d.name.toLowerCase().includes(search.toLowerCase()));
 
-1. Tab — 리소스 유형별 분류
-2. Create button — 새 리소스 생성 (선택)
-3. Search input — 검색 및 필터링
-4. Pagination — 페이지 이동
-5. Item count — 데이터 규모 표시
-6. Table — 리소스 목록
-7. Selection area — 선택된 리소스 Chip 표시
-8. 확인/취소 버튼
+  return (
+    <VStack gap={3}>
+      <SearchInput
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        onClear={() => setSearch('')}
+        placeholder="Search networks by name, type, or subnet"
+        size="sm"
+        className="w-[280px]"
+      />
 
----
+      <Pagination
+        currentPage={page}
+        totalPages={1}
+        onPageChange={setPage}
+        totalItems={filtered.length}
+        selectedCount={selected.length}
+      />
 
-## 인터랙션
+      <VStack gap={2}>
+        <Table
+          columns={selectorColumns}
+          data={filtered}
+          rowKey="id"
+          selectable
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+          emptyMessage="No networks found"
+        />
 
-### 선택
-- 단일 선택: Radio, 다중 선택: Checkbox
-- 선택된 항목은 Chip 형태로 Selection area에 표시
-
-### 선택 해제
-- Chip ✕ 클릭 또는 행 선택 해제 시 Chip 제거
-
-### 페이지 이동
-- Pagination 이동 시 선택 상태 유지
-
-### 생성 버튼
-- 새 탭에서 생성 화면 이동, 기존 선택 유지
-
-### 행 개수
-- 단독 리스트: 10개 고정
-- 카드/드로어 내 2개 이상 또는 입력값 많을 때: 5개 고정
-`;
+        <SelectionIndicator
+          selectedItems={selected.map((id) => ({
+            id,
+            label: selectorData.find((d) => d.id === id)?.name ?? id,
+          }))}
+          onRemove={(id) => setSelected((prev) => prev.filter((s) => s !== id))}
+          emptyText="No network selected"
+        />
+      </VStack>
+    </VStack>
+  );
+}
 
 export function ListSelectorPage() {
   return (
     <ComponentPageTemplate
       title="List Selector"
       description="사용자가 리소스 목록에서 하나 이상의 항목을 검색하고 선택하기 위한 UI 패턴. 주로 카드, 드로어 또는 설정 패널 내부에서 사용된다."
+      preview={
+        <ComponentPreview
+          code={`<VStack gap={3}>
+  <SearchInput placeholder="Search networks" size="sm" />
+
+  <Pagination currentPage={page} totalPages={1} onPageChange={setPage}
+    totalItems={data.length} selectedCount={selected.length} />
+
+  <Table columns={columns} data={data} rowKey="id" selectable
+    selectedKeys={selected} onSelectionChange={setSelected} />
+
+  {selected.length > 0 && (
+    <div className="selection-area">
+      {selected.map((id) => (
+        <Chip key={id} label={name} size="sm" onRemove={() => deselect(id)} />
+      ))}
+    </div>
+  )}
+</VStack>`}
+        >
+          <ListSelectorPreview />
+        </ComponentPreview>
+      }
       whenToUse={[
         '다른 리소스를 참조하여 설정해야 하는 경우',
         '리소스를 선택하여 연결해야 하는 경우',
@@ -161,14 +181,18 @@ export function ListSelectorPage() {
       guidelines={
         <>
           <NotionRenderer markdown={LIST_SELECTOR_GUIDELINES} />
-          <Disclosure className="mt-6">
-            <Disclosure.Trigger>이전 버전</Disclosure.Trigger>
-            <Disclosure.Panel>
-              <div className="pt-2">
-                <NotionRenderer markdown={LIST_SELECTOR_PREV_VERSION} />
-              </div>
-            </Disclosure.Panel>
-          </Disclosure>
+          <DosDonts
+            doItems={[
+              '검색 기능을 제공한다.',
+              '선택된 항목을 명확하게 표시한다.',
+              'Chip을 통해 선택 상태를 쉽게 제거할 수 있도록 한다.',
+            ]}
+            dontItems={[
+              '선택 결과를 숨기지 않는다.',
+              '선택 상태를 Table과 분리하여 표시하지 않는다.',
+              'Create 기능을 필수 요소로 만들지 않는다.',
+            ]}
+          />
         </>
       }
       relatedLinks={[

@@ -325,6 +325,10 @@ import { ErrorAlertPage } from '@/pages/design/foundation/ErrorAlertPage';
 import { SystemErrorPage } from '@/pages/design/foundation/SystemErrorPage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
 import { InputPage } from '@/pages/design/components/InputPage';
+import { TextInputPage } from '@/pages/design/components/TextInputPage';
+import { NumberInputPage } from '@/pages/design/components/NumberInputPage';
+import { TextareaPage } from '@/pages/design/components/TextareaPage';
+import { SearchInputPage } from '@/pages/design/components/SearchInputPage';
 import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
 import { FilterSearchInputPage } from '@/pages/design/components/FilterSearchInputPage';
 import { SelectPage } from '@/pages/design/components/SelectPage';
@@ -374,8 +378,11 @@ import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
+import { ListPagePatternPage } from '@/pages/design/patterns/ListPagePatternPage';
 import { ListSelectorPage } from '@/pages/design/patterns/ListSelectorPage';
 import { ViewPreferencesPage } from '@/pages/design/patterns/ViewPreferencesPage';
+import { FormFieldPatternPage } from '@/pages/design/patterns/FormFieldPatternPage';
+import { ShellPatternPage } from '@/pages/design/patterns/ShellPatternPage';
 import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePrototypePage';
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
@@ -988,6 +995,10 @@ function AppRoutes() {
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
+        <Route path="components/text-input" element={<TextInputPage />} />
+        <Route path="components/number-input" element={<NumberInputPage />} />
+        <Route path="components/textarea" element={<TextareaPage />} />
+        <Route path="components/search-input" element={<SearchInputPage />} />
         <Route path="components/form-field" element={<FormFieldPage />} />
         <Route path="components/filter-search-input" element={<FilterSearchInputPage />} />
         <Route path="components/select" element={<SelectPage />} />
@@ -1041,8 +1052,11 @@ function AppRoutes() {
         <Route path="patterns/desktop-grid" element={<DesktopGridPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/form-validation" element={<FormValidationPage />} />
+        <Route path="patterns/list-page" element={<ListPagePatternPage />} />
         <Route path="patterns/list-selector" element={<ListSelectorPage />} />
         <Route path="patterns/view-preferences" element={<ViewPreferencesPage />} />
+        <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
+        <Route path="patterns/shell" element={<ShellPatternPage />} />
         {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />

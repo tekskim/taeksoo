@@ -2,6 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Checkbox, CheckboxGroup, VStack } from '@/design-system';
 
@@ -82,18 +83,6 @@ const CHECKBOX_GUIDELINES = `## Overview
 ---
 
 ## Usage Guidelines
-
-### Do ✅
-- Checkbox에 지정된 라벨이 있을 경우 라벨은 반드시 표시한다.
-- Checkbox Group에는 명확한 그룹 레이블(legend)을 함께 제공한다.
-- 관련 있는 옵션끼리 하나의 Checkbox Group으로 묶는다.
-- Indeterminate는 "전체 선택" 체크박스에 한정해 사용한다.
-
-### Don't ❌
-- 단독으로 On/Off 토글 목적으로 사용하지 않는다 → Toggle 사용.
-- 하나만 선택 가능한 옵션 그룹에 Checkbox를 사용하지 않는다 → Radio 사용.
-- 라벨 없이 Control만 단독으로 노출하지 않는다 (단, Table 내 행 선택 등 맥락이 명확한 경우 예외).
-- 선택지가 5개 이상인 경우 Checkbox 나열 대신 Select(Dropdown) 또는 Multi-select 사용을 검토한다.
 
 ---
 
@@ -269,7 +258,25 @@ export function CheckboxPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={CHECKBOX_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={CHECKBOX_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Checkbox에 지정된 라벨이 있을 경우 라벨은 반드시 표시한다.',
+              'Checkbox Group에는 명확한 그룹 레이블(legend)을 함께 제공한다.',
+              '관련 있는 옵션끼리 하나의 Checkbox Group으로 묶는다.',
+              'Indeterminate는 "전체 선택" 체크박스에 한정해 사용한다.',
+            ]}
+            dontItems={[
+              '단독으로 On/Off 토글 목적으로 사용하지 않는다 → Toggle 사용.',
+              '하나만 선택 가능한 옵션 그룹에 Checkbox를 사용하지 않는다 → Radio 사용.',
+              '라벨 없이 Control만 단독으로 노출하지 않는다 (단, Table 내 행 선택 등 맥락이 명확한 경우 예외).',
+              '선택지가 5개 이상인 경우 Checkbox 나열 대신 Select(Dropdown) 또는 Multi-select 사용을 검토한다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 6px</code> ·{' '}

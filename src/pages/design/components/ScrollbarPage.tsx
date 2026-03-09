@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
 
 export function ScrollbarPage() {
@@ -253,27 +254,17 @@ export function ScrollbarPage() {
 
             <VStack gap={2}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-success)]">
-                    Do ✅
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>스크롤 가능한 모든 컨테이너에 적절한 scroll 클래스를 적용한다.</li>
-                    <li>컨텍스트(사이드바, 드로어, 모달, 테이블)에 맞는 variant를 선택한다.</li>
-                  </ul>
-                </div>
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-danger)]">
-                    Don&apos;t ❌
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>스크롤이 필요 없는 영역에 scroll 클래스를 적용하지 않는다.</li>
-                    <li>브라우저 기본 스크롤바가 요구되는 환경에서 강제로 덮어쓰지 않는다.</li>
-                    <li>다른 variant의 스타일을 혼용하지 않는다.</li>
-                  </ul>
-                </div>
-              </div>
+              <DosDonts
+                doItems={[
+                  '스크롤 가능한 모든 컨테이너에 적절한 scroll 클래스를 적용한다.',
+                  '컨텍스트(사이드바, 드로어, 모달, 테이블)에 맞는 variant를 선택한다.',
+                ]}
+                dontItems={[
+                  '스크롤이 필요 없는 영역에 scroll 클래스를 적용하지 않는다.',
+                  '브라우저 기본 스크롤바가 요구되는 환경에서 강제로 덮어쓰지 않는다.',
+                  '다른 variant의 스타일을 혼용하지 않는다.',
+                ]}
+              />
             </VStack>
           </VStack>
         </div>

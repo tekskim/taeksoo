@@ -28,6 +28,7 @@ import {
   WizardSectionStatusIcon,
   FilterSearchInput,
   Badge,
+  fixedColumns,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
