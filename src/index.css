@@ -378,8 +378,15 @@ html.theme-transition *::after {
   --color-surface-default: var(--color-white);
   --color-surface-subtle: var(--color-slate-50);
   --color-surface-muted: var(--color-slate-100);
+  --color-surface-hover: var(--color-slate-100);
   --color-surface-inverse: var(--color-slate-900);
   --color-surface-contrast: #0f172a; /* Dark background for code/terminal areas */
+
+  /* Info (weak) */
+  --color-info-weak-bg: var(--color-blue-50);
+
+  /* Alias: --color-on-primary → --color-text-on-primary */
+  --color-on-primary: var(--color-text-on-primary);
 
   /* Border */
   --color-border-default: var(--color-slate-200);
@@ -995,8 +1002,23 @@ html.theme-transition *::after {
   --action-icon-color: #64748b;
 
   /* ----------------------------------------
-     Component - Chart Colors
+     Component - Chart Colors (base values)
      ---------------------------------------- */
+  --component-chart-color-1: #22d3ee; /* cyan400 */
+  --component-chart-color-2: #34d399; /* emerald400 */
+  --component-chart-color-3: #fbbf24; /* amber400 */
+  --component-chart-color-4: #a78bfa; /* violet400 */
+  --component-chart-color-5: #e879f9; /* fuchsia400 */
+  --component-chart-color-6: #f472b6; /* pink400 */
+  --component-chart-color-7: #f87171; /* red400 */
+  --component-chart-color-8: #60a5fa; /* blue400 */
+  --component-chart-color-9: #2dd4bf; /* teal400 */
+  --component-chart-color-10: #fb923c; /* orange400 */
+  --component-chart-color-neutral: #94a3b8; /* slate400 */
+  --component-chart-color-grid: #f1f5f9; /* slate100 */
+  --component-chart-color-text: #1e293b; /* slate800 */
+
+  /* Semantic aliases */
   --chart-color-1: var(--component-chart-color-1);
   --chart-color-2: var(--component-chart-color-2);
   --chart-color-3: var(--component-chart-color-3);
@@ -1070,8 +1092,15 @@ html.theme-transition *::after {
   --color-surface-default: #1c1c1c; /* 카드, 모달 배경 */
   --color-surface-subtle: #141414; /* 앱 배경 (가장 어두움) */
   --color-surface-muted: #252525; /* 호버, 강조 배경 */
+  --color-surface-hover: #252525; /* hover 배경 */
   --color-surface-inverse: #fafafa; /* 밝은 표면 */
   --color-surface-contrast: #0a0a0a; /* Dark background for code/terminal areas */
+
+  /* Info (weak) */
+  --color-info-weak-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% */
+
+  /* Alias */
+  --color-on-primary: var(--color-text-on-primary);
 
   /* Border - Apple Style */
   --color-border-default: #3a3a3a; /* 기본 보더 (Apple HIG 참고) */
@@ -2385,7 +2414,7 @@ input[type='search']::-webkit-search-decoration {
 .calendarHeader {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
   margin-bottom: var(--datepicker-gap);
 }
 
