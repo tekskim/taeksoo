@@ -19,6 +19,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -140,9 +141,11 @@ export function ClusterManagementPage() {
       sortable: false,
       align: 'center',
       render: (status) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={status}>
-          <span className="truncate">{status}</span>
-        </Badge>
+        <Tooltip content={status}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{status}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
