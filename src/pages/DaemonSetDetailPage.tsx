@@ -46,7 +46,7 @@ import {
 interface DaemonSetData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   namespace: string;
   image: string;
   createdAt: string;
@@ -58,7 +58,7 @@ interface DaemonSetData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   image: string;
   ready: string;
@@ -72,7 +72,7 @@ interface PodRow {
 interface ServiceRow {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   target: string;
   selector: string;
   type: string;
@@ -110,7 +110,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '1': {
     id: '1',
     name: 'daemonsetName',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025',
@@ -130,7 +130,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '2': {
     id: '2',
     name: 'fluentd-logging',
-    status: 'Running',
+    status: 'True',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
     createdAt: 'Nov 9, 2025',
@@ -149,7 +149,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -172,7 +172,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'daemonset-service',
-    status: 'Running',
+    status: 'OK',
     target: '10.0.0.100:80',
     selector: 'app=daemonset',
     type: 'ClusterIP',
@@ -547,9 +547,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
-      flex: 1,
-      sortable: true,
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',

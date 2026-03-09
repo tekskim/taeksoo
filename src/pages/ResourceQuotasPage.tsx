@@ -18,6 +18,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface ResourceQuotaRow {
   id: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   request: string;
@@ -56,7 +57,7 @@ interface ResourceQuotaRow {
 const resourceQuotasData: ResourceQuotaRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'resourcequotaName',
     namespace: 'namespaceName',
     request: '-',
@@ -65,7 +66,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'True',
     name: 'compute-quota',
     namespace: 'default',
     request: 'cpu: 4, memory: 8Gi',
@@ -74,7 +75,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'None',
     name: 'storage-quota',
     namespace: 'kube-system',
     request: 'storage: 100Gi',
@@ -83,7 +84,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'object-quota',
     namespace: 'production',
     request: 'pods: 10, services: 5',
@@ -92,7 +93,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'combined-quota',
     namespace: 'monitoring',
     request: 'cpu: 2, memory: 4Gi',
@@ -179,10 +180,12 @@ export function ResourceQuotasPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       align: 'center',
-      render: () => (
-        <Badge theme="white" size="sm" className="max-w-[80px]">
-          Active
-        </Badge>
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

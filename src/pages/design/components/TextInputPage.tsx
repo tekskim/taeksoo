@@ -99,6 +99,36 @@ export function TextInputPage() {
           </VStack>
 
           <VStack gap={3}>
+            <Label>Width</Label>
+            <div className="flex flex-col gap-3 w-full">
+              <VStack gap={1} className="items-start">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">XS (80px)</span>
+                <Input placeholder="XS" width="xs" />
+              </VStack>
+              <VStack gap={1} className="items-start">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">SM (160px)</span>
+                <Input placeholder="SM" width="sm" />
+              </VStack>
+              <VStack gap={1} className="items-start">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">MD (240px)</span>
+                <Input placeholder="MD" width="md" />
+              </VStack>
+              <VStack gap={1} className="items-start">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">LG (360px)</span>
+                <Input placeholder="LG" width="lg" />
+              </VStack>
+              <VStack gap={1} className="w-full">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Half (50%)</span>
+                <Input placeholder="Half" width="half" />
+              </VStack>
+              <VStack gap={1} className="w-full">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Full (100%)</span>
+                <Input placeholder="Full" width="full" />
+              </VStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
             <Label>With Icons</Label>
             <div className="flex gap-4">
               <Input placeholder="Search..." leftElement={<IconSearch size={14} />} width="md" />
@@ -128,7 +158,7 @@ export function TextInputPage() {
           </VStack>
 
           <VStack gap={3}>
-            <Label>With Suffix</Label>
+            <Label>With Suffix (Outside)</Label>
             <div className="flex gap-4 items-end">
               <HStack gap={2} align="center">
                 <Input placeholder="0" width="sm" />
@@ -138,6 +168,26 @@ export function TextInputPage() {
                 <Input placeholder="100" width="sm" />
                 <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
               </HStack>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>With Suffix (Inside)</Label>
+            <div className="flex gap-4 items-end">
+              <Input
+                placeholder="0"
+                width="sm"
+                rightElement={
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">Seconds</span>
+                }
+              />
+              <Input
+                placeholder="100"
+                width="sm"
+                rightElement={
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">GiB</span>
+                }
+              />
             </div>
           </VStack>
         </VStack>

@@ -1,6 +1,6 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import { AreaChartDemo } from '../../design-system-sections/ChartComponents';
+import { AreaChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { VStack } from '@/design-system';
 
@@ -508,6 +508,78 @@ function LineChartGuidelines() {
   );
 }
 
+const PRIMARY_COLORS = [
+  { name: 'cyan400', hex: chartColors.cyan400 },
+  { name: 'emerald400', hex: chartColors.emerald400 },
+  { name: 'amber400', hex: chartColors.amber400 },
+  { name: 'violet400', hex: chartColors.violet400 },
+  { name: 'fuchsia400', hex: chartColors.fuchsia400 },
+];
+
+const EXTENDED_COLORS = [
+  { name: 'pink400', hex: chartColors.pink400 },
+  { name: 'red400', hex: chartColors.red400 },
+  { name: 'blue400', hex: chartColors.blue400 },
+  { name: 'teal400', hex: chartColors.teal400 },
+  { name: 'orange400', hex: chartColors.orange400 },
+  { name: 'indigo400', hex: chartColors.indigo400 },
+];
+
+function ColorRow({ index, name, hex }: { index: number; name: string; hex: string }) {
+  return (
+    <div className="flex items-center gap-3 py-1.5">
+      <span className="text-body-sm text-[var(--color-text-subtle)] w-5 text-right tabular-nums">
+        {index}
+      </span>
+      <span
+        className="inline-block w-3.5 h-3.5 rounded-full border border-black/10 flex-shrink-0"
+        style={{ backgroundColor: hex }}
+      />
+      <span className="text-body-md text-[var(--color-text-default)]">{name}</span>
+      <code className="text-body-sm text-[var(--color-text-subtle)]">{hex}</code>
+    </div>
+  );
+}
+
+function ChartColorTokens() {
+  return (
+    <VStack gap={6}>
+      <pre className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-default)] overflow-x-auto border border-[var(--color-border-subtle)]">
+        {`fill-opacity: 0.1  line-width: 1px  smooth: true  symbol-size: 6px`}
+      </pre>
+
+      <VStack gap={2}>
+        <span className="text-heading-h6 text-[var(--color-text-default)]">
+          Primary 5-color palette
+        </span>
+        <VStack gap={0}>
+          {PRIMARY_COLORS.map((c, i) => (
+            <ColorRow key={c.name} index={i + 1} name={c.name} hex={c.hex} />
+          ))}
+        </VStack>
+      </VStack>
+
+      <VStack gap={2}>
+        <span className="text-heading-h6 text-[var(--color-text-default)]">Extended palette</span>
+        <VStack gap={0}>
+          {EXTENDED_COLORS.map((c, i) => (
+            <ColorRow key={c.name} index={i + 6} name={c.name} hex={c.hex} />
+          ))}
+        </VStack>
+      </VStack>
+
+      <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
+        <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
+        <code>--chart-color-1</code> … <code>--chart-color-10</code>
+        {' · '}
+        <span className="text-[var(--color-text-default)] font-medium">Import:</span>{' '}
+        <code>chartColors</code>, <code>primaryChartColors</code>, <code>extendedChartColors</code>{' '}
+        from <code>ChartComponents</code>
+      </div>
+    </VStack>
+  );
+}
+
 export function LineChartPage() {
   return (
     <ComponentPageTemplate
@@ -569,6 +641,7 @@ export function LineChartPage() {
         </VStack>
       }
       guidelines={<LineChartGuidelines />}
+      tokens={<ChartColorTokens />}
       relatedLinks={[
         { label: 'Chart Overview', path: '/design/charts/overview', description: '상위 차트 패턴' },
         { label: 'Usage Chart', path: '/design/charts/usage-chart', description: '사용률 차트' },

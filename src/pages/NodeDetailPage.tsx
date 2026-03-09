@@ -49,7 +49,7 @@ import {
 
 interface NodeData {
   name: string;
-  status: 'Ready' | 'NotReady' | 'Unknown';
+  status: string;
   internalIp: string;
   kubernetesVersion: string;
   os: string;
@@ -79,7 +79,7 @@ interface NodeData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -134,7 +134,7 @@ interface EventRow {
 const mockNodeData: Record<string, NodeData> = {
   'node-control-plane-01': {
     name: 'node-control-plane-01',
-    status: 'Ready',
+    status: 'OK',
     internalIp: '172.16.0.237',
     kubernetesVersion: 'v1.34',
     os: 'Ubuntu 24.04.3 LTS',
@@ -180,7 +180,7 @@ const mockNodeData: Record<string, NodeData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'helm-install-thakicloud-webhook',
     namespace: 'cattle-system',
     image: 'thakicloud/Shell:v0.21',
@@ -192,7 +192,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'coredns-7b98449c4-x2k4m',
     namespace: 'kube-system',
     image: 'rancher/mirrored-coredns-coredns:1.10.1',
@@ -204,7 +204,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'local-path-provisioner-6795b5f9d8-p3n2q',
     namespace: 'kube-system',
     image: 'rancher/local-path-provisioner:v0.0.24',
@@ -231,7 +231,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
     type: 'MemoryPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
@@ -241,7 +241,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'DiskPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
@@ -251,7 +251,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     type: 'PIDPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
@@ -303,7 +303,7 @@ const mockEventsData: EventRow[] = [
 
 interface ConditionCardProps {
   title: string;
-  status: 'Ready' | 'NotReady';
+  status: string;
   tooltip: string;
 }
 

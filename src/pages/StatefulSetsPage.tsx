@@ -41,7 +41,7 @@ import {
 
 interface StatefulSetRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -55,7 +55,7 @@ interface StatefulSetRow {
 const statefulSetsData: StatefulSetRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'postgresql-primary-replication-statefulset',
     namespace: 'default',
     image: 'nginx',
@@ -64,7 +64,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'OK',
     name: 'mysql-primary-replication-cluster-statefulset',
     namespace: 'database',
     image: 'mysql:8.0',
@@ -73,7 +73,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'elasticsearch-cluster-data-node-statefulset',
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
@@ -82,7 +82,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'InvalidImageName',
     name: 'mongodb-replica-set-sharded-cluster-statefulset',
     namespace: 'database',
     image: 'mongo:7.0',
@@ -91,7 +91,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '5',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'kafka-broker-messaging-cluster-statefulset',
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
@@ -100,7 +100,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '6',
-    status: 'Failed',
+    status: 'True',
     name: 'zookeeper-ensemble-coordination-statefulset',
     namespace: 'messaging',
     image: 'zookeeper:3.9',
@@ -109,7 +109,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '7',
-    status: 'Running',
+    status: 'Raw',
     name: 'redis-cluster-sentinel-high-availability-statefulset',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
@@ -118,7 +118,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '8',
-    status: 'Running',
+    status: 'None',
     name: 'cockroachdb-distributed-sql-database-statefulset',
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',

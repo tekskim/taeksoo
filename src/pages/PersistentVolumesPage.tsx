@@ -41,7 +41,7 @@ import {
 
 interface PersistentVolumeRow {
   id: string;
-  status: 'Bound' | 'Available' | 'Released' | 'Failed' | 'Pending';
+  status: string;
   name: string;
   reclaimPolicy: string;
   persistentVolumeClaim: string;
@@ -57,7 +57,7 @@ interface PersistentVolumeRow {
 const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '1',
-    status: 'Bound',
+    status: 'OK',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: 'Ceph-pvc',
@@ -67,7 +67,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '2',
-    status: 'Bound',
+    status: 'OK',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: 'data-postgres-0',
@@ -77,7 +77,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '3',
-    status: 'Available',
+    status: 'True',
     name: 'pvc-a1b2c3d4-e5f6-7890-abcd-1234567890ab-data-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: '',
@@ -87,7 +87,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '4',
-    status: 'Released',
+    status: 'Raw',
     name: 'pvc-f1e2d3c4-b5a6-7890-fedc-0987654321ba-logs-storage',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
@@ -97,7 +97,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '5',
-    status: 'Bound',
+    status: 'None',
     name: 'pvc-redis-cluster-sentinel-persistent-data-01-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: 'redis-data',
@@ -107,7 +107,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '6',
-    status: 'Failed',
+    status: 'CreateContainerConfigError',
     name: 'pvc-failed-provisioning-rbd-csi-ceph-storage-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
@@ -117,7 +117,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '7',
-    status: 'Pending',
+    status: 'ImagePullBackOff',
     name: 'pvc-pending-nfs-provisioning-waiting-for-node-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: 'pending-claim',

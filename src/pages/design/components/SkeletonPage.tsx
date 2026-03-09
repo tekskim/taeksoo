@@ -108,6 +108,109 @@ function SkeletonPreview() {
   );
 }
 
+function ListPageSkeleton() {
+  const ROW_COUNT = 6;
+  const COLUMNS = [
+    { width: '40px', flex: false },
+    { width: '50px', flex: false },
+    { width: undefined, flex: true, minW: '120px' },
+    { width: undefined, flex: true, minW: '80px' },
+    { width: undefined, flex: true, minW: '80px' },
+    { width: undefined, flex: true, minW: '60px' },
+    { width: undefined, flex: true, minW: '60px' },
+    { width: '40px', flex: false },
+  ];
+
+  return (
+    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+      {/* Page Header */}
+      <div className="flex items-center justify-between px-6 pt-5 pb-4">
+        <SkeletonBlock width="140px" height="20px" />
+        <SkeletonBlock width="110px" height="32px" />
+      </div>
+
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 px-6 pb-3">
+        <SkeletonBlock width="240px" height="28px" />
+        <SkeletonBlock width="28px" height="28px" />
+        <div className="flex-1" />
+        <SkeletonBlock width="60px" height="28px" />
+        <SkeletonBlock width="60px" height="28px" />
+        <SkeletonBlock width="60px" height="28px" />
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center gap-2 px-6 pb-3">
+        <SkeletonBlock width="24px" height="24px" />
+        <SkeletonBlock width="24px" height="24px" />
+        <SkeletonBlock width="24px" height="24px" />
+        <SkeletonBlock width="16px" height="12px" />
+        <SkeletonBlock width="24px" height="24px" />
+        <div className="flex-1" />
+        <SkeletonBlock width="60px" height="12px" />
+      </div>
+
+      {/* Table */}
+      <div className="px-6 pb-5">
+        {/* Table Header */}
+        <div className="flex items-center gap-3 px-3 py-2 bg-[var(--color-surface-subtle)] rounded-t-[var(--primitive-radius-sm)] border border-[var(--color-border-default)]">
+          {COLUMNS.map((col, i) => (
+            <div
+              key={`h-${i}`}
+              className={col.flex ? 'flex-1' : ''}
+              style={{
+                width: col.width,
+                minWidth: col.minW,
+              }}
+            >
+              <SkeletonBlock
+                width={i === 0 ? '16px' : i === COLUMNS.length - 1 ? '16px' : '70%'}
+                height="10px"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Table Rows */}
+        {Array.from({ length: ROW_COUNT }).map((_, rowIdx) => (
+          <div
+            key={rowIdx}
+            className="flex items-center gap-3 px-3 py-3 border-x border-b border-[var(--color-border-default)]"
+            style={{ opacity: 1 - rowIdx * 0.1 }}
+          >
+            {COLUMNS.map((col, colIdx) => (
+              <div
+                key={`r${rowIdx}-c${colIdx}`}
+                className={col.flex ? 'flex-1' : ''}
+                style={{
+                  width: col.width,
+                  minWidth: col.minW,
+                }}
+              >
+                {colIdx === 0 ? (
+                  <SkeletonBlock width="16px" height="16px" />
+                ) : colIdx === 1 ? (
+                  <SkeletonBlock width="24px" height="24px" />
+                ) : colIdx === COLUMNS.length - 1 ? (
+                  <SkeletonBlock width="16px" height="16px" />
+                ) : (
+                  <VStack gap={1}>
+                    <SkeletonBlock
+                      width={`${55 + ((rowIdx * 13 + colIdx * 17) % 35)}%`}
+                      height="12px"
+                    />
+                    {colIdx === 2 && <SkeletonBlock width="40%" height="9px" />}
+                  </VStack>
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function SkeletonGuidelines() {
   return (
     <VStack gap={10}>
@@ -320,6 +423,16 @@ export function SkeletonPage() {
               All Skeleton Variants
             </span>
             <SkeletonPreview />
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              List Page Skeleton
+            </span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              페이지 로딩 시 테이블 데이터가 표시되기 전 보여지는 전체 List Page 스켈레톤 예시
+            </span>
+            <ListPageSkeleton />
           </VStack>
         </VStack>
       }

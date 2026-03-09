@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -137,7 +138,7 @@ function AxisTooltipDemo() {
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: 'var(--chart-color-1)' }}
+            style={{ backgroundColor: chartColors.cyan400 }}
           />
           <span>CPU Usage</span>
           <span className="font-medium ml-auto pl-4">42%</span>
@@ -145,7 +146,7 @@ function AxisTooltipDemo() {
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: 'var(--chart-color-2)' }}
+            style={{ backgroundColor: chartColors.emerald400 }}
           />
           <span>Memory</span>
           <span className="font-medium ml-auto pl-4">67%</span>
@@ -153,7 +154,7 @@ function AxisTooltipDemo() {
         <div className="flex items-center gap-2">
           <span
             className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: 'var(--chart-color-3)' }}
+            style={{ backgroundColor: chartColors.amber400 }}
           />
           <span>Disk I/O</span>
           <span className="font-medium ml-auto pl-4">28%</span>
@@ -177,7 +178,7 @@ function PieTooltipDemo() {
       <div className="flex items-center gap-1.5">
         <span
           className="inline-block w-2 h-2 rounded-full"
-          style={{ backgroundColor: 'var(--chart-color-1)' }}
+          style={{ backgroundColor: chartColors.cyan400 }}
         />
         <span>Compute</span>
       </div>

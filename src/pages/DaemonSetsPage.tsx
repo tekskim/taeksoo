@@ -41,7 +41,7 @@ import {
 
 interface DaemonSetRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -57,7 +57,7 @@ interface DaemonSetRow {
 const daemonSetsData: DaemonSetRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'monitoring-node-exporter-prometheus-daemonset',
     namespace: 'default',
     image: 'nginx',
@@ -68,7 +68,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'OK',
     name: 'logging-fluentd-elasticsearch-forwarder-daemonset',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
@@ -79,7 +79,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'monitoring-node-exporter-metrics-collector-daemonset',
     namespace: 'monitoring',
     image: 'prom/node-exporter:v1.6.1',
@@ -90,7 +90,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'InvalidImageName',
     name: 'networking-calico-node-cni-daemonset',
     namespace: 'kube-system',
     image: 'calico/node:v3.26.1',
@@ -101,7 +101,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '5',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'kube-system-proxy-network-routing-daemonset',
     namespace: 'kube-system',
     image: 'k8s.gcr.io/kube-proxy:v1.28.0',
@@ -112,7 +112,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '6',
-    status: 'Failed',
+    status: 'True',
     name: 'logging-filebeat-elasticsearch-shipper-daemonset',
     namespace: 'logging',
     image: 'elastic/filebeat:8.10.2',
@@ -123,7 +123,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '7',
-    status: 'Running',
+    status: 'Raw',
     name: 'gpu-nvidia-device-plugin-k8s-daemonset',
     namespace: 'gpu-operator',
     image: 'nvidia/k8s-device-plugin:v0.14.1',
@@ -134,7 +134,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '8',
-    status: 'Running',
+    status: 'None',
     name: 'networking-cilium-ebpf-cni-daemonset',
     namespace: 'kube-system',
     image: 'cilium/cilium:v1.14.2',

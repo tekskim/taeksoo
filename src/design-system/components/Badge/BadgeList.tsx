@@ -71,12 +71,22 @@ export const BadgeList = memo(function BadgeList({
           delay={100}
           hideDelay={100}
           content={
-            <div className="p-3 min-w-[120px] max-w-[240px]">
+            <div className="p-3 min-w-[120px] max-w-[320px]">
               <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                 {popoverTitle ?? `All items (${items.length})`}
               </div>
-              <div className="flex flex-wrap gap-1">
-                {items.map((item, index) => renderBadge(item, index, false))}
+              <div className="flex flex-col gap-1">
+                {items.map((item, index) => (
+                  <Badge
+                    key={index}
+                    size={size}
+                    theme={theme}
+                    type={type}
+                    className="w-fit max-w-full"
+                  >
+                    <span className="break-all">{item}</span>
+                  </Badge>
+                ))}
               </div>
             </div>
           }

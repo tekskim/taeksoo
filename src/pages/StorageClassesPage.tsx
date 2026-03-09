@@ -41,7 +41,7 @@ import {
 
 interface StorageClassRow {
   id: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   name: string;
   isDefault: boolean;
   createdAt: string;
@@ -53,35 +53,35 @@ interface StorageClassRow {
 const storageClassesData: StorageClassRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'ceph-rbd-high-performance-ssd-storage-class',
     isDefault: true,
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'True',
     name: 'nfs-shared-persistent-general-purpose-storage',
     isDefault: false,
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'None',
     name: 'ceph-rbd-block-storage-replicated-storage-class',
     isDefault: false,
     createdAt: 'Nov 9, 2025',
   },
   {
     id: '4',
-    status: 'Active',
+    status: 'CreateContainerConfigError',
     name: 'nfs-client-provisioner-shared-storage-class',
     isDefault: false,
     createdAt: 'Nov 8, 2025',
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'local-path-provisioner-single-node-storage',
     isDefault: false,
     createdAt: 'Nov 7, 2025',

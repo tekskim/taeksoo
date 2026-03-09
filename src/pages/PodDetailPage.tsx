@@ -47,7 +47,7 @@ import {
 interface PodData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   namespace: string;
   podIP: string;
   createdAt: string;
@@ -61,7 +61,7 @@ interface PodData {
 
 interface ContainerRow {
   id: string;
-  status: 'Running' | 'Waiting' | 'Terminated';
+  status: string;
   ready: boolean;
   name: string;
   image: string;
@@ -101,7 +101,7 @@ const mockPodData: Record<string, PodData> = {
   '1': {
     id: '1',
     name: 'podName',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default',
     podIP: '10.11.0.11',
     createdAt: 'Jul 25, 2025',
@@ -130,7 +130,7 @@ const mockPodData: Record<string, PodData> = {
   '2': {
     id: '2',
     name: 'nginx-deployment-7fb96c846b-x2vnl',
-    status: 'Running',
+    status: 'True',
     namespace: 'default',
     podIP: '10.76.0.12',
     createdAt: 'Nov 9, 2025',
@@ -148,12 +148,32 @@ const mockPodData: Record<string, PodData> = {
 const mockContainersData: ContainerRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     ready: true,
     name: 'manager',
     image: 'imageName',
     initContainer: true,
     restarts: 1,
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '2',
+    status: 'True',
+    ready: true,
+    name: 'nginx',
+    image: 'nginx:1.27',
+    initContainer: false,
+    restarts: 0,
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    ready: false,
+    name: 'sidecar',
+    image: 'sidecar:latest',
+    initContainer: false,
+    restarts: 2,
     createdAt: 'Jul 25, 2025',
   },
 ];
@@ -171,7 +191,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'ContainersReady',
-    status: 'True',
+    status: 'None',
     reason: 'ContainersReady',
     message: 'All containers are ready.',
     lastTransition: 'Jul 25, 2025',
@@ -363,10 +383,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
-      flex: 1,
-      minWidth: columnMinWidths.size,
-      sortable: true,
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',
