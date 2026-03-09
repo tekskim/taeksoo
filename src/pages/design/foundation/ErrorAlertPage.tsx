@@ -1,39 +1,136 @@
-import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { VStack } from '@/design-system';
+import { ComponentPageTemplate, Disclosure } from '@/design-system';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 
-function TableWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
-        {children}
-      </table>
-    </div>
-  );
-}
+const ERROR_ALERT_GUIDELINES = `## Overview
+사용자의 행동 결과, 시스템 상태 변화, 또는 오류 상황을 사용자에게 전달하기 위한 **제품 전반의 알림 체계와 메시지 분류 기준을 정의하는 Foundation 문서**이다.
 
-function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
-    >
-      {children}
-    </th>
-  );
-}
+이 문서는 다음 내용을 정의한다:
+- 제품 내 알림 계층 구조
+- 메시지 유형 분류 기준
+- 메시지 전달에 사용되는 UI 컴포넌트
 
-function Td({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
-      {children}
-    </td>
-  );
-}
+---
+
+## Principles
+
+### 1) 알림은 사용자 행동에 필요한 정보만 전달한다
+- 불필요한 알림 노출을 지양한다.
+- 동일한 이벤트에 대해 중복 알림을 발생시키지 않는다.
+
+### 2) 알림은 중요도에 따라 계층적으로 전달한다
+
+| 중요도 | 특징 | 컴포넌트 |
+| --- | --- | --- |
+| 낮음(Low) | 단순 피드백, 짧은 시간 표시 | Validation, 토스트 |
+| 중간(Medium) | 추가 행동 필요, 주의 환기 | 스낵바, 인라인 메세지 |
+| 높음(High) | 작업 진행 불가, 즉각 조치 필요 | 모달, 에러 화면, 알림 센터 |
+
+### 3) 알림은 맥락이 가장 가까운 위치에서 전달한다
+- 입력 오류 → 입력 필드 validation
+- 액션 결과 → 토스트
+- 중요 이벤트 → 스낵바
+- 지속적인 상태 경고 → 인라인 메세지
+
+### 4) 중요한 이벤트는 기록 가능한 채널을 사용한다
+- 모든 기록형 알림은 App Notification Center에 저장된다.
+- Global Notification Panel은 저장된 알림을 표시하는 UI 레이어이다.
+
+---
+
+## Usage Guidelines
+
+### 1) 알림 계층 구조
+1. **앱 내부 알림**: 앱이 활성화 상태일 때 노출. 컴포넌트: Validation, 인라인 메세지, 토스트, 스낵바, 알림 센터
+2. **데스크탑UI 알림**: 앱이 비활성 상태일 때 데스크탑 UI에서 표시. 컴포넌트: 글로벌 알림 패널, 스낵바, 앱 아이콘 배지
+3. **실제 PC 알림** (향후 지원): 브라우저 또는 OS 알림 시스템
+
+### 2) 메세지 유형
+1. 필드 검증 → Validation
+2. 일시적 피드백 → 토스트
+3. 시간차/지연 응답 → 토스트 또는 스낵바
+4. 상태 전이 → 스낵바, 인라인 메세지
+5. 권한 피드백 → 토스트/스낵바, 결정 필요시 모달
+6. 시스템/연결 오류 → 에러 화면
+7. 위험 경고 → 인라인 메세지, 알림 센터, 이메일
+
+### 3) 컴포넌트 유형
+1. **Validation**: 입력값 오류, 즉각 검증. 기록 없음.
+2. **Toast**: 가벼운 피드백, 3~5초 후 휘발. 기록 없음.
+3. **Snackbar**: 이벤트 알림, 자동 소멸 또는 사용자 처리. Notification Center에 기록.
+4. **Inline Message**: 지속적인 주의, 조건 해소까지 유지. Notification Center에 기록 가능.
+5. **Modal**: 사용자의 결정 요구, 버튼 누를 때까지 유지. 기록 없음.
+6. **Confirm Modal**: 삭제/확인 등 사용자 결정 필요 시, 버튼 선택 시 종료. 기록 없음.
+7. **에러 화면**: 화면 접근 차단, 시스템 문제 해결까지 유지. 기록 없음.
+8. **알림 센터**: 기록형 알림의 저장소. 사용자 필요에 따라 열림/닫힘.
+9. **글로벌 알림 패널**: 안읽은 알림 통합 표시. macOS Notification Panel 유사.
+
+### 4) 알림 기록 정책
+- 기록되는 유형: 비동기 작업 결과, 시스템 상태 변화, 권한/정책 이벤트, 조치 필요 이벤트
+- 기록되지 않는 유형: 설정 저장 완료, 이름 변경 완료, 입력 오류 메시지 등
+
+**흐름**
+
+\`\`\`
+[이벤트 발생] → 기록 대상 여부 판단
+  ├─ Yes → [Notification Center 저장] → [글로벌 패널·알림 센터 표시]
+  └─ No  → [일시 표시 (토스트 등)] → [휘발]
+\`\`\`
+
+---
+
+## Related
+
+| 이름 | 유형 | 관련 이유 |
+| --- | --- | --- |
+| Toast | Component | 단발성 사용자 액션 피드백 전달 |
+| Snackbar | Component | 기록형 이벤트 알림 전달 |
+| Inline message | Component | 지속적인 시스템 상태 안내 |
+| Modal | Component | 경고/에러 문구 톤·구조 |
+| Notification center | Component | 알림 이벤트 기록 저장소 |
+| Global notification panel | Component | 데스크탑 레벨 메세지 표시 패널 |
+| Input field | Component | validation 정책 구체화 |
+| System error | Foundation | 시스템 오류 상황의 UI 처리 화면 |
+`;
+
+const ERROR_ALERT_PREV_CONTENT = `## 목적
+사용자의 행동 결과, 시스템 상태 변화, 오류 상황을 일관된 방식으로 전달하기 위하여 제품 전반의 알림 체계를 정의한다.
+
+## 범위
+- 앱 내부 알림 (Validation, Toast, Snackbar, Inline Message, Modal, 알림 센터)
+- 데스크탑 UI 전역 알림 (글로벌 알림 패널, 앱 아이콘 배지)
+- 시스템 상태 메시지 (에러 화면, System Error)
+
+## 컴포넌트
+| 컴포넌트 | 용도 |
+| --- | --- |
+| Validation | 입력 필드 오류 검증 |
+| Toast | 단발성 피드백 |
+| Snackbar | 이벤트 알림 (기록형) |
+| Inline Message | 지속적 상태 안내 |
+| Modal | 사용자 결정 필요 |
+| 에러 화면 | 시스템 오류 차단 |
+| 알림 센터 | 기록형 알림 저장소 |
+| 글로벌 알림 패널 | 데스크탑 레벨 표시 |
+
+## 핵심 개념 정의
+
+### Validation Error
+사용자 입력값이 유효하지 않을 때 발생. 입력 필드에 즉시 표시되며, Form 에러 메시지로 처리. 기록하지 않음.
+
+### Operation Failure
+비동기 작업(API 호출, 배포 등)이 실패했을 때 발생. Toast 또는 Snackbar로 알림. 기록 대상일 경우 Notification Center에 저장.
+
+## UX Writing
+- 전문적이고 중립적인 문체 사용
+- 감정·사과·공감 표현 사용 금지
+- 사용자가 취할 수 있는 다음 행동을 명확히 제시
+`;
 
 export function ErrorAlertPage() {
   return (
     <ComponentPageTemplate
       title="Error & Alert"
-      description="사용자의 행동 결과, 시스템 상태 변화, 또는 오류 상황을 사용자에게 전달하기 위한 제품 전반의 알림 체계와 메시지 분류 기준을 정의하는 Foundation 문서이다."
+      description="사용자의 행동 결과, 시스템 상태 변화, 또는 오류 상황을 사용자에게 전달하기 위한 제품 전반의 알림 체계와 메시지 분류 기준을 정의하는 Foundation 문서."
       whenToUse={[
         '앱 내부 알림',
         '데스크탑 UI 전역 알림',
@@ -42,280 +139,24 @@ export function ErrorAlertPage() {
       ]}
       whenNotToUse={['마케팅 메시지', '고객 지원 메시지']}
       guidelines={
-        <VStack gap={6}>
-          {/* 1. Principles */}
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-3">Principles</h3>
-            <VStack gap={4}>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  1. 필요한 정보만 전달
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  불필요하거나 중복된 알림을 피한다.
-                </p>
+        <>
+          <NotionRenderer markdown={ERROR_ALERT_GUIDELINES} />
+          <Disclosure className="mt-6">
+            <Disclosure.Trigger>이전 내용</Disclosure.Trigger>
+            <Disclosure.Panel>
+              <div className="pt-2">
+                <NotionRenderer markdown={ERROR_ALERT_PREV_CONTENT} />
               </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-2">
-                  2. 계층적 전달 (중요도별)
-                </h4>
-                <TableWrapper>
-                  <thead>
-                    <tr>
-                      <Th className="w-[100px]">중요도</Th>
-                      <Th>특성</Th>
-                      <Th>컴포넌트</Th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <Td>Low</Td>
-                      <Td>단순 피드백, 최소한의 방해</Td>
-                      <Td>Validation, Toast</Td>
-                    </tr>
-                    <tr>
-                      <Td>Medium</Td>
-                      <Td>작업 진행에 영향 가능, 주의 필요</Td>
-                      <Td>Snackbar, Inline Message</Td>
-                    </tr>
-                    <tr>
-                      <Td>High</Td>
-                      <Td>진행 차단, 즉시 결정 필요</Td>
-                      <Td>Modal, Error 화면, Notification Center</Td>
-                    </tr>
-                  </tbody>
-                </TableWrapper>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  3. 맥락 가까운 위치에서 전달
-                </h4>
-                <ul className="text-body-md text-[var(--color-text-muted)] list-disc pl-5 space-y-1">
-                  <li>입력 오류 → 필드 검증</li>
-                  <li>액션 결과 → Toast</li>
-                  <li>중요 이벤트 → Snackbar</li>
-                  <li>지속적 경고 → Inline Message</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  4. 기록 가능한 채널 사용
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  기록되는 모든 알림은 App Notification Center에 저장된다. Global Notification
-                  Panel은 표시 레이어이다.
-                </p>
-              </div>
-            </VStack>
-          </div>
-
-          {/* 2. 알림 계층 구조 */}
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-              알림 계층 구조
-            </h3>
-            <VStack gap={3}>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  1. 앱 내부 알림
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  앱이 활성화된 상태. 컴포넌트: Validation, Inline Message, Toast, Snackbar,
-                  Notification Center
-                </p>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  2. 데스크탑 UI 알림
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  앱이 비활성화된 상태. 컴포넌트: Global Notification Panel, Snackbar, App icon
-                  badge
-                </p>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  3. 실제 PC 알림
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  Suite가 최소화되거나 포커스를 잃었을 때. 브라우저/OS 알림 시스템 사용.
-                </p>
-              </div>
-            </VStack>
-          </div>
-
-          {/* 3. 메시지 유형 */}
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-3">메시지 유형</h3>
-            <TableWrapper>
-              <thead>
-                <tr>
-                  <Th className="w-[120px]">유형</Th>
-                  <Th>정의</Th>
-                  <Th>예</Th>
-                  <Th>컴포넌트</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>필드 검증</Td>
-                  <Td>입력 중 오류/가이드</Td>
-                  <Td>필수 필드, 형식 오류</Td>
-                  <Td>Validation</Td>
-                </tr>
-                <tr>
-                  <Td>일시적 피드백</Td>
-                  <Td>액션에 대한 즉각적 응답</Td>
-                  <Td>&quot;이름 변경됨&quot;, &quot;설정 저장됨&quot;</Td>
-                  <Td>Toast</Td>
-                </tr>
-                <tr>
-                  <Td>시간차/지연 응답</Td>
-                  <Td>비동기 작업 결과</Td>
-                  <Td>리소스 생성 성공/실패</Td>
-                  <Td>Toast 또는 Snackbar</Td>
-                </tr>
-                <tr>
-                  <Td>상태 전이</Td>
-                  <Td>시스템 주도 상태 변화</Td>
-                  <Td>Active → Error</Td>
-                  <Td>Snackbar, Inline Message</Td>
-                </tr>
-                <tr>
-                  <Td>권한 피드백</Td>
-                  <Td>정책/권한 위반</Td>
-                  <Td>&quot;권한이 부족합니다&quot;</Td>
-                  <Td>Toast/Snackbar, 결정 시 Modal</Td>
-                </tr>
-                <tr>
-                  <Td>시스템/연결 오류</Td>
-                  <Td>서비스 연결 불가</Td>
-                  <Td>&quot;네트워크 연결 끊김&quot;</Td>
-                  <Td>Error 화면</Td>
-                </tr>
-                <tr>
-                  <Td>위험 경고</Td>
-                  <Td>개입이 필요한 시스템 이슈</Td>
-                  <Td>비정상 로그인, 인프라 장애</Td>
-                  <Td>Inline Message, Notification Center, Email</Td>
-                </tr>
-              </tbody>
-            </TableWrapper>
-          </div>
-
-          {/* 4. 컴포넌트 유형 */}
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-3">컴포넌트 유형</h3>
-            <TableWrapper>
-              <thead>
-                <tr>
-                  <Th className="w-[180px]">컴포넌트</Th>
-                  <Th>목적</Th>
-                  <Th>지속성</Th>
-                  <Th>기록</Th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <Td>1. Validation</Td>
-                  <Td>입력 필드 근처 텍스트/라인</Td>
-                  <Td>휘발성</Td>
-                  <Td>없음</Td>
-                </tr>
-                <tr>
-                  <Td>2. Toast</Td>
-                  <Td>액션 피드백용 경량 팝업</Td>
-                  <Td>3–5초 후 사라짐</Td>
-                  <Td>없음</Td>
-                </tr>
-                <tr>
-                  <Td>3. Snackbar</Td>
-                  <Td>액션 버튼이 있는 이벤트 알림</Td>
-                  <Td>자동 닫힘 또는 사용자 닫기</Td>
-                  <Td>가능</Td>
-                </tr>
-                <tr>
-                  <Td>4. Inline Message</Td>
-                  <Td>화면/섹션 상단 지속 배너</Td>
-                  <Td>조건 해소까지 유지</Td>
-                  <Td>가능</Td>
-                </tr>
-                <tr>
-                  <Td>5. Modal</Td>
-                  <Td>사용자 액션 중단, 결정 필요</Td>
-                  <Td>버튼 클릭까지 유지</Td>
-                  <Td>없음</Td>
-                </tr>
-                <tr>
-                  <Td>6. Error 화면</Td>
-                  <Td>전체 화면 접근 차단</Td>
-                  <Td>시스템 복구까지 유지</Td>
-                  <Td>없음</Td>
-                </tr>
-                <tr>
-                  <Td>7. Notification Center</Td>
-                  <Td>앱 내 기록 가능 알림 저장소</Td>
-                  <Td>—</Td>
-                  <Td>—</Td>
-                </tr>
-                <tr>
-                  <Td>8. Global notification panel</Td>
-                  <Td>데스크탑 수준 통합 표시 (macOS 알림 패널 유사)</Td>
-                  <Td>—</Td>
-                  <Td>App Notification Center 데이터 표시</Td>
-                </tr>
-                <tr>
-                  <Td>9. Email</Td>
-                  <Td>중요 알림 이메일 발송</Td>
-                  <Td>—</Td>
-                  <Td>기록됨</Td>
-                </tr>
-              </tbody>
-            </TableWrapper>
-          </div>
-
-          {/* 5. 알림 기록 정책 */}
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
-            <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-              알림 기록 정책
-            </h3>
-            <VStack gap={3}>
-              <p className="text-body-md text-[var(--color-text-muted)]">
-                사용자가 나중에 검토할 필요가 있는 이벤트만 기록된다.
-              </p>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  기록되는 메시지 유형
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  비동기 결과, 시스템 상태 변화, 권한 이벤트, 필수 사용자 액션, 보안 이벤트
-                </p>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  특징
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  기록 데이터 흐름: Event → App Notification Center → Snackbar (앱 활성 시 in-app,
-                  비활성 시 desktop)
-                </p>
-              </div>
-              <div>
-                <h4 className="text-label-md text-[var(--color-text-default)] font-medium mb-1">
-                  기록되지 않는 알림
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  일시적 피드백 (설정 저장됨, 이름 변경됨, 입력 오류)
-                </p>
-              </div>
-            </VStack>
-          </div>
-        </VStack>
+            </Disclosure.Panel>
+          </Disclosure>
+        </>
       }
       relatedLinks={[
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Modal', path: '/design/components/modal' },
+        { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Modal', path: '/design/components/modal' },
+        { label: 'Notification Center', path: '/design/components/notification-center' },
         { label: 'System Error', path: '/design/foundation/system-error' },
       ]}
     />

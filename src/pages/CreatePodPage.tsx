@@ -3017,14 +3017,11 @@ export function CreatePodPage() {
                                       width: fixedColumns.statusLabel,
                                       align: 'center',
                                       render: (value: string) => (
-                                        <Badge
-                                          theme="white"
-                                          size="sm"
-                                          className="max-w-[80px]"
-                                          title={value}
-                                        >
-                                          <span className="truncate">{value}</span>
-                                        </Badge>
+                                        <Tooltip content={value}>
+                                          <Badge theme="white" size="sm" className="max-w-[80px]">
+                                            <span className="truncate">{value}</span>
+                                          </Badge>
+                                        </Tooltip>
                                       ),
                                     },
                                     {
