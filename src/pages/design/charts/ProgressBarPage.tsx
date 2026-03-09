@@ -1,8 +1,154 @@
 import { type ReactNode, useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { QuotaBarDemo } from '../../design-system-sections/ChartComponents';
 import { ProgressBar, VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function ProgressBarPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={3}>
+        <SectionTitle>Variants</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Variant</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Quota</strong>
+              </Td>
+              <Td>
+                리소스명과 사용량/총량 수치를 함께 표시. 항목별 Gauge Bar가 리스트 형태로 나열됨
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Default</strong>
+              </Td>
+              <Td>수치 레이블만 표시 (예: 30 MB (30%)). 공간이 제한적인 컨텍스트에서 사용</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Dashboard</strong>
+              </Td>
+              <Td>
+                리소스 그룹 타이틀(예: COMPUTE QUOTA)과 함께 항목별 이름, 사용량/총량, 퍼센트를 모두
+                표시. 대시보드 전용 레이아웃
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>상태 기반 색상 전환</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>상태</Th>
+              <Th>기준 (사용률)</Th>
+              <Th>색상</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Safe (안전)</strong>
+              </Td>
+              <Td>0 – 69%</Td>
+              <Td>Green (초록)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Warning (경고)</strong>
+              </Td>
+              <Td>70 – 94%</Td>
+              <Td>Orange (주황)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Danger (위험)</strong>
+              </Td>
+              <Td>95%+</Td>
+              <Td>Red (빨강)</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <Prose>
+          <p>임계값은 서비스 도메인별로 조정 가능하며, Status Color 토큰과 함께 관리된다.</p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>Usage Guidelines</SectionTitle>
+        <DosDonts
+          doItems={[
+            '같은 컨텍스트 안에서 Gauge Bar 트랙 너비를 통일하여 시각적 비교가 가능하도록 한다.',
+            '차트와 함께 반드시 수치를 표시한다 — 색상만으로 정보를 전달하지 않는다 (접근성).',
+            '100%를 초과하는 경우, 채움은 100%로 표시하고 별도의 오버플로우 처리를 적용한다.',
+          ]}
+          dontItems={[
+            '같은 컨텍스트에서 Gauge Bar Chart와 Donut Chart를 혼용하지 않는다.',
+            '단일 리소스를 강조해야 할 때는 Gauge Bar 대신 Donut Chart를 사용한다.',
+          ]}
+        />
+      </VStack>
+    </VStack>
+  );
+}
 
 function getCSSVar(name: string, fallback: string) {
   if (typeof window !== 'undefined') {
@@ -139,123 +285,7 @@ export function ProgressBarPage() {
           </GaugeHoverTooltip>
         </div>
       }
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium">Quota</td>
-                      <td className="py-2">
-                        리소스명과 사용량/총량 수치를 함께 표시. 항목별 Gauge Bar가 리스트 형태로
-                        나열됨
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium">Default</td>
-                      <td className="py-2">
-                        수치 레이블만 표시 (예: 30 MB (30%)). 공간이 제한적인 컨텍스트에서 사용
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium">Dashboard</td>
-                      <td className="py-2">
-                        리소스 그룹 타이틀(예: COMPUTE QUOTA)과 함께 항목별 이름, 사용량/총량,
-                        퍼센트를 모두 표시. 대시보드 전용 레이아웃
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                상태 기반 색상 전환
-              </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        상태
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        기준 (사용률)
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        색상
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Safe (안전)</td>
-                      <td className="py-2 pr-4">0 – 69%</td>
-                      <td className="py-2">Green (초록)</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Warning (경고)</td>
-                      <td className="py-2 pr-4">70 – 94%</td>
-                      <td className="py-2">Orange (주황)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4">Danger (위험)</td>
-                      <td className="py-2 pr-4">95%+</td>
-                      <td className="py-2">Red (빨강)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
-                임계값은 서비스 도메인별로 조정 가능하며, Status Color 토큰과 함께 관리된다.
-              </p>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Do</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    같은 컨텍스트 안에서 Gauge Bar 트랙 너비를 통일하여 시각적 비교가 가능하도록
-                    한다.
-                  </li>
-                  <li>
-                    차트와 함께 반드시 수치를 표시한다 — 색상만으로 정보를 전달하지 않는다 (접근성).
-                  </li>
-                  <li>
-                    100%를 초과하는 경우, 채움은 100%로 표시하고 별도의 오버플로우 처리를 적용한다.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Don&apos;t</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>같은 컨텍스트에서 Gauge Bar Chart와 Donut Chart를 혼용하지 않는다.</li>
-                  <li>단일 리소스를 강조해야 할 때는 Gauge Bar 대신 Donut Chart를 사용한다.</li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-        </VStack>
-      }
+      guidelines={<ProgressBarPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>height: 4px</code> · <code>radius: pill</code>

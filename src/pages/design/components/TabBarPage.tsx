@@ -182,11 +182,11 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
       }}
       examples={<TabBarDemo />}
       guidelines={
-        <>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={10}>
+          <VStack gap={4}>
+            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+            <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+              <ul className="list-disc pl-5 space-y-1">
                 <li>
                   브라우저 스타일의 탭으로 여러 페이지/리소스를 동시에 열어 작업할 수 있습니다.
                 </li>
@@ -205,18 +205,20 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
                   말줄임 처리.
                 </li>
               </ul>
-            </VStack>
-          </div>
-          <div className="mt-4">
-            <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-2">Features</h4>
-            <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-              <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
-              <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
-              <li>탭 추가/닫기 기능</li>
-              <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
-            </ul>
-          </div>
-        </>
+            </div>
+          </VStack>
+          <VStack gap={4}>
+            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Features</h3>
+            <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+              <ul className="list-disc pl-5 space-y-1">
+                <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
+                <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
+                <li>탭 추가/닫기 기능</li>
+                <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
+              </ul>
+            </div>
+          </VStack>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">

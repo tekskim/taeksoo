@@ -383,6 +383,7 @@ import { ListSelectorPage } from '@/pages/design/patterns/ListSelectorPage';
 import { ViewPreferencesPage } from '@/pages/design/patterns/ViewPreferencesPage';
 import { FormFieldPatternPage } from '@/pages/design/patterns/FormFieldPatternPage';
 import { ShellPatternPage } from '@/pages/design/patterns/ShellPatternPage';
+import { EmptyStatesPage } from '@/pages/design/patterns/EmptyStatesPage';
 import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePrototypePage';
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
@@ -1057,6 +1058,7 @@ function AppRoutes() {
         <Route path="patterns/view-preferences" element={<ViewPreferencesPage />} />
         <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
         <Route path="patterns/shell" element={<ShellPatternPage />} />
+        <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
         {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />

@@ -1,10 +1,108 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function ShadowsGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <SectionTitle>Shadow tokens</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Token</Th>
+              <Th>Usage</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>--shadow-xs</strong>
+              </Td>
+              <Td>Subtle borders, light elevation</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>--shadow-sm</strong>
+              </Td>
+              <Td>Cards, dropdowns, small elevation</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>--shadow-md</strong>
+              </Td>
+              <Td>Modals, popovers, medium elevation</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>--shadow-lg</strong>
+              </Td>
+              <Td>Drawers, panels, high elevation</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>--shadow-xl</strong>
+              </Td>
+              <Td>Maximum elevation, overlays</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <Prose>
+          <p>
+            Use CSS variable <code>var(--shadow-*)</code> for elevation. Prefer tokens over
+            hardcoded values for consistency.
+          </p>
+        </Prose>
+      </VStack>
+    </VStack>
+  );
+}
 
 export function ShadowsPage() {
   return (
     <ComponentPageTemplate
       title="Shadows"
       description="Box shadow tokens for elevation and depth"
+      guidelines={<ShadowsGuidelines />}
       preview={
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[

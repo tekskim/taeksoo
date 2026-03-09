@@ -100,13 +100,6 @@ const TOOLTIP_GUIDELINES = `## Overview
 - 문장 끝에 마침표를 붙이지 않는다.
 - 아이콘 버튼의 경우 아이콘의 기술적 명칭을 사용하지 말고, 맥락에 맞는 설명으로 재작성한다.
 
----
-
-## Related
-
-- Popover
-- Button
-- Badge
 `;
 
 function StaticTooltip({

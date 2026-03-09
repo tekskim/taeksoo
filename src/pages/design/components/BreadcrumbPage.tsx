@@ -1,8 +1,53 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Breadcrumb, VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
 
 const breadcrumbProps: PropDef[] = [
   {
@@ -129,506 +174,455 @@ export function BreadcrumbPage() {
         </VStack>
       }
       guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Composition (구성 요소)
-              </h4>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                Breadcrumb은 노드(Node)와 구분자(Separator)의 조합으로 구성된다.
-              </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
+        <VStack gap={10}>
+          {/* Composition */}
+          <VStack gap={4}>
+            <SectionTitle>Composition</SectionTitle>
+            <Prose>
+              <p>Breadcrumb은 노드(Node)와 구분자(Separator)의 조합으로 구성된다.</p>
+              <p>
                 Structure: Root Node + Separator + Parent Node(s) + Separator + Current Page Node
               </p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        유형
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Root Node</td>
-                      <td className="py-2">계층 구조의 최상위 페이지 노드</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Parent Node</td>
-                      <td className="py-2">
-                        중간 계층 페이지 노드. 계층에 따라 1개 이상 반복 가능
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4">Current Page Node</td>
-                      <td className="py-2">현재 페이지를 나타내는 마지막 노드. 링크 없음</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                노드는 페이지를 가리킨다.
-              </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
+            </Prose>
+            <TableWrapper>
+              <thead>
+                <tr>
+                  <Th className="w-[200px]">유형</Th>
+                  <Th>설명</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <Td>
+                    <strong>Root Node</strong>
+                  </Td>
+                  <Td>계층 구조의 최상위 페이지 노드</Td>
+                </tr>
+                <tr>
+                  <Td>
+                    <strong>Parent Node</strong>
+                  </Td>
+                  <Td>중간 계층 페이지 노드. 계층에 따라 1개 이상 반복 가능</Td>
+                </tr>
+                <tr>
+                  <Td>
+                    <strong>Current Page Node</strong>
+                  </Td>
+                  <Td>현재 페이지를 나타내는 마지막 노드. 링크 없음</Td>
+                </tr>
+              </tbody>
+            </TableWrapper>
+            <Prose>
+              <p>노드는 페이지를 가리킨다.</p>
+              <p>
                 Separator: 상위/하위 페이지 관계를 시각적으로 구분. <code>&gt;</code> 기호 사용
               </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
+              <p>
                 Result example:{' '}
                 <code>
                   primaryMenuTitle &gt; (secondaryMenuTitle) &gt; subPageTitle &gt; recentPageTitle
                 </code>
               </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
+              <p>
                 Note: secondaryMenuTitle은 사이드바가 이중으로 구성된 경우(Container 앱, Agent
                 Ops)에만 해당
               </p>
+            </Prose>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          {/* Variants */}
+          <VStack gap={4}>
+            <SectionTitle>Variants</SectionTitle>
+            <TableWrapper>
+              <thead>
+                <tr>
+                  <Th className="w-[200px]">구분</Th>
+                  <Th>설명</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <Td>Default</Td>
+                  <Td>모든 노드를 순서대로 표시하는 기본형</Td>
+                </tr>
+              </tbody>
+            </TableWrapper>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          {/* States */}
+          <VStack gap={4}>
+            <SectionTitle>States</SectionTitle>
+            <TableWrapper>
+              <thead>
+                <tr>
+                  <Th className="w-[200px]">상태</Th>
+                  <Th>설명</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <Td>
+                    <strong>Default</strong>
+                  </Td>
+                  <Td>기본 표시 상태</Td>
+                </tr>
+                <tr>
+                  <Td>
+                    <strong>Hover</strong>
+                  </Td>
+                  <Td>
+                    링크가 있는 노드에 마우스를 올렸을 때. 밑줄 또는 색상 변화로 인터랙션 가능
+                    여부를 표시
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>
+                    <strong>Disabled (Current)</strong>
+                  </Td>
+                  <Td>마지막 노드(현재 페이지). 링크 없음, 클릭 불가 상태로 표시</Td>
+                </tr>
+              </tbody>
+            </TableWrapper>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          {/* Behavior */}
+          <VStack gap={4}>
+            <SectionTitle>Behavior</SectionTitle>
+            <VStack gap={3}>
+              <SubSectionTitle>동적 노드명 동기화</SubSectionTitle>
+              <Prose>
+                <p>
+                  리소스 이름이 포함된 노드(예: <code>{'{instanceName}'}</code>,{' '}
+                  <code>{'{podName}'}</code>)는 페이지 로딩 시점에 실제 리소스명으로 동기화된다.
+                </p>
+                <p>리소스명을 불러오는 동안에는 로딩 상태(Skeleton 또는 Placeholder)를 표시한다.</p>
+              </Prose>
             </VStack>
-          </div>
+          </VStack>
 
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        구분
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr>
-                      <td className="py-2 pr-4">Default</td>
-                      <td className="py-2">모든 노드를 순서대로 표시하는 기본형</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          {/* Usage Guidelines */}
+          <VStack gap={4}>
+            <SectionTitle>Usage Guidelines</SectionTitle>
+            <DosDonts
+              dontItems={[
+                '사용자의 방문 히스토리(뒤로가기 흔적)를 반영하지 않는다. Breadcrumb은 IA 기반의 구조적 경로다.',
+                '다음 항목은 노드에 포함하지 않는다: 조직(Domain), Partition(테넌트·네임스페이스·프로젝트 등), 앱 이름, 메뉴 카테고리 분류(Section title)',
+                '현재 페이지 노드에 링크를 포함하지 않는다.',
+              ]}
+            />
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          {/* Content Guidelines */}
+          <VStack gap={6}>
+            <SectionTitle>Content Guidelines</SectionTitle>
+
+            <VStack gap={3}>
+              <SubSectionTitle>노드 텍스트 작성 기준</SubSectionTitle>
+              <Prose>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>노드 텍스트는 메뉴명 또는 페이지 H1 제목과 정확히 일치시킨다.</li>
+                  <li>
+                    리소스명이 포함되는 경우 <code>{'{리소스명}'}</code> 형태로 동적 바인딩한다.
+                    이름이 없는 리소스는 <code>no name</code>으로 표시한다.
+                  </li>
+                  <li>노드 텍스트를 임의로 축약하거나 변형하지 않는다.</li>
+                  <li>노드 텍스트는 문장이 아닌 명사형으로 작성한다.</li>
+                </ul>
+              </Prose>
             </VStack>
-          </div>
 
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">States</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        상태
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Default</td>
-                      <td className="py-2">기본 표시 상태</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Hover</td>
-                      <td className="py-2">
-                        링크가 있는 노드에 마우스를 올렸을 때. 밑줄 또는 색상 변화로 인터랙션 가능
-                        여부를 표시
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4">Disabled (Current)</td>
-                      <td className="py-2">
-                        마지막 노드(현재 페이지). 링크 없음, 클릭 불가 상태로 표시
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
+            <VStack gap={3}>
+              <SubSectionTitle>서비스별 Breadcrumb 표기 예시</SubSectionTitle>
 
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Behavior</h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                동적 노드명 동기화
-              </h5>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                리소스 이름이 포함된 노드(예: <code>{'{instanceName}'}</code>,{' '}
-                <code>{'{podName}'}</code>)는 페이지 로딩 시점에 실제 리소스명으로 동기화된다.
-              </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                리소스명을 불러오는 동안에는 로딩 상태(Skeleton 또는 Placeholder)를 표시한다.
-              </p>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                Don&apos;t
-              </h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  사용자의 방문 히스토리(뒤로가기 흔적)를 반영하지 않는다. Breadcrumb은 IA 기반의
-                  구조적 경로다.
-                </li>
-                <li>
-                  다음 항목은 노드에 포함하지 않는다: 조직(Domain),
-                  Partition(테넌트·네임스페이스·프로젝트 등), 앱 이름, 메뉴 카테고리 분류(Section
-                  title)
-                </li>
-                <li>현재 페이지 노드에 링크를 포함하지 않는다.</li>
-              </ul>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Content Guidelines
-              </h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                노드 텍스트 작성 기준
-              </h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>노드 텍스트는 메뉴명 또는 페이지 H1 제목과 정확히 일치시킨다.</li>
-                <li>
-                  리소스명이 포함되는 경우 <code>{'{리소스명}'}</code> 형태로 동적 바인딩한다.
-                  이름이 없는 리소스는 <code>no name</code>으로 표시한다.
-                </li>
-                <li>노드 텍스트를 임의로 축약하거나 변형하지 않는다.</li>
-                <li>노드 텍스트는 문장이 아닌 명사형으로 작성한다.</li>
-              </ul>
-
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                서비스별 Breadcrumb 표기 예시
-              </h5>
-
-              <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                  Compute / Compute-admin
-                </h5>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
+              <VStack gap={4}>
+                <VStack gap={2}>
+                  <h5 className="text-heading-h6 text-[var(--color-text-default)]">
+                    Compute / Compute-admin
+                  </h5>
+                  <TableWrapper>
                     <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          페이지 유형
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          Breadcrumb
-                        </th>
+                      <tr>
+                        <Th className="w-[200px]">페이지 유형</Th>
+                        <Th>Breadcrumb</Th>
                       </tr>
                     </thead>
-                    <tbody className="text-[var(--color-text-muted)]">
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">단일 화면 (Dashboard)</td>
-                        <td className="py-2">
+                    <tbody>
+                      <tr>
+                        <Td>단일 화면 (Dashboard)</Td>
+                        <Td>
                           <code>Dashboard</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">단일 화면 (Topology)</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>단일 화면 (Topology)</Td>
+                        <Td>
                           <code>Topology</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">리스트 화면</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>리스트 화면</Td>
+                        <Td>
                           <code>Instances</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">디테일 화면</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>디테일 화면</Td>
+                        <Td>
                           <code>{'Instances > {Instance name}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Pool 상세</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Pool 상세</Td>
+                        <Td>
                           <code>
                             {'Load balancer > {load balancer id} > {listener id} > {pool name}'}
                           </code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Port 상세 (이름 있음)</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Port 상세 (이름 있음)</Td>
+                        <Td>
                           <code>{'Ports > {port name}'}</code>
-                        </td>
+                        </Td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4">Port 상세 (이름 없음)</td>
-                        <td className="py-2">
+                        <Td>Port 상세 (이름 없음)</Td>
+                        <Td>
                           <code>Ports &gt; no name</code>
-                        </td>
+                        </Td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-              </VStack>
+                  </TableWrapper>
+                </VStack>
 
-              <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                  Container
-                </h5>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
+                <VStack gap={2}>
+                  <h5 className="text-heading-h6 text-[var(--color-text-default)]">Container</h5>
+                  <TableWrapper>
                     <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          페이지 유형
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          Breadcrumb
-                        </th>
+                      <tr>
+                        <Th className="w-[200px]">페이지 유형</Th>
+                        <Th>Breadcrumb</Th>
                       </tr>
                     </thead>
-                    <tbody className="text-[var(--color-text-muted)]">
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Primary menu page</td>
-                        <td className="py-2">
+                    <tbody>
+                      <tr>
+                        <Td>Primary menu page</Td>
+                        <Td>
                           <code>primaryMenuTitle</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Secondary menu page</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Secondary menu page</Td>
+                        <Td>
                           <code>{'primaryMenuTitle > secondaryMenuTitle > subpageTitle'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Cluster Create 페이지</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Cluster Create 페이지</Td>
+                        <Td>
                           <code>Cluster Management &gt; Clusters &gt; Create Cluster</code>
-                        </td>
+                        </Td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4">Pod Detail 페이지</td>
-                        <td className="py-2">
+                        <Td>Pod Detail 페이지</Td>
+                        <Td>
                           <code>{'clusterName > Pods > {podName}'}</code>
-                        </td>
+                        </Td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-              </VStack>
+                  </TableWrapper>
+                </VStack>
 
-              <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                  Storage
-                </h5>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
+                <VStack gap={2}>
+                  <h5 className="text-heading-h6 text-[var(--color-text-default)]">Storage</h5>
+                  <TableWrapper>
                     <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          페이지
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          경로
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          Breadcrumb
-                        </th>
+                      <tr>
+                        <Th>페이지</Th>
+                        <Th>경로</Th>
+                        <Th>Breadcrumb</Th>
                       </tr>
                     </thead>
-                    <tbody className="text-[var(--color-text-muted)]">
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Dashboard</td>
-                        <td className="py-2 pr-4">/home</td>
-                        <td className="py-2">
+                    <tbody>
+                      <tr>
+                        <Td>Dashboard</Td>
+                        <Td>/home</Td>
+                        <Td>
                           <code>Dashboard</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Pools 리스트</td>
-                        <td className="py-2 pr-4">/pools</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Pools 리스트</Td>
+                        <Td>/pools</Td>
+                        <Td>
                           <code>Pools</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Pool 상세</td>
-                        <td className="py-2 pr-4">/pools/:poolName</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Pool 상세</Td>
+                        <Td>/pools/:poolName</Td>
+                        <Td>
                           <code>{'Pools > {poolName}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Hosts 리스트</td>
-                        <td className="py-2 pr-4">/hosts</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Hosts 리스트</Td>
+                        <Td>/hosts</Td>
+                        <Td>
                           <code>Hosts</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Host 상세</td>
-                        <td className="py-2 pr-4">/hosts/:hostname</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Host 상세</Td>
+                        <Td>/hosts/:hostname</Td>
+                        <Td>
                           <code>{'Hosts > {hostname}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">OSDs 리스트</td>
-                        <td className="py-2 pr-4">/osds</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>OSDs 리스트</Td>
+                        <Td>/osds</Td>
+                        <Td>
                           <code>OSDs</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">OSD 상세</td>
-                        <td className="py-2 pr-4">/osds/:osdId</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>OSD 상세</Td>
+                        <Td>/osds/:osdId</Td>
+                        <Td>
                           <code>{'OSDs > {osdId}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Physical Disks 리스트</td>
-                        <td className="py-2 pr-4">/physical-disks</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Physical Disks 리스트</Td>
+                        <Td>/physical-disks</Td>
+                        <Td>
                           <code>Physical Disks</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Images 리스트</td>
-                        <td className="py-2 pr-4">/images</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Images 리스트</Td>
+                        <Td>/images</Td>
+                        <Td>
                           <code>Images</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Image 상세</td>
-                        <td className="py-2 pr-4">/images/:imageName</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Image 상세</Td>
+                        <Td>/images/:imageName</Td>
+                        <Td>
                           <code>{'Images > {imageName}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Buckets 리스트</td>
-                        <td className="py-2 pr-4">/buckets</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Buckets 리스트</Td>
+                        <Td>/buckets</Td>
+                        <Td>
                           <code>Buckets</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Bucket 상세</td>
-                        <td className="py-2 pr-4">/buckets/:bucketName</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Bucket 상세</Td>
+                        <Td>/buckets/:bucketName</Td>
+                        <Td>
                           <code>{'Buckets > {bucketName}'}</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Bucket 생성</td>
-                        <td className="py-2 pr-4">/buckets/create</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Bucket 생성</Td>
+                        <Td>/buckets/create</Td>
+                        <Td>
                           <code>Buckets &gt; Create Bucket</code>
-                        </td>
+                        </Td>
                       </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Bucket 편집</td>
-                        <td className="py-2 pr-4">/buckets/:bucketName/edit</td>
-                        <td className="py-2">
+                      <tr>
+                        <Td>Bucket 편집</Td>
+                        <Td>/buckets/:bucketName/edit</Td>
+                        <Td>
                           <code>{'Buckets > {bucketName} > Edit Bucket'}</code>
-                        </td>
+                        </Td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4">Overall Performance</td>
-                        <td className="py-2 pr-4">/overall-performance</td>
-                        <td className="py-2">
+                        <Td>Overall Performance</Td>
+                        <Td>/overall-performance</Td>
+                        <Td>
                           <code>Overall Performance</code>
-                        </td>
+                        </Td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-              </VStack>
+                  </TableWrapper>
+                </VStack>
 
-              <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">IAM</h5>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
+                <VStack gap={2}>
+                  <h5 className="text-heading-h6 text-[var(--color-text-default)]">IAM</h5>
+                  <TableWrapper>
                     <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          페이지 유형
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          Breadcrumb
-                        </th>
+                      <tr>
+                        <Th className="w-[200px]">페이지 유형</Th>
+                        <Th>Breadcrumb</Th>
                       </tr>
                     </thead>
-                    <tbody className="text-[var(--color-text-muted)]">
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Dashboard</td>
-                        <td className="py-2">
+                    <tbody>
+                      <tr>
+                        <Td>Dashboard</Td>
+                        <Td>
                           <code>Dashboard</code>
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Users 리스트</td>
-                        <td className="py-2">
-                          <code>Users</code>
-                        </td>
+                        </Td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4">User 상세</td>
-                        <td className="py-2">
+                        <Td>Users 리스트</Td>
+                        <Td>
+                          <code>Users</code>
+                        </Td>
+                      </tr>
+                      <tr>
+                        <Td>User 상세</Td>
+                        <Td>
                           <code>{'Users > {Username}'}</code>
-                        </td>
+                        </Td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
-              </VStack>
+                  </TableWrapper>
+                </VStack>
 
-              <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)] uppercase">
-                  AI Agent
-                </h5>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
+                <VStack gap={2}>
+                  <h5 className="text-heading-h6 text-[var(--color-text-default)]">AI Agent</h5>
+                  <TableWrapper>
                     <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          페이지 유형
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          Breadcrumb
-                        </th>
+                      <tr>
+                        <Th className="w-[200px]">페이지 유형</Th>
+                        <Th>Breadcrumb</Th>
                       </tr>
                     </thead>
-                    <tbody className="text-[var(--color-text-muted)]">
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4">Data source 상세</td>
-                        <td className="py-2">
+                    <tbody>
+                      <tr>
+                        <Td>Data source 상세</Td>
+                        <Td>
                           <code>{'Data sources > {Data source name}'}</code>
-                        </td>
+                        </Td>
                       </tr>
                       <tr>
-                        <td className="py-2 pr-4">Data source 생성</td>
-                        <td className="py-2">
+                        <Td>Data source 생성</Td>
+                        <Td>
                           <code>Data sources &gt; Create data source</code>
-                        </td>
+                        </Td>
                       </tr>
                     </tbody>
-                  </table>
-                </div>
+                  </TableWrapper>
+                </VStack>
               </VStack>
             </VStack>
-          </div>
+          </VStack>
         </VStack>
       }
       tokens={

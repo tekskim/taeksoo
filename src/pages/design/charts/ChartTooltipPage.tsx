@@ -1,5 +1,130 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function ChartTooltipPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={3}>
+        <SubSectionTitle>Tooltip 타입별 사용 기준</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>타입</Th>
+              <Th>trigger</Th>
+              <Th>사용 차트</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Axis</strong>
+              </Td>
+              <Td>axis</Td>
+              <Td>Area, Bar, Line chart</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Item</strong>
+              </Td>
+              <Td>item</Td>
+              <Td>Pie, Doughnut chart</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Gauge</strong>
+              </Td>
+              <Td>Custom (mouseMove)</Td>
+              <Td>Half-Doughnut chart</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <SubSectionTitle>공통 스타일 규칙</SubSectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              배경색: <code>#ffffff</code>, 테두리: <code>#e2e8f0</code> (border-subtle)
+            </li>
+            <li>
+              텍스트: <code>#1e293b</code> (slate800), 크기: <code>11px</code>
+            </li>
+            <li>
+              폰트: <code>Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif</code>
+            </li>
+            <li>
+              색상 도트: <code>8×8px</code> rounded-full, 시리즈 색상 매칭
+            </li>
+            <li>
+              값 텍스트: <code>font-weight: 500</code> (medium)
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>Usage Guidelines</SectionTitle>
+        <DosDonts
+          doItems={[
+            'hover 시 정확한 수치(값, 단위, 퍼센트)를 표시합니다.',
+            '시리즈 색상과 도트 색상을 일치시킵니다.',
+            'Gauge 차트는 cursor 근처에 tooltip을 배치합니다.',
+          ]}
+          dontItems={[
+            'tooltip에 과도한 정보(5개 이상 시리즈)를 표시하지 않습니다.',
+            '하드코딩된 색상 대신 chartColors 팔레트를 사용합니다.',
+            'tooltip 폰트 크기를 11px 이외로 변경하지 않습니다.',
+          ]}
+        />
+      </VStack>
+    </VStack>
+  );
+}
 
 function AxisTooltipDemo() {
   return (
@@ -137,104 +262,7 @@ export function ChartTooltipPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Tooltip 타입별 사용 기준
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          타입
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          trigger
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          사용 차트
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Axis
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">axis</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          Area, Bar, Line chart
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Item
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">item</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">Pie, Doughnut chart</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Gauge
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          Custom (mouseMove)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">Half-Doughnut chart</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  공통 스타일 규칙
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    배경색: <code>#ffffff</code>, 테두리: <code>#e2e8f0</code> (border-subtle)
-                  </li>
-                  <li>
-                    텍스트: <code>#1e293b</code> (slate800), 크기: <code>11px</code>
-                  </li>
-                  <li>
-                    폰트: <code>Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif</code>
-                  </li>
-                  <li>
-                    색상 도트: <code>8×8px</code> rounded-full, 시리즈 색상 매칭
-                  </li>
-                  <li>
-                    값 텍스트: <code>font-weight: 500</code> (medium)
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>hover 시 정확한 수치(값, 단위, 퍼센트)를 표시합니다.</li>
-                <li>시리즈 색상과 도트 색상을 일치시킵니다.</li>
-                <li>Gauge 차트는 cursor 근처에 tooltip을 배치합니다.</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">Don&apos;t</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>tooltip에 과도한 정보(5개 이상 시리즈)를 표시하지 않습니다.</li>
-                <li>하드코딩된 색상 대신 chartColors 팔레트를 사용합니다.</li>
-                <li>tooltip 폰트 크기를 11px 이외로 변경하지 않습니다.</li>
-              </ul>
-            </div>
-          </div>
-        </VStack>
-      }
+      guidelines={<ChartTooltipPageGuidelines />}
       tokens={
         <>
           <div className="overflow-x-auto">

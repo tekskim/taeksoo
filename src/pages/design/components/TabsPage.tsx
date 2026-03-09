@@ -5,6 +5,97 @@ import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Tabs, TabList, Tab, TabPanel, VStack } from '@/design-system';
 
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function TabsPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <VStack gap={2}>
+          <SubSectionTitle>Variant 선택 기준</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th>Variant</Th>
+                <Th>사용 조건</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>underline</strong>
+                </Td>
+                <Td>상세 페이지 내 콘텐츠 전환 (기본값). Detail Page의 섹션 구분에 사용.</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>boxed</strong>
+                </Td>
+                <Td>폼 내부 또는 카드 내 옵션 전환 시 사용. 시각적으로 더 독립적인 영역 구분.</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+        <VStack gap={4}>
+          <SectionTitle>Usage Guidelines</SectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                탭 수는 <strong>2~7개</strong>를 권장합니다. 7개 초과 시 스크롤 또는 구조 재설계를
+                검토합니다.
+              </li>
+              <li>탭 전환 시 입력값은 유지됩니다 (Create/Edit 폼에서 탭 간 이동 시).</li>
+              <li>탭 라벨은 간결한 명사형으로 작성합니다 (Details, Volumes, Networking).</li>
+            </ul>
+          </Prose>
+        </VStack>
+      </VStack>
+    </VStack>
+  );
+}
+
 function CapsuleTabDemo() {
   const [selected, setSelected] = useState<'left' | 'right'>('left');
 
@@ -191,60 +282,7 @@ export function TabsPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={4}>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Variant 선택 기준
-              </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        사용 조건
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        underline
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        상세 페이지 내 콘텐츠 전환 (기본값). Detail Page의 섹션 구분에 사용.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        boxed
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        폼 내부 또는 카드 내 옵션 전환 시 사용. 시각적으로 더 독립적인 영역 구분.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  탭 수는 <strong>2~7개</strong>를 권장합니다. 7개 초과 시 스크롤 또는 구조 재설계를
-                  검토합니다.
-                </li>
-                <li>탭 전환 시 입력값은 유지됩니다 (Create/Edit 폼에서 탭 간 이동 시).</li>
-                <li>탭 라벨은 간결한 명사형으로 작성합니다 (Details, Volumes, Networking).</li>
-              </ul>
-            </VStack>
-          </VStack>
-        </div>
-      }
+      guidelines={<TabsPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>gap: 8px</code> · <code>min-width: 80px</code> · <code>padding-x: 12px</code> ·{' '}
