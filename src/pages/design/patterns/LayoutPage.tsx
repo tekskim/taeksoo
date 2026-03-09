@@ -2,68 +2,92 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { VStack } from '@/design-system';
 import { IconChevronLeft, IconMenu2 } from '@tabler/icons-react';
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function LayoutGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <SectionTitle>레이아웃 구조</SectionTitle>
+        <Prose>
+          <p>
+            PageShell이 전체 페이지를 래핑하며, Sidebar + TabBar + TopBar + Content 영역으로
+            구성됩니다. 하단에는 Shell Panel(터미널)이 선택적으로 표시됩니다.
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={4}>
+        <SectionTitle>사이드바 정책</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>펼침 상태</strong>: 너비 200px (<code>--layout-sidebar-width</code>). 메뉴
+              아이콘 + 라벨 표시.
+            </li>
+            <li>
+              <strong>접힘 상태</strong>: 사이드바가 완전히 숨겨집니다.
+            </li>
+            <li>사이드바 토글은 사이드바 하단 또는 TopBar에서 제공합니다.</li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={4}>
+        <SectionTitle>콘텐츠 영역 정책</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>최소 너비</strong>: 콘텐츠 영역의 최소 너비를 보장하여 레이아웃이 깨지지
+              않도록 합니다.
+            </li>
+            <li>
+              <strong>패딩</strong>: 상단 16px (pt-4), 좌우 32px (px-8), 하단 80px (pb-20).
+            </li>
+            <li>
+              <strong>리스트 페이지</strong>: 최소 너비 1176px 적용.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
+        <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
+          <strong>📐 Layout Guidelines:</strong>
+          <ul className="mt-2 space-y-1 list-disc list-inside">
+            <li>Sidebar는 200px 고정, 숨김/표시 토글 가능</li>
+            <li>1920px에서 1440px까지 반응형 지원</li>
+            <li>1440px 미만은 모바일 레이아웃 (추후 확장)</li>
+            <li>Content area는 sidebar 상태에 따라 자동 조절</li>
+          </ul>
+        </div>
+      </div>
+    </VStack>
+  );
+}
+
 export function LayoutPage() {
   return (
     <ComponentPageTemplate
       title="Layout"
       description="Application layout structure with responsive sidebar"
-      guidelines={
-        <VStack gap={8}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">레이아웃 구조</h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  PageShell이 전체 페이지를 래핑하며, Sidebar + TabBar + TopBar + Content 영역으로
-                  구성됩니다. 하단에는 Shell Panel(터미널)이 선택적으로 표시됩니다.
-                </p>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">사이드바 정책</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>펼침 상태</strong>: 너비 200px (<code>--layout-sidebar-width</code>).
-                    메뉴 아이콘 + 라벨 표시.
-                  </li>
-                  <li>
-                    <strong>접힘 상태</strong>: 사이드바가 완전히 숨겨집니다.
-                  </li>
-                  <li>사이드바 토글은 사이드바 하단 또는 TopBar에서 제공합니다.</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  콘텐츠 영역 정책
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>최소 너비</strong>: 콘텐츠 영역의 최소 너비를 보장하여 레이아웃이 깨지지
-                    않도록 합니다.
-                  </li>
-                  <li>
-                    <strong>패딩</strong>: 상단 16px (pt-4), 좌우 32px (px-8), 하단 80px (pb-20).
-                  </li>
-                  <li>
-                    <strong>리스트 페이지</strong>: 최소 너비 1176px 적용.
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
-            <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
-              <strong>📐 Layout Guidelines:</strong>
-              <ul className="mt-2 space-y-1 list-disc list-inside">
-                <li>Sidebar는 200px 고정, 숨김/표시 토글 가능</li>
-                <li>1920px에서 1440px까지 반응형 지원</li>
-                <li>1440px 미만은 모바일 레이아웃 (추후 확장)</li>
-                <li>Content area는 sidebar 상태에 따라 자동 조절</li>
-              </ul>
-            </div>
-          </div>
-        </VStack>
-      }
+      guidelines={<LayoutGuidelines />}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

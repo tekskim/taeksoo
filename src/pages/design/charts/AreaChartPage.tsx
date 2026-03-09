@@ -9,10 +9,10 @@ export function AreaChartPage() {
       description="Filled area visualization for volume and cumulative data"
       preview={<AreaChartDemo variant="basic" />}
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
               <li>
                 <strong>시계열 데이터</strong>: CPU/Memory/Network 사용량 등 시간에 따른 변화를
                 시각화합니다.
@@ -29,8 +29,8 @@ export function AreaChartPage() {
                 <strong>Y축 눈금</strong>: Y축은 항상 5개 단위(splitNumber: 5)로 표시합니다.
               </li>
             </ul>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <VStack gap={4}>

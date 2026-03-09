@@ -181,7 +181,7 @@ const formControlItems: NavItem[] = [
   { id: 'select', label: 'Select', icon: IconSelector, path: '/design/components/select' },
   {
     id: 'datepicker',
-    label: 'DatePicker',
+    label: 'Date Picker',
     icon: IconCalendar,
     path: '/design/components/datepicker',
   },
@@ -235,7 +235,12 @@ const feedbackItems: NavItem[] = [
     icon: IconInfoCircle,
     path: '/design/components/inline-message',
   },
-  { id: 'loading', label: 'Loading', icon: IconLoader2, path: '/design/components/loading' },
+  {
+    id: 'loading',
+    label: 'Progress Bar (Loading)',
+    icon: IconLoader2,
+    path: '/design/components/loading',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -261,7 +266,7 @@ const overlayItems: NavItem[] = [
   },
   {
     id: 'context-menu',
-    label: 'Context menu',
+    label: 'Context Menu',
     icon: IconMenu2,
     path: '/design/components/context-menu',
   },
@@ -298,7 +303,7 @@ const layoutItems: NavItem[] = [
   },
   {
     id: 'window-control',
-    label: 'Window control',
+    label: 'Window Control',
     icon: IconAppWindow,
     path: '/design/components/window-control',
   },
@@ -379,6 +384,12 @@ const layoutItems: NavItem[] = [
     label: 'Shell',
     icon: IconTerminal2,
     path: '/design/patterns/shell',
+  },
+  {
+    id: 'empty-states',
+    label: 'Empty States',
+    icon: IconTemplate,
+    path: '/design/patterns/empty-states',
   },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
@@ -525,7 +536,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/form-field': '2026-03-01 10:30:00',
   '/design/components/filter-search-input': '2026-03-09 10:30:00',
   '/design/components/select': '2026-03-09 10:30:00',
-  '/design/components/datepicker': '2026-03-01 10:30:00',
+  '/design/components/datepicker': '2026-03-09',
   '/design/components/slider': '2026-03-05 13:00:00',
   '/design/components/toggle': '2026-03-09 10:30:00',
   '/design/components/checkbox': '2026-03-09 10:30:00',
@@ -534,15 +545,15 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/table': '2026-03-09 10:30:00',
   '/design/components/badge': '2026-03-05 13:00:00',
   '/design/components/card': '2026-03-09 10:30:00',
-  '/design/components/chip': '2026-03-01 10:30:00',
+  '/design/components/chip': '2026-03-09',
   '/design/components/status-indicator': '2026-03-09 10:30:00',
-  '/design/components/pagination': '2026-03-01 10:30:00',
+  '/design/components/pagination': '2026-03-09',
   '/design/components/selection-indicator': '2026-03-01 10:30:00',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
   '/design/components/expandable-checklist': '2026-03-09 10:30:00',
   // Feedback
   '/design/components/inline-message': '2026-03-09 10:30:00',
-  '/design/components/loading': '2026-03-01 10:30:00',
+  '/design/components/loading': '2026-03-09',
   // Navigation
   '/design/components/topbar': '2026-03-01 10:30:00',
   '/design/components/tabbar': '2026-03-01 10:30:00',
@@ -552,7 +563,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/tooltip': '2026-03-09 10:30:00',
   '/design/components/popover': '2026-03-01 10:30:00',
   '/design/components/menu': '2026-03-09',
-  '/design/components/context-menu': '2026-03-01 10:30:00',
+  '/design/components/context-menu': '2026-03-09',
   '/design/components/modal': '2026-03-09 10:30:00',
   '/design/components/drawer': '2026-03-09 10:30:00',
   '/design/components/notification-center': '2026-03-09 10:30:00',
@@ -562,7 +573,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/floating-card': '2026-03-05 13:00:00',
   // Layout & Patterns
   '/design/components/disclosure': '2026-03-03 18:45:00',
-  '/design/components/window-control': '2026-03-01 10:30:00',
+  '/design/components/window-control': '2026-03-09',
   '/design/components/scrollbar': '2026-03-05 13:00:00',
   '/design/patterns/common': '2026-03-01 10:30:00',
   '/design/components/detail-header': '2026-03-01 10:30:00',
@@ -581,6 +592,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/view-preferences': '2026-03-09 10:30:00',
   '/design/patterns/form-field-pattern': '2026-03-09 15:00:00',
   '/design/patterns/shell': '2026-03-09 15:00:00',
+  '/design/patterns/empty-states': '2026-03-09',
   // Charts
   '/design/charts/overview': '2026-03-09 10:30:00',
   '/design/charts/status-colors': '2026-03-01 10:30:00',

@@ -3,6 +3,186 @@ import { DosDonts } from '../_shared/DosDonts';
 import { DoughnutChartDemo } from '../../design-system-sections/ChartComponents';
 import { VStack } from '@/design-system';
 
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function DoughnutChartPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={3}>
+        <SectionTitle>Variants</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Variant</Th>
+              <Th>Description</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Full (원형)</strong>
+              </Td>
+              <Td>넓은 영역에서 사용하는 전체 원형 도넛</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Half (반원형)</strong>
+              </Td>
+              <Td>세로 공간이 제한적일 때 사용하는 반원형 도넛</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>Composition (구성 요소)</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Element</Th>
+              <Th>Description</Th>
+              <Th>Condition</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>그래프 타이틀</Td>
+              <Td>차트 상단의 리소스/메트릭 이름 (예: Capacity used)</Td>
+              <Td>Always</Td>
+            </tr>
+            <tr>
+              <Td>도넛 그래프</Td>
+              <Td>사용량에 비례한 fill 색상, 나머지는 Available 색상으로 표시</Td>
+              <Td>Always</Td>
+            </tr>
+            <tr>
+              <Td>중앙 퍼센트 수치</Td>
+              <Td>링 내부에 사용률 퍼센트 표시, 상태 색상과 동기화</Td>
+              <Td>Always</Td>
+            </tr>
+            <tr>
+              <Td>사용량/전체 용량 텍스트</Td>
+              <Td>그래프 하단 (예: 167.49/189.9 TiB). 소수점 둘째 자리까지 표시</Td>
+              <Td>Always</Td>
+            </tr>
+            <tr>
+              <Td>범례</Td>
+              <Td>Used / Available 항목, 색상 점, 값, 퍼센트</Td>
+              <Td>Always</Td>
+            </tr>
+            <tr>
+              <Td>툴팁</Td>
+              <Td>호버 시: 데이터 유형(Used/Available), 값, 퍼센트</Td>
+              <Td>On hover</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>Behavior - 상태 기반 색상 전환</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Status</Th>
+              <Th>Utilization</Th>
+              <Th>Color</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Safe</strong>
+              </Td>
+              <Td>0 – 69%</Td>
+              <Td>Green</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Warning</strong>
+              </Td>
+              <Td>70 – 94%</Td>
+              <Td>Orange</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Danger</strong>
+              </Td>
+              <Td>95%+</Td>
+              <Td>Red</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <Prose>
+          <p>
+            툴팁: 호버 시 Used/Available, 값, 퍼센트 표시. 애니메이션: 초기 로드 시 fill 즉시
+            렌더링, 실시간 데이터 업데이트 즉시 반영.
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={3}>
+        <SectionTitle>Usage Guidelines</SectionTitle>
+        <DosDonts
+          doItems={[
+            '단일 리소스에만 사용한다. 복수 리소스는 Gauge Bar Chart 사용.',
+            '소수점 둘째 자리까지 표시한다.',
+          ]}
+          dontItems={['3개 이상의 세그먼트를 표시하지 않는다. Used / Available만 유지한다.']}
+        />
+      </VStack>
+    </VStack>
+  );
+}
+
 export function DoughnutChartPage() {
   return (
     <ComponentPageTemplate
@@ -17,165 +197,7 @@ export function DoughnutChartPage() {
         '표시할 리소스가 2개 이상인 경우 → Gauge Bar Chart 사용',
       ]}
       preview={<DoughnutChartDemo title="OSD onode Hits Ratio" value={98.3} color="#ef4444" />}
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        Description
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium">Full (원형)</td>
-                      <td className="py-2">넓은 영역에서 사용하는 전체 원형 도넛</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium">Half (반원형)</td>
-                      <td className="py-2">세로 공간이 제한적일 때 사용하는 반원형 도넛</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Composition (구성 요소)
-              </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Element
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Description
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        Condition
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">그래프 타이틀</td>
-                      <td className="py-2 pr-4">
-                        차트 상단의 리소스/메트릭 이름 (예: Capacity used)
-                      </td>
-                      <td className="py-2">Always</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">도넛 그래프</td>
-                      <td className="py-2 pr-4">
-                        사용량에 비례한 fill 색상, 나머지는 Available 색상으로 표시
-                      </td>
-                      <td className="py-2">Always</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">중앙 퍼센트 수치</td>
-                      <td className="py-2 pr-4">
-                        링 내부에 사용률 퍼센트 표시, 상태 색상과 동기화
-                      </td>
-                      <td className="py-2">Always</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">사용량/전체 용량 텍스트</td>
-                      <td className="py-2 pr-4">
-                        그래프 하단 (예: 167.49/189.9 TiB). 소수점 둘째 자리까지 표시
-                      </td>
-                      <td className="py-2">Always</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">범례</td>
-                      <td className="py-2 pr-4">Used / Available 항목, 색상 점, 값, 퍼센트</td>
-                      <td className="py-2">Always</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4">툴팁</td>
-                      <td className="py-2 pr-4">
-                        호버 시: 데이터 유형(Used/Available), 값, 퍼센트
-                      </td>
-                      <td className="py-2">On hover</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Behavior - 상태 기반 색상 전환
-              </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Status
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Utilization
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        Color
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--color-text-muted)]">
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Safe</td>
-                      <td className="py-2 pr-4">0 – 69%</td>
-                      <td className="py-2">Green</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4">Warning</td>
-                      <td className="py-2 pr-4">70 – 94%</td>
-                      <td className="py-2">Orange</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4">Danger</td>
-                      <td className="py-2 pr-4">95%+</td>
-                      <td className="py-2">Red</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
-                툴팁: 호버 시 Used/Available, 값, 퍼센트 표시. 애니메이션: 초기 로드 시 fill 즉시
-                렌더링, 실시간 데이터 업데이트 즉시 반영.
-              </p>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <DosDonts
-                doItems={[
-                  '단일 리소스에만 사용한다. 복수 리소스는 Gauge Bar Chart 사용.',
-                  '소수점 둘째 자리까지 표시한다.',
-                ]}
-                dontItems={['3개 이상의 세그먼트를 표시하지 않는다. Used / Available만 유지한다.']}
-              />
-            </VStack>
-          </div>
-        </VStack>
-      }
+      guidelines={<DoughnutChartPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>inner-radius: 68%</code> · <code>outer-radius: 80%</code> ·{' '}

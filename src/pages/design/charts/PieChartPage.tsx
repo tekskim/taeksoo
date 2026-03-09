@@ -18,10 +18,10 @@ export function PieChartPage() {
         />
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
               <li>
                 <strong>구성 비율</strong>: 전체 대비 각 항목의 비율을 시각화합니다 (e.g. 스토리지
                 유형별 분포).
@@ -31,10 +31,10 @@ export function PieChartPage() {
                 &quot;기타(Others)&quot;로 그룹핑합니다.
               </li>
               <li>각 슬라이스에 퍼센트 라벨을 표시합니다.</li>
-              <li>hover 시 해당 항목의 상세 값(이름, 수치, 비율)을 tooltip으로 표시합니다.</li>
+              <li>hover 시 해당 항목의 상세 값(이름, 수치, 비율)을 tooltip으로 표시합니다. </li>
             </ul>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <VStack gap={4}>

@@ -98,14 +98,6 @@ const TOGGLE_GUIDELINES = `## Overview
   - ❌ "켜기/끄기", "활성화 여부"
 - Description은 설정의 영향 범위나 주의 사항을 1–2문장 이내로 간결하게 작성한다.
 - On/Off 상태를 라벨 텍스트로 변경하지 않는다. 상태는 Toggle의 시각적 표현으로 전달한다.
-
----
-
-## Related
-
-- Checkbox
-- Radio
-- Select
 `;
 
 const toggleProps: PropDef[] = [

@@ -1,31 +1,49 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { Badge, VStack } from '@/design-system';
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function StatusColorsPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={3}>
+        <SectionTitle>색상 임계값 규칙</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>사용률 기반 차트에 공통으로 적용되는 색상 시스템입니다.</li>
+            <li>
+              <strong>Safe</strong> (초록): 사용률 0~69%. 정상 범위.
+            </li>
+            <li>
+              <strong>Warning</strong> (주황): 사용률 70~89%. 주의 필요.
+            </li>
+            <li>
+              <strong>Danger</strong> (빨강): 사용률 90~100%. 위험/임계치 초과.
+            </li>
+            <li>모든 사용률 차트(Bar, Doughnut, Half-Doughnut)에 동일한 임계값을 적용합니다.</li>
+          </ul>
+        </Prose>
+      </VStack>
+    </VStack>
+  );
+}
+
 export function StatusColorsPage() {
   return (
     <ComponentPageTemplate
       title="Status colors"
       description="Shared color thresholds for usage-based charts including bar charts, half-doughnut, and doughnut charts"
-      guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">색상 임계값 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-              <li>사용률 기반 차트에 공통으로 적용되는 색상 시스템입니다.</li>
-              <li>
-                <strong>Safe</strong> (초록): 사용률 0~69%. 정상 범위.
-              </li>
-              <li>
-                <strong>Warning</strong> (주황): 사용률 70~89%. 주의 필요.
-              </li>
-              <li>
-                <strong>Danger</strong> (빨강): 사용률 90~100%. 위험/임계치 초과.
-              </li>
-              <li>모든 사용률 차트(Bar, Doughnut, Half-Doughnut)에 동일한 임계값을 적용합니다.</li>
-            </ul>
-          </VStack>
-        </div>
-      }
+      guidelines={<StatusColorsPageGuidelines />}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
