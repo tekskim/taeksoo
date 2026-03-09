@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
@@ -348,6 +348,7 @@ import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
 import { LoadingPage } from '@/pages/design/components/LoadingPage';
+import { ProgressBarComponentPage } from '@/pages/design/components/ProgressBarComponentPage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
 import { TabBarPage } from '@/pages/design/components/TabBarPage';
 import { TabsPage } from '@/pages/design/components/TabsPage';
@@ -367,6 +368,7 @@ import { DisclosurePage } from '@/pages/design/components/DisclosurePage';
 import { WindowControlPage } from '@/pages/design/components/WindowControlPage';
 import { ScrollbarPage } from '@/pages/design/components/ScrollbarPage';
 import { DetailHeaderPage } from '@/pages/design/components/DetailHeaderPage';
+import { EditorPage } from '@/pages/design/components/EditorPage';
 import { SectionCardPage } from '@/pages/design/components/SectionCardPage';
 import { MonitoringToolbarPage } from '@/pages/design/components/MonitoringToolbarPage';
 import { CsvDownloadPage } from '@/pages/design/components/CsvDownloadPage';
@@ -379,6 +381,7 @@ import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
 import { ListPagePatternPage } from '@/pages/design/patterns/ListPagePatternPage';
+import { DetailPagePatternPage } from '@/pages/design/patterns/DetailPagePatternPage';
 import { ListSelectorPage } from '@/pages/design/patterns/ListSelectorPage';
 import { ViewPreferencesPage } from '@/pages/design/patterns/ViewPreferencesPage';
 import { FormFieldPatternPage } from '@/pages/design/patterns/FormFieldPatternPage';
@@ -388,11 +391,9 @@ import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePr
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
-import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
+import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
 import { AreaChartPage } from '@/pages/design/charts/AreaChartPage';
 import { PieChartPage } from '@/pages/design/charts/PieChartPage';
-import { HalfDoughnutChartPage } from '@/pages/design/charts/HalfDoughnutChartPage';
-import { DoughnutChartPage } from '@/pages/design/charts/DoughnutChartPage';
 import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
 // Pages - Desktop
@@ -1019,6 +1020,7 @@ function AppRoutes() {
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
         <Route path="components/loading" element={<LoadingPage />} />
+        <Route path="components/progress-bar" element={<ProgressBarComponentPage />} />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />
@@ -1041,6 +1043,7 @@ function AppRoutes() {
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
         <Route path="components/detail-header" element={<DetailHeaderPage />} />
+        <Route path="components/editor" element={<EditorPage />} />
         <Route path="components/section-card" element={<SectionCardPage />} />
         <Route path="components/monitoring-toolbar" element={<MonitoringToolbarPage />} />
         <Route path="components/csv-download" element={<CsvDownloadPage />} />
@@ -1054,6 +1057,7 @@ function AppRoutes() {
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/form-validation" element={<FormValidationPage />} />
         <Route path="patterns/list-page" element={<ListPagePatternPage />} />
+        <Route path="patterns/detail-page" element={<DetailPagePatternPage />} />
         <Route path="patterns/list-selector" element={<ListSelectorPage />} />
         <Route path="patterns/view-preferences" element={<ViewPreferencesPage />} />
         <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
@@ -1064,11 +1068,21 @@ function AppRoutes() {
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
-        <Route path="charts/gauge-bar" element={<ProgressBarPage />} />
+        <Route path="charts/usage-chart" element={<UsageChartPage />} />
+        <Route
+          path="charts/gauge-bar"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
+        <Route
+          path="charts/half-doughnut"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
+        <Route
+          path="charts/doughnut"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
         <Route path="charts/area-chart" element={<AreaChartPage />} />
         <Route path="charts/pie-chart" element={<PieChartPage />} />
-        <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />
-        <Route path="charts/doughnut" element={<DoughnutChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
         <Route path="figma/guide" element={<FigmaGuidePage />} />

@@ -3,7 +3,7 @@ import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Loading, ProgressBar, VStack } from '@/design-system';
+import { Loading, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -102,28 +102,34 @@ const loadingProps: PropDef[] = [
 function LoadingGuidelines() {
   return (
     <VStack gap={10}>
-      {/* Variants */}
+      {/* Composition */}
       <VStack gap={4}>
-        <SectionTitle>Variants</SectionTitle>
+        <SectionTitle>Composition</SectionTitle>
         <TableWrapper>
           <thead>
             <tr>
-              <Th className="w-[140px]">Variant</Th>
+              <Th className="w-[220px]">요소</Th>
               <Th>설명</Th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <Td>
-                <strong>Default</strong>
+                <strong>Loading indicator</strong>
               </Td>
-              <Td>진행률(%)만 Fill로 표현. 레이블·수치 없이 Bar만 단독으로 표시</Td>
+              <Td>로딩 상태 표시</Td>
             </tr>
             <tr>
               <Td>
-                <strong>Labeled</strong>
+                <strong>Loading message</strong> (optional)
               </Td>
-              <Td>Bar 상단 또는 좌측에 작업명(Label)과 진행률 수치(Value)를 함께 표시</Td>
+              <Td>진행 상태 설명</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Background content</strong>
+              </Td>
+              <Td>로딩 대상 UI</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -131,81 +137,53 @@ function LoadingGuidelines() {
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
 
-      {/* Composition */}
+      {/* Variants */}
       <VStack gap={4}>
-        <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
-          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[Label]                              [Value]
-[████████████████░░░░░░░░░░░░░░░░░░]`}</pre>
-        </div>
+        <SectionTitle>Variants</SectionTitle>
         <TableWrapper>
           <thead>
             <tr>
-              <Th className="w-[120px]">요소</Th>
+              <Th className="w-[160px]">Variant</Th>
               <Th>설명</Th>
-              <Th className="w-[140px]">제공 조건</Th>
+              <Th>로딩 UI</Th>
+              <Th className="w-[120px]">사용 위치</Th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <Td>
-                <strong>a. Track</strong>
+                <strong>Page Loading</strong>
               </Td>
-              <Td>전체 너비의 배경 Bar. 미완료 영역을 나타냄</Td>
-              <Td>항상</Td>
+              <Td>전체 페이지 로딩</Td>
+              <Td>
+                • 레이아웃을 알 수 없는 초기 로딩 → Spinner
+                <br />• 레이아웃은 알 수 있지만, 개별 데이터 값 로딩 → Skeleton
+              </Td>
+              <Td>페이지 전체</Td>
             </tr>
             <tr>
               <Td>
-                <strong>b. Fill</strong>
+                <strong>Section Loading</strong>
               </Td>
-              <Td>현재 진행률에 비례한 채워진 Bar. 기본 색상은 Black</Td>
-              <Td>항상</Td>
+              <Td>특정 영역 로딩</Td>
+              <Td>Skeleton</Td>
+              <Td>카드 / 드로어</Td>
             </tr>
             <tr>
               <Td>
-                <strong>c. Label</strong>
+                <strong>Table Loading</strong>
               </Td>
-              <Td>진행 중인 작업의 이름 또는 설명 텍스트</Td>
-              <Td>Labeled variant</Td>
+              <Td>리스트 데이터 로딩</Td>
+              <Td>Skeleton</Td>
+              <Td>Table</Td>
             </tr>
             <tr>
               <Td>
-                <strong>d. Value</strong>
+                <strong>Inline Loading</strong>
               </Td>
-              <Td>
-                진행률 수치 표시. <code>퍼센트(%)</code> 또는 <code>현재값/전체값</code> 형식
-              </Td>
-              <Td>Labeled variant</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">속성</Th>
-              <Th>값</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <code>height</code>
-              </Td>
-              <Td>4px</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>border-radius</code>
-              </Td>
-              <Td>pill (full round)</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>Fill 기본 색상</code>
-              </Td>
-              <Td>Black</Td>
+              <Td>작은 작업 로딩</Td>
+              <Td>Spinner</Td>
+              <Td>버튼 / 필드</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -218,22 +196,69 @@ function LoadingGuidelines() {
         <SectionTitle>Behavior</SectionTitle>
 
         <VStack gap={3}>
-          <SubSectionTitle>Fill 진행 방식</SubSectionTitle>
+          <SubSectionTitle>1) Loading 시작</SubSectionTitle>
           <Prose>
+            <p>다음 상황에서 Loading이 시작된다.</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Fill은 진행률(0~100%)에 비례하여 왼쪽에서 오른쪽으로 채워진다.</li>
-              <li>진행률이 업데이트될 때마다 Fill 너비가 즉시 반영된다.</li>
+              <li>데이터 요청 발생</li>
+              <li>페이지 이동</li>
+              <li>사용자 액션 실행</li>
             </ul>
           </Prose>
         </VStack>
 
         <VStack gap={3}>
-          <SubSectionTitle>진행률 불확정 상태 (Indeterminate)</SubSectionTitle>
+          <SubSectionTitle>2) Loading 종료</SubSectionTitle>
+          <Prose>
+            <p>다음 상태 중 하나로 전환된다.</p>
+          </Prose>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[140px]">상태</Th>
+                <Th>설명</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>Success</strong>
+                </Td>
+                <Td>정상 데이터 표시</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Empty</strong>
+                </Td>
+                <Td>데이터 없음</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Error</strong>
+                </Td>
+                <Td>오류 발생</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>3) Loading 시간 정책</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>전체 작업량을 알 수 없는 경우 Indeterminate 모드를 사용한다.</li>
-              <li>Fill이 Track 위를 좌→우로 반복 이동하는 애니메이션으로 표현한다.</li>
-              <li>수치(Value)는 표시하지 않는다.</li>
+              <li>API 응답이 200ms 이내에 완료되면 로딩 표시를 건너뛴다.</li>
+              <li>10초 이상 소요 시 "This may take a moment..." 안내 메시지를 표시한다.</li>
+              <li>10초 이상 소요되는 액션은 가능하면 ProgressBar로 표기한다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>4) 버튼 로딩</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>제출 중인 버튼은 Spinner + disabled 상태로 표시한다.</li>
+              <li>버튼 로딩 중에 버튼은 중복 요청을 방지하기 위해 비활성화된다.</li>
             </ul>
           </Prose>
         </VStack>
@@ -246,15 +271,14 @@ function LoadingGuidelines() {
         <SectionTitle>Usage Guidelines</SectionTitle>
         <DosDonts
           doItems={[
-            '진행률을 알 수 있는 경우 되도록 수치(퍼센트 또는 현재값/전체값)를 함께 표시한다.',
-            '작업이 완료되면 Success 상태로 명확히 전환하여 사용자에게 완료를 인지시킨다.',
-            '진행률을 알 수 없을 때는 Indeterminate 모드를 사용한다.',
+            '로딩 중임을 명확하게 표시한다.',
+            '가능한 기존 레이아웃을 유지한다.',
+            'Skeleton을 사용하여 레이아웃 안정성을 유지한다.',
           ]}
           dontItems={[
-            '위험도(Safe / Warning / Danger) 맥락에서 Progress Bar를 사용하지 않는다. → Usage Chart 사용',
-            'Progress Bar를 리소스 할당량(Quota) 표시 목적으로 사용하지 않는다. → Usage Chart 사용',
-            '진행률이 역방향(감소)으로 표현되어야 하는 경우에는 사용하지 않는다.',
-            '동일한 영역에 여러 개의 Progress Bar를 중첩하여 사용하지 않는다.',
+            '콘텐츠가 갑자기 사라지도록 하지 않는다.',
+            '긴 로딩 동안 아무 표시도 하지 않는다.',
+            'Loading indicator만 표시하고 문맥을 제거하지 않는다.',
           ]}
         />
       </VStack>
@@ -265,103 +289,44 @@ function LoadingGuidelines() {
 export function LoadingPage() {
   return (
     <ComponentPageTemplate
-      title="Progress Bar (Loading)"
-      description="작업의 진행 상태를 수평형 막대로 시각화하는 컴포넌트다. 전체 작업량 대비 현재까지 완료된 진행률을 표현한다."
+      title="Loading"
+      description="Loading은 시스템이 데이터를 가져오거나 처리하는 동안 사용자에게 진행 중 상태를 전달하기 위한 UI 패턴이다. 작업이 진행 중임, 시스템이 정상적으로 응답하고 있음, 결과가 곧 표시될 예정임을 전달한다."
       whenToUse={[
-        '파일 업로드, 데이터 로딩, 설치 등 작업의 완료율을 표시할 때',
-        '전체 단계 중 현재 진행 위치를 사용자에게 인지시켜야 할 때',
-        '완료까지 남은 시간이나 진행 정도를 지속적으로 피드백해야 할 때',
+        '데이터 요청 중',
+        '페이지 초기 로딩',
+        '리스트 데이터 조회',
+        '비동기 작업 처리 중',
       ]}
       whenNotToUse={[
-        '리소스 할당량 대비 사용량(Quota)을 표현할 때 → Usage Chart (Gauge Bar Chart) 사용',
-        '사용률에 따라 Safe / Warning / Danger 상태 색상이 필요할 때 → Usage Chart (Gauge Bar Chart) 사용',
-        '진행률을 알 수 없는 불확정 로딩 상태 → Spinner 또는 Skeleton 사용',
+        '작업이 매우 빠른 경우 (→ 로딩 표시 생략)',
+        '사용자 작업 대기 상태 (→ Empty state)',
+        '오류 발생 (→ Error state)',
       ]}
       preview={
         <ComponentPreview
-          code={`<Loading variant="progress" text="Uploading..." progress={68} />
-<ProgressBar label="Installing" value={45} max={100} showValue />`}
+          code={`<Loading variant="spinner" size="md" text="Loading" />
+<Loading variant="progress" text="Loading.." progress={68} />`}
         >
-          <VStack gap={6} className="w-full max-w-[400px]">
-            <Loading
-              variant="progress"
-              text="Uploading..."
-              progress={68}
-              statusText="Status: parsing"
-            />
-            <ProgressBar label="Installing" value={45} max={100} showValue />
-          </VStack>
+          <div className="flex gap-8 items-center">
+            <Loading variant="spinner" size="md" text="Loading" />
+            <Loading variant="progress" text="Loading.." progress={68} />
+          </div>
         </ComponentPreview>
       }
       usage={{
-        code: `import { Loading, ProgressBar } from '@/design-system';
+        code: `import { Loading } from '@/design-system';
 
-// Labeled progress with status
+<Loading variant="spinner" text="Loading" />
 <Loading variant="progress" text="Uploading" progress={50} />
-
-// Simple progress bar
-<ProgressBar value={45} max={100} label="Installing" showValue />
-
-// Spinner (indeterminate)
-<Loading variant="spinner" text="Loading" />`,
+<Loading variant="button" buttonLabel="Saving" />`,
       }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Default Progress Bar</Label>
+              <Label>Spinner variant (Inline Loading)</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                진행률(%)만 Fill로 표현. 레이블·수치 없이 Bar만 단독으로 표시.
-              </span>
-            </VStack>
-            <div className="w-full max-w-[400px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={4}>
-                <ProgressBar value={30} max={100} showValue={false} />
-                <ProgressBar value={68} max={100} showValue={false} />
-                <ProgressBar value={100} max={100} showValue={false} />
-              </VStack>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Labeled Progress Bar</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Bar 상단에 작업명(Label)과 진행률 수치(Value)를 함께 표시.
-              </span>
-            </VStack>
-            <div className="w-full max-w-[400px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={4}>
-                <ProgressBar label="Uploading files" value={30} max={100} showValue />
-                <ProgressBar label="Installing packages" value={68} max={100} showValue />
-                <ProgressBar label="Build complete" value={100} max={100} showValue />
-              </VStack>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Progress with Status Text</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Loading 컴포넌트의 progress variant. 작업명, 설명, 진행률, 상태 텍스트를 모두 표시.
-              </span>
-            </VStack>
-            <div className="w-full max-w-[400px] p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <Loading
-                variant="progress"
-                text="Building image..."
-                description="Create an instance to start using compute resources."
-                progress={68}
-                statusText="Status: parsing"
-              />
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Spinner (Indeterminate)</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                진행률을 알 수 없는 불확정 로딩 상태. 수치를 표시하지 않음.
+                레이아웃을 예측할 수 없거나 단일 영역 로딩 시 사용. 버튼, 필드 등 작은 작업에 적합.
               </span>
             </VStack>
             <div className="flex gap-8 items-end p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -382,9 +347,27 @@ export function LoadingPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Button Loading State</Label>
+              <Label>Progress variant</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                제출 중인 버튼은 Spinner + disabled 상태로 표시.
+                진행률을 수치로 알 수 있는 경우 사용. 파일 업로드, 이미지 빌드, 마이그레이션 등.
+              </span>
+            </VStack>
+            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <Loading
+                variant="progress"
+                text="Loading.."
+                description="Create an instance to start using compute resources."
+                progress={68}
+                statusText="Status: parsing"
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Button variant (Inline Loading)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                제출 중인 버튼은 Spinner + disabled 상태로 표시. 중복 요청을 방지.
               </span>
             </VStack>
             <div className="flex gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -397,37 +380,60 @@ export function LoadingPage() {
       }
       guidelines={<LoadingGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>height: 4px</code> · <code>border-radius: pill (full round)</code> ·{' '}
-          <code>Fill 기본 색상: Black</code> · <code>spinner: 16/22/32px</code>
-        </div>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">토큰</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <code>spinner</code>
+              </Td>
+              <Td>16 / 22 / 32px (sm / md / lg)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>progress</code>
+              </Td>
+              <Td>h-1 (4px)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>button</code>
+              </Td>
+              <Td>min-w-80px</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
       }
       apiReference={loadingProps}
       accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Loading spinner uses aria-hidden for decorative icon. Progress variant exposes progress
-          value via aria-valuenow. Button variant is disabled and not focusable.
-        </p>
+        <Prose>
+          <p>
+            Loading spinner uses <code>aria-hidden</code> for decorative icon. Progress variant
+            exposes progress value. Button variant is disabled and not focusable.
+          </p>
+        </Prose>
       }
       relatedLinks={[
+        { label: 'Spinner', path: '/design/components/loading', description: '로딩 표시 컴포넌트' },
         {
-          label: 'Gauge Bar Chart',
+          label: 'Progress Bar',
           path: '/design/charts/progress-bar',
-          description: 'Usage Chart — 리소스 할당량 대비 사용량(Quota) 시각화',
+          description: '진행률 표시 (determinate)',
         },
+        { label: 'Table', path: '/design/components/table', description: '리스트 데이터 로딩' },
         {
-          label: 'Spinner',
-          path: '/design/components/loading',
-          description: '진행률을 알 수 없는 불확정 로딩',
+          label: 'Empty State',
+          path: '/design/patterns/empty-states',
+          description: '데이터 없음 패턴',
         },
-        {
-          label: 'Skeleton',
-          path: '/design/components/skeleton',
-          description: '레이아웃을 미리 알 수 있는 로딩 상태',
-        },
-        { label: 'Badge', path: '/design/components/badge', description: '단독 지표 표시' },
+        { label: 'Button', path: '/design/components/button', description: '버튼 로딩 상태' },
       ]}
-      notionPageId="31b9eddc34e68032a221eebd2ea18568"
+      notionPageId="2a99eddc34e680f190a9ea81bafd558a"
     />
   );
 }

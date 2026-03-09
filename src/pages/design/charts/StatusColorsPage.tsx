@@ -146,13 +146,8 @@ export function StatusColorsPage() {
           description: 'Chart guidelines',
         },
         {
-          label: 'Gauge bar chart',
-          path: '/design/charts/gauge-bar',
-          description: 'Uses status colors',
-        },
-        {
-          label: 'Half-Doughnut chart',
-          path: '/design/charts/half-doughnut',
+          label: 'Usage Chart',
+          path: '/design/charts/usage-chart',
           description: 'Uses status colors',
         },
       ]}

@@ -1,4 +1,4 @@
-import { ComponentPageTemplate } from '@/design-system';
+import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
