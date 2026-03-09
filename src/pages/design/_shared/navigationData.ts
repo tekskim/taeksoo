@@ -31,8 +31,6 @@ import {
   IconTerminal2,
   IconLayoutSidebar,
   IconChartBar,
-  IconGauge,
-  IconChartDonut,
   IconBorderAll,
   IconAppWindow,
   IconApps,
@@ -237,14 +235,25 @@ const feedbackItems: NavItem[] = [
   },
   {
     id: 'loading',
-    label: 'Progress Bar (Loading)',
+    label: 'Loading',
     icon: IconLoader2,
     path: '/design/components/loading',
+  },
+  {
+    id: 'progress-bar',
+    label: 'Progress Bar',
+    icon: IconProgress,
+    path: '/design/components/progress-bar',
   },
 ];
 
 const navigationItems: NavItem[] = [
-  { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar, path: '/design/components/topbar' },
+  {
+    id: 'topbar',
+    label: 'Top Navigation Bar',
+    icon: IconLayoutNavbar,
+    path: '/design/components/topbar',
+  },
   { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar, path: '/design/components/tabbar' },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar, path: '/design/components/tabs' },
   {
@@ -350,6 +359,12 @@ const layoutItems: NavItem[] = [
     path: '/design/patterns/list-page',
   },
   {
+    id: 'detail-page',
+    label: 'Detail Page',
+    icon: IconList,
+    path: '/design/patterns/detail-page',
+  },
+  {
     id: 'list-selector',
     label: 'List Selector',
     icon: IconList,
@@ -410,6 +425,12 @@ const layoutItems: NavItem[] = [
     icon: IconChecklist,
     path: '/design/patterns/form-validation',
   },
+  {
+    id: 'editor',
+    label: 'Editor',
+    icon: IconTemplate,
+    path: '/design/components/editor',
+  },
 ];
 
 const graphItems: NavItem[] = [
@@ -426,25 +447,13 @@ const graphItems: NavItem[] = [
     path: '/design/charts/status-colors',
   },
   {
-    id: 'gauge-bar-chart',
-    label: 'Gauge bar chart',
+    id: 'usage-chart',
+    label: 'Usage Chart',
     icon: IconChartBar,
-    path: '/design/charts/gauge-bar',
+    path: '/design/charts/usage-chart',
   },
-  { id: 'area-chart', label: 'Area chart', icon: IconChartBar, path: '/design/charts/area-chart' },
+  { id: 'area-chart', label: 'Line Chart', icon: IconChartBar, path: '/design/charts/area-chart' },
   { id: 'pie-chart', label: 'Pie chart', icon: IconActivity, path: '/design/charts/pie-chart' },
-  {
-    id: 'half-doughnut-chart',
-    label: 'Half-Doughnut chart',
-    icon: IconGauge,
-    path: '/design/charts/half-doughnut',
-  },
-  {
-    id: 'doughnut-chart',
-    label: 'Doughnut chart',
-    icon: IconChartDonut,
-    path: '/design/charts/doughnut',
-  },
   {
     id: 'chart-tooltip',
     label: 'Chart tooltip',
@@ -554,10 +563,11 @@ export const pageLastUpdated: Record<string, string> = {
   // Feedback
   '/design/components/inline-message': '2026-03-09 10:30:00',
   '/design/components/loading': '2026-03-09',
+  '/design/components/progress-bar': '2026-03-09',
   // Navigation
-  '/design/components/topbar': '2026-03-01 10:30:00',
-  '/design/components/tabbar': '2026-03-01 10:30:00',
-  '/design/components/tabs': '2026-03-01 10:30:00',
+  '/design/components/topbar': '2026-03-09',
+  '/design/components/tabbar': '2026-03-09',
+  '/design/components/tabs': '2026-03-09',
   '/design/components/breadcrumb': '2026-03-05 13:00:00',
   // Overlay
   '/design/components/tooltip': '2026-03-09 10:30:00',
@@ -576,18 +586,20 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/window-control': '2026-03-09',
   '/design/components/scrollbar': '2026-03-05 13:00:00',
   '/design/patterns/common': '2026-03-01 10:30:00',
-  '/design/components/detail-header': '2026-03-01 10:30:00',
-  '/design/components/section-card': '2026-03-01 10:30:00',
+  '/design/components/detail-header': '2026-03-09',
+  '/design/components/section-card': '2026-03-09',
   '/design/patterns/wizard': '2026-03-05 13:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
-  '/design/components/monitoring-toolbar': '2026-03-01 10:30:00',
+  '/design/components/monitoring-toolbar': '2026-03-09',
   '/design/components/csv-download': '2026-03-09 15:00:00',
   '/design/components/app-window': '2026-03-09 10:30:00',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
   '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
   '/design/patterns/form-validation': '2026-03-01 10:30:00',
+  '/design/components/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
+  '/design/patterns/detail-page': '2026-03-09',
   '/design/patterns/list-selector': '2026-03-09 10:30:00',
   '/design/patterns/view-preferences': '2026-03-09 10:30:00',
   '/design/patterns/form-field-pattern': '2026-03-09 15:00:00',
@@ -596,11 +608,9 @@ export const pageLastUpdated: Record<string, string> = {
   // Charts
   '/design/charts/overview': '2026-03-09 10:30:00',
   '/design/charts/status-colors': '2026-03-01 10:30:00',
-  '/design/charts/gauge-bar': '2026-03-05 13:00:00',
-  '/design/charts/area-chart': '2026-03-01 10:30:00',
-  '/design/charts/pie-chart': '2026-03-01 10:30:00',
-  '/design/charts/half-doughnut': '2026-03-05 13:00:00',
-  '/design/charts/doughnut': '2026-03-05 13:00:00',
+  '/design/charts/usage-chart': '2026-03-09',
+  '/design/charts/area-chart': '2026-03-09',
+  '/design/charts/pie-chart': '2026-03-09',
   '/design/charts/tooltip': '2026-03-01 10:30:00',
   // Figma Migration
   '/design/figma/guide': '2026-03-01 10:30:00',

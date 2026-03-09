@@ -533,7 +533,7 @@ export function FloatingCardPage() {
       relatedLinks={[
         { label: 'Create Page', path: '/design/patterns/wizard' },
         { label: 'Section Card', path: '/design/components/section-card' },
-        { label: 'Gauge Bar Chart', path: '/design/charts/gauge-bar' },
+        { label: 'Usage Chart', path: '/design/charts/usage-chart' },
       ]}
     />
   );
