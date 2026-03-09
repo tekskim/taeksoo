@@ -149,7 +149,7 @@ function PieChartGuidelines() {
               <li>Tooltip 표시</li>
             </ol>
             <p>
-              <strong>Tooltip 정보:</strong> timestamp, series label, value
+              <strong>Tooltip 정보:</strong> category label, value, percentage
             </p>
             <p>
               <strong>정책:</strong>

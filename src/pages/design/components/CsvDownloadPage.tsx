@@ -333,7 +333,7 @@ export function CsvDownloadPage() {
         { label: 'Button', path: '/design/components/button' },
         { label: 'Toast', path: '/design/components/toast' },
         { label: 'Modal', path: '/design/components/modal' },
-        { label: 'List', path: '/design/patterns/common' },
+        { label: 'Common Patterns', path: '/design/patterns/common' },
       ]}
       notionPageId="2be9eddc34e68071af01c876fdaf9634"
     />

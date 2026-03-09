@@ -80,6 +80,20 @@ const topBarProps: PropDef[] = [
     required: false,
     description: 'Forward navigation handler',
   },
+  {
+    name: 'canGoBack',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Enable/disable back button',
+  },
+  {
+    name: 'canGoForward',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Enable/disable forward button',
+  },
 ];
 
 function TopBarGuidelines() {

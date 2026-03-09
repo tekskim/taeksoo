@@ -362,6 +362,18 @@ export function ProgressBarComponentPage() {
         </VStack>
       }
       guidelines={<ProgressBarGuidelines />}
+      accessibility={
+        <Prose>
+          <p>
+            ProgressBar는 <code>role="progressbar"</code>를 사용하며, <code>aria-valuenow</code>,{' '}
+            <code>aria-valuemin</code>, <code>aria-valuemax</code>를 통해 현재 진행률을 전달한다.
+            라벨이 있는 경우 <code>aria-label</code> 또는 <code>aria-labelledby</code>로 진행 상태를
+            설명한다.
+            <code>prefers-reduced-motion</code> 미디어 쿼리를 지원하여 모션 민감 사용자에게
+            애니메이션을 비활성화한다.
+          </p>
+        </Prose>
+      }
       relatedLinks={[
         { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
         {

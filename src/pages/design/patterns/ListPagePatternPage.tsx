@@ -175,7 +175,9 @@ export function ListPagePatternPage() {
       description="시스템에 존재하는 리소스 또는 데이터 목록을 조회, 탐색, 관리하기 위한 화면 패턴이다."
       preview={
         <ComponentPreview
-          code={`<VStack gap={3}>
+          code={`import { IconPlus, IconDownload, IconPlayerPlay, IconTrash } from '@tabler/icons-react';
+
+<VStack gap={3}>
   <PageHeader
     title="Instances"
     actions={

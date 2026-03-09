@@ -483,7 +483,7 @@ export function DetailHeaderPage() {
               </Button>
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid>
-              <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+              <DetailHeader.InfoCard label="Status" status="active" />
               <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
               <DetailHeader.InfoCard label="Host" value="compute-03" />
               <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />

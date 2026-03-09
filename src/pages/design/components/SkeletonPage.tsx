@@ -324,6 +324,17 @@ export function SkeletonPage() {
         </VStack>
       }
       guidelines={<SkeletonGuidelines />}
+      accessibility={
+        <Prose>
+          <p>
+            Skeleton 컨테이너에 <code>aria-hidden="true"</code>를 적용하여 스크린 리더가
+            플레이스홀더를 읽지 않도록 한다. 로딩 영역의 부모 요소에 <code>aria-busy="true"</code>를
+            설정하여 콘텐츠가 로딩 중임을 전달한다.
+            <code>prefers-reduced-motion</code> 미디어 쿼리를 지원하여 모션 민감 사용자에게
+            애니메이션을 비활성화한다.
+          </p>
+        </Prose>
+      }
       relatedLinks={[
         { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
         {
@@ -333,7 +344,7 @@ export function SkeletonPage() {
         },
         {
           label: 'Empty State',
-          path: '/design/components/empty-state',
+          path: '/design/patterns/empty-states',
           description: '데이터 없음 상태',
         },
         { label: 'Table', path: '/design/components/table', description: 'Table skeleton 사용' },

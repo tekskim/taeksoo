@@ -508,7 +508,7 @@ function LineChartGuidelines() {
   );
 }
 
-export function AreaChartPage() {
+export function LineChartPage() {
   return (
     <ComponentPageTemplate
       title="Line Chart"
