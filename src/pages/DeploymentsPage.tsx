@@ -41,7 +41,7 @@ import {
 
 interface DeploymentRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -57,7 +57,7 @@ interface DeploymentRow {
 const deploymentsData: DeploymentRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-nginx-deployment',
     namespace: 'cart5-production-dev-api-system',
     image: 'mirrored-cluster-api-controller:v1.6.2',
@@ -68,7 +68,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'OK',
     name: 'ingress-nginx-controller-admission-webhook-deployment',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
@@ -79,7 +79,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'monitoring-prometheus-alertmanager-server-deployment',
     namespace: 'monitoring',
     image: 'prometheus/prometheus:v2.47.0',
@@ -90,7 +90,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'InvalidImageName',
     name: 'monitoring-grafana-dashboard-visualization-deployment',
     namespace: 'monitoring',
     image: 'grafana/grafana:10.2.0',
@@ -101,7 +101,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '5',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'cache-redis-master-replication-deployment',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
@@ -112,7 +112,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '6',
-    status: 'Failed',
+    status: 'True',
     name: 'payment-service-gateway-microservice-deployment',
     namespace: 'payment-system',
     image: 'payment-service:v2.1.0',
@@ -123,7 +123,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '7',
-    status: 'Running',
+    status: 'Raw',
     name: 'backend-api-gateway-microservice-deployment',
     namespace: 'gateway',
     image: 'api-gateway:v3.0.1',
@@ -134,7 +134,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '8',
-    status: 'Running',
+    status: 'None',
     name: 'user-management-service-authentication-deployment',
     namespace: 'user-management',
     image: 'user-service:v1.5.3',

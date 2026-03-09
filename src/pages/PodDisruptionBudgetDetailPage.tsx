@@ -72,7 +72,7 @@ interface RecentEvent {
 interface PodDisruptionBudgetData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -93,7 +93,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
   '1': {
     id: '1',
     name: 'poddisruptionbudgetName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: { app: 'web' },
@@ -144,7 +144,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
   '2': {
     id: '2',
     name: 'web-pdb',
-    status: 'Active',
+    status: 'True',
     namespace: 'production',
     createdAt: 'Nov 9, 2025',
     labels: { env: 'production' },

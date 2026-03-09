@@ -23,8 +23,8 @@ export function NumberInputPage() {
         '정해진 값 선택 (→ Select)',
       ]}
       preview={
-        <ComponentPreview code={`<NumberInput defaultValue={1} min={0} max={100} width="md" />`}>
-          <NumberInput defaultValue={1} min={0} max={100} width="md" />
+        <ComponentPreview code={`<NumberInput defaultValue={1} min={0} max={100} width="sm" />`}>
+          <NumberInput defaultValue={1} min={0} max={100} width="sm" />
         </ComponentPreview>
       }
       examples={
@@ -34,15 +34,15 @@ export function NumberInputPage() {
             <div className="flex gap-4 items-start">
               <VStack gap={1}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Default</span>
-                <NumberInput defaultValue={1} width="md" />
+                <NumberInput defaultValue={1} width="sm" />
               </VStack>
               <VStack gap={1}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">With Min/Max</span>
-                <NumberInput defaultValue={5} min={0} max={10} width="md" />
+                <NumberInput defaultValue={5} min={0} max={10} width="sm" />
               </VStack>
               <VStack gap={1}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Disabled</span>
-                <NumberInput defaultValue={1} disabled width="md" />
+                <NumberInput defaultValue={1} disabled width="sm" />
               </VStack>
             </div>
           </VStack>
@@ -57,10 +57,6 @@ export function NumberInputPage() {
               <VStack gap={1}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">SM (160px)</span>
                 <NumberInput defaultValue={1} width="sm" />
-              </VStack>
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)]">MD (240px)</span>
-                <NumberInput defaultValue={1} width="md" />
               </VStack>
             </div>
           </VStack>

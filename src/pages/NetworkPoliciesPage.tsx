@@ -18,6 +18,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface NetworkPolicyRow {
   id: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   podSelector: string;
@@ -55,7 +56,7 @@ interface NetworkPolicyRow {
 const networkPoliciesData: NetworkPolicyRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'networkpolicyName',
     namespace: 'default',
     podSelector: 'foo1=bar1 (+6)',
@@ -63,7 +64,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'True',
     name: 'networkpolicyName2',
     namespace: 'default',
     podSelector: '-',
@@ -71,7 +72,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'None',
     name: 'deny-all-ingress',
     namespace: 'production',
     podSelector: 'app=web',
@@ -79,7 +80,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
   },
   {
     id: '4',
-    status: 'Active',
+    status: 'CreateContainerConfigError',
     name: 'allow-frontend',
     namespace: 'kube-system',
     podSelector: 'tier=frontend (+2)',
@@ -87,7 +88,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
   },
   {
     id: '5',
-    status: 'Pending',
+    status: 'ImagePullBackOff',
     name: 'restrict-egress',
     namespace: 'staging',
     podSelector: 'env=staging',
@@ -183,10 +184,12 @@ export function NetworkPoliciesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       align: 'center',
-      render: () => (
-        <Badge theme="white" size="sm" className="max-w-[80px]">
-          Active
-        </Badge>
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

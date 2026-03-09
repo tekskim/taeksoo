@@ -39,8 +39,8 @@ const STATUS_GUIDELINES = `## Overview
 | 형식 | 구성 | 사용 상황 |
 | --- | --- | --- |
 | Icon + Label | 아이콘 + 텍스트 레이블 | Defined 상태의 기본 형식 |
-| Icon Only | 아이콘만 표시 | 공간이 제한적인 경우 |
-| Label Only | 텍스트 레이블만 표시 | Default 상태의 기본 형식 |
+| Icon Only | 아이콘만 표시 | 테이블 Status 컬럼 등 공간이 제한적인 경우 |
+| Label Only | 텍스트 레이블만 표시 | Container 앱의 Default 상태 기본 형식 |
 
 ---
 
@@ -91,7 +91,7 @@ const STATUS_GUIDELINES = `## Overview
 - 레이블 텍스트는 줄바꿈 없이 한 줄로 유지한다.
 
 ### 3) 반응형 대응
-- 공간이 제한적인 경우 Display Type을 Icon Only로 전환할 수 있다.
+- 테이블 Status 컬럼 등 공간이 제한적인 경우 Display Type을 Icon Only로 전환할 수 있다.
 - Icon Only 사용 시 설계 시점에서 명시적으로 선택한다.
 
 ### 4) 접근성

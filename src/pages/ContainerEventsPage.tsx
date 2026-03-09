@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -38,7 +39,7 @@ import {
 
 interface EventRow {
   id: string;
-  status: 'Normal' | 'Warning' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   lastSeen: string;
@@ -59,7 +60,7 @@ interface EventRow {
 const eventsData: EventRow[] = [
   {
     id: '1',
-    status: 'Normal',
+    status: 'OK',
     name: 'frontend-web-server-pod-started-successfully-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
@@ -74,7 +75,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '2',
-    status: 'Normal',
+    status: 'OK',
     name: 'frontend-web-server-pod-scheduled-to-worker-node-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
@@ -89,7 +90,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '3',
-    status: 'Warning',
+    status: 'CreateContainerConfigError',
     name: 'nginx-deployment-pod-failed-scheduling-no-nodes-event',
     namespace: 'kube-system',
     lastSeen: 'Oct 21, 2025',
@@ -104,7 +105,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '4',
-    status: 'Normal',
+    status: 'InvalidImageName',
     name: 'api-server-deployment-scaled-replicaset-event',
     namespace: 'production',
     lastSeen: 'Oct 21, 2025',
@@ -119,7 +120,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '5',
-    status: 'Error',
+    status: 'ImagePullBackOff',
     name: 'backend-service-pod-crash-loop-backoff-event',
     namespace: 'staging',
     lastSeen: 'Oct 21, 2025',
@@ -134,7 +135,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '6',
-    status: 'Normal',
+    status: 'True',
     name: 'web-frontend-service-created-clusterip-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
@@ -149,7 +150,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '7',
-    status: 'Normal',
+    status: 'Raw',
     name: 'worker-node-3-status-now-ready-event',
     namespace: 'default',
     lastSeen: 'Oct 21, 2025',
@@ -164,7 +165,7 @@ const eventsData: EventRow[] = [
   },
   {
     id: '8',
-    status: 'Warning',
+    status: 'None',
     name: 'database-replica-pod-image-pull-failed-event',
     namespace: 'production',
     lastSeen: 'Oct 21, 2025',
@@ -240,11 +241,13 @@ export function ContainerEventsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
-      render: () => (
-        <Badge theme="white" size="sm" className="max-w-[80px]">
-          Active
-        </Badge>
+      align: 'left',
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

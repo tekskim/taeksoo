@@ -42,7 +42,7 @@ import {
 
 interface HPARow {
   id: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   workload: string;
@@ -59,7 +59,7 @@ interface HPARow {
 const hpaData: HPARow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-horizontal-autoscaler',
     namespace: 'namespaceName',
     workload: 'workloadName',
@@ -70,7 +70,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'backend-api-gateway-cpu-memory-autoscaler',
     namespace: 'default',
     workload: 'api-deployment',
@@ -81,7 +81,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '3',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'frontend-web-production-pending-workload-autoscaler',
     namespace: 'production',
     workload: 'web-deployment',
@@ -92,7 +92,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '4',
-    status: 'Error',
+    status: 'ImagePullBackOff',
     name: 'staging-environment-workload-autoscaler',
     namespace: 'staging',
     workload: 'staging-deployment',

@@ -47,7 +47,7 @@ import {
 interface DeploymentData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   namespace: string;
   image: string;
   createdAt: string;
@@ -61,7 +61,7 @@ interface DeploymentData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   image: string;
   ready: string;
@@ -75,7 +75,7 @@ interface PodRow {
 interface ServiceRow {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Paused';
+  status: string;
   target: string;
   selector: string;
   type: string;
@@ -113,7 +113,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '1': {
     id: '1',
     name: 'cart-manager',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025',
@@ -135,7 +135,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '2': {
     id: '2',
     name: 'nginx-ingress-controller',
-    status: 'Running',
+    status: 'True',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
     createdAt: 'Nov 8, 2025',
@@ -156,7 +156,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -175,12 +175,36 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 0,
     ip: '10.11.0.12',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+    containers: ['container-0'],
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    name: 'podName-79',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+    containers: ['container-0'],
+  },
+  {
+    id: '4',
+    status: 'ImagePullBackOff',
+    name: 'podName-80',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 3,
+    ip: '10.11.0.14',
     node: 'nodeName',
     createdAt: 'Jul 25, 2025',
     containers: ['container-0'],
@@ -191,7 +215,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'Running',
+    status: 'OK',
     target: '10.43.136.100:443 → webhook-server/TCP',
     selector: 'cluster.x-k8s.io/provider=cluster-api',
     type: 'Cluster IP',
@@ -200,7 +224,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '2',
     name: 'cart-manager-svc',
-    status: 'Running',
+    status: 'True',
     target: '10.43.136.101:80 → http/TCP',
     selector: 'app=cart-manager',
     type: 'Cluster IP',
@@ -221,7 +245,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'True',
+    status: 'None',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet "cart-manager-77" has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -635,10 +659,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
-      flex: 1,
-      minWidth: columnMinWidths.conditionStatus,
-      sortable: true,
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',

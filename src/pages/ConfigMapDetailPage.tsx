@@ -38,7 +38,7 @@ import {
 interface ConfigMapData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -55,7 +55,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
   '1': {
     id: '1',
     name: 'app-config',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Nov 10, 2025',
     labels: {},
@@ -72,7 +72,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
   '2': {
     id: '2',
     name: 'nginx-config',
-    status: 'Active',
+    status: 'True',
     namespace: 'nginx-ingress',
     createdAt: 'Nov 9, 2025',
     labels: {
@@ -89,7 +89,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
   '3': {
     id: '3',
     name: 'kube-root-ca.crt',
-    status: 'Active',
+    status: 'Raw',
     namespace: 'kube-system',
     createdAt: 'Nov 8, 2025',
     labels: {},
@@ -102,7 +102,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
   '4': {
     id: '4',
     name: 'coredns',
-    status: 'Active',
+    status: 'None',
     namespace: 'kube-system',
     createdAt: 'Nov 7, 2025',
     labels: {
@@ -120,7 +120,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
   '5': {
     id: '5',
     name: 'prometheus-config',
-    status: 'Active',
+    status: 'OK',
     namespace: 'monitoring',
     createdAt: 'Nov 6, 2025',
     labels: {

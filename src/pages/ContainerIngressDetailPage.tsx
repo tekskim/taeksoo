@@ -33,7 +33,7 @@ import { IconBell, IconTerminal2, IconSearch, IconChevronDown } from '@tabler/ic
 interface IngressData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   ingressClass: string;
   createdAt: string;
@@ -58,7 +58,7 @@ const mockIngressData: Record<string, IngressData> = {
   '1': {
     id: '1',
     name: 'ingressName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     ingressClass: 'ingressclassName',
     createdAt: 'Jul 25, 2025',
@@ -76,7 +76,7 @@ const mockIngressData: Record<string, IngressData> = {
   '2': {
     id: '2',
     name: 'api-ingress',
-    status: 'Active',
+    status: 'True',
     namespace: 'kube-system',
     ingressClass: 'traefik',
     createdAt: 'Nov 8, 2025',

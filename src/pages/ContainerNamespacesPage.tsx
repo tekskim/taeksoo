@@ -42,7 +42,7 @@ import {
 
 interface NamespaceRow {
   id: string;
-  status: 'Active' | 'Terminating' | 'Pending';
+  status: string;
   name: string;
   description: string;
   createdAt: string;
@@ -55,84 +55,84 @@ interface NamespaceRow {
 const namespacesData: NamespaceRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'production-microservices-platform-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'OK',
     name: 'staging-integration-testing-environment',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'OK',
     name: 'development-sandbox-experimental-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '4',
-    status: 'Active',
+    status: 'True',
     name: 'shared-global-data-persistence-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'True',
     name: 'cattle-impersonation-system-rbac-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '6',
-    status: 'Active',
+    status: 'Raw',
     name: 'cattle-provisioning-capi-cluster-api-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '7',
-    status: 'Active',
+    status: 'Raw',
     name: 'monitoring-observability-stack-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '8',
-    status: 'Active',
+    status: 'None',
     name: 'default-system-resources-default-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '9',
-    status: 'Active',
+    status: 'None',
     name: 'kube-public-cluster-info-public-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '10',
-    status: 'Active',
+    status: 'CreateContainerConfigError',
     name: 'kube-system-cluster-components-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '11',
-    status: 'Active',
+    status: 'InvalidImageName',
     name: 'local-development-single-node-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '12',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'kube-node-lease-heartbeat-lease-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025',

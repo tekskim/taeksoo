@@ -32,7 +32,7 @@ import {
    Types
    ---------------------------------------- */
 
-type ClusterStatus = 'active' | 'building' | 'error' | 'deleting';
+type ClusterStatus = string;
 
 interface ClusterDetail {
   id: string;
@@ -70,7 +70,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-001': {
     id: 'cluster-001',
     name: 'Cluster1',
-    status: 'building',
+    status: 'Raw',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
     createdAt: 'Nov 11, 2025',
@@ -97,7 +97,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-002': {
     id: 'cluster-002',
     name: 'ClusterName',
-    status: 'active',
+    status: 'OK',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
     createdAt: 'Oct 6, 2025',
@@ -121,17 +121,47 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
       nodeCount: 5,
     },
   },
+  'cluster-003': {
+    id: 'cluster-003',
+    name: 'Cluster3',
+    status: 'OK',
+    kubernetesVersion: 'v1.33.4',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Oct 5, 2025',
+    networking: {
+      externalNetwork: 'extnet-03',
+      tenantNetwork: 'net-03',
+      subnet: 'subnet-03 (10.62.3.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 3,
+      etcd: 'External (20GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 3,
+    },
+  },
 };
 
 /* ----------------------------------------
    Status Mapping
    ---------------------------------------- */
 
-const statusMap: Record<ClusterStatus, StatusType> = {
-  active: 'active',
-  building: 'building',
-  error: 'error',
-  deleting: 'deleting',
+const statusMap: Record<string, StatusType> = {
+  Raw: 'building',
+  OK: 'active',
+  True: 'active',
+  None: 'muted',
+  CreateContainerConfigError: 'error',
+  InvalidImageName: 'error',
+  ImagePullBackOff: 'error',
 };
 
 /* ----------------------------------------
@@ -155,7 +185,7 @@ export function ClusterDetailPage() {
   const clusterData = cluster || {
     id: 'cluster-001',
     name: 'tk-test',
-    status: 'active' as ClusterStatus,
+    status: 'OK',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
     createdAt: 'Jul 25, 2025',
