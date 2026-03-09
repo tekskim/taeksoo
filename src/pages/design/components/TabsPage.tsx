@@ -200,48 +200,6 @@ function TabsGuidelines() {
             </tr>
           </tbody>
         </TableWrapper>
-
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">토큰</Th>
-              <Th>값</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <code>gap</code>
-              </Td>
-              <Td>8px</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>min-width</code>
-              </Td>
-              <Td>80px</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>padding-x</code>
-              </Td>
-              <Td>12px</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>indicator</code>
-              </Td>
-              <Td>2px</Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>boxed-padding</code>
-              </Td>
-              <Td>24px × 8px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
       </VStack>
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
@@ -580,7 +538,7 @@ export function TabsPage() {
       relatedLinks={[
         {
           label: 'Detail Page',
-          path: '/design/patterns/common',
+          path: '/design/patterns/detail-page',
           description: 'Detail Page 내 콘텐츠 섹션 구분에 탭 사용',
         },
         {

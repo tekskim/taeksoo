@@ -676,8 +676,8 @@ Constraint text / Validation message`}
       }
       relatedLinks={[
         { label: 'Text Input', path: '/design/components/input' },
-        { label: 'Number Input', path: '/design/components/input' },
-        { label: 'Textarea', path: '/design/components/input' },
+        { label: 'Number Input', path: '/design/components/number-input' },
+        { label: 'Textarea', path: '/design/components/textarea' },
         { label: 'Select', path: '/design/components/select' },
       ]}
       notionPageId="2a89eddc34e680ceb289dda7bade01b8"

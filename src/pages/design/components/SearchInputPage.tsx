@@ -280,40 +280,6 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                   </tbody>
                 </table>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
-                  <thead>
-                    <tr>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
-                        Type
-                      </th>
-                      <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">text</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
-                        기본 문자열 입력
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">password</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
-                        입력값 마스킹
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border border-[var(--color-border-default)]">email</td>
-                      <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
-                        이메일 형식 입력
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
             </VStack>
             <VStack gap={3} align="stretch">
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">3) Filter chip</h4>
@@ -455,6 +421,43 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                 '여러 필터를 하나의 문자열로 표현하지 않는다.',
               ]}
             />
+          </VStack>
+        </VStack>
+      }
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Keyword Search</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              일반 텍스트 기반 검색. 필터 키 없이 자유 텍스트로 검색.
+            </span>
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <SearchInput placeholder="Search resources" size="sm" className="w-[320px]" />
+            </div>
+          </VStack>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Different Sizes</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              sm, md 사이즈를 지원한다.
+            </span>
+            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <VStack gap={2}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Small</span>
+                <SearchInput
+                  placeholder="Search resources by attributes"
+                  size="sm"
+                  className="w-[320px]"
+                />
+              </VStack>
+              <VStack gap={2}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Medium</span>
+                <SearchInput
+                  placeholder="Search resources by attributes"
+                  size="md"
+                  className="w-[320px]"
+                />
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       }

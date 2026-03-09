@@ -532,6 +532,12 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
           </p>
         </Prose>
       }
+      keyboardInteractions={[
+        { key: 'Tab', description: 'TabBar 진입 및 이탈' },
+        { key: '← / →', description: '이전 / 다음 탭으로 포커스 이동' },
+        { key: 'Enter / Space', description: '포커스된 탭 선택' },
+        { key: 'Delete / Backspace', description: '포커스된 탭 닫기 (closable인 경우)' },
+      ]}
       relatedLinks={[
         {
           label: 'Top Navigation Bar',

@@ -394,7 +394,7 @@ import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
-import { AreaChartPage } from '@/pages/design/charts/AreaChartPage';
+import { LineChartPage } from '@/pages/design/charts/LineChartPage';
 import { PieChartPage } from '@/pages/design/charts/PieChartPage';
 import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
@@ -1085,7 +1085,7 @@ function AppRoutes() {
           path="charts/doughnut"
           element={<Navigate to="/design/charts/usage-chart" replace />}
         />
-        <Route path="charts/area-chart" element={<AreaChartPage />} />
+        <Route path="charts/area-chart" element={<LineChartPage />} />
         <Route path="charts/pie-chart" element={<PieChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />

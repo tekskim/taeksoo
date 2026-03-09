@@ -506,7 +506,7 @@ export function ButtonPage() {
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
-                <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">
+                <span className="text-body-sm text-[var(--color-text-subtle)] w-[120px]">
                   No selection
                 </span>
                 <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />} disabled>
@@ -523,7 +523,7 @@ export function ButtonPage() {
                 </Button>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-[11px] text-[var(--color-text-subtle)] w-[120px]">
+                <span className="text-body-sm text-[var(--color-text-subtle)] w-[120px]">
                   With selection
                 </span>
                 <Button size="sm" variant="muted" leftIcon={<IconPlayerPlay size={12} />}>
