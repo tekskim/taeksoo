@@ -3,6 +3,7 @@ import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import { Select, VStack } from '@/design-system';
 import { IconChevronDown, IconCheck } from '@tabler/icons-react';
 
@@ -114,21 +115,6 @@ const SELECT_GUIDELINES = `## Overview
 ---
 
 ## Usage Guidelines
-
-### Do ✅
-- Placeholder는 "Select [항목명]" 형태로 작성한다.
-- 기본 선택값이 있는 경우, 미리 설정하여 사용자 입력을 최소화한다.
-- 옵션이 10개 이상인 경우 스크롤 영역 내에서 탐색한다.
-- 옵션 목록은 논리적 순서로 정렬한다.
-- 선택이 선택 사항(optional)인 경우, None 옵션을 제공한다.
-- 긴 옵션 텍스트는 말줄임 처리하고 tooltip으로 전체 텍스트를 제공한다.
-- 연관된 옵션이 많은 경우 옵션 그룹(Option Group)으로 묶어 제공한다.
-
-### Don't ❌
-- 옵션이 3개 이하 고정인 경우 Select를 사용하지 않는다 (Radio Group 사용).
-- Select 내부 옵션에 복잡한 레이아웃을 넣지 않는다.
-- 옵션 목록이 동적으로 변경되면서 현재 선택값이 사라지게 하지 않는다.
-- 페이지 최초 진입 시 드롭다운이 자동으로 열린 상태로 표시하지 않는다.
 
 ---
 
@@ -476,7 +462,27 @@ export function SelectPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={SELECT_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={SELECT_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Placeholder는 "Select [항목명]" 형태로 작성한다.',
+              '기본 선택값이 있는 경우, 미리 설정하여 사용자 입력을 최소화한다.',
+              '옵션이 10개 이상인 경우 스크롤 영역 내에서 탐색한다.',
+              '옵션 목록은 논리적 순서로 정렬한다.',
+              '선택이 선택 사항(optional)인 경우, None 옵션을 제공한다.',
+              '연관된 옵션이 많은 경우 옵션 그룹(Option Group)으로 묶어 제공한다.',
+            ]}
+            dontItems={[
+              '옵션이 3개 이하 고정인 경우 Select를 사용하지 않는다 (Radio Group 사용).',
+              'Select 내부 옵션에 복잡한 레이아웃을 넣지 않는다.',
+              '옵션 목록이 동적으로 변경되면서 현재 선택값이 사라지게 하지 않는다.',
+              '페이지 최초 진입 시 드롭다운이 자동으로 열린 상태로 표시하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 12px</code> ·{' '}

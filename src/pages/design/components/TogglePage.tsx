@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Toggle, VStack } from '@/design-system';
@@ -87,20 +88,6 @@ const TOGGLE_GUIDELINES = `## Overview
 | Space | Toggle On/Off 전환 |
 | Tab | 다음 포커스 요소로 이동 |
 | Shift + Tab | 이전 포커스 요소로 이동 |
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- Toggle 우측에 항상 설정 항목의 라벨을 표시한다.
-- 이진(On/Off) 상태를 즉시 반영하는 단일 설정에 사용한다.
-- Disabled 상태 사용 시, 조작 불가 이유를 Tooltip 또는 인접 텍스트로 안내한다.
-
-### Don't ❌
-- 폼 제출이 필요한 선택 항목에 Toggle을 사용하지 않는다 → Checkbox 사용.
-- 3개 이상의 선택지를 Toggle로 표현하지 않는다.
-- On/Off 외의 중간 상태(Indeterminate)를 Toggle로 표현하지 않는다.
 
 ---
 
@@ -277,7 +264,23 @@ export function TogglePage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={TOGGLE_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={TOGGLE_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Toggle 우측에 항상 설정 항목의 라벨을 표시한다.',
+              '이진(On/Off) 상태를 즉시 반영하는 단일 설정에 사용한다.',
+              'Disabled 상태 사용 시, 조작 불가 이유를 Tooltip 또는 인접 텍스트로 안내한다.',
+            ]}
+            dontItems={[
+              '폼 제출이 필요한 선택 항목에 Toggle을 사용하지 않는다 → Checkbox 사용.',
+              '3개 이상의 선택지를 Toggle로 표현하지 않는다.',
+              'On/Off 외의 중간 상태(Indeterminate)를 Toggle로 표현하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>track: 36×20px</code> · <code>thumb: 16×16px</code> · <code>padding: 4px</code> ·{' '}

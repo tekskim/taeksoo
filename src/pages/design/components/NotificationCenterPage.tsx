@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { Button, Disclosure, NotificationCenter, VStack } from '@/design-system';
+import { Button, NotificationCenter, VStack } from '@/design-system';
 import type { NotificationItem } from '@/design-system';
 import {
   IconCheck,
@@ -101,20 +102,6 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 모든 기록형 알림을 알림센터에 저장한다
-- 실패 알림은 상세 정보 제공
-- 안읽은 알림을 명확히 표시한다
-
-### Don't ❌
-- Toast를 기록형 알림으로 사용하지 않는다
-- 사용자가 알림을 삭제하도록 하지 않는다
-- 기록형 알림을 자동으로 숨기지 않는다
-
----
-
 ## Related
 
 | 이름 | 유형 | 이유 |
@@ -125,44 +112,6 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 | Modal | Component | 사용자 확인 |
 | Global Notification Panel | Pattern | 안읽은 알림 집계 |
 | Error & Alert | Foundation | 알림 유형 정의 |
-`;
-
-const NOTIFICATION_CENTER_PREV_VERSION = `## 개요
-
-| 항목 | 내용 |
-| --- | --- |
-| 목적 | 앱 내부 기록형 알림의 원본 저장소 |
-| 위치 | 앱별 상단 또는 툴바 영역 |
-| 접근 | Notification icon 클릭 |
-
-## 구성요소
-1. Notification icon — 알림센터 열기
-2. Unread badge — 안읽은 알림 수
-3. Tabs — All/Unread/Error 필터
-4. Mark all as read — 전체 읽음
-5. Notification list — 알림 목록
-6. Notification item — 개별 알림 카드
-
-## 가이드라인
-1. 모든 기록형 알림을 알림센터에 저장한다
-2. 실패 알림은 상세 정보 제공
-3. 안읽은 알림을 명확히 표시한다
-4. Toast를 기록형 알림으로 사용하지 않는다
-5. 사용자가 알림을 삭제하도록 하지 않는다
-
-### 읽음 처리
-
-| 행동 | 결과 |
-| --- | --- |
-| Snackbar 클릭 | 읽음 |
-| Read button | 읽음 |
-| Mark all as read | 전체 읽음 |
-
-## 시나리오
-1. 사용자가 인스턴스 생성 완료 Snackbar를 놓친 경우 → 알림센터에서 확인
-2. 오류 발생 후 상세 정보 확인 → 알림센터 해당 항목 View details
-3. 여러 앱 사용 중 특정 앱 알림만 확인 → 해당 앱 알림센터 접근
-4. 과거 알림 기록 조회 → 알림센터 All 탭에서 최신순 확인
 `;
 
 const initialNotifications: NotificationItem[] = [
@@ -360,14 +309,18 @@ export function NotificationCenterPage() {
       guidelines={
         <>
           <NotionRenderer markdown={NOTIFICATION_CENTER_GUIDELINES} />
-          <Disclosure className="mt-6">
-            <Disclosure.Trigger>이전 버전</Disclosure.Trigger>
-            <Disclosure.Panel>
-              <div className="pt-2">
-                <NotionRenderer markdown={NOTIFICATION_CENTER_PREV_VERSION} />
-              </div>
-            </Disclosure.Panel>
-          </Disclosure>
+          <DosDonts
+            doItems={[
+              '모든 기록형 알림을 알림센터에 저장한다',
+              '실패 알림은 상세 정보 제공',
+              '안읽은 알림을 명확히 표시한다',
+            ]}
+            dontItems={[
+              'Toast를 기록형 알림으로 사용하지 않는다',
+              '사용자가 알림을 삭제하도록 하지 않는다',
+              '기록형 알림을 자동으로 숨기지 않는다',
+            ]}
+          />
         </>
       }
       tokens={

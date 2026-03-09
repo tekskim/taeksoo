@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { Button, VStack, HStack, NumberInput, ProgressBar } from '@/design-system';
 import { IconCheck, IconAlertTriangle } from '@tabler/icons-react';
@@ -480,30 +481,20 @@ export function FloatingCardPage() {
 
             <VStack gap={2}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-success)]">
-                    Do ✅
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>다수의 섹션/탭이 있는 Create 플로우에서 우측에 배치한다.</li>
-                    <li>Quota가 있는 리소스 생성 시 할당량을 Gauge bar로 시각화한다.</li>
-                    <li>입력 진행 상태를 섹션별 아이콘으로 명확히 표시한다.</li>
-                    <li>Summary 영역에 핵심 설정값만 간결하게 요약한다.</li>
-                  </ul>
-                </div>
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-danger)]">
-                    Don&apos;t ❌
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>단순 폼(섹션 1개)에 Floating card를 사용하지 않는다.</li>
-                    <li>모바일 등 좁은 뷰포트에서 우측 고정 레이아웃을 강제하지 않는다.</li>
-                    <li>Quota·Summary가 없는 Confirm 다이얼로그에 사용하지 않는다.</li>
-                    <li>Summary에 과도한 정보를 넣어 가독성을 해치지 않는다.</li>
-                  </ul>
-                </div>
-              </div>
+              <DosDonts
+                doItems={[
+                  '다수의 섹션/탭이 있는 Create 플로우에서 우측에 배치한다.',
+                  'Quota가 있는 리소스 생성 시 할당량을 Gauge bar로 시각화한다.',
+                  '입력 진행 상태를 섹션별 아이콘으로 명확히 표시한다.',
+                  'Summary 영역에 핵심 설정값만 간결하게 요약한다.',
+                ]}
+                dontItems={[
+                  '단순 폼(섹션 1개)에 Floating card를 사용하지 않는다.',
+                  '모바일 등 좁은 뷰포트에서 우측 고정 레이아웃을 강제하지 않는다.',
+                  'Quota·Summary가 없는 Confirm 다이얼로그에 사용하지 않는다.',
+                  'Summary에 과도한 정보를 넣어 가독성을 해치지 않는다.',
+                ]}
+              />
             </VStack>
           </VStack>
         </div>

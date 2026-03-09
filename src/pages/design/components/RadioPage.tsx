@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Radio, RadioGroup, VStack } from '@/design-system';
@@ -84,22 +85,6 @@ const RADIO_GUIDELINES = `## Overview
 ### 레이아웃 정책
 - 수직(Vertical) 배치를 기본으로 사용한다.
 - 수평(Horizontal) 배치는 옵션이 3개 이하이고, 각 라벨이 짧을 때 제한적으로 사용한다.
-
----
-
-## Usage Guidelines
-
-### Do ✅
-- 옵션을 2–5개 범위 안에서 사용한다.
-- 그룹에 반드시 Group Label을 제공하여 선택의 맥락을 명확히 한다.
-- 기본값을 설정하여 사용자가 선택 없이 진행하는 상황을 방지한다.
-- 수직 배치를 기본으로 사용하고, 옵션이 3개 이하·라벨이 짧을 때만 수평 배치를 고려한다.
-
-### Don't ❌
-- 단일 Radio를 단독으로 사용하지 않는다. 반드시 2개 이상의 그룹으로 구성한다.
-- Checkbox를 대체하는 용도로 사용하지 않는다.
-- 옵션 수가 6개 이상인 경우 Radio Group 대신 Select를 사용한다.
-- 선택이 선택 사항(optional)인 경우 기본값 없이 Radio 사용을 고려하지 않는다 → Checkbox 사용.
 
 ---
 
@@ -279,7 +264,25 @@ export function RadioPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={RADIO_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={RADIO_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '옵션을 2–5개 범위 안에서 사용한다.',
+              '그룹에 반드시 Group Label을 제공하여 선택의 맥락을 명확히 한다.',
+              '기본값을 설정하여 사용자가 선택 없이 진행하는 상황을 방지한다.',
+              '수직 배치를 기본으로 사용하고, 옵션이 3개 이하·라벨이 짧을 때만 수평 배치를 고려한다.',
+            ]}
+            dontItems={[
+              '단일 Radio를 단독으로 사용하지 않는다. 반드시 2개 이상의 그룹으로 구성한다.',
+              'Checkbox를 대체하는 용도로 사용하지 않는다.',
+              '옵션 수가 6개 이상인 경우 Radio Group 대신 Select를 사용한다.',
+              '선택이 선택 사항(optional)인 경우 기본값 없이 Radio 사용을 고려하지 않는다 → Checkbox 사용.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>size: 16×16px</code> · <code>dot: 6px</code> · <code>border: 2px</code> ·{' '}

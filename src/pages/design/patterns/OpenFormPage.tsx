@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import {
   VStack,
@@ -516,54 +517,28 @@ export function OpenFormPage() {
             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
               Multi Tab Create — General Guidelines
             </h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                  <li>
-                    탭 기반의 정보 구획 구조를 사용하며, 각 탭의 목적이 명확히 구분되도록
-                    구성합니다.
-                  </li>
-                  <li>입력값은 탭 간 이동 시에도 항상 유지되어야 합니다.</li>
-                  <li>
-                    각 탭은 <strong>단계(step)가 아니라 주제(category) 단위</strong>로 그룹화합니다.
-                  </li>
-                  <li>탭 제목은 사용자가 직관적으로 이해할 수 있는 언어로 작성합니다.</li>
-                  <li>Summary 패널은 모든 탭에서 동일한 상태를 유지합니다.</li>
-                  <li>
-                    모든 필수 입력값에는 <span className="text-[var(--color-state-danger)]">*</span>{' '}
-                    표시를 적용합니다.
-                  </li>
-                  <li>탭 전환 시 Soft Validation을 수행하여 오류 있는 섹션을 미리 표시합니다.</li>
-                  <li>하나의 섹션에는 최대 5~7개의 필드만 배치하여 인지 부하를 줄입니다.</li>
-                  <li>
-                    생성 버튼은 Summary 패널 하단에 고정 배치하며, 클릭 시 전체 탭에 대한 Global
-                    Validation을 수행합니다.
-                  </li>
-                  <li>
-                    탭 전환, 섹션 확장 등의 인터랙션에는 자연스러운 전환 애니메이션(200~300ms)을
-                    적용합니다.
-                  </li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
-                  Don&apos;t
-                </h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                  <li>탭을 순차적인 단계(wizard step)처럼 표현하지 않습니다.</li>
-                  <li>탭 이동 시 입력값이 초기화되거나 섹션이 자동으로 닫히지 않도록 합니다.</li>
-                  <li>Summary 패널의 구성을 탭마다 다르게 변경하지 않습니다.</li>
-                  <li>오류 메시지를 여러 개의 모달로 중첩 표시하지 않습니다.</li>
-                  <li>
-                    Add/Remove 액션 시 입력 필드의 위치나 순서를 갑작스럽게 변경하지 않습니다.
-                  </li>
-                  <li>
-                    탭 전환 시 페이지 전체가 새로고침되거나 입력 상태가 손실되지 않도록 합니다.
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <DosDonts
+              doItems={[
+                '탭 기반의 정보 구획 구조를 사용하며, 각 탭의 목적이 명확히 구분되도록 구성합니다.',
+                '입력값은 탭 간 이동 시에도 항상 유지되어야 합니다.',
+                '각 탭은 단계(step)가 아니라 주제(category) 단위로 그룹화합니다.',
+                '탭 제목은 사용자가 직관적으로 이해할 수 있는 언어로 작성합니다.',
+                'Summary 패널은 모든 탭에서 동일한 상태를 유지합니다.',
+                '모든 필수 입력값에는 * 표시를 적용합니다.',
+                '탭 전환 시 Soft Validation을 수행하여 오류 있는 섹션을 미리 표시합니다.',
+                '하나의 섹션에는 최대 5~7개의 필드만 배치하여 인지 부하를 줄입니다.',
+                '생성 버튼은 Summary 패널 하단에 고정 배치하며, 클릭 시 전체 탭에 대한 Global Validation을 수행합니다.',
+                '탭 전환, 섹션 확장 등의 인터랙션에는 자연스러운 전환 애니메이션(200~300ms)을 적용합니다.',
+              ]}
+              dontItems={[
+                '탭을 순차적인 단계(wizard step)처럼 표현하지 않습니다.',
+                '탭 이동 시 입력값이 초기화되거나 섹션이 자동으로 닫히지 않도록 합니다.',
+                'Summary 패널의 구성을 탭마다 다르게 변경하지 않습니다.',
+                '오류 메시지를 여러 개의 모달로 중첩 표시하지 않습니다.',
+                'Add/Remove 액션 시 입력 필드의 위치나 순서를 갑작스럽게 변경하지 않습니다.',
+                '탭 전환 시 페이지 전체가 새로고침되거나 입력 상태가 손실되지 않도록 합니다.',
+              ]}
+            />
           </VStack>
 
           <VStack gap={3}>

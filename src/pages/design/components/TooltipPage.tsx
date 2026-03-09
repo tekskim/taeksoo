@@ -3,6 +3,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import { Button, Tooltip, VStack } from '@/design-system';
 import { IconTrash } from '@tabler/icons-react';
 
@@ -88,22 +89,6 @@ const TOOLTIP_GUIDELINES = `## Overview
 | 트리거 | Hover 전용 | Click 또는 Hover |
 | 인터랙션 | 비인터랙티브 (읽기 전용) | 인터랙티브 (클릭, 입력 가능) |
 | 접근성 역할 | role="tooltip" | aria-haspopup="dialog" |
-
-### Do ✅
-
-- 아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.
-- 말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.
-- Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)
-- 표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)
-- 기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.
-
-### Don't ❌
-
-- Tooltip 안에 링크, 버튼 등 인터랙티브 요소를 포함하지 않는다.
-- 이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.
-- 사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다.
-- 비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.
-- 레이아웃 컨테이너, 레이블, 비활성 툴바 등 정적인 요소에는 Tooltip을 사용하지 않는다.
 
 ---
 
@@ -265,7 +250,26 @@ export function TooltipPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={TOOLTIP_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={TOOLTIP_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.',
+              '말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.',
+              'Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)',
+              '표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)',
+              '기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.',
+            ]}
+            dontItems={[
+              'Tooltip 안에 링크, 버튼 등 인터랙티브 요소를 포함하지 않는다.',
+              '이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.',
+              '사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다.',
+              '비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>padding: 6×4px</code> · <code>radius: 4px</code> · <code>font-size: 11px</code> ·{' '}

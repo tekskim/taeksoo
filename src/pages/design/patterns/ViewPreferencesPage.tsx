@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const VIEW_PREFERENCES_GUIDELINES = `## Overview
@@ -91,19 +92,6 @@ Save
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 사용자에게 Column 표시 제어 권한 제공
-- Row 수 설정 제공
-- 설정 변경을 명확히 표시
-
-### Don't ❌
-- 필터 기능을 포함하지 않는다
-- 데이터 수정 기능을 포함하지 않는다
-
----
-
 ## Related
 
 | 이름 | 유형 | 이유 |
@@ -124,7 +112,19 @@ export function ViewPreferencesPage() {
       whenNotToUse={[
         '생성 화면, 드로어 내부 테이블은 보조 데이터를 표기하는 것으로 테이블 속성 변경 기능 미지원',
       ]}
-      guidelines={<NotionRenderer markdown={VIEW_PREFERENCES_GUIDELINES} />}
+      guidelines={
+        <>
+          <NotionRenderer markdown={VIEW_PREFERENCES_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '사용자에게 Column 표시 제어 권한 제공',
+              'Row 수 설정 제공',
+              '설정 변경을 명확히 표시',
+            ]}
+            dontItems={['필터 기능을 포함하지 않는다', '데이터 수정 기능을 포함하지 않는다']}
+          />
+        </>
+      }
       relatedLinks={[
         { label: 'Table', path: '/design/components/table' },
         { label: 'Pagination', path: '/design/components/pagination' },

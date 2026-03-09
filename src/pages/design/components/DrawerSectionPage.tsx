@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
 import { VStack, Button } from '@/design-system';
@@ -258,24 +259,18 @@ export function DrawerSectionPage() {
             </VStack>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Drawer가 열려 있을 때 배경 콘텐츠와의 맥락을 유지합니다.</li>
-                <li>닫기 전 미저장 변경사항이 있으면 확인 모달을 표시합니다.</li>
-                <li>ESC 키와 외부 클릭으로 닫을 수 있도록 합니다.</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">Don&apos;t</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Drawer 안에서 또 다른 Drawer를 열지 않습니다.</li>
-                <li>필드 6개 이상을 Drawer에 넣지 않습니다 (별도 Create 페이지 사용).</li>
-                <li>Drawer를 전체 화면 너비로 사용하지 않습니다.</li>
-              </ul>
-            </div>
-          </div>
+          <DosDonts
+            doItems={[
+              'Drawer가 열려 있을 때 배경 콘텐츠와의 맥락을 유지합니다.',
+              '닫기 전 미저장 변경사항이 있으면 확인 모달을 표시합니다.',
+              'ESC 키와 외부 클릭으로 닫을 수 있도록 합니다.',
+            ]}
+            dontItems={[
+              'Drawer 안에서 또 다른 Drawer를 열지 않습니다.',
+              '필드 6개 이상을 Drawer에 넣지 않습니다 (별도 Create 페이지 사용).',
+              'Drawer를 전체 화면 너비로 사용하지 않습니다.',
+            ]}
+          />
         </VStack>
       }
       tokens={

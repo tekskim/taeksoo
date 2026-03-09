@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Badge, Button, HStack, Popover, VStack } from '@/design-system';
@@ -328,26 +329,18 @@ export function PopoverPage() {
             </VStack>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Popover 내 콘텐츠는 간결하게 유지합니다 (필드 3개 이하).</li>
-                <li>
-                  인터랙티브 콘텐츠에는 <code>aria-haspopup=&quot;dialog&quot;</code>를 설정합니다.
-                </li>
-                <li>Hover 트리거 시 적절한 delay(200ms)를 설정하여 오작동을 방지합니다.</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">Don&apos;t</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Popover 안에 또 다른 Popover를 중첩하지 않습니다.</li>
-                <li>복잡한 폼(필드 4개 이상)을 Popover에 넣지 않습니다 (Drawer 사용).</li>
-                <li>Hover 트리거로 인터랙티브 콘텐츠를 제공하지 않습니다 (Click 사용).</li>
-              </ul>
-            </div>
-          </div>
+          <DosDonts
+            doItems={[
+              'Popover 내 콘텐츠는 간결하게 유지합니다 (필드 3개 이하).',
+              '인터랙티브 콘텐츠에는 aria-haspopup="dialog"를 설정합니다.',
+              'Hover 트리거 시 적절한 delay(200ms)를 설정하여 오작동을 방지합니다.',
+            ]}
+            dontItems={[
+              'Popover 안에 또 다른 Popover를 중첩하지 않습니다.',
+              '복잡한 폼(필드 4개 이상)을 Popover에 넣지 않습니다 (Drawer 사용).',
+              'Hover 트리거로 인터랙티브 콘텐츠를 제공하지 않습니다 (Click 사용).',
+            ]}
+          />
         </VStack>
       }
       tokens={

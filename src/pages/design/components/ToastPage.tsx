@@ -1,5 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { VStack } from '@/design-system';
 
 const TOAST_GUIDELINES = `## Overview
 
@@ -58,20 +60,6 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 가벼운 UI 피드백에 사용한다.
-- 메시지는 짧고 명확하게 작성한다.
-- 사용자가 후속 행동을 할 필요 없는 경우에 사용한다.
-
-### Don't ❌
-- 사용자 확인이 필요한 메시지를 Toast로 표시하지 않는다.
-- 기록이 필요한 알림에 사용하지 않는다.
-- 긴 문장을 사용하지 않는다.
-
----
-
 ## Related
 
 | 이름 | 유형 | 관련 이유 |
@@ -98,7 +86,23 @@ export function ToastPage() {
         '사용자의 확인이 필요한 경우 (→ Modal)',
         '입력 오류 안내 (→ Validation)',
       ]}
-      guidelines={<NotionRenderer markdown={TOAST_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={TOAST_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '가벼운 UI 피드백에 사용한다.',
+              '메시지는 짧고 명확하게 작성한다.',
+              '사용자가 후속 행동을 할 필요 없는 경우에 사용한다.',
+            ]}
+            dontItems={[
+              '사용자 확인이 필요한 메시지를 Toast로 표시하지 않는다.',
+              '기록이 필요한 알림에 사용하지 않는다.',
+              '긴 문장을 사용하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Inline Message', path: '/design/components/inline-message' },

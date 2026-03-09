@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const APP_WINDOW_GUIDELINES = `## Overview
@@ -71,19 +72,6 @@ App Window는 다음 역할을 수행한다.
 
 ---
 
-## Usage Guidelines
-
-### Do ✅
-- 메뉴와 콘텐츠 영역을 명확히 분리한다.
-- 여러 작업을 탭으로 관리할 수 있도록 한다.
-
-### Don't ❌
-- 앱 기능을 여러 Window로 분산하지 않는다.
-- 메뉴와 작업 영역을 혼합하지 않는다.
-- Window Controls를 커스텀 동작으로 변경하지 않는다.
-
----
-
 ## Related
 
 | 이름 | 유형 | 관련 이유 |
@@ -110,7 +98,22 @@ export function AppWindowPage() {
         '특정 리소스에 대한 설정 패널 (→ Drawer, Modal)',
         '보조 정보 표시 (→ Drawer, Popover)',
       ]}
-      guidelines={<NotionRenderer markdown={APP_WINDOW_GUIDELINES} />}
+      guidelines={
+        <>
+          <NotionRenderer markdown={APP_WINDOW_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '메뉴와 콘텐츠 영역을 명확히 분리한다.',
+              '여러 작업을 탭으로 관리할 수 있도록 한다.',
+            ]}
+            dontItems={[
+              '앱 기능을 여러 Window로 분산하지 않는다.',
+              '메뉴와 작업 영역을 혼합하지 않는다.',
+              'Window Controls를 커스텀 동작으로 변경하지 않는다.',
+            ]}
+          />
+        </>
+      }
       relatedLinks={[
         { label: 'Menu', path: '/design/components/menu' },
         { label: 'Top Bar', path: '/design/components/topbar' },

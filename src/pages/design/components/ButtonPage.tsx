@@ -5,6 +5,7 @@ import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Button, VStack } from '@/design-system';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import {
   IconPlus,
   IconArrowRight,
@@ -168,20 +169,6 @@ Tooltip은 "사용자가 화면만 보고 이유를 알 수 있는가"로 결정
 ---
 
 ## Usage Guidelines
-
-### Do ✅
-
-- Disabled를 기본으로 사용하고, 숨김은 예외로만 허용한다.
-- Primary는 컨테이너당 1개 원칙을 지킨다.
-- 비동기 버튼은 Loading으로 중복 실행을 방지한다.
-- 파괴적 액션 버튼은 Confirm 단계를 반드시 제공한다.
-- 동일 액션의 라벨/순서/위치를 전반에서 일관되게 유지한다.
-
-### Don't ❌
-
-- 같은 의미의 액션을 다른 라벨로 혼용하지 않는다.
-- 이유 설명 없이 Disabled를 남발하지 않는다.
-- 컨테이너 내 Primary를 여러 개 두지 않는다(CTA 경쟁).
 
 ---
 
@@ -645,7 +632,25 @@ export function ButtonPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<NotionRenderer markdown={BUTTON_GUIDELINES} />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={BUTTON_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Disabled를 기본으로 사용하고, 숨김은 예외로만 허용한다.',
+              'Primary는 컨테이너당 1개 원칙을 지킨다.',
+              '비동기 버튼은 Loading으로 중복 실행을 방지한다.',
+              '파괴적 액션 버튼은 Confirm 단계를 반드시 제공한다.',
+              '동일 액션의 라벨/순서/위치를 전반에서 일관되게 유지한다.',
+            ]}
+            dontItems={[
+              '같은 의미의 액션을 다른 라벨로 혼용하지 않는다.',
+              '이유 설명 없이 Disabled를 남발하지 않는다.',
+              '컨테이너 내 Primary를 여러 개 두지 않는다(CTA 경쟁).',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <>
           <div className="overflow-x-auto">
