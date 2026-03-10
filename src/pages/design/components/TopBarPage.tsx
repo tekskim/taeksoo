@@ -600,7 +600,6 @@ export function TopBarPage() {
         },
         { label: 'Shell', path: '/design/patterns/shell', description: '터미널 패널' },
       ]}
-      notionPageId="30d9eddc34e6808da3abe6f7354dffeb"
     />
   );
 }

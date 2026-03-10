@@ -471,6 +471,74 @@ function ErrorAlertGuidelines() {
           </TableWrapper>
         </VStack>
 
+        {/* Toast vs Snackbar 비교 */}
+        <VStack gap={3}>
+          <SubSectionTitle>Toast vs Snackbar 비교</SubSectionTitle>
+          <Prose>
+            <p>
+              많은 디자인 시스템(Material Design, Ant Design)에서 Toast와 Snackbar를 동일시하지만,
+              TDS는 <strong>기록 여부</strong>와 <strong>인터랙션 수준</strong>을 기준으로 명확히
+              구분합니다.
+            </p>
+          </Prose>
+
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[140px]">구분</Th>
+                <Th>Toast</Th>
+                <Th>Snackbar</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>목적</strong>
+                </Td>
+                <Td>액션에 대한 가벼운 피드백 (성공/실패 확인)</Td>
+                <Td>사용자가 반드시 인지해야 하는 이벤트 알림</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>인터랙션</strong>
+                </Td>
+                <Td>닫기 버튼만 (또는 자동 소멸)</Td>
+                <Td>액션 버튼 포함 가능 (상세보기, 실행취소 등)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>소멸 방식</strong>
+                </Td>
+                <Td>3~5초 후 자동 휘발</Td>
+                <Td>자동 소멸 또는 사용자 처리 후 삭제</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>기록 여부</strong>
+                </Td>
+                <Td>기록하지 않음</Td>
+                <Td>조건부 기록 (Notification Center에 저장 가능)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>표시 위치</strong>
+                </Td>
+                <Td>화면 하단 중앙 또는 우측 상단</Td>
+                <Td>앱 활성 시 앱 내부, 비활성 시 데스크탑 UI</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>사용 예시</strong>
+                </Td>
+                <Td>"인스턴스가 생성되었습니다", "클립보드에 복사됨"</Td>
+                <Td>
+                  "인스턴스 i-123이 중지되었습니다 [상세보기]", "디스크 용량 90% 초과 [조치하기]"
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+
         {/* 4) 알림 기록 정책 */}
         <VStack gap={3}>
           <SubSectionTitle>4) 알림 기록 정책</SubSectionTitle>
@@ -595,7 +663,6 @@ export function ErrorAlertPage() {
         },
         { label: 'System Error', path: '/design/foundation/system-error' },
       ]}
-      notionPageId="2a99eddc34e6805197f6c83b4890fdf9"
     />
   );
 }

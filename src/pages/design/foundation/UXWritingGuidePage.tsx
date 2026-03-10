@@ -964,7 +964,6 @@ export function UXWritingGuidePage() {
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Toast', path: '/design/components/toast' },
       ]}
-      notionPageId="ux-writing"
     />
   );
 }

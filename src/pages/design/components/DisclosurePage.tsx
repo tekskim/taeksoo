@@ -32,6 +32,16 @@ export function DisclosurePage() {
     <ComponentPageTemplate
       title="Disclosure"
       description="Expandable/collapsible content sections"
+      whenToUse={[
+        'FAQ, 도움말 등 접기/펼치기가 필요한 콘텐츠를 표시할 때',
+        '선택적 세부 정보를 기본적으로 숨기고 사용자 요청 시 표시할 때',
+        '긴 콘텐츠를 섹션별로 나누어 화면 공간을 절약할 때',
+      ]}
+      whenNotToUse={[
+        '항상 표시되어야 하는 중요한 정보인 경우 → SectionCard 사용',
+        '탭 간 전환이 필요한 경우 → Tabs 사용',
+        '단계별 진행이 필요한 경우 → Wizard(SectionCard) 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`<Disclosure defaultOpen>

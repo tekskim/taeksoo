@@ -1112,7 +1112,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           prev.filter((_, i) => i !== index)
                                         );
                                       }}
-                                      className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
+                                      className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-state-danger-bg)]"
                                     >
                                       <IconCircleMinus
                                         size={16}

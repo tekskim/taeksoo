@@ -482,7 +482,6 @@ export function PieChartPage() {
         { label: 'Line Chart', path: '/design/charts/area-chart', description: '시계열 데이터' },
         { label: 'Tooltip', path: '/design/components/tooltip', description: '데이터 설명' },
       ]}
-      notionPageId="31d9eddc34e680edacaed1669a87135a"
     />
   );
 }

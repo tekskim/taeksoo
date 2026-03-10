@@ -447,6 +447,12 @@ export function StatusIndicatorPage() {
         </VStack>
       }
       apiReference={statusIndicatorProps}
+      keyboardInteractions={[
+        {
+          key: 'N/A',
+          description: 'StatusIndicator는 정보 표시 전용이므로 별도의 키보드 인터랙션이 없습니다.',
+        },
+      ]}
       relatedLinks={[
         { label: 'Badge', path: '/design/components/badge' },
         { label: 'Table', path: '/design/components/table' },

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Badge,
   Button,
@@ -168,6 +168,7 @@ function buildTableColumns(
 export function CloudBuilderConsolePage() {
   const navigate = useNavigate();
   const params = useParams();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const {
     tabs,
@@ -263,7 +264,12 @@ export function CloudBuilderConsolePage() {
       // detailHrefBase가 있는 페이지는 detail로 이동
       const base = viewConfig.detailHrefBase ?? config.detailHrefBase;
       if (base) {
-        navigate(`${base}/${row.id}`);
+        // Backward compatible route: if user is on /cloud-builder, keep that prefix
+        const prefix = location.pathname.startsWith('/cloud-builder')
+          ? '/cloud-builder'
+          : '/cloudbuilder';
+        const normalizedBase = base.replace(/^\/cloudbuilder/, prefix);
+        navigate(`${normalizedBase}/${row.id}`);
         return;
       }
       // detail이 없는 페이지는 클릭 동작 없음

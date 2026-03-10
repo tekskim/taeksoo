@@ -550,6 +550,66 @@ export function TransitionsPage() {
             <DesktopAppDemo />
           </div>
 
+          {/* Motion Principles */}
+          <div className="space-y-4">
+            <h3 className="text-heading-h6 text-[var(--color-text-default)]">Motion Principles</h3>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              TDS의 모션은 다음 4가지 원칙을 따릅니다.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                {
+                  title: 'Purposeful',
+                  desc: '모든 애니메이션은 사용자에게 공간적 맥락(어디서 왔는지, 어디로 가는지)을 제공하거나 상태 변화를 알리는 목적이 있어야 합니다.',
+                },
+                {
+                  title: 'Quick',
+                  desc: '인터랙티브 UI 트랜지션은 300ms 이내로 유지합니다. 150ms(fast)는 미세한 피드백, 200ms(normal)는 표준 전환, 300ms(slow)는 큰 영역 변화에 사용합니다.',
+                },
+                {
+                  title: 'Natural',
+                  desc: '진입은 ease-out(빠르게 나타나 부드럽게 정착), 퇴장은 ease-in(가속하며 사라짐), 양방향은 ease-in-out을 사용하여 물리적으로 자연스러운 움직임을 만듭니다.',
+                },
+                {
+                  title: 'Accessible',
+                  desc: 'prefers-reduced-motion 미디어 쿼리를 존중합니다. 모션이 줄어든 환경에서는 opacity만 사용하거나 즉시 전환으로 대체합니다.',
+                },
+              ].map((p) => (
+                <div
+                  key={p.title}
+                  className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]"
+                >
+                  <span className="text-heading-h7 text-[var(--color-text-default)]">
+                    {p.title}
+                  </span>
+                  <p className="text-body-sm text-[var(--color-text-subtle)] mt-1">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Reduced Motion Support */}
+          <div className="space-y-3">
+            <h3 className="text-heading-h6 text-[var(--color-text-default)]">
+              Reduced Motion Support
+            </h3>
+            <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] font-mono text-body-sm text-[var(--color-text-default)]">
+              <pre>{`@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}`}</pre>
+            </div>
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              OS 설정에서 모션 줄이기를 활성화한 사용자를 위해, 모든 CSS 트랜지션과 애니메이션을
+              거의 즉시로 전환합니다. Framer Motion 사용 시에도 이 미디어 쿼리를 감지하여 duration을
+              0으로 설정하는 것을 권장합니다.
+            </p>
+          </div>
+
           {/* Guidelines */}
           <div className="space-y-4">
             <h3 className="text-heading-h6 text-[var(--color-text-default)]">Guidelines</h3>

@@ -403,7 +403,6 @@ export function SpinnerPage() {
         },
         { label: 'Modal', path: '/design/components/modal', description: '작업 진행 상태 표시' },
       ]}
-      notionPageId="31d9eddc34e6806388a8cf138c60a597"
     />
   );
 }

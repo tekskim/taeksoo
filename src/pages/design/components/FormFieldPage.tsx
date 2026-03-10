@@ -339,6 +339,15 @@ export function FormFieldPage() {
     <ComponentPageTemplate
       title="Form field spacing"
       description="Standardized spacing for label + description + input combinations"
+      whenToUse={[
+        '입력 필드에 라벨, 설명, 도움말, 에러 메시지를 함께 제공할 때',
+        '폼 컨트롤의 접근성(label-input 연결)을 보장할 때',
+        'Input, Select, Checkbox, Radio, Toggle 등 모든 폼 컨트롤을 감쌀 때',
+      ]}
+      whenNotToUse={[
+        '라벨 없이 인라인으로 입력 필드만 표시하는 경우 → Input 단독 사용',
+        '버튼이나 링크 등 비-폼 요소에 라벨을 붙이는 경우',
+      ]}
       preview={
         <ComponentPreview
           code={`<FormField label="Instance Name" helperText="2-64 characters">\n  <Input placeholder="e.g., web-server-01" fullWidth />\n</FormField>`}

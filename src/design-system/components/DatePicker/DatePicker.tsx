@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -227,8 +227,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
   const [viewMonth, setViewMonth] = useState(initialDate.getMonth());
 
-  // For range selection, track which part we're selecting
   const [selectingRangeEnd, setSelectingRangeEnd] = useState(false);
+  const [focusedDate, setFocusedDate] = useState<Date | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const weekdays = firstDayOfWeek === 1 ? WEEKDAYS_MONDAY_START : WEEKDAYS_SUNDAY_START;
 
@@ -290,6 +291,79 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       }
     },
     [disabled, mode, onChange, onRangeChange, rangeValue.start, selectingRangeEnd]
+  );
+
+  // Sync focused button when focusedDate changes
+  useEffect(() => {
+    if (!focusedDate || !gridRef.current) return;
+    const dateStr = focusedDate.toISOString().slice(0, 10);
+    const btn = gridRef.current.querySelector<HTMLButtonElement>(`[data-date="${dateStr}"]`);
+    btn?.focus();
+  }, [focusedDate]);
+
+  const handleGridKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const dateAttr = target.getAttribute('data-date');
+      if (!dateAttr) return;
+
+      const current = new Date(dateAttr + 'T00:00:00');
+      let next: Date | null = null;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          next = new Date(current);
+          next.setDate(next.getDate() + 1);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          next = new Date(current);
+          next.setDate(next.getDate() - 1);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          next = new Date(current);
+          next.setDate(next.getDate() + 7);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          next = new Date(current);
+          next.setDate(next.getDate() - 7);
+          break;
+        case 'Home':
+          e.preventDefault();
+          next = new Date(current.getFullYear(), current.getMonth(), 1);
+          break;
+        case 'End':
+          e.preventDefault();
+          next = new Date(
+            current.getFullYear(),
+            current.getMonth(),
+            getDaysInMonth(current.getFullYear(), current.getMonth())
+          );
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          {
+            const day = calendarDays.find((d) => isSameDay(d.date, current));
+            if (day) handleDateClick(day);
+          }
+          return;
+      }
+
+      if (next) {
+        if (isDateDisabled(next, minDate, maxDate)) return;
+        // Navigate months if needed
+        if (next.getMonth() !== viewMonth || next.getFullYear() !== viewYear) {
+          setViewYear(next.getFullYear());
+          setViewMonth(next.getMonth());
+        }
+        setFocusedDate(next);
+      }
+    },
+    [calendarDays, handleDateClick, minDate, maxDate, viewMonth, viewYear]
   );
 
   const monthYearText = useMemo(() => {
@@ -392,8 +466,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           })}
         </div>
 
-        {/* Date Grid - No gap, using cell spacing for continuous range background */}
-        <div className="grid grid-cols-7">
+        {/* Date Grid */}
+        <div ref={gridRef} role="grid" className="grid grid-cols-7" onKeyDown={handleGridKeyDown}>
           {calendarDays.map((day, index) => {
             const isSelected = day.isSelected || day.isRangeStart || day.isRangeEnd;
             // Only show range background when both start and end are selected
@@ -456,6 +530,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
                 <button
                   type="button"
+                  data-date={`${day.date.getFullYear()}-${String(day.date.getMonth() + 1).padStart(2, '0')}-${String(day.date.getDate()).padStart(2, '0')}`}
+                  tabIndex={
+                    focusedDate
+                      ? isSameDay(day.date, focusedDate)
+                        ? 0
+                        : -1
+                      : day.isSelected || (day.isToday && day.isCurrentMonth)
+                        ? 0
+                        : -1
+                  }
                   onClick={() => handleDateClick(day)}
                   disabled={disabled || day.isDisabled}
                   className={`
@@ -467,6 +551,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     text-label-md
                     rounded-full
                     transition-colors duration-[var(--duration-fast)]
+                    outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]
                     ${
                       isSelected
                         ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'

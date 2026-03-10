@@ -360,7 +360,6 @@ export function WindowControlPage() {
           description: '윈도우 컨트롤이 적용되는 윈도우 전체 레이아웃',
         },
       ]}
-      notionPageId="30d9eddc34e68015935bd575804c1ea9"
     />
   );
 }

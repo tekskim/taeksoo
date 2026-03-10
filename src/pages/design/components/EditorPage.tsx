@@ -349,7 +349,6 @@ export function EditorPage() {
         },
         { label: 'Select', path: '/design/components/select', description: '드롭다운 선택' },
       ]}
-      notionPageId="31b9eddc34e680e7a38ffa0e20f07c9c"
     />
   );
 }

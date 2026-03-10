@@ -555,7 +555,6 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
           description: '페이지 레이아웃 구조',
         },
       ]}
-      notionPageId="30d9eddc34e680baa56ec56949c7c994"
     />
   );
 }

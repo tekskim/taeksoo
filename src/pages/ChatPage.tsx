@@ -80,7 +80,7 @@ function AgentCard({
           className="shrink-0 p-1 -m-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
         >
           {isFavorite ? (
-            <IconStarFilled size={16} className="text-yellow-500" />
+            <IconStarFilled size={16} className="text-[var(--primitive-color-yellow400)]" />
           ) : (
             <IconStar size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
           )}
@@ -321,7 +321,7 @@ function NewChatDrawer({
             className="shrink-0 p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
           >
             {agent.isFavorite ? (
-              <IconStarFilled size={18} className="text-yellow-500" />
+              <IconStarFilled size={18} className="text-[var(--primitive-color-yellow400)]" />
             ) : (
               <IconStar size={18} stroke={1.5} className="text-[var(--color-text-disabled)]" />
             )}

@@ -781,6 +781,10 @@ export function SectionCardPage() {
         { name: 'SectionCard.Content', props: sectionCardContentProps },
         { name: 'SectionCard.DataRow', props: sectionCardDataRowProps },
       ]}
+      keyboardInteractions={[
+        { key: 'Tab', description: 'SectionCard 내 인터랙티브 요소(버튼, 링크)로 포커스 이동' },
+        { key: 'Enter / Space', description: '포커스된 액션 버튼 활성화' },
+      ]}
       relatedLinks={[
         {
           label: 'Detail Header',
@@ -793,7 +797,6 @@ export function SectionCardPage() {
           description: 'Create 페이지 위자드 패턴',
         },
       ]}
-      notionPageId="30d9eddc34e6804ea054e30e637a09c3"
     />
   );
 }

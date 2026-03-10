@@ -532,7 +532,6 @@ export function DetailPagePatternPage() {
           description: '상세 페이지 헤더',
         },
       ]}
-      notionPageId="30d9eddc34e680adb69eedc5f36d0161"
     />
   );
 }
