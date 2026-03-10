@@ -801,40 +801,21 @@ export default function IAMRoleDetailPage() {
                 </h2>
 
                 {/* Sub Tab Container */}
-                <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
-                  <div className="flex gap-2 items-center w-full">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEntitiesSubTab('user-groups');
-                        setEntitiesCurrentPage(1);
-                        setEntitiesSearchQuery('');
-                      }}
-                      className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
-                        entitiesSubTab === 'user-groups'
-                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                          : 'text-[var(--color-text-default)]'
-                      }`}
-                    >
-                      User groups
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEntitiesSubTab('users');
-                        setEntitiesCurrentPage(1);
-                        setEntitiesSearchQuery('');
-                      }}
-                      className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
-                        entitiesSubTab === 'users'
-                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                          : 'text-[var(--color-text-default)]'
-                      }`}
-                    >
-                      Users
-                    </button>
-                  </div>
-                </div>
+                <Tabs
+                  value={entitiesSubTab}
+                  onChange={(val) => {
+                    setEntitiesSubTab(val as 'user-groups' | 'users');
+                    setEntitiesCurrentPage(1);
+                    setEntitiesSearchQuery('');
+                  }}
+                  variant="boxed"
+                  size="sm"
+                >
+                  <TabList>
+                    <Tab value="user-groups">User groups</Tab>
+                    <Tab value="users">Users</Tab>
+                  </TabList>
+                </Tabs>
 
                 {/* Search */}
                 <SearchInput

@@ -45,6 +45,8 @@ export interface TableProps<T = any> {
   emptyMessage?: string;
   className?: string;
   rowHeight?: string;
+  /** Render expanded content below a row. Return null to collapse. */
+  expandedContent?: (row: T, rowIndex: number) => React.ReactNode | null;
   /** Enable column resizing. Defaults to true */
   resizable?: boolean;
   /** Resize timing: 'onChange' for real-time, 'onEnd' for after drag. Defaults to 'onEnd' */
@@ -93,6 +95,7 @@ export function Table<T extends Record<string, any>>({
   stickyHeader = false,
   maxHeight,
   onRowClick,
+  expandedContent,
   emptyMessage = 'No data',
   className = '',
   rowHeight,
@@ -359,77 +362,87 @@ export function Table<T extends Record<string, any>>({
               sortedData.map((row, rowIndex) => {
                 const key = getRowKey(row);
                 const isSelected = selectedKeys.includes(key);
+                const expanded = expandedContent?.(row, rowIndex);
 
                 return (
                   <div
                     key={key}
                     className={cn(
-                      'flex items-stretch min-h-[var(--table-row-height)] w-full',
-                      'rounded-[var(--table-row-radius)] transition-all hover:bg-[var(--table-row-hover-bg)]',
+                      'rounded-[var(--table-row-radius)] overflow-hidden',
                       'border border-[var(--color-border-default)]',
                       isSelected
                         ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
-                        : 'bg-[var(--color-surface-default)]',
-                      onRowClick && 'cursor-pointer'
+                        : 'bg-[var(--color-surface-default)]'
                     )}
-                    onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
                   >
-                    {selectable && (
-                      <div
-                        className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Checkbox
-                          checked={isSelected}
-                          onChange={() => handleSelectRow(key)}
-                          aria-label={`Select row ${rowIndex + 1}`}
-                        />
-                      </div>
-                    )}
-
-                    {columns.map((column, colIndex) => {
-                      const isFirstColumn = colIndex === 0;
-                      const showCellDivider = isFirstColumn ? selectable : true;
-                      const align = column.align || 'left';
-
-                      const cellValue = row[column.key];
-                      const cellTitle =
-                        typeof cellValue === 'string' || typeof cellValue === 'number'
-                          ? String(cellValue)
-                          : undefined;
-
-                      return (
+                    <div
+                      className={cn(
+                        'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                        'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                        onRowClick && 'cursor-pointer'
+                      )}
+                      onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                    >
+                      {selectable && (
                         <div
-                          key={column.key}
-                          data-column-key={column.key}
-                          className={cn(
-                            'flex items-center',
-                            'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
-                            'text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]',
-                            'min-w-0 overflow-hidden',
-                            CELL_ALIGN_CLS[align],
-                            showCellDivider && 'border-l border-transparent'
-                          )}
-                          style={getEffectiveColumnStyle(column)}
-                          title={cellTitle}
+                          className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <div
-                            className={cn(
-                              'truncate w-full min-w-0',
-                              align === 'center' && 'text-center',
-                              align === 'right' && 'text-right'
-                            )}
-                          >
-                            {column.render
-                              ? column.render(row[column.key], row, rowIndex)
-                              : row[column.key]}
-                          </div>
+                          <Checkbox
+                            checked={isSelected}
+                            onChange={() => handleSelectRow(key)}
+                            aria-label={`Select row ${rowIndex + 1}`}
+                          />
                         </div>
-                      );
-                    })}
+                      )}
 
-                    {hasResizedColumns && (
-                      <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                      {columns.map((column, colIndex) => {
+                        const isFirstColumn = colIndex === 0;
+                        const showCellDivider = isFirstColumn ? selectable : true;
+                        const align = column.align || 'left';
+
+                        const cellValue = row[column.key];
+                        const cellTitle =
+                          typeof cellValue === 'string' || typeof cellValue === 'number'
+                            ? String(cellValue)
+                            : undefined;
+
+                        return (
+                          <div
+                            key={column.key}
+                            data-column-key={column.key}
+                            className={cn(
+                              'flex items-center',
+                              'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
+                              'text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]',
+                              'min-w-0 overflow-hidden',
+                              CELL_ALIGN_CLS[align],
+                              showCellDivider && 'border-l border-transparent'
+                            )}
+                            style={getEffectiveColumnStyle(column)}
+                            title={cellTitle}
+                          >
+                            <div
+                              className={cn(
+                                'truncate w-full min-w-0',
+                                align === 'center' && 'text-center',
+                                align === 'right' && 'text-right'
+                              )}
+                            >
+                              {column.render
+                                ? column.render(row[column.key], row, rowIndex)
+                                : row[column.key]}
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {hasResizedColumns && (
+                        <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                      )}
+                    </div>
+                    {expanded && (
+                      <div className="border-t border-[var(--color-border-subtle)]">{expanded}</div>
                     )}
                   </div>
                 );
