@@ -332,9 +332,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] z-[2]"
           style={{
             width: `${Math.min(totalPercent, 100)}%`,
-            backgroundColor: error
-              ? getStatusColor('danger')
-              : getStatusColor(status || usedStatus),
+            backgroundColor: error ? getStatusColor('danger') : 'var(--color-action-primary)',
             minWidth: totalPercent > 0 ? 4 : 0,
           }}
         />

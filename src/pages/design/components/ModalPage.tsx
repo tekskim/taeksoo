@@ -155,7 +155,7 @@ export function ModalPage() {
         '단순 정보 안내 → Inline message',
         '설정 편집 → Drawer',
         '긴 입력폼 → Full page',
-        '짧은 확인 메세지 → Toast, Snackbar',
+        '짧은 확인 메시지 → Toast, Snackbar',
       ]}
       preview={<ModalDemo variant="delete" />}
       usage={{
