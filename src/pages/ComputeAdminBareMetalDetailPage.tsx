@@ -578,16 +578,18 @@ export function ComputeAdminBareMetalDetailPage() {
             <TabPanel value="interfaces" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Header */}
-                <div className="flex items-center w-full">
+                <div className="flex items-center h-7">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
                 </div>
 
                 {/* Search */}
-                <SearchInput
-                  placeholder="Search interface by attributes"
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
+                <div className="flex items-center gap-1">
+                  <SearchInput
+                    placeholder="Search interface by attributes"
+                    size="sm"
+                    className="w-[280px]"
+                  />
+                </div>
 
                 {/* Pagination */}
                 <Pagination
@@ -705,7 +707,8 @@ export function ComputeAdminBareMetalDetailPage() {
                       setActionLogSearchQuery(e.target.value);
                       setActionLogCurrentPage(1);
                     }}
-                    className="w-[var(--search-input-width)]"
+                    size="sm"
+                    className="w-[280px]"
                   />
                   <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
                     <IconDownload size={12} stroke={2} className="w-3 h-3" />

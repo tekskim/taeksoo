@@ -689,7 +689,7 @@ export function ComputeAdminFlavorDetailPage() {
                     onChange={(e) => setInstanceSearchQuery(e.target.value)}
                     onClear={() => setInstanceSearchQuery('')}
                     size="sm"
-                    fullWidth
+                    className="w-[280px]"
                   />
                 </div>
 
