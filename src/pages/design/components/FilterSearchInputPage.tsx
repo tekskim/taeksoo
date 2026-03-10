@@ -2,10 +2,110 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { FilterSearchInput, Chip, VStack } from '@/design-system';
 import type { FilterField, AppliedFilter } from '@/design-system';
 import { IconSearch } from '@tabler/icons-react';
+
+const SEARCH_INPUT_GUIDELINES = `## Overview
+
+사용자가 리소스 목록 또는 데이터 집합을 빠르게 탐색하고 필터링할 수 있도록 하는 검색 입력 컴포넌트.
+두 가지 방식의 검색을 지원한다.
+
+- **Keyword Search**: 일반 텍스트 기반 검색. 사용자가 자유 형식으로 검색어를 입력하면 해당 키워드가 포함된 결과를 찾는다.
+- **Filter Search**: 필터 키 기반 구조화된 검색. 사용자가 필터 키(속성)를 선택한 뒤 해당 키에 대한 값을 입력하거나 선택하여 정확한 조건으로 데이터를 좁혀간다.
+
+완성된 필터는 검색 필드 아래에 Chip 형태로 표시되며 개별 필터를 제거하거나 전체 필터를 초기화할 수 있다.
+
+---
+
+## Composition
+
+| 요소 | 설명 |
+| --- | --- |
+| Search field | 필터 조건 입력 영역 |
+| Filter key dropdown | 필터 키 선택 메뉴 |
+| Filter value input | 필터 값 입력 또는 선택 |
+| Filter chips | 적용된 필터 목록 |
+| Clear action | 전체 필터 초기화 |
+
+---
+
+## Variants
+
+| Mode | 설명 |
+| --- | --- |
+| Keyword search | 텍스트 기반 검색 |
+| Filter search | 필터 키 기반 검색 |
+
+---
+
+## States
+
+| State | 설명 |
+| --- | --- |
+| Default | 기본 상태 |
+| Focus | 입력 중 |
+| Active | 필터 키 입력 완료 + 필터 값 입력 중 |
+
+---
+
+## Behavior
+
+### 1) Filter Creation Flow
+1. 검색 필드 클릭 또는 입력 → 필터 키 드롭다운 노출
+2. 필터 키 선택 → 검색 필드에 키 정보가 chip형태로 노출
+3. 필터값 입력 또는 선택 → Filter chips 영역에 새로운 필터(chip) 생성
+
+### 2) Filter Value Input Types
+
+| 유형 | 입력 방식 |
+| --- | --- |
+| text | Text input |
+| enum | Select |
+| boolean | Select |
+| number | Text input |
+| tag | Select |
+
+### 3) Filter Chip
+
+| 항목 | 내용 |
+| --- | --- |
+| 표시 형태 | Chip |
+| Chip 표시 내용 | [키 + 값] |
+| Chip 포함 요소 | 제거 버튼 |
+| 생성 시점 | Enter 입력 또는 Value 선택 |
+
+### 4) Chip Removal
+
+| 동작 | 결과 |
+| --- | --- |
+| Chip ✕ 버튼 클릭 | 해당 필터 제거 |
+| Clear 클릭 | 모든 필터 제거 |
+
+### 5) Multiple Filters
+
+| 조건 | 로직 |
+| --- | --- |
+| 같은 필터 키 | OR |
+| 다른 필터 키 | AND |
+
+### 6) Placeholder Policy
+- Filter Search는 Label 대신 Placeholder를 사용한다.
+- 표준 문구: "Search {resources} by attributes"
+
+---
+
+## Related
+
+| 이름 | 유형 | 이유 |
+| --- | --- | --- |
+| List page | Pattern | 필터 검색이 사용되는 대표적 사례 |
+| Chip | Component | 필터 표시 |
+| Table | Component | 필터 대상 |
+`;
 
 const filterSearchInputProps: PropDef[] = [
   {
@@ -105,7 +205,9 @@ export function FilterSearchInputPage() {
   return (
     <ComponentPageTemplate
       title="Filter search Input"
-      description="Combined search and filter input with tag display for applied filters"
+      description="사용자가 리소스 목록 또는 데이터 집합을 빠르게 탐색하고 필터링할 수 있도록 하는 검색 입력 컴포넌트. Keyword Search와 Filter Search 두 가지 방식의 검색을 지원한다."
+      whenToUse={['리소스 목록 검색', '테이블 필터링', '설정 항목 검색']}
+      whenNotToUse={['폼 입력 (→ Text input, Textarea)', '정해진 값 선택 (→ Select)']}
       preview={
         <ComponentPreview
           code={`<FilterSearchInput\n  filters={filterFields}\n  appliedFilters={appliedFilters}\n  onFiltersChange={setAppliedFilters}\n  placeholder="Search by attributes"\n/>`}
@@ -244,53 +346,20 @@ export function FilterSearchInputPage() {
         </VStack>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={4}>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">개요</h4>
-              <p className="text-body-md text-[var(--color-text-muted)]">
-                리스트 페이지에서 리소스를 검색하고 필터링하기 위한 통합 입력 컴포넌트입니다. 검색어
-                입력과 구조화된 필터를 하나의 인터페이스에서 제공합니다.
-              </p>
-            </VStack>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">동작 정책</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  <strong>검색</strong>: 입력 후 300ms debounce 적용하여 필터링. Enter 키로 즉시
-                  검색 확정.
-                </li>
-                <li>
-                  <strong>필터 추가</strong>: 필터 필드 선택 → 값 입력/선택 → 태그로 적용.
-                </li>
-                <li>
-                  <strong>필터 제거</strong>: 개별 태그의 X 클릭 또는 &quot;Clear all&quot;로 전체
-                  제거.
-                </li>
-                <li>
-                  <strong>복합 필터</strong>: 여러 필터를 AND 조건으로 조합 가능.
-                </li>
-                <li>
-                  <strong>빈 결과</strong>: 필터 적용 후 결과가 없으면 EmptyState와 함께 필터 초기화
-                  옵션 제공.
-                </li>
-              </ul>
-            </VStack>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">배치 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>ListToolbar 내 primaryActions 영역의 첫 번째 요소로 배치합니다.</li>
-                <li>
-                  너비는 <code>w-[var(--search-input-width)]</code> CSS 변수를 사용합니다.
-                </li>
-                <li>
-                  적용된 필터 태그는 Toolbar 하단에 표시되거나 <code>hideAppliedFilters</code>로
-                  숨길 수 있습니다.
-                </li>
-              </ul>
-            </VStack>
-          </VStack>
-        </div>
+        <VStack gap={6}>
+          <NotionRenderer markdown={SEARCH_INPUT_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '필터 키 기반 검색을 제공한다',
+              '생성된 필터를 Chip으로 표시한다',
+              'Clear action을 제공한다',
+            ]}
+            dontItems={[
+              '필터 조건을 텍스트로만 표시하지 않는다',
+              '여러 필터를 하나의 문자열로 표현하지 않는다',
+            ]}
+          />
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
@@ -307,9 +376,8 @@ export function FilterSearchInputPage() {
         </ul>
       }
       relatedLinks={[
-        { label: 'Input', path: '/design/components/input', description: 'Text fields and search' },
-        { label: 'Select', path: '/design/components/select', description: 'Dropdown select' },
-        { label: 'Chip', path: '/design/components/chip', description: 'Filter tags display' },
+        { label: 'Chip', path: '/design/components/chip' },
+        { label: 'Table', path: '/design/components/table' },
       ]}
     />
   );

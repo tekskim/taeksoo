@@ -16,6 +16,289 @@ import {
   VStack,
 } from '@/design-system';
 
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function FormFieldPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <VStack gap={2}>
+          <SubSectionTitle>FormField 구성 규칙</SubSectionTitle>
+          <Prose>
+            <p>
+              모든 폼 입력 요소는 <strong>FormField</strong> 컴포넌트로 감싸서 일관된 라벨, 설명,
+              에러 메시지 표시를 보장합니다.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>Label</strong>: 필드의 용도를 명확히 설명. 필수 필드는{' '}
+                <span className="text-[var(--color-state-danger)]">*</span> 표시.
+              </li>
+              <li>
+                <strong>Description</strong> (선택): 라벨만으로 불충분한 경우 추가 설명 제공. 라벨
+                바로 아래 4px 간격.
+              </li>
+              <li>
+                <strong>HelperText</strong> (선택): 입력 형식/제약 조건 안내. Input 아래 8px 간격.
+              </li>
+              <li>
+                <strong>ErrorMessage</strong>: 검증 실패 시 HelperText 상단에 추가 표시. danger
+                색상. HelperText는 항상 유지.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>Description vs HelperText 구분</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[120px]">구분</Th>
+                <Th>Description</Th>
+                <Th>HelperText</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>용도</strong>
+                </Td>
+                <Td>필드의 목적·맥락을 설명 (&quot;왜 이 값을 입력하는가&quot;)</Td>
+                <Td>입력 형식·제약 조건을 안내 (&quot;어떻게 입력해야 하는가&quot;)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>위치</strong>
+                </Td>
+                <Td>Label 아래, Input 위 (4px gap)</Td>
+                <Td>Input 아래 (8px gap)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>타이포</strong>
+                </Td>
+                <Td>text-body-md (12px/18px)</Td>
+                <Td>text-body-sm (11px/16px)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>예시</strong>
+                </Td>
+                <Td>&quot;이 인스턴스의 루트 비밀번호를 설정합니다&quot;</Td>
+                <Td>&quot;8자 이상, 대문자·숫자 포함&quot;</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>폼 레이아웃 정책</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>단일 컬럼</strong>: Create/Edit 폼의 기본 레이아웃. 필드를 세로로 배치.
+              </li>
+              <li>
+                <strong>그룹핑</strong>: 관련 필드를 SectionCard 또는 Disclosure로 묶어 구조화.
+              </li>
+              <li>
+                <strong>spacing=&quot;loose&quot;</strong>: 복잡한 필드(탭, 테이블 포함)에는
+                spacing=&quot;loose&quot;로 12px 간격을 적용.
+              </li>
+              <li>
+                <strong>필드 순서</strong>: 필수 필드를 먼저, 선택 필드를 나중에 배치합니다.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={4}>
+        <VStack gap={2}>
+          <SubSectionTitle>검증 타이밍</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[160px]">시점</Th>
+                <Th>동작</Th>
+                <Th>예시</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>Blur (포커스 해제)</strong>
+                </Td>
+                <Td>
+                  값을 수정한 적 있는(touched) 필드만 형식/필수 검증 실행. 미접촉 필드는 무시.
+                </Td>
+                <Td>이름 필드에 타이핑 후 포커스 떠날 때</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Submit (제출)</strong>
+                </Td>
+                <Td>전체 폼에 대한 Global Validation 실행</Td>
+                <Td>Create/Save 버튼 클릭 시</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Tab 전환 (Soft)</strong>
+                </Td>
+                <Td>현재 탭의 필수 필드 검증 실행. 에러를 표시하되 탭 전환은 차단하지 않음.</Td>
+                <Td>Multi Tab Create에서 다른 탭으로 이동할 때</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>타이핑 중</strong>
+                </Td>
+                <Td>검증하지 않음 (사용자 입력 방해 금지)</Td>
+                <Td>—</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>에러 표시 규칙</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>표시 위치</strong>: ErrorMessage는 Input 하단, HelperText{' '}
+                <strong>상단</strong>에 표시됩니다. HelperText는 숨기지 않고 항상 유지합니다.
+              </li>
+              <li>
+                <strong>렌더링 순서</strong>: Input → ErrorMessage (danger) → HelperText (subtle).
+                각 요소 간 8px 간격.
+              </li>
+              <li>
+                <strong>ErrorMessage 스타일</strong>: <code>text-body-sm</code>,{' '}
+                <code>text-[var(--color-state-danger)]</code> 색상,{' '}
+                <code>role=&quot;alert&quot;</code>.
+              </li>
+              <li>
+                <strong>HelperText 스타일</strong>: 에러 시에도 <code>text-body-sm</code>,{' '}
+                <code>text-[var(--color-text-subtle)]</code> 유지.
+              </li>
+              <li>
+                <strong>Input 테두리</strong>: <code>error</code> prop으로 테두리를 danger 색상으로
+                변경합니다.
+              </li>
+              <li>
+                <strong>에러 해제</strong>: 사용자가 타이핑을 시작하면(onChange) 즉시 에러 상태를
+                해제합니다. 재검증은 blur 시점에 수행.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>Global Validation (Submit 시)</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>모든 필수 필드와 형식 검증을 한 번에 수행합니다.</li>
+              <li>
+                첫 번째 오류 필드로 <strong>자동 스크롤</strong>하고 해당 필드에{' '}
+                <strong>포커스</strong>를 설정합니다.
+              </li>
+              <li>Multi Tab Create의 경우, 오류가 있는 탭으로 자동 이동합니다.</li>
+              <li>
+                Floating card의 Configuration 섹션에 오류가 있는 섹션을 시각적으로 표시합니다.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>에러 메시지 작성 규칙</SubSectionTitle>
+          <Prose>
+            <p>
+              현재 예시는 영어이며, 향후 다국어(i18n) 지원 예정입니다. 에러 메시지 키는 번역 가능한
+              형태로 관리합니다.
+            </p>
+          </Prose>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th>유형</Th>
+                <Th>메시지 예시</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>필수 필드 미입력</Td>
+                <Td>&quot;This field is required.&quot;</Td>
+              </tr>
+              <tr>
+                <Td>형식 오류</Td>
+                <Td>
+                  &quot;Please enter a valid IP address.&quot; / &quot;Must be 2-64
+                  characters.&quot;
+                </Td>
+              </tr>
+              <tr>
+                <Td>범위 초과</Td>
+                <Td>&quot;Value must be between 1 and 100.&quot;</Td>
+              </tr>
+              <tr>
+                <Td>중복</Td>
+                <Td>&quot;This name is already in use.&quot;</Td>
+              </tr>
+              <tr>
+                <Td>선택 미완료</Td>
+                <Td>
+                  &quot;Please select a region.&quot; / &quot;At least one item must be
+                  selected.&quot;
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+      </VStack>
+    </VStack>
+  );
+}
+
 const formFieldProps: PropDef[] = [
   { name: 'label', type: 'ReactNode', required: false, description: 'Label text (simple API)' },
   {
@@ -401,303 +684,7 @@ export function FormFieldPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  FormField 구성 규칙
-                </h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  모든 폼 입력 요소는 <strong>FormField</strong> 컴포넌트로 감싸서 일관된 라벨,
-                  설명, 에러 메시지 표시를 보장합니다.
-                </p>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>Label</strong>: 필드의 용도를 명확히 설명. 필수 필드는{' '}
-                    <span className="text-[var(--color-state-danger)]">*</span> 표시.
-                  </li>
-                  <li>
-                    <strong>Description</strong> (선택): 라벨만으로 불충분한 경우 추가 설명 제공.
-                    라벨 바로 아래 4px 간격.
-                  </li>
-                  <li>
-                    <strong>HelperText</strong> (선택): 입력 형식/제약 조건 안내. Input 아래 8px
-                    간격.
-                  </li>
-                  <li>
-                    <strong>ErrorMessage</strong>: 검증 실패 시 HelperText 상단에 추가 표시. danger
-                    색상. HelperText는 항상 유지.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Description vs HelperText 구분
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
-                          구분
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          Description
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          HelperText
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          용도
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          필드의 목적·맥락을 설명 (&quot;왜 이 값을 입력하는가&quot;)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          입력 형식·제약 조건을 안내 (&quot;어떻게 입력해야 하는가&quot;)
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          위치
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          Label 아래, Input 위 (4px gap)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          Input 아래 (8px gap)
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          타이포
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          text-body-md (12px/18px)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          text-body-sm (11px/16px)
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          예시
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          &quot;이 인스턴스의 루트 비밀번호를 설정합니다&quot;
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;8자 이상, 대문자·숫자 포함&quot;
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  폼 레이아웃 정책
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>단일 컬럼</strong>: Create/Edit 폼의 기본 레이아웃. 필드를 세로로 배치.
-                  </li>
-                  <li>
-                    <strong>그룹핑</strong>: 관련 필드를 SectionCard 또는 Disclosure로 묶어 구조화.
-                  </li>
-                  <li>
-                    <strong>spacing=&quot;loose&quot;</strong>: 복잡한 필드(탭, 테이블 포함)에는
-                    spacing=&quot;loose&quot;로 12px 간격을 적용.
-                  </li>
-                  <li>
-                    <strong>필드 순서</strong>: 필수 필드를 먼저, 선택 필드를 나중에 배치합니다.
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">검증 타이밍</h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[160px]">
-                          시점
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          동작
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          예시
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Blur (포커스 해제)
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          값을 수정한 적 있는(touched) 필드만 형식/필수 검증 실행. 미접촉 필드는
-                          무시.
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          이름 필드에 타이핑 후 포커스 떠날 때
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Submit (제출)
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          전체 폼에 대한 Global Validation 실행
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          Create/Save 버튼 클릭 시
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Tab 전환 (Soft)
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          현재 탭의 필수 필드 검증 실행. 에러를 표시하되 탭 전환은 차단하지 않음.
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          Multi Tab Create에서 다른 탭으로 이동할 때
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          타이핑 중
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          검증하지 않음 (사용자 입력 방해 금지)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">—</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">에러 표시 규칙</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>표시 위치</strong>: ErrorMessage는 Input 하단, HelperText{' '}
-                    <strong>상단</strong>에 표시됩니다. HelperText는 숨기지 않고 항상 유지합니다.
-                  </li>
-                  <li>
-                    <strong>렌더링 순서</strong>: Input → ErrorMessage (danger) → HelperText
-                    (subtle). 각 요소 간 8px 간격.
-                  </li>
-                  <li>
-                    <strong>ErrorMessage 스타일</strong>: <code>text-body-sm</code>,{' '}
-                    <code>text-[var(--color-state-danger)]</code> 색상,{' '}
-                    <code>role=&quot;alert&quot;</code>.
-                  </li>
-                  <li>
-                    <strong>HelperText 스타일</strong>: 에러 시에도 <code>text-body-sm</code>,{' '}
-                    <code>text-[var(--color-text-subtle)]</code> 유지.
-                  </li>
-                  <li>
-                    <strong>Input 테두리</strong>: <code>error</code> prop으로 테두리를 danger
-                    색상으로 변경합니다.
-                  </li>
-                  <li>
-                    <strong>에러 해제</strong>: 사용자가 타이핑을 시작하면(onChange) 즉시 에러
-                    상태를 해제합니다. 재검증은 blur 시점에 수행.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Global Validation (Submit 시)
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>모든 필수 필드와 형식 검증을 한 번에 수행합니다.</li>
-                  <li>
-                    첫 번째 오류 필드로 <strong>자동 스크롤</strong>하고 해당 필드에{' '}
-                    <strong>포커스</strong>를 설정합니다.
-                  </li>
-                  <li>Multi Tab Create의 경우, 오류가 있는 탭으로 자동 이동합니다.</li>
-                  <li>
-                    Floating card의 Configuration 섹션에 오류가 있는 섹션을 시각적으로 표시합니다.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  에러 메시지 작성 규칙
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  현재 예시는 영어이며, 향후 다국어(i18n) 지원 예정입니다. 에러 메시지 키는 번역
-                  가능한 형태로 관리합니다.
-                </p>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          유형
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          메시지 예시
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">
-                          필수 필드 미입력
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;This field is required.&quot;
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">형식 오류</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;Please enter a valid IP address.&quot; / &quot;Must be 2-64
-                          characters.&quot;
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">범위 초과</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;Value must be between 1 and 100.&quot;
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">중복</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;This name is already in use.&quot;
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 text-[var(--color-text-default)]">선택 미완료</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          &quot;Please select a region.&quot; / &quot;At least one item must be
-                          selected.&quot;
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-            </VStack>
-          </div>
-        </VStack>
-      }
+      guidelines={<FormFieldPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <strong>Spacing:</strong>

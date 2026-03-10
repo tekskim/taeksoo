@@ -1,8 +1,108 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { NotionRenderer } from '../_shared/NotionRenderer';
+import { DosDonts } from '../_shared/DosDonts';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Checkbox, CheckboxGroup, VStack } from '@/design-system';
+
+const CHECKBOX_GUIDELINES = `## Overview
+
+사용자가 하나 이상의 옵션을 선택하거나 해제할 수 있는 선택 컨트롤이다.
+단일 선택(Single Checkbox)과 다중 선택(Checkbox Group) 두 가지 방식으로 사용되며, Table 내 행 선택에도 활용된다.
+
+---
+
+## Variants
+
+| 구분 | 설명 |
+| --- | --- |
+| Single Checkbox | 단일 선택 컨트롤. 다른 선택 컨트롤과 독립적으로 사용 |
+| Checkbox Group | 복수의 Checkbox를 묶어 관련 옵션을 나열하는 그룹 컨트롤 |
+
+---
+
+## Composition (구성 요소)
+
+\`\`\`
+┌──────────┐
+│ Control  │ ── 6px gap ── Label
+│ 16×16px  │     Description (optional)
+└──────────┘
+\`\`\`
+
+| 요소 | 설명 | 제공 조건 |
+| --- | --- | --- |
+| Control (박스) | 선택 상태를 시각적으로 나타내는 16×16px 정사각형 영역. radius 4px | 항상 |
+| Label | 체크박스의 목적을 설명하는 텍스트. 클릭 시 선택 상태 토글 가능 | 지정된 라벨이 있을 경우 항상 표시 |
+| Description | 라벨 하단에 위치하는 보조 설명 텍스트 | 선택 (optional) |
+
+### Design Tokens
+
+| 속성 | 값 |
+| --- | --- |
+| size | 16 × 16px |
+| border-radius | 4px |
+| gap (control ↔ label) | 6px |
+| icon size (체크/대시) | 12px |
+
+---
+
+## States
+
+| 상태 | 설명 |
+| --- | --- |
+| Unselected | 기본 상태. 아무것도 선택되지 않은 상태 |
+| Selected (Checked) | 선택된 상태. 체크 아이콘 표시 |
+| Indeterminate | Checkbox Group에서 일부 항목만 선택된 경우. 대시(–) 아이콘 표시 |
+| Disabled | 비활성 상태. 사용자 인터랙션 불가 |
+| Disabled + Checked | 비활성 상태이면서 선택된 상태 |
+| Focused | 키보드 포커스 상태. 접근성 포커스 링 표시 |
+| Hover | 마우스 오버 상태 |
+
+---
+
+## Behavior
+
+### 선택 토글 정책
+- Control 영역과 Label 텍스트 모두 클릭 영역으로 동작한다.
+- 선택/해제는 클릭 또는 키보드 Space 키로 토글된다.
+
+### Checkbox Group 전체 선택 정책
+- 그룹 내 모든 항목이 선택 해제된 상태 → 상위 체크박스: Unselected
+- 그룹 내 일부 항목만 선택된 상태 → 상위 체크박스: Indeterminate
+- 그룹 내 모든 항목이 선택된 상태 → 상위 체크박스: Checked
+- 상위 체크박스가 Checked 상태일 때 클릭 → 전체 해제 (Unselected)
+- 상위 체크박스가 Unselected 또는 Indeterminate 상태일 때 클릭 → 전체 선택 (Checked)
+
+### 레이아웃
+- Checkbox Group의 기본 방향은 세로(vertical) 나열이다.
+- 공간이 허용되는 경우 가로(horizontal) 배치를 선택할 수 있다.
+- 각 옵션 간 간격은 일관되게 유지한다.
+
+---
+
+## Usage Guidelines
+
+---
+
+## Content Guidelines
+
+- 라벨은 짧고 명확하게 작성하며, 선택 행위의 결과를 직접 설명한다.
+- 부정문보다 긍정문으로 작성한다.
+- Description은 라벨만으로 의미가 충분히 전달되지 않을 때에만 제공한다.
+- Checkbox Group의 그룹 레이블은 명사형으로 작성한다.
+- Indeterminate 상태의 상위 체크박스 라벨은 "전체 선택" 또는 이에 준하는 명확한 표현을 사용한다.
+
+---
+
+## Related
+
+- Radio
+- Toggle
+- Select (Dropdown)
+- Table
+`;
 
 const checkboxProps: PropDef[] = [
   { name: 'label', type: 'ReactNode', required: false, description: 'Checkbox label' },
@@ -41,7 +141,7 @@ export function CheckboxPage() {
   return (
     <ComponentPageTemplate
       title="Checkbox"
-      description="사용자가 하나 이상의 옵션을 선택하거나 해제할 수 있는 선택 컨트롤이다. 단일 선택(Single Checkbox)과 다중 선택(Checkbox Group) 두 가지 방식으로 사용되며, Table 내 행 선택에도 활용된다."
+      description="사용자가 하나 이상의 옵션을 선택하거나 해제할 수 있는 선택 컨트롤. 단일 선택(Single Checkbox)과 다중 선택(Checkbox Group) 두 가지 방식으로 사용되며, Table 내 행 선택에도 활용된다."
       whenToUse={[
         'Single Checkbox: 약관 동의, 옵션 활성화 등 이진(yes/no) 선택이 필요할 때',
         'Checkbox Group: 여러 옵션 중 복수 선택이 가능한 경우',
@@ -160,232 +260,21 @@ export function CheckboxPage() {
       }
       guidelines={
         <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Single Checkbox</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        단일 이진 선택 (약관 동의, 옵션 활성화 등)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Checkbox Group</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        복수 선택 (수직/수평 배치)
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Composition</h4>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                Control + Label + Description(optional) 구조. 라벨 클릭으로도 체크 상태를 변경할 수
-                있어야 한다.
-              </p>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Elements</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        요소
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Control</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">체크박스 박스 영역</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Label</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">선택 항목 설명 (필수)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Description</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        라벨 하단 보조 설명 (선택)
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Design Tokens</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Token
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        값
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">size</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">16×16px</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">radius</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">4px</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">gap</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">6px</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">icon</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">12px</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">States</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        State
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Unselected</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">미선택</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Selected</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">선택됨 (체크)</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Indeterminate</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        일부 선택 (전체 선택 체크박스)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Disabled</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">비활성화</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        Disabled + Checked
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">비활성화 + 선택됨</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Focused</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">포커스 링</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Hover</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">호버 배경</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Behavior</h4>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                선택 토글: 클릭 또는 Space로 체크/해제. Checkbox Group 전체 선택 시 &quot;전체
-                선택&quot; 체크박스는 indeterminate로 일부 선택 상태를 표시한다.
-              </p>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                레이아웃: 수직(vertical) 또는 수평(horizontal) 배치. 옵션이 많으면 수직 배치를
-                권장한다.
-              </p>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                  <h5 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do ✅</h5>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>
-                      라벨은 반드시 제공하며, 라벨 클릭으로도 체크 상태를 변경할 수 있게 한다.
-                    </li>
-                    <li>단일 체크박스는 약관 동의, 옵션 활성화 등 이진(yes/no) 선택에 사용한다.</li>
-                    <li>
-                      Checkbox Group은 &quot;전체 선택&quot; 시 indeterminate 상태를 표시한다.
-                    </li>
-                    <li>FormField와 함께 사용할 때는 spacing=&quot;loose&quot;를 적용한다.</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                  <h5 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
-                    Don&apos;t ❌
-                  </h5>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>하나의 옵션만 선택 가능한 경우 Checkbox 대신 Radio를 사용한다.</li>
-                    <li>On/Off 즉시 전환이 필요한 경우 Toggle을 사용한다.</li>
-                    <li>5개 이상의 옵션을 나열할 때는 Select 또는 Multi-select 검토한다.</li>
-                    <li>라벨 없이 체크박스만 노출하지 않는다 (Table 행 선택 제외).</li>
-                  </ul>
-                </div>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Content Guidelines
-              </h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">라벨 작성</h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>라벨은 선택 항목을 명확히 설명한다 (예: &quot;이메일 알림 받기&quot;).</li>
-                <li>
-                  긍정형 표현을 사용한다 (&quot;이메일 알림 받기&quot; vs &quot;이메일 알림 받지
-                  않기&quot;).
-                </li>
-                <li>긴 설명은 description에 배치한다.</li>
-                <li>약관 동의의 경우 &quot;동의합니다&quot; 형태로 명확히 작성한다.</li>
-                <li>Checkbox Group 라벨은 그룹 전체를 대표하는 질문 형태로 작성한다.</li>
-              </ul>
-            </VStack>
-          </div>
+          <NotionRenderer markdown={CHECKBOX_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Checkbox에 지정된 라벨이 있을 경우 라벨은 반드시 표시한다.',
+              'Checkbox Group에는 명확한 그룹 레이블(legend)을 함께 제공한다.',
+              '관련 있는 옵션끼리 하나의 Checkbox Group으로 묶는다.',
+              'Indeterminate는 "전체 선택" 체크박스에 한정해 사용한다.',
+            ]}
+            dontItems={[
+              '단독으로 On/Off 토글 목적으로 사용하지 않는다 → Toggle 사용.',
+              '하나만 선택 가능한 옵션 그룹에 Checkbox를 사용하지 않는다 → Radio 사용.',
+              '라벨 없이 Control만 단독으로 노출하지 않는다 (단, Table 내 행 선택 등 맥락이 명확한 경우 예외).',
+              '선택지가 5개 이상인 경우 Checkbox 나열 대신 Select(Dropdown) 또는 Multi-select 사용을 검토한다.',
+            ]}
+          />
         </VStack>
       }
       tokens={
@@ -403,14 +292,10 @@ export function CheckboxPage() {
         </ul>
       }
       relatedLinks={[
-        { label: 'Radio', path: '/design/components/radio', description: '단일 선택' },
-        { label: 'Toggle', path: '/design/components/toggle', description: 'On/Off 스위치' },
-        { label: 'Select', path: '/design/components/select', description: '드롭다운 단일 선택' },
-        {
-          label: 'Table',
-          path: '/design/components/table',
-          description: '행 선택 (Checkbox 내장)',
-        },
+        { label: 'Radio', path: '/design/components/radio' },
+        { label: 'Toggle', path: '/design/components/toggle' },
+        { label: 'Select', path: '/design/components/select' },
+        { label: 'Table', path: '/design/components/table' },
       ]}
     />
   );

@@ -18,6 +18,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface HPARow {
   id: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   workload: string;
@@ -58,7 +59,7 @@ interface HPARow {
 const hpaData: HPARow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-horizontal-autoscaler',
     namespace: 'namespaceName',
     workload: 'workloadName',
@@ -69,7 +70,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'backend-api-gateway-cpu-memory-autoscaler',
     namespace: 'default',
     workload: 'api-deployment',
@@ -80,7 +81,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '3',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'frontend-web-production-pending-workload-autoscaler',
     namespace: 'production',
     workload: 'web-deployment',
@@ -91,7 +92,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '4',
-    status: 'Error',
+    status: 'ImagePullBackOff',
     name: 'staging-environment-workload-autoscaler',
     namespace: 'staging',
     workload: 'staging-deployment',
@@ -167,9 +168,11 @@ export function ContainerHPAPage() {
       align: 'center',
       sortable: false,
       render: (value) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

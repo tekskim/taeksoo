@@ -202,10 +202,10 @@ import type { FileItem } from '@/design-system';
         </VStack>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
               <li>파일 업로드 후 선택된 파일을 미리보기 형태로 보여줄 때 사용합니다.</li>
               <li>
                 <strong>FileListCard</strong>: 파일 목록만 표시할 때 사용합니다.
@@ -222,8 +222,8 @@ import type { FileItem } from '@/design-system';
               </li>
               <li>Drawer 안에서 사용 시 max-width를 지정하지 않아도 부모에 맞춰 늘어납니다.</li>
             </ul>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">

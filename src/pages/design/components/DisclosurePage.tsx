@@ -131,10 +131,10 @@ export function DisclosurePage() {
         </VStack>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
               <li>Create/Edit 페이지에서 설정 카드의 접힘/펼침에 사용합니다.</li>
               <li>
                 <strong>기본 상태</strong>: 필수 입력이 있는 섹션은 기본 펼침, 선택 사항만 있는
@@ -147,8 +147,8 @@ export function DisclosurePage() {
               </li>
               <li>접힘/펼침 전환 시 부드러운 애니메이션(200~300ms)을 적용합니다.</li>
             </ul>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">

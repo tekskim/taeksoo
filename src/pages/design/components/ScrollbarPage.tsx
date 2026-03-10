@@ -1,5 +1,279 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function ScrollbarGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={2}>
+        <SectionTitle>Variants</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>클래스명</Th>
+              <Th>적용 컨텍스트</Th>
+              <Th>너비</Th>
+              <Th>Thumb 색상</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>sidebar-scroll</strong>
+              </Td>
+              <Td>메인 사이드바 네비게이션</Td>
+              <Td>6px</Td>
+              <Td>border-default</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>drawer-scroll</strong>
+              </Td>
+              <Td>드로어/패널 콘텐츠</Td>
+              <Td>6px</Td>
+              <Td>border-default</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>settings-scroll</strong>
+              </Td>
+              <Td>설정 페이지 콘텐츠</Td>
+              <Td>6px</Td>
+              <Td>border-default</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>legend-scroll</strong>
+              </Td>
+              <Td>차트 범례 영역</Td>
+              <Td>6px</Td>
+              <Td>border-default</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>shell-scroll</strong>
+              </Td>
+              <Td>터미널/Shell 출력</Td>
+              <Td>6px</Td>
+              <Td>#475569</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>table-scroll-container</strong>
+              </Td>
+              <Td>테이블 가로 스크롤</Td>
+              <Td>height 6px</Td>
+              <Td>border-default</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <Prose>
+          <p>
+            <code>modal-scroll</code>은 4px 너비를 사용한다.
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={2}>
+        <SectionTitle>Composition (구성 요소)</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>요소</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Track</strong>
+              </Td>
+              <Td>transparent</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Thumb</strong>
+              </Td>
+              <Td>border-radius full</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Design Token</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>scrollbar-width</strong>
+              </Td>
+              <Td>6px / 4px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>scrollbar-radius</strong>
+              </Td>
+              <Td>full</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>scrollbar-track-color</strong>
+              </Td>
+              <Td>transparent</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>scrollbar-thumb-color</strong>
+              </Td>
+              <Td>border-default</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>scrollbar-thumb-color-dark</strong>
+              </Td>
+              <Td>#475569</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={2}>
+        <SectionTitle>States</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>상태</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Hidden</strong>
+              </Td>
+              <Td>기본 (비활성 시)</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Visible</strong>
+              </Td>
+              <Td>hover 시</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Active</strong>
+              </Td>
+              <Td>드래그 중</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={2}>
+        <SectionTitle>Behavior</SectionTitle>
+        <Prose>
+          <p className="text-body-md font-medium text-[var(--color-text-default)]">노출 방식</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>기본적으로 스크롤바는 숨겨지고, hover 시에만 표시된다.</li>
+            <li>스크롤 영역에 포커스가 있을 때도 표시할 수 있다.</li>
+            <li>비활성 시 track은 transparent로 보이지 않는다.</li>
+          </ul>
+        </Prose>
+        <Prose>
+          <p className="text-body-md font-medium text-[var(--color-text-default)] mt-2">
+            가로 스크롤
+          </p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <code>table-scroll-container</code> 클래스로 테이블 가로 스크롤에 적용한다.
+            </li>
+            <li>overflow-x: auto와 함께 사용한다.</li>
+          </ul>
+        </Prose>
+        <Prose>
+          <p className="text-body-md font-medium text-[var(--color-text-default)] mt-2">
+            Shell 컨텍스트
+          </p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <code>shell-scroll</code>은 어두운 배경(터미널)에서 Thumb 색상을 #475569으로 적용한다.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={2}>
+        <SectionTitle>Usage Guidelines</SectionTitle>
+        <DosDonts
+          doItems={[
+            '스크롤 가능한 모든 컨테이너에 적절한 scroll 클래스를 적용한다.',
+            '컨텍스트(사이드바, 드로어, 모달, 테이블)에 맞는 variant를 선택한다.',
+          ]}
+          dontItems={[
+            '스크롤이 필요 없는 영역에 scroll 클래스를 적용하지 않는다.',
+            '브라우저 기본 스크롤바가 요구되는 환경에서 강제로 덮어쓰지 않는다.',
+            '다른 variant의 스타일을 혼용하지 않는다.',
+          ]}
+        />
+      </VStack>
+    </VStack>
+  );
+}
 
 export function ScrollbarPage() {
   return (
@@ -15,269 +289,7 @@ export function ScrollbarPage() {
         '콘텐츠가 컨테이너 안에 완전히 들어오는 경우 (스크롤 불필요)',
         '브라우저 기본 스크롤바가 요구되는 OS 환경',
       ]}
-      guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={6}>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        클래스명
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        적용 컨텍스트
-                      </th>
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        너비
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        Thumb 색상
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        sidebar-scroll
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        메인 사이드바 네비게이션
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        drawer-scroll
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        드로어/패널 콘텐츠
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        settings-scroll
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        설정 페이지 콘텐츠
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        legend-scroll
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">차트 범례 영역</td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        shell-scroll
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        터미널/Shell 출력
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">#475569</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        table-scroll-container
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        테이블 가로 스크롤
-                      </td>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">height 6px</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-body-sm text-[var(--color-text-muted)] mt-2">
-                <code>modal-scroll</code>은 4px 너비를 사용한다.
-              </p>
-            </VStack>
-
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Composition (구성 요소)
-              </h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        요소
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        Track
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">transparent</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        Thumb
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-radius full</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="overflow-x-auto mt-2">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Design Token
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        값
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        scrollbar-width
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">6px / 4px</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        scrollbar-radius
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">full</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        scrollbar-track-color
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">transparent</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        scrollbar-thumb-color
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">border-default</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        scrollbar-thumb-color-dark
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">#475569</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">States</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        상태
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        Hidden
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">기본 (비활성 시)</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        Visible
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">hover 시</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                        Active
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">드래그 중</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Behavior</h4>
-              <p className="text-body-sm font-medium text-[var(--color-text-default)]">노출 방식</p>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>기본적으로 스크롤바는 숨겨지고, hover 시에만 표시된다.</li>
-                <li>스크롤 영역에 포커스가 있을 때도 표시할 수 있다.</li>
-                <li>비활성 시 track은 transparent로 보이지 않는다.</li>
-              </ul>
-              <p className="text-body-sm font-medium text-[var(--color-text-default)] mt-2">
-                가로 스크롤
-              </p>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  <code>table-scroll-container</code> 클래스로 테이블 가로 스크롤에 적용한다.
-                </li>
-                <li>overflow-x: auto와 함께 사용한다.</li>
-              </ul>
-              <p className="text-body-sm font-medium text-[var(--color-text-default)] mt-2">
-                Shell 컨텍스트
-              </p>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  <code>shell-scroll</code>은 어두운 배경(터미널)에서 Thumb 색상을 #475569으로
-                  적용한다.
-                </li>
-              </ul>
-            </VStack>
-
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-success)]">
-                    Do ✅
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>스크롤 가능한 모든 컨테이너에 적절한 scroll 클래스를 적용한다.</li>
-                    <li>컨텍스트(사이드바, 드로어, 모달, 테이블)에 맞는 variant를 선택한다.</li>
-                  </ul>
-                </div>
-                <div>
-                  <span className="text-body-sm font-medium text-[var(--color-state-danger)]">
-                    Don&apos;t ❌
-                  </span>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1 mt-1">
-                    <li>스크롤이 필요 없는 영역에 scroll 클래스를 적용하지 않는다.</li>
-                    <li>브라우저 기본 스크롤바가 요구되는 환경에서 강제로 덮어쓰지 않는다.</li>
-                    <li>다른 variant의 스타일을 혼용하지 않는다.</li>
-                  </ul>
-                </div>
-              </div>
-            </VStack>
-          </VStack>
-        </div>
-      }
+      guidelines={<ScrollbarGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>width: 6px</code> · <code>radius: full</code> · <code>track: transparent</code> ·{' '}

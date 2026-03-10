@@ -1,58 +1,83 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { VStack } from '@/design-system';
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function DesktopGridGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <SectionTitle>그리드 방식</SectionTitle>
+        <Prose>
+          <p>
+            CSS Grid의 <code>repeat(auto-fill, 80px)</code>를 사용하여 뷰포트 너비에 따라 아이콘이
+            자동으로 재배열됩니다. 아이콘 추가/삭제 시 레이아웃 변경이 필요 없습니다.
+          </p>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <VStack gap={4}>
+        <SectionTitle>배치 규칙</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>Flow</strong>: row (왼쪽→오른쪽, 위→아래) — OS 데스크톱 컨벤션
+            </li>
+            <li>
+              <strong>Alignment</strong>: top-left (<code>content-start</code>)
+            </li>
+            <li>
+              <strong>Wrap</strong>: 뷰포트 부족 시 자동으로 다음 행으로 이동
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
+        <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
+          <strong>Desktop Grid Guidelines:</strong>
+          <ul className="mt-2 space-y-1 list-disc list-inside">
+            <li>
+              <code>auto-fill</code>로 뷰포트에 맞게 컬럼 수가 자동 결정됩니다.
+            </li>
+            <li>아이콘 셀은 80px 고정 (w-20). 64px 아이콘 이미지가 중앙 정렬됩니다.</li>
+            <li>
+              1280px+ 에서 현재 8개 아이콘이 모두 한 줄에 들어갑니다. 1024px에서는 마지막 아이콘이
+              두 번째 줄로 이동합니다.
+            </li>
+            <li>앱 아이콘 추가 시 레이아웃 변경 없이 자동 reflow됩니다.</li>
+            <li>하단 64px은 "Go to main page" 네비게이션 링크 영역으로 예약됩니다.</li>
+          </ul>
+        </div>
+      </div>
+    </VStack>
+  );
+}
+
 export function DesktopGridPage() {
   return (
     <ComponentPageTemplate
       title="Desktop Icon Grid"
       description="Responsive grid layout for desktop page icons. Auto-reflows based on viewport width."
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">그리드 방식</h4>
-                <p className="text-body-md text-[var(--color-text-muted)]">
-                  CSS Grid의 <code>repeat(auto-fill, 80px)</code>를 사용하여 뷰포트 너비에 따라
-                  아이콘이 자동으로 재배열됩니다. 아이콘 추가/삭제 시 레이아웃 변경이 필요 없습니다.
-                </p>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">배치 규칙</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>Flow</strong>: row (왼쪽→오른쪽, 위→아래) — OS 데스크톱 컨벤션
-                  </li>
-                  <li>
-                    <strong>Alignment</strong>: top-left (<code>content-start</code>)
-                  </li>
-                  <li>
-                    <strong>Wrap</strong>: 뷰포트 부족 시 자동으로 다음 행으로 이동
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-state-info-bg)] rounded-[var(--radius-md)]">
-            <div className="text-[length:var(--font-size-12)] text-[var(--color-state-info)]">
-              <strong>Desktop Grid Guidelines:</strong>
-              <ul className="mt-2 space-y-1 list-disc list-inside">
-                <li>
-                  <code>auto-fill</code>로 뷰포트에 맞게 컬럼 수가 자동 결정됩니다.
-                </li>
-                <li>아이콘 셀은 80px 고정 (w-20). 64px 아이콘 이미지가 중앙 정렬됩니다.</li>
-                <li>
-                  1280px+ 에서 현재 8개 아이콘이 모두 한 줄에 들어갑니다. 1024px에서는 마지막
-                  아이콘이 두 번째 줄로 이동합니다.
-                </li>
-                <li>앱 아이콘 추가 시 레이아웃 변경 없이 자동 reflow됩니다.</li>
-                <li>하단 64px은 "Go to main page" 네비게이션 링크 영역으로 예약됩니다.</li>
-              </ul>
-            </div>
-          </div>
-        </VStack>
-      }
+      guidelines={<DesktopGridGuidelines />}
       examples={
         <VStack gap={8}>
           {/* Grid Specification Table */}

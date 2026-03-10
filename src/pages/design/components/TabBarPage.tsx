@@ -1,9 +1,54 @@
 import { useRef } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { TabBar, useTabBar, VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
 
 const tabBarProps: PropDef[] = [
   { name: 'tabs', type: 'TabBarItem[]', required: true, description: 'Tab items array' },
@@ -54,7 +99,7 @@ function TabBarPreview() {
   });
 
   return (
-    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden w-full">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden w-full">
       <TabBar
         tabs={tabs}
         activeTab={activeTab}
@@ -63,7 +108,7 @@ function TabBarPreview() {
         onTabAdd={addTab}
         showWindowControls={false}
       />
-      <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+      <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md">
         Content for: {tabs.find((t) => t.id === activeTab)?.label || 'No tab selected'}
       </div>
     </div>
@@ -75,7 +120,7 @@ function TabBarDemo() {
 
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Entry page', closable: true },
+      { id: 'tab-1', label: 'Entry page', closable: false },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -118,8 +163,14 @@ function TabBarDemo() {
   return (
     <VStack gap={8}>
       <VStack gap={3}>
-        <Label>Interactive Demo (3 tabs)</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+        <VStack gap={1}>
+          <Label>Interactive Demo (3 tabs)</Label>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            탭 클릭으로 전환, × 클릭으로 닫기, + 클릭으로 새 탭 추가. 기본 탭(Entry page)은 닫을 수
+            없음.
+          </span>
+        </VStack>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
           <TabBar
             tabs={tabs}
             activeTab={activeTab}
@@ -127,17 +178,21 @@ function TabBarDemo() {
             onTabClose={closeTab}
             onTabAdd={handleAddTab}
           />
-          <div className="h-[120px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+          <div className="h-[120px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md">
             Content for: {tabs.find((t) => t.id === activeTab)?.label || 'No tab selected'}
           </div>
         </div>
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-          Click tabs to switch, click × to close, click + to add new tabs
-        </p>
       </VStack>
+
       <VStack gap={3}>
-        <Label>Many Tabs Demo (8 tabs - 비율 축소)</Label>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] overflow-hidden">
+        <VStack gap={1}>
+          <Label>Many Tabs (8 tabs — 비율 축소)</Label>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            탭 수가 증가하면 모든 탭이 화면에 표시될 수 있도록 너비가 비율적으로 축소된다. 가로
+            스크롤은 발생하지 않는다.
+          </span>
+        </VStack>
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
           <TabBar
             tabs={manyTabsDemo.tabs}
             activeTab={manyTabsDemo.activeTab}
@@ -146,7 +201,7 @@ function TabBarDemo() {
             onTabAdd={handleAddManyTab}
             showAddButton={true}
           />
-          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-[length:var(--font-size-12)]">
+          <div className="h-[80px] flex items-center justify-center bg-[var(--color-surface-default)] text-[var(--color-text-muted)] text-body-md">
             탭이 많아지면 모든 탭이 화면에 보이도록 너비가 비율적으로 줄어듭니다.
           </div>
         </div>
@@ -155,15 +210,255 @@ function TabBarDemo() {
   );
 }
 
+function TabBarGuidelines() {
+  return (
+    <VStack gap={10}>
+      {/* Composition */}
+      <VStack gap={4}>
+        <SectionTitle>Composition</SectionTitle>
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[탭 영역 (a)] ···  [+ 버튼 (b)]   [— □ × (c)]`}</pre>
+        </div>
+
+        <SubSectionTitle>1. 탭 (Tab Item)</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">요소</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>a. 탭 레이블</Td>
+              <Td>페이지 타이틀 또는 리소스 이름 표시. 너비 초과 시 말줄임(truncate) 처리</Td>
+            </tr>
+            <tr>
+              <Td>b. 닫기 버튼 (×)</Td>
+              <Td>탭 닫기.</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>2. 탭 추가 버튼 (+)</SubSectionTitle>
+        <Prose>
+          <p>탭 목록 우측에 위치. 클릭 시 새 탭 추가.</p>
+        </Prose>
+
+        <SubSectionTitle>3. 윈도우 컨트롤 영역</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">요소</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>최소화 (—)</Td>
+              <Td>현재 윈도우 최소화</Td>
+            </tr>
+            <tr>
+              <Td>최대화 (□)</Td>
+              <Td>현재 윈도우 최대화</Td>
+            </tr>
+            <tr>
+              <Td>닫기 (×)</Td>
+              <Td>현재 윈도우 닫기</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>Design Tokens</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <code>height</code>
+              </Td>
+              <Td>36px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>max-width</code> (탭)
+              </Td>
+              <Td>160px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>padding-x</code>
+              </Td>
+              <Td>12px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>font-size</code>
+              </Td>
+              <Td>12px</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* States */}
+      <VStack gap={4}>
+        <SectionTitle>States</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[180px]">상태</Th>
+              <Th>설명</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Default</strong>
+              </Td>
+              <Td>비활성 탭. 배경색 미강조</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Active / Selected</strong>
+              </Td>
+              <Td>현재 선택된 탭. 하단 강조선 또는 배경 강조로 구분</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Hover</strong>
+              </Td>
+              <Td>마우스 오버 시 시각적 피드백 제공</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Focus</strong>
+              </Td>
+              <Td>키보드 포커스 상태. 접근성 대응을 위한 포커스 링 표시</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Dragging</strong>
+              </Td>
+              <Td>드래그 앤 드롭으로 탭 순서 변경 중인 상태</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* Behavior */}
+      <VStack gap={4}>
+        <SectionTitle>Behavior</SectionTitle>
+
+        <VStack gap={3}>
+          <SubSectionTitle>탭 너비 정책</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>탭의 최대 너비는 160px이다.</li>
+              <li>
+                탭 수가 증가하면 모든 탭이 화면에 표시될 수 있도록 탭 너비가 비율적으로 축소된다.
+              </li>
+              <li>탭이 축소되더라도 가로 스크롤은 발생하지 않는다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>탭 추가 / 닫기</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <code>+</code> 버튼 클릭 시 새 탭이 추가된다.
+              </li>
+              <li>
+                <code>×</code> 버튼 클릭 시 해당 탭이 닫힌다.
+              </li>
+              <li>활성 탭을 닫으면 인접한 탭이 자동으로 활성화된다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>탭 순서 변경</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>드래그 앤 드롭으로 탭 순서를 변경할 수 있다.</li>
+              <li>드래그 중인 탭은 시각적으로 구분되어 표시된다 (Dragging 상태).</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>탭 레이블 처리</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>탭 레이블이 현재 탭 너비를 초과하면 말줄임(…) 처리한다.</li>
+              <li>말줄임된 레이블은 hover 시 툴팁으로 전체 이름을 표시한다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* Usage Guidelines */}
+      <VStack gap={4}>
+        <SectionTitle>Usage Guidelines</SectionTitle>
+        <DosDonts
+          doItems={[
+            '탭 레이블은 해당 페이지 또는 리소스의 이름을 그대로 사용한다.',
+            '항상 활성(selected) 탭이 하나 이상 존재하도록 한다.',
+            '기본 탭(닫을 수 없는 탭)은 항상 첫 번째 위치에 고정한다.',
+          ]}
+          dontItems={[
+            '탭 레이블에 "페이지", "탭" 등 불필요한 단어를 포함하지 않는다.',
+            '탭 바를 콘텐츠 영역 내 뷰 전환 용도(Tabs 컴포넌트의 역할)로 혼용하지 않는다.',
+            '탭이 한 개인 경우에도 탭 바를 숨기거나 제거하지 않는다. 일관된 레이아웃을 유지한다.',
+          ]}
+        />
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* Content Guidelines */}
+      <VStack gap={4}>
+        <SectionTitle>Content Guidelines</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>탭 레이블은 페이지 타이틀 또는 리소스 이름을 그대로 사용한다.</li>
+            <li>
+              레이블은 가능한 간결하게 작성하되, 사용자가 탭의 내용을 즉시 식별할 수 있어야 한다.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+    </VStack>
+  );
+}
+
 export function TabBarPage() {
   return (
     <ComponentPageTemplate
-      title="TabBar"
-      description="Browser-style tabs with responsive width (max 160px, auto-shrink when overflow)"
+      title="Tab Bar"
+      description="브라우저 스타일의 탭바로, 여러 페이지 또는 리소스를 동시에 열어 작업할 수 있는 멀티 탭 인터페이스다."
+      whenToUse={[
+        '사용자가 여러 페이지 또는 리소스를 동시에 열어두고 전환해야 할 때',
+        '브라우저와 유사한 멀티 탭 탐색 경험이 필요한 앱 내 환경을 구현할 때',
+      ]}
+      whenNotToUse={['단일 콘텐츠 영역 내에서 뷰를 전환하는 용도라면 Tabs 컴포넌트를 사용한다.']}
       preview={
         <ComponentPreview
           code={`const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
-  initialTabs: [{ id: '1', label: 'Tab 1', closable: true }, ...],
+  initialTabs: [{ id: '1', label: 'Entry page', closable: false }, ...],
   initialActiveTab: '1',
 });
 <TabBar tabs={tabs} activeTab={activeTab} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addTab} />`}
@@ -175,67 +470,92 @@ export function TabBarPage() {
         code: `import { TabBar, useTabBar } from '@/design-system';
 
 const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
-  initialTabs: [{ id: '1', label: 'Home', closable: false }, { id: '2', label: 'Settings', closable: true }],
+  initialTabs: [
+    { id: '1', label: 'Home', closable: false },
+    { id: '2', label: 'Settings', closable: true },
+  ],
   initialActiveTab: '1',
 });
-<TabBar tabs={tabs} activeTab={activeTab} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addTab} />`,
+
+<TabBar
+  tabs={tabs}
+  activeTab={activeTab}
+  onTabChange={selectTab}
+  onTabClose={closeTab}
+  onTabAdd={addTab}
+/>`,
       }}
       examples={<TabBarDemo />}
-      guidelines={
-        <>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  브라우저 스타일의 탭으로 여러 페이지/리소스를 동시에 열어 작업할 수 있습니다.
-                </li>
-                <li>
-                  <strong>탭 너비</strong>: 최대 160px, 탭 수 증가 시 자동으로 축소됩니다.
-                </li>
-                <li>
-                  <strong>탭 추가</strong>: + 버튼으로 새 탭 추가. 기본 탭(Home 등)은 닫을 수
-                  없습니다 (<code>closable: false</code>).
-                </li>
-                <li>
-                  <strong>탭 정렬</strong>: 드래그 앤 드롭으로 탭 순서를 변경할 수 있습니다.
-                </li>
-                <li>
-                  <strong>탭 이름</strong>: 페이지 타이틀 또는 리소스 이름을 표시합니다. 긴 이름은
-                  말줄임 처리.
-                </li>
-              </ul>
-            </VStack>
-          </div>
-          <div className="mt-4">
-            <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-2">Features</h4>
-            <ul className="list-disc list-outside pl-4 space-y-1 text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-              <li>탭 최대 너비 160px, 긴 타이틀은 truncate 처리</li>
-              <li>탭이 많아지면 비율적으로 너비가 줄어듦 (스크롤 없음)</li>
-              <li>탭 추가/닫기 기능</li>
-              <li>윈도우 컨트롤 (최소화/최대화/닫기)</li>
-            </ul>
-          </div>
-        </>
-      }
+      guidelines={<TabBarGuidelines />}
       tokens={
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> ·{' '}
-          <code>font: 12px</code>
-        </div>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <code>height</code>
+              </Td>
+              <Td>36px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>max-width</code> (탭)
+              </Td>
+              <Td>160px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>padding-x</code>
+              </Td>
+              <Td>12px</Td>
+            </tr>
+            <tr>
+              <Td>
+                <code>font-size</code>
+              </Td>
+              <Td>12px</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
       }
       apiReference={tabBarProps}
       accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          TabBar uses role="tablist" and role="tab". Tab buttons are keyboard navigable. Close and
-          add buttons have aria-labels.
-        </p>
+        <Prose>
+          <p>
+            TabBar uses <code>role="tablist"</code> and <code>role="tab"</code>. Tab buttons are
+            keyboard navigable. Close and add buttons have <code>aria-label</code>s.
+          </p>
+        </Prose>
       }
-      relatedLinks={[
-        { label: 'TopBar', path: '/design/components/topbar', description: 'Application header' },
-        { label: 'Tabs', path: '/design/components/tabs', description: 'Content tabs' },
-        { label: 'PageShell', path: '/design/patterns/layout', description: 'Page layout' },
+      keyboardInteractions={[
+        { key: 'Tab', description: 'TabBar 진입 및 이탈' },
+        { key: '← / →', description: '이전 / 다음 탭으로 포커스 이동' },
+        { key: 'Enter / Space', description: '포커스된 탭 선택' },
+        { key: 'Delete / Backspace', description: '포커스된 탭 닫기 (closable인 경우)' },
       ]}
+      relatedLinks={[
+        {
+          label: 'Top Navigation Bar',
+          path: '/design/components/topbar',
+          description: '상단 네비게이션 바',
+        },
+        {
+          label: 'Tabs',
+          path: '/design/components/tabs',
+          description: '콘텐츠 영역 내 뷰 전환용 탭',
+        },
+        {
+          label: 'Page Shell',
+          path: '/design/patterns/layout',
+          description: '페이지 레이아웃 구조',
+        },
+      ]}
+      notionPageId="30d9eddc34e680baa56ec56949c7c994"
     />
   );
 }

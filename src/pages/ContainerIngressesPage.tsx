@@ -18,6 +18,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface IngressRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   target: string[];
@@ -57,7 +58,7 @@ interface IngressRow {
 const ingressesData: IngressRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-tls-ingress-controller',
     namespace: 'namespaceName',
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
@@ -67,7 +68,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'api-gateway-external-routing-ingress-rule',
     namespace: 'default',
     target: ['api → 8080/TCP'],
@@ -77,7 +78,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '3',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'web-application-production-tls-ingress-rule',
     namespace: 'production',
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
@@ -87,7 +88,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '4',
-    status: 'Error',
+    status: 'ImagePullBackOff',
     name: 'staging-application-preview-ingress-rule',
     namespace: 'staging',
     target: ['app → 3000/TCP'],
@@ -158,9 +159,11 @@ export function ContainerIngressesPage() {
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Button, NotificationCenter, VStack } from '@/design-system';
 import type { NotificationItem } from '@/design-system';
 import {
@@ -9,6 +11,108 @@ import {
   IconInfoCircle,
   IconRefresh,
 } from '@tabler/icons-react';
+
+const NOTIFICATION_CENTER_GUIDELINES = `## Overview
+앱 내부 알림센터는 해당 앱에서 발생한 모든 기록형 알림의 원본 저장소이다. 사용자가 Snackbar를 놓치거나 과거 알림을 확인하려는 경우 알림센터를 통해 확인할 수 있다.
+
+---
+
+## Composition
+
+| 요소 | 설명 |
+| --- | --- |
+| Notification icon | 알림센터 열기 |
+| Unread badge | 안읽은 알림 표시 |
+| Tabs | 알림 필터 (All/Unread/Error) |
+| Mark all as read | 전체 읽음 처리 |
+| Notification list | 알림 목록 |
+| Notification item | 개별 알림 |
+
+### Notification Icon
+- 알림센터 열기/닫기 트리거
+- Unread badge와 함께 표시
+
+### Tabs
+- All: 모든 알림, Unread: 읽지 않은 알림, Error: 실패 알림
+- 정렬은 최신순
+
+### Mark all as read
+- 현재 알림센터에 표시된 알림을 읽음 처리
+- Badge 제거, 호버 시 툴팁 "Mark all as read"
+
+### Notification Item
+- 전역 패널의 개별 알림과 동일한 구조
+
+| 구성요소 | 설명 |
+| --- | --- |
+| Type icon | 알림 유형 (success/error/warning/info) |
+| Message | 알림 메시지 |
+| Timestamp | 발생 시각 |
+| Partition info | 프로젝트/네임스페이스 등 |
+| Read button | 읽음 처리 |
+| View details | 상세 메시지 확장 |
+
+---
+
+## Behavior
+
+### 1) 기록 규칙
+- 스낵바 알림은 항상 알림 센터에 기록된다.
+- 토스트, 인라인, Validation은 기록되지 않는다.
+
+### 2) 스낵바 관계
+
+| 사용자 행동 | 읽음 처리 |
+| --- | --- |
+| Snackbar 클릭 | 읽음 |
+| Snackbar 닫기/자동 종료/View details | 안읽음 유지 |
+
+- 스낵바로 노출되는 메세지는 모두 알림센터에 기록된다.
+
+### 3) Global Notification Panel
+- 모든 앱의 안읽은 알림 집계 뷰, 최신순 정렬
+- 알림 센터와 실시간 동기화
+
+| 이벤트 | 패널 동작 |
+| --- | --- |
+| 새 알림 발생 | 패널 상단 추가 |
+| 알림 읽음 처리 | 패널에서 제거 |
+| 알림 만료 | 패널에서 제거 |
+
+### 4) Snackbar Suppression Rule
+
+| 조건 | 스낵바 동작 |
+| --- | --- |
+| 알림센터 열림 | 노출 안 됨 |
+| 글로벌 패널 열림 | 노출 안 됨 |
+
+### 5) 읽음 처리 기준
+
+| 행동 | 결과 |
+| --- | --- |
+| Snackbar 클릭 | 읽음 처리 |
+| Notification item 클릭 | 읽음 처리 |
+| Read button | 읽음 처리 |
+| Mark all as read | 전체 읽음 처리 |
+| 읽음 처리 후 | 글로벌 알림 패널에서 제거 |
+
+### 6) 알림 보관 정책
+- 알림은 사용자가 삭제할 수 없다.
+- 30일 보관 후 자동 삭제.
+
+---
+
+## Related
+
+| 이름 | 유형 | 이유 |
+| --- | --- | --- |
+| Snackbar | Component | 기록형 알림 |
+| Toast | Component | 단발성 피드백 |
+| Inline Message | Component | 지속 경고 |
+| Modal | Component | 사용자 확인 |
+| Global Notification Panel | Pattern | 안읽은 알림 집계 |
+| Error & Alert | Foundation | 알림 유형 정의 |
+`;
 
 const initialNotifications: NotificationItem[] = [
   {
@@ -78,7 +182,17 @@ export function NotificationCenterPage() {
   return (
     <ComponentPageTemplate
       title="Notification center"
-      description="Centralized notification panel with filtering, read/unread states, and real-time updates"
+      description="앱 내부 알림센터는 해당 앱에서 발생한 모든 기록형 알림의 원본 저장소. 사용자가 Snackbar를 놓치거나 과거 알림을 확인하려는 경우 알림센터를 통해 확인할 수 있다."
+      whenToUse={[
+        '해당 앱에서 발생한 알림 기록을 확인해야 하는 경우',
+        '오류 상세 정보 또는 작업 결과를 확인해야 하는 경우',
+      ]}
+      whenNotToUse={[
+        '단순 UI 피드백 (→ Toast)',
+        '지속 경고 메세지 (→ Inline)',
+        '사용자 확인이 필요한 작업 (→ Modal)',
+        '모든 앱의 알림을 한 번에 확인 (→ Global notification panel)',
+      ]}
       preview={
         <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           <NotificationCenter
@@ -193,150 +307,21 @@ export function NotificationCenterPage() {
         </VStack>
       }
       guidelines={
-        <VStack gap={8}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">1. 개요</h4>
-                <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    앱 내부 알림센터는 해당 앱에서 발생한 모든 알림의{' '}
-                    <strong>원본 기록 공간</strong>이다.
-                  </li>
-                  <li>
-                    토스트 및 전역 알림 패널이 즉각적 인지를 담당한다면, 앱 내부 알림센터는 알림의{' '}
-                    <strong>보관</strong>을 담당한다.
-                  </li>
-                  <li>
-                    알림은 <strong>3일간 보관</strong>되며, 이후 자동 삭제된다.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  토스트, 전역 패널과의 관계
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-md border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          레이어
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          역할
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          기록 여부
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          동작
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          토스트
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">즉시 인지</td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">X</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          노출 1~3초, 호버 시 일시정지. 실패에는 View details 제공.
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          전역 알림 패널
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          모든 앱의 &apos;안읽은&apos; 알림 목록(미러)
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">X</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          필터 없음 · 최신순. 개별/전체 읽음 제공.
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          앱 알림센터
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          원본 기록/상세 확인
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">O</td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          개별/전체 읽음 제공, 실패 상세 제공, 3일 자동 삭제.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">적용 기준</h4>
-                <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
-                  <li>해당 앱의 토스트 메시지를 놓쳤거나 히스토리 확인이 필요한 경우 사용된다.</li>
-                  <li>
-                    알림 클릭 시 기본 동작 → 대상 리소스의 상세 화면으로 이동 + 해당 알림은 읽음
-                    처리
-                  </li>
-                  <li>View details 클릭 시 → 알림센터 내에서 해당 알림 확장 (읽음 아님).</li>
-                  <li>
-                    알림센터가 열려 있는 동안 새 알림이 발생하면 토스트는 뜨지 않고 알림센터 목록에
-                    안읽음으로 직접 추가된다.
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-
-          <VStack gap={3}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">2. 구성요소</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  알림센터 아이콘
-                </h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>클릭 시 알림센터가 열림</li>
-                  <li>안읽은 알림이 있을 시 붉은 색으로 뱃지가 표시</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">탭</h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>전체(All)</strong> → 모든 알림
-                  </li>
-                  <li>
-                    <strong>안 읽음(Unread)</strong> → 안 읽은 알림만
-                  </li>
-                  <li>
-                    <strong>실패(Error)</strong> → 실패 알림만
-                  </li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  전체 읽음 처리 버튼
-                </h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>호버 시 툴팁: &quot;Mark all as read&quot;</li>
-                  <li>클릭 시 현재 알림센터의 모든 알림이 읽음 처리</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">개별 알림</h4>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>토스트와 유사한 형태 (유형 아이콘, 메시지 내용, 발생 시각)</li>
-                  <li>개별 읽음 처리 버튼, 파티션 정보(선택), 상세 보기 버튼(선택)</li>
-                  <li>읽지 않은 알림과 읽은 알림 구별 표시</li>
-                </ul>
-              </div>
-            </div>
-          </VStack>
-        </VStack>
+        <>
+          <NotionRenderer markdown={NOTIFICATION_CENTER_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '모든 기록형 알림을 알림센터에 저장한다',
+              '실패 알림은 상세 정보 제공',
+              '안읽은 알림을 명확히 표시한다',
+            ]}
+            dontItems={[
+              'Toast를 기록형 알림으로 사용하지 않는다',
+              '사용자가 알림을 삭제하도록 하지 않는다',
+              '기록형 알림을 자동으로 숨기지 않는다',
+            ]}
+          />
+        </>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
@@ -345,17 +330,15 @@ export function NotificationCenterPage() {
         </div>
       }
       relatedLinks={[
-        { label: 'Toast', path: '/design/components/toast', description: 'Instant feedback' },
+        { label: 'Snackbar', path: '/design/components/snackbar' },
+        { label: 'Toast', path: '/design/components/toast' },
+        { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Modal', path: '/design/components/modal' },
         {
-          label: 'Global notification panel',
+          label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',
-          description: 'Desktop-level panel',
         },
-        {
-          label: 'Inline message',
-          path: '/design/components/inline-message',
-          description: 'Inline feedback',
-        },
+        { label: 'Error & Alert', path: '/design/foundation/error-alert' },
       ]}
     />
   );

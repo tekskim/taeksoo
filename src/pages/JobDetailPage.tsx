@@ -22,6 +22,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -45,7 +46,7 @@ import {
 interface JobData {
   id: string;
   name: string;
-  status: 'Running' | 'Completed' | 'Failed' | 'Pending';
+  status: string;
   namespace: string;
   image: string;
   createdAt: string;
@@ -56,7 +57,7 @@ interface JobData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   image: string;
   ready: string;
@@ -98,7 +99,7 @@ const mockJobData: Record<string, JobData> = {
   '1': {
     id: '1',
     name: 'jobName',
-    status: 'Completed',
+    status: 'OK',
     namespace: 'default',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025',
@@ -117,7 +118,7 @@ const mockJobData: Record<string, JobData> = {
   '2': {
     id: '2',
     name: 'data-migration-job',
-    status: 'Completed',
+    status: 'True',
     namespace: 'database',
     image: 'migration-tool:v2.1',
     createdAt: 'Nov 9, 2025',
@@ -135,7 +136,7 @@ const mockJobData: Record<string, JobData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -151,6 +152,30 @@ const mockPodsData: PodRow[] = [
       'container-4',
       'container-5',
     ],
+  },
+  {
+    id: '2',
+    status: 'True',
+    name: 'podName-78',
+    image: 'nginx:1.27',
+    ready: '1/1',
+    restarts: 0,
+    ip: '10.11.0.12',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+    containers: ['container-0'],
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    name: 'podName-79',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+    containers: ['container-0'],
   },
 ];
 
@@ -236,9 +261,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -379,9 +406,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
-      flex: 1,
-      sortable: true,
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'center',
+      sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',

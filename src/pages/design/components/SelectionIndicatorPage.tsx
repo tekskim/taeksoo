@@ -116,10 +116,10 @@ export function SelectionIndicatorPage() {
         </VStack>
       }
       guidelines={
-        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-          <VStack gap={2}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-            <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
               <li>테이블에서 선택된 항목의 수를 표시하는 전용 컴포넌트입니다.</li>
               <li>
                 선택 필수(required) 필드에서 미선택 시 <strong>에러 상태</strong>를 표시합니다.
@@ -127,8 +127,8 @@ export function SelectionIndicatorPage() {
               <li>선택된 항목의 개별 제거(X 클릭)와 전체 해제를 지원합니다.</li>
               <li>Drawer 내 리소스 선택 시 테이블 아래에 배치하여 선택 상태를 알립니다.</li>
             </ul>
-          </VStack>
-        </div>
+          </div>
+        </VStack>
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
