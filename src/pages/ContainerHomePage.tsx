@@ -149,7 +149,7 @@ export function ContainerHomePage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>

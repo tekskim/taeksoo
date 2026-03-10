@@ -3031,7 +3031,7 @@ export function CreateJobPage() {
                                       key: 'status',
                                       label: 'Status',
                                       width: fixedColumns.statusLabel,
-                                      align: 'center',
+                                      align: 'left',
                                       render: (value: string) => (
                                         <Tooltip content={value}>
                                           <Badge theme="white" size="sm" className="max-w-[80px]">

@@ -22,6 +22,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -289,7 +290,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -537,7 +538,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -744,15 +745,14 @@ export function ContainerServiceDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={service.status === 'Running' ? 'Active' : service.status}
-              status={
-                service.status === 'Running'
-                  ? 'active'
-                  : service.status === 'Pending'
-                    ? 'building'
-                    : service.status === 'Error'
-                      ? 'error'
-                      : 'muted'
+              value={
+                <Tooltip content={service.status === 'Running' ? 'Active' : service.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {service.status === 'Running' ? 'Active' : service.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
@@ -772,18 +772,44 @@ export function ContainerServiceDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(service.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(service.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(service.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(service.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(service.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(service.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -793,18 +819,44 @@ export function ContainerServiceDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(service.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(service.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(service.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(service.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(service.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(service.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
