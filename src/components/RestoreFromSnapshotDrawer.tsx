@@ -214,9 +214,14 @@ export function RestoreFromSnapshotDrawer({
 
         {/* Volume Snapshots Section */}
         <VStack gap={3}>
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume snapshots
-          </h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Volume snapshots<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select a snapshot from the list to use for the restore operation.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">

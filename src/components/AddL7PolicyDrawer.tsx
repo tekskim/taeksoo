@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, NumberInput, Select, Toggle, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Textarea,
+  NumberInput,
+  Select,
+  Toggle,
+  FormField,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -138,18 +147,25 @@ export function AddL7PolicyDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g., Redirect image traffic to CDN"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
         {/* Action Select */}
         <FormField>
           <FormField.Label>Action</FormField.Label>
+          <FormField.Description>
+            Choose the action to apply to traffic for the L7 policy.
+          </FormField.Description>
           <FormField.Control>
             <VStack gap={2} className="w-full">
               <Select
@@ -180,18 +196,26 @@ export function AddL7PolicyDrawer({
         {/* Position Input */}
         <FormField>
           <FormField.Label>Position</FormField.Label>
+          <FormField.Description>
+            Specifies the evaluation order of the L7 policy.
+          </FormField.Description>
           <FormField.Control>
             <NumberInput
               value={position}
               onChange={(value) => setPosition(value ?? 1)}
               min={1}
-              width="xs"
+              step={1}
+              width="sm"
             />
           </FormField.Control>
         </FormField>
 
         {/* Admin State Toggle */}
-        <FormField label="Admin state" spacing="loose">
+        <FormField
+          label="Admin state"
+          description="Set the administrative state of the policy. 'UP' enables traffic handling, while 'DOWN' disables it."
+          spacing="loose"
+        >
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">

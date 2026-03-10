@@ -1,15 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   Button,
   SearchInput,
   Pagination,
-  StatusIndicator,
-  Radio,
   Table,
   SelectionIndicator,
   InfoBox,
-  fixedColumns,
+  Toggle,
+  FormField,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -18,15 +17,6 @@ import { IconExternalLink } from '@tabler/icons-react';
 /* ----------------------------------------
    Types
    ---------------------------------------- */
-
-export interface InterfaceItem {
-  id: string;
-  portName: string;
-  networkName: string;
-  ipAddress: string;
-  macAddress: string;
-  status: 'active' | 'error' | 'building';
-}
 
 export interface SecurityGroupItem {
   id: string;
@@ -44,34 +34,27 @@ export interface ManageSecurityGroupsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   instance: InstanceInfo;
-  interfaces?: InterfaceItem[];
+  portName?: string;
   securityGroups?: SecurityGroupItem[];
-  onSave?: (interfaceId: string, securityGroupIds: string[]) => void;
+  onSave?: (securityGroupIds: string[], portSecurityEnabled: boolean) => void;
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-const defaultInterfaces: InterfaceItem[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `iface-${i + 1}`,
-  portName: 'port-02',
-  networkName: 'net-02',
-  ipAddress: '192.168.10.1',
-  macAddress: 'fa:16:3e:ab:cd:ef',
-  status: 'active',
-}));
-
-const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 115 }, (_, i) => ({
+const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 15 }, (_, i) => ({
   id: `sg-${i + 1}`,
-  name: 'default-sg',
+  name: i === 0 ? 'default_sg' : `internal-${String(i + 1).padStart(2, '0')}`,
   description: '-',
-  createdAt: 'Sep 5, 2025',
+  createdAt: i % 2 === 0 ? '2025-09-23' : '2025-08-23',
 }));
 
 const ITEMS_PER_PAGE = 5;
 
-// interfaceColumns defined inside component (needs selectedInterfaceId state)
+/* ----------------------------------------
+   Column Definitions
+   ---------------------------------------- */
 
 const securityGroupColumns: TableColumn<SecurityGroupItem>[] = [
   {
@@ -106,109 +89,25 @@ export function ManageSecurityGroupsDrawer({
   isOpen,
   onClose,
   instance,
-  interfaces = defaultInterfaces,
+  portName = 'port-01',
   securityGroups = defaultSecurityGroups,
   onSave,
 }: ManageSecurityGroupsDrawerProps) {
-  // Interface state
-  const [selectedInterfaceId, setSelectedInterfaceId] = useState<string | null>(null);
-  const [interfaceSearchQuery, setInterfaceSearchQuery] = useState('');
-  const [interfacePage, setInterfacePage] = useState(1);
-
-  // Security Groups state
+  const [portSecurityEnabled, setPortSecurityEnabled] = useState(true);
   const [selectedSecurityGroupIds, setSelectedSecurityGroupIds] = useState<string[]>([]);
   const [sgSearchQuery, setSgSearchQuery] = useState('');
   const [sgPage, setSgPage] = useState(1);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
-  // Filter interfaces
-  const filteredInterfaces = interfaces.filter(
-    (iface) =>
-      iface.portName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
-      iface.networkName.toLowerCase().includes(interfaceSearchQuery.toLowerCase()) ||
-      iface.ipAddress.includes(interfaceSearchQuery)
-  );
+  useEffect(() => {
+    if (isOpen) {
+      setPortSecurityEnabled(true);
+      setSelectedSecurityGroupIds([]);
+      setSgSearchQuery('');
+      setSgPage(1);
+    }
+  }, [isOpen]);
 
-  const interfaceTotalPages = Math.ceil(filteredInterfaces.length / ITEMS_PER_PAGE);
-  const paginatedInterfaces = filteredInterfaces.slice(
-    (interfacePage - 1) * ITEMS_PER_PAGE,
-    interfacePage * ITEMS_PER_PAGE
-  );
-
-  const interfaceColumns: TableColumn<InterfaceItem>[] = [
-    {
-      key: 'id' as keyof InterfaceItem,
-      label: '',
-      width: fixedColumns.radio,
-      render: (_value, row) => (
-        <div onClick={(e) => e.stopPropagation()}>
-          <Radio
-            name="interface-select"
-            value={row.id}
-            checked={selectedInterfaceId === row.id}
-            onChange={() => setSelectedInterfaceId(row.id)}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      width: '59px',
-      align: 'center',
-      render: (_value, row) => <StatusIndicator layout="icon-only" status={row.status} size="sm" />,
-    },
-    {
-      key: 'portName',
-      label: 'Name',
-      sortable: true,
-      render: (_value, row) => (
-        <div className="flex flex-col gap-0.5 overflow-hidden">
-          <div className="flex items-center gap-1.5">
-            <span className="text-label-md text-[var(--color-action-primary)] truncate">
-              {row.portName}
-            </span>
-            <IconExternalLink
-              size={12}
-              stroke={1.5}
-              className="shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
-          </span>
-        </div>
-      ),
-    },
-    {
-      key: 'networkName',
-      label: 'Network',
-      sortable: true,
-      render: (_value, row) => (
-        <div className="flex flex-col gap-0.5 overflow-hidden">
-          <div className="flex items-center gap-1.5">
-            <span className="text-label-md text-[var(--color-action-primary)] truncate">
-              {row.networkName}
-            </span>
-            <IconExternalLink
-              size={12}
-              stroke={1.5}
-              className="shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
-          </span>
-        </div>
-      ),
-    },
-    { key: 'ipAddress', label: 'Fixed IP' },
-    { key: 'macAddress', label: 'MAC address' },
-  ];
-
-  // Filter security groups
   const filteredSecurityGroups = securityGroups.filter(
     (sg) =>
       sg.name.toLowerCase().includes(sgSearchQuery.toLowerCase()) ||
@@ -222,13 +121,9 @@ export function ManageSecurityGroupsDrawer({
   );
 
   const handleSave = async () => {
-    setHasAttemptedSubmit(true);
-
-    if (!selectedInterfaceId) return;
-
     setIsSubmitting(true);
     try {
-      await onSave?.(selectedInterfaceId, selectedSecurityGroupIds);
+      await onSave?.(selectedSecurityGroupIds, portSecurityEnabled);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -236,20 +131,10 @@ export function ManageSecurityGroupsDrawer({
   };
 
   const handleClose = () => {
-    setSelectedInterfaceId(null);
     setSelectedSecurityGroupIds([]);
-    setInterfaceSearchQuery('');
     setSgSearchQuery('');
-    setInterfacePage(1);
     setSgPage(1);
-    setHasAttemptedSubmit(false);
     onClose();
-  };
-
-  const handleSecurityGroupToggle = (sgId: string) => {
-    setSelectedSecurityGroupIds((prev) =>
-      prev.includes(sgId) ? prev.filter((id) => id !== sgId) : [...prev, sgId]
-    );
   };
 
   return (
@@ -257,7 +142,7 @@ export function ManageSecurityGroupsDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Manage security groups"
-      description="You can attach or detach security groups for the selected interface. These rules control inbound and outbound traffic for the instance."
+      description="When disabled, no security groups will be applied, and anti-spoofing checks are turned off."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -276,129 +161,74 @@ export function ManageSecurityGroupsDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        <VStack gap={3}>
-          {/* Instance Info Box */}
-          <InfoBox label="Instance" value={instance.name} />
-        </VStack>
+        <InfoBox label="Port name" value={portName} />
 
-        {/* Interfaces Section */}
-        <VStack gap={3}>
-          <VStack gap={1}>
-            <h3 className="text-label-lg text-[var(--color-text-default)]">
-              Interfaces<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </h3>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Select the interface to apply security groups to.
-            </span>
-          </VStack>
-
-          {/* Search */}
-          <div className="w-[280px]">
-            <SearchInput
-              value={interfaceSearchQuery}
-              onChange={(e) => setInterfaceSearchQuery(e.target.value)}
-              onClear={() => setInterfaceSearchQuery('')}
-              placeholder="Search interface by attributes"
-              size="sm"
-              fullWidth
+        <FormField spacing="loose" required>
+          <FormField.Label>Port security</FormField.Label>
+          <FormField.Description>
+            Indicates whether to enable security features on the port, including security groups.
+          </FormField.Description>
+          <FormField.Control>
+            <Toggle
+              checked={portSecurityEnabled}
+              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+              label={portSecurityEnabled ? 'On' : 'Off'}
             />
-          </div>
+          </FormField.Control>
+        </FormField>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={interfacePage}
-            totalPages={interfaceTotalPages}
-            totalItems={filteredInterfaces.length}
-            onPageChange={setInterfacePage}
-            selectedCount={selectedInterfaceId ? 1 : 0}
-          />
+        {portSecurityEnabled && (
+          <VStack gap={3} className="pb-5">
+            <VStack gap={1}>
+              <h3 className="text-label-lg text-[var(--color-text-default)]">Security groups</h3>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select the security groups to apply to the port.
+              </span>
+            </VStack>
 
-          <VStack gap={2}>
-            <div className="w-[648px] max-w-[648px]">
-              <Table<InterfaceItem>
-                columns={interfaceColumns}
-                data={paginatedInterfaces}
-                rowKey="id"
-                onRowClick={(row) => setSelectedInterfaceId(row.id)}
-                emptyMessage="No interfaces found"
+            <div className="w-[280px]">
+              <SearchInput
+                value={sgSearchQuery}
+                onChange={(e) => setSgSearchQuery(e.target.value)}
+                onClear={() => setSgSearchQuery('')}
+                placeholder="Search security groups by attributes"
+                size="sm"
+                fullWidth
               />
             </div>
 
-            {/* Interface Selection Indicator */}
-            <SelectionIndicator
-              selectedItems={
-                selectedInterfaceId
-                  ? [
-                      {
-                        id: selectedInterfaceId,
-                        label: interfaces.find((i) => i.id === selectedInterfaceId)?.portName || '',
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => setSelectedInterfaceId(null)}
-              emptyText="No item selected"
-              error={hasAttemptedSubmit && !selectedInterfaceId}
-              errorMessage="Please select an interface."
-              className="shrink-0 w-[648px]"
+            <Pagination
+              currentPage={sgPage}
+              totalPages={sgTotalPages}
+              totalItems={filteredSecurityGroups.length}
+              onPageChange={setSgPage}
+              selectedCount={selectedSecurityGroupIds.length}
             />
+
+            <VStack gap={2} className="w-full">
+              <Table<SecurityGroupItem>
+                columns={securityGroupColumns}
+                data={paginatedSecurityGroups}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedSecurityGroupIds}
+                onSelectionChange={(keys) => setSelectedSecurityGroupIds(keys as string[])}
+                emptyMessage="No security groups found"
+              />
+              <SelectionIndicator
+                selectedItems={selectedSecurityGroupIds.map((id) => ({
+                  id,
+                  label: securityGroups.find((sg) => sg.id === id)?.name || '',
+                }))}
+                onRemove={(id) =>
+                  setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
+                }
+                emptyText="No items selected"
+                className="shrink-0 w-full"
+              />
+            </VStack>
           </VStack>
-        </VStack>
-
-        {/* Security Groups Section */}
-        <VStack gap={3} className="pb-5">
-          <VStack gap={1}>
-            <h3 className="text-label-lg text-[var(--color-text-default)]">
-              Security groups<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </h3>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
-              Select the security groups to apply to the chosen interface.
-            </span>
-          </VStack>
-
-          {/* Search */}
-          <div className="w-[280px]">
-            <SearchInput
-              value={sgSearchQuery}
-              onChange={(e) => setSgSearchQuery(e.target.value)}
-              onClear={() => setSgSearchQuery('')}
-              placeholder="Search security group by attributes"
-              size="sm"
-              fullWidth
-            />
-          </div>
-
-          {/* Pagination */}
-          <Pagination
-            currentPage={sgPage}
-            totalPages={sgTotalPages}
-            totalItems={filteredSecurityGroups.length}
-            onPageChange={setSgPage}
-            selectedCount={selectedSecurityGroupIds.length}
-          />
-
-          <VStack gap={2}>
-            <Table<SecurityGroupItem>
-              columns={securityGroupColumns}
-              data={paginatedSecurityGroups}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedSecurityGroupIds}
-              onSelectionChange={(keys) => setSelectedSecurityGroupIds(keys as string[])}
-              emptyMessage="No security groups found"
-            />
-            <SelectionIndicator
-              selectedItems={selectedSecurityGroupIds.map((id) => ({
-                id,
-                label: securityGroups.find((sg) => sg.id === id)?.name || '',
-              }))}
-              onRemove={(id) =>
-                setSelectedSecurityGroupIds((prev) => prev.filter((sgId) => sgId !== id))
-              }
-              emptyText="No item selected"
-            />
-          </VStack>
-        </VStack>
+        )}
       </VStack>
     </Drawer>
   );

@@ -536,10 +536,15 @@ export default function IAMEventLogsPage() {
                         }}
                       >
                         {isExpanded ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                          <IconChevronDown
+                            size={16}
+                            stroke={1.5}
+                            className="text-[var(--color-text-default)]"
+                          />
                         ) : (
                           <IconChevronRight
                             size={16}
+                            stroke={1.5}
                             className="text-[var(--color-text-default)]"
                           />
                         )}

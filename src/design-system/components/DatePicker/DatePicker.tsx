@@ -467,7 +467,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         </div>
 
         {/* Date Grid */}
-        <div ref={gridRef} role="grid" className="grid grid-cols-7" onKeyDown={handleGridKeyDown}>
+        <div
+          ref={gridRef}
+          role="group"
+          aria-label="Calendar dates"
+          className="grid grid-cols-7"
+          onKeyDown={handleGridKeyDown}
+        >
           {calendarDays.map((day, index) => {
             const isSelected = day.isSelected || day.isRangeStart || day.isRangeEnd;
             // Only show range background when both start and end are selected

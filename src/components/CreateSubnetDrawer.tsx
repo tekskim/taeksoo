@@ -191,7 +191,7 @@ export function CreateSubnetDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         {/* Subnet Name */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Subnet Name</FormField.Label>
           <FormField.Control>
             <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
@@ -205,6 +205,9 @@ export function CreateSubnetDrawer({
         {/* CIDR */}
         <FormField required error={hasAttemptedSubmit && !cidr.trim()}>
           <FormField.Label>CIDR</FormField.Label>
+          <FormField.Description>
+            Defines the network address (CIDR) for the subnet.
+          </FormField.Description>
           <FormField.Control>
             <Input
               value={cidr}
@@ -214,14 +217,15 @@ export function CreateSubnetDrawer({
             />
           </FormField.Control>
           <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
-          <FormField.HelperText>
-            It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
-            192.168.0.0/16
-          </FormField.HelperText>
         </FormField>
 
         {/* Gateway */}
-        <FormField label="Gateway" spacing="loose">
+        <FormField spacing="loose" required>
+          <FormField.Label>Gateway</FormField.Label>
+          <FormField.Description>
+            Specifies the gateway IP address for the subnet. Gateway must be an IP address within
+            the subnet range, excluding the network and broadcast addresses.
+          </FormField.Description>
           <VStack gap={2}>
             <Toggle
               checked={gatewayEnabled}
@@ -233,18 +237,12 @@ export function CreateSubnetDrawer({
             )}
           </VStack>
         </FormField>
-        {gatewayEnabled && (
-          <p className="text-body-sm text-[var(--color-text-subtle)] -mt-4">
-            Gateway must be an IP address within the subnet range, excluding the network and
-            broadcast addresses.
-          </p>
-        )}
 
         {/* Advanced Options Disclosure */}
         <Disclosure open={showAdvanced} onChange={setShowAdvanced}>
           <Disclosure.Trigger>Advanced options</Disclosure.Trigger>
           <Disclosure.Panel>
-            <VStack gap={6} className="mt-6">
+            <VStack gap={6} className="mt-6 pb-5">
               {/* DHCP */}
               <FormField label="DHCP" spacing="loose">
                 <Toggle
