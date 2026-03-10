@@ -34,6 +34,7 @@ export interface CurrentCertificateInfo {
 export interface ChangeCACertificateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  listenerName?: string;
   currentCertificate: CurrentCertificateInfo;
   certificates?: CACertificateItem[];
   onSubmit?: (certificateId: string) => void;
@@ -60,6 +61,7 @@ const ITEMS_PER_PAGE = 5;
 export function ChangeCACertificateDrawer({
   isOpen,
   onClose,
+  listenerName,
   currentCertificate,
   certificates = defaultCertificates,
   onSubmit,
@@ -191,12 +193,13 @@ export function ChangeCACertificateDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header Section */}
-        <VStack gap={3}>
+        <InfoBox.Group>
+          {listenerName && <InfoBox label="Listener" value={listenerName} />}
           <InfoBox
             label="Current CA certificate"
             value={`${currentCertificate.name} (expired on ${currentCertificate.expiredOn})`}
           />
-        </VStack>
+        </InfoBox.Group>
 
         {/* New Certificate Section */}
         <VStack gap={3} className="w-full pb-5">

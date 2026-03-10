@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, Textarea, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -73,6 +73,7 @@ export function EditPortDrawer({ isOpen, onClose, port, onSubmit }: EditPortDraw
       isOpen={isOpen}
       onClose={handleClose}
       title="Edit port"
+      description="Edit the port's name and description. These changes update basic information only."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -117,13 +118,17 @@ export function EditPortDrawer({ isOpen, onClose, port, onSubmit }: EditPortDraw
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. NIC for frontend instance"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField } from '@/design-system';
+import { Drawer, Button, Input, Textarea, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -97,6 +97,7 @@ export function CreateSecurityGroupDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Create security group"
+      description="A security group acts as a virtual firewall for your instances. Define inbound and outbound rules to control network access to your servers."
       width={360}
       footer={
         <VStack gap={4} className="w-full">
@@ -147,13 +148,17 @@ export function CreateSecurityGroupDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. NIC for frontend instance"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
       </VStack>
     </Drawer>

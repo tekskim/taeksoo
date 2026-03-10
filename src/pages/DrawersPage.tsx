@@ -2428,6 +2428,7 @@ export function DrawersPage() {
       <ChangeServerCertificateDrawer
         isOpen={openDrawer === 'change-server-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         currentCertificate={{
           name: 'server-cert-1',
           expiresAt: 'Oct 10, 2025',
@@ -2440,6 +2441,7 @@ export function DrawersPage() {
       <ChangeCACertificateDrawer
         isOpen={openDrawer === 'change-c-a-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         currentCertificate={{
           name: 'ca-cert-1',
           expiredOn: 'Oct 10, 2025',
@@ -2452,6 +2454,7 @@ export function DrawersPage() {
       <ManageSNICertificateDrawer
         isOpen={openDrawer === 'manage-s-n-i-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         initialSniEnabled={true}
         onSubmit={(data) => {
           console.log('Manage SNI certificate:', data);

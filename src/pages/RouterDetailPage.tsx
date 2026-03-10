@@ -754,7 +754,7 @@ export default function RouterDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconLink size={12} />}
                     disabled={selectedPorts.length === 0}

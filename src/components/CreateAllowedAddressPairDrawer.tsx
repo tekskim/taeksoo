@@ -88,6 +88,9 @@ export function CreateAllowedAddressPairDrawer({
         {/* CIDR Input */}
         <FormField required error={hasAttemptedSubmit && !cidr.trim()}>
           <FormField.Label>CIDR</FormField.Label>
+          <FormField.Description>
+            Specifies the CIDR address to use for the allowed address pair.
+          </FormField.Description>
           <FormField.Control>
             <Input
               value={cidr}
@@ -103,29 +106,34 @@ export function CreateAllowedAddressPairDrawer({
 
         {/* MAC Address Radio Group */}
         <FormField
-          label="MAC address"
           spacing="loose"
           required
           error={macAddressType === 'manual' && hasAttemptedSubmit && !macAddress.trim()}
         >
-          <RadioGroup
-            value={macAddressType}
-            onChange={(value) => setMacAddressType(value as MacAddressType)}
-          >
-            <VStack gap={2}>
-              <HStack gap={2} className="items-center">
-                <Radio value="from_port" label="From port" />
-                <Tooltip content="Use the MAC address assigned to this port automatically.">
-                  <IconHelp
-                    size={12}
-                    stroke={1.5}
-                    className="text-[var(--color-text-subtle)] cursor-help"
-                  />
-                </Tooltip>
-              </HStack>
-              <Radio value="manual" label="Manual" />
-            </VStack>
-          </RadioGroup>
+          <FormField.Label>MAC address</FormField.Label>
+          <FormField.Description>
+            Choose whether to use the MAC address from the port or enter one manually.
+          </FormField.Description>
+          <FormField.Control>
+            <RadioGroup
+              value={macAddressType}
+              onChange={(value) => setMacAddressType(value as MacAddressType)}
+            >
+              <VStack gap={2}>
+                <HStack gap={2} className="items-center">
+                  <Radio value="from_port" label="From port" />
+                  <Tooltip content="Use the MAC address assigned to this port automatically.">
+                    <IconHelp
+                      size={12}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)] cursor-help"
+                    />
+                  </Tooltip>
+                </HStack>
+                <Radio value="manual" label="Manual" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
         </FormField>
         {/* Manual MAC Address Input */}
         {macAddressType === 'manual' && (
