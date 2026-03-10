@@ -471,6 +471,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
   }
 
   if (slug === 'compute-services') {
+    const serviceNames = [
+      'nova-scheduler',
+      'nova-conductor',
+      'nova-compute',
+      'nova-consoleauth',
+      'nova-compute',
+    ] as const;
     const tabComputeHosts = {
       id: 'compute-hosts',
       label: 'Compute Hosts',
@@ -479,33 +486,47 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       showCheckboxColumn: false,
       showBulkDelete: false,
       statusAction: {
-        statusKey: 'status',
+        statusKey: 'serviceStatus',
         primaryLabel: 'Service',
-        primaryKey: 'computeService',
+        primaryKey: 'name',
         secondaryLabel: 'Host',
         secondaryKey: 'host',
         requireDisableReason: true,
       },
       columns: [
+        { key: 'name', label: 'Name', sortable: true },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'vcpus', label: 'vCPUs', sortable: true, kind: 'mono' },
-        { key: 'ram', label: 'RAM', sortable: true, kind: 'mono' },
+        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         {
-          key: 'status',
-          label: 'Status',
+          key: 'serviceStatus',
+          label: 'Service Status',
           sortable: true,
           kind: 'badge',
           badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
-        { key: 'updatedAt', label: 'Updated At', sortable: true },
+        {
+          key: 'serviceState',
+          label: 'Service State',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Up: 'success', Down: 'danger' },
+        },
+        { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
-        computeService: 'nova-compute',
-        host: `compute-${(i % 24) + 1}`,
-        vcpus: String(16 + (i % 8) * 4),
-        ram: `${64 + (i % 6) * 32} GiB`,
-        status: i % 9 === 0 ? 'Disabled' : 'Enabled',
-        updatedAt: dateTime(i),
+        name: serviceNames[i % serviceNames.length],
+        host: `bdv2kr1-${i % 3 === 0 ? 'ctrl' : i % 3 === 1 ? 'compute' : 'gcompute'}${String((i % 24) + 1).padStart(2, '0')}`,
+        availabilityZone: i % 3 === 0 ? 'internal' : 'nova',
+        serviceStatus: i % 9 === 0 ? 'Disabled' : 'Enabled',
+        serviceState: i % 12 === 0 ? 'Down' : 'Up',
+        lastUpdated:
+          i % 4 === 0
+            ? 'a few seconds ago'
+            : i % 4 === 1
+              ? '1 minute ago'
+              : i % 4 === 2
+                ? 'a few seconds ago'
+                : '2 minutes ago',
       })),
     };
 
