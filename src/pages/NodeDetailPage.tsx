@@ -26,6 +26,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -37,7 +38,6 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
-  IconCheck,
   IconChevronDown,
   IconInfoCircle,
   IconTrash,
@@ -49,7 +49,7 @@ import {
 
 interface NodeData {
   name: string;
-  status: 'Ready' | 'NotReady' | 'Unknown';
+  status: string;
   internalIp: string;
   kubernetesVersion: string;
   os: string;
@@ -79,7 +79,7 @@ interface NodeData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -134,7 +134,7 @@ interface EventRow {
 const mockNodeData: Record<string, NodeData> = {
   'node-control-plane-01': {
     name: 'node-control-plane-01',
-    status: 'Ready',
+    status: 'OK',
     internalIp: '172.16.0.237',
     kubernetesVersion: 'v1.34',
     os: 'Ubuntu 24.04.3 LTS',
@@ -180,7 +180,7 @@ const mockNodeData: Record<string, NodeData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'helm-install-thakicloud-webhook',
     namespace: 'cattle-system',
     image: 'thakicloud/Shell:v0.21',
@@ -192,7 +192,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'coredns-7b98449c4-x2k4m',
     namespace: 'kube-system',
     image: 'rancher/mirrored-coredns-coredns:1.10.1',
@@ -204,7 +204,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     name: 'local-path-provisioner-6795b5f9d8-p3n2q',
     namespace: 'kube-system',
     image: 'rancher/local-path-provisioner:v0.0.24',
@@ -231,7 +231,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
     type: 'MemoryPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
@@ -241,7 +241,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'DiskPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
@@ -251,7 +251,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     type: 'PIDPressure',
-    status: 'False',
+    status: 'None',
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
@@ -303,7 +303,7 @@ const mockEventsData: EventRow[] = [
 
 interface ConditionCardProps {
   title: string;
-  status: 'Ready' | 'NotReady';
+  status: string;
   tooltip: string;
 }
 
@@ -311,25 +311,14 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 min-w-0">
       <HStack justify="between" align="center">
-        <HStack gap={2} align="center">
-          <div
-            className={`w-5 h-5 rounded-full flex items-center justify-center ${
-              status === 'Ready'
-                ? 'bg-[var(--color-state-success)]'
-                : 'bg-[var(--color-state-danger)]'
-            }`}
-          >
-            <IconCheck size={12} className="text-white" stroke={2} />
-          </div>
-          <VStack gap={0.5}>
-            <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
-              {title}
-            </span>
-            <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-              {status}
-            </span>
-          </VStack>
-        </HStack>
+        <VStack gap={0.5}>
+          <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
+            {title}
+          </span>
+          <Badge theme="white" size="sm" className="w-fit">
+            {status}
+          </Badge>
+        </VStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -390,11 +379,13 @@ function PodsTab({ pods }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -933,8 +924,15 @@ export function NodeDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={node.status === 'Ready' ? 'Active' : 'Not Ready'}
-              status={node.status === 'Ready' ? 'active' : 'error'}
+              value={
+                <Tooltip content={node.status === 'Ready' ? 'Active' : 'Not Ready'}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {node.status === 'Ready' ? 'Active' : 'Not Ready'}
+                    </Badge>
+                  </span>
+                </Tooltip>
+              }
             />
             <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
             <DetailHeader.InfoCard label="Kubernetes version" value={node.kubernetesVersion} />
@@ -944,18 +942,44 @@ export function NodeDetailPage() {
               label={`Labels (${Object.keys(node.labels).length})`}
               value={
                 Object.keys(node.labels).length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  <div className="flex items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {val ? `${key}: ${val}` : key}
                         </Badge>
                       ))}
                     {Object.keys(node.labels).length > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(node.labels).length - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Labels ({Object.keys(node.labels).length})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(node.labels).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{Object.keys(node.labels).length - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (
@@ -967,18 +991,44 @@ export function NodeDetailPage() {
               label={`Annotations (${Object.keys(node.annotations).length})`}
               value={
                 Object.keys(node.annotations).length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  <div className="flex items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {val ? `${key}: ${val}` : key}
                         </Badge>
                       ))}
                     {Object.keys(node.annotations).length > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(node.annotations).length - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Annotations ({Object.keys(node.annotations).length})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(node.annotations).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{Object.keys(node.annotations).length - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (

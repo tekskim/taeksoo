@@ -1,4 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { VStack } from '@/design-system';
 import { DocSection } from '../_shared/DocSection';
 import { WizardPatternSection } from '../../design-system-sections/WizardPatternSection';
@@ -218,23 +219,19 @@ export function WizardPage() {
           </DocSection>
 
           <DocSection title="Usage Guidelines">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Do ✅</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>단계 수 최소 유지</li>
-                <li>논리적 그룹 기준</li>
-                <li>필수 입력 많을 때 단계형</li>
-                <li>종속성 있는 설정 동일/인접 단계 배치</li>
-              </ul>
-            </VStack>
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Don&apos;t ❌</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>과도한 필드 배치 금지</li>
-                <li>순서 임의 건너뛰기 금지</li>
-                <li>Floating card 네비게이션 사용 금지</li>
-              </ul>
-            </VStack>
+            <DosDonts
+              doItems={[
+                '단계 수 최소 유지',
+                '논리적 그룹 기준',
+                '필수 입력 많을 때 단계형',
+                '종속성 있는 설정 동일/인접 단계 배치',
+              ]}
+              dontItems={[
+                '과도한 필드 배치 금지',
+                '순서 임의 건너뛰기 금지',
+                'Floating card 네비게이션 사용 금지',
+              ]}
+            />
           </DocSection>
         </VStack>
       }

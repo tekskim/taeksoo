@@ -13,6 +13,8 @@ import {
   Button,
   ContextMenu,
   DetailHeader,
+  Badge,
+  Tooltip,
   Select,
   Input,
   Pagination,
@@ -63,7 +65,7 @@ interface MatchingPod {
 interface NetworkPolicyData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -82,7 +84,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
   '1': {
     id: '1',
     name: 'networkpolicyName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: { app: 'web' },
@@ -125,7 +127,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
   '2': {
     id: '2',
     name: 'networkpolicyName2',
-    status: 'Active',
+    status: 'True',
     namespace: 'default',
     createdAt: 'Nov 10, 2025',
     labels: {},
@@ -396,13 +398,14 @@ export function NetworkPolicyDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={networkPolicyData.status}
-              status={
-                networkPolicyData.status === 'Active'
-                  ? 'active'
-                  : networkPolicyData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={networkPolicyData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {networkPolicyData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

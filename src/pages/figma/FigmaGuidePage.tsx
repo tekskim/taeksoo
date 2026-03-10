@@ -90,14 +90,18 @@ const namingRows: (string | React.ReactNode)[][] = [
   [<code>Toggle</code>, <code>TDS/Form/Toggle</code>, 'Form'],
   [<code>Slider</code>, <code>TDS/Form/Slider</code>, 'Form'],
   [<code>DatePicker</code>, <code>TDS/Form/DatePicker</code>, 'Form'],
+  [<code>Password</code>, <code>TDS/Form/Password</code>, 'Form'],
   [<code>FormField</code>, <code>TDS/Form/FormField</code>, 'Form'],
   [<code>Badge</code>, <code>TDS/Data/Badge</code>, 'Data Display'],
   [<code>Chip</code>, <code>TDS/Data/Chip</code>, 'Data Display'],
+  [<code>Tag</code>, <code>TDS/Data/Tag</code>, 'Data Display'],
   [<code>StatusIndicator</code>, <code>TDS/Data/StatusIndicator</code>, 'Data Display'],
   [<code>Table</code>, <code>TDS/Data/Table</code>, 'Data Display'],
   [<code>Pagination</code>, <code>TDS/Data/Pagination</code>, 'Data Display'],
+  [<code>ProgressBar</code>, <code>TDS/Data/ProgressBar</code>, 'Data Display'],
   [<code>InfoBox</code>, <code>TDS/Data/InfoBox</code>, 'Data Display'],
   [<code>MetricCard</code>, <code>TDS/Data/MetricCard</code>, 'Data Display'],
+  [<code>SelectionIndicator</code>, <code>TDS/Data/SelectionIndicator</code>, 'Data Display'],
   [<code>Tooltip</code>, <code>TDS/Overlay/Tooltip</code>, 'Overlay'],
   [<code>Popover</code>, <code>TDS/Overlay/Popover</code>, 'Overlay'],
   [<code>Modal</code>, <code>TDS/Overlay/Modal</code>, 'Overlay'],
@@ -108,8 +112,13 @@ const namingRows: (string | React.ReactNode)[][] = [
   [<code>TabBar</code>, <code>TDS/Navigation/TabBar</code>, 'Navigation'],
   [<code>Breadcrumb</code>, <code>TDS/Navigation/Breadcrumb</code>, 'Navigation'],
   [<code>TopBar</code>, <code>TDS/Navigation/TopBar</code>, 'Navigation'],
+  [<code>SNBMenuItem</code>, <code>TDS/Navigation/SNBMenuItem</code>, 'Navigation'],
+  [<code>WindowControl</code>, <code>TDS/Navigation/WindowControl</code>, 'Navigation'],
   [<code>InlineMessage</code>, <code>TDS/Feedback/InlineMessage</code>, 'Feedback'],
+  [<code>Toast</code>, <code>TDS/Feedback/Toast</code>, 'Feedback'],
   [<code>Loading</code>, <code>TDS/Feedback/Loading</code>, 'Feedback'],
+  [<code>Skeleton</code>, <code>TDS/Feedback/Skeleton</code>, 'Feedback'],
+  [<code>Disclosure</code>, <code>TDS/Feedback/Disclosure</code>, 'Feedback'],
   [<code>EmptyState</code>, <code>TDS/Feedback/EmptyState</code>, 'Feedback'],
   [<code>ErrorState</code>, <code>TDS/Feedback/ErrorState</code>, 'Feedback'],
   [<code>PageShell</code>, <code>TDS/Layout/PageShell</code>, 'Layout'],
@@ -117,6 +126,8 @@ const namingRows: (string | React.ReactNode)[][] = [
   [<code>DetailHeader</code>, <code>TDS/Layout/DetailHeader</code>, 'Layout'],
   [<code>SectionCard</code>, <code>TDS/Layout/SectionCard</code>, 'Layout'],
   [<code>ListToolbar</code>, <code>TDS/Layout/ListToolbar</code>, 'Layout'],
+  [<code>CopyButton</code>, <code>TDS/Utility/CopyButton</code>, 'Utility'],
+  [<code>Copyable</code>, <code>TDS/Utility/Copyable</code>, 'Utility'],
 ];
 
 const propMappingRows: (string | React.ReactNode)[][] = [
@@ -224,16 +235,18 @@ export function FigmaGuidePage() {
         title="캡처 페이지 바로가기"
         description="HTML to Design 플러그인에 사용할 캡처 전용 페이지"
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
             {
               path: '/design/figma/foundation',
               label: 'Foundation',
               desc: '색상, 타이포, 간격, 아이콘',
             },
-            { path: '/design/figma/components', label: 'Components', desc: '전체 UI 컴포넌트' },
-            { path: '/design/figma/overlays', label: 'Overlays', desc: 'Modal, Drawer, Tooltip' },
-            { path: '/design/figma/patterns', label: 'Patterns', desc: 'List, Detail, Wizard' },
+            {
+              path: '/design/figma/components',
+              label: 'Components',
+              desc: '전체 UI 컴포넌트 (49개+)',
+            },
           ].map((item) => (
             <Link
               key={item.path}
@@ -250,9 +263,7 @@ export function FigmaGuidePage() {
         <div className="mt-3 p-3 rounded-[var(--primitive-radius-md)] bg-[var(--color-state-info-bg)] text-body-sm text-[var(--color-text-default)]">
           <strong>Standalone 캡처:</strong> 사이드바 없이 순수 컴포넌트만 캡처하려면{' '}
           <CaptureLink path="/figma/foundation" label="/figma/foundation" />,{' '}
-          <CaptureLink path="/figma/components" label="/figma/components" />,{' '}
-          <CaptureLink path="/figma/overlays" label="/figma/overlays" />,{' '}
-          <CaptureLink path="/figma/patterns" label="/figma/patterns" /> 경로를 사용하세요.
+          <CaptureLink path="/figma/components" label="/figma/components" /> 경로를 사용하세요.
         </div>
       </DocSection>
 
@@ -265,13 +276,22 @@ export function FigmaGuidePage() {
         <MappingTable
           headers={['Figma Page', '설명', '캡처 소스']}
           rows={[
-            ['Foundation', '색상 팔레트, 타이포그래피, 간격, 반경, 그림자', '/figma/foundation'],
-            ['Components', '전체 UI 컴포넌트 (variant × size × state)', '/figma/components'],
-            ['Overlays', 'Modal, Drawer, Tooltip, Popover 정적 렌더링', '/figma/overlays'],
-            ['Patterns', 'List/Detail/Wizard/Form 페이지 패턴', '/figma/patterns'],
-            ['Icons', 'Tabler 아이콘 컴포넌트화', '/figma/foundation (하단)'],
+            [
+              'Foundation',
+              '색상 팔레트, 타이포그래피, 간격, 반경, 그림자, 아이콘',
+              '/figma/foundation',
+            ],
+            [
+              'Components',
+              '전체 UI 컴포넌트 (variant × size × state) + Overlay 포함',
+              '/figma/components',
+            ],
           ]}
         />
+        <div className="mt-2 p-3 rounded-[var(--primitive-radius-md)] bg-[var(--color-state-info-bg)] text-body-sm text-[var(--color-text-default)]">
+          Components 페이지에 Overlay(Modal, Drawer, Tooltip, Popover) 컴포넌트가 모두 포함되어
+          있으므로 별도의 Overlays 캡처 페이지는 필요하지 않습니다.
+        </div>
         <CodeBlock
           code={`Page: Components
   ├── Frame: Button
@@ -365,9 +385,111 @@ export function FigmaGuidePage() {
                 ['Type', 'Variant', 'solid | subtle'],
                 ['Size', 'Variant', 'sm | md | lg'],
                 ['Dot', 'Boolean', 'true / false'],
+                ['LeftIcon', 'Instance swap', 'icon slot'],
+                ['RightIcon', 'Instance swap', 'icon slot'],
                 ['Label', 'Text', '"Badge"'],
               ]}
             />
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              Semantic Color: info=blue, success=green, warning=yellow, danger=red, neutral=gray,
+              default=white. Subtle 타입 권장 (Solid는 white/gray 중심).
+            </p>
+          </VStack>
+
+          {/* Select */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Select</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Size', 'Variant', 'sm | md'],
+                ['State', 'Variant', 'default | open | error | disabled'],
+                ['Placeholder', 'Text', '"Select..."'],
+                ['Value', 'Text', '(selected option text)'],
+              ]}
+            />
+          </VStack>
+
+          {/* Tabs */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Tabs</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Variant', 'Variant', 'underline | boxed'],
+                ['Size', 'Variant', 'sm | md'],
+                ['Tab State', 'Variant', 'active | inactive | hover'],
+                ['Label', 'Text', '"Tab"'],
+              ]}
+            />
+          </VStack>
+
+          {/* Toast */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Toast</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Variant', 'Variant', 'success | warning | error | info'],
+                ['Title', 'Text', '"Toast title"'],
+                ['Message', 'Text', '"Toast message"'],
+                ['HasAction', 'Boolean', 'true / false'],
+                ['Dismissible', 'Boolean', 'true / false'],
+              ]}
+            />
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              Width: 360px (fixed), Radius: 8px, Shadow: --shadow-lg
+            </p>
+          </VStack>
+
+          {/* Table */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Table</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Selectable', 'Boolean', 'true / false'],
+                ['StickyHeader', 'Boolean', 'true / false'],
+                ['Resizable', 'Boolean', 'true / false (default: true)'],
+              ]}
+            />
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              Row height: 44px, Cell padding: 8px 12px, Font: 12px. 컬럼 리사이즈는 Overflow 모드.
+            </p>
+          </VStack>
+
+          {/* Tag */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Tag</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Variant', 'Variant', 'default | primary | success | warning | danger | info'],
+                ['Size', 'Variant', 'sm | md | lg'],
+                ['Closable', 'Boolean', 'true / false'],
+                ['Rounded', 'Boolean', 'true / false'],
+                ['Outline', 'Boolean', 'true / false'],
+                ['Icon', 'Instance swap', 'icon slot'],
+                ['Label', 'Text', '"Tag"'],
+              ]}
+            />
+          </VStack>
+
+          {/* Tooltip / Popover */}
+          <VStack gap={2} align="stretch">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Tooltip / Popover</h4>
+            <MappingTable
+              headers={['Property', 'Type', 'Values']}
+              rows={[
+                ['Position', 'Variant', 'top | bottom | left | right'],
+                ['Content', 'Text', '"Tooltip text" (Tooltip)'],
+                ['Trigger', 'Variant', 'click | hover (Popover)'],
+                ['ShowArrow', 'Boolean', 'true / false (Popover)'],
+              ]}
+            />
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              Tooltip: Radius 4px, Padding 4px 6px, Max-width 240px. Popover: Radius 8px, Arrow 7px.
+            </p>
           </VStack>
 
           {/* StatusIndicator */}
@@ -451,21 +573,69 @@ export function FigmaGuidePage() {
   State: default | hover | active | disabled | loading
   Icon: none | left | right | icon-only
 
-Input:
+Input / Password:
   Size: sm | md | lg
   State: default | focus | error | disabled
-  LeftElement: true | false
-  RightElement: true | false
+  LeftElement: true | false (Input)
+  RightElement: true | false (Input)
+  Visible: true | false (Password)
+
+Select:
+  Size: sm | md
+  State: default | open | error | disabled
 
 Badge:
   Theme: blue | red | green | yellow | gray | white
   Type: solid | subtle
   Size: sm | md | lg
   Dot: true | false
+  LeftIcon / RightIcon: Instance swap
+
+Tag:
+  Variant: default | primary | success | warning | danger | info
+  Size: sm | md | lg
+  Closable: true | false
+  Rounded: true | false
+  Outline: true | false
+
+Checkbox:
+  State: unchecked | checked | indeterminate
+  Disabled: true | false
+
+Toggle:
+  State: off | on
+  Disabled: true | false
+
+Tabs:
+  Variant: underline | boxed
+  Size: sm | md
+  Tab State: active | inactive | hover
 
 StatusIndicator:
   Status: active | error | building | pending | shutoff | ...
-  Layout: icon-only | dot-label`}
+  Layout: icon-only | dot-label
+
+Toast:
+  Variant: success | warning | error | info
+  Dismissible: true | false
+
+Modal:
+  Size: sm | md | lg
+
+Drawer:
+  Side: left | right
+  Width: 360 | 696 | 1032
+
+Disclosure:
+  State: collapsed | expanded
+
+SNBMenuItem:
+  Type: icon | text
+  Status: default | hover | selected
+
+WindowControl:
+  Type: close | minimize | maximize
+  Disabled: true | false`}
         />
         <div className="p-3 rounded-[var(--primitive-radius-md)] bg-[var(--color-state-warning-bg)] text-body-sm text-[var(--color-text-default)]">
           <strong>Hover 상태:</strong> CSS <code>:hover</code>는 캡처되지 않으므로, Figma에서는 별도
@@ -480,22 +650,43 @@ StatusIndicator:
         description="주요 컴포넌트의 Figma Auto Layout 설정"
       >
         <MappingTable
-          headers={['컴포넌트', 'Direction', 'Gap', 'Padding (Y/X)']}
+          headers={['컴포넌트', 'Direction', 'Gap', 'Padding (Y/X)', 'Height']}
           rows={[
-            ['Button SM', 'Horizontal', '6px', '6px / 10px'],
-            ['Button MD', 'Horizontal', '6px', '8px / 12px'],
-            ['Button LG', 'Horizontal', '8px', '10px / 16px'],
-            ['Input MD', 'Horizontal', '—', '0 / 10px'],
-            ['Badge SM', 'Horizontal', '4px', '2px / 6px'],
-            ['Badge MD', 'Horizontal', '4px', '4px / 8px'],
-            ['Checkbox', 'Horizontal', '6px', '0'],
-            ['SectionCard', 'Vertical', '16px', '16px'],
-            ['Modal SM/MD', 'Vertical', '16px', '24px'],
-            ['Drawer 360', 'Vertical', '24px', '24px'],
-            ['FormField', 'Vertical', '8px', '0'],
-            ['Tooltip', 'Horizontal', '—', '4px / 6px'],
-            ['StatusIndicator', 'Horizontal', '4px', '4px / 6px'],
-            ['InlineMessage', 'Horizontal', '8px', '12px'],
+            ['Button SM', 'Horizontal', '6px', '6px / 10px', '28px'],
+            ['Button MD', 'Horizontal', '6px', '8px / 12px', '32px'],
+            ['Button LG', 'Horizontal', '8px', '10px / 16px', '36px'],
+            ['Input SM', 'Horizontal', '—', '0 / 10px', '28px'],
+            ['Input MD', 'Horizontal', '—', '0 / 10px', '32px'],
+            ['Input LG', 'Horizontal', '—', '0 / 10px', '40px'],
+            ['Badge SM', 'Horizontal', '4px', '2px / 6px', '—'],
+            ['Badge MD', 'Horizontal', '4px', '4px / 8px', '—'],
+            ['Badge LG', 'Horizontal', '4px', '4px / 12px', '—'],
+            ['Tag SM', 'Horizontal', '4px', '2px / 6px', '—'],
+            ['Tag MD', 'Horizontal', '4px', '4px / 8px', '—'],
+            ['Chip', 'Horizontal', '4px', '4px / 8px', '—'],
+            ['Checkbox', 'Horizontal', '6px', '0', '—'],
+            ['StatusIndicator', 'Horizontal', '4px', '4px / 6px', '—'],
+            ['Tooltip', 'Horizontal', '—', '4px / 6px', '—'],
+            ['Popover', 'Vertical', '0', '0', '—'],
+            ['InlineMessage', 'Horizontal', '8px', '12px / 16px', '—'],
+            ['Toast', 'Horizontal', '12px', '16px', '—'],
+            ['FormField', 'Vertical', '8px', '0', '—'],
+            ['SectionCard', 'Vertical', '12px', 'pt-3 px-4 pb-6', '—'],
+            ['Modal SM/MD/LG', 'Vertical', '16px', '24px', '—'],
+            ['Drawer Header', 'Horizontal', '—', '16px / 24px', '56px'],
+            ['Drawer Content', 'Vertical', '24px', '0 / 24px', '—'],
+            ['Table Row', 'Horizontal', '0', '0', '44px'],
+            ['Table Cell', 'Horizontal', '0', '8px / 12px', '—'],
+            ['Tabs (underline)', 'Horizontal', '0', '0', '—'],
+            ['Tabs (boxed)', 'Horizontal', '2px', '2px', '—'],
+            ['TabBar', 'Horizontal', '0', '0', '36px'],
+            ['TopBar', 'Horizontal', '8px', '0 / 12px', '40px'],
+            ['Breadcrumb', 'Horizontal', '4px', '0', '—'],
+            ['ContextMenu', 'Vertical', '2px', '4px', '—'],
+            ['Pagination', 'Horizontal', '—', '0', '32px'],
+            ['Disclosure Trigger', 'Horizontal', '8px', '8px / 0', '—'],
+            ['SNBMenuItem (icon)', 'Horizontal', '0', '8px', '40px'],
+            ['SNBMenuItem (text)', 'Horizontal', '8px', '8px / 12px', '36px'],
           ]}
         />
         <VStack gap={2} align="stretch">
@@ -595,7 +786,7 @@ StatusIndicator:
             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
               Step 1: 로컬 서버 실행
             </h4>
-            <CodeBlock code="npx pnpm dev" language="bash" />
+            <CodeBlock code="npm run dev" language="bash" />
           </VStack>
 
           <VStack gap={2} align="stretch">
@@ -607,8 +798,6 @@ StatusIndicator:
               rows={[
                 ['Foundation', 'http://localhost:5173/figma/foundation'],
                 ['Components', 'http://localhost:5173/figma/components'],
-                ['Overlays', 'http://localhost:5173/figma/overlays'],
-                ['Patterns', 'http://localhost:5173/figma/patterns'],
               ]}
             />
           </VStack>
@@ -726,7 +915,7 @@ StatusIndicator:
               ],
             },
             {
-              title: 'Components',
+              title: 'Form Controls',
               items: [
                 'Button (8 variant × 3 size × 5 state × icon 조합)',
                 'Input (3 size × 4 state)',
@@ -736,25 +925,69 @@ StatusIndicator:
                 'Radio (2 state × disabled)',
                 'Toggle (on/off × disabled)',
                 'Slider (default/disabled + with NumberInput)',
-                'Badge (6 theme × 2 type × 3 size + dot)',
+                'DatePicker (single / range)',
+                'Password (sm/md × 4 state × visible toggle)',
+                'FormField (label + control + helper/error)',
+              ],
+            },
+            {
+              title: 'Data Display',
+              items: [
+                'Badge (6 theme × 2 type × 3 size + dot + icons)',
                 'Chip (default/selected/disabled + removable)',
+                'Tag (6 variant × 3 size + closable/rounded/outline)',
                 'StatusIndicator (16 status × 2 layout)',
-                'Table, Pagination, ProgressBar',
-                'Tabs (underline/boxed), Breadcrumb',
-                'InlineMessage (4 variant), Loading (3 size)',
-                'EmptyState, ErrorState',
-                'FormField, SectionCard, DetailHeader, PageHeader',
-                'InfoBox, MetricCard, ListToolbar, ContextMenu',
+                'Table (selectable, resizable, sortable)',
+                'Pagination (page buttons + settings)',
+                'ProgressBar (5 status)',
+                'InfoBox / InfoBox.Group',
+                'MetricCard / MetricCard.Group',
+                'SelectionIndicator (items/empty/error)',
+                'Skeleton (text/circular/rectangular/rounded + SkeletonTable)',
+              ],
+            },
+            {
+              title: 'Navigation',
+              items: [
+                'Tabs (underline/boxed × sm/md)',
+                'TabBar (browser-style tabs + window controls)',
+                'TopBar (sidebar toggle + nav + breadcrumb + actions)',
+                'Breadcrumb (2-5 items)',
+                'SNBMenuItem (icon/text × 3 state)',
+                'WindowControl (close/minimize/maximize)',
               ],
             },
             {
               title: 'Overlays',
               items: [
+                'Tooltip (4 position)',
+                'Popover (4 position + click/hover + arrow toggle)',
                 'Modal (SM/MD/LG)',
                 'ConfirmModal (danger)',
-                'Drawer (360px/696px)',
-                'Tooltip (4 position)',
-                'Popover (top/bottom)',
+                'Drawer (360px/696px/1032px)',
+                'ContextMenu (click/contextmenu + submenu)',
+              ],
+            },
+            {
+              title: 'Feedback',
+              items: [
+                'InlineMessage (4 variant + closable)',
+                'Toast (4 variant + action/link)',
+                'Loading (3 size)',
+                'EmptyState (card/inline)',
+                'ErrorState',
+                'Disclosure (collapsed/expanded)',
+              ],
+            },
+            {
+              title: 'Layout & Utility',
+              items: [
+                'PageShell (sidebar + tabbar + topbar + content)',
+                'PageHeader (title + actions)',
+                'DetailHeader (title + actions + InfoGrid)',
+                'SectionCard (header + content + DataRow)',
+                'ListToolbar (search + filters + bulk actions)',
+                'CopyButton / Copyable (ghost/outline + copied state)',
               ],
             },
             {

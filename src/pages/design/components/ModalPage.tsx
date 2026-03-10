@@ -1,12 +1,108 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import {
   ModalDemo,
   ModalUseCaseDemo,
   AIAgentModalDemo,
 } from '../../design-system-sections/OverlayDemos';
-import { Button, VStack, HStack } from '@/design-system';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { VStack, HStack } from '@/design-system';
+
+const MODAL_GUIDELINES = `## Overview
+
+사용자가 특정 액션을 실행하기 전에 중요한 확인을 요구하거나 추가 입력을 받기 위해 화면 위에 표시되는 UI 컴포넌트이다.
+Modal은 현재 화면 위에 오버레이 형태로 나타나며 사용자의 주의를 집중시키기 위해 배경 화면과의 상호작용을 일시적으로 차단한다.
+
+---
+
+## Composition
+
+| 요소 | 설명 |
+| --- | --- |
+| Title | 액션 명확화 |
+| Description | 액션 설명 |
+| Subject | 액션 대상 |
+| Target resources | 액션 대상 목록 |
+| Warning message | 위험 안내 |
+| Actions | 사용자 선택 버튼 |
+
+---
+
+## Variants
+
+| Variant | 설명 |
+| --- | --- |
+| Single resource confirmation | 단일 리소스 액션 확인 |
+| Bulk action confirmation | 다중 리소스 일괄 작업 |
+| Subject–Target confirmation | 주체와 대상이 존재하는 액션 |
+| Information modal | 정보 전달 |
+
+### 1) Single Resource Confirmation
+- 단일 리소스에 대한 액션을 확인하는 모달이다.
+- Subject 영역에 대상 리소스를 표시한다.
+
+### 2) Bulk Action Confirmation
+- 여러 리소스에 대한 액션을 수행하는 경우 사용한다.
+- 선택된 리소스 중 액션이 가능한 리소스와 불가능한 리소스를 분리해서 보여준다.
+
+### 3) Subject–Target Confirmation
+- 주체와 대상이 존재하는 액션에서 사용된다.
+- Subject와 Target을 명확히 구분한다.
+
+### 4) Information Modal
+- 사용자에게 중요한 정보를 전달하기 위한 모달이다.
+- 확인 또는 닫기 버튼만 제공한다.
+
+---
+
+## Behavior
+
+### 1) Modal Open
+Modal은 다음 상황에서 열린다.
+- 위험 액션 실행
+- 시스템 상태 변경 작업
+- 대량 리소스 작업
+
+### 2) Modal Close
+Modal은 다음 방법으로 닫을 수 있다.
+
+| 방법 | 설명 |
+| --- | --- |
+| Cancel 버튼 | 작업 취소 |
+| Close 버튼 | 모달 닫기 |
+| 배경화면 영역 클릭 | 모달 닫기 |
+
+### 3) Background Interaction
+- 모달이 열려 있을 때 배경화면 영역을 클릭하면 모달이 닫힌다.
+- 모달이 열려 있을 때도 배경 영역 스크롤이 가능하다.
+
+### 4) Actions
+Modal의 버튼은 다음 구조를 따른다.
+파괴적 액션의 경우 Primary 버튼은 Danger 스타일을 사용한다.
+
+| 버튼 | 역할 |
+| --- | --- |
+| Primary | 액션 실행 |
+| Secondary | 취소 |
+
+---
+
+## Content Guidelines
+
+### 1) Title
+- \`KO\`: {리소스} {액션}
+- \`EN\`: {Action} {resource}
+
+### 2) Subject/Target
+- 리소스 표기: {resource name}
+- 작업 대상 표기:
+
+| 유형 | 표현 |
+| --- | --- |
+| Actionable resources | {resources} that can be {action} |
+| Non-actionable resources | {resources} that cannot be {action} |
+
+`;
 
 const modalProps: PropDef[] = [
   { name: 'isOpen', type: 'boolean', required: true, description: 'Open state' },
@@ -48,7 +144,19 @@ export function ModalPage() {
   return (
     <ComponentPageTemplate
       title="Modal"
-      description="Dialog overlay for confirmations, alerts, and user interactions"
+      description="사용자가 특정 액션을 실행하기 전에 중요한 확인을 요구하거나 추가 입력을 받기 위해 화면 위에 표시되는 UI 컴포넌트. 현재 화면 위에 오버레이 형태로 나타나며 배경 화면과의 상호작용을 일시적으로 차단한다."
+      whenToUse={[
+        '삭제, 중단 등 리소스를 사용할 수 없는 상태로 만드는 파괴적 액션',
+        '연결 변경, 정책 수정 등 리소스 기능에 영향을 미치는 치명적 액션',
+        '데이터 손실 등 되돌릴 수 없는 작업',
+        '여러 리소스를 대상으로 하는 일괄 액션',
+      ]}
+      whenNotToUse={[
+        '단순 정보 안내 → Inline message',
+        '설정 편집 → Drawer',
+        '긴 입력폼 → Full page',
+        '짧은 확인 메세지 → Toast, Snackbar',
+      ]}
       preview={<ModalDemo variant="delete" />}
       usage={{
         code: `import { Modal } from '@/design-system';\n\n<Modal\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Modal Title"\n  description="Optional description"\n  size="sm"\n>\n  {/* Content */}\n</Modal>`,
@@ -85,223 +193,7 @@ export function ModalPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <VStack gap={8}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">1. 개요</h4>
-                <VStack gap={2}>
-                  <h4 className="text-heading-h6 text-[var(--color-text-default)]">정의</h4>
-                  <p className="text-body-md text-[var(--color-text-muted)]">
-                    모달은 사용자가 리소스에 대해 액션을 실행하기 전에 확인을 받기 위한 UI로,
-                    사용자의 실수를 방지하고, 액션으로 인해 발생할 수 있는 결과를 명확하게
-                    인지시켜야 합니다.
-                  </p>
-                </VStack>
-                <VStack gap={2}>
-                  <h4 className="text-heading-h6 text-[var(--color-text-default)]">적용 기준</h4>
-                  <p className="text-body-md text-[var(--color-text-muted)] mb-1">
-                    다음과 같은 액션을 실행할 때 모달을 노출시켜 사용자의 실수를 방지합니다.
-                  </p>
-                  <ol className="list-decimal pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
-                    <li>
-                      <strong>파괴적 액션</strong> — 삭제, 중단 등 리소스 자체를 불가능한 상태로
-                      만드는 액션
-                    </li>
-                    <li>
-                      <strong>치명적 영향 액션</strong> — 연결 끊기, 연결 변경 등 리소스의 특정
-                      기능에 문제를 만드는 액션
-                    </li>
-                    <li>
-                      <strong>복구 불가 액션</strong> — 데이터 손실 등 되돌릴 수 없을 수 있는 액션
-                    </li>
-                    <li>
-                      <strong>일괄 액션</strong> — 여러 리소스를 대상으로 일어나는 액션
-                    </li>
-                  </ol>
-                </VStack>
-              </VStack>
-            </VStack>
-          </div>
-
-          <VStack gap={3}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">2. 구성 요소</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">1. 타이틀</h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  액션을 명확히 제시 · 좌측 최상단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>
-                    <code>KO</code> 리소스 + 액션 구조로 작성 권장
-                  </li>
-                  <li>
-                    <code>EN</code> 액션 + 리소스 구조로 작성 권장
-                  </li>
-                  <li>문장의 첫 글자만 대문자 사용 권장</li>
-                  <li>단일 대상 → 단수형, 다중 대상 → 복수형</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  2. 디스크립션
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  상세한 액션에 대한 확인 · 타이틀 하단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>
-                    <code>KO</code> &#123;리소스&#125;를 정말 &#123;액션&#125;하시겠습니까?
-                  </li>
-                  <li>
-                    <code>EN</code> Are you sure you want to &#123;action&#125; this
-                    &#123;resource&#125;?
-                  </li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  3. 주체{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
-                    (선택)
-                  </span>
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  액션이 이뤄지는 대상 확인 · 디스크립션 하단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>&#123;리소스명&#125; + &#123;이름&#125; 조합</li>
-                  <li>액션이 이뤄지는 주된 대상이 하나일 때 노출</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  4. 액션 가능한 주체{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
-                    (선택)
-                  </span>
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  액션이 이뤄지는 대상 확인 · 디스크립션 하단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>
-                    <code>KO</code> &#123;액션&#125; 가능한 &#123;리소스&#125;
-                  </li>
-                  <li>
-                    <code>EN</code> &#123;resources&#125; that can be &#123;action&#125;
-                  </li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  5. 액션 불가능한 주체{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
-                    (선택)
-                  </span>
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  액션이 불가능한 대상 확인 · 액션 가능한 주체 하단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>
-                    <code>KO</code> &#123;액션&#125; 불가능한 &#123;리소스&#125;
-                  </li>
-                  <li>
-                    <code>EN</code> &#123;resources&#125; that cannot be &#123;action&#125;
-                  </li>
-                  <li>백엔드 확인 없이 액션이 불가능하다고 판단 가능한 경우 표기</li>
-                </ul>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                  6. 경고 문구{' '}
-                  <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
-                    (선택)
-                  </span>
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
-                  액션으로 인해 발생할 수 있는 위험 전달 · 버튼 상단
-                </p>
-                <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
-                  <li>다른 리소스에 영향을 미칠 수 있는 경우</li>
-                  <li>대상 리소스에 치명적인 오류 또는 서비스 중단을 초래할 수 있을 때 표기</li>
-                </ul>
-              </div>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Inner components</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
-                  Info Box (single value)
-                </span>
-                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1">
-                  <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-                    Volume name
-                  </span>
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-                    vol-01 (Available)
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
-                  Scrollable List (max-h: 96px)
-                </span>
-                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1 max-h-[96px] overflow-y-auto sidebar-scroll">
-                  <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-                    Security groups (6)
-                  </span>
-                  <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-1">
-                    <li>sg-01</li>
-                    <li>sg-02</li>
-                    <li>sg-03</li>
-                    <li>sg-04</li>
-                    <li>sg-05</li>
-                    <li>sg-06</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
-                  Warning Alert
-                </span>
-                <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-center">
-                  <IconAlertCircle
-                    size={16}
-                    className="text-[var(--color-state-danger)] shrink-0"
-                    stroke={1.5}
-                  />
-                  <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-                    This action will permanently delete the resource. This cannot be undone.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
-                  Button Group
-                </span>
-                <div className="flex gap-2 w-full">
-                  <Button variant="outline" size="md" className="flex-1">
-                    Cancel
-                  </Button>
-                  <Button variant="primary" size="md" className="flex-1">
-                    Confirm
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </VStack>
-        </VStack>
-      }
+      guidelines={<NotionRenderer markdown={MODAL_GUIDELINES} />}
       tokens={
         <VStack gap={3}>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
@@ -314,18 +206,145 @@ export function ModalPage() {
         </VStack>
       }
       apiReference={modalProps}
+      accessibility={
+        <VStack gap={4} align="stretch">
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            Modal은 사용자의 주의를 강제로 집중시키는 컴포넌트이므로, 접근성 요구사항이 특히
+            중요합니다.
+          </p>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">ARIA 속성</h4>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-body-md text-[var(--color-text-default)]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-default)]">
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      속성
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      상태
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      설명
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      attr: 'role="dialog"',
+                      status: 'Gap',
+                      desc: '모달 컨테이너에 dialog role 필요',
+                    },
+                    {
+                      attr: 'aria-modal="true"',
+                      status: 'Gap',
+                      desc: '배경 콘텐츠가 비활성임을 스크린 리더에 전달',
+                    },
+                    {
+                      attr: 'aria-labelledby',
+                      status: 'Gap',
+                      desc: '모달 타이틀 요소의 id를 참조하여 모달의 목적 전달',
+                    },
+                    {
+                      attr: 'aria-describedby',
+                      status: 'Gap',
+                      desc: 'description이 있을 경우 해당 요소 id 참조',
+                    },
+                  ].map((r) => (
+                    <tr key={r.attr} className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 px-3 font-mono text-body-sm">{r.attr}</td>
+                      <td className="py-2 px-3">
+                        <span className="text-body-sm text-[var(--color-state-warning)]">
+                          {r.status}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-body-sm text-[var(--color-text-muted)]">
+                        {r.desc}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </VStack>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Focus management</h4>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-body-md text-[var(--color-text-default)]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-default)]">
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      요구사항
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      상태
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      설명
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      req: 'Focus trap',
+                      status: 'Gap',
+                      desc: 'Tab/Shift+Tab 키로 모달 내부에서만 포커스가 순환해야 함',
+                    },
+                    {
+                      req: 'Initial focus',
+                      status: 'Gap',
+                      desc: '모달 열릴 때 첫 번째 포커스 가능 요소로 포커스 이동',
+                    },
+                    {
+                      req: 'Focus restore',
+                      status: 'Gap',
+                      desc: '모달 닫힐 때 트리거 요소로 포커스 복원',
+                    },
+                  ].map((r) => (
+                    <tr key={r.req} className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 px-3 text-label-sm">{r.req}</td>
+                      <td className="py-2 px-3">
+                        <span className="text-body-sm text-[var(--color-state-warning)]">
+                          {r.status}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-body-sm text-[var(--color-text-muted)]">
+                        {r.desc}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </VStack>
+
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-state-info-bg)]">
+            <p className="text-body-sm text-[var(--color-text-default)]">
+              <strong>참조:</strong> WAI-ARIA Authoring Practices 1.2 — Dialog (Modal) Pattern. 위
+              Gap 항목은 인식된 개선 과제이며, 접근성 로드맵에 따라 순차적으로 구현 예정입니다.
+            </p>
+          </div>
+        </VStack>
+      }
+      keyboardInteractions={[
+        { key: 'Escape', description: '모달을 닫고 트리거 요소로 포커스 복원' },
+        { key: 'Tab', description: '모달 내 다음 포커스 가능 요소로 이동 (trap 구현 시)' },
+        {
+          key: 'Shift + Tab',
+          description: '모달 내 이전 포커스 가능 요소로 이동 (trap 구현 시)',
+        },
+        { key: 'Enter', description: '포커스된 버튼 활성화' },
+        { key: 'Space', description: '포커스된 버튼 활성화' },
+      ]}
       relatedLinks={[
-        { label: 'Drawer', path: '/design/components/drawer', description: 'Slide-out panel' },
-        {
-          label: 'ConfirmModal',
-          path: '/design/components/modal',
-          description: 'Delete confirmation',
-        },
-        {
-          label: 'Popover',
-          path: '/design/components/popover',
-          description: 'Lightweight overlay',
-        },
+        { label: 'Button', path: '/design/components/button' },
+        { label: 'Drawer', path: '/design/components/drawer' },
+        { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Snackbar', path: '/design/components/snackbar' },
       ]}
     />
   );

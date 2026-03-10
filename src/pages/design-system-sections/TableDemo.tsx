@@ -208,6 +208,8 @@ export function TableDemo() {
       render: (value: string) => (
         <StatusIndicator
           status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
+          layout="icon-only"
+          size="sm"
         />
       ),
     },
@@ -423,6 +425,8 @@ export function TableDemo() {
       render: (value: string) => (
         <StatusIndicator
           status={value === 'Running' ? 'active' : value === 'Stopped' ? 'error' : 'building'}
+          layout="icon-only"
+          size="sm"
         />
       ),
     },

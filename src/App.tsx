@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
@@ -325,6 +325,10 @@ import { ErrorAlertPage } from '@/pages/design/foundation/ErrorAlertPage';
 import { SystemErrorPage } from '@/pages/design/foundation/SystemErrorPage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
 import { InputPage } from '@/pages/design/components/InputPage';
+import { TextInputPage } from '@/pages/design/components/TextInputPage';
+import { NumberInputPage } from '@/pages/design/components/NumberInputPage';
+import { TextareaPage } from '@/pages/design/components/TextareaPage';
+import { SearchInputPage } from '@/pages/design/components/SearchInputPage';
 import { FormFieldPage } from '@/pages/design/components/FormFieldPage';
 import { FilterSearchInputPage } from '@/pages/design/components/FilterSearchInputPage';
 import { SelectPage } from '@/pages/design/components/SelectPage';
@@ -341,8 +345,12 @@ import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPa
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
 import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndicatorPage';
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
+import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
 import { LoadingPage } from '@/pages/design/components/LoadingPage';
+import { ProgressBarComponentPage } from '@/pages/design/components/ProgressBarComponentPage';
+import { SkeletonPage } from '@/pages/design/components/SkeletonPage';
+import { SpinnerPage } from '@/pages/design/components/SpinnerPage';
 import { TopBarPage } from '@/pages/design/components/TopBarPage';
 import { TabBarPage } from '@/pages/design/components/TabBarPage';
 import { TabsPage } from '@/pages/design/components/TabsPage';
@@ -354,6 +362,7 @@ import { ContextMenuPage } from '@/pages/design/components/ContextMenuPage';
 import { ModalPage } from '@/pages/design/components/ModalPage';
 import { DrawerSectionPage } from '@/pages/design/components/DrawerSectionPage';
 import { NotificationCenterPage } from '@/pages/design/components/NotificationCenterPage';
+import { SnackbarPage } from '@/pages/design/components/SnackbarPage';
 import { ToastPage } from '@/pages/design/components/ToastPage';
 import { GlobalNotificationPanelPage } from '@/pages/design/components/GlobalNotificationPanelPage';
 import { FloatingCardPage } from '@/pages/design/components/FloatingCardPage';
@@ -361,10 +370,11 @@ import { DisclosurePage } from '@/pages/design/components/DisclosurePage';
 import { WindowControlPage } from '@/pages/design/components/WindowControlPage';
 import { ScrollbarPage } from '@/pages/design/components/ScrollbarPage';
 import { DetailHeaderPage } from '@/pages/design/components/DetailHeaderPage';
+import { EditorPage } from '@/pages/design/components/EditorPage';
 import { SectionCardPage } from '@/pages/design/components/SectionCardPage';
 import { MonitoringToolbarPage } from '@/pages/design/components/MonitoringToolbarPage';
 import { CsvDownloadPage } from '@/pages/design/components/CsvDownloadPage';
-import { ShellPage } from '@/pages/design/components/ShellPage';
+import { AppWindowPage } from '@/pages/design/components/AppWindowPage';
 import { CommonPatternsPage } from '@/pages/design/patterns/CommonPatternsPage';
 import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
@@ -372,15 +382,20 @@ import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
 import { DesktopGridPage } from '@/pages/design/patterns/DesktopGridPage';
 import { DynamicFormFieldsPage } from '@/pages/design/patterns/DynamicFormFieldsPage';
 import { FormValidationPage } from '@/pages/design/patterns/FormValidationPage';
+import { ListPagePatternPage } from '@/pages/design/patterns/ListPagePatternPage';
+import { DetailPagePatternPage } from '@/pages/design/patterns/DetailPagePatternPage';
+import { ListSelectorPage } from '@/pages/design/patterns/ListSelectorPage';
+import { ViewPreferencesPage } from '@/pages/design/patterns/ViewPreferencesPage';
+import { FormFieldPatternPage } from '@/pages/design/patterns/FormFieldPatternPage';
+import { ShellPatternPage } from '@/pages/design/patterns/ShellPatternPage';
+import { EmptyStatesPage } from '@/pages/design/patterns/EmptyStatesPage';
 import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePrototypePage';
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
-import { ProgressBarPage } from '@/pages/design/charts/ProgressBarPage';
-import { AreaChartPage } from '@/pages/design/charts/AreaChartPage';
+import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
+import { LineChartPage } from '@/pages/design/charts/LineChartPage';
 import { PieChartPage } from '@/pages/design/charts/PieChartPage';
-import { HalfDoughnutChartPage } from '@/pages/design/charts/HalfDoughnutChartPage';
-import { DoughnutChartPage } from '@/pages/design/charts/DoughnutChartPage';
 import { ChartTooltipPage } from '@/pages/design/charts/ChartTooltipPage';
 
 // Pages - Desktop
@@ -984,6 +999,10 @@ function AppRoutes() {
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
+        <Route path="components/text-input" element={<TextInputPage />} />
+        <Route path="components/number-input" element={<NumberInputPage />} />
+        <Route path="components/textarea" element={<TextareaPage />} />
+        <Route path="components/search-input" element={<SearchInputPage />} />
         <Route path="components/form-field" element={<FormFieldPage />} />
         <Route path="components/filter-search-input" element={<FilterSearchInputPage />} />
         <Route path="components/select" element={<SelectPage />} />
@@ -1000,8 +1019,12 @@ function AppRoutes() {
         <Route path="components/pagination" element={<PaginationPage />} />
         <Route path="components/selection-indicator" element={<SelectionIndicatorPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
+        <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
         <Route path="components/loading" element={<LoadingPage />} />
+        <Route path="components/progress-bar" element={<ProgressBarComponentPage />} />
+        <Route path="components/skeleton" element={<SkeletonPage />} />
+        <Route path="components/spinner" element={<SpinnerPage />} />
         <Route path="components/topbar" element={<TopBarPage />} />
         <Route path="components/tabbar" element={<TabBarPage />} />
         <Route path="components/tabs" element={<TabsPage />} />
@@ -1013,6 +1036,7 @@ function AppRoutes() {
         <Route path="components/modal" element={<ModalPage />} />
         <Route path="components/drawer" element={<DrawerSectionPage />} />
         <Route path="components/notification-center" element={<NotificationCenterPage />} />
+        <Route path="components/snackbar" element={<SnackbarPage />} />
         <Route path="components/toast" element={<ToastPage />} />
         <Route
           path="components/global-notification-panel"
@@ -1023,10 +1047,11 @@ function AppRoutes() {
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
         <Route path="components/detail-header" element={<DetailHeaderPage />} />
+        <Route path="components/editor" element={<EditorPage />} />
         <Route path="components/section-card" element={<SectionCardPage />} />
         <Route path="components/monitoring-toolbar" element={<MonitoringToolbarPage />} />
         <Route path="components/csv-download" element={<CsvDownloadPage />} />
-        <Route path="components/shell" element={<ShellPage />} />
+        <Route path="components/app-window" element={<AppWindowPage />} />
         <Route path="components/*" element={<DesignOverviewPage />} />
         <Route path="patterns/common" element={<CommonPatternsPage />} />
         <Route path="patterns/wizard" element={<WizardPage />} />
@@ -1035,16 +1060,33 @@ function AppRoutes() {
         <Route path="patterns/desktop-grid" element={<DesktopGridPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
         <Route path="patterns/form-validation" element={<FormValidationPage />} />
+        <Route path="patterns/list-page" element={<ListPagePatternPage />} />
+        <Route path="patterns/detail-page" element={<DetailPagePatternPage />} />
+        <Route path="patterns/list-selector" element={<ListSelectorPage />} />
+        <Route path="patterns/view-preferences" element={<ViewPreferencesPage />} />
+        <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
+        <Route path="patterns/shell" element={<ShellPatternPage />} />
+        <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
         {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
-        <Route path="charts/gauge-bar" element={<ProgressBarPage />} />
-        <Route path="charts/area-chart" element={<AreaChartPage />} />
+        <Route path="charts/usage-chart" element={<UsageChartPage />} />
+        <Route
+          path="charts/gauge-bar"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
+        <Route
+          path="charts/half-doughnut"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
+        <Route
+          path="charts/doughnut"
+          element={<Navigate to="/design/charts/usage-chart" replace />}
+        />
+        <Route path="charts/area-chart" element={<LineChartPage />} />
         <Route path="charts/pie-chart" element={<PieChartPage />} />
-        <Route path="charts/half-doughnut" element={<HalfDoughnutChartPage />} />
-        <Route path="charts/doughnut" element={<DoughnutChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
         <Route path="figma/guide" element={<FigmaGuidePage />} />

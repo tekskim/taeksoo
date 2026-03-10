@@ -159,6 +159,57 @@ import {
 import { IconExpandOff, IconExpandOn } from '@/design-system/components/Icons/CustomIcons';
 import { IconUbuntu, IconRocky, IconGrid } from '@/design-system';
 
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function IconsGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <SectionTitle>아이콘 규칙</SectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>라이브러리</strong>: Tabler Icons (<code>@tabler/icons-react</code>)를
+              사용합니다.
+            </li>
+            <li>
+              <strong>Stroke</strong>: 기본{' '}
+              <code>
+                stroke={'{'}1.5{'}'}
+              </code>
+              .
+            </li>
+            <li>
+              <strong>크기</strong>: 버튼 내 아이콘 12px (sm/md), 14px (lg). 독립 아이콘 16~20px.
+            </li>
+            <li>
+              <strong>색상</strong>: CSS 변수(
+              <code>text-[var(--color-text-*)]</code>)를 사용. 하드코딩 금지.
+            </li>
+            <li>
+              <strong>즐겨찾기</strong>: <code>IconStar</code>(비활성) / <code>IconStarFilled</code>
+              (활성, yellow400).
+            </li>
+            <li>
+              아이콘만 사용하는 버튼에는 반드시 <code>aria-label</code>을 지정합니다.
+            </li>
+          </ul>
+        </Prose>
+      </VStack>
+    </VStack>
+  );
+}
+
 export function IconsPage() {
   const [iconSearchQuery, setIconSearchQuery] = useState('');
 
@@ -166,43 +217,7 @@ export function IconsPage() {
     <ComponentPageTemplate
       title="Icons"
       description="Tabler Icons & Custom Icons - Stroke width 1.5, Size 16-20px"
-      guidelines={
-        <VStack gap={3}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">아이콘 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  <strong>라이브러리</strong>: Tabler Icons (<code>@tabler/icons-react</code>)를
-                  사용합니다.
-                </li>
-                <li>
-                  <strong>Stroke</strong>: 기본{' '}
-                  <code>
-                    stroke={'{'}1.5{'}'}
-                  </code>
-                  .
-                </li>
-                <li>
-                  <strong>크기</strong>: 버튼 내 아이콘 12px (sm/md), 14px (lg). 독립 아이콘
-                  16~20px.
-                </li>
-                <li>
-                  <strong>색상</strong>: CSS 변수(
-                  <code>text-[var(--color-text-*)]</code>)를 사용. 하드코딩 금지.
-                </li>
-                <li>
-                  <strong>즐겨찾기</strong>: <code>IconStar</code>(비활성) /{' '}
-                  <code>IconStarFilled</code>(활성, yellow400).
-                </li>
-                <li>
-                  아이콘만 사용하는 버튼에는 반드시 <code>aria-label</code>을 지정합니다.
-                </li>
-              </ul>
-            </VStack>
-          </div>
-        </VStack>
-      }
+      guidelines={<IconsGuidelines />}
       preview={
         <VStack gap={4}>
           <SearchInput

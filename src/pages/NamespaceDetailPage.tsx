@@ -21,6 +21,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -49,7 +50,7 @@ interface ResourceRow {
 
 interface NamespaceData {
   name: string;
-  status: 'Active' | 'Terminating' | 'Pending';
+  status: string;
   createdAt: string;
   labels: Record<string, string>;
   annotations: Record<string, string>;
@@ -68,7 +69,7 @@ interface NamespaceData {
 const mockNamespaceData: Record<string, NamespaceData> = {
   'cattle-clusters-system': {
     name: 'cattle-clusters-system',
-    status: 'Active',
+    status: 'OK',
     createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'cattle-clusters-system' },
     annotations: {},
@@ -76,7 +77,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   },
   'kube-system': {
     name: 'kube-system',
-    status: 'Active',
+    status: 'OK',
     createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'kube-system' },
     annotations: {},
@@ -84,7 +85,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   },
   default: {
     name: 'default',
-    status: 'Active',
+    status: 'OK',
     createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'default' },
     annotations: {},
@@ -109,7 +110,7 @@ interface WorkloadRow {
   restarts: number;
   createdAt: string;
   health: string;
-  status: 'active' | 'error' | 'pending';
+  status: string;
 }
 
 const mockWorkloadsData: WorkloadRow[] = [
@@ -122,7 +123,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 25, 2025',
     health: '3 Running',
-    status: 'active',
+    status: 'OK',
   },
   {
     id: '2',
@@ -133,7 +134,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 2,
     createdAt: 'Jul 24, 2025',
     health: '5 Running',
-    status: 'active',
+    status: 'OK',
   },
   {
     id: '3',
@@ -144,7 +145,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 20, 2025',
     health: '4 Running',
-    status: 'active',
+    status: 'OK',
   },
   {
     id: '4',
@@ -155,7 +156,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 1,
     createdAt: 'Jul 18, 2025',
     health: '4 Running',
-    status: 'active',
+    status: 'True',
   },
   {
     id: '5',
@@ -166,7 +167,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 15, 2025',
     health: '3 Running',
-    status: 'active',
+    status: 'True',
   },
   {
     id: '6',
@@ -177,7 +178,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 14, 2025',
     health: '3 Running',
-    status: 'active',
+    status: 'Raw',
   },
   {
     id: '7',
@@ -188,7 +189,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 10, 2025',
     health: '0 Running',
-    status: 'active',
+    status: 'Raw',
   },
   {
     id: '8',
@@ -199,7 +200,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 12, 2025',
     health: '0 Running',
-    status: 'active',
+    status: 'None',
   },
   {
     id: '9',
@@ -210,7 +211,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 25, 2025',
     health: '1 Running',
-    status: 'pending',
+    status: 'None',
   },
   {
     id: '10',
@@ -221,7 +222,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 1,
     createdAt: 'Jul 24, 2025',
     health: '0 Completed',
-    status: 'active',
+    status: 'CreateContainerConfigError',
   },
   {
     id: '11',
@@ -232,7 +233,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 25, 2025',
     health: '1 Running',
-    status: 'active',
+    status: 'InvalidImageName',
   },
   {
     id: '12',
@@ -243,7 +244,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 3,
     createdAt: 'Jul 25, 2025',
     health: '1 Running',
-    status: 'error',
+    status: 'ImagePullBackOff',
   },
 ];
 
@@ -259,35 +260,35 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
     condition: 'NamespaceDeletionDiscoveryFailure',
-    status: 'False',
+    status: 'True',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '2',
     condition: 'NamespaceDeletionGroupVersionParsingFailure',
-    status: 'False',
+    status: 'True',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '3',
     condition: 'NamespaceDeletionContentFailure',
-    status: 'False',
+    status: 'None',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '4',
     condition: 'NamespaceContentRemaining',
-    status: 'False',
+    status: 'None',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '5',
     condition: 'NamespaceFinalizersRemaining',
-    status: 'False',
+    status: 'None',
     message: '',
     updated: 'Nov 10, 2025',
   },
@@ -518,11 +519,13 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -647,8 +650,16 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      flex: 1,
+      width: fixedColumns.statusLabel,
+      align: 'left',
       sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',
@@ -698,7 +709,7 @@ export function NamespaceDetailPage() {
   // Get namespace data
   const namespace = mockNamespaceData[namespaceName || ''] || {
     name: namespaceName || 'unknown',
-    status: 'Active' as const,
+    status: 'OK' as const,
     createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': namespaceName || '' },
     annotations: {},
@@ -820,13 +831,14 @@ export function NamespaceDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={namespace.status}
-              status={
-                namespace.status === 'Active'
-                  ? 'active'
-                  : namespace.status === 'Terminating'
-                    ? 'error'
-                    : 'pending'
+              value={
+                <Tooltip content={namespace.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {namespace.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
@@ -834,11 +846,19 @@ export function NamespaceDetailPage() {
               label={`Labels (${Object.keys(namespace.labels).length})`}
               value={
                 Object.keys(namespace.labels).length > 0 ? (
-                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                  <div className="flex flex-col items-start gap-1 min-w-0 w-full overflow-hidden">
                     {Object.entries(namespace.labels).map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
-                        {`${key}: ${val}`}
-                      </Badge>
+                      <Tooltip key={key} content={`${key}: ${val}`} position="top">
+                        <div className="w-full">
+                          <Badge
+                            theme="white"
+                            size="sm"
+                            className="w-full truncate justify-start text-left"
+                          >
+                            {`${key}: ${val}`}
+                          </Badge>
+                        </div>
+                      </Tooltip>
                     ))}
                   </div>
                 ) : (

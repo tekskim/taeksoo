@@ -248,7 +248,9 @@ function OpenSectionTableDemo() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_: unknown, row: DemoImageRow) => <StatusIndicator status={row.status} />,
+      render: (_: unknown, row: DemoImageRow) => (
+        <StatusIndicator status={row.status} layout="icon-only" size="sm" />
+      ),
     },
     {
       key: 'name',

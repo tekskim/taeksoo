@@ -21,23 +21,21 @@ export function AppIconsPage() {
       title="App icons"
       description="Application icons for THAKI Cloud services - Size 64x64"
       guidelines={
-        <VStack gap={3}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={2}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>
-                  THAKI Cloud의 각 서비스(Compute, Compute Admin, Container, Storage, Storage Admin,
-                  Cloud Builder, AI Platform, Agent ops, IAM, Settings, Admin center, Chat)를
-                  대표하는 아이콘입니다.
-                </li>
-                <li>
-                  <strong>크기</strong>: 기본 64×64px. 사이드바 등 작은 영역에서는 축소 사용 가능.
-                </li>
-                <li>서비스 간 시각적 일관성을 유지하기 위해 공통 스타일 가이드를 따릅니다.</li>
-                <li>새로운 서비스 추가 시 기존 아이콘 세트와 동일한 스타일로 제작합니다.</li>
-              </ul>
-            </VStack>
+        <VStack gap={4}>
+          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
+          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                THAKI Cloud의 각 서비스(Compute, Compute Admin, Container, Storage, Storage Admin,
+                Cloud Builder, AI Platform, Agent ops, IAM, Settings, Admin center, Chat)를 대표하는
+                아이콘입니다.
+              </li>
+              <li>
+                <strong>크기</strong>: 기본 64×64px. 사이드바 등 작은 영역에서는 축소 사용 가능.
+              </li>
+              <li>서비스 간 시각적 일관성을 유지하기 위해 공통 스타일 가이드를 따릅니다.</li>
+              <li>새로운 서비스 추가 시 기존 아이콘 세트와 동일한 스타일로 제작합니다.</li>
+            </ul>
           </div>
         </VStack>
       }

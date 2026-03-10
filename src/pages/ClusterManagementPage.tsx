@@ -14,11 +14,11 @@ import {
   Chip,
   ContextMenu,
   type TableColumn,
-  type StatusType,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -39,12 +39,10 @@ import {
    Types
    ---------------------------------------- */
 
-type ClusterStatus = 'active' | 'building' | 'error' | 'deleting';
-
 interface Cluster {
   id: string;
   name: string;
-  status: ClusterStatus;
+  status: string;
   kubernetesVersion: string;
   createdAt: string;
 }
@@ -57,50 +55,39 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-001',
     name: 'production-kubernetes-high-availability-cluster',
-    status: 'building',
+    status: 'OK',
     kubernetesVersion: 'v1.34',
     createdAt: 'Nov 11, 2025',
   },
   {
     id: 'cluster-002',
     name: 'staging-development-testing-environment-cluster',
-    status: 'active',
+    status: 'OK',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 6, 2025',
   },
   {
     id: 'cluster-003',
     name: 'production-microservices-platform-cluster',
-    status: 'active',
+    status: 'True',
     kubernetesVersion: 'v1.32.2',
     createdAt: 'Sep 15, 2025',
   },
   {
     id: 'cluster-004',
     name: 'staging-integration-testing-environment-cluster',
-    status: 'active',
+    status: 'None',
     kubernetesVersion: 'v1.33.1',
     createdAt: 'Aug 20, 2025',
   },
   {
     id: 'cluster-005',
     name: 'development-sandbox-experimental-cluster',
-    status: 'error',
+    status: 'ImagePullBackOff',
     kubernetesVersion: 'v1.31.0',
     createdAt: 'Jul 10, 2025',
   },
 ];
-
-/* ----------------------------------------
-   Status Mapping
-   ---------------------------------------- */
-
-const statusMap: Record<ClusterStatus, StatusType> = {
-  active: 'active',
-  building: 'building',
-  error: 'error',
-  deleting: 'deleting',
-};
 
 /* ----------------------------------------
    Component
@@ -140,9 +127,11 @@ export function ClusterManagementPage() {
       sortable: false,
       align: 'center',
       render: (status) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={status}>
-          <span className="truncate">{status}</span>
-        </Badge>
+        <Tooltip content={status}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{status}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

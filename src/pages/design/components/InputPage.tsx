@@ -1,9 +1,188 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Input, Textarea, NumberInput, SearchInput, VStack, HStack } from '@/design-system';
 import { IconSearch, IconMail } from '@tabler/icons-react';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function InputPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <VStack gap={2}>
+          <SubSectionTitle>Input 유형 선택 기준</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[140px]">유형</Th>
+                <Th>사용 조건</Th>
+                <Th>예시</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>Input</strong>
+                </Td>
+                <Td>한 줄 텍스트 입력 (이름, IP, URL 등)</Td>
+                <Td>Instance Name, IP Address</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>Textarea</strong>
+                </Td>
+                <Td>여러 줄 텍스트 입력 (설명, 메모 등)</Td>
+                <Td>Description, Notes</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>NumberInput</strong>
+                </Td>
+                <Td>숫자만 입력 (증감 버튼 포함)</Td>
+                <Td>vCPU, Replica count, Port</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>SearchInput</strong>
+                </Td>
+                <Td>검색 전용 입력 (아이콘 포함, 300ms debounce 필터링)</Td>
+                <Td>리스트 필터, 리소스 검색</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>Validation 정책</SubSectionTitle>
+          <Prose>
+            <p>
+              상세 검증 정책(타이밍, 에러 표시·해제 규칙, 메시지 작성 규칙)은{' '}
+              <strong>Form field spacing</strong> 섹션의 Validation States를 참조하세요.
+            </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>필수 필드</strong>: 라벨 옆에{' '}
+                <span className="text-[var(--color-state-danger)]">*</span> 표시.
+              </li>
+              <li>
+                <strong>에러 표시</strong>: Input 테두리를 danger 색상으로 변경하고 하단에
+                ErrorMessage 표시. HelperText는 항상 유지.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>Placeholder 규칙</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                입력 형식 예시를 표시합니다: <code>e.g. 192.168.0.1</code>,{' '}
+                <code>e.g. my-instance</code>
+              </li>
+              <li>
+                라벨을 반복하지 않습니다: 라벨이 &quot;Name&quot;이면 placeholder는
+                &quot;Name&quot;이 아닌 <code>Enter instance name</code>
+              </li>
+              <li>필수/선택 여부를 placeholder에 표시하지 않습니다 (라벨의 * 표시로 충분).</li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>Size 선택 기준</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>sm (28px)</strong>: Toolbar, 테이블 인라인 편집, Drawer 내부 등 밀집된 영역.
+              </li>
+              <li>
+                <strong>md (32px)</strong>: 일반 폼 필드. Create/Edit 페이지의 기본 크기.
+              </li>
+              <li>
+                <strong>lg (40px)</strong>: 로그인, 단독 입력 화면 등 강조가 필요한 경우.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+        <VStack gap={2}>
+          <SubSectionTitle>readOnly vs disabled 구분</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>readOnly</strong>: 값을 표시하되 복사가 가능해야 하는 경우 (e.g. 자동 생성된
+                ID, API endpoint). 포커스 가능, 텍스트 선택/복사 가능.
+              </li>
+              <li>
+                <strong>disabled</strong>: 현재 맥락에서 입력이 불가능한 경우 (e.g. 다른 필드에
+                의존, 권한 부족). 포커스 불가, Tooltip으로 비활성 이유를 안내.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <DosDonts
+        doItems={[
+          '모든 Input은 FormField로 감싸서 라벨, 도움말, 에러를 일관되게 제공합니다.',
+          '입력 형식이 특정한 경우 helperText로 형식을 안내합니다.',
+          '관련 있는 필드는 그룹으로 묶어 시각적 연관성을 제공합니다.',
+          '비밀번호 등 민감 정보는 type="password"를 사용합니다.',
+        ]}
+        dontItems={[
+          'placeholder를 라벨 대용으로 사용하지 않습니다 (입력 시 사라짐).',
+          '타이핑 중에 실시간 에러를 표시하지 않습니다 (blur 시 검증).',
+          'disabled 상태의 이유를 설명 없이 비활성화하지 않습니다.',
+          '숫자만 입력받는 필드에 일반 Input을 사용하지 않습니다 (NumberInput 사용).',
+        ]}
+      />
+    </VStack>
+  );
+}
 
 const inputProps: PropDef[] = [
   {
@@ -69,6 +248,18 @@ export function InputPage() {
     <ComponentPageTemplate
       title="Input"
       description="Text fields, textarea, number input, and search"
+      whenToUse={[
+        '사용자로부터 짧은 텍스트(이름, 이메일 등)를 입력받을 때 (Text Input)',
+        '여러 줄의 텍스트(설명, 메모 등)를 입력받을 때 (Textarea)',
+        '정확한 숫자 값을 입력받거나 증감 조절이 필요할 때 (Number Input)',
+        '리스트나 테이블 내에서 빠른 검색/필터링이 필요할 때 (Search Input)',
+      ]}
+      whenNotToUse={[
+        '미리 정의된 옵션 목록에서 선택해야 하는 경우 → Select 사용',
+        'on/off 토글이 필요한 경우 → Toggle 사용',
+        '날짜/시간을 선택해야 하는 경우 → DatePicker 사용',
+        '범위 내 값을 시각적으로 조절해야 하는 경우 → Slider 사용',
+      ]}
       preview={
         <ComponentPreview code={`<Input placeholder="Enter text..." width="md" />`}>
           <Input placeholder="Enter text..." width="md" />
@@ -434,165 +625,7 @@ export function InputPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Input 유형 선택 기준
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[140px]">
-                          유형
-                        </th>
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          사용 조건
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          예시
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Input
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          한 줄 텍스트 입력 (이름, IP, URL 등)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          Instance Name, IP Address
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          Textarea
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          여러 줄 텍스트 입력 (설명, 메모 등)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">Description, Notes</td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          NumberInput
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          숫자만 입력 (증감 버튼 포함)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          vCPU, Replica count, Port
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 font-medium text-[var(--color-text-default)]">
-                          SearchInput
-                        </td>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          검색 전용 입력 (아이콘 포함, 300ms debounce 필터링)
-                        </td>
-                        <td className="py-2 text-[var(--color-text-muted)]">
-                          리스트 필터, 리소스 검색
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Validation 정책
-                </h4>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  상세 검증 정책(타이밍, 에러 표시·해제 규칙, 메시지 작성 규칙)은{' '}
-                  <strong>Form field spacing</strong> 섹션의 Validation States를 참조하세요.
-                </p>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>필수 필드</strong>: 라벨 옆에{' '}
-                    <span className="text-[var(--color-state-danger)]">*</span> 표시.
-                  </li>
-                  <li>
-                    <strong>에러 표시</strong>: Input 테두리를 danger 색상으로 변경하고 하단에
-                    ErrorMessage 표시. HelperText는 항상 유지.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Placeholder 규칙
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    입력 형식 예시를 표시합니다: <code>e.g. 192.168.0.1</code>,{' '}
-                    <code>e.g. my-instance</code>
-                  </li>
-                  <li>
-                    라벨을 반복하지 않습니다: 라벨이 &quot;Name&quot;이면 placeholder는
-                    &quot;Name&quot;이 아닌 <code>Enter instance name</code>
-                  </li>
-                  <li>필수/선택 여부를 placeholder에 표시하지 않습니다 (라벨의 * 표시로 충분).</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">Size 선택 기준</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>sm (28px)</strong>: Toolbar, 테이블 인라인 편집, Drawer 내부 등 밀집된
-                    영역.
-                  </li>
-                  <li>
-                    <strong>md (32px)</strong>: 일반 폼 필드. Create/Edit 페이지의 기본 크기.
-                  </li>
-                  <li>
-                    <strong>lg (40px)</strong>: 로그인, 단독 입력 화면 등 강조가 필요한 경우.
-                  </li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  readOnly vs disabled 구분
-                </h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>readOnly</strong>: 값을 표시하되 복사가 가능해야 하는 경우 (e.g. 자동
-                    생성된 ID, API endpoint). 포커스 가능, 텍스트 선택/복사 가능.
-                  </li>
-                  <li>
-                    <strong>disabled</strong>: 현재 맥락에서 입력이 불가능한 경우 (e.g. 다른 필드에
-                    의존, 권한 부족). 포커스 불가, Tooltip으로 비활성 이유를 안내.
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>모든 Input은 FormField로 감싸서 라벨, 도움말, 에러를 일관되게 제공합니다.</li>
-                <li>입력 형식이 특정한 경우 helperText로 형식을 안내합니다.</li>
-                <li>관련 있는 필드는 그룹으로 묶어 시각적 연관성을 제공합니다.</li>
-                <li>비밀번호 등 민감 정보는 type=&quot;password&quot;를 사용합니다.</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">Don&apos;t</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>placeholder를 라벨 대용으로 사용하지 않습니다 (입력 시 사라짐).</li>
-                <li>타이핑 중에 실시간 에러를 표시하지 않습니다 (blur 시 검증).</li>
-                <li>disabled 상태의 이유를 설명 없이 비활성화하지 않습니다.</li>
-                <li>숫자만 입력받는 필드에 일반 Input을 사용하지 않습니다 (NumberInput 사용).</li>
-              </ul>
-            </div>
-          </div>
-        </VStack>
-      }
+      guidelines={<InputPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>height: 28/32px</code> · <code>padding: 10×8px</code> · <code>radius: 6px</code> ·{' '}

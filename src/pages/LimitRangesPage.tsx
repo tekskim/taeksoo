@@ -18,6 +18,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface LimitRangeRow {
   id: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   createdAt: string;
@@ -54,35 +55,35 @@ interface LimitRangeRow {
 const limitRangesData: LimitRangeRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'limitrangeName',
     namespace: 'namespaceName',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'True',
     name: 'cpu-memory-limits',
     namespace: 'default',
     createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'None',
     name: 'storage-limits',
     namespace: 'kube-system',
     createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'container-limits',
     namespace: 'production',
     createdAt: 'Nov 7, 2025',
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'pod-limits',
     namespace: 'monitoring',
     createdAt: 'Nov 6, 2025',
@@ -176,11 +177,13 @@ export function LimitRangesPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
-      render: () => (
-        <Badge theme="white" size="sm" className="max-w-[80px]">
-          Active
-        </Badge>
+      align: 'left',
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

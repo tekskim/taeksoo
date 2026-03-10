@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import ReactECharts from 'echarts-for-react';
-import { Tooltip, MonitoringToolbar } from '@/design-system';
+import { Tooltip, MonitoringToolbar, type TimeRangeValue } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
   IconArrowsMinimize,
@@ -580,37 +580,20 @@ export function ChartWithFullScreen({
   yAxisFormatter?: (value: number) => string;
   height?: string;
 }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isFullScreen = searchParams.get('fullscreen') === 'true';
-  const fullScreenContainerRef = useRef<HTMLDivElement>(null);
-  const [containerReady, setContainerReady] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [fullScreenTimeRange, setFullScreenTimeRange] = useState<TimeRangeValue>('30m');
+
+  const fullScreenTimeRangeOptions = timeOptions;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isFullScreen) {
-        setSearchParams({}, { replace: true });
+        setIsFullScreen(false);
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isFullScreen, setSearchParams]);
-
-  useEffect(() => {
-    if (isFullScreen && fullScreenContainerRef.current) {
-      const timer = setTimeout(() => setContainerReady(true), 50);
-      return () => clearTimeout(timer);
-    } else {
-      setContainerReady(false);
-    }
   }, [isFullScreen]);
-
-  const handleEnterFullScreen = () => {
-    setSearchParams({ fullscreen: 'true' }, { replace: true });
-  };
-
-  const handleExitFullScreen = () => {
-    setSearchParams({}, { replace: true });
-  };
 
   return (
     <>
@@ -620,27 +603,34 @@ export function ChartWithFullScreen({
         series={series}
         yAxisFormatter={yAxisFormatter}
         height={height}
-        onFullScreen={handleEnterFullScreen}
+        onFullScreen={() => setIsFullScreen(true)}
       />
 
-      {/* Full Screen Overlay & Chart */}
-      {isFullScreen && (
-        <>
-          <div className="fullScreenOverlay" onClick={handleExitFullScreen} />
-          <div className="fullScreenFloating" ref={fullScreenContainerRef}>
-            {containerReady && (
+      {/* Full Screen via Portal */}
+      {isFullScreen &&
+        createPortal(
+          <>
+            <div className="fullScreenOverlay" onClick={() => setIsFullScreen(false)} />
+            <div className="fullScreenFloating">
               <LineChart
                 title={title}
                 series={series}
                 yAxisFormatter={yAxisFormatter}
                 isFullScreen={true}
-                onExitFullScreen={handleExitFullScreen}
-                timeControls={<MonitoringToolbar timeRangeOptions={timeOptions} />}
+                onExitFullScreen={() => setIsFullScreen(false)}
+                timeControls={
+                  <MonitoringToolbar
+                    timeRangeOptions={fullScreenTimeRangeOptions}
+                    timeRange={fullScreenTimeRange}
+                    onTimeRangeChange={setFullScreenTimeRange}
+                    onRefresh={() => {}}
+                  />
+                }
               />
-            )}
-          </div>
-        </>
-      )}
+            </div>
+          </>,
+          document.body
+        )}
     </>
   );
 }
