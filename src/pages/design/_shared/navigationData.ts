@@ -315,7 +315,7 @@ const overlayItems: NavItem[] = [
   },
 ];
 
-const layoutItems: NavItem[] = [
+const layoutComponentItems: NavItem[] = [
   {
     id: 'disclosure',
     label: 'Disclosure',
@@ -335,12 +335,6 @@ const layoutItems: NavItem[] = [
     path: '/design/components/scrollbar',
   },
   {
-    id: 'common-patterns',
-    label: 'Common patterns',
-    icon: IconTemplate,
-    path: '/design/patterns/common',
-  },
-  {
     id: 'detail-header',
     label: 'Detail header',
     icon: IconLayoutNavbar,
@@ -351,6 +345,39 @@ const layoutItems: NavItem[] = [
     label: 'Section card',
     icon: IconLayoutGrid,
     path: '/design/components/section-card',
+  },
+  {
+    id: 'monitoring-toolbar',
+    label: 'Monitoring toolbar',
+    icon: IconRefresh,
+    path: '/design/components/monitoring-toolbar',
+  },
+  {
+    id: 'csv-download',
+    label: 'List Download (CSV Export)',
+    icon: IconDownload,
+    path: '/design/components/csv-download',
+  },
+  {
+    id: 'app-window',
+    label: 'App Window',
+    icon: IconTerminal2,
+    path: '/design/components/app-window',
+  },
+  {
+    id: 'editor',
+    label: 'Editor',
+    icon: IconTemplate,
+    path: '/design/components/editor',
+  },
+];
+
+const patternItems: NavItem[] = [
+  {
+    id: 'common-patterns',
+    label: 'Common patterns',
+    icon: IconTemplate,
+    path: '/design/patterns/common',
   },
   {
     id: 'wizard',
@@ -389,24 +416,6 @@ const layoutItems: NavItem[] = [
     path: '/design/patterns/view-preferences',
   },
   {
-    id: 'monitoring-toolbar',
-    label: 'Monitoring toolbar',
-    icon: IconRefresh,
-    path: '/design/components/monitoring-toolbar',
-  },
-  {
-    id: 'csv-download',
-    label: 'List Download (CSV Export)',
-    icon: IconDownload,
-    path: '/design/components/csv-download',
-  },
-  {
-    id: 'app-window',
-    label: 'App Window',
-    icon: IconTerminal2,
-    path: '/design/components/app-window',
-  },
-  {
     id: 'shell-pattern',
     label: 'Shell',
     icon: IconTerminal2,
@@ -436,12 +445,6 @@ const layoutItems: NavItem[] = [
     label: 'Form Validation',
     icon: IconChecklist,
     path: '/design/patterns/form-validation',
-  },
-  {
-    id: 'editor',
-    label: 'Editor',
-    icon: IconTemplate,
-    path: '/design/components/editor',
   },
 ];
 
@@ -520,7 +523,8 @@ export const navGroups: NavGroup[] = [
   { title: 'Feedback', items: feedbackItems },
   { title: 'Navigation', items: navigationItems },
   { title: 'Overlay', items: overlayItems },
-  { title: 'Layout', items: layoutItems },
+  { title: 'Layout Components', items: layoutComponentItems },
+  { title: 'Patterns', items: patternItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Figma Migration', items: figmaItems },
   { title: 'Prototype', items: prototypeItems },

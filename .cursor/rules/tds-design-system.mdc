@@ -38,50 +38,44 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 
 ### 색상 - Light Mode
 
+> **Note**: 아래 변수명은 `src/index.css`에 정의된 실제 사용 이름입니다. Figma 토큰 빌드 산출물(`light.css`)은 `--semantic-color-*` 네이밍을 사용하며, `compatibility.css`가 이를 아래 `--color-*` 별칭으로 매핑합니다. 코드에서는 항상 아래 `--color-*` 이름을 사용하세요.
+
 ```css
-/* Primary */
---semantic-color-primary: #2563eb;        /* blue600 */
---semantic-color-primary-hover: #1d4ed8;  /* blue700 */
---semantic-color-primary-focus: #1e40af;  /* blue800 */
---semantic-color-on-primary: #ffffff;
-
-/* Secondary */
---semantic-color-secondary: #475569;       /* blueGray600 */
---semantic-color-secondary-hover: #334155; /* blueGray700 */
---semantic-color-on-secondary: #ffffff;
-
-/* Tertiary (Muted Button Background) */
---semantic-color-tertiary: #f1f5f9;        /* blueGray100 */
---semantic-color-tertiary-hover: #e2e8f0;  /* blueGray200 */
---semantic-color-on-tertiary: #0f172a;     /* blueGray900 */
-
-/* Surface */
---semantic-color-surface: #ffffff;
---semantic-color-surface-muted: #f8fafc;   /* blueGray50 */
---semantic-color-surface-hover: #f1f5f9;   /* blueGray100 */
---semantic-color-surface-elevated: #ffffff;
+/* Action (Primary) */
+--color-action-primary: #2563eb;          /* blue600 */
+--color-action-primary-hover: #1d4ed8;    /* blue700 */
+--color-action-primary-active: #1e40af;   /* blue800 */
+--color-action-primary-subtle: #eff6ff;   /* blue50 */
 
 /* Text */
---semantic-color-text: #0f172a;            /* blueGray900 */
---semantic-color-text-muted: #475569;      /* blueGray600 */
---semantic-color-text-subtle: #64748b;     /* blueGray500 */
---semantic-color-text-disabled: #94a3b8;   /* blueGray400 */
+--color-text-default: #0f172a;            /* slate900 */
+--color-text-muted: #475569;              /* slate600 */
+--color-text-subtle: #64748b;             /* slate500 */
+--color-text-disabled: #94a3b8;           /* slate400 */
+--color-text-on-primary: #ffffff;
+--color-text-inverse: #ffffff;
+
+/* Surface */
+--color-surface-default: #ffffff;
+--color-surface-subtle: #f8fafc;          /* slate50 */
+--color-surface-muted: #f1f5f9;           /* slate100 */
+--color-surface-hover: #f1f5f9;           /* slate100 */
 
 /* Border */
---semantic-color-border: #e2e8f0;          /* blueGray200 */
---semantic-color-border-subtle: #f1f5f9;   /* blueGray100 */
---semantic-color-border-strong: #cbd5e1;   /* blueGray300 */
---semantic-color-border-focus: #3b82f6;    /* blue500 */
+--color-border-default: #e2e8f0;          /* slate200 */
+--color-border-subtle: #f1f5f9;           /* slate100 */
+--color-border-strong: #cbd5e1;           /* slate300 */
+--color-border-focus: #3b82f6;            /* blue500 */
 
 /* State */
---semantic-color-state-info: #2563eb;      /* blue600 */
---semantic-color-state-info-bg: #eff6ff;   /* blue50 */
---semantic-color-state-success: #16a34a;   /* green600 */
---semantic-color-state-success-bg: #f0fdf4;/* green50 */
---semantic-color-state-warning: #ea580c;   /* orange600 */
---semantic-color-state-warning-bg: #fefce8;/* yellow50 */
---semantic-color-state-danger: #dc2626;    /* red600 */
---semantic-color-state-danger-bg: #fef2f2; /* red50 */
+--color-state-info: #2563eb;              /* blue600 */
+--color-state-info-bg: #eff6ff;           /* blue50 */
+--color-state-success: #22c55e;           /* green500 */
+--color-state-success-bg: #f0fdf4;        /* green50 */
+--color-state-warning: #f97316;           /* orange500 */
+--color-state-warning-bg: #fff7ed;        /* orange50 */
+--color-state-danger: #ef4444;            /* red500 */
+--color-state-danger-bg: #fef2f2;         /* red50 */
 ```
 
 ### Chart Color Palette
@@ -125,52 +119,54 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 
 ### Spacing (px 단위)
 
-> **Note**: Spacing과 Radius는 px 단위로 정의되어 브라우저 font-size 설정에 관계없이 일관된 크기를 보장합니다.
+> **Note**: Spacing과 Radius는 px 단위로 정의되어 브라우저 font-size 설정에 관계없이 일관된 크기를 보장합니다. 아래 변수명은 `src/index.css`에 정의된 실제 사용 이름입니다. Figma 토큰 빌드 산출물(`light.css`)은 `--primitive-spacing-*` 네이밍을 사용합니다.
 
 ```css
---primitive-spacing-0: 0;
---primitive-spacing-0-5: 2px;
---primitive-spacing-1: 4px;
---primitive-spacing-1-5: 6px;
---primitive-spacing-2: 8px;
---primitive-spacing-2-5: 10px;
---primitive-spacing-3: 12px;
---primitive-spacing-4: 16px;
---primitive-spacing-5: 20px;
---primitive-spacing-6: 24px;
---primitive-spacing-7: 28px;
---primitive-spacing-8: 32px;
---primitive-spacing-9: 36px;
---primitive-spacing-10: 40px;
---primitive-spacing-12: 48px;
---primitive-spacing-16: 64px;
+--spacing-0: 0;
+--spacing-0-5: 2px;
+--spacing-1: 4px;
+--spacing-1-5: 6px;
+--spacing-2: 8px;
+--spacing-2-5: 10px;
+--spacing-3: 12px;
+--spacing-4: 16px;
+--spacing-5: 20px;
+--spacing-6: 24px;
+--spacing-7: 28px;
+--spacing-8: 32px;
+--spacing-9: 36px;
+--spacing-10: 40px;
+--spacing-12: 48px;
+--spacing-16: 64px;
 ```
 
 ### Typography
 
-```css
-/* Font Size */
---font-size-10: 0.625rem;   /* 10px */
---font-size-11: 0.6875rem;  /* 11px */
---font-size-12: 0.75rem;    /* 12px */
---font-size-13: 0.8125rem;  /* 13px */
---font-size-14: 0.875rem;   /* 14px */
---font-size-16: 1rem;       /* 16px */
---font-size-18: 1.125rem;   /* 18px */
---font-size-24: 1.5rem;     /* 24px */
---font-size-32: 2rem;       /* 32px */
---font-size-40: 2.5rem;     /* 40px */
+> **Note**: `src/index.css`의 CSS 변수는 px 단위로 정의됩니다. Figma 토큰 빌드 산출물(`light.css`)은 rem 단위를 사용하지만, 유틸리티 클래스(`.text-body-md` 등)가 CSS 변수를 참조하여 최종 렌더링합니다. 접근성을 위해 유틸리티 클래스는 CSS 변수의 px 값을 사용하므로, 브라우저 기본 폰트 크기에 따른 스케일링은 `html` 요소의 `font-size` 설정에 의존합니다.
 
-/* Line Height */
---line-height-14: 0.875rem; /* 14px */
---line-height-16: 1rem;     /* 16px */
---line-height-18: 1.125rem; /* 18px */
---line-height-20: 1.25rem;  /* 20px */
---line-height-24: 1.5rem;   /* 24px */
---line-height-28: 1.75rem;  /* 28px */
---line-height-32: 2rem;     /* 32px */
---line-height-40: 2.5rem;   /* 40px */
---line-height-48: 3rem;     /* 48px */
+```css
+/* Font Size (px — src/index.css 기준) */
+--font-size-10: 10px;
+--font-size-11: 11px;
+--font-size-12: 12px;
+--font-size-13: 13px;
+--font-size-14: 14px;
+--font-size-16: 16px;
+--font-size-18: 18px;
+--font-size-24: 24px;
+--font-size-32: 32px;
+--font-size-40: 40px;
+
+/* Line Height (px — src/index.css 기준) */
+--line-height-14: 14px;
+--line-height-16: 16px;
+--line-height-18: 18px;
+--line-height-20: 20px;
+--line-height-24: 24px;
+--line-height-28: 28px;
+--line-height-32: 32px;
+--line-height-40: 40px;
+--line-height-48: 48px;
 
 /* Font Weight */
 --font-weight-regular: 400;
@@ -178,8 +174,8 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 --font-weight-semibold: 600;
 
 /* Font Family */
---font-family-sans: "Mona Sans";
---font-family-mono: "Menlo";
+--font-sans: "Mona Sans Variable", "Mona Sans", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+--font-mono: Menlo, "Fira Code", Consolas, monospace;
 ```
 
 ### 타이포그래피 유틸리티 클래스
@@ -211,12 +207,12 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 ### Border Radius (px 단위)
 
 ```css
---primitive-radius-none: 0;
---primitive-radius-sm: 4px;    /* field, checkbox */
---primitive-radius-md: 6px;    /* button, badge, menu */
---primitive-radius-lg: 8px;    /* card */
---primitive-radius-xl: 16px;   /* modal */
---primitive-radius-full: 9999px; /* pill, statusIndicator */
+--radius-none: 0;
+--radius-sm: 4px;    /* field, checkbox */
+--radius-md: 6px;    /* button, badge, menu */
+--radius-lg: 8px;    /* card */
+--radius-xl: 16px;   /* modal */
+--radius-full: 9999px; /* pill, statusIndicator */
 ```
 
 ### Transition
@@ -417,7 +413,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 ### Popover
 
 ```css
---popover-radius: 0.5rem;      /* 8px - primitive-radius-lg */
+--popover-radius: 0.5rem;      /* 8px - radius-lg */
 --popover-border: 1px;
 --popover-arrow-size: 7px;     /* border triangle outer */
 --popover-arrow-fill: 6px;     /* fill triangle inner */
@@ -1369,7 +1365,7 @@ function DaemonsCell({ daemons }) { ... }
 | 항목 | 금지 | 권장 |
 |------|------|------|
 | 폰트 사이즈 | `text-[10px]`, `text-[11px]`, `text-[12px]` | `text-body-xs`, `text-body-sm`, `text-body-md` |
-| Border Radius | `rounded-[4px]`, `rounded-[6px]`, `rounded-[8px]` | `rounded-[var(--primitive-radius-sm)]`, `rounded-[var(--primitive-radius-md)]`, `rounded-[var(--primitive-radius-lg)]` |
+| Border Radius | `rounded-[4px]`, `rounded-[6px]`, `rounded-[8px]` | `rounded-[var(--radius-sm)]`, `rounded-[var(--radius-md)]`, `rounded-[var(--radius-lg)]` |
 | 색상 | `#2563eb`, `bg-blue-500` | `var(--color-action-primary)`, `var(--color-state-*)` |
 | Fallback 색상 | `var(--color-xxx, #ffffff)` | `var(--color-xxx)` (fallback 제거) |
 | 차트 색상 | 로컬 `const chartColors = { ... }` 재정의 | `import { chartColors } from '@/pages/design-system-sections/ChartComponents'` |
@@ -1456,14 +1452,14 @@ import { IconAlertCircle } from '@tabler/icons-react';
 <div className="text-[var(--color-state-info)]">정보</div>
 
 // 간격 (px 단위)
-<div className="p-[var(--primitive-spacing-4)]">padding 16px</div>
-<div className="gap-[var(--primitive-spacing-2)]">gap 8px</div>
-<div className="mt-[var(--primitive-spacing-6)]">margin-top 24px</div>
+<div className="p-[var(--spacing-4)]">padding 16px</div>
+<div className="gap-[var(--spacing-2)]">gap 8px</div>
+<div className="mt-[var(--spacing-6)]">margin-top 24px</div>
 
 // 반경 (px 단위)
-<div className="rounded-[var(--primitive-radius-sm)]">4px radius</div>
-<div className="rounded-[var(--primitive-radius-md)]">6px radius</div>
-<div className="rounded-[var(--primitive-radius-lg)]">8px radius</div>
+<div className="rounded-[var(--radius-sm)]">4px radius</div>
+<div className="rounded-[var(--radius-md)]">6px radius</div>
+<div className="rounded-[var(--radius-lg)]">8px radius</div>
 ```
 
 ## PageShell 페이지 레이아웃 패턴

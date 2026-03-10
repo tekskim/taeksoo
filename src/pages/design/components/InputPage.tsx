@@ -248,6 +248,18 @@ export function InputPage() {
     <ComponentPageTemplate
       title="Input"
       description="Text fields, textarea, number input, and search"
+      whenToUse={[
+        '사용자로부터 짧은 텍스트(이름, 이메일 등)를 입력받을 때 (Text Input)',
+        '여러 줄의 텍스트(설명, 메모 등)를 입력받을 때 (Textarea)',
+        '정확한 숫자 값을 입력받거나 증감 조절이 필요할 때 (Number Input)',
+        '리스트나 테이블 내에서 빠른 검색/필터링이 필요할 때 (Search Input)',
+      ]}
+      whenNotToUse={[
+        '미리 정의된 옵션 목록에서 선택해야 하는 경우 → Select 사용',
+        'on/off 토글이 필요한 경우 → Toggle 사용',
+        '날짜/시간을 선택해야 하는 경우 → DatePicker 사용',
+        '범위 내 값을 시각적으로 조절해야 하는 경우 → Slider 사용',
+      ]}
       preview={
         <ComponentPreview code={`<Input placeholder="Enter text..." width="md" />`}>
           <Input placeholder="Enter text..." width="md" />

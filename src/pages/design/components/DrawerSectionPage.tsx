@@ -228,6 +228,18 @@ export function DrawerSectionPage() {
     <ComponentPageTemplate
       title="Drawer"
       description="Slide-out panel for forms, details, and secondary content"
+      whenToUse={[
+        '리소스 생성/편집 등 짧은 폼을 메인 화면 위에 슬라이드 형태로 표시할 때',
+        '상세 정보나 설정을 메인 콘텐츠와 나란히 보여줘야 할 때',
+        '작업 흐름을 중단하지 않으면서 보조 콘텐츠를 제공할 때',
+        '스냅샷 생성, 잠금 설정 등 컨텍스트 정보와 함께 간단한 입력이 필요할 때',
+      ]}
+      whenNotToUse={[
+        '파괴적 액션(삭제, 중단) 확인이 필요한 경우 → Modal 사용',
+        '폼이 매우 길거나 복잡한 위자드가 필요한 경우 → 전체 페이지(Create Page) 사용',
+        '단순 정보 안내만 필요한 경우 → Inline Message 또는 Toast 사용',
+        '인터랙티브 없는 짧은 추가 정보만 보여줄 때 → Tooltip 또는 Popover 사용',
+      ]}
       preview={<DrawerDemo />}
       usage={{
         code: `import { Drawer, VStack, HStack, Button } from '@/design-system';\n\n<Drawer\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Edit Resource"\n  description="Optional description text."\n  width={360}\n  footer={\n    <HStack gap={2} className="w-full">\n      <Button variant="secondary" className="flex-1">Cancel</Button>\n      <Button variant="primary" className="flex-1">Save</Button>\n    </HStack>\n  }\n>\n  {/* Content */}\n</Drawer>`,
