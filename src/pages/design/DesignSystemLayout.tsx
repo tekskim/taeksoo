@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, type RefObject } from 'react';
 import { Outlet, Link, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { VStack, Button, Disclosure } from '@/design-system';
-import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { VStack, Disclosure } from '@/design-system';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
 import { navGroups, allNavItems } from './_shared/navigationData';
 
@@ -79,9 +78,7 @@ export function DesignSystemLayout() {
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/design" className="flex items-center mb-4">
-            <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
-              TDS
-            </span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">TDS</span>
           </Link>
 
           {/* EntryPage Link */}
@@ -182,6 +179,9 @@ export function DesignSystemLayout() {
                   >
                     <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] uppercase tracking-wide hover:!text-[var(--color-text-muted)]">
                       {group.title}
+                      <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
+                        {group.items.length}
+                      </span>
                     </Disclosure.Trigger>
                     <Disclosure.Panel>
                       <VStack gap={0} className="mb-1">
@@ -224,30 +224,7 @@ export function DesignSystemLayout() {
         <div className="py-12 px-8 overflow-x-auto">
           <div className="min-w-[var(--layout-content-min-width)]">
             <div className="max-w-[1000px] mx-auto">
-              <VStack gap={12} align="stretch">
-                {/* Header */}
-                <div className="flex items-center justify-between w-full">
-                  <VStack gap={2} align="start">
-                    <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                      Thaki Design System
-                    </h1>
-                    <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
-                      Design tokens and components built with a 3-tier token architecture
-                    </p>
-                  </VStack>
-                  <div className="flex items-center gap-3">
-                    <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
-                    <Link to="/">
-                      <Button variant="secondary" size="sm">
-                        Entry page →
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Page Content */}
-                <Outlet context={{ mainRef }} />
-              </VStack>
+              <Outlet context={{ mainRef }} />
             </div>
           </div>
         </div>

@@ -335,7 +335,6 @@ export function CsvDownloadPage() {
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Common Patterns', path: '/design/patterns/common' },
       ]}
-      notionPageId="2be9eddc34e68071af01c876fdaf9634"
     />
   );
 }

@@ -757,7 +757,6 @@ export function MenuPage() {
         { label: 'Tab Bar', path: '/design/components/tabbar' },
         { label: 'Breadcrumb', path: '/design/components/breadcrumb' },
       ]}
-      notionPageId="3069eddc34e680979af9edfb3e6275ac"
     />
   );
 }

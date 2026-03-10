@@ -663,7 +663,6 @@ export function ErrorAlertPage() {
         },
         { label: 'System Error', path: '/design/foundation/system-error' },
       ]}
-      notionPageId="2a99eddc34e6805197f6c83b4890fdf9"
     />
   );
 }

@@ -548,7 +548,6 @@ export function ChipPage() {
           description: '말줄임 처리된 Chip의 전체 텍스트 표시',
         },
       ]}
-      notionPageId="30d9eddc34e680b5a978f4ef6c397415"
     />
   );
 }

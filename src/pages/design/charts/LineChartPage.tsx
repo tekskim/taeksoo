@@ -653,7 +653,6 @@ export function LineChartPage() {
           description: '시간 범위 제어',
         },
       ]}
-      notionPageId="31d9eddc34e680369606ef2c6bbe8bfa"
     />
   );
 }

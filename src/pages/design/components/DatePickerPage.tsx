@@ -591,7 +591,6 @@ export function DatePickerPage() {
           description: '버튼/날짜 표기 규칙',
         },
       ]}
-      notionPageId="30d9eddc34e680119c3afe71e6f5dc59"
     />
   );
 }

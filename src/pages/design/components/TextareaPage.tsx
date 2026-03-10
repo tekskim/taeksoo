@@ -418,7 +418,6 @@ export function TextareaPage() {
         { label: 'Form Field', path: '/design/patterns/form-field-pattern' },
         { label: 'Text Input', path: '/design/components/text-input' },
       ]}
-      notionPageId="31b9eddc34e6800e927dcb07b94bbd12"
     />
   );
 }

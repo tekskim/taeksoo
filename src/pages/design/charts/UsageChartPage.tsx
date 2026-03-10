@@ -700,7 +700,6 @@ export function UsageChartPage() {
         },
         { label: 'Tooltip', path: '/design/components/tooltip', description: '데이터 설명' },
       ]}
-      notionPageId="30d9eddc34e680c69486c0b358776c8d"
     />
   );
 }

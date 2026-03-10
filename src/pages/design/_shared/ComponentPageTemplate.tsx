@@ -5,7 +5,6 @@ import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react
 import { DocSection } from './DocSection';
 import { PropsTable, type PropDef } from './PropsTable';
 import { CodeBlock } from './CodeBlock';
-import { NotionDesignNotes } from './NotionDesignNotes';
 import { TableOfContents } from './TableOfContents';
 import { PrevNextNav } from './PrevNextNav';
 import { useDesignLayoutContext } from '../DesignSystemLayout';
@@ -51,7 +50,6 @@ interface ComponentPageTemplateProps {
   keyboardInteractions?: KeyboardInteraction[];
   relatedLinks?: RelatedLink[];
   children?: ReactNode;
-  notionPageId?: string;
 }
 
 const maturityConfig: Record<ComponentMaturity, { label: string; color: string; bg: string }> = {
@@ -90,7 +88,6 @@ export function ComponentPageTemplate({
   keyboardInteractions,
   children,
   relatedLinks,
-  notionPageId,
 }: ComponentPageTemplateProps) {
   const mainRef = useDesignLayoutContext();
   const location = useLocation();
@@ -229,9 +226,6 @@ export function ComponentPageTemplate({
             {guidelines}
           </DocSection>
         )}
-
-        {/* Design Notes (from Notion) */}
-        {notionPageId && <NotionDesignNotes notionPageId={notionPageId} />}
 
         {/* Design Tokens + Structure Specs */}
         {(tokens || structureSpecs) && (
