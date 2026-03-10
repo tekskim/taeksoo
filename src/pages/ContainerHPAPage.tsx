@@ -165,7 +165,7 @@ export function ContainerHPAPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value) => (
         <Tooltip content={value}>

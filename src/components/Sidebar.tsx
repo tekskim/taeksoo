@@ -26,9 +26,6 @@ import {
   IconLayoutGrid,
   IconUsersGroup,
   IconFileCode,
-  IconCloudComputing,
-  IconCalendarEvent,
-  IconRoute,
 } from '@tabler/icons-react';
 import { EthernetPort, ChevronsLeftRightEllipsis } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
@@ -470,24 +467,6 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                   label="Topology"
                   href={`${basePath}/topology`}
                   active={isActive(`${basePath}/topology`)}
-                />
-                <MenuItem
-                  icon={<IconRoute size={16} stroke={1.5} />}
-                  label="DNS Zones"
-                  href={`${basePath}/dns-zones`}
-                  active={isActive(`${basePath}/dns-zones`)}
-                />
-                <MenuItem
-                  icon={<IconCloudComputing size={16} stroke={1.5} />}
-                  label="Backup Policies"
-                  href={`${basePath}/backup-policies`}
-                  active={isActive(`${basePath}/backup-policies`)}
-                />
-                <MenuItem
-                  icon={<IconCalendarEvent size={16} stroke={1.5} />}
-                  label="Scheduled Tasks"
-                  href={`${basePath}/scheduled-tasks`}
-                  active={isActive(`${basePath}/scheduled-tasks`)}
                 />
               </MenuSection>
             </>

@@ -15,6 +15,8 @@ import {
   FormField,
   ContextMenu,
   DetailHeader,
+  Badge,
+  Tooltip,
   PageShell,
   CopyButton,
   type ContextMenuItem,
@@ -347,13 +349,14 @@ export function ConfigMapDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={configMapData.status}
-              status={
-                configMapData.status === 'Active'
-                  ? 'active'
-                  : configMapData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={configMapData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {configMapData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

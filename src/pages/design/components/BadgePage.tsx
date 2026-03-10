@@ -96,15 +96,9 @@ const badgeListProps: PropDef[] = [
   {
     name: 'maxVisible',
     type: 'number',
-    default: '2',
+    default: '1',
     required: false,
     description: 'Maximum badges shown before +N overflow',
-  },
-  {
-    name: 'maxBadgeWidth',
-    type: 'string',
-    required: false,
-    description: "Max width per badge with truncation (e.g. '120px')",
   },
   {
     name: 'size',
@@ -151,7 +145,7 @@ function BadgeGuidelines() {
           <thead>
             <tr>
               <Th className="w-[120px]">Size</Th>
-              <Th>설명</Th>
+              <Th>용도</Th>
             </tr>
           </thead>
           <tbody>
@@ -159,19 +153,19 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Small</strong>
               </Td>
-              <Td>테이블 셀, 인라인 라벨</Td>
+              <Td>테이블 셀, 목록 등 공간이 제한된 영역</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Medium</strong>
               </Td>
-              <Td>기본 크기</Td>
+              <Td>카드, 상세 페이지 등 일반 컨텍스트 (기본값)</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Large</strong>
               </Td>
-              <Td>강조가 필요한 경우</Td>
+              <Td>강조가 필요한 단독 표시 영역</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -189,13 +183,13 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Solid</strong>
               </Td>
-              <Td>배경색이 진한 형태</Td>
+              <Td>배경색을 채워 강한 시각적 강조</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Subtle</strong>
               </Td>
-              <Td>연한 배경 + 텍스트 색상</Td>
+              <Td>연한 배경색으로 부드럽게 표시</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -204,7 +198,7 @@ function BadgeGuidelines() {
         <TableWrapper>
           <thead>
             <tr>
-              <Th className="w-[120px]">Color</Th>
+              <Th className="w-[120px]">Variant</Th>
               <Th className="w-[100px]">색상</Th>
               <Th>사용 목적</Th>
             </tr>
@@ -215,47 +209,50 @@ function BadgeGuidelines() {
                 <strong>info</strong>
               </Td>
               <Td>파란색</Td>
-              <Td>정보성, 중립적 레이블 (New, v2.1, 개수)</Td>
+              <Td>정보성·중립적 레이블 (예: &quot;New&quot;, &quot;v2.1&quot;, 개수 표시)</Td>
             </tr>
             <tr>
               <Td>
                 <strong>success</strong>
               </Td>
               <Td>초록색</Td>
-              <Td>긍정적 레이블 (Completed, Approved)</Td>
+              <Td>긍정적 레이블 (예: &quot;Completed&quot;, &quot;Approved&quot;)</Td>
             </tr>
             <tr>
               <Td>
                 <strong>warning</strong>
               </Td>
               <Td>주황색</Td>
-              <Td>주의 레이블 (Expiring soon, Beta)</Td>
+              <Td>주의 레이블 (예: &quot;Expiring soon&quot;, &quot;Beta&quot;)</Td>
             </tr>
             <tr>
               <Td>
                 <strong>danger</strong>
               </Td>
               <Td>빨간색</Td>
-              <Td>오류/위험 레이블 (Failed, Expired, Deprecated)</Td>
+              <Td>
+                오류/위험 레이블 (예: &quot;Failed&quot;, &quot;Expired&quot;,
+                &quot;Deprecated&quot;)
+              </Td>
             </tr>
             <tr>
               <Td>
                 <strong>white</strong>
               </Td>
-              <Td>흰색/회색</Td>
-              <Td>기본, 카테고리 분류</Td>
+              <Td>흰색</Td>
+              <Td>어두운 배경 위 중립 표시</Td>
             </tr>
             <tr>
               <Td>
                 <strong>gray</strong>
               </Td>
               <Td>회색</Td>
-              <Td>비활성, 보조 정보</Td>
+              <Td>비활성·보조 정보 표시</Td>
             </tr>
           </tbody>
         </TableWrapper>
 
-        <SubSectionTitle>Layout</SubSectionTitle>
+        <SubSectionTitle>Layout (with Icons)</SubSectionTitle>
         <TableWrapper>
           <thead>
             <tr>
@@ -274,13 +271,13 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Left icon</strong>
               </Td>
-              <Td>왼쪽 아이콘 포함</Td>
+              <Td>아이콘 + 텍스트</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Right icon</strong>
               </Td>
-              <Td>오른쪽 아이콘 포함</Td>
+              <Td>텍스트 + 아이콘</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -290,7 +287,7 @@ function BadgeGuidelines() {
 
       {/* Composition */}
       <VStack gap={4}>
-        <SectionTitle>Composition</SectionTitle>
+        <SectionTitle>Composition (구성 요소)</SectionTitle>
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ (icon)  label text  (icon) ]`}</pre>
         </div>
@@ -298,6 +295,7 @@ function BadgeGuidelines() {
           <thead>
             <tr>
               <Th className="w-[140px]">요소</Th>
+              <Th className="w-[100px]">필수 여부</Th>
               <Th>설명</Th>
             </tr>
           </thead>
@@ -306,25 +304,29 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Container</strong>
               </Td>
-              <Td>배경, 테두리, 패딩</Td>
+              <Td>✅ 필수</Td>
+              <Td>배경색과 border-radius가 적용된 Pill 형태의 래퍼</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Label text</strong>
               </Td>
-              <Td>짧은 텍스트 또는 숫자</Td>
+              <Td>✅ 필수</Td>
+              <Td>상태·값·카테고리를 나타내는 짧은 텍스트</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Left icon</strong>
               </Td>
-              <Td>선택적 왼쪽 아이콘</Td>
+              <Td>선택</Td>
+              <Td>의미를 보조하는 아이콘</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Right icon</strong>
               </Td>
-              <Td>선택적 오른쪽 아이콘</Td>
+              <Td>선택</Td>
+              <Td>방향·액션을 암시하는 아이콘</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -398,15 +400,19 @@ function BadgeGuidelines() {
         <SectionTitle>BadgeList</SectionTitle>
         <Prose>
           <p>
-            테이블 셀에서 배열 데이터를 뱃지로 표시할 때 사용. 오버플로우 시 +N 인디케이터와
-            Popover로 전체 항목을 보여준다.
+            테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
+            가능한 개수(<code>maxVisible</code>)를 초과하면 <code>+N</code> 인디케이터로 숨김
+            처리하고, 클릭 시 Popover로 전체 항목을 확인할 수 있다.
           </p>
         </Prose>
+
+        <SubSectionTitle>Variants</SubSectionTitle>
         <TableWrapper>
           <thead>
             <tr>
               <Th className="w-[140px]">Variant</Th>
               <Th>설명</Th>
+              <Th>주요 사용처</Th>
             </tr>
           </thead>
           <tbody>
@@ -414,25 +420,29 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Basic</strong>
               </Td>
-              <Td>짧은 값 (daemons, osds, status)</Td>
+              <Td>짧은 값을 그대로 표시</Td>
+              <Td>daemons, osds, status</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Truncation</strong>
               </Td>
-              <Td>긴 값 (labels, tags) — maxBadgeWidth 사용</Td>
+              <Td>긴 값은 말줄임 처리 후 표시</Td>
+              <Td>labels, tags</Td>
             </tr>
             <tr>
               <Td>
                 <strong>maxVisible=1</strong>
               </Td>
-              <Td>매우 긴 값 (annotations)</Td>
+              <Td>1개만 노출 후 나머지 +N 처리</Td>
+              <Td>매우 긴 값, 공간 극히 제한</Td>
             </tr>
             <tr>
               <Td>
                 <strong>No overflow</strong>
               </Td>
-              <Td>항목이 적어 오버플로우 없음</Td>
+              <Td>항목 수가 maxVisible 이하라 오버플로우 없는 경우</Td>
+              <Td>항목 수 적음</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -440,9 +450,13 @@ function BadgeGuidelines() {
         <SubSectionTitle>Overflow 처리 정책</SubSectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
-            <li>maxVisible 기본값 2 — 뱃지 2개까지 표시, 나머지는 +N Popover</li>
-            <li>컬럼이 좁으면 maxVisible=1 사용</li>
-            <li>긴 텍스트는 maxBadgeWidth로 truncation 적용</li>
+            <li>
+              <code>maxVisible</code> 값을 초과하는 항목은 <code>+N</code> 인디케이터로 표시한다.
+            </li>
+            <li>
+              <code>+N</code> 클릭 시 Popover가 열리며 전체 Badge 목록을 표시한다.
+            </li>
+            <li>Popover 내에서도 동일한 Badge 스타일을 유지한다.</li>
           </ul>
         </Prose>
       </VStack>
@@ -453,7 +467,7 @@ function BadgeGuidelines() {
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
 
-        <SubSectionTitle>Badge vs Chip vs StatusIndicator</SubSectionTitle>
+        <SubSectionTitle>Badge vs Chip vs Status Indicator 선택 기준</SubSectionTitle>
         <TableWrapper>
           <thead>
             <tr>
@@ -466,7 +480,7 @@ function BadgeGuidelines() {
               <Td>
                 <strong>Badge</strong>
               </Td>
-              <Td>상태 라벨, 카운트 표시, 카테고리 분류 (비인터랙티브)</Td>
+              <Td>상태 레이블, 카운트 표시, 카테고리 분류 (비인터랙티브)</Td>
             </tr>
             <tr>
               <Td>
@@ -476,7 +490,7 @@ function BadgeGuidelines() {
             </tr>
             <tr>
               <Td>
-                <strong>StatusIndicator</strong>
+                <strong>Status Indicator</strong>
               </Td>
               <Td>리소스의 실시간 상태 (active, error, building 등)</Td>
             </tr>
@@ -484,24 +498,46 @@ function BadgeGuidelines() {
         </TableWrapper>
         <Prose>
           <p>
-            <strong>Badge vs StatusIndicator</strong>: Badge는 정적 레이블·카운트 표시용(버전, 개수,
-            카테고리)이고, StatusIndicator는 실시간 운영 상태 표시용(Running, Error, Building)이다.
-            "Active", "Healthy" 등 실시간 상태는 StatusIndicator를 사용한다.
+            Badge는 정적 레이블·카운트 표시(예: 버전, 개수, 카테고리)이고, Status Indicator는 실시간
+            운영 상태 표시(예: Running, Error, Building)다. &quot;Active&quot;, &quot;Healthy&quot;
+            등 실시간 상태는 Status Indicator를 사용한다.
           </p>
+        </Prose>
+
+        <SubSectionTitle>Variant 매핑 규칙</SubSectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              <strong>info</strong> (파란색): 정보성·중립적 레이블 (예: &quot;New&quot;,
+              &quot;v2.1&quot;, 개수 표시)
+            </li>
+            <li>
+              <strong>success</strong> (초록색): 긍정적 레이블 (예: &quot;Completed&quot;,
+              &quot;Approved&quot;)
+            </li>
+            <li>
+              <strong>warning</strong> (주황색): 주의 레이블 (예: &quot;Expiring soon&quot;,
+              &quot;Beta&quot;)
+            </li>
+            <li>
+              <strong>danger</strong> (빨간색): 오류/위험 레이블 (예: &quot;Failed&quot;,
+              &quot;Expired&quot;, &quot;Deprecated&quot;)
+            </li>
+          </ul>
         </Prose>
 
         <DosDonts
           doItems={[
-            '짧은 라벨 텍스트 사용 (1–3단어)',
-            '시맨틱 색상에 맞는 variant 선택',
-            '테이블 셀 배열 데이터는 BadgeList 사용',
-            '긴 텍스트는 maxBadgeWidth로 truncation',
+            '레이블은 1–3단어 이내의 짧은 텍스트로 작성한다.',
+            '동일한 화면에서 Semantic Color의 의미를 일관되게 사용한다.',
+            '테이블·목록 등 밀도가 높은 UI에는 Small 사이즈를 우선 사용한다.',
+            '텍스트만으로 의미가 충분히 전달될 때는 아이콘 없이 사용한다.',
           ]}
           dontItems={[
-            '실시간 운영 상태 표시 — StatusIndicator 사용',
-            '사용자 추가/제거 태그 — Chip 사용',
-            '클릭·포커스 등 인터랙션 부여',
-            '과도하게 긴 문장 사용',
+            '문장 전체를 Badge에 담지 않는다.',
+            '색상만으로 의미를 구분하지 않는다. 텍스트 레이블을 반드시 함께 사용한다.',
+            '동일한 화면에서 같은 색상 Variant를 다른 의미로 혼용하지 않는다.',
+            '인터랙티브 요소(버튼, 링크 등)처럼 보이도록 스타일링하지 않는다.',
           ]}
         />
       </VStack>
@@ -513,11 +549,16 @@ function BadgeGuidelines() {
         <SectionTitle>Content Guidelines</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
-            <li>라벨 텍스트는 짧고 명확하게 (1–3단어 권장)</li>
-            <li>약어 사용 시 일관성 유지 (e.g. v2.1, Beta)</li>
-            <li>문장 형태보다는 명사/형용사 형태 사용</li>
-            <li>대문자 사용은 제한적 (New, Beta 등 특수 케이스만)</li>
-            <li>동일 맥락에서 동일 용어·스타일 유지</li>
+            <li>레이블 텍스트는 가능한 한 1단어로 작성하고, 최대 3단어를 넘지 않도록 한다.</li>
+            <li>축약어를 사용할 경우 툴팁 등으로 전체 의미를 보완한다.</li>
+            <li>
+              문장 형태(동사 포함)로 작성하지 않는다. (예: &quot;Error occurred&quot; ❌ →
+              &quot;Error&quot; ✅)
+            </li>
+            <li>
+              첫 글자는 대문자로 시작한다. (예: &quot;approved&quot; ❌ → &quot;Approved&quot; ✅)
+            </li>
+            <li>동일한 상태를 표현할 때는 시스템 전반에 걸쳐 동일한 레이블 텍스트를 사용한다.</li>
           </ul>
         </Prose>
       </VStack>
@@ -750,8 +791,9 @@ export function BadgePage() {
         <VStack gap={8}>
           <Prose>
             <p>
-              테이블 셀에서 배열 데이터를 뱃지로 표시할 때 사용하는 컴포넌트입니다. 오버플로우 시 +N
-              인디케이터와 Popover로 전체 항목을 보여줍니다.
+              테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
+              가능한 개수(<code>maxVisible</code>)를 초과하면 <code>+N</code> 인디케이터로 숨김
+              처리하고, 클릭 시 Popover로 전체 항목을 확인할 수 있다.
             </p>
           </Prose>
 
@@ -760,15 +802,10 @@ export function BadgePage() {
             <ComponentPreview
               code={`<BadgeList
   items={['osd.4', 'osd.5', 'osd.6', 'osd.7']}
-  maxVisible={2}
   popoverTitle="All OSDs (4)"
 />`}
             >
-              <BadgeList
-                items={['osd.4', 'osd.5', 'osd.6', 'osd.7']}
-                maxVisible={2}
-                popoverTitle="All OSDs (4)"
-              />
+              <BadgeList items={['osd.4', 'osd.5', 'osd.6', 'osd.7']} popoverTitle="All OSDs (4)" />
             </ComponentPreview>
           </VStack>
 
@@ -781,8 +818,6 @@ export function BadgePage() {
     'app.kubernetes.io/instance=nginx',
     'env=staging',
   ]}
-  maxVisible={2}
-  maxBadgeWidth="120px"
   popoverTitle="All Labels (3)"
 />`}
             >
@@ -792,8 +827,6 @@ export function BadgePage() {
                   'app.kubernetes.io/instance=nginx',
                   'env=staging',
                 ]}
-                maxVisible={2}
-                maxBadgeWidth="120px"
                 popoverTitle="All Labels (3)"
               />
             </ComponentPreview>
@@ -808,7 +841,6 @@ export function BadgePage() {
     'topology.kubernetes.io/zone=us-east-1a',
   ]}
   maxVisible={1}
-  maxBadgeWidth="140px"
   popoverTitle="All Annotations (2)"
 />`}
             >
@@ -818,7 +850,6 @@ export function BadgePage() {
                   'topology.kubernetes.io/zone=us-east-1a',
                 ]}
                 maxVisible={1}
-                maxBadgeWidth="140px"
                 popoverTitle="All Annotations (2)"
               />
             </ComponentPreview>
@@ -827,8 +858,8 @@ export function BadgePage() {
           <VStack gap={3}>
             <Label>항목이 적은 경우 — 오버플로우 없음</Label>
             <div className="flex gap-6">
-              <BadgeList items={['admin']} maxVisible={2} />
-              <BadgeList items={['in', 'up']} maxVisible={2} />
+              <BadgeList items={['admin']} />
+              <BadgeList items={['in', 'up']} />
             </div>
           </VStack>
 

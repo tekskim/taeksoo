@@ -26,6 +26,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -37,7 +38,6 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
-  IconCheck,
   IconChevronDown,
   IconInfoCircle,
   IconTrash,
@@ -311,25 +311,14 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 min-w-0">
       <HStack justify="between" align="center">
-        <HStack gap={2} align="center">
-          <div
-            className={`w-5 h-5 rounded-full flex items-center justify-center ${
-              status === 'Ready'
-                ? 'bg-[var(--color-state-success)]'
-                : 'bg-[var(--color-state-danger)]'
-            }`}
-          >
-            <IconCheck size={12} className="text-white" stroke={2} />
-          </div>
-          <VStack gap={0.5}>
-            <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
-              {title}
-            </span>
-            <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-              {status}
-            </span>
-          </VStack>
-        </HStack>
+        <VStack gap={0.5}>
+          <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
+            {title}
+          </span>
+          <Badge theme="white" size="sm" className="w-fit">
+            {status}
+          </Badge>
+        </VStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -390,7 +379,7 @@ function PodsTab({ pods }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -935,8 +924,15 @@ export function NodeDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={node.status === 'Ready' ? 'Active' : 'Not Ready'}
-              status={node.status === 'Ready' ? 'active' : 'error'}
+              value={
+                <Tooltip content={node.status === 'Ready' ? 'Active' : 'Not Ready'}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {node.status === 'Ready' ? 'Active' : 'Not Ready'}
+                    </Badge>
+                  </span>
+                </Tooltip>
+              }
             />
             <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
             <DetailHeader.InfoCard label="Kubernetes version" value={node.kubernetesVersion} />
@@ -946,18 +942,44 @@ export function NodeDetailPage() {
               label={`Labels (${Object.keys(node.labels).length})`}
               value={
                 Object.keys(node.labels).length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  <div className="flex items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {val ? `${key}: ${val}` : key}
                         </Badge>
                       ))}
                     {Object.keys(node.labels).length > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(node.labels).length - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Labels ({Object.keys(node.labels).length})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(node.labels).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{Object.keys(node.labels).length - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (
@@ -969,18 +991,44 @@ export function NodeDetailPage() {
               label={`Annotations (${Object.keys(node.annotations).length})`}
               value={
                 Object.keys(node.annotations).length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  <div className="flex items-center gap-1 min-w-0 w-full">
                     {Object.entries(node.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {val ? `${key}: ${val}` : key}
                         </Badge>
                       ))}
                     {Object.keys(node.annotations).length > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(node.annotations).length - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Annotations ({Object.keys(node.annotations).length})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(node.annotations).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{v ? `${k}: ${v}` : k}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{Object.keys(node.annotations).length - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (

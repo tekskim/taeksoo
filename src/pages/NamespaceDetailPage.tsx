@@ -519,7 +519,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -651,7 +651,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -831,13 +831,14 @@ export function NamespaceDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={namespace.status}
-              status={
-                namespace.status === 'OK' || namespace.status === 'True'
-                  ? 'active'
-                  : namespace.status === 'Terminating'
-                    ? 'error'
-                    : 'pending'
+              value={
+                <Tooltip content={namespace.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {namespace.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
@@ -845,11 +846,19 @@ export function NamespaceDetailPage() {
               label={`Labels (${Object.keys(namespace.labels).length})`}
               value={
                 Object.keys(namespace.labels).length > 0 ? (
-                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                  <div className="flex flex-col items-start gap-1 min-w-0 w-full overflow-hidden">
                     {Object.entries(namespace.labels).map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
-                        {`${key}: ${val}`}
-                      </Badge>
+                      <Tooltip key={key} content={`${key}: ${val}`} position="top">
+                        <div className="w-full">
+                          <Badge
+                            theme="white"
+                            size="sm"
+                            className="w-full truncate justify-start text-left"
+                          >
+                            {`${key}: ${val}`}
+                          </Badge>
+                        </div>
+                      </Tooltip>
                     ))}
                   </div>
                 ) : (
