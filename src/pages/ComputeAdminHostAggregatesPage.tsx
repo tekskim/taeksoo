@@ -14,6 +14,7 @@ import {
   Tab,
   ContextMenu,
   ConfirmModal,
+  Table,
   PageShell,
   PageHeader,
   type ContextMenuItem,
@@ -437,39 +438,15 @@ export function ComputeAdminHostAggregatesPage() {
                     {/* Expanded Metadata Table */}
                     {isExpanded && row.metadata.length > 0 && (
                       <div className="border-t border-[var(--color-border-default)] p-3">
-                        <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-                          {/* Metadata Table Header */}
-                          <div className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                              <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
-                                Metadata
-                              </span>
-                            </div>
-                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1 border-l border-[var(--color-border-default)]">
-                              <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
-                                Value
-                              </span>
-                            </div>
-                          </div>
-                          {/* Metadata Table Rows */}
-                          {row.metadata.map((meta, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                            >
-                              <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                                <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                  {meta.key}
-                                </span>
-                              </div>
-                              <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
-                                <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                  {meta.value}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                        <Table
+                          columns={[
+                            { key: 'key', label: 'Metadata', flex: 1 },
+                            { key: 'value', label: 'Value', flex: 1 },
+                          ]}
+                          data={row.metadata}
+                          rowKey="key"
+                          className="[&_[data-column-key=value]]:border-l [&_[data-column-key=value]]:border-[var(--color-border-default)]"
+                        />
                       </div>
                     )}
                   </div>

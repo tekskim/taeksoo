@@ -921,6 +921,8 @@ export default function NetworkDetailPage() {
                           setSubnetCurrentPage(1);
                         }}
                         placeholder="Search subnets by attributes"
+                        size="sm"
+                        className="w-[280px]"
                       />
                     </div>
                     <Button
@@ -990,6 +992,8 @@ export default function NetworkDetailPage() {
                           setPortCurrentPage(1);
                         }}
                         placeholder="Search ports by attributes"
+                        size="sm"
+                        className="w-[280px]"
                       />
                     </div>
                     <Button
@@ -1059,6 +1063,8 @@ export default function NetworkDetailPage() {
                           setDhcpAgentCurrentPage(1);
                         }}
                         placeholder="Search DHCP agents by attributes"
+                        size="sm"
+                        className="w-[280px]"
                       />
                     </div>
                     <Button
