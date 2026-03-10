@@ -39,20 +39,20 @@ export function DarkModeProvider({ children }: { children: ReactNode }) {
     return false;
   });
 
-  // Apply dark class to document with smooth transition
+  // Apply dark class + data-theme attribute for token layer synchronization
   useEffect(() => {
     const root = document.documentElement;
 
-    // Add transition class for smooth theme switching
     root.classList.add('theme-transition');
 
     if (isDark) {
       root.classList.add('dark');
+      root.setAttribute('data-theme', 'dark');
     } else {
       root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
     }
 
-    // Remove transition class after animation completes
     const timeout = setTimeout(() => {
       root.classList.remove('theme-transition');
     }, 300);

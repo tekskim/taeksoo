@@ -375,6 +375,11 @@ export function FilterSearchInputPage() {
           <li>Filter chips: Keyboard removable</li>
         </ul>
       }
+      keyboardInteractions={[
+        { key: 'Enter', description: '현재 필터 조건 적용' },
+        { key: 'Escape', description: '필터 드롭다운 닫기' },
+        { key: 'Backspace', description: '마지막 적용된 필터 삭제 (입력이 비어있을 때)' },
+      ]}
       relatedLinks={[
         { label: 'Chip', path: '/design/components/chip' },
         { label: 'Table', path: '/design/components/table' },

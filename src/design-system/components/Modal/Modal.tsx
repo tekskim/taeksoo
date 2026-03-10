@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { Button } from '../Button';
+import { useStableId } from '../../hooks/useId';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 /* ----------------------------------------
    Types
@@ -65,6 +67,9 @@ export function Modal({
 }: ModalProps) {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
+  const titleId = useStableId('modal-title');
+  const descriptionId = useStableId('modal-desc');
+  const focusTrapRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   // Handle animation states
   useEffect(() => {
@@ -147,12 +152,24 @@ export function Modal({
 
   return createPortal(
     <div className={backdropClasses} onClick={handleBackdropClick}>
-      <div className={modalClasses} onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={focusTrapRef}
+        className={modalClasses}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={description ? descriptionId : undefined}
+      >
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h2>
+          <h2 id={titleId} className="text-heading-h5 text-[var(--color-text-default)]">
+            {title}
+          </h2>
           {description && (
-            <p className="text-body-md text-[var(--color-text-subtle)]">{description}</p>
+            <p id={descriptionId} className="text-body-md text-[var(--color-text-subtle)]">
+              {description}
+            </p>
           )}
         </div>
 

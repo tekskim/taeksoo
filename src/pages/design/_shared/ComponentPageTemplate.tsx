@@ -30,10 +30,13 @@ export interface StructureSpec {
   token?: string;
 }
 
+export type ComponentMaturity = 'draft' | 'beta' | 'stable';
+
 interface ComponentPageTemplateProps {
   title: string;
   description: string;
   category?: string;
+  maturity?: ComponentMaturity;
   preview?: ReactNode;
   usage?: { code: string; description?: string };
   examples?: ReactNode;
@@ -51,9 +54,28 @@ interface ComponentPageTemplateProps {
   notionPageId?: string;
 }
 
+const maturityConfig: Record<ComponentMaturity, { label: string; color: string; bg: string }> = {
+  draft: {
+    label: 'Draft',
+    color: 'var(--color-state-warning)',
+    bg: 'var(--color-state-warning-bg)',
+  },
+  beta: {
+    label: 'Beta',
+    color: 'var(--color-state-info)',
+    bg: 'var(--color-state-info-bg)',
+  },
+  stable: {
+    label: 'Stable',
+    color: 'var(--color-state-success)',
+    bg: 'var(--color-state-success-bg)',
+  },
+};
+
 export function ComponentPageTemplate({
   title,
   description,
+  maturity,
   preview,
   usage,
   examples,
@@ -110,7 +132,20 @@ export function ComponentPageTemplate({
       <VStack gap={10} align="stretch">
         {/* Page Header */}
         <VStack gap={2} align="start">
-          <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
+            {maturity && (
+              <span
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-body-xs font-medium"
+                style={{
+                  color: maturityConfig[maturity].color,
+                  backgroundColor: maturityConfig[maturity].bg,
+                }}
+              >
+                {maturityConfig[maturity].label}
+              </span>
+            )}
+          </div>
           <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
           {lastUpdated && (
             <div className="flex items-center gap-1.5 mt-1">

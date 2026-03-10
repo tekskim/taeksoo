@@ -652,6 +652,16 @@ export function DetailHeaderPage() {
       }
       apiReference={detailHeaderProps}
       subComponentApis={[{ name: 'DetailHeader.InfoCard', props: detailHeaderInfoCardProps }]}
+      keyboardInteractions={[
+        {
+          key: 'Tab',
+          description: 'Header 내 액션 버튼과 복사 가능한 InfoCard 간 포커스 이동',
+        },
+        {
+          key: 'Enter / Space',
+          description: '포커스된 액션 버튼 활성화 또는 ID 복사',
+        },
+      ]}
       relatedLinks={[
         {
           label: 'Section Card',

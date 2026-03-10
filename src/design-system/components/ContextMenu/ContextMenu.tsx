@@ -250,6 +250,11 @@ const ContextMenuItemComponent: React.FC<{
   const menuItem = (
     <div
       ref={itemRef}
+      role="menuitem"
+      tabIndex={-1}
+      aria-disabled={item.disabled || undefined}
+      aria-haspopup={hasSubmenu ? 'menu' : undefined}
+      aria-expanded={hasSubmenu ? showSubmenu : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseDown={handleMouseDown}
@@ -263,11 +268,12 @@ const ContextMenuItemComponent: React.FC<{
         whitespace-nowrap
         cursor-pointer
         transition-colors duration-[var(--duration-fast)]
+        outline-none
         ${item.divider ? 'border-b border-[var(--color-border-subtle)]' : ''}
         ${
           item.status === 'danger'
-            ? 'text-[var(--color-state-danger)] hover:bg-[var(--color-state-danger-bg)]'
-            : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)]'
+            ? 'text-[var(--color-state-danger)] hover:bg-[var(--color-state-danger-bg)] focus-visible:bg-[var(--color-state-danger-bg)]'
+            : 'text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] focus-visible:bg-[var(--context-menu-hover-bg)]'
         }
         ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}
         ${showSubmenu ? 'bg-[var(--context-menu-hover-bg)]' : ''}
@@ -358,40 +364,31 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
   const [adjustedPosition, setAdjustedPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
-    // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
       if (menuRef.current) {
         const rect = menuRef.current.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // Calculate initial X position based on alignment
         let newX: number;
         if (align === 'right') {
-          // Right-align: position.x is the left edge of trigger, so we need to align menu's right edge with trigger's right edge
           newX = position.x + triggerWidth - rect.width;
         } else {
-          // Left-align: menu left edge aligns with trigger left edge
           newX = position.x;
         }
         let newY = position.y;
 
-        // Adjust horizontal position if menu overflows viewport
         if (newX + rect.width > viewportWidth - 8) {
-          // Menu would overflow right edge, align to right edge
           newX = viewportWidth - rect.width - 8;
         }
         if (newX < 8) {
-          // Menu would overflow left edge, align to left edge
           newX = 8;
         }
 
-        // Adjust vertical position
         if (position.y + rect.height > viewportHeight - 8) {
           newY = Math.max(8, viewportHeight - rect.height - 8);
         }
 
-        // Apply minTop if specified
         if (minTop !== undefined && newY < minTop) {
           newY = minTop;
         }
@@ -401,11 +398,72 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
     });
   }, [position, triggerRef, minTop, align, triggerWidth]);
 
+  // Focus first item on mount
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (menuRef.current) {
+        const firstItem = menuRef.current.querySelector<HTMLElement>('[role="menuitem"]');
+        firstItem?.focus();
+      }
+    });
+  }, []);
+
+  const handleMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const menu = menuRef.current;
+      if (!menu) return;
+
+      const menuItems = Array.from(
+        menu.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])')
+      );
+      if (menuItems.length === 0) return;
+
+      const currentIndex = menuItems.indexOf(document.activeElement as HTMLElement);
+
+      switch (e.key) {
+        case 'ArrowDown': {
+          e.preventDefault();
+          const next = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+          menuItems[next].focus();
+          break;
+        }
+        case 'ArrowUp': {
+          e.preventDefault();
+          const prev = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+          menuItems[prev].focus();
+          break;
+        }
+        case 'Home': {
+          e.preventDefault();
+          menuItems[0].focus();
+          break;
+        }
+        case 'End': {
+          e.preventDefault();
+          menuItems[menuItems.length - 1].focus();
+          break;
+        }
+        case 'Enter':
+        case ' ': {
+          e.preventDefault();
+          if (currentIndex >= 0) {
+            menuItems[currentIndex].click();
+          }
+          break;
+        }
+      }
+    },
+    [onClose]
+  );
+
   return createPortal(
     <div
       ref={menuRef}
+      role="menu"
+      aria-orientation="vertical"
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
+      onKeyDown={handleMenuKeyDown}
       className="
         fixed z-[var(--z-context-menu)]
         flex flex-col
@@ -415,12 +473,14 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         shadow-[var(--shadow-md)]
         overflow-hidden
         transition-opacity duration-[var(--duration-fast)]
+        outline-none
       "
       style={{
         left: adjustedPosition?.x ?? position.x,
         top: adjustedPosition?.y ?? position.y,
         opacity: adjustedPosition ? 1 : 0,
       }}
+      tabIndex={-1}
     >
       {items.map((item) => (
         <ContextMenuItemComponent
@@ -454,38 +514,35 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   const [triggerWidth, setTriggerWidth] = useState(0);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const handleOpen = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;
 
+      previousFocusRef.current = document.activeElement as HTMLElement;
+
       if (trigger === 'contextmenu') {
         e.preventDefault();
 
-        // 다른 컨텍스트 메뉴가 열릴 때 이전 메뉴를 닫기 위한 커스텀 이벤트 발생
         const closeEvent = new CustomEvent('contextmenu:close-all');
         document.dispatchEvent(closeEvent);
 
-        // 위치 업데이트 및 메뉴 열기
-        // 같은 메뉴인 경우에도 위치를 업데이트하기 위해 먼저 닫고 다시 열기
         setPosition({ x: e.clientX, y: e.clientY });
         setTriggerWidth(0);
         setIsOpen(true);
       } else {
-        // Click trigger: toggle menu and position relative to trigger element
         if (isOpen) {
           setIsOpen(false);
           return;
         }
 
         if (triggerRef.current) {
-          // Get the actual trigger element (first child) for accurate positioning
           const triggerElement = triggerRef.current.firstElementChild as HTMLElement | null;
           const rect =
             triggerElement?.getBoundingClientRect() ?? triggerRef.current.getBoundingClientRect();
-          // Position menu directly below the button
           setPosition({
-            x: rect.left, // Button left edge
+            x: rect.left,
             y: rect.bottom + 4,
           });
           setTriggerWidth(rect.width);
@@ -498,6 +555,13 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
+    if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+      try {
+        previousFocusRef.current.focus();
+      } catch {
+        // Element may have been removed from DOM
+      }
+    }
   }, []);
 
   // Close on click outside and when other context menu opens
