@@ -368,7 +368,6 @@ export function LoadingPage() {
           description: '데이터 없음 패턴',
         },
       ]}
-      notionPageId="2a99eddc34e680f190a9ea81bafd558a"
     />
   );
 }

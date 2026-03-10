@@ -557,7 +557,6 @@ export function TabsPage() {
           description: '옵션이 많을 때 드롭다운 대안',
         },
       ]}
-      notionPageId="30d9eddc34e680e5beffc32d4a06a48e"
     />
   );
 }

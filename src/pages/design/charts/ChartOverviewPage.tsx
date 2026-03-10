@@ -147,7 +147,7 @@ export function ChartOverviewPage() {
   return (
     <ComponentPageTemplate
       title="Chart overview"
-      description="시스템 리소스 상태, 사용량, 구성 비율, 변화 추이를 직관적으로 시각화하여 빠르게 상태를 인지하고 데이터를 탐색할 수 있도록 하는 데이터 시각화 패턴."
+      description="시스템 리소스 상태, 사용량, 구성 비율, 변화 추이를 직관적으로 시각화하여 빠르게 상태를 인지하고 데이터를 탐색할 수 있도록 하는 데이터 시각화 패턴. ECharts (echarts-for-react) 기반."
       whenToUse={[
         '시스템 리소스 사용량 표시',
         '시간에 따른 데이터 변화 확인',

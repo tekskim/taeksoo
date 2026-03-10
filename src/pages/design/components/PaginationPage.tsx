@@ -541,7 +541,6 @@ export function PaginationPage() {
           description: 'Result summary, aria-label 등 문구/표기 규칙 준수',
         },
       ]}
-      notionPageId="30d9eddc34e68028b71cd4daa4461670"
     />
   );
 }

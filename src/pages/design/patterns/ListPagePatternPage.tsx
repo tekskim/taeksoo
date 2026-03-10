@@ -496,7 +496,6 @@ Table
         { label: 'View Preferences', path: '/design/patterns/view-preferences' },
         { label: 'List Download', path: '/design/components/csv-download' },
       ]}
-      notionPageId="2b09eddc34e68073a489c3545fcc17fa"
     />
   );
 }

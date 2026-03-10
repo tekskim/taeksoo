@@ -359,7 +359,6 @@ export function NumberInputPage() {
         { label: 'Text Input', path: '/design/components/text-input' },
         { label: 'Slider', path: '/design/components/slider' },
       ]}
-      notionPageId="31b9eddc34e680af8833dd64f9a0ab0a"
     />
   );
 }

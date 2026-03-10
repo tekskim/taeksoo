@@ -797,7 +797,6 @@ export function SectionCardPage() {
           description: 'Create 페이지 위자드 패턴',
         },
       ]}
-      notionPageId="30d9eddc34e6804ea054e30e637a09c3"
     />
   );
 }

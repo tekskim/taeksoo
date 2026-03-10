@@ -665,7 +665,6 @@ export function ContextMenuPage() {
           description: '리스트/테이블 항목 컨텍스트에서 Context Menu 사용 빈도가 높음',
         },
       ]}
-      notionPageId="30d9eddc34e680fcb270e14cf16ced60"
     />
   );
 }

@@ -470,7 +470,6 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
         { label: 'Chip', path: '/design/components/chip' },
         { label: 'Table', path: '/design/components/table' },
       ]}
-      notionPageId="31b9eddc34e68088a758c3b614dc2c0f"
     />
   );
 }

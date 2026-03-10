@@ -722,7 +722,6 @@ export function ButtonPage() {
         { label: 'Create Page', path: '/design/patterns/wizard' },
         { label: 'UX Writing Guide', path: '/design/foundation/ux-writing' },
       ]}
-      notionPageId="button"
     />
   );
 }

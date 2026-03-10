@@ -675,7 +675,6 @@ export function DetailHeaderPage() {
           description: '추가 액션 메뉴',
         },
       ]}
-      notionPageId="30d9eddc34e680fda3cfe37d8da333a7"
     />
   );
 }

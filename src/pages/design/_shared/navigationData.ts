@@ -143,6 +143,12 @@ const foundationItems: NavItem[] = [
 
 const formControlItems: NavItem[] = [
   {
+    id: 'form-field-pattern',
+    label: 'Form Field',
+    icon: IconForms,
+    path: '/design/patterns/form-field-pattern',
+  },
+  {
     id: 'form-field-spacing',
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
@@ -375,12 +381,6 @@ const patternItems: NavItem[] = [
     label: 'Common patterns',
     icon: IconTemplate,
     path: '/design/patterns/common',
-  },
-  {
-    id: 'form-field-pattern',
-    label: 'Form Field',
-    icon: IconForms,
-    path: '/design/patterns/form-field-pattern',
   },
   {
     id: 'wizard',
