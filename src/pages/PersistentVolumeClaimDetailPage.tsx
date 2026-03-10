@@ -20,12 +20,14 @@ import {
   NumberInput,
   FormField,
   Badge,
+  Tooltip,
   Checkbox,
   Table,
   Pagination,
   SearchInput,
   PageShell,
   type ContextMenuItem,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -69,7 +71,7 @@ interface PVCEvent {
 interface PersistentVolumeClaimData {
   id: string;
   name: string;
-  status: 'Bound' | 'Pending' | 'Lost';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -95,7 +97,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '1': {
     id: '1',
     name: 'cert-manager',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: {
@@ -159,7 +161,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '2': {
     id: '2',
     name: 'data-postgres-0',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'database',
     createdAt: 'Nov 9, 2025',
     labels: {
@@ -204,7 +206,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '3': {
     id: '3',
     name: 'redis-data',
-    status: 'Bound',
+    status: 'True',
     namespace: 'cache',
     createdAt: 'Nov 8, 2025',
     labels: {
@@ -247,7 +249,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '4': {
     id: '4',
     name: 'pending-claim',
-    status: 'Pending',
+    status: 'Raw',
     namespace: 'default',
     createdAt: 'Nov 10, 2025',
     labels: {},
@@ -300,7 +302,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '5': {
     id: '5',
     name: 'elasticsearch-data-0',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'logging',
     createdAt: 'Nov 7, 2025',
     labels: {
@@ -553,13 +555,14 @@ export function PersistentVolumeClaimDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={pvcData.status === 'Bound' ? 'Active' : pvcData.status}
-              status={
-                pvcData.status === 'Bound'
-                  ? 'active'
-                  : pvcData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={pvcData.status === 'Bound' ? 'Active' : pvcData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {pvcData.status === 'Bound' ? 'Active' : pvcData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard
@@ -578,18 +581,44 @@ export function PersistentVolumeClaimDetailPage() {
               label={`Labels (${labelsCount})`}
               value={
                 labelsCount > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
                     {Object.entries(pvcData.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {`${key}: ${val}`}
                         </Badge>
                       ))}
                     {labelsCount > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{labelsCount - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Labels ({labelsCount})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(pvcData.labels).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{labelsCount - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (
@@ -601,18 +630,44 @@ export function PersistentVolumeClaimDetailPage() {
               label={`Annotations (${annotationsCount})`}
               value={
                 annotationsCount > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
                     {Object.entries(pvcData.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {`${key}: ${val}`}
                         </Badge>
                       ))}
                     {annotationsCount > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{annotationsCount - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Annotations ({annotationsCount})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(pvcData.annotations).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{annotationsCount - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (

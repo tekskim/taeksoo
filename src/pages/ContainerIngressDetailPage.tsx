@@ -16,10 +16,12 @@ import {
   ContextMenu,
   DetailHeader,
   Badge,
+  Tooltip,
   PageShell,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -33,7 +35,7 @@ import { IconBell, IconTerminal2, IconSearch, IconChevronDown } from '@tabler/ic
 interface IngressData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   ingressClass: string;
   createdAt: string;
@@ -58,7 +60,7 @@ const mockIngressData: Record<string, IngressData> = {
   '1': {
     id: '1',
     name: 'ingressName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     ingressClass: 'ingressclassName',
     createdAt: 'Jul 25, 2025',
@@ -76,7 +78,7 @@ const mockIngressData: Record<string, IngressData> = {
   '2': {
     id: '2',
     name: 'api-ingress',
-    status: 'Active',
+    status: 'True',
     namespace: 'kube-system',
     ingressClass: 'traefik',
     createdAt: 'Nov 8, 2025',
@@ -347,8 +349,15 @@ export function ContainerIngressDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={ingress.status}
-              status={getStatusType(ingress.status)}
+              value={
+                <Tooltip content={ingress.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {ingress.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
+              }
             />
             <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
             <DetailHeader.InfoCard label="Ingress class" value={ingress.ingressClass} />
@@ -362,18 +371,44 @@ export function ContainerIngressDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(ingress.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(ingress.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(ingress.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(ingress.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(ingress.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(ingress.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(ingress.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -383,18 +418,44 @@ export function ContainerIngressDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(ingress.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(ingress.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(ingress.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(ingress.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(ingress.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(ingress.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(ingress.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>

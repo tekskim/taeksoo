@@ -15,6 +15,8 @@ import {
   FormField,
   ContextMenu,
   DetailHeader,
+  Badge,
+  Tooltip,
   PageShell,
   CopyButton,
   type ContextMenuItem,
@@ -40,7 +42,7 @@ import {
 interface SecretData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   secretType: string;
   createdAt: string;
@@ -57,7 +59,7 @@ const mockSecretData: Record<string, SecretData> = {
   '1': {
     id: '1',
     name: 'secretName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'namespaceName',
     secretType: 'Custom type - customType',
     createdAt: 'Nov 10, 2025',
@@ -71,7 +73,7 @@ const mockSecretData: Record<string, SecretData> = {
   '2': {
     id: '2',
     name: 'db-credentials',
-    status: 'Active',
+    status: 'True',
     namespace: 'default',
     secretType: 'Opaque',
     createdAt: 'Nov 9, 2025',
@@ -89,7 +91,7 @@ const mockSecretData: Record<string, SecretData> = {
   '3': {
     id: '3',
     name: 'tls-secret',
-    status: 'Active',
+    status: 'Raw',
     namespace: 'nginx-ingress',
     secretType: 'kubernetes.io/tls',
     createdAt: 'Nov 8, 2025',
@@ -103,7 +105,7 @@ const mockSecretData: Record<string, SecretData> = {
   '4': {
     id: '4',
     name: 'docker-registry',
-    status: 'Active',
+    status: 'None',
     namespace: 'default',
     secretType: 'kubernetes.io/dockerconfigjson',
     createdAt: 'Nov 7, 2025',
@@ -116,7 +118,7 @@ const mockSecretData: Record<string, SecretData> = {
   '5': {
     id: '5',
     name: 'service-account-token',
-    status: 'Active',
+    status: 'OK',
     namespace: 'kube-system',
     secretType: 'kubernetes.io/service-account-token',
     createdAt: 'Nov 6, 2025',
@@ -352,13 +354,14 @@ export function SecretDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={secretData.status}
-              status={
-                secretData.status === 'Active'
-                  ? 'active'
-                  : secretData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={secretData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {secretData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

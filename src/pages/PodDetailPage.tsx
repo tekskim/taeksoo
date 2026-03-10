@@ -22,6 +22,8 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -46,7 +48,7 @@ import {
 interface PodData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   namespace: string;
   podIP: string;
   createdAt: string;
@@ -60,7 +62,7 @@ interface PodData {
 
 interface ContainerRow {
   id: string;
-  status: 'Running' | 'Waiting' | 'Terminated';
+  status: string;
   ready: boolean;
   name: string;
   image: string;
@@ -100,7 +102,7 @@ const mockPodData: Record<string, PodData> = {
   '1': {
     id: '1',
     name: 'podName',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default',
     podIP: '10.11.0.11',
     createdAt: 'Jul 25, 2025',
@@ -129,7 +131,7 @@ const mockPodData: Record<string, PodData> = {
   '2': {
     id: '2',
     name: 'nginx-deployment-7fb96c846b-x2vnl',
-    status: 'Running',
+    status: 'True',
     namespace: 'default',
     podIP: '10.76.0.12',
     createdAt: 'Nov 9, 2025',
@@ -147,12 +149,32 @@ const mockPodData: Record<string, PodData> = {
 const mockContainersData: ContainerRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     ready: true,
     name: 'manager',
     image: 'imageName',
     initContainer: true,
     restarts: 1,
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '2',
+    status: 'True',
+    ready: true,
+    name: 'nginx',
+    image: 'nginx:1.27',
+    initContainer: false,
+    restarts: 0,
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    ready: false,
+    name: 'sidecar',
+    image: 'sidecar:latest',
+    initContainer: false,
+    restarts: 2,
     createdAt: 'Jul 25, 2025',
   },
 ];
@@ -170,7 +192,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'ContainersReady',
-    status: 'True',
+    status: 'None',
     reason: 'ContainersReady',
     message: 'All containers are ready.',
     lastTransition: 'Jul 25, 2025',
@@ -239,11 +261,13 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -360,10 +384,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
-      flex: 1,
-      minWidth: columnMinWidths.size,
-      sortable: true,
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      align: 'left',
+      sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',
@@ -722,17 +753,14 @@ export function PodDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={pod.status === 'Running' ? 'Active' : pod.status}
-              status={
-                pod.status === 'Running'
-                  ? 'active'
-                  : pod.status === 'Succeeded'
-                    ? 'active'
-                    : pod.status === 'Pending'
-                      ? 'pending'
-                      : pod.status === 'Failed'
-                        ? 'error'
-                        : 'pending'
+              value={
+                <Tooltip content={pod.status === 'Running' ? 'Active' : pod.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {pod.status === 'Running' ? 'Active' : pod.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard
@@ -778,18 +806,44 @@ export function PodDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(pod.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(pod.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(pod.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(pod.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(pod.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(pod.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(pod.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -799,18 +853,44 @@ export function PodDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(pod.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(pod.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(pod.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(pod.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(pod.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(pod.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(pod.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>

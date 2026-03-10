@@ -16,6 +16,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -28,7 +29,7 @@ import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler
 interface ClusterRow {
   id: string;
   name: string;
-  status: 'Running' | 'Stopped' | 'Creating' | 'Error';
+  status: string;
   kubernetesVersion: string;
   createdAt: string;
   cpu: string;
@@ -44,7 +45,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '1',
     name: 'Cluster1',
-    status: 'Running',
+    status: 'OK',
     kubernetesVersion: 'v1.24',
     createdAt: 'Nov 11, 2025',
     cpu: '-',
@@ -54,7 +55,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '2',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'OK',
     kubernetesVersion: 'v1.29.1',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -64,7 +65,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '3',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '8 cores',
@@ -74,7 +75,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '4',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'InvalidImageName',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -84,7 +85,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '5',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'ImagePullBackOff',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -94,7 +95,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '6',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'True',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -104,7 +105,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '7',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'Raw',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -114,7 +115,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '8',
     name: 'ClusterName',
-    status: 'Running',
+    status: 'None',
     kubernetesVersion: 'v1.33.4',
     createdAt: 'Oct 30, 2025',
     cpu: '-',
@@ -148,12 +149,14 @@ export function ContainerHomePage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

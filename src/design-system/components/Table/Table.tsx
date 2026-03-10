@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
+import { cn } from '../../utils/cn';
+import { useColumnResize } from './useColumnResize';
 
 /* ----------------------------------------
    Types
@@ -20,6 +22,8 @@ export interface TableColumn<T = any> {
   flex?: number;
   align?: 'left' | 'center' | 'right';
   sortable?: boolean;
+  /** Whether this column can be resized. Defaults to true for flex columns, false for fixed-width columns */
+  resizable?: boolean;
   headerRender?: () => React.ReactNode;
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
@@ -41,7 +45,37 @@ export interface TableProps<T = any> {
   emptyMessage?: string;
   className?: string;
   rowHeight?: string;
+  /** Enable column resizing. Defaults to true */
+  resizable?: boolean;
+  /** Resize timing: 'onChange' for real-time, 'onEnd' for after drag. Defaults to 'onEnd' */
+  columnResizeMode?: 'onChange' | 'onEnd';
+  /** Callback when a column width changes via resize */
+  onColumnResize?: (columnKey: string, width: number) => void;
+  /** Global minimum column width in px. Defaults to 50 */
+  minColumnWidth?: number;
 }
+
+/* ----------------------------------------
+   Alignment maps
+   ---------------------------------------- */
+
+const HEADER_ALIGN_CLS: Record<string, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
+const CELL_ALIGN_CLS: Record<string, string> = {
+  left: 'justify-start text-left',
+  center: 'justify-center text-center',
+  right: 'justify-end text-right',
+};
+
+const INNER_ALIGN_CLS: Record<string, string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end flex-row-reverse',
+};
 
 /* ----------------------------------------
    Table Component
@@ -62,17 +96,45 @@ export function Table<T extends Record<string, any>>({
   emptyMessage = 'No data',
   className = '',
   rowHeight,
+  resizable = true,
+  columnResizeMode = 'onEnd',
+  onColumnResize,
+  minColumnWidth,
 }: TableProps<T>) {
-  // thaki-ui compatibility: support rows prop as alias for data
   const tableData = data ?? rows ?? [];
 
-  // thaki-ui compatibility: support header prop as alias for label
   const columns = rawColumns.map((col) => ({
     ...col,
     label: col.label || col.header || '',
   }));
+
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+  const resizableColumnKeys = useMemo(() => {
+    if (!resizable) return [];
+    return rawColumns
+      .filter((c) => {
+        if (c.resizable !== undefined) return c.resizable;
+        return !c.width;
+      })
+      .map((c) => c.key);
+  }, [rawColumns, resizable]);
+
+  const {
+    isResizing,
+    resizingColumnKey,
+    getResizeHandleProps,
+    getResizedColumnStyle,
+    tableRef,
+    shouldIgnoreHeaderClick,
+    hasResizedColumns,
+  } = useColumnResize({
+    mode: columnResizeMode,
+    onColumnResize,
+    minColumnWidth,
+    resizableColumnKeys,
+  });
 
   const getRowKey = useCallback(
     (row: T): string => {
@@ -146,6 +208,12 @@ export function Table<T extends Record<string, any>>({
 
   const enableStickyHeader = stickyHeader || !!maxHeight;
 
+  const isColumnResizable = (column: TableColumn<T>): boolean => {
+    if (!resizable) return false;
+    if (column.resizable !== undefined) return column.resizable;
+    return !column.width;
+  };
+
   const getColumnStyle = (column: TableColumn<T>): React.CSSProperties => {
     const style: React.CSSProperties = {};
 
@@ -169,39 +237,34 @@ export function Table<T extends Record<string, any>>({
     return style;
   };
 
+  const getEffectiveColumnStyle = (column: TableColumn<T>): React.CSSProperties => {
+    const baseStyle = getColumnStyle(column);
+    if (!resizable || !isColumnResizable(column)) return baseStyle;
+    return getResizedColumnStyle(column.key, baseStyle, column.minWidth, column.maxWidth);
+  };
+
   return (
     <div
-      className={`flex flex-col gap-[var(--table-row-gap)] ${className}`}
+      ref={tableRef}
+      className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
       style={rowHeight ? ({ '--table-row-height': rowHeight } as React.CSSProperties) : undefined}
     >
       <div
-        className={`overflow-x-auto ${maxHeight ? 'overflow-y-auto' : ''}`}
-        style={{ ...(maxHeight ? { maxHeight } : {}) }}
+        className={cn('overflow-x-auto', maxHeight && 'overflow-y-auto')}
+        style={maxHeight ? { maxHeight } : undefined}
       >
-        {/* Table content wrapper - ensures minimum width while allowing full width */}
         <div className="min-w-fit w-full">
           {/* Header */}
           <div
-            className={`
-            flex items-stretch
-            min-h-[var(--table-row-height)]
-            w-full
-            bg-[var(--table-header-bg)]
-            border border-[var(--color-border-default)]
-            rounded-[var(--table-row-radius)]
-            ${enableStickyHeader ? 'sticky top-0 z-10' : ''}
-          `}
+            className={cn(
+              'flex items-stretch min-h-[var(--table-row-height)] w-full',
+              'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]',
+              enableStickyHeader && 'sticky top-0 z-10',
+              isResizing && 'select-none'
+            )}
           >
             {selectable && (
-              <div
-                className="
-                shrink-0
-                flex items-center
-                w-[var(--table-checkbox-width)]
-                px-[var(--table-cell-padding-x)]
-                py-[var(--table-header-padding-y)]
-              "
-              >
+              <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
                 {!hideSelectAll && (
                   <Checkbox
                     checked={allSelected}
@@ -216,36 +279,40 @@ export function Table<T extends Record<string, any>>({
             {columns.map((column, index) => {
               const isFirstColumn = index === 0;
               const showDivider = isFirstColumn ? selectable : true;
+              const columnResizable = isColumnResizable(column);
+              const align = column.align || 'left';
 
               return (
                 <div
                   key={column.key}
-                  className={`
-                  flex items-center
-                  px-[var(--table-cell-padding-x)]
-                  py-[var(--table-header-padding-y)]
-                  text-[length:var(--table-header-font-size)]
-                  leading-[var(--table-line-height)]
-                  font-medium
-                  text-[var(--color-text-default)]
-                  min-w-0
-                  overflow-hidden
-                  ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : 'text-left'}
-                  ${column.sortable ? 'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors' : ''}
-                  ${showDivider ? 'border-l border-[var(--color-border-default)]' : ''}
-                `}
-                  style={getColumnStyle(column)}
-                  onClick={column.sortable ? () => handleSort(column.key) : undefined}
+                  data-column-key={column.key}
+                  className={cn(
+                    'relative flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]',
+                    'text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]',
+                    'min-w-0 overflow-hidden',
+                    HEADER_ALIGN_CLS[align],
+                    column.sortable &&
+                      'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors',
+                    showDivider && 'border-l border-[var(--color-border-default)]'
+                  )}
+                  style={getEffectiveColumnStyle(column)}
+                  onClick={
+                    column.sortable
+                      ? () => {
+                          if (!shouldIgnoreHeaderClick()) handleSort(column.key);
+                        }
+                      : undefined
+                  }
                   title={column.label}
                 >
                   {column.headerRender ? (
                     column.headerRender()
                   ) : (
                     <div
-                      className={`
-                      flex items-center gap-1 w-full min-w-0
-                      ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end flex-row-reverse' : 'justify-start'}
-                    `}
+                      className={cn(
+                        'flex items-center gap-1 w-full min-w-0',
+                        INNER_ALIGN_CLS[align]
+                      )}
                     >
                       <span className="whitespace-nowrap truncate" title={column.label}>
                         {column.label}
@@ -255,25 +322,36 @@ export function Table<T extends Record<string, any>>({
                       )}
                     </div>
                   )}
+
+                  {/* Resize Handle */}
+                  {columnResizable && (
+                    <div
+                      className={cn(
+                        'absolute top-0 right-0 h-full w-[var(--table-resize-handle-width)] cursor-col-resize z-[1] flex items-center justify-center',
+                        "after:content-[''] after:absolute after:top-2 after:bottom-2 after:w-[1px] after:rounded-full",
+                        'after:bg-[var(--table-resize-handle-hover-color)] after:opacity-0 after:transition-opacity after:duration-150',
+                        resizingColumnKey !== column.key && 'hover:after:opacity-100',
+                        resizingColumnKey === column.key && 'after:opacity-100'
+                      )}
+                      {...getResizeHandleProps(column.key, column.label)}
+                    />
+                  )}
                 </div>
               );
             })}
+
+            {hasResizedColumns && <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />}
           </div>
 
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
             {sortedData.length === 0 ? (
               <div
-                className="
-                px-[var(--table-cell-padding-x)]
-                py-[var(--table-empty-padding-y)]
-                text-center
-                text-[length:var(--table-font-size)]
-                text-[var(--color-text-muted)]
-                border border-[var(--color-border-default)]
-                rounded-[var(--table-row-radius)]
-                bg-[var(--color-surface-default)]
-              "
+                className={cn(
+                  'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',
+                  'text-[length:var(--table-font-size)] text-[var(--color-text-muted)]',
+                  'border border-[var(--color-border-default)] rounded-[var(--table-row-radius)] bg-[var(--color-surface-default)]'
+                )}
               >
                 {emptyMessage}
               </div>
@@ -285,32 +363,20 @@ export function Table<T extends Record<string, any>>({
                 return (
                   <div
                     key={key}
-                    className={`
-                    flex items-stretch
-                    min-h-[var(--table-row-height)]
-                    w-full
-                    rounded-[var(--table-row-radius)]
-                    transition-all
-                    hover:bg-[var(--table-row-hover-bg)]
-                    border border-[var(--color-border-default)]
-                    ${
+                    className={cn(
+                      'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                      'rounded-[var(--table-row-radius)] transition-all hover:bg-[var(--table-row-hover-bg)]',
+                      'border border-[var(--color-border-default)]',
                       isSelected
                         ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
-                        : 'bg-[var(--color-surface-default)]'
-                    }
-                    ${onRowClick ? 'cursor-pointer' : ''}
-                  `}
+                        : 'bg-[var(--color-surface-default)]',
+                      onRowClick && 'cursor-pointer'
+                    )}
                     onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
                   >
                     {selectable && (
                       <div
-                        className="
-                        shrink-0
-                        flex items-center
-                        w-[var(--table-checkbox-width)]
-                        px-[var(--table-cell-padding-x)]
-                        py-[var(--table-cell-padding-y)]
-                      "
+                        className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Checkbox
@@ -324,6 +390,7 @@ export function Table<T extends Record<string, any>>({
                     {columns.map((column, colIndex) => {
                       const isFirstColumn = colIndex === 0;
                       const showCellDivider = isFirstColumn ? selectable : true;
+                      const align = column.align || 'left';
 
                       const cellValue = row[column.key];
                       const cellTitle =
@@ -334,37 +401,36 @@ export function Table<T extends Record<string, any>>({
                       return (
                         <div
                           key={column.key}
-                          className={`
-                          flex items-center
-                          px-[var(--table-cell-padding-x)]
-                          py-[var(--table-cell-padding-y)]
-                          text-[length:var(--table-font-size)]
-                          leading-[var(--table-line-height)]
-                          text-[var(--color-text-default)]
-                          min-w-0
-                          overflow-hidden
-                          ${column.align === 'center' ? 'justify-center text-center' : column.align === 'right' ? 'justify-end text-right' : 'justify-start text-left'}
-                          ${showCellDivider ? 'border-l border-transparent' : ''}
-                        `}
-                          style={getColumnStyle(column)}
+                          data-column-key={column.key}
+                          className={cn(
+                            'flex items-center',
+                            'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
+                            'text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]',
+                            'min-w-0 overflow-hidden',
+                            CELL_ALIGN_CLS[align],
+                            showCellDivider && 'border-l border-transparent'
+                          )}
+                          style={getEffectiveColumnStyle(column)}
                           title={cellTitle}
                         >
-                          {column.render ? (
-                            <div
-                              className={`w-full min-w-0 overflow-hidden flex ${column.align === 'center' ? 'justify-center' : column.align === 'right' ? 'justify-end' : ''}`}
-                            >
-                              {column.render(row[column.key], row, rowIndex)}
-                            </div>
-                          ) : (
-                            <span
-                              className={`truncate w-full ${column.align === 'center' ? 'text-center' : column.align === 'right' ? 'text-right' : ''}`}
-                            >
-                              {row[column.key]}
-                            </span>
-                          )}
+                          <div
+                            className={cn(
+                              'truncate w-full min-w-0',
+                              align === 'center' && 'text-center',
+                              align === 'right' && 'text-right'
+                            )}
+                          >
+                            {column.render
+                              ? column.render(row[column.key], row, rowIndex)
+                              : row[column.key]}
+                          </div>
                         </div>
                       );
                     })}
+
+                    {hasResizedColumns && (
+                      <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                    )}
                   </div>
                 );
               })

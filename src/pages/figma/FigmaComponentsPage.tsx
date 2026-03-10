@@ -33,12 +33,34 @@ import {
   NumberInput,
   ProgressBar,
   Tooltip,
+  Popover,
   ContextMenu,
   Disclosure,
+  Modal,
+  ConfirmModal,
+  Drawer,
+  DatePicker,
+  Table,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Skeleton,
+  SkeletonText,
+  SkeletonTable,
+  Tag,
+  CopyButton,
+  Copyable,
+  Password,
+  ToastContainer,
+  ToastProvider,
+  useToast,
+  SNBMenuItem,
+  SelectionIndicator,
+  WindowControl,
   VStack,
   HStack,
 } from '@/design-system';
-import type { FilterField, AppliedFilter } from '@/design-system';
+import type { FilterField, AppliedFilter, TableColumn } from '@/design-system';
 import {
   IconPlus,
   IconEdit,
@@ -51,25 +73,53 @@ import {
   IconPlayerPlay,
   IconTerminal2,
   IconCheck,
+  IconSettings,
+  IconBell,
+  IconTag,
+  IconServer,
+  IconHome,
+  IconBrandDocker,
 } from '@tabler/icons-react';
 
 /* ──────────────────────────────────────────
    Shared Layout Helpers
    ────────────────────────────────────────── */
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-heading-h4 text-[var(--color-text-default)] pb-2 border-b border-[var(--color-border-default)] mb-6 mt-16 first:mt-0">
+const CategoryHeader = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="text-heading-h3 text-[var(--color-text-default)] pb-3 border-b-2 border-[var(--color-border-strong)] mb-6 mt-20 first:mt-0">
     {children}
   </h2>
 );
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h3 className="text-heading-h4 text-[var(--color-text-default)] pb-2 border-b border-[var(--color-border-default)] mb-6 mt-12 first:mt-0">
+    {children}
+  </h3>
+);
+
 const SubTitle = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-heading-h6 text-[var(--color-text-muted)] mb-3 mt-6">{children}</h3>
+  <h4 className="text-heading-h6 text-[var(--color-text-muted)] mb-3 mt-6">{children}</h4>
 );
 
 const StateLabel = ({ children }: { children: React.ReactNode }) => (
   <span className="text-body-xs text-[var(--color-text-subtle)]">{children}</span>
 );
+
+const PropertyTypeBadge = ({ type }: { type: string }) => {
+  const cls =
+    type === 'Variant'
+      ? 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info)]'
+      : type === 'Boolean'
+        ? 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success)]'
+        : type === 'Text'
+          ? 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)]'
+          : 'bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)]';
+  return (
+    <span className={`inline-block px-1.5 py-0.5 rounded text-body-xs font-medium ${cls}`}>
+      {type}
+    </span>
+  );
+};
 
 /* ──────────────────────────────────────────
    FigmaGuide — Inline migration guide block
@@ -101,7 +151,7 @@ interface FigmaGuideProps {
 function FigmaGuide({ figmaName, properties, autoLayout, radius, tokens, tips }: FigmaGuideProps) {
   return (
     <div className="mt-4">
-      <Disclosure title="Figma Guide" defaultOpen={false}>
+      <Disclosure title="Figma Guide" defaultOpen>
         <div className="flex flex-col gap-3 text-body-sm text-[var(--color-text-default)]">
           <div>
             <span className="text-label-sm text-[var(--color-text-subtle)]">Component name</span>
@@ -311,6 +361,197 @@ const filterFields: FilterField[] = [
 ];
 
 /* ──────────────────────────────────────────
+   Interactive Demo Components
+   ────────────────────────────────────────── */
+
+function ModalDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <Button variant="secondary" size="sm" onClick={() => setIsOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Edit Resource"
+        description="수정 사항을 입력하세요."
+        size="sm"
+      >
+        <FormField label="Name" required>
+          <Input placeholder="Enter name" fullWidth />
+        </FormField>
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => setIsOpen(false)} className="flex-1">
+            Save
+          </Button>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+function ConfirmModalDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <Button variant="danger" size="sm" onClick={() => setIsOpen(true)}>
+        Open Confirm Modal
+      </Button>
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onConfirm={() => setIsOpen(false)}
+        title="Delete Resource"
+        description="이 작업은 되돌릴 수 없습니다."
+        infoLabel="Resource name"
+        infoValue="instance-production-01"
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+    </>
+  );
+}
+
+function DrawerDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <Button variant="secondary" size="sm" onClick={() => setIsOpen(true)}>
+        Open Drawer
+      </Button>
+      <Drawer
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Edit Resource"
+        width={360}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={() => setIsOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={() => setIsOpen(false)} className="flex-1">
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={4}>
+          <InfoBox label="Resource ID" value="i-0123456789abcdef" />
+          <FormField label="Display Name" required>
+            <Input placeholder="Enter name" fullWidth />
+          </FormField>
+          <FormField label="Description">
+            <Textarea placeholder="Enter description" />
+          </FormField>
+        </VStack>
+      </Drawer>
+    </>
+  );
+}
+
+function ToastDemoInner() {
+  const toast = useToast();
+  return (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => toast.success('리소스가 생성되었습니다.')}
+      >
+        Success
+      </Button>
+      <Button variant="secondary" size="sm" onClick={() => toast.error('오류가 발생했습니다.')}>
+        Error
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => toast.warning('디스크 사용량이 90%를 초과했습니다.')}
+      >
+        Warning
+      </Button>
+      <Button variant="secondary" size="sm" onClick={() => toast.info('새 버전이 출시되었습니다.')}>
+        Info
+      </Button>
+    </div>
+  );
+}
+
+function ToastDemo() {
+  return (
+    <ToastProvider>
+      <ToastDemoInner />
+      <ToastContainer position="top-right" maxToasts={3} />
+    </ToastProvider>
+  );
+}
+
+const demoTableColumns: TableColumn<{
+  id: string;
+  name: string;
+  status: string;
+  created: string;
+}>[] = [
+  { key: 'name', label: 'Name', flex: 1, sortable: true },
+  {
+    key: 'status',
+    label: 'Status',
+    width: '80px',
+    align: 'center',
+    render: (v) => (
+      <StatusIndicator status={v === 'Running' ? 'active' : 'error'} layout="icon-only" size="sm" />
+    ),
+  },
+  { key: 'created', label: 'Created', flex: 1, align: 'right', sortable: true },
+];
+
+const demoTableData = [
+  { id: '1', name: 'web-server-01', status: 'Running', created: '2026-03-01' },
+  { id: '2', name: 'db-primary', status: 'Running', created: '2026-02-28' },
+  { id: '3', name: 'cache-node', status: 'Error', created: '2026-02-25' },
+];
+
+function TableDemo() {
+  const [selected, setSelected] = useState<string[]>([]);
+  return (
+    <Table
+      columns={demoTableColumns}
+      data={demoTableData}
+      rowKey="id"
+      selectable
+      selectedKeys={selected}
+      onSelectionChange={setSelected}
+      resizable
+    />
+  );
+}
+
+function TabBarDemo() {
+  const [activeTab, setActiveTab] = useState('tab1');
+  const tabs = [
+    { id: 'tab1', label: 'Overview', closable: false },
+    { id: 'tab2', label: 'Instances', closable: true },
+    { id: 'tab3', label: 'Settings', closable: true },
+  ];
+  return (
+    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+      <TabBar
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onTabClose={() => {}}
+        showWindowControls={false}
+        showAddButton
+      />
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────
    Page Component
    ────────────────────────────────────────── */
 
@@ -321,6 +562,54 @@ export function FigmaComponentsPage() {
 
   return (
     <div className="flex flex-col">
+      {/* ════════════════ INTRO ════════════════ */}
+      <div className="mb-12">
+        <h2 className="text-heading-h3 text-[var(--color-text-default)] mb-3">
+          Figma Components Capture
+        </h2>
+        <p className="text-body-lg text-[var(--color-text-muted)] mb-6 max-w-2xl">
+          이 페이지는 TDS 디자인 시스템의 각 컴포넌트를 Figma 컴포넌트로 변환할 때 필요한 정보를
+          제공합니다. 각 컴포넌트의 시각적 프리뷰와 함께 Figma에서의 네이밍, Property 설정, Auto
+          Layout 스펙, 디자인 토큰을 확인할 수 있습니다.
+        </p>
+        <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+          <span className="text-label-sm text-[var(--color-text-subtle)] block mb-2">
+            Property Type 범례
+          </span>
+          <div className="flex flex-wrap gap-4 items-center">
+            <HStack gap={1.5} align="center">
+              <PropertyTypeBadge type="Variant" />
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                선택 가능한 옵션 목록 (Size, State 등)
+              </span>
+            </HStack>
+            <HStack gap={1.5} align="center">
+              <PropertyTypeBadge type="Boolean" />
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                true/false 토글 (Disabled, HasIcon 등)
+              </span>
+            </HStack>
+            <HStack gap={1.5} align="center">
+              <PropertyTypeBadge type="Text" />
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                편집 가능한 텍스트 (Label, Placeholder 등)
+              </span>
+            </HStack>
+            <HStack gap={1.5} align="center">
+              <PropertyTypeBadge type="Instance swap" />
+              <span className="text-body-sm text-[var(--color-text-muted)]">
+                교체 가능한 인스턴스 슬롯 (Icon 등)
+              </span>
+            </HStack>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════════════════════════════════
+          FORM CONTROLS
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Form Controls</CategoryHeader>
+
       {/* ════════════════ BUTTON ════════════════ */}
       <SectionTitle>Button</SectionTitle>
 
@@ -542,10 +831,15 @@ export function FigmaComponentsPage() {
       <FigmaGuide
         figmaName="TDS/Form/NumberInput"
         properties={[
+          { name: 'Size', type: 'Variant', values: 'xs | sm | md | lg' },
           { name: 'Value', type: 'Text', values: '(number)' },
           { name: 'Suffix', type: 'Text', values: '"GiB" (optional)' },
           { name: 'Disabled', type: 'Boolean', values: 'true | false' },
         ]}
+        autoLayout={[
+          { label: 'Container', direction: 'H', gap: '0', padding: '0', height: '32px (md)' },
+        ]}
+        radius="6px (--primitive-radius-md)"
         tokens={[
           { label: 'Arrow hover bg', value: '--color-surface-muted' },
           { label: 'Arrow hover text', value: '--color-text-default' },
@@ -569,7 +863,18 @@ export function FigmaComponentsPage() {
         figmaName="TDS/Form/SearchInput"
         properties={[
           { name: 'Size', type: 'Variant', values: 'sm | md' },
+          { name: 'State', type: 'Variant', values: 'empty | filled | focus' },
           { name: 'Placeholder', type: 'Text', values: '"Search..."' },
+          { name: 'HasClear', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'SM', direction: 'H', gap: '6px', padding: '0 10px', height: '28px' },
+          { label: 'MD', direction: 'H', gap: '6px', padding: '0 10px', height: '32px' },
+        ]}
+        radius="6px (--primitive-radius-md)"
+        tokens={[
+          { label: 'Search icon', value: 'IconSearch, 14px, --color-text-subtle' },
+          { label: 'Clear icon', value: 'IconX, 14px, --color-text-muted' },
         ]}
         tips={[
           'Input 컴포넌트를 기반으로 왼쪽에 검색 아이콘(IconSearch)이 고정된 구조',
@@ -864,25 +1169,78 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      {/* ═══════════════════════════════════════════
+          DATA DISPLAY
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Data Display</CategoryHeader>
+
       {/* ════════════════ BADGE ════════════════ */}
       <SectionTitle>Badge</SectionTitle>
-      {badgeTypes.map((type) => (
-        <div key={type}>
-          <SubTitle>Type: {type}</SubTitle>
-          {badgeSizes.map((size) => (
-            <div key={`${type}-${size}`} className="mb-3">
-              <StateLabel>Size: {size}</StateLabel>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {badgeThemes.map((theme) => (
-                  <Badge key={`${type}-${size}-${theme}`} type={type} theme={theme} size={size}>
-                    {theme}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          ))}
+
+      <SubTitle>Subtle (권장 — 모든 Semantic Color)</SubTitle>
+      {badgeSizes.map((size) => (
+        <div key={`subtle-${size}`} className="mb-3">
+          <StateLabel>Size: {size}</StateLabel>
+          <div className="flex flex-wrap gap-2 mt-1">
+            {badgeThemes.map((theme) => (
+              <Badge key={`subtle-${size}-${theme}`} type="subtle" theme={theme} size={size}>
+                {theme}
+              </Badge>
+            ))}
+          </div>
         </div>
       ))}
+
+      <SubTitle>Solid (white/gray 중심 사용)</SubTitle>
+      <div className="flex flex-wrap gap-2 mb-3">
+        {(['white', 'gray'] as const).map((theme) => (
+          <Badge key={`solid-${theme}`} type="solid" theme={theme} size="md">
+            {theme}
+          </Badge>
+        ))}
+      </div>
+      <div className="p-3 bg-[var(--color-state-info-bg)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-state-info)] mb-4">
+        Solid 타입은 white/gray에 주로 사용합니다. 색상 강조가 필요한 경우 Subtle 타입을 사용하세요.
+      </div>
+
+      <SubTitle>Semantic Color 매핑</SubTitle>
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        {[
+          { semantic: 'info', theme: 'blue' as const },
+          { semantic: 'success', theme: 'green' as const },
+          { semantic: 'warning', theme: 'yellow' as const },
+          { semantic: 'danger', theme: 'red' as const },
+          { semantic: 'neutral', theme: 'gray' as const },
+          { semantic: 'default', theme: 'white' as const },
+        ].map(({ semantic, theme }) => (
+          <HStack key={semantic} gap={2} align="center" className="py-1">
+            <Badge type="subtle" theme={theme} size="sm">
+              {theme}
+            </Badge>
+            <span className="text-body-xs text-[var(--color-text-subtle)]">← {semantic}</span>
+          </HStack>
+        ))}
+      </div>
+
+      <SubTitle>With Icons</SubTitle>
+      <div className="flex flex-wrap gap-2 items-center">
+        <Badge theme="blue" type="subtle" size="sm" leftIcon={<IconTag size={10} />}>
+          Left Icon
+        </Badge>
+        <Badge theme="green" type="subtle" size="sm" rightIcon={<IconCheck size={10} />}>
+          Right Icon
+        </Badge>
+        <Badge
+          theme="gray"
+          type="subtle"
+          size="md"
+          leftIcon={<IconSettings size={10} />}
+          rightIcon={<IconChevronDown size={10} />}
+        >
+          Both Icons
+        </Badge>
+      </div>
+
       <SubTitle>With Dot</SubTitle>
       <div className="flex flex-wrap gap-2">
         {badgeThemes.map((theme) => (
@@ -899,6 +1257,8 @@ export function FigmaComponentsPage() {
           { name: 'Type', type: 'Variant', values: 'solid | subtle' },
           { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
           { name: 'Dot', type: 'Boolean', values: 'true | false' },
+          { name: 'LeftIcon', type: 'Instance swap', values: 'icon slot' },
+          { name: 'RightIcon', type: 'Instance swap', values: 'icon slot' },
           { name: 'Label', type: 'Text', values: '"Badge"' },
         ]}
         autoLayout={[
@@ -907,11 +1267,20 @@ export function FigmaComponentsPage() {
           { label: 'LG', direction: 'H', gap: '4px', padding: '4px 12px' },
         ]}
         radius="4px (--primitive-radius-sm)"
+        tokens={[
+          { label: 'Subtle bg', value: 'theme별 --color-state-{info|success|warning|danger}-bg' },
+          { label: 'Subtle text', value: 'theme별 --color-state-{info|success|warning|danger}' },
+          { label: 'Solid bg', value: 'theme 색상 (blue600, red600...)' },
+          { label: 'Solid text', value: '--color-on-primary (white)' },
+          { label: 'Dot size', value: '6px (--badge-dot-size)' },
+          { label: 'Icon gap', value: '4px (--badge-gap)' },
+        ]}
         tips={[
-          '6 Theme × 2 Type × 3 Size = 36 조합 + Dot 옵션. 필요한 조합만 생성 권장',
-          'solid: 배경 진하고 텍스트 흰색. subtle: 배경 연하고 텍스트 진한색',
+          'Semantic Color 매핑: info=blue, success=green, warning=yellow, danger=red, neutral=gray, default=white',
+          'Subtle 타입 권장: 대부분의 색상 뱃지에 사용. Solid는 white/gray 중심으로 사용',
           'Dot: 라벨 왼쪽에 6px 원형 dot 추가. Boolean으로 on/off',
           'Auto Layout: 수평 방향, 텍스트는 hug contents, 아이콘/dot이 있을 때 gap 4px',
+          'Icon slot은 Instance swap으로 설정. 크기: sm/md=10px, lg=12px',
         ]}
       />
 
@@ -943,6 +1312,7 @@ export function FigmaComponentsPage() {
           { name: 'Removable', type: 'Boolean', values: 'true | false' },
           { name: 'Label', type: 'Text', values: '"Label"' },
         ]}
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '4px', padding: '4px 8px' }]}
         radius="9999px (pill)"
         tokens={[
           { label: 'Default bg', value: '--color-surface-subtle' },
@@ -989,6 +1359,10 @@ export function FigmaComponentsPage() {
           },
           { name: 'Layout', type: 'Variant', values: 'icon-only | dot-label' },
         ]}
+        autoLayout={[
+          { label: 'icon-only', direction: 'H', gap: '0', padding: '4px 6px' },
+          { label: 'dot-label', direction: 'H', gap: '4px', padding: '4px 6px' },
+        ]}
         radius="9999px (pill)"
         tokens={[
           { label: 'Active bg', value: '--status-success-bg (green)' },
@@ -1023,6 +1397,14 @@ export function FigmaComponentsPage() {
         properties={[
           { name: 'CurrentPage', type: 'Text', values: '(number)' },
           { name: 'ShowSettings', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Container', direction: 'H', gap: '—', padding: '0', height: '32px' },
+          { label: 'Page Button', direction: 'H', gap: '0', padding: '4px 8px' },
+        ]}
+        tokens={[
+          { label: 'Active page', value: '--color-action-primary, font-weight medium' },
+          { label: 'Nav button size', value: '24px × 24px' },
         ]}
         tips={[
           '활성 페이지 번호는 primary color + font-weight medium으로 강조',
@@ -1064,6 +1446,8 @@ export function FigmaComponentsPage() {
           },
           { name: 'Value', type: 'Text', values: '(0–100)' },
         ]}
+        autoLayout={[{ label: 'Track', direction: 'H', gap: '0', padding: '0', height: '4px' }]}
+        radius="9999px (pill — Track and Fill both)"
         tokens={[
           { label: 'Info fill', value: '--color-state-info (blue)' },
           { label: 'Success fill', value: '--color-state-success (green)' },
@@ -1079,6 +1463,11 @@ export function FigmaComponentsPage() {
           'border-radius: Track과 Fill 모두 9999px (pill)',
         ]}
       />
+
+      {/* ═══════════════════════════════════════════
+          NAVIGATION
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Navigation</CategoryHeader>
 
       {/* ════════════════ TABS ════════════════ */}
       <SectionTitle>Tabs</SectionTitle>
@@ -1119,6 +1508,12 @@ export function FigmaComponentsPage() {
           { name: 'Tab State', type: 'Variant', values: 'active | inactive | hover' },
           { name: 'Label', type: 'Text', values: '"Tab"' },
         ]}
+        autoLayout={[
+          { label: 'TabList (underline)', direction: 'H', gap: '0', padding: '0' },
+          { label: 'TabList (boxed)', direction: 'H', gap: '2px', padding: '2px' },
+          { label: 'Tab item', direction: 'H', gap: '0', padding: '8px 12px' },
+        ]}
+        radius="6px (boxed TabList background), 4px (boxed active tab)"
         tokens={[
           { label: 'Active color', value: '--tabs-active-color (= --color-action-primary)' },
           { label: 'Inactive color', value: '--tabs-inactive-color (= --color-text-subtle)' },
@@ -1155,6 +1550,13 @@ export function FigmaComponentsPage() {
           { name: 'Items', type: 'Text', values: '(breadcrumb labels)' },
           { name: 'ItemCount', type: 'Variant', values: '2 | 3 | 4 | 5' },
         ]}
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '4px', padding: '0' }]}
+        tokens={[
+          { label: 'Link color', value: '--color-text-muted' },
+          { label: 'Current color', value: '--color-text-default' },
+          { label: 'Separator', value: 'IconChevronRight, 12px, --color-text-subtle' },
+          { label: 'Font', value: 'body-sm (11px)' },
+        ]}
         tips={[
           '구조: [Link] > [Link] > [CurrentPage]. 수평 Auto Layout, gap 4px',
           'separator: chevron-right 아이콘(12px). 아이템 사이에 자동 삽입',
@@ -1163,6 +1565,11 @@ export function FigmaComponentsPage() {
           'ItemCount를 Variant로 두거나, 아이템을 가변 개수로 처리 (Auto Layout + 복제)',
         ]}
       />
+
+      {/* ═══════════════════════════════════════════
+          FEEDBACK
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Feedback</CategoryHeader>
 
       {/* ════════════════ INLINE MESSAGE ════════════════ */}
       <SectionTitle>InlineMessage</SectionTitle>
@@ -1181,13 +1588,15 @@ export function FigmaComponentsPage() {
           { name: 'Message', type: 'Text', values: '"Message content"' },
           { name: 'Closable', type: 'Boolean', values: 'true | false' },
         ]}
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '8px', padding: '12px 16px' }]}
+        radius="6px (--primitive-radius-md)"
         tokens={[
           { label: 'Info', value: 'bg: state-info-bg, icon/border: state-info' },
           { label: 'Success', value: 'bg: state-success-bg, icon/border: state-success' },
           { label: 'Warning', value: 'bg: state-warning-bg, icon/border: state-warning' },
           { label: 'Error', value: 'bg: state-danger-bg, icon/border: state-danger' },
+          { label: 'Left border', value: '2px, variant별 색상' },
         ]}
-        radius="6px (--primitive-radius-md)"
         tips={[
           '구조: 좌측 아이콘 + 메시지 텍스트 + (optional) 우측 닫기 버튼. 수평 Auto Layout',
           '좌측 아이콘은 Variant별로 자동 결정: info → InfoCircle, success → CircleCheck, warning → AlertTriangle, error → AlertCircle',
@@ -1210,6 +1619,7 @@ export function FigmaComponentsPage() {
           { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
           { name: 'Variant', type: 'Variant', values: 'spinner | progress | button' },
         ]}
+        autoLayout={[{ label: 'Spinner', direction: 'V', gap: '8px', padding: '0' }]}
         tokens={[
           { label: 'Spinner sizes', value: 'sm: 16px, md: 22px, lg: 32px' },
           { label: 'Spinner color', value: '--color-action-primary (blue)' },
@@ -1251,6 +1661,14 @@ export function FigmaComponentsPage() {
           { name: 'Description', type: 'Text', values: '"Description"' },
           { name: 'HasAction', type: 'Boolean', values: 'true | false' },
           { name: 'Icon', type: 'Instance swap', values: 'icon slot' },
+        ]}
+        autoLayout={[
+          {
+            label: 'Container',
+            direction: 'V',
+            gap: '16px',
+            padding: '64px (card) / 80px 0 (inline)',
+          },
         ]}
         tokens={[
           { label: 'Card padding', value: '64px (p-16)' },
@@ -1295,6 +1713,7 @@ export function FigmaComponentsPage() {
           { name: 'HasAction', type: 'Boolean', values: 'true | false' },
           { name: 'Icon', type: 'Instance swap', values: 'icon slot' },
         ]}
+        autoLayout={[{ label: 'Container', direction: 'V', gap: '8px', padding: '80px 0' }]}
         tokens={[
           { label: 'Icon color', value: '--color-state-danger (red)' },
           { label: 'Title', value: 'heading-h5, mb-8px' },
@@ -1608,6 +2027,10 @@ export function FigmaComponentsPage() {
           { name: 'Items', type: 'Text', values: '(menu items)' },
           { name: 'Trigger', type: 'Variant', values: 'click | contextmenu' },
         ]}
+        autoLayout={[
+          { label: 'MenuList', direction: 'V', gap: '2px', padding: '4px' },
+          { label: 'MenuItem', direction: 'H', gap: '6px', padding: '6px 8px' },
+        ]}
         radius="6px (--primitive-radius-md)"
         tokens={[
           { label: 'Item padding', value: '6px 8px' },
@@ -1626,6 +2049,824 @@ export function FigmaComponentsPage() {
           'danger 아이템: 텍스트/아이콘 색상이 빨간색. MenuItem State=danger로 처리',
           'submenu: 우측 화살표 아이콘(chevron-right) + 하위 MenuList. nested component로 구현',
           '모든 아이템에 고유 id 필수. Figma에서는 레이어 이름으로 관리',
+        ]}
+      />
+
+      {/* ═══════════════════════════════════════════
+          OVERLAYS
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Overlays</CategoryHeader>
+
+      {/* ════════════════ TOOLTIP ════════════════ */}
+      <SectionTitle>Tooltip</SectionTitle>
+      <div className="flex flex-wrap gap-6 items-center">
+        <Tooltip content="기본 위치 (top)">
+          <Button variant="secondary" size="sm">
+            Top
+          </Button>
+        </Tooltip>
+        <Tooltip content="아래쪽 표시" position="bottom">
+          <Button variant="secondary" size="sm">
+            Bottom
+          </Button>
+        </Tooltip>
+        <Tooltip content="왼쪽 표시" position="left">
+          <Button variant="secondary" size="sm">
+            Left
+          </Button>
+        </Tooltip>
+        <Tooltip content="오른쪽 표시" position="right">
+          <Button variant="secondary" size="sm">
+            Right
+          </Button>
+        </Tooltip>
+        <Tooltip content="비활성 상태" disabled>
+          <Button variant="secondary" size="sm">
+            Disabled
+          </Button>
+        </Tooltip>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Overlay/Tooltip"
+        properties={[
+          { name: 'Position', type: 'Variant', values: 'top | bottom | left | right' },
+          { name: 'Content', type: 'Text', values: '"Tooltip text"' },
+        ]}
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '0', padding: '4px 6px' }]}
+        radius="4px (--primitive-radius-sm)"
+        tokens={[
+          { label: 'Font', value: '11px (body-xs)' },
+          { label: 'Max width', value: '240px' },
+          { label: 'Min width', value: '60px' },
+          { label: 'BG', value: '--tooltip-bg (dark)' },
+          { label: 'Text', value: 'white' },
+          { label: 'Arrow', value: '6px triangle, same bg' },
+        ]}
+        tips={[
+          '호버 전용. 인터랙티브 콘텐츠 불가 — 인터랙티브가 필요하면 Popover 사용',
+          '긴 텍스트는 max-width 240px에서 자동 줄바꿈. whitespace-nowrap 사용 금지',
+          'Figma에서 arrow 포함. Position별로 arrow 방향이 달라짐 (top → 아래쪽 arrow 등)',
+          'delay: 200ms (hover 후 표시까지). Figma에서는 표현 불가하므로 spec 문서에 명시',
+        ]}
+      />
+
+      {/* ════════════════ POPOVER ════════════════ */}
+      <SectionTitle>Popover</SectionTitle>
+      <div className="flex flex-wrap gap-4 items-start">
+        <Popover
+          trigger="click"
+          position="bottom"
+          content={
+            <div className="p-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-default)]">Quick Info</span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">
+                  인터랙티브 콘텐츠를 담을 수 있는 팝오버입니다.
+                </span>
+                <Button variant="primary" size="sm">
+                  Action
+                </Button>
+              </VStack>
+            </div>
+          }
+        >
+          <Button variant="secondary" size="sm">
+            Click Popover
+          </Button>
+        </Popover>
+        <Popover
+          trigger="hover"
+          position="top"
+          content={<div className="p-3 text-body-sm">Hover로 표시되는 팝오버</div>}
+        >
+          <Button variant="secondary" size="sm">
+            Hover Popover
+          </Button>
+        </Popover>
+        <Popover
+          trigger="click"
+          position="bottom"
+          showArrow={false}
+          content={<div className="p-3 text-body-sm">Arrow 없는 팝오버</div>}
+        >
+          <Button variant="outline" size="sm">
+            No Arrow
+          </Button>
+        </Popover>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Overlay/Popover"
+        properties={[
+          { name: 'Position', type: 'Variant', values: 'top | bottom | left | right' },
+          { name: 'Trigger', type: 'Variant', values: 'click | hover' },
+          { name: 'ShowArrow', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[{ label: 'Container', direction: 'V', gap: '0', padding: '0' }]}
+        radius="8px (--primitive-radius-lg)"
+        tokens={[
+          { label: 'Border', value: '1px, --color-border-default' },
+          { label: 'BG', value: '--color-surface-default' },
+          { label: 'Arrow size', value: '7px (outer), 6px (inner)' },
+          { label: 'Shadow', value: '--shadow-md' },
+        ]}
+        tips={[
+          'Tooltip과 달리 인터랙티브 콘텐츠(폼, 버튼, 메뉴 등) 포함 가능',
+          'Figma에서 Content 영역은 Slot frame으로 처리. 내부 콘텐츠는 자유롭게 구성',
+          'Arrow는 Position에 따라 방향 변경. ShowArrow=false면 arrow 숨김',
+          'click 트리거: 외부 클릭 또는 ESC로 닫힘. hover 트리거: delay/hideDelay로 제어',
+          'aria-haspopup="dialog" 자동 적용. Figma에서는 spec 문서에 명시',
+        ]}
+      />
+
+      {/* ════════════════ MODAL ════════════════ */}
+      <SectionTitle>Modal / ConfirmModal</SectionTitle>
+      <div className="flex flex-wrap gap-4">
+        <ModalDemo />
+        <ConfirmModalDemo />
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Overlay/Modal"
+        properties={[
+          { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
+          { name: 'Title', type: 'Text', values: '"Modal Title"' },
+          { name: 'Description', type: 'Text', values: '"Optional description"' },
+          { name: 'HasDescription', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'SM', direction: 'V', gap: '16px', padding: '24px' },
+          { label: 'MD', direction: 'V', gap: '16px', padding: '24px' },
+          { label: 'LG', direction: 'V', gap: '16px', padding: '24px' },
+        ]}
+        radius="16px (--primitive-radius-xl)"
+        tokens={[
+          { label: 'SM width', value: '400px' },
+          { label: 'MD width', value: '480px' },
+          { label: 'LG width', value: '640px' },
+          { label: 'Backdrop', value: 'rgba(0,0,0,0.5)' },
+          { label: 'Shadow', value: '--shadow-xl' },
+        ]}
+        tips={[
+          '구조: Title → (Description) → Content → Button Group. 수직 Auto Layout, gap 16px',
+          'Button Group: 두 버튼이 flex-1로 균등 분할. Cancel(secondary) + Confirm(primary/danger)',
+          'ConfirmModal: InfoBox(label + value)가 Content에 포함되는 패턴',
+          'Backdrop: 반투명 검은 오버레이. 클릭 시 닫힘 (closeOnBackdropClick)',
+          'ESC 키로 닫힘. Figma에서는 spec 문서에 명시',
+          'SM/MD 크기는 폼/확인용, LG는 복잡한 콘텐츠용',
+        ]}
+      />
+
+      {/* ════════════════ DRAWER ════════════════ */}
+      <SectionTitle>Drawer</SectionTitle>
+      <DrawerDemo />
+
+      <FigmaGuide
+        figmaName="TDS/Overlay/Drawer"
+        properties={[
+          { name: 'Side', type: 'Variant', values: 'left | right' },
+          { name: 'Title', type: 'Text', values: '"Drawer Title"' },
+          { name: 'HasFooter', type: 'Boolean', values: 'true | false' },
+          { name: 'Width', type: 'Variant', values: '360 | 696 | 1032' },
+        ]}
+        autoLayout={[
+          { label: 'Outer', direction: 'V', gap: '0', padding: '0', height: '100vh' },
+          { label: 'Header', direction: 'H', gap: '—', padding: '16px 24px', height: '56px' },
+          { label: 'Content', direction: 'V', gap: '24px', padding: '0 24px' },
+          { label: 'Footer', direction: 'H', gap: '8px', padding: '16px 24px' },
+        ]}
+        tokens={[
+          { label: '4-col width', value: '360px' },
+          { label: '8-col width', value: '696px' },
+          { label: '12-col width', value: '1032px' },
+          { label: 'BG', value: '--color-surface-default' },
+          { label: 'Shadow', value: '--shadow-xl' },
+          { label: 'Backdrop', value: 'rgba(0,0,0,0.3)' },
+        ]}
+        tips={[
+          '구조: Header(Title + Close) + Content(scrollable) + Footer(sticky). 수직 Auto Layout',
+          'Footer: Cancel + Save 버튼이 flex-1로 균등 분할. HStack gap-2',
+          'Content 영역은 스크롤 가능. Footer는 하단 고정',
+          'Width 3단계: 360px(4col, 간단 폼), 696px(8col, 복잡 폼), 1032px(12col, 대형)',
+          'right(기본)에서 슬라이드-인 애니메이션. left도 지원',
+          'Backdrop 클릭 또는 ESC로 닫힘',
+        ]}
+      />
+
+      {/* ════════════════ TOAST ════════════════ */}
+      <SectionTitle>Toast</SectionTitle>
+      <ToastDemo />
+
+      <FigmaGuide
+        figmaName="TDS/Feedback/Toast"
+        properties={[
+          { name: 'Variant', type: 'Variant', values: 'success | warning | error | info' },
+          { name: 'Title', type: 'Text', values: '"Toast title"' },
+          { name: 'Message', type: 'Text', values: '"Toast message"' },
+          { name: 'HasAction', type: 'Boolean', values: 'true | false' },
+          { name: 'HasLink', type: 'Boolean', values: 'true | false' },
+          { name: 'Dismissible', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Container', direction: 'H', gap: '12px', padding: '16px' },
+          { label: 'Content', direction: 'V', gap: '4px', padding: '0' },
+        ]}
+        radius="8px (--primitive-radius-lg)"
+        tokens={[
+          { label: 'Width', value: '360px (fixed)' },
+          { label: 'Shadow', value: '--shadow-lg' },
+          { label: 'Success icon', value: 'IconCircleCheck, green' },
+          { label: 'Error icon', value: 'IconAlertCircle, red' },
+          { label: 'Warning icon', value: 'IconAlertTriangle, orange' },
+          { label: 'Info icon', value: 'IconInfoCircle, blue' },
+        ]}
+        tips={[
+          '구조: Icon + Content(Title + Message) + Close Button. 수평 Auto Layout',
+          'Position: 기본 top-right. 6가지 위치 지원',
+          'Auto-dismiss: 기본 5000ms. duration=0이면 수동 닫기만 가능',
+          'Action: 버튼 또는 링크. 하단에 표시',
+          'Stack: 여러 토스트가 위에서 아래로 쌓임. maxToasts(기본 5)로 제한',
+          'useToast() 훅으로 프로그래밍 방식 호출: toast.success(), toast.error() 등',
+        ]}
+      />
+
+      {/* ════════════════ TABLE ════════════════ */}
+      <SectionTitle>Table</SectionTitle>
+      <TableDemo />
+
+      <FigmaGuide
+        figmaName="TDS/Data/Table"
+        properties={[
+          { name: 'Selectable', type: 'Boolean', values: 'true | false' },
+          { name: 'StickyHeader', type: 'Boolean', values: 'true | false' },
+          { name: 'Resizable', type: 'Boolean', values: 'true | false (default: true)' },
+        ]}
+        autoLayout={[
+          { label: 'Table', direction: 'V', gap: '--table-row-gap', padding: '0' },
+          { label: 'Row', direction: 'H', gap: '0', padding: '0', height: '44px' },
+          { label: 'Cell', direction: 'H', gap: '0', padding: '8px 12px' },
+        ]}
+        radius="--table-row-radius (rows)"
+        tokens={[
+          { label: 'Row height', value: '--table-row-height (44px)' },
+          { label: 'Cell padding-x', value: '--table-cell-padding-x (12px)' },
+          { label: 'Cell padding-y', value: '--table-cell-padding-y (8px)' },
+          { label: 'Font size', value: '--table-font-size (12px)' },
+          { label: 'Row radius', value: '--table-row-radius' },
+          { label: 'Row hover bg', value: '--table-row-hover-bg' },
+          { label: 'Header bg', value: '--table-header-bg' },
+          { label: 'Resize handle', value: '3px wide, --color-border-focus on hover' },
+        ]}
+        tips={[
+          '정렬: 클릭 시 오름차순 → 내림차순 → 해제. 헤더에 정렬 아이콘 표시',
+          '선택: 체크박스로 행 선택. 헤더 체크박스로 전체 선택/해제',
+          '컬럼 리사이즈: 헤더 경계 드래그. 더블클릭으로 콘텐츠 맞춤. 키보드(Arrow)도 지원',
+          '리사이즈 정책: Overflow 모드 — 개별 컬럼 리사이즈 시 다른 컬럼 영향 없음',
+          '텍스트 말줄임: 긴 텍스트는 truncate 처리, hover 시 title 속성으로 전체 표시',
+          '고정 너비 컬럼(width prop): 리사이즈 불가 (Status, Actions 등)',
+          'flex 컬럼(flex prop): 기본 리사이즈 가능. 최소 50px',
+          'Figma에서 Table은 Row 컴포넌트를 반복 배치. Header Row + Body Row를 분리',
+        ]}
+      />
+
+      {/* ════════════════ DATE PICKER ════════════════ */}
+      <SectionTitle>DatePicker</SectionTitle>
+      <div className="flex flex-wrap gap-8 items-start">
+        <VStack gap={1}>
+          <StateLabel>Single Date</StateLabel>
+          <DatePicker mode="single" />
+        </VStack>
+        <VStack gap={1}>
+          <StateLabel>Range</StateLabel>
+          <DatePicker mode="range" />
+        </VStack>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Form/DatePicker"
+        properties={[
+          { name: 'Mode', type: 'Variant', values: 'single | range' },
+          { name: 'Disabled', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Container', direction: 'V', gap: '8px', padding: '16px' },
+          { label: 'Header', direction: 'H', gap: '—', padding: '0', height: '32px' },
+          { label: 'Day Grid', direction: 'H (wrap)', gap: '0', padding: '0' },
+        ]}
+        radius="8px (--primitive-radius-lg) — calendar panel"
+        tokens={[
+          { label: 'Day cell size', value: '32px × 32px' },
+          { label: 'Selected bg', value: '--color-action-primary' },
+          { label: 'Range bg', value: '--color-state-info-bg (blue-50)' },
+          { label: 'Today border', value: '--color-action-primary (ring)' },
+          { label: 'Header font', value: 'heading-h6 (14px semibold)' },
+          { label: 'Day font', value: 'body-sm (11px)' },
+        ]}
+        tips={[
+          '구조: Header(월 네비게이션) + Day Grid(7×6). 수직 Auto Layout',
+          'Header: ◀ [Month Year] ▶. 좌우 화살표로 월 전환',
+          'Day Grid: 7열(요일) × 최대 6행. 각 셀 32×32px, 중앙 정렬',
+          'Selected: 원형 파란 배경 + 흰 텍스트. Range: 시작/끝은 원형, 사이는 연한 파란 배경',
+          'Today: 파란 ring(outline). 선택되지 않은 오늘 날짜 표시',
+          'Event dot: 날짜 아래 작은 dot으로 이벤트 표시. eventDates prop',
+          'Disabled 날짜: opacity 감소, 클릭 불가',
+        ]}
+      />
+
+      {/* ════════════════ TAB BAR ════════════════ */}
+      <SectionTitle>TabBar</SectionTitle>
+      <TabBarDemo />
+
+      <FigmaGuide
+        figmaName="TDS/Navigation/TabBar"
+        properties={[
+          { name: 'ShowAddButton', type: 'Boolean', values: 'true | false' },
+          { name: 'ShowWindowControls', type: 'Boolean', values: 'true | false' },
+          { name: 'TabState', type: 'Variant', values: 'active | inactive | hover' },
+        ]}
+        autoLayout={[
+          { label: 'Bar', direction: 'H', gap: '0', padding: '0', height: '36px' },
+          { label: 'Tab', direction: 'H', gap: '4px', padding: '8px 12px' },
+        ]}
+        radius="6px (top-left, top-right — active tab)"
+        tokens={[
+          { label: 'Height', value: '36px' },
+          { label: 'Tab padding', value: '8px 12px' },
+          { label: 'Active tab bg', value: '--color-surface-default' },
+          { label: 'Inactive tab bg', value: 'transparent' },
+          { label: 'Close icon', value: 'IconX, 12px' },
+          { label: 'Add icon', value: 'IconPlus, 14px' },
+          { label: 'BG', value: '--color-surface-subtle' },
+        ]}
+        tips={[
+          '브라우저 탭과 유사한 UI. 드래그로 탭 순서 변경 가능',
+          '구조: WindowControls(좌) + Tab List(중앙, 스크롤) + Add Button(우). 수평 Auto Layout',
+          'Active 탭: 흰 배경 + 살짝 볼록한 효과. Inactive: 투명 배경',
+          'Close 버튼: 각 탭 우측에 X 아이콘. hover 시만 표시. closable=false면 숨김',
+          'WindowControls: 빨강/노랑/초록 dot 3개. macOS 스타일',
+          'Add 버튼: + 아이콘. 새 탭 추가',
+          'Figma에서 Tab을 별도 컴포넌트로: State(active/inactive/hover) + Closable Boolean',
+        ]}
+      />
+
+      {/* ════════════════ TOP BAR ════════════════ */}
+      <SectionTitle>TopBar</SectionTitle>
+      <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+        <TopBar
+          showSidebarToggle
+          onSidebarToggle={() => {}}
+          showNavigation
+          onBack={() => {}}
+          onForward={() => {}}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Project-1', href: '#' },
+                { label: 'Compute', href: '#' },
+                { label: 'Instances' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <TopBarAction icon={<IconTerminal2 size={16} stroke={1.5} />} aria-label="Console" />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                aria-label="Notifications"
+                badge
+              />
+            </>
+          }
+        />
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Navigation/TopBar"
+        properties={[
+          { name: 'ShowSidebarToggle', type: 'Boolean', values: 'true | false' },
+          { name: 'ShowNavigation', type: 'Boolean', values: 'true | false' },
+          { name: 'HasActions', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Bar', direction: 'H', gap: '8px', padding: '0 12px', height: '40px' },
+        ]}
+        tokens={[
+          { label: 'Height', value: '40px' },
+          { label: 'BG', value: '--color-surface-default' },
+          { label: 'Border bottom', value: '1px, --color-border-subtle' },
+          { label: 'Action icon size', value: '16px, stroke 1.5' },
+          { label: 'Nav button size', value: '24px × 24px' },
+          { label: 'Badge dot', value: '6px, red (notifications)' },
+        ]}
+        tips={[
+          '구조: SidebarToggle + Navigation(◀▶) + Breadcrumb + Actions. 수평 Auto Layout',
+          'SidebarToggle: 사이드바가 닫혀있을 때만 표시. 클릭 시 사이드바 열림',
+          'Navigation: 뒤로/앞으로 버튼. canGoBack/canGoForward로 비활성화 제어',
+          'Breadcrumb: TopBar 중앙에 배치. flex-1로 남은 공간 차지',
+          'Actions: 우측에 아이콘 버튼들. TopBarAction 컴포넌트로 생성',
+          'TopBarAction의 badge: 빨간 dot으로 알림 표시. Boolean 속성',
+        ]}
+      />
+
+      {/* ═══════════════════════════════════════════
+          LAYOUT & UTILITY
+          ═══════════════════════════════════════════ */}
+      <CategoryHeader>Layout &amp; Utility</CategoryHeader>
+
+      {/* ════════════════ SKELETON ════════════════ */}
+      <SectionTitle>Skeleton</SectionTitle>
+      <div className="flex flex-col gap-6">
+        <SubTitle>Basic Variants</SubTitle>
+        <div className="flex flex-wrap gap-6 items-end">
+          <VStack gap={1}>
+            <StateLabel>Text (3 lines)</StateLabel>
+            <SkeletonText lines={3} />
+          </VStack>
+          <VStack gap={1}>
+            <StateLabel>Rectangular</StateLabel>
+            <Skeleton variant="rectangular" width={120} height={80} />
+          </VStack>
+          <VStack gap={1}>
+            <StateLabel>Circular</StateLabel>
+            <Skeleton variant="circular" size={48} />
+          </VStack>
+          <VStack gap={1}>
+            <StateLabel>Rounded</StateLabel>
+            <Skeleton variant="rounded" width={120} height={40} />
+          </VStack>
+        </div>
+        <SubTitle>Table Skeleton</SubTitle>
+        <SkeletonTable rows={3} columns={4} />
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Feedback/Skeleton"
+        properties={[
+          { name: 'Variant', type: 'Variant', values: 'text | circular | rectangular | rounded' },
+          { name: 'Animation', type: 'Variant', values: 'pulse | wave | none' },
+          { name: 'Width', type: 'Text', values: '(px or %)' },
+          { name: 'Height', type: 'Text', values: '(px)' },
+        ]}
+        radius="4px (rectangular/rounded), 9999px (circular), 2px (text)"
+        tokens={[
+          { label: 'BG', value: '--color-surface-muted (shimmer)' },
+          { label: 'Pulse animation', value: 'opacity 0.4 → 1.0, 1.5s ease-in-out infinite' },
+          { label: 'Text height', value: '14px per line' },
+          { label: 'Text gap', value: '8px between lines' },
+        ]}
+        tips={[
+          '데이터 로딩 중 콘텐츠의 위치를 미리 보여주는 플레이스홀더',
+          'Presets: SkeletonText(텍스트 블록), SkeletonAvatar(프로필), SkeletonButton(버튼), SkeletonTable(테이블)',
+          'Figma에서 pulse 애니메이션 재현 불가. 정적 프레임으로 캡처하고 spec에 애니메이션 명시',
+          'loading prop: true일 때 skeleton 표시, false면 children 표시. 조건부 렌더링에 활용',
+          'Table Skeleton: rows × columns 그리드로 자동 생성. 테이블 로딩 상태용',
+        ]}
+      />
+
+      {/* ════════════════ TAG ════════════════ */}
+      <SectionTitle>Tag</SectionTitle>
+      <div className="flex flex-col gap-4">
+        <SubTitle>Variants</SubTitle>
+        <div className="flex flex-wrap gap-2 items-center">
+          <Tag variant="default">Default</Tag>
+          <Tag variant="primary">Primary</Tag>
+          <Tag variant="success">Success</Tag>
+          <Tag variant="warning">Warning</Tag>
+          <Tag variant="danger">Danger</Tag>
+          <Tag variant="info">Info</Tag>
+        </div>
+        <SubTitle>Features</SubTitle>
+        <div className="flex flex-wrap gap-2 items-center">
+          <Tag variant="primary" closable onClose={() => {}}>
+            Closable
+          </Tag>
+          <Tag variant="default" icon={<IconTag size={12} />}>
+            With Icon
+          </Tag>
+          <Tag variant="primary" rounded>
+            Rounded
+          </Tag>
+          <Tag variant="default" outline>
+            Outline
+          </Tag>
+          <Tag variant="default" disabled>
+            Disabled
+          </Tag>
+        </div>
+        <SubTitle>Sizes</SubTitle>
+        <div className="flex flex-wrap gap-2 items-center">
+          <Tag size="sm">Small</Tag>
+          <Tag size="md">Medium</Tag>
+          <Tag size="lg">Large</Tag>
+        </div>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Data/Tag"
+        properties={[
+          {
+            name: 'Variant',
+            type: 'Variant',
+            values: 'default | primary | success | warning | danger | info',
+          },
+          { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
+          { name: 'Closable', type: 'Boolean', values: 'true | false' },
+          { name: 'Rounded', type: 'Boolean', values: 'true | false' },
+          { name: 'Outline', type: 'Boolean', values: 'true | false' },
+          { name: 'Icon', type: 'Instance swap', values: 'icon slot' },
+          { name: 'Label', type: 'Text', values: '"Tag"' },
+        ]}
+        autoLayout={[
+          { label: 'SM', direction: 'H', gap: '4px', padding: '2px 6px' },
+          { label: 'MD', direction: 'H', gap: '4px', padding: '4px 8px' },
+          { label: 'LG', direction: 'H', gap: '4px', padding: '4px 12px' },
+        ]}
+        radius="4px (--primitive-radius-sm), rounded=true 시 9999px"
+        tokens={[
+          { label: 'Default bg', value: '--color-surface-subtle' },
+          { label: 'Default text', value: '--color-text-default' },
+          { label: 'Primary bg', value: '--color-state-info-bg' },
+          { label: 'Primary text', value: '--color-state-info' },
+          { label: 'Success bg', value: '--color-state-success-bg' },
+          { label: 'Danger bg', value: '--color-state-danger-bg' },
+          { label: 'Close icon', value: 'IconX, 10px' },
+          { label: 'Outline border', value: '1px, variant별 색상' },
+        ]}
+        tips={[
+          'Badge와 유사하나 closable/clickable 인터랙션 지원. 필터 태그, 카테고리 등에 사용',
+          'rounded: pill 형태 (radius 9999px). 기본은 rounded-sm',
+          'outline: 배경 투명 + border만 표시',
+          'closable: 우측에 X 아이콘. 클릭 시 onClose 콜백',
+          'TagGroup: 여러 Tag를 감싸는 래퍼. gap sm/md/lg 지원',
+          'Badge vs Tag vs Chip: Badge(읽기 전용), Tag(closable/clickable), Chip(선택/필터)',
+        ]}
+      />
+
+      {/* ════════════════ DISCLOSURE ════════════════ */}
+      <SectionTitle>Disclosure</SectionTitle>
+      <div className="max-w-lg flex flex-col gap-4">
+        <Disclosure title="Default (collapsed)">
+          <div className="text-body-md text-[var(--color-text-muted)]">
+            접기/펼치기가 가능한 콘텐츠 영역입니다.
+          </div>
+        </Disclosure>
+        <Disclosure title="Default Open" defaultOpen>
+          <div className="text-body-md text-[var(--color-text-muted)]">
+            기본으로 열려있는 Disclosure입니다. 접기 가능합니다.
+          </div>
+        </Disclosure>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Feedback/Disclosure"
+        properties={[
+          { name: 'State', type: 'Variant', values: 'collapsed | expanded' },
+          { name: 'Title', type: 'Text', values: '"Section Title"' },
+          { name: 'DefaultOpen', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Container', direction: 'V', gap: '0', padding: '0' },
+          { label: 'Trigger', direction: 'H', gap: '8px', padding: '8px 0' },
+        ]}
+        tokens={[
+          { label: 'Chevron', value: 'IconChevronDown, 14px, 180° rotation on expand' },
+          { label: 'Title font', value: 'label-md (12px medium)' },
+          { label: 'Border', value: 'border-b border-subtle (trigger bottom)' },
+        ]}
+        tips={[
+          '구조: Trigger(Title + Chevron) + Panel(Content). 수직 Auto Layout',
+          'Trigger 클릭 시 Panel 토글. Chevron 아이콘이 회전(0° → 180°)',
+          'collapsed: Trigger만 표시, expanded: Trigger + Panel 모두 표시',
+          'Figma에서 State를 Variant로: collapsed / expanded',
+          'Controlled 모드: open + onChange prop으로 외부 상태 제어 가능',
+          'Figma 캡처 페이지의 FigmaGuide 블록 등에서 실제 사용 중',
+        ]}
+      />
+
+      {/* ════════════════ COPY BUTTON ════════════════ */}
+      <SectionTitle>CopyButton / Copyable</SectionTitle>
+      <div className="flex flex-col gap-4">
+        <SubTitle>CopyButton</SubTitle>
+        <div className="flex flex-wrap gap-4 items-center">
+          <CopyButton value="copied-text" variant="ghost" size="sm" />
+          <CopyButton value="copied-text" variant="outline" size="sm" label="Copy ID" />
+        </div>
+        <SubTitle>Copyable (텍스트 + 복사 버튼)</SubTitle>
+        <div className="flex flex-col gap-2">
+          <Copyable value="i-0123456789abcdef" />
+          <Copyable
+            value="very-long-resource-identifier-that-should-be-truncated"
+            truncate
+            maxWidth="200px"
+          />
+        </div>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Utility/CopyButton"
+        properties={[
+          { name: 'Variant', type: 'Variant', values: 'default | ghost | outline' },
+          { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
+          { name: 'State', type: 'Variant', values: 'default | copied' },
+          { name: 'IconOnly', type: 'Boolean', values: 'true | false' },
+          { name: 'Label', type: 'Text', values: '"Copy" (optional)' },
+        ]}
+        autoLayout={[{ label: 'Copyable', direction: 'H', gap: '4px', padding: '0' }]}
+        radius="6px (--primitive-radius-md)"
+        tokens={[
+          { label: 'Copy icon', value: 'IconCopy, 12px' },
+          { label: 'Success icon', value: 'IconCheck, green, 2000ms duration' },
+        ]}
+        tips={[
+          'CopyButton: 아이콘(또는 아이콘+텍스트) 클릭 시 클립보드에 복사. 성공 시 체크 아이콘으로 전환',
+          'Copyable: 텍스트 + CopyButton 조합. ID, URL 등 복사 가능한 값 표시용',
+          'truncate: 긴 텍스트를 말줄임 처리. maxWidth로 최대 너비 제한',
+          'ghost: 배경 없음 (기본). outline: 테두리만. default: 배경+테두리',
+          'successDuration: 체크 아이콘 표시 시간 (기본 2000ms)',
+        ]}
+      />
+
+      {/* ════════════════ PASSWORD ════════════════ */}
+      <SectionTitle>Password</SectionTitle>
+      <div className="flex flex-col gap-4 max-w-sm">
+        <VStack gap={1}>
+          <StateLabel>Default</StateLabel>
+          <Password placeholder="Enter password" fullWidth />
+        </VStack>
+        <VStack gap={1}>
+          <StateLabel>With Value</StateLabel>
+          <Password defaultValue="mypassword123" fullWidth />
+        </VStack>
+        <VStack gap={1}>
+          <StateLabel>Disabled</StateLabel>
+          <Password placeholder="Disabled" disabled fullWidth />
+        </VStack>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Form/Password"
+        properties={[
+          { name: 'Size', type: 'Variant', values: 'sm | md' },
+          { name: 'State', type: 'Variant', values: 'default | focus | error | disabled' },
+          { name: 'Visible', type: 'Boolean', values: 'true | false' },
+          { name: 'ShowToggle', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'SM', direction: 'H', gap: '—', padding: '0 10px', height: '28px' },
+          { label: 'MD', direction: 'H', gap: '—', padding: '0 10px', height: '32px' },
+        ]}
+        radius="6px (--primitive-radius-md)"
+        tokens={[
+          { label: 'Toggle icon', value: 'IconEye / IconEyeOff, 14px' },
+          { label: 'Font', value: 'password dots (type=password) 또는 일반 텍스트' },
+        ]}
+        tips={[
+          'Input 기반 + 우측에 비밀번호 표시/숨김 토글 버튼',
+          '토글 클릭: type=password ↔ type=text 전환. 아이콘도 Eye ↔ EyeOff 전환',
+          'Figma에서 Toggle 버튼 영역을 Boolean으로 제어 (ShowToggle)',
+          'State 처리는 Input과 동일 (focus ring, error border, disabled bg)',
+        ]}
+      />
+
+      {/* ════════════════ SNB MENU ITEM ════════════════ */}
+      <SectionTitle>SNBMenuItem</SectionTitle>
+      <div className="flex gap-6 items-start">
+        <VStack gap={2}>
+          <StateLabel>Icon Type — States</StateLabel>
+          <div className="flex gap-2 bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
+            <SNBMenuItem type="icon" icon={<IconHome size={20} />} status="default" />
+            <SNBMenuItem type="icon" icon={<IconServer size={20} />} status="hover" />
+            <SNBMenuItem type="icon" icon={<IconBrandDocker size={20} />} status="selected" />
+          </div>
+        </VStack>
+        <VStack gap={2}>
+          <StateLabel>Text Type — States</StateLabel>
+          <div className="flex flex-col gap-1 bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)] w-[200px]">
+            <SNBMenuItem type="text" text="Instances" status="default" />
+            <SNBMenuItem type="text" text="Volumes" status="hover" />
+            <SNBMenuItem type="text" text="Networks" status="selected" />
+          </div>
+        </VStack>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Navigation/SNBMenuItem"
+        properties={[
+          { name: 'Type', type: 'Variant', values: 'icon | text' },
+          { name: 'Status', type: 'Variant', values: 'default | hover | selected' },
+          { name: 'Icon', type: 'Instance swap', values: 'icon slot (type=icon)' },
+          { name: 'Text', type: 'Text', values: '"Menu Item" (type=text)' },
+        ]}
+        autoLayout={[
+          { label: 'Icon', direction: 'H', gap: '0', padding: '8px', height: '40px' },
+          { label: 'Text', direction: 'H', gap: '8px', padding: '8px 12px', height: '36px' },
+        ]}
+        radius="6px (--primitive-radius-md)"
+        tokens={[
+          { label: 'Default bg', value: 'transparent' },
+          { label: 'Hover bg', value: '--color-surface-hover' },
+          { label: 'Selected bg', value: '--color-surface-hover' },
+          { label: 'Selected icon', value: '--color-action-primary' },
+          { label: 'Icon size', value: '20px (default), iconSize prop으로 변경 가능' },
+        ]}
+        tips={[
+          '좁은 사이드바(icon sidebar)와 넓은 사이드바(text sidebar)에서 각각 사용',
+          'Icon type: 40×40px 정사각형. 아이콘만 중앙 정렬',
+          'Text type: 좌정렬 텍스트. 선택 시 font-weight medium + primary color',
+          'ContainerSidebar에서 아이콘 사이드바(40px)에는 icon type, 메뉴(200px)에는 text type 사용',
+          'Figma에서 Type + Status 조합으로 총 6개 Variant 생성',
+        ]}
+      />
+
+      {/* ════════════════ SELECTION INDICATOR ════════════════ */}
+      <SectionTitle>SelectionIndicator</SectionTitle>
+      <div className="flex flex-col gap-4 max-w-lg">
+        <VStack gap={1}>
+          <StateLabel>With Selected Items</StateLabel>
+          <SelectionIndicator
+            selectedItems={[
+              { id: '1', label: 'nginx-pod-01' },
+              { id: '2', label: 'redis-cache' },
+            ]}
+          />
+        </VStack>
+        <VStack gap={1}>
+          <StateLabel>Empty</StateLabel>
+          <SelectionIndicator selectedItems={[]} emptyText="No items selected" />
+        </VStack>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Data/SelectionIndicator"
+        properties={[
+          { name: 'HasItems', type: 'Boolean', values: 'true | false' },
+          { name: 'Removable', type: 'Boolean', values: 'true | false' },
+          { name: 'Error', type: 'Boolean', values: 'true | false' },
+          { name: 'EmptyText', type: 'Text', values: '"No items selected"' },
+        ]}
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '4px', padding: '8px 12px' }]}
+        radius="6px (--primitive-radius-md)"
+        tokens={[
+          { label: 'BG', value: '--color-surface-subtle' },
+          { label: 'Border', value: '--color-border-default, 1px' },
+          { label: 'Error border', value: '--color-state-danger' },
+          { label: 'Chip', value: 'Chip 컴포넌트 인스턴스 사용' },
+        ]}
+        tips={[
+          '선택된 항목들을 Chip으로 표시. 항목 제거 가능 (Removable)',
+          'Empty 상태: emptyText 표시 (연한 텍스트)',
+          'Error 상태: border가 danger 색상, 하단에 에러 메시지 표시',
+          'rightContent: 우측에 추가 콘텐츠(버튼 등) 배치 가능',
+          'ListToolbar에서 벌크 액션과 함께 사용',
+        ]}
+      />
+
+      {/* ════════════════ WINDOW CONTROL ════════════════ */}
+      <SectionTitle>WindowControl</SectionTitle>
+      <div className="flex flex-wrap gap-8 items-start">
+        <VStack gap={2}>
+          <StateLabel>Individual Controls</StateLabel>
+          <div className="flex gap-2 items-center bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
+            <WindowControl type="close" />
+            <WindowControl type="minimize" />
+            <WindowControl type="maximize" />
+          </div>
+        </VStack>
+        <VStack gap={2}>
+          <StateLabel>Disabled</StateLabel>
+          <div className="flex gap-2 items-center bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
+            <WindowControl type="close" disabled />
+            <WindowControl type="minimize" disabled />
+            <WindowControl type="maximize" disabled />
+          </div>
+        </VStack>
+      </div>
+
+      <FigmaGuide
+        figmaName="TDS/Navigation/WindowControl"
+        properties={[
+          { name: 'Type', type: 'Variant', values: 'close | minimize | maximize' },
+          { name: 'Disabled', type: 'Boolean', values: 'true | false' },
+        ]}
+        autoLayout={[
+          { label: 'Controls Group', direction: 'H', gap: '8px', padding: '0' },
+          { label: 'Button', direction: 'H', gap: '0', padding: '0', height: '12px' },
+        ]}
+        radius="9999px (circle)"
+        tokens={[
+          { label: 'Close', value: '#FF5F57 (macOS red)' },
+          { label: 'Minimize', value: '#FEBC2E (macOS yellow)' },
+          { label: 'Maximize', value: '#28C840 (macOS green)' },
+          { label: 'Disabled', value: '--color-border-default (gray)' },
+          { label: 'Size', value: '12px × 12px' },
+        ]}
+        tips={[
+          'macOS 스타일의 창 컨트롤 버튼 (빨강/노랑/초록 원형)',
+          'TabBar 좌측에 배치되는 것이 일반적 (WindowControls 그룹)',
+          'Hover 시 아이콘(X, −, ↗) 표시. 기본은 색상 원만 표시',
+          'Disabled: 모든 버튼이 동일한 회색으로 변경. 비활성 창 표현',
+          'Figma에서 12×12px 원형 프레임. 각 Type별 색상 + hover 상태에서 아이콘 overlay',
         ]}
       />
     </div>

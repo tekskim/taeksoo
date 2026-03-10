@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -40,7 +41,7 @@ import {
 
 interface PersistentVolumeClaimRow {
   id: string;
-  status: 'Bound' | 'Pending' | 'Lost';
+  status: string;
   name: string;
   namespace: string;
   volume: string;
@@ -58,7 +59,7 @@ interface PersistentVolumeClaimRow {
 const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   {
     id: '1',
-    status: 'Bound',
+    status: 'OK',
     name: 'cert-manager-tls-wildcard-production-domain-claim',
     namespace: 'default',
     volume: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
@@ -70,7 +71,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   },
   {
     id: '2',
-    status: 'Bound',
+    status: 'True',
     name: 'data-postgresql-primary-statefulset-0-volume-claim',
     namespace: 'database',
     volume: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
@@ -82,7 +83,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   },
   {
     id: '3',
-    status: 'Bound',
+    status: 'None',
     name: 'redis-cluster-sentinel-persistent-data-01',
     namespace: 'cache',
     volume: 'pvc-redis-data-001',
@@ -94,7 +95,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'pending-analytics-logs-storage-volume-claim',
     namespace: 'default',
     volume: '',
@@ -106,7 +107,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
   },
   {
     id: '5',
-    status: 'Bound',
+    status: 'ImagePullBackOff',
     name: 'elasticsearch-cluster-data-node-statefulset-0',
     namespace: 'logging',
     volume: 'pvc-elastic-001',
@@ -204,11 +205,13 @@ export function PersistentVolumeClaimsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

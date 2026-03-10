@@ -21,6 +21,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -43,7 +44,7 @@ import {
 
 interface NodeRow {
   id: string;
-  status: 'Ready' | 'NotReady' | 'Unknown';
+  status: string;
   name: string;
   roles: string;
   version: string;
@@ -63,7 +64,7 @@ interface NodeRow {
 const nodesData: NodeRow[] = [
   {
     id: '1',
-    status: 'Ready',
+    status: 'OK',
     name: 'master-control-plane-high-availability-node-01',
     roles: 'Control Plane',
     version: 'v1.34',
@@ -77,7 +78,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '2',
-    status: 'Ready',
+    status: 'OK',
     name: 'worker-node-production-cluster-az1-pool-001',
     roles: 'Worker',
     version: 'v1.34',
@@ -91,7 +92,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '3',
-    status: 'Ready',
+    status: 'True',
     name: 'worker-node-production-cluster-az1-pool-002',
     roles: 'Worker',
     version: 'v1.34',
@@ -105,7 +106,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '4',
-    status: 'Ready',
+    status: 'Raw',
     name: 'worker-node-production-cluster-az2-pool-003',
     roles: 'Worker',
     version: 'v1.34',
@@ -119,7 +120,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '5',
-    status: 'NotReady',
+    status: 'None',
     name: 'worker-node-production-cluster-az2-pool-004',
     roles: 'Worker',
     version: 'v1.34',
@@ -133,7 +134,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '6',
-    status: 'Ready',
+    status: 'ImagePullBackOff',
     name: 'worker-node-gpu-inference-accelerator-pool-001',
     roles: 'Worker, GPU',
     version: 'v1.34',
@@ -224,11 +225,13 @@ export function ContainerNodesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

@@ -21,6 +21,8 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -42,7 +44,7 @@ import {
 interface ServiceData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
   clusterIP: string;
@@ -54,7 +56,7 @@ interface ServiceData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   image: string;
   ready: string;
@@ -97,7 +99,7 @@ const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default',
     type: 'ClusterIP',
     clusterIP: '10.11.111.10',
@@ -117,7 +119,7 @@ const mockServiceData: Record<string, ServiceData> = {
   '2': {
     id: '2',
     name: 'nginx-service',
-    status: 'Running',
+    status: 'True',
     namespace: 'ingress-nginx',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
@@ -136,7 +138,7 @@ const mockServiceData: Record<string, ServiceData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'deploymentName-77f6bb9c69-4ww7f',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -147,12 +149,34 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'deploymentName-77f6bb9c69-5xx8g',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 0,
     ip: '10.11.0.12',
+    node: 'nodeName-2',
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    name: 'deploymentName-77f6bb9c69-6yy9h',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '4',
+    status: 'ImagePullBackOff',
+    name: 'deploymentName-77f6bb9c69-7zz0i',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 3,
+    ip: '10.11.0.14',
     node: 'nodeName-2',
     createdAt: 'Jul 25, 2025',
   },
@@ -204,7 +228,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'True',
+    status: 'None',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -266,12 +290,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -511,8 +537,16 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      flex: 1,
+      width: fixedColumns.statusLabel,
+      align: 'left',
       sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',
@@ -711,15 +745,14 @@ export function ContainerServiceDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={service.status === 'Running' ? 'Active' : service.status}
-              status={
-                service.status === 'Running'
-                  ? 'active'
-                  : service.status === 'Pending'
-                    ? 'building'
-                    : service.status === 'Error'
-                      ? 'error'
-                      : 'muted'
+              value={
+                <Tooltip content={service.status === 'Running' ? 'Active' : service.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {service.status === 'Running' ? 'Active' : service.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
@@ -739,18 +772,44 @@ export function ContainerServiceDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(service.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(service.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(service.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(service.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(service.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(service.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -760,18 +819,44 @@ export function ContainerServiceDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(service.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(service.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(service.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(service.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(service.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(service.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>

@@ -80,6 +80,7 @@ const meta: Meta<typeof Table> = {
 ### 기능
 - **정렬**: 컬럼별 오름차순/내림차순 정렬
 - **선택**: 단일/다중 행 선택
+- **컬럼 리사이즈**: 드래그로 컬럼 너비 조절, 더블클릭으로 콘텐츠 자동 맞춤, 키보드(ArrowLeft/Right) 지원
 - **커스텀 렌더링**: 셀 내용 커스터마이징
 - **스크롤**: 고정 헤더 + 본문 스크롤
 
@@ -92,6 +93,7 @@ const meta: Meta<typeof Table> = {
 - 표준 HTML table 구조 사용
 - 정렬 버튼에 aria-sort 적용
 - 선택 체크박스 레이블 자동 생성
+- 리사이즈 핸들: role="separator", aria-orientation="vertical", 키보드 탐색 지원
 
 ### 예시
 \`\`\`tsx
@@ -291,6 +293,60 @@ export const ColumnAlignment: Story = {
     ];
 
     return <Table columns={alignedColumns} data={sampleUsers} rowKey="id" />;
+  },
+};
+
+// Resizable Columns
+export const Resizable: Story = {
+  render: function ResizableTable() {
+    const resizableColumns: TableColumn<User>[] = [
+      { key: 'name', label: 'Name', sortable: true },
+      { key: 'email', label: 'Email' },
+      { key: 'role', label: 'Role' },
+      { key: 'status', label: 'Status', width: '100px', align: 'center' },
+      { key: 'createdAt', label: 'Created at' },
+    ];
+
+    return (
+      <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
+        <p className="text-body-sm text-[var(--color-text-muted)]">
+          Drag column edges to resize. Double-click to auto-fit content width.
+        </p>
+        <Table
+          columns={resizableColumns}
+          data={sampleUsers}
+          rowKey="id"
+          resizable
+          onColumnResize={(key, width) => console.log(`Column ${key} resized to ${width}px`)}
+        />
+      </div>
+    );
+  },
+};
+
+// Resizable with Selection
+export const ResizableWithSelection: Story = {
+  render: function ResizableSelectableTable() {
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+    const columns: TableColumn<User>[] = [
+      { key: 'name', label: 'Name', sortable: true },
+      { key: 'email', label: 'Email' },
+      { key: 'role', label: 'Role' },
+      { key: 'createdAt', label: 'Created at', align: 'right' },
+    ];
+
+    return (
+      <Table
+        columns={columns}
+        data={sampleUsers}
+        rowKey="id"
+        resizable
+        selectable
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      />
+    );
   },
 };
 

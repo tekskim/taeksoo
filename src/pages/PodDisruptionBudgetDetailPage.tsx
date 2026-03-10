@@ -14,6 +14,8 @@ import {
   ContextMenu,
   PageShell,
   DetailHeader,
+  Badge,
+  Tooltip,
   Select,
   Input,
   NumberInput,
@@ -72,7 +74,7 @@ interface RecentEvent {
 interface PodDisruptionBudgetData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -93,7 +95,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
   '1': {
     id: '1',
     name: 'poddisruptionbudgetName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: { app: 'web' },
@@ -144,7 +146,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
   '2': {
     id: '2',
     name: 'web-pdb',
-    status: 'Active',
+    status: 'True',
     namespace: 'production',
     createdAt: 'Nov 9, 2025',
     labels: { env: 'production' },
@@ -515,13 +517,14 @@ export function PodDisruptionBudgetDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={pdbData.status}
-              status={
-                pdbData.status === 'Active'
-                  ? 'active'
-                  : pdbData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={pdbData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {pdbData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

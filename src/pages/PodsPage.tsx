@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -55,7 +56,7 @@ interface PodRow {
 const podsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-deployment-7fb96c846b-x2vnl',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -66,7 +67,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'OK',
     name: 'backend-api-gateway-service-5d4f8b7c9a-k8m2n',
     namespace: 'default',
     image: 'nginx:1.27',
@@ -110,7 +111,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '6',
-    status: 'Running',
+    status: 'True',
     name: 'postgresql-primary-replication-statefulset-0',
     namespace: 'database',
     image: 'postgres:15',
@@ -121,7 +122,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '7',
-    status: 'Succeeded',
+    status: 'Raw',
     name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'database',
     image: 'migration:v1.0',
@@ -132,7 +133,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '8',
-    status: 'Running',
+    status: 'None',
     name: 'monitoring-node-exporter-prometheus-daemonset-node1',
     namespace: 'monitoring',
     image: 'prometheus-agent:v2.45',
@@ -245,11 +246,13 @@ export function PodsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

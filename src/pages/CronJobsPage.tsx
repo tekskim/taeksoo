@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +42,7 @@ import {
 
 interface CronJobRow {
   id: string;
-  status: 'Active' | 'Suspended' | 'Running' | 'Failed';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -56,7 +57,7 @@ interface CronJobRow {
 const cronJobsData: CronJobRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'automated-database-backup-daily-schedule-cronjob',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -66,7 +67,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'OK',
     name: 'database-backup-nightly-incremental-schedule-cronjob',
     namespace: 'database',
     image: 'backup-tool:v2.1',
@@ -76,7 +77,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'log-rotation-cleanup-weekly-maintenance-cronjob',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.5',
@@ -86,7 +87,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '4',
-    status: 'Suspended',
+    status: 'InvalidImageName',
     name: 'analytics-weekly-report-generator-schedule-cronjob',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
@@ -96,7 +97,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'data-sync-incremental-replication-schedule-cronjob',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
@@ -106,7 +107,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '6',
-    status: 'Active',
+    status: 'True',
     name: 'search-index-rebuild-weekly-full-sync-cronjob',
     namespace: 'search',
     image: 'indexer:v4.1',
@@ -116,7 +117,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '7',
-    status: 'Suspended',
+    status: 'Raw',
     name: 'cache-warmup-daily-preload-schedule-cronjob',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
@@ -126,7 +127,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '8',
-    status: 'Active',
+    status: 'None',
     name: 'monitoring-metrics-collector-aggregation-cronjob',
     namespace: 'monitoring',
     image: 'metrics:v1.0',
@@ -231,11 +232,13 @@ export function CronJobsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

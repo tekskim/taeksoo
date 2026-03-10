@@ -1,8 +1,136 @@
 import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Badge, Button, HStack, Popover, VStack } from '@/design-system';
+
+function TableWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
+  return (
+    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+      {children}
+    </td>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
+}
+
+function SubSectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
+}
+
+function Prose({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
+      {children}
+    </div>
+  );
+}
+
+function PopoverPageGuidelines() {
+  return (
+    <VStack gap={10}>
+      <VStack gap={4}>
+        <VStack gap={2}>
+          <SubSectionTitle>Popover vs Tooltip vs Drawer 선택 기준</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th>조건</Th>
+                <Th>권장 컴포넌트</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>텍스트 설명만 필요, 비인터랙티브</Td>
+                <Td>
+                  <strong>Tooltip</strong>
+                </Td>
+              </tr>
+              <tr>
+                <Td>간단한 인터랙티브 콘텐츠 (폼 1~2개, 버튼)</Td>
+                <Td>
+                  <strong>Popover</strong>
+                </Td>
+              </tr>
+              <tr>
+                <Td>복잡한 폼 또는 상세 콘텐츠</Td>
+                <Td>
+                  <strong>Drawer</strong>
+                </Td>
+              </tr>
+              <tr>
+                <Td>확인/결정이 필요한 액션</Td>
+                <Td>
+                  <strong>Modal</strong>
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
+        <VStack gap={4}>
+          <SectionTitle>Usage Guidelines</SectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>트리거</strong>: Click(기본) 또는 Hover. 인터랙티브 콘텐츠는 반드시 Click
+                트리거를 사용합니다.
+              </li>
+              <li>
+                <strong>닫기</strong>: 외부 클릭 또는 ESC 키로 닫힘.{' '}
+                <code>closeOnOutsideClick</code>, <code>closeOnEscape</code> 기본 true.
+              </li>
+              <li>
+                <strong>위치</strong>: 트리거 요소 기준으로 자동 배치. 뷰포트 밖으로 나가면 반대
+                방향으로 flip.
+              </li>
+              <li>
+                <strong>너비</strong>: 권장 너비 280px. 최대 viewport 너비의 50% 이내로 제한합니다.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      <DosDonts
+        doItems={[
+          'Popover 내 콘텐츠는 간결하게 유지합니다 (필드 3개 이하).',
+          '인터랙티브 콘텐츠에는 aria-haspopup="dialog"를 설정합니다.',
+          'Hover 트리거 시 적절한 delay(200ms)를 설정하여 오작동을 방지합니다.',
+        ]}
+        dontItems={[
+          'Popover 안에 또 다른 Popover를 중첩하지 않습니다.',
+          '복잡한 폼(필드 4개 이상)을 Popover에 넣지 않습니다 (Drawer 사용).',
+          'Hover 트리거로 인터랙티브 콘텐츠를 제공하지 않습니다 (Click 사용).',
+        ]}
+      />
+    </VStack>
+  );
+}
 
 function StaticPopover({
   content,
@@ -140,6 +268,17 @@ export function PopoverPage() {
     <ComponentPageTemplate
       title="Popover"
       description="Interactive overlay that can contain complex content"
+      whenToUse={[
+        '버튼 클릭 시 폼, 메뉴, 설정 등 인터랙티브 콘텐츠를 표시할 때',
+        '컨텍스트에 따라 추가 정보를 제공하면서 사용자 인터랙션(입력, 선택)이 필요할 때',
+        '메인 콘텐츠를 가리지 않으면서 보조 콘텐츠를 트리거 요소 근처에 표시할 때',
+      ]}
+      whenNotToUse={[
+        '텍스트만 표시하고 인터랙션이 필요 없는 경우 → Tooltip 사용',
+        '전체 화면을 차단하고 중요한 확인이 필요한 경우 → Modal 사용',
+        '메뉴 아이템 목록만 표시하는 경우 → ContextMenu 사용',
+        '긴 폼이나 상세 정보를 표시하는 경우 → Drawer 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`<Popover
@@ -249,107 +388,7 @@ export function PopoverPage() {
           </VStack>
         </VStack>
       }
-      guidelines={
-        <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                  Popover vs Tooltip vs Drawer 선택 기준
-                </h4>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-body-sm border-collapse">
-                    <thead>
-                      <tr className="border-b border-[var(--color-border-default)]">
-                        <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                          조건
-                        </th>
-                        <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                          권장 컴포넌트
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          텍스트 설명만 필요, 비인터랙티브
-                        </td>
-                        <td className="py-2 font-medium text-[var(--color-text-default)]">
-                          Tooltip
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          간단한 인터랙티브 콘텐츠 (폼 1~2개, 버튼)
-                        </td>
-                        <td className="py-2 font-medium text-[var(--color-text-default)]">
-                          Popover
-                        </td>
-                      </tr>
-                      <tr className="border-b border-[var(--color-border-subtle)]">
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          복잡한 폼 또는 상세 콘텐츠
-                        </td>
-                        <td className="py-2 font-medium text-[var(--color-text-default)]">
-                          Drawer
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                          확인/결정이 필요한 액션
-                        </td>
-                        <td className="py-2 font-medium text-[var(--color-text-default)]">Modal</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <h4 className="text-heading-h6 text-[var(--color-text-default)]">사용 규칙</h4>
-                <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                  <li>
-                    <strong>트리거</strong>: Click(기본) 또는 Hover. 인터랙티브 콘텐츠는 반드시
-                    Click 트리거를 사용합니다.
-                  </li>
-                  <li>
-                    <strong>닫기</strong>: 외부 클릭 또는 ESC 키로 닫힘.{' '}
-                    <code>closeOnOutsideClick</code>, <code>closeOnEscape</code> 기본 true.
-                  </li>
-                  <li>
-                    <strong>위치</strong>: 트리거 요소 기준으로 자동 배치. 뷰포트 밖으로 나가면 반대
-                    방향으로 flip.
-                  </li>
-                  <li>
-                    <strong>너비</strong>: 권장 너비 280px. 최대 viewport 너비의 50% 이내로
-                    제한합니다.
-                  </li>
-                </ul>
-              </VStack>
-            </VStack>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Popover 내 콘텐츠는 간결하게 유지합니다 (필드 3개 이하).</li>
-                <li>
-                  인터랙티브 콘텐츠에는 <code>aria-haspopup=&quot;dialog&quot;</code>를 설정합니다.
-                </li>
-                <li>Hover 트리거 시 적절한 delay(200ms)를 설정하여 오작동을 방지합니다.</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-              <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">Don&apos;t</h4>
-              <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
-                <li>Popover 안에 또 다른 Popover를 중첩하지 않습니다.</li>
-                <li>복잡한 폼(필드 4개 이상)을 Popover에 넣지 않습니다 (Drawer 사용).</li>
-                <li>Hover 트리거로 인터랙티브 콘텐츠를 제공하지 않습니다 (Click 사용).</li>
-              </ul>
-            </div>
-          </div>
-        </VStack>
-      }
+      guidelines={<PopoverPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>padding: 12px</code> · <code>radius: 8px</code> · <code>border: 1px</code> ·{' '}

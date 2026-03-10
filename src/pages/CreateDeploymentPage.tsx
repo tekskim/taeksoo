@@ -28,6 +28,7 @@ import {
   WizardSectionStatusIcon,
   FilterSearchInput,
   Badge,
+  fixedColumns,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -64,7 +65,7 @@ const NAMESPACE_OPTIONS = [
 interface NamespaceData {
   id: string;
   name: string;
-  status: 'active' | 'error' | 'building';
+  status: string;
   description: string;
   createdAt: string;
 }
@@ -73,70 +74,77 @@ const MOCK_NAMESPACES: NamespaceData[] = [
   {
     id: '1',
     name: 'cattle-clusters-system',
-    status: 'active',
+    status: 'OK',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
     name: 'cattle-system',
-    status: 'active',
+    status: 'OK',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '3',
     name: 'cattle-fleet-local-system',
-    status: 'active',
+    status: 'OK',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '4',
     name: 'cattle-fleet-system',
-    status: 'active',
+    status: 'True',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
     name: 'cattle-provisioning-capi-system',
-    status: 'active',
+    status: 'True',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '6',
     name: 'cert-manager',
-    status: 'active',
+    status: 'Raw',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '7',
     name: 'default',
-    status: 'active',
+    status: 'Raw',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '8',
     name: 'kube-node-lease',
-    status: 'active',
+    status: 'None',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '9',
     name: 'kube-public',
-    status: 'active',
+    status: 'None',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
   {
     id: '10',
     name: 'kube-system',
-    status: 'active',
+    status: 'CreateContainerConfigError',
+    description: 'description text',
+    createdAt: 'Nov 10, 2025',
+  },
+  {
+    id: '11',
+    name: 'monitoring',
+    status: 'ImagePullBackOff',
     description: 'description text',
     createdAt: 'Nov 10, 2025',
   },
@@ -3323,16 +3331,13 @@ export function CreateDeploymentPage() {
                                       key: 'status',
                                       label: 'Status',
                                       width: fixedColumns.statusLabel,
-                                      align: 'center',
+                                      align: 'left',
                                       render: (value: string) => (
-                                        <Badge
-                                          theme="white"
-                                          size="sm"
-                                          className="max-w-[80px]"
-                                          title={value}
-                                        >
-                                          <span className="truncate">{value}</span>
-                                        </Badge>
+                                        <Tooltip content={value}>
+                                          <Badge theme="white" size="sm" className="max-w-[80px]">
+                                            <span className="truncate">{value}</span>
+                                          </Badge>
+                                        </Tooltip>
                                       ),
                                     },
                                     {

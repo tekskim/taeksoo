@@ -395,25 +395,29 @@ export function UXWritingGuidePage() {
               <SubSectionTitle>3-2. 날짜, 시간</SubSectionTitle>
               <Prose>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>기본 시간은 사용자의 로컬 시간을 기준으로 표시</li>
-                  <li>오전/오후 구분 없이 24시간 표기법 적용</li>
-                  <li>화면 목적에 따라 시간 표기 방식은 선택적으로 적용</li>
+                  <li>기본 시간은 사용자의 로컬 시간을 기준으로 표시한다.</li>
+                  <li>오전/오후 구분 없이 24시간 표기법을 적용한다.</li>
+                  <li>화면 목적에 따라 시간 표기 방식은 선택적으로 적용한다.</li>
                   <li>
-                    시각적 정렬과 일관성을 위해 10 미만의 숫자 앞에는 &quot;0&quot;을 붙인다.{' '}
-                    <Bad>9시(❌)</Bad> → <Good>09시(✅)</Good>
+                    정렬이 필요한 UI(테이블, 로그 등)에서는 10 미만의 숫자 앞에는 &quot;0&quot;을
+                    붙인다. <Bad>9시(❌)</Bad> → <Good>09시(⭕️)</Good>
+                    <ul className="list-disc pl-5 mt-1">
+                      <li>단, 설명 문장(헬프 텍스트 등)에서는 자연 표기(9시)를 허용한다.</li>
+                    </ul>
                   </li>
                   <li>
-                    날짜와 시간 사이에는 한 칸 띄어쓰기, 기간 표기 시 물결표(~) 또는 하이픈(–)
-                    앞뒤로 띄어쓰기 없이 표기
+                    날짜와 시간 사이에는 한 칸 띄어쓰고, 기간 표기 시 물결표(~) 또는 하이픈(–)
+                    앞뒤로 띄어쓰기 없이 표기한다.
                   </li>
                 </ul>
               </Prose>
               <TableWrapper>
                 <thead>
                   <tr>
-                    <Th className="w-[120px]">유형</Th>
+                    <Th className="w-[120px]" />
                     <Th>한국어 표기 원칙</Th>
                     <Th>영어 표기 원칙</Th>
+                    <Th>예시</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -423,18 +427,39 @@ export function UXWritingGuidePage() {
                     </Td>
                     <Td>
                       <ul className="list-disc pl-4 space-y-1 text-body-sm">
+                        <li>
+                          점검 시간처럼 글로벌 소통이 필요할 때는 UTC 표기를 추가해 사용합니다.
+                        </li>
+                        <li>
+                          테이블 등 UTC 표기가 의사 결정에 큰 영향을 주지 않고, 공간이 제약될 때는
+                          UTC 표기를 제거해 사용합니다.
+                        </li>
                         <li>(같은 일자) YYYY-MM-DD HH:mm~HH:mm (UTC+N)</li>
-                        <li>(같은 연도) YYYY-MM-DD~MM-DD (UTC+N)</li>
-                        <li>(다른 연도) YYYY-MM-DD~YYYY-MM-DD (UTC+N)</li>
+                        <li>(통일) YYYY-MM-DD~YYYY-MM-DD (UTC+N)</li>
                         <li>(마감일) YYYY-MM-DD HH:mm (UTC+N)까지</li>
                       </ul>
                     </Td>
                     <Td>
                       <ul className="list-disc pl-4 space-y-1 text-body-sm">
+                        <li>
+                          점검 시간처럼 글로벌 소통이 필요할 때는 UTC 표기를 추가해 사용합니다.
+                        </li>
+                        <li>
+                          테이블 등 UTC 표기가 의사 결정에 큰 영향을 주지 않고, 공간이 제약될 때는
+                          UTC 표기를 제거해 사용합니다.
+                        </li>
                         <li>(같은 일자) Mth DD, YYYY HH:mm–HH:mm (UTC+N)</li>
                         <li>(같은 연도) Mth DD–Mth DD, YYYY (UTC+N)</li>
                         <li>(다른 연도) Mth DD, YYYY–Mth DD, YYYY (UTC+N)</li>
                         <li>(마감일) Due by Mth DD, YYYY HH:mm (UTC+N)</li>
+                      </ul>
+                    </Td>
+                    <Td>
+                      <ul className="list-disc pl-4 space-y-1 text-body-sm">
+                        <li>같은 일자, 한국어 → 2026-03-01 14:30~16:00 (UTC+9)</li>
+                        <li>같은 연도, 영어 → Mar 01–Apr 01, 2026 (UTC-5)</li>
+                        <li>다른 연도, 한국어 → 2026-03-01~2027-03-01 (UTC+9)</li>
+                        <li>마감일, 영어 → Due by Mar 01, 2026 (UTC-5)</li>
                       </ul>
                     </Td>
                   </tr>
@@ -442,22 +467,71 @@ export function UXWritingGuidePage() {
                     <Td>
                       <strong>일자(표준형)</strong>
                     </Td>
-                    <Td className="text-body-sm">YYYY-MM-DD HH:mm:ss (UTC+N)</Td>
-                    <Td className="text-body-sm">Mth DD, YYYY HH:mm:ss (UTC+N)</Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          상세 화면, 로그 등 이벤트 발생 시각의 정확한 정보가 필요한 화면에서
+                          사용됩니다.
+                        </li>
+                        <li>YYYY-MM-DD HH:mm:ss (UTC+N)</li>
+                      </ul>
+                    </Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          상세 화면, 로그 등 이벤트 발생 시각의 정확한 정보가 필요한 화면에서
+                          사용됩니다.
+                        </li>
+                        <li>Mth DD, YYYY HH:mm:ss (UTC+N)</li>
+                      </ul>
+                    </Td>
+                    <Td />
                   </tr>
                   <tr>
                     <Td>
                       <strong>일자(축약형)</strong>
                     </Td>
-                    <Td className="text-body-sm">YYYY-MM-DD</Td>
-                    <Td className="text-body-sm">Mth DD, YYYY</Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          테이블, 리소스 요약 정보 등 UTC표기나 시 단위가 의사결정에 큰 영향을 주지
+                          않는 화면에서 사용됩니다.
+                        </li>
+                        <li>YYYY-MM-DD</li>
+                      </ul>
+                    </Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          테이블, 리소스 요약 정보 등 UTC표기나 시 단위가 의사결정에 큰 영향을 주지
+                          않는 화면에서 사용됩니다.
+                        </li>
+                        <li>Mth DD, YYYY</li>
+                      </ul>
+                    </Td>
+                    <Td />
                   </tr>
                   <tr>
                     <Td>
                       <strong>시각</strong>
                     </Td>
-                    <Td className="text-body-sm">HH:mm</Td>
-                    <Td className="text-body-sm">HH:mm</Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          당일 발생한 알림 등 일시적, 즉각적으로 발생하는 화면에서 사용됩니다.
+                        </li>
+                        <li>HH:mm</li>
+                      </ul>
+                    </Td>
+                    <Td className="text-body-sm">
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          당일 발생한 알림 등 일시적, 즉각적으로 발생하는 화면에서 사용됩니다.
+                        </li>
+                        <li>HH:mm</li>
+                      </ul>
+                    </Td>
+                    <Td />
                   </tr>
                 </tbody>
               </TableWrapper>
@@ -467,8 +541,8 @@ export function UXWritingGuidePage() {
             <VStack gap={3}>
               <SubSectionTitle>3-3. 숫자, 단위</SubSectionTitle>
 
-              {/* 공통 규칙 */}
-              <p className="text-label-lg text-[var(--color-text-default)]">공통 규칙</p>
+              {/* 1. 공통 규칙 */}
+              <p className="text-label-lg text-[var(--color-text-default)]">1. 공통 규칙</p>
               <TableWrapper>
                 <thead>
                   <tr>
@@ -478,43 +552,72 @@ export function UXWritingGuidePage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <Td>적용 대상</Td>
                     <Td>
-                      값의 크기를 비교하거나 더할 수 있는 숫자를 대상으로 한다. 예외: 네트워크
-                      식별자, ID/코드, 버전/규격, 날짜/시각, 사용자 입력값
+                      <strong>적용 대상</strong>
+                    </Td>
+                    <Td>
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          <strong>값의 크기를 비교하거나 더할 수 있는 숫자를 대상으로 한다.</strong>
+                        </li>
+                        <li>
+                          <strong>
+                            예외: 식별 또는 구조적 의미를 갖는 숫자에는 적용하지 않는다. →
+                          </strong>{' '}
+                          네트워크 식별자, ID/코드, 버전/규격, 날짜/시각, 사용자 입력값
+                        </li>
+                      </ul>
                     </Td>
                   </tr>
                   <tr>
-                    <Td>반올림</Td>
+                    <Td>
+                      <strong>반올림</strong>
+                    </Td>
                     <Td>모든 반올림은 round half-up을 사용한다.</Td>
                   </tr>
                   <tr>
-                    <Td>숫자-단위 공백</Td>
                     <Td>
-                      숫자와 단위 사이에는 공백 1칸을 둔다. (예: 123.4 ms, 1.2 GiB/s) 예외: 퍼센트
-                      기호(%)는 숫자 뒤에 공백 없이 표기 (예: 12.3%)
+                      <strong>숫자-단위 공백</strong>
+                    </Td>
+                    <Td>
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>숫자와 단위 사이에는 공백 1칸을 둡니다. → 예: 123.4 ms, 1.2 GiB/s</li>
+                        <li>예외: 퍼센트 기호(%)는 숫자 뒤에 공백 없이 표기합니다. 예: 12.3%</li>
+                      </ul>
                     </Td>
                   </tr>
                   <tr>
-                    <Td>trailing zero</Td>
-                    <Td>의미를 추가하지 않는 소수점 .0은 제거한다. (2.0 GiB → 2 GiB, 1.0K → 1K)</Td>
+                    <Td>
+                      <strong>trailing zero</strong>
+                    </Td>
+                    <Td>
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>
+                          의미를 추가하지 않는 소수점 .0은 제거한다. (2.0 GiB → 2 GiB, 1.0K → 1K)
+                        </li>
+                      </ul>
+                    </Td>
                   </tr>
                   <tr>
-                    <Td>차트(Y축)</Td>
+                    <Td>
+                      <strong>차트(Y축)</strong>
+                    </Td>
                     <Td>
                       하나의 차트(Y축)는 단일 단위만 사용한다. (범위 내 max 기준으로 단위 결정 후
                       고정)
                     </Td>
                   </tr>
                   <tr>
-                    <Td>툴팁</Td>
+                    <Td>
+                      <strong>툴팁</strong>
+                    </Td>
                     <Td>차트 단위와 동일 단위 사용</Td>
                   </tr>
                 </tbody>
               </TableWrapper>
 
-              {/* 숫자 표기 */}
-              <p className="text-label-lg text-[var(--color-text-default)]">숫자 표기</p>
+              {/* 2. 숫자 표기 */}
+              <p className="text-label-lg text-[var(--color-text-default)]">2. 숫자 표기</p>
               <TableWrapper>
                 <thead>
                   <tr>
@@ -541,22 +644,21 @@ export function UXWritingGuidePage() {
                   </tr>
                   <tr>
                     <Td>천 단위 구분</Td>
-                    <Td>정수. 3자리 콤마 적용</Td>
-                    <Td>12,345</Td>
-                  </tr>
-                  <tr>
-                    <Td>로케일 적용</Td>
                     <Td>
-                      숫자는 사용자 로케일을 기준으로 포맷. 천 단위 구분자와 소수점 기호는 로케일에
-                      따라 자동 적용하며, 로케일 정보가 없는 경우 콤마(,)를 기본값으로 사용
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>숫자는 사용자 로케일을 기준으로 포맷한다.</li>
+                        <li>로케일 정보가 없을 시, 천 단위 구분자로 콤마 적용</li>
+                      </ul>
                     </Td>
-                    <Td />
+                    <Td>12,345</Td>
                   </tr>
                 </tbody>
               </TableWrapper>
 
-              {/* 단위 자동 변환 표기 */}
-              <p className="text-label-lg text-[var(--color-text-default)]">단위 자동 변환 표기</p>
+              {/* 3. 단위 자동 변환 표기 */}
+              <p className="text-label-lg text-[var(--color-text-default)]">
+                3. 단위 자동 변환 표기
+              </p>
               <TableWrapper>
                 <thead>
                   <tr>

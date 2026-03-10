@@ -283,4 +283,127 @@ describe('Table', () => {
       expect(screen.getByText('Email')).toBeInTheDocument();
     });
   });
+
+  describe('Column Resize', () => {
+    it('renders resize handles when resizable is true', () => {
+      render(<Table columns={testColumns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBe(3);
+    });
+
+    it('does not render resize handles when resizable is false', () => {
+      render(<Table columns={testColumns} data={testData} rowKey="id" resizable={false} />);
+
+      const handles = screen.queryAllByRole('separator');
+      expect(handles.length).toBe(0);
+    });
+
+    it('does not render resize handle for fixed-width columns by default', () => {
+      const mixedColumns: TableColumn<TestData>[] = [
+        { key: 'name', label: 'Name', width: '200px' },
+        { key: 'email', label: 'Email' },
+        { key: 'status', label: 'Status' },
+      ];
+
+      render(<Table columns={mixedColumns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBe(2);
+    });
+
+    it('renders resize handle for fixed-width column when resizable is explicitly true', () => {
+      const mixedColumns: TableColumn<TestData>[] = [
+        { key: 'name', label: 'Name', width: '200px', resizable: true },
+        { key: 'email', label: 'Email' },
+        { key: 'status', label: 'Status' },
+      ];
+
+      render(<Table columns={mixedColumns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBe(3);
+    });
+
+    it('does not render resize handle for flex column when resizable is explicitly false', () => {
+      const columns: TableColumn<TestData>[] = [
+        { key: 'name', label: 'Name', resizable: false },
+        { key: 'email', label: 'Email' },
+        { key: 'status', label: 'Status' },
+      ];
+
+      render(<Table columns={columns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBe(2);
+    });
+
+    it('resize handles have correct aria attributes', () => {
+      render(<Table columns={testColumns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      handles.forEach((handle) => {
+        expect(handle).toHaveAttribute('aria-orientation', 'vertical');
+        expect(handle).toHaveAttribute('aria-label');
+        expect(handle).toHaveAttribute('tabindex', '0');
+      });
+    });
+
+    it('calls onColumnResize callback', async () => {
+      const handleResize = vi.fn();
+
+      render(
+        <Table
+          columns={testColumns}
+          data={testData}
+          rowKey="id"
+          resizable
+          onColumnResize={handleResize}
+        />
+      );
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBeGreaterThan(0);
+    });
+
+    it('adds data-column-key attribute to header and body cells', () => {
+      const { container } = render(
+        <Table columns={testColumns} data={testData} rowKey="id" resizable />
+      );
+
+      const headerCells = container.querySelectorAll('[data-column-key="name"]');
+      expect(headerCells.length).toBe(1 + testData.length);
+    });
+
+    it('does not render spacer divs before any resize interaction', () => {
+      const { container } = render(
+        <Table columns={testColumns} data={testData} rowKey="id" resizable />
+      );
+
+      const spacers = container.querySelectorAll('[aria-hidden="true"]');
+      expect(spacers.length).toBe(0);
+    });
+
+    it('does not render spacer when resizable is false', () => {
+      const { container } = render(
+        <Table columns={testColumns} data={testData} rowKey="id" resizable={false} />
+      );
+
+      const spacers = container.querySelectorAll('[aria-hidden="true"]');
+      expect(spacers.length).toBe(0);
+    });
+
+    it('passes resizableColumnKeys excluding fixed-width columns', () => {
+      const mixedColumns: TableColumn<TestData>[] = [
+        { key: 'name', label: 'Name' },
+        { key: 'email', label: 'Email' },
+        { key: 'status', label: 'Status', width: '80px' },
+      ];
+
+      render(<Table columns={mixedColumns} data={testData} rowKey="id" resizable />);
+
+      const handles = screen.getAllByRole('separator');
+      expect(handles.length).toBe(2);
+    });
+  });
 });

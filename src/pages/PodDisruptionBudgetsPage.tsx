@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -40,7 +41,7 @@ import {
 
 interface PodDisruptionBudgetRow {
   id: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   minAvailable: string;
@@ -56,7 +57,7 @@ interface PodDisruptionBudgetRow {
 const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   {
     id: '1',
-    status: 'Active',
+    status: 'OK',
     name: 'frontend-web-deployment-disruption-budget-policy',
     namespace: 'default',
     minAvailable: '1',
@@ -66,7 +67,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   },
   {
     id: '2',
-    status: 'Active',
+    status: 'True',
     name: 'frontend-web-production-minimum-availability-pdb',
     namespace: 'production',
     minAvailable: '2',
@@ -76,7 +77,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   },
   {
     id: '3',
-    status: 'Active',
+    status: 'None',
     name: 'backend-api-minimum-availability-disruption-budget',
     namespace: 'kube-system',
     minAvailable: 'N/A',
@@ -86,7 +87,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   },
   {
     id: '4',
-    status: 'Pending',
+    status: 'CreateContainerConfigError',
     name: 'database-primary-replication-disruption-budget',
     namespace: 'staging',
     minAvailable: '50%',
@@ -96,7 +97,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
   },
   {
     id: '5',
-    status: 'Active',
+    status: 'ImagePullBackOff',
     name: 'cache-redis-cluster-disruption-budget-policy',
     namespace: 'monitoring',
     minAvailable: 'N/A',
@@ -193,11 +194,13 @@ export function PodDisruptionBudgetsPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
