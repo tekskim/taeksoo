@@ -40,7 +40,7 @@ import {
 interface PersistentVolumeData {
   id: string;
   name: string;
-  status: 'Bound' | 'Available' | 'Released' | 'Failed' | 'Pending';
+  status: string;
   createdAt: string;
   labels: Record<string, string>;
   annotations: Record<string, string>;
@@ -74,7 +74,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '1': {
     id: '1',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
-    status: 'Bound',
+    status: 'OK',
     createdAt: 'Jul 25, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -106,7 +106,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '2': {
     id: '2',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
-    status: 'Bound',
+    status: 'OK',
     createdAt: 'Jul 24, 2025',
     labels: {
       app: 'postgres',

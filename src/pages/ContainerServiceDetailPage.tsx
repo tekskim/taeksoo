@@ -21,6 +21,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -42,7 +43,7 @@ import {
 interface ServiceData {
   id: string;
   name: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
   clusterIP: string;
@@ -54,7 +55,7 @@ interface ServiceData {
 
 interface PodRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Failed' | 'Succeeded';
+  status: string;
   name: string;
   image: string;
   ready: string;
@@ -97,7 +98,7 @@ const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'Running',
+    status: 'OK',
     namespace: 'default',
     type: 'ClusterIP',
     clusterIP: '10.11.111.10',
@@ -117,7 +118,7 @@ const mockServiceData: Record<string, ServiceData> = {
   '2': {
     id: '2',
     name: 'nginx-service',
-    status: 'Running',
+    status: 'True',
     namespace: 'ingress-nginx',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
@@ -136,7 +137,7 @@ const mockServiceData: Record<string, ServiceData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'deploymentName-77f6bb9c69-4ww7f',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -147,12 +148,34 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'deploymentName-77f6bb9c69-5xx8g',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 0,
     ip: '10.11.0.12',
+    node: 'nodeName-2',
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '3',
+    status: 'CreateContainerConfigError',
+    name: 'deploymentName-77f6bb9c69-6yy9h',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Jul 25, 2025',
+  },
+  {
+    id: '4',
+    status: 'ImagePullBackOff',
+    name: 'deploymentName-77f6bb9c69-7zz0i',
+    image: 'nginx:1.27',
+    ready: '0/1',
+    restarts: 3,
+    ip: '10.11.0.14',
     node: 'nodeName-2',
     createdAt: 'Jul 25, 2025',
   },
@@ -204,7 +227,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'True',
+    status: 'None',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -269,9 +292,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {
@@ -511,8 +536,16 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      flex: 1,
+      width: fixedColumns.statusLabel,
+      align: 'center',
       sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',

@@ -22,6 +22,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -45,7 +46,7 @@ import {
 interface CronJobData {
   id: string;
   name: string;
-  status: 'Active' | 'Suspended';
+  status: string;
   namespace: string;
   image: string;
   createdAt: string;
@@ -56,7 +57,7 @@ interface CronJobData {
 
 interface JobRow {
   id: string;
-  status: 'Running' | 'Completed' | 'Failed' | 'Pending';
+  status: string;
   name: string;
   image: string;
   completions: string;
@@ -87,7 +88,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '1': {
     id: '1',
     name: 'cronjobName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025',
@@ -106,7 +107,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '2': {
     id: '2',
     name: 'backup-cronjob',
-    status: 'Active',
+    status: 'True',
     namespace: 'database',
     image: 'backup-tool:v2.1',
     createdAt: 'Nov 9, 2025',
@@ -124,7 +125,7 @@ const mockCronJobData: Record<string, CronJobData> = {
 const mockJobsData: JobRow[] = [
   {
     id: '1',
-    status: 'Completed',
+    status: 'OK',
     name: 'jobName-77',
     image: 'nginx:1.27',
     completions: '1/1',
@@ -198,9 +199,11 @@ function JobsTab({ jobs }: JobsTabProps) {
       align: 'center',
       sortable: false,
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

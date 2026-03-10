@@ -19,6 +19,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -42,7 +43,7 @@ import {
 
 interface ServiceRow {
   id: string;
-  status: 'Running' | 'Pending' | 'Error';
+  status: string;
   name: string;
   namespace: string;
   target: string[];
@@ -58,7 +59,7 @@ interface ServiceRow {
 const servicesData: ServiceRow[] = [
   {
     id: '1',
-    status: 'Running',
+    status: 'OK',
     name: 'frontend-web-application-loadbalancer-service',
     namespace: 'namespaceName',
     target: ['http + 80/TCP', 'https-internal + 444/TCP'],
@@ -68,7 +69,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '2',
-    status: 'Running',
+    status: 'True',
     name: 'backend-api-gateway-cluster-internal-service',
     namespace: 'namespaceName',
     target: ['myport + 80/TCP'],
@@ -78,7 +79,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'None',
     name: 'external-database-connection-externalname-service',
     namespace: 'namespaceName',
     target: ['my.database.example.com'],
@@ -88,7 +89,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '4',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'ingress-nginx-loadbalancer-external-service',
     namespace: 'namespaceName',
     target: ['80/TCP', '443/TCP'],
@@ -98,7 +99,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '5',
-    status: 'Error',
+    status: 'ImagePullBackOff',
     name: 'legacy-application-nodeport-external-access-service',
     namespace: 'namespaceName',
     target: ['[Any Node]:31575'],
@@ -169,9 +170,11 @@ export function ContainerServicesPage() {
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

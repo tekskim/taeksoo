@@ -63,7 +63,7 @@ interface MatchingPod {
 interface NetworkPolicyData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -82,7 +82,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
   '1': {
     id: '1',
     name: 'networkpolicyName',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: { app: 'web' },
@@ -125,7 +125,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
   '2': {
     id: '2',
     name: 'networkpolicyName2',
-    status: 'Active',
+    status: 'True',
     namespace: 'default',
     createdAt: 'Nov 10, 2025',
     labels: {},

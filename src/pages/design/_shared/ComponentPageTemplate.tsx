@@ -116,7 +116,7 @@ export function ComponentPageTemplate({
             <div className="flex items-center gap-1.5 mt-1">
               <IconClock size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Last updated {lastUpdated}
+                Last updated {lastUpdated.split(' ')[0]}
               </span>
             </div>
           )}

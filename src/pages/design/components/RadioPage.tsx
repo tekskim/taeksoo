@@ -1,8 +1,116 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { DosDonts } from '../_shared/DosDonts';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Radio, RadioGroup, VStack } from '@/design-system';
+
+const RADIO_GUIDELINES = `## Overview
+
+상호 배타적인 옵션 중 하나를 선택하는 단일 선택 컨트롤이다.
+사용자는 그룹 내에서 반드시 하나의 옵션만 선택할 수 있으며, 선택 상태는 항상 명확하게 표시된다.
+
+---
+
+## Variants
+
+| 구분 | 설명 |
+| --- | --- |
+| Icon Only | 라벨 없이 Radio 버튼만 단독으로 표시. 공간이 제한적이거나 외부 레이블로 의미가 명확할 때 사용 |
+| With Label | Radio 버튼과 인라인 텍스트 라벨을 함께 표시. 일반적인 사용 형태 |
+
+---
+
+## Composition
+
+### 1. Radio (단일)
+
+| 요소 | 설명 |
+| --- | --- |
+| Control | 원형 선택 컨트롤. 크기 16×16px, 테두리 2px |
+| Dot | 선택 상태를 나타내는 내부 원형 마커. 지름 6px |
+| Label | 선택지를 설명하는 인라인 텍스트. Control과의 간격 6px |
+
+### Design Tokens
+
+| 속성 | 값 |
+| --- | --- |
+| Control 크기 | 16×16px |
+| Dot 지름 | 6px |
+| Border 두께 | 2px |
+| Control–Label 간격 | 6px |
+
+### 2. Radio Group
+
+| 요소 | 설명 |
+| --- | --- |
+| Group Label | 그룹 전체를 설명하는 제목 텍스트. 필드셋의 레전드 역할 |
+| Description | 그룹 또는 개별 옵션에 대한 부가 설명 (선택적) |
+| Radio Items | 개별 Radio 버튼의 목록 |
+| Error Message | 유효성 검사 실패 시 표시되는 오류 안내 텍스트 |
+
+---
+
+## States
+
+| 상태 | 설명 |
+| --- | --- |
+| Unselected | 기본 상태. 선택되지 않은 Radio |
+| Selected | 선택된 상태. 내부 Dot이 표시됨 |
+| Disabled | 비활성 상태. 클릭·포커스 불가 |
+| Disabled + Selected | 비활성이지만 선택된 상태로 고정 |
+| Focus | 키보드 또는 포인터 포커스 상태. 포커스 링 표시 |
+| Error | 그룹 유효성 검사 실패 상태 |
+
+---
+
+## Behavior
+
+### 선택 정책
+- 그룹 내에서 하나의 옵션만 선택 가능하다.
+- 다른 옵션을 클릭하면 기존 선택이 즉시 해제되고 새 옵션이 선택된다.
+- 이미 선택된 Radio를 다시 클릭해도 선택 해제되지 않는다.
+- 기본값(default selection) 설정을 권장한다.
+
+### 키보드 인터랙션
+
+| 키 | 동작 |
+| --- | --- |
+| Tab | 그룹 전체로 포커스 이동 |
+| Shift + Tab | 이전 포커스 영역으로 이동 |
+| ↑ / ← | 이전 옵션으로 포커스 및 선택 이동 |
+| ↓ / → | 다음 옵션으로 포커스 및 선택 이동 |
+
+### 레이아웃 정책
+- 수직(Vertical) 배치를 기본으로 사용한다.
+- 수평(Horizontal) 배치는 옵션이 3개 이하이고, 각 라벨이 짧을 때 제한적으로 사용한다.
+
+---
+
+## Content Guidelines
+
+**라벨 작성 기준**
+- 라벨은 명사 또는 명사구로 간결하게 작성한다.
+- 옵션 간 문체와 형식을 일관되게 유지한다.
+- 부가 설명이 필요한 경우 Description을 별도로 제공한다.
+
+**Group Label 작성 기준**
+- 그룹 전체를 대표하는 짧은 명사 또는 명사구로 작성한다.
+- 예: 배포 방식, 알림 수신 설정, 플랜 선택
+
+**Error Message 작성 기준**
+- 무엇이 잘못되었는지와 어떻게 해결해야 하는지를 함께 안내한다.
+- 예: 옵션을 선택해 주세요.
+
+---
+
+## Related
+
+- Select
+- Checkbox
+- Toggle
+`;
 
 const radioProps: PropDef[] = [
   { name: 'label', type: 'ReactNode', required: false, description: 'Radio label' },
@@ -39,7 +147,7 @@ export function RadioPage() {
   return (
     <ComponentPageTemplate
       title="Radio"
-      description="상호 배타적인 옵션 중 하나를 선택하는 단일 선택 컨트롤이다. 사용자는 그룹 내에서 반드시 하나의 옵션만 선택할 수 있으며, 선택 상태는 항상 명확하게 표시된다."
+      description="상호 배타적인 옵션 중 하나를 선택하는 단일 선택 컨트롤. 사용자는 그룹 내에서 반드시 하나의 옵션만 선택할 수 있으며, 선택 상태는 항상 명확하게 표시된다."
       whenToUse={[
         '옵션이 2–5개이고, 모든 선택지를 한눈에 비교할 필요가 있을 때',
         '선택지 중 하나가 반드시 선택된 상태여야 할 때',
@@ -158,295 +266,21 @@ export function RadioPage() {
       }
       guidelines={
         <VStack gap={6}>
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Variants</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Variant
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Icon Only</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">라벨 없이 컨트롤만</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">With Label</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">라벨과 함께 표시</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Composition</h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Radio (단일)</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        요소
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Control</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">원형 라디오 버튼</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Dot</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">선택 시 내부 원</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Label</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">선택 항목 설명 (선택)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Design Tokens</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        Token
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        값
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Control</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">16×16px</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Dot</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">6px</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Border</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">2px</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">gap</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">6px</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Radio Group</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        요소
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Group Label</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">그룹 전체 질문/제목</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Description</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">그룹 설명 (선택)</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Radio Items</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        선택 가능한 Radio 목록
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Error Message</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">에러 시 표시</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">States</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        State
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        설명
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Unselected</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">미선택</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Selected</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        선택됨 (내부 Dot 표시)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Disabled</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">비활성화</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">
-                        Disabled + Selected
-                      </td>
-                      <td className="py-2 text-[var(--color-text-muted)]">비활성화 + 선택됨</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Focus</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">포커스 링</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Error</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">에러 상태 (그룹 레벨)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Behavior</h4>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                선택 정책: 그룹 내 하나만 선택 가능. 다른 옵션 선택 시 기존 선택이 해제된다.
-              </p>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">키보드 인터랙션</h5>
-              <div className="overflow-x-auto">
-                <table className="w-full text-body-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
-                        키
-                      </th>
-                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
-                        동작
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Tab</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        그룹 진입 (첫 선택 또는 첫 항목)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">Shift + Tab</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">이전 포커스 영역으로</td>
-                    </tr>
-                    <tr className="border-b border-[var(--color-border-subtle)]">
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">↑ / ←</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        이전 옵션으로 이동 및 선택
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-4 text-[var(--color-text-muted)]">↓ / →</td>
-                      <td className="py-2 text-[var(--color-text-muted)]">
-                        다음 옵션으로 이동 및 선택
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-body-sm text-[var(--color-text-muted)]">
-                레이아웃 정책: 수직(vertical) 배치를 기본으로 사용한다. 옵션이 2~3개일 때
-                수평(horizontal) 배치도 가능하다.
-              </p>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">Usage Guidelines</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                  <h5 className="text-heading-h7 text-[var(--color-state-success)] mb-3">Do ✅</h5>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>옵션이 2~5개이고 한눈에 비교할 필요가 있을 때 사용한다.</li>
-                    <li>반드시 하나의 옵션이 선택된 상태로 기본값을 설정한다.</li>
-                    <li>라벨은 간결하게 작성하고, 부가 설명은 description에 배치한다.</li>
-                    <li>수직 배치를 기본으로 사용한다.</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                  <h5 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
-                    Don&apos;t ❌
-                  </h5>
-                  <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>옵션이 6개 이상인 경우 Radio 대신 Select를 사용한다.</li>
-                    <li>여러 항목을 동시에 선택할 수 있는 경우 Checkbox를 사용한다.</li>
-                    <li>선택이 optional인 경우 기본값 없이 Checkbox를 고려한다.</li>
-                    <li>On/Off 즉시 전환이 필요한 경우 Toggle을 사용한다.</li>
-                  </ul>
-                </div>
-              </div>
-            </VStack>
-          </div>
-
-          <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-            <VStack gap={4}>
-              <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                Content Guidelines
-              </h4>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">라벨 작성 기준</h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>각 Radio 라벨은 선택지를 명확히 구분한다.</li>
-                <li>동일한 문법 구조로 작성하여 스캔하기 쉽게 한다.</li>
-              </ul>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
-                Group Label 작성 기준
-              </h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>그룹 전체를 대표하는 질문 또는 제목 형태로 작성한다.</li>
-                <li>예: &quot;배포 방식을 선택하세요&quot;, &quot;리전&quot;</li>
-              </ul>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
-                Error Message 작성 기준
-              </h5>
-              <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-                <li>필수 선택인데 미선택 시 구체적인 안내를 제공한다.</li>
-                <li>예: &quot;옵션을 하나 선택해 주세요&quot;</li>
-              </ul>
-            </VStack>
-          </div>
+          <NotionRenderer markdown={RADIO_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '옵션을 2–5개 범위 안에서 사용한다.',
+              '그룹에 반드시 Group Label을 제공하여 선택의 맥락을 명확히 한다.',
+              '기본값을 설정하여 사용자가 선택 없이 진행하는 상황을 방지한다.',
+              '수직 배치를 기본으로 사용하고, 옵션이 3개 이하·라벨이 짧을 때만 수평 배치를 고려한다.',
+            ]}
+            dontItems={[
+              '단일 Radio를 단독으로 사용하지 않는다. 반드시 2개 이상의 그룹으로 구성한다.',
+              'Checkbox를 대체하는 용도로 사용하지 않는다.',
+              '옵션 수가 6개 이상인 경우 Radio Group 대신 Select를 사용한다.',
+              '선택이 선택 사항(optional)인 경우 기본값 없이 Radio 사용을 고려하지 않는다 → Checkbox 사용.',
+            ]}
+          />
         </VStack>
       }
       tokens={
@@ -464,13 +298,9 @@ export function RadioPage() {
         </ul>
       }
       relatedLinks={[
-        {
-          label: 'Select',
-          path: '/design/components/select',
-          description: '4개 이상 드롭다운 선택',
-        },
-        { label: 'Checkbox', path: '/design/components/checkbox', description: '다중 선택' },
-        { label: 'Toggle', path: '/design/components/toggle', description: 'On/Off 스위치' },
+        { label: 'Select', path: '/design/components/select' },
+        { label: 'Checkbox', path: '/design/components/checkbox' },
+        { label: 'Toggle', path: '/design/components/toggle' },
       ]}
     />
   );

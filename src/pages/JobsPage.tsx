@@ -17,6 +17,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -40,7 +41,7 @@ import {
 
 interface JobRow {
   id: string;
-  status: 'Running' | 'Completed' | 'Failed' | 'Pending';
+  status: string;
   name: string;
   namespace: string;
   image: string;
@@ -56,7 +57,7 @@ interface JobRow {
 const jobsData: JobRow[] = [
   {
     id: '1',
-    status: 'Completed',
+    status: 'OK',
     name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -66,7 +67,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '2',
-    status: 'Completed',
+    status: 'OK',
     name: 'data-warehouse-etl-pipeline-extraction-transform-job',
     namespace: 'database',
     image: 'migration-tool:v2.1',
@@ -76,7 +77,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '3',
-    status: 'Running',
+    status: 'CreateContainerConfigError',
     name: 'backup-automated-daily-snapshot-creation-job',
     namespace: 'backup',
     image: 'backup-agent:v1.5',
@@ -86,7 +87,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '4',
-    status: 'Failed',
+    status: 'InvalidImageName',
     name: 'maintenance-cleanup-temp-files-retention-job',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.0',
@@ -96,7 +97,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '5',
-    status: 'Completed',
+    status: 'ImagePullBackOff',
     name: 'analytics-report-generator-weekly-summary-job',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
@@ -106,7 +107,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '6',
-    status: 'Pending',
+    status: 'True',
     name: 'data-sync-incremental-replication-worker-job',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
@@ -116,7 +117,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '7',
-    status: 'Completed',
+    status: 'Raw',
     name: 'search-index-rebuild-full-sync-job',
     namespace: 'search',
     image: 'indexer:v4.1',
@@ -126,7 +127,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '8',
-    status: 'Completed',
+    status: 'None',
     name: 'cache-warmup-preload-frequently-accessed-job',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
@@ -196,9 +197,11 @@ export function JobsPage() {
       sortable: false,
       align: 'center',
       render: (value: string) => (
-        <Badge theme="white" size="sm" className="max-w-[80px]" title={value}>
-          <span className="truncate">{value}</span>
-        </Badge>
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
       ),
     },
     {

@@ -39,7 +39,7 @@ import {
 interface StorageClassData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   isDefault: boolean;
   createdAt: string;
   labels: Record<string, string>;
@@ -59,7 +59,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
   '1': {
     id: '1',
     name: 'storageclassName1',
-    status: 'Active',
+    status: 'OK',
     isDefault: true,
     createdAt: 'Jul 25, 2025',
     labels: {
@@ -81,7 +81,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
   '2': {
     id: '2',
     name: 'storageclassName2',
-    status: 'Active',
+    status: 'True',
     isDefault: false,
     createdAt: 'Jul 25, 2025',
     labels: {
@@ -101,7 +101,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
   '3': {
     id: '3',
     name: 'ceph-rbd',
-    status: 'Active',
+    status: 'Raw',
     isDefault: false,
     createdAt: 'Nov 9, 2025',
     labels: {},

@@ -21,6 +21,8 @@ import {
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
+  fixedColumns,
+  Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -41,7 +43,7 @@ import {
 interface HPAData {
   id: string;
   name: string;
-  status: 'Active' | 'Pending' | 'Error';
+  status: string;
   namespace: string;
   targetReference: string;
   createdAt: string;
@@ -85,7 +87,7 @@ const mockHPAData: Record<string, HPAData> = {
   '1': {
     id: '1',
     name: 'php-apache-hpa',
-    status: 'Active',
+    status: 'OK',
     namespace: 'default',
     targetReference: 'php-apache',
     createdAt: 'Jul 25, 2025',
@@ -103,7 +105,7 @@ const mockHPAData: Record<string, HPAData> = {
   '2': {
     id: '2',
     name: 'nginx-hpa',
-    status: 'Active',
+    status: 'True',
     namespace: 'kube-system',
     targetReference: 'nginx-deployment',
     createdAt: 'Nov 8, 2025',
@@ -160,7 +162,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     condition: 'ScalingLimited',
-    status: 'False',
+    status: 'None',
     message: '[DesiredWithinRange] the desired count is within the acceptable range',
     updated: 'Nov 10, 2025',
   },
@@ -270,8 +272,16 @@ function ConditionsTab() {
     {
       key: 'status',
       label: 'Status',
-      flex: 1,
+      width: fixedColumns.statusLabel,
+      align: 'center',
       sortable: false,
+      render: (value: string) => (
+        <Tooltip content={value}>
+          <Badge theme="white" size="sm" className="max-w-[80px]">
+            <span className="truncate">{value}</span>
+          </Badge>
+        </Tooltip>
+      ),
     },
     {
       key: 'message',

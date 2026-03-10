@@ -69,7 +69,7 @@ interface PVCEvent {
 interface PersistentVolumeClaimData {
   id: string;
   name: string;
-  status: 'Bound' | 'Pending' | 'Lost';
+  status: string;
   namespace: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -95,7 +95,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '1': {
     id: '1',
     name: 'cert-manager',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'default',
     createdAt: 'Jul 25, 2025',
     labels: {
@@ -159,7 +159,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '2': {
     id: '2',
     name: 'data-postgres-0',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'database',
     createdAt: 'Nov 9, 2025',
     labels: {
@@ -204,7 +204,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '3': {
     id: '3',
     name: 'redis-data',
-    status: 'Bound',
+    status: 'True',
     namespace: 'cache',
     createdAt: 'Nov 8, 2025',
     labels: {
@@ -247,7 +247,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '4': {
     id: '4',
     name: 'pending-claim',
-    status: 'Pending',
+    status: 'Raw',
     namespace: 'default',
     createdAt: 'Nov 10, 2025',
     labels: {},
@@ -300,7 +300,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
   '5': {
     id: '5',
     name: 'elasticsearch-data-0',
-    status: 'Bound',
+    status: 'OK',
     namespace: 'logging',
     createdAt: 'Nov 7, 2025',
     labels: {
