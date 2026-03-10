@@ -737,7 +737,7 @@ export default function ComputeAdminPhysicalNodesPage() {
             value={selectedNode}
             onChange={(val) => setSelectedNode(val as string)}
             size="sm"
-            width={273}
+            width={160}
           />
           <MonitoringToolbar
             timeRangeOptions={timeRangeOptions}
