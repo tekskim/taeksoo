@@ -129,8 +129,11 @@ export function CreateImageFromVolumeDrawer({
         </FormField>
 
         {/* Disk Format Select */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Disk format</FormField.Label>
+          <FormField.Description>
+            Select the disk format to use for the image.
+          </FormField.Description>
           <FormField.Control>
             <Select options={diskFormats} value={diskFormat} onChange={setDiskFormat} fullWidth />
           </FormField.Control>

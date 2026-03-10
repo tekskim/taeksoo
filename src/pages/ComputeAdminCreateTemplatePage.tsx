@@ -3078,7 +3078,7 @@ function AdvancedSection({
                   onClick={handleFileUpload}
                   className="w-fit"
                 >
-                  Upload a file
+                  Choose file
                 </Button>
 
                 <VStack gap={2} align="stretch">

@@ -599,7 +599,7 @@ export function FloatingIPsPage() {
       <AssociateFloatingIPDrawer
         isOpen={associateOpen}
         onClose={() => setAssociateOpen(false)}
-        floatingIP={{ address: selectedFIPForDrawer?.floatingIp || '' }}
+        port={{ id: selectedFIPForDrawer?.id || '', name: selectedFIPForDrawer?.floatingIp || '' }}
       />
 
       <DisassociateFloatingIPDrawer

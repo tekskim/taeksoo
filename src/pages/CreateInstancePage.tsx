@@ -3781,7 +3781,7 @@ function AdvancedSection({
                       <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
                         <HStack gap={1} align="center">
                           <IconUpload size={12} stroke={1.5} />
-                          <span>Upload a file</span>
+                          <span>Choose file</span>
                         </HStack>
                       </Button>
                     </label>

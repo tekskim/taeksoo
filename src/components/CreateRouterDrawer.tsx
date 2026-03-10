@@ -218,6 +218,7 @@ export function CreateRouterDrawer({
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <span className="flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
@@ -236,8 +237,8 @@ export function CreateRouterDrawer({
         </span>
       ),
     },
-    { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1 },
-    { key: 'size', label: 'Size', flex: 1 },
+    { key: 'subnetCidr', label: 'Subnet CIDR', flex: 1, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, sortable: true },
   ];
 
   return (

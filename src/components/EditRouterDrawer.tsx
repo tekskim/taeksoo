@@ -76,6 +76,7 @@ export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRout
       isOpen={isOpen}
       onClose={handleClose}
       title="Edit router"
+      description="Modifies the properties of the router."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
