@@ -98,8 +98,6 @@ export function CloudBuilderCreatePage() {
 
   const canSubmitServerForm = isServerLike && Object.values(serverFormErrors).every((v) => !v);
 
-  const FieldDivider = () => <div className="h-px w-full bg-[var(--color-border-subtle)]" />;
-
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/project' },
     { label: config.title, href: `/cloudbuilder/${slug}` },
@@ -296,116 +294,96 @@ export function CloudBuilderCreatePage() {
             <SectionCard>
               <SectionCard.Header title="Basic Information" />
               <SectionCard.Content>
-                <div className="py-4">
-                  <Input
-                    label="Serial Number"
-                    placeholder="e.g. SN1234"
-                    value={serial}
-                    onChange={(e) => setSerial(e.target.value)}
-                    required
-                    error={submitted ? (serverFormErrors as any).serial : undefined}
-                    fullWidth
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Input
-                    label="MAC (Primary)"
-                    placeholder="e.g. 00:1A:2B:3C:4D:5E"
-                    value={macPrimary}
-                    onChange={(e) => setMacPrimary(e.target.value)}
-                    required
-                    error={submitted ? (serverFormErrors as any).macPrimary : undefined}
-                    fullWidth
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Input
-                    label="NIC (Primary Name)"
-                    placeholder="e.g. eno1"
-                    value={nicPrimaryName}
-                    onChange={(e) => setNicPrimaryName(e.target.value)}
-                    required
-                    error={submitted ? (serverFormErrors as any).nicPrimaryName : undefined}
-                    fullWidth
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Input
-                    label="Location"
-                    placeholder="e.g. R1-U18"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    required
-                    helperText={'placement: { rack, rack_offset_u } 로 매핑'}
-                    error={submitted ? (serverFormErrors as any).location : undefined}
-                    fullWidth
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Input
-                    label="Provider Network"
-                    placeholder="e.g. VLAN 120 / 10.0.20.12 또는 VLAN 120 / 10.0.20.12/24"
-                    value={providerNetwork}
-                    onChange={(e) => setProviderNetwork(e.target.value)}
-                    required
-                    helperText={'유효성 검사 불가: 형식만 검증합니다. (VLAN ID + IP 또는 IP/CIDR)'}
-                    error={submitted ? (serverFormErrors as any).providerNetwork : undefined}
-                    fullWidth
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Select
-                    label="Role"
-                    placeholder="Select role"
-                    value={role}
-                    onChange={setRole}
-                    required
-                    error={submitted ? (serverFormErrors as any).role : undefined}
-                    fullWidth
-                    options={[
-                      { value: 'controller', label: 'controller' },
-                      ...Array.from({ length: 24 }, (_, idx) => ({
-                        value: `compute${idx + 1}`,
-                        label: `compute${idx + 1}`,
-                      })),
-                      { value: 'master1', label: 'master1' },
-                      { value: 'master2', label: 'master2' },
-                      { value: 'master3', label: 'master3' },
-                      ...Array.from({ length: 24 }, (_, idx) => ({
-                        value: `worker${idx + 1}`,
-                        label: `worker${idx + 1}`,
-                      })),
-                      { value: 'ceph-mon', label: 'ceph-mon' },
-                      { value: 'ceph-mgr', label: 'ceph-mgr' },
-                      { value: 'ceph-mds', label: 'ceph-mds' },
-                      { value: 'ceph-osd', label: 'ceph-osd' },
-                    ]}
-                  />
-                </div>
-                <FieldDivider />
-                <div className="py-4">
-                  <Select
-                    label="Domain"
-                    placeholder="Select domain"
-                    value={domain}
-                    onChange={setDomain}
-                    required
-                    error={submitted ? (serverFormErrors as any).domain : undefined}
-                    helperText="thaki suite 내 도메인을 선택값으로 불러옴 (UI mock)"
-                    fullWidth
-                    options={[
-                      { value: 'thaki-prod', label: 'thaki-prod' },
-                      { value: 'thaki-stage', label: 'thaki-stage' },
-                      { value: 'thaki-dev', label: 'thaki-dev' },
-                      { value: 'thaki-lab', label: 'thaki-lab' },
-                    ]}
-                  />
-                </div>
+                <Input
+                  label="Serial Number"
+                  placeholder="e.g. SN1234"
+                  value={serial}
+                  onChange={(e) => setSerial(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).serial : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="MAC (Primary)"
+                  placeholder="e.g. 00:1A:2B:3C:4D:5E"
+                  value={macPrimary}
+                  onChange={(e) => setMacPrimary(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).macPrimary : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="NIC (Primary Name)"
+                  placeholder="e.g. eno1"
+                  value={nicPrimaryName}
+                  onChange={(e) => setNicPrimaryName(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).nicPrimaryName : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="Location"
+                  placeholder="e.g. R1-U18"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                  helperText={'placement: { rack, rack_offset_u } 로 매핑'}
+                  error={submitted ? (serverFormErrors as any).location : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="Provider Network"
+                  placeholder="e.g. VLAN 120 / 10.0.20.12 또는 VLAN 120 / 10.0.20.12/24"
+                  value={providerNetwork}
+                  onChange={(e) => setProviderNetwork(e.target.value)}
+                  required
+                  helperText={'유효성 검사 불가: 형식만 검증합니다. (VLAN ID + IP 또는 IP/CIDR)'}
+                  error={submitted ? (serverFormErrors as any).providerNetwork : undefined}
+                  fullWidth
+                />
+                <Select
+                  label="Role"
+                  placeholder="Select role"
+                  value={role}
+                  onChange={setRole}
+                  required
+                  error={submitted ? (serverFormErrors as any).role : undefined}
+                  fullWidth
+                  options={[
+                    { value: 'controller', label: 'controller' },
+                    ...Array.from({ length: 24 }, (_, idx) => ({
+                      value: `compute${idx + 1}`,
+                      label: `compute${idx + 1}`,
+                    })),
+                    { value: 'master1', label: 'master1' },
+                    { value: 'master2', label: 'master2' },
+                    { value: 'master3', label: 'master3' },
+                    ...Array.from({ length: 24 }, (_, idx) => ({
+                      value: `worker${idx + 1}`,
+                      label: `worker${idx + 1}`,
+                    })),
+                    { value: 'ceph-mon', label: 'ceph-mon' },
+                    { value: 'ceph-mgr', label: 'ceph-mgr' },
+                    { value: 'ceph-mds', label: 'ceph-mds' },
+                    { value: 'ceph-osd', label: 'ceph-osd' },
+                  ]}
+                />
+                <Select
+                  label="Domain"
+                  placeholder="Select domain"
+                  value={domain}
+                  onChange={setDomain}
+                  required
+                  error={submitted ? (serverFormErrors as any).domain : undefined}
+                  helperText="thaki suite 내 도메인을 선택값으로 불러옴 (UI mock)"
+                  fullWidth
+                  options={[
+                    { value: 'thaki-prod', label: 'thaki-prod' },
+                    { value: 'thaki-stage', label: 'thaki-stage' },
+                    { value: 'thaki-dev', label: 'thaki-dev' },
+                    { value: 'thaki-lab', label: 'thaki-lab' },
+                  ]}
+                />
               </SectionCard.Content>
             </SectionCard>
 
@@ -414,13 +392,11 @@ export function CloudBuilderCreatePage() {
                 Cancel
               </Button>
               <Button
-                size="md"
                 onClick={() => {
                   setSubmitted(true);
                   if (!canSubmitServerForm) return;
                   setConfirmOpen(true);
                 }}
-                disabled={!canSubmitServerForm}
               >
                 Create
               </Button>
