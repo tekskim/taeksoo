@@ -9611,7 +9611,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                             </h4>
                             <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                               <li>
-                                <strong>지연 표시</strong>: API 응답이 200ms 이내에 완료되면 로딩
+                                <strong>지연 표시</strong>: API 응답이 300ms 이내에 완료되면 로딩
                                 표시를 건너뜁니다 (깜빡임 방지).
                               </li>
                               <li>
@@ -14295,10 +14295,10 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                             <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                               <li>
                                 0.7버전에서는 <strong>사용자 액션에 대한 피드백만</strong> 토스트
-                                메세지에 해당합니다.
+                                메시지에 해당합니다.
                               </li>
                               <li>
-                                토스트 메세지는 얼럿(Alert)이 아닌{' '}
+                                토스트 메시지는 얼럿(Alert)이 아닌{' '}
                                 <strong>노티(Notification)</strong>입니다.
                               </li>
                               <li>
@@ -14326,7 +14326,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </div>
                         <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                           <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                            메세지 내용
+                            메시지 내용
                           </h4>
                           <p className="text-body-sm text-[var(--color-text-muted)]">
                             어떤 리소스에 대해 어떤 액션이 어떻게 되었는지 단일 문장으로 구성합니다.
@@ -14353,7 +14353,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </div>
                         <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                           <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
-                            메세지 발생 시각
+                            메시지 발생 시각
                           </h4>
                           <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
                             <li>
@@ -14406,7 +14406,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <VStack gap={4}>
                           <VStack gap={2}>
                             <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                              토스트 메세지 발생 유형
+                              토스트 메시지 발생 유형
                             </h4>
                             <p className="text-body-md text-[var(--color-text-muted)] mb-1">
                               사용자 액션 결과형: 화면 UI 또는 Shell에서 사용자가 특정 액션을 직접
@@ -15186,7 +15186,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       <Label>실패 처리</Label>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                         <p className="text-body-sm text-[var(--color-text-muted)]">
-                          다운로드 실패 시 토스트 메세지:
+                          다운로드 실패 시 토스트 메시지:
                         </p>
                         <code className="text-body-sm text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)] px-2 py-1 rounded-[var(--radius-sm)] mt-1 inline-block">
                           {'Failed to download the {resource_name} list'}

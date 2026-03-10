@@ -162,7 +162,7 @@ export function CsvDownloadPage() {
                 다운로드 실패 시 사용자에게 토스트 메시지를 표시한다.
               </p>
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)]">토스트 메세지</span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">토스트 메시지</span>
                 <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                   <li>
                     <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
@@ -307,7 +307,7 @@ export function CsvDownloadPage() {
             <VStack gap={3}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">3) Toast message</h4>
               <p className="text-body-md text-[var(--color-text-muted)]">
-                다운로드 실패 시 토스트 메세지
+                다운로드 실패 시 토스트 메시지
               </p>
               <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                 <li>

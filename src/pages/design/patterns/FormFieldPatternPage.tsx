@@ -501,10 +501,10 @@ Constraint text / Validation message`}
                 4) Validation message
               </h4>
               <p className="text-body-md text-[var(--color-text-muted)]">
-                유효성 검사 오류가 있을 때 메세지로 오류 이유 고지
+                유효성 검사 오류가 있을 때 메시지로 오류 이유 고지
               </p>
               <p className="text-body-md text-[var(--color-text-muted)]">
-                전역 디폴트 유효성 실패 메세지:
+                전역 디폴트 유효성 실패 메시지:
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-body-md border-collapse">

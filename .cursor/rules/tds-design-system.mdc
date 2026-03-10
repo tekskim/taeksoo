@@ -312,7 +312,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 
 **InfoGrid 레이아웃 정책 (행당 최대 4개):**
 
-| InfoCard 갯수 | 행 배치 |
+| InfoCard 개수 | 행 배치 |
 |---|---|
 | 1~4 | 한 줄 |
 | 5 | 3 / 2 |
@@ -326,7 +326,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 | 12+ | 4개씩 채워나감 |
 
 **InfoCard 배치 규칙:**
-- 권장 갯수: **4~6개** (가장 보편적인 사용 범위)
+- 권장 개수: **4~6개** (가장 보편적인 사용 범위)
 - **Status**: 항상 첫 번째 카드에 배치. `status` prop으로 StatusIndicator 표시
 - **ID**: `copyable` 속성으로 클립보드 복사 기능 제공. 두 번째 카드에 배치 권장
 - **날짜**: Created at, Updated at 등 시간 정보. 마지막 카드에 배치 권장

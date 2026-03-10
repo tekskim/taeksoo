@@ -76,7 +76,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 - 카드 본문 클릭 → 리소스 화면 이동 + 읽음 처리 + 패널 닫힘
 - 개별 읽음 버튼 → 해당 알림 읽음 + 패널에서 제거
 - 전체 읽음 버튼 → 현재 표시 알림 읽음 + 패널에서 제거
-- View details 버튼 → 상세 메세지 확장, 읽음 처리 안됨
+- View details 버튼 → 상세 메시지 확장, 읽음 처리 안됨
 
 ### 4) Real-time Behavior
 - 패널이 열린 상태에서 새 알림은 상단에 실시간 추가
@@ -111,7 +111,7 @@ export function GlobalNotificationPanelPage() {
       ]}
       whenNotToUse={[
         '단순 UI 피드백 (→ Toast)',
-        '지속 경고 메세지 (→ Inline)',
+        '지속 경고 메시지 (→ Inline)',
         '사용자 확인이 필요한 작업 (→ Modal)',
         '특정 앱의 알림 기록을 상세히 확인 (→ Notification Center)',
       ]}

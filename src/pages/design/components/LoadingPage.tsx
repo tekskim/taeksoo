@@ -232,7 +232,7 @@ function LoadingGuidelines() {
           <SubSectionTitle>3) Loading 시간 정책</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>API 응답이 200ms 이내에 완료되면 로딩 표시를 건너뛴다.</li>
+              <li>API 응답이 300ms 이내에 완료되면 로딩 표시를 건너뛴다.</li>
               <li>10초 이상 소요 시 "This may take a moment..." 안내 메시지를 표시한다.</li>
               <li>10초 이상 소요되는 액션은 가능하면 ProgressBar로 표기한다.</li>
             </ul>
