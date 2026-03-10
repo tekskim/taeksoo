@@ -294,7 +294,7 @@ export function useColumnResize(options: UseColumnResizeOptions = {}): UseColumn
       role: 'separator',
       tabIndex: 0,
       'aria-orientation': 'vertical' as const,
-      'aria-valuenow': columnWidths[columnKey],
+      'aria-valuenow': columnWidths[columnKey] ?? minColumnWidth,
       'aria-valuemin': minColumnWidth,
       'aria-label': `Resize column ${columnLabel}`,
     }),

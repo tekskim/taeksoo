@@ -227,7 +227,7 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
         <Disclosure open={advancedOpen} onChange={setAdvancedOpen}>
           <Disclosure.Trigger>Advanced</Disclosure.Trigger>
           <Disclosure.Panel>
-            <VStack gap={6}>
+            <VStack gap={6} className="pt-4">
               {/* Min system disk */}
               <FormField
                 label="Min system disk"
