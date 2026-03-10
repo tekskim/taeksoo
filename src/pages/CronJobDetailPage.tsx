@@ -23,6 +23,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -196,7 +197,7 @@ function JobsTab({ jobs }: JobsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -618,8 +619,15 @@ export function CronJobDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={cronjob.status}
-              status={cronjob.status === 'Active' ? 'active' : 'suspended'}
+              value={
+                <Tooltip content={cronjob.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {cronjob.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
+              }
             />
             <DetailHeader.InfoCard label="Namespace" value={cronjob.namespace} copyable />
             <DetailHeader.InfoCard label="Image" value={cronjob.image} copyable />
@@ -633,18 +641,44 @@ export function CronJobDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(cronjob.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(cronjob.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(cronjob.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(cronjob.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(cronjob.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(cronjob.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(cronjob.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -654,18 +688,44 @@ export function CronJobDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(cronjob.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(cronjob.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(cronjob.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(cronjob.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(cronjob.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(cronjob.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(cronjob.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>

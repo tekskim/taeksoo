@@ -374,7 +374,7 @@ export function FloatingIPsPage() {
               </span>
             </div>
             <Tooltip content="Instance" position="top">
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
+              <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
                 <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               </div>
             </Tooltip>

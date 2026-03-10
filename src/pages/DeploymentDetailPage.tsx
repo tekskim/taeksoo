@@ -23,6 +23,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -354,7 +355,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -528,7 +529,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -661,7 +662,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
+      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -1060,15 +1061,14 @@ export function DeploymentDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={deployment.status === 'Running' ? 'Active' : deployment.status}
-              status={
-                deployment.status === 'Running'
-                  ? 'active'
-                  : deployment.status === 'Pending'
-                    ? 'building'
-                    : deployment.status === 'Failed'
-                      ? 'error'
-                      : 'muted'
+              value={
+                <Tooltip content={deployment.status === 'Running' ? 'Active' : deployment.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {deployment.status === 'Running' ? 'Active' : deployment.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard label="Namespace" value={deployment.namespace} copyable />
@@ -1107,18 +1107,44 @@ export function DeploymentDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(deployment.labels).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(deployment.labels)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(deployment.labels).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(deployment.labels).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Labels ({Object.keys(deployment.labels).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(deployment.labels).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(deployment.labels).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
@@ -1128,18 +1154,44 @@ export function DeploymentDetailPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(deployment.annotations).length})
                 </span>
-                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(deployment.annotations)
                     .slice(0, 1)
                     .map(([key, val]) => (
-                      <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                      <Badge
+                        key={key}
+                        theme="white"
+                        size="sm"
+                        className="min-w-0 truncate justify-start text-left"
+                      >
                         {`${key}: ${val}`}
                       </Badge>
                     ))}
                   {Object.keys(deployment.annotations).length > 1 && (
-                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                      (+{Object.keys(deployment.annotations).length - 1})
-                    </span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                            All Annotations ({Object.keys(deployment.annotations).length})
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            {Object.entries(deployment.annotations).map(([k, v]) => (
+                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                <span className="break-all">{`${k}: ${v}`}</span>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{Object.keys(deployment.annotations).length - 1})
+                      </span>
+                    </Popover>
                   )}
                 </div>
               </VStack>
