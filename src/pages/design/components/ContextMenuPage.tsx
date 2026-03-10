@@ -282,7 +282,7 @@ function ContextMenuGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>열릴 때 메뉴 컨테이너에 포커스</li>
-              <li>키보드 ↑/↓ 클릭 시 밑에서/위에서 첫 번째 enabled item에 포커스</li>
+              <li>키보드 ↑/↓ 입력 시 밑에서/위에서 첫 번째 enabled item에 포커스</li>
               <li>↑/↓로 항목 이동, Enter로 실행, →로 서브메뉴 진입, ←로 서브메뉴 이탈</li>
             </ul>
           </Prose>

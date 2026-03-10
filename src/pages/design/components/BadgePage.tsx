@@ -579,9 +579,9 @@ export function BadgePage() {
   return (
     <ComponentPageTemplate
       title="Badge"
-      description="버전, 상태, 갯수, 카테고리 등 짧은 정보를 색상과 함께 시각적으로 표시하는 보기 전용 레이블 컴포넌트다. 텍스트·숫자·상태값을 인라인으로 전달하며, 사용자가 직접 조작하지 않는 읽기 전용 요소다."
+      description="버전, 상태, 개수, 카테고리 등 짧은 정보를 색상과 함께 시각적으로 표시하는 보기 전용 레이블 컴포넌트다. 텍스트·숫자·상태값을 인라인으로 전달하며, 사용자가 직접 조작하지 않는 읽기 전용 요소다."
       whenToUse={[
-        '버전, 상태, 갯수, 카테고리(예: New, Approved, Deprecated) 등 짧은 메타 정보를 레이블로 표기할 때',
+        '버전, 상태, 개수, 카테고리(예: New, Approved, Deprecated) 등 짧은 메타 정보를 레이블로 표기할 때',
         '테이블 셀, 카드, 목록 등에서 속성값을 색상과 함께 인라인으로 보여줄 때',
       ]}
       whenNotToUse={[

@@ -82,7 +82,7 @@ const SELECT_GUIDELINES = `## Overview
 | Border Radius | 6px |
 | Font Size | 12px |
 | Item Padding | 10 × 6px |
-| Item Font Size | 11px |
+| Item Font Size | 12px |
 | Border Width | 1px (기본) → 2px (focus) |
 
 ---
@@ -486,7 +486,7 @@ export function SelectPage() {
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
           <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 12px</code> ·{' '}
-          <code>item: 10×6px, 11px</code> · <code>border: 1px → 2px focus</code>
+          <code>item: 10×6px, 12px</code> · <code>border: 1px → 2px focus</code>
         </div>
       }
       apiReference={selectProps}

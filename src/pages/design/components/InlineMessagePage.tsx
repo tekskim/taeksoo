@@ -52,11 +52,12 @@ const INLINE_MESSAGE_GUIDELINES = `## Overview
 - 사용자가 펼친 상태는 현재 세션 동안 유지, 새로고침/재진입 시 초기화.
 
 ### 4) Timestamp 표기 규칙
+- InlineMessage는 영속적 메시지이므로 타임존 포함 상세 형식을 사용한다. (cf. Snackbar는 휘발성 알림용 간결 형식)
 - 운영 이벤트/장애/점검처럼 "언제부터"가 중요한 메시지에만 사용.
 - KO: YYYY-MM-DD HH:mm:ss (UTC+N)
 - EN: Mth DD, YYYY HH:mm:ss (UTC+N)
 
-### 5) 여러 메세지 표기 규칙
+### 5) 여러 메시지 표기 규칙
 - 같은 위치에 여러 InlineMessage가 필요한 경우 VStack으로 8px 간격으로 스태킹.
 - Severity 우선: error > warning > info > success
 - 동일 severity 내 최신 우선.
@@ -81,7 +82,7 @@ const INLINE_MESSAGE_GUIDELINES = `## Overview
 | Validation | Component | 입력 오류 메시지와 구분 |
 | Notification Center | Component | 기록형 이벤트와 역할 분리 |
 | UX Writing Guide | Foundation | 문장 톤/날짜 표기 규칙 |
-| Error&Alert Overview | Foundation | 메세지 유형 및 컴포넌트 종합 정책 |
+| Error&Alert Overview | Foundation | 메시지 유형 및 컴포넌트 종합 정책 |
 `;
 
 const inlineMessageProps: PropDef[] = [
